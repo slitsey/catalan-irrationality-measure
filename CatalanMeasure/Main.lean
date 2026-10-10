@@ -115,8 +115,8 @@ theorem factorial_n_le_exp {c : ℝ} (hc : 0 < c) :
 
 /-- The two hypotheses of the measure criterion for `Q_p = (44 p)! · D_p · Δ_p`, from the
 perturbation lemma: arithmetic nonvanishing at `a / b` with `p ∤ b`, and smallness
-`|Q_p(x)| ≤ exp(-2016 γ p²)` on the disk `|x - G| ≤ exp(-ρ p)`. -/
-theorem measureIntPoly_hypotheses {ρ : ℝ}
+`|Q_p(x)| ≤ exp(-η p²)` for any `η < 2304 γ` on the disk `|x - G| ≤ exp(-ρ p)`. -/
+theorem measureIntPoly_hypotheses {ρ η : ℝ} (hη : η < 2304 * measureGap)
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
@@ -125,34 +125,36 @@ theorem measureIntPoly_hypotheses {ρ : ℝ}
       (∀ p, P₀ ≤ p → p.Prime → ∀ (a : ℤ) (b : ℕ), 0 < b → ¬ p ∣ b →
         aeval ((a : ℝ) / b) (measureIntPoly p) ≠ 0) ∧
       (∀ p, P₀ ≤ p → p.Prime → ∀ x : ℝ, |x - catalan| ≤ Real.exp (-(ρ * p)) →
-        |aeval x (measureIntPoly p)| ≤ Real.exp (-(2016 * measureGap * (p : ℝ) ^ 2))) := by
+        |aeval x (measureIntPoly p)| ≤ Real.exp (-(η * (p : ℝ) ^ 2))) := by
   set γ := measureGap with hγ
   have hγ0 : 0 < γ := measureGap_pos
+  set e : ℝ := (2304 * γ - η) / 9216 with he
+  have he0 : 0 < e := by rw [he]; linarith
   -- eventual estimates, all at the prime index `p`
   have hev : ∀ᶠ p : ℕ in atTop,
       (∀ x : ℝ, |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
-          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + γ / 32))) ∧
+          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e))) ∧
       |determinant p| ≤
-        Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + γ / 32)) ∧
-      Real.log (denomBound p) ≤ (8609 / 4608 + 505 / 4608 * Real.log 2 + γ / 32) * (n p : ℝ) ^ 2 ∧
-      (((n p) ! : ℕ) : ℝ) ≤ Real.exp (γ / 32 * (n p : ℝ) ^ 2) ∧
-      Real.log 2 ≤ γ / 32 * (n p : ℝ) ^ 2 ∧
+        Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e)) ∧
+      Real.log (denomBound p) ≤ (8609 / 4608 + 505 / 4608 * Real.log 2 + e) * (n p : ℝ) ^ 2 ∧
+      (((n p) ! : ℕ) : ℝ) ≤ Real.exp (e * (n p : ℝ) ^ 2) ∧
+      Real.log 2 ≤ e * (n p : ℝ) ^ 2 ∧
       fixedDeterminantPrimeCutoff < p ∧ 0 < p := by
-    have hlog2 : ∀ᶠ p : ℕ in atTop, Real.log 2 ≤ γ / 32 * (n p : ℝ) ^ 2 := by
-      have htend : Tendsto (fun p : ℕ => γ / 32 * (n p : ℝ) ^ 2) atTop atTop := by
-        have : (fun p : ℕ => γ / 32 * (n p : ℝ) ^ 2) = fun p : ℕ => (γ / 32 * 2304) * (p : ℝ) ^ 2 := by
+    have hlog2 : ∀ᶠ p : ℕ in atTop, Real.log 2 ≤ e * (n p : ℝ) ^ 2 := by
+      have htend : Tendsto (fun p : ℕ => e * (n p : ℝ) ^ 2) atTop atTop := by
+        have : (fun p : ℕ => e * (n p : ℝ) ^ 2) = fun p : ℕ => (e * 2304) * (p : ℝ) ^ 2 := by
           funext p
           simp only [n, Nat.cast_mul, Nat.cast_ofNat]
           ring
         rw [this]
-        exact Tendsto.const_mul_atTop (by positivity)
+        exact Tendsto.const_mul_atTop (by nlinarith [he0])
           ((tendsto_pow_atTop (n := 2) (by norm_num)).comp tendsto_natCast_atTop_atTop)
       exact htend.eventually (eventually_ge_atTop _)
-    filter_upwards [hpert (γ / 32) (by positivity),
-      eventually_realDeterminant_abs_upper_sharp (ε := γ / 32) (by positivity),
-      log_denomBound_eventually_le (ε := γ / 32) (by positivity),
-      factorial_n_le_exp (c := γ / 32) (by positivity), hlog2,
+    filter_upwards [hpert (e) he0,
+      eventually_realDeterminant_abs_upper_sharp (ε := e) he0,
+      log_denomBound_eventually_le (ε := e) he0,
+      factorial_n_le_exp (c := e) he0, hlog2,
       eventually_gt_atTop fixedDeterminantPrimeCutoff, eventually_gt_atTop 0]
       with p h1 h2 h3 h4 h5 h6 h7
     exact ⟨h1, h2, h3, h4, h5, h6, h7⟩
@@ -174,11 +176,11 @@ theorem measureIntPoly_hypotheses {ρ : ℝ}
   · -- smallness near `G`
     intro p hp hprime x hx
     obtain ⟨hpert', hG, hM, hfacn, hlog2, -, hp0⟩ := hP₀ p hp
-    have hfac : (((44 * p) ! : ℕ) : ℝ) ≤ Real.exp (γ / 32 * (n p : ℝ) ^ 2) := by
+    have hfac : (((44 * p) ! : ℕ) : ℝ) ≤ Real.exp (e * (n p : ℝ) ^ 2) := by
       refine le_trans ?_ hfacn
       exact_mod_cast Nat.factorial_le (by unfold n; omega)
     rw [aeval_measureIntPoly hp0]
-    set E : ℝ := (n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + γ / 32)
+    set E : ℝ := (n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e)
       with hE
     have hΔ : |aeval x (deltaPoly p)| ≤ 2 * Real.exp E := by
       have h1 := hpert' x hx
@@ -191,65 +193,64 @@ theorem measureIntPoly_hypotheses {ρ : ℝ}
         _ ≤ Real.exp E + Real.exp E := add_le_add h1 (by rw [h2]; exact hG)
         _ = 2 * Real.exp E := by ring
     have hM' : (denomBound p : ℝ) ≤
-        Real.exp ((8609 / 4608 + 505 / 4608 * Real.log 2 + γ / 32) * (n p : ℝ) ^ 2) := by
+        Real.exp ((8609 / 4608 + 505 / 4608 * Real.log 2 + e) * (n p : ℝ) ^ 2) := by
       have hMpos : (0 : ℝ) < denomBound p := by
         exact_mod_cast Nat.pos_of_ne_zero (denomBound_ne_zero p)
       rw [← Real.exp_log hMpos]
       exact Real.exp_le_exp.mpr hM
-    have h2 : (2 : ℝ) ≤ Real.exp (γ / 32 * (n p : ℝ) ^ 2) := by
+    have h2 : (2 : ℝ) ≤ Real.exp (e * (n p : ℝ) ^ 2) := by
       rw [← Real.exp_log (by norm_num : (0 : ℝ) < 2)]
       exact Real.exp_le_exp.mpr hlog2
     have hfac0 : (0 : ℝ) ≤ (((44 * p) ! : ℕ) : ℝ) := by positivity
     have hM0 : (0 : ℝ) ≤ (denomBound p : ℝ) := by positivity
     rw [abs_mul, abs_mul, abs_of_nonneg hfac0, abs_of_nonneg hM0]
     calc (((44 * p) ! : ℕ) : ℝ) * (denomBound p : ℝ) * |aeval x (deltaPoly p)|
-        ≤ Real.exp (γ / 32 * (n p : ℝ) ^ 2) *
-            Real.exp ((8609 / 4608 + 505 / 4608 * Real.log 2 + γ / 32) * (n p : ℝ) ^ 2) *
-            (Real.exp (γ / 32 * (n p : ℝ) ^ 2) * Real.exp E) := by
+        ≤ Real.exp (e * (n p : ℝ) ^ 2) *
+            Real.exp ((8609 / 4608 + 505 / 4608 * Real.log 2 + e) * (n p : ℝ) ^ 2) *
+            (Real.exp (e * (n p : ℝ) ^ 2) * Real.exp E) := by
           have hΔ' : |aeval x (deltaPoly p)| ≤
-              Real.exp (γ / 32 * (n p : ℝ) ^ 2) * Real.exp E :=
+              Real.exp (e * (n p : ℝ) ^ 2) * Real.exp E :=
             hΔ.trans (mul_le_mul_of_nonneg_right h2 (Real.exp_pos _).le)
           gcongr
-      _ = Real.exp (-(7 * γ / 8) * (n p : ℝ) ^ 2) := by
+      _ = Real.exp (-(η / 2304) * (n p : ℝ) ^ 2) := by
           rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add, hE]
           congr 1
-          rw [hγ]
+          rw [he, hγ]
           unfold measureGap
           ring
-      _ = Real.exp (-(2016 * γ * (p : ℝ) ^ 2)) := by
+      _ = Real.exp (-(η * (p : ℝ) ^ 2)) := by
           congr 1
           simp only [n, Nat.cast_mul, Nat.cast_ofNat]
           ring
 
 /-- **Main theorem (Chebyshev window).**  Assuming the perturbation lemma, Catalan's constant
 has a finite irrationality measure. -/
-theorem catalan_irrationalityMeasure_of_perturbation {ρ : ℝ} (hρ : 0 < ρ)
+theorem catalan_irrationalityMeasure_of_perturbation {ρ η : ℝ} (hρ : 0 < ρ) (hη0 : 0 < η)
+    (hη : η < 2304 * measureGap)
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
           Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(3 * ρ * (max (((44 : ℕ) : ℝ) / (2016 * measureGap)) 4 + 1) + 1)) <
+      (b : ℝ) ^ (-(3 * ρ * (max (((44 : ℕ) : ℝ) / η) 4 + 1) + 1)) <
         |catalan - a / b| := by
-  obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hpert
-  have hη : 0 < 2016 * measureGap := by linarith [measureGap_pos]
-  exact CatalanMeasure.irrationality_measure_of_polynomials catalan 44 hη hρ measureIntPoly P₀
+  obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hη hpert
+  exact CatalanMeasure.irrationality_measure_of_polynomials catalan 44 hη0 hρ measureIntPoly P₀
     measureIntPoly_natDegree_le hnz hsmall
 
 /-- **Main theorem (prime number theorem window).**  For every `ε > 0`, the exponent
-`(1 + ε) ρ (max (44 / (2016 γ)) (2 / ε) + 1) + 1`.  With `ε` small this is within a few percent
-of `ρ · 44 / (2016 γ)`. -/
-theorem catalan_irrationalityMeasure_of_perturbation_pnt {ρ ε : ℝ} (hρ : 0 < ρ) (hε : 0 < ε)
+`(1 + ε) ρ (max (44 / η) (c / ε) + 1) + 1` for any `0 < η < 2304 γ` and `c > 1`. -/
+theorem catalan_irrationalityMeasure_of_perturbation_pnt {ρ η ε c : ℝ} (hρ : 0 < ρ)
+    (hη0 : 0 < η) (hη : η < 2304 * measureGap) (hε : 0 < ε) (hc : 1 < c)
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
           Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((1 + ε) * ρ * (max (((44 : ℕ) : ℝ) / (2016 * measureGap)) (2 / ε) + 1) + 1)) <
+      (b : ℝ) ^ (-((1 + ε) * ρ * (max (((44 : ℕ) : ℝ) / η) (c / ε) + 1) + 1)) <
         |catalan - a / b| := by
-  obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hpert
-  have hη : 0 < 2016 * measureGap := by linarith [measureGap_pos]
-  exact CatalanMeasure.irrationality_measure_of_polynomials_pnt catalan 44 hη hρ hε measureIntPoly P₀
-    measureIntPoly_natDegree_le hnz hsmall
+  obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hη hpert
+  exact CatalanMeasure.irrationality_measure_of_polynomials_pnt catalan 44 hη0 hρ hε hc
+    measureIntPoly P₀ measureIntPoly_natDegree_le hnz hsmall
 
 end OAI.InternalCatalan

@@ -1,7 +1,7 @@
 module
 
 public import CatalanMeasure.PinSupDual
-public import CatalanMeasure.GenVandermonde
+public import CatalanMeasure.GenVandermondeSharp
 public import CatalanMeasure.MixedAndreief
 public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantUpper
 public import OAI.NumberTheory.Catalan.Analysis.RealEnergyLogMajorants
@@ -21,7 +21,7 @@ fully antisymmetrized mixed integrand of `MixedAndreief.lean` is
 Using OpenAI's two sheet bounds for the `n × n` row determinant, the coordinate formulas, and the
 generalized Vandermonde bound for the column determinant, we prove
 
-  `|integrand| ≤ K_κ · 4^(n m) · 2^(2 h m) · exp (n² (pinFiniteValue N κ x s + log 2 / 2))`
+  `|integrand| ≤ K_κ · 2^(n m) · 2^(2 h m) · exp (n² (pinFiniteValue N κ x s + log 2 / 2))`
 
 in case `κ` of OpenAI's case split (`κ = 1`: Hadamard bound, `κ = 2`: first-sheet bound).
 The fixed nodes cost at most `2^(2h)` each: the powers of two they contribute are exactly
@@ -193,7 +193,7 @@ theorem abs_mixedDouble_le_sheet {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p + m
     (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) :
     |CatalanMeasure.mixedDouble (pinRowFun N) (realCoordinateInv ∘ y) (pinColFun N E) pinKernel
         (realCoordinateInv ∘ x) s| ≤
-      (4 : ℝ) ^ (n N * m) *
+      (2 : ℝ) ^ (n N * m) *
         |realSheetDeterminant N (fun c => Fin.append x y (Fin.cast hpm.symm c))| *
         (∏ j, rowNodeWeight N (y j)) * pinPrincipal N x s := by
   have hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1 := fun i => by simpa using hz (Fin.castAdd m i)
@@ -221,13 +221,17 @@ theorem abs_mixedDouble_le_sheet {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p + m
     ring
   have hsw : 0 ≤ ∏ j, (s j ^ b N * (1 - s j) ^ q N) := prod_nonneg fun j _ =>
     mul_nonneg (pow_nonneg (hs j).1.le _) (pow_nonneg (sub_pos.mpr (hs j).2).le _)
-  have hGV := CatalanMeasure.genVandermonde_abs_le s (fun j => ⟨(hs j).1.le, (hs j).2.le⟩)
+  have hGV0 := CatalanMeasure.genVandermonde_abs_le_two s (fun j => ⟨(hs j).1.le, (hs j).2.le⟩)
     E hE hEn
   have hm : n N - p = m := by omega
-  rw [hm] at hGV
+  rw [hm] at hGV0
+  have hGV : |(Matrix.of fun l i : Fin p => s l ^ E i).det| ≤
+      (2 : ℝ) ^ (n N * m) * |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)| :=
+    hGV0.trans (mul_le_mul_of_nonneg_right
+      (pow_le_pow_right₀ (by norm_num) (Nat.mul_le_mul_right m (by omega))) (abs_nonneg _))
   have hGb : |(Matrix.of fun j i : Fin p => pinColFun N E i (s j)).det| ≤
       (∏ j, (s j ^ b N * (1 - s j) ^ q N)) *
-        ((4 : ℝ) ^ (n N * m) * |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)|) := by
+        ((2 : ℝ) ^ (n N * m) * |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)|) := by
     rw [hG, abs_mul, abs_of_nonneg hsw]
     exact mul_le_mul_of_nonneg_left hGV hsw
   have hKabs : |(Matrix.of fun i j : Fin p => pinKernel ((realCoordinateInv ∘ x) i) (s j)).det| =
@@ -251,7 +255,7 @@ theorem abs_mixedDouble_le_sheet {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p + m
           |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)| /
             (∏ i : Fin p, ∏ j : Fin p, (1 - realCoordinateInv (x i) * s j))) *
         ((∏ j, (s j ^ b N * (1 - s j) ^ q N)) *
-          ((4 : ℝ) ^ (n N * m) * |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)|)) :=
+          ((2 : ℝ) ^ (n N * m) * |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)|)) :=
         mul_le_mul_of_nonneg_left hGb (mul_nonneg hS0 hK0)
     _ = _ := by
         unfold pinPrincipal
@@ -736,7 +740,7 @@ theorem abs_mixedDouble_le_caseOne {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p +
     (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) (hxi : Function.Injective x) (hsi : Function.Injective s) :
     |CatalanMeasure.mixedDouble (pinRowFun N) (realCoordinateInv ∘ y) (pinColFun N E) pinKernel
         (realCoordinateInv ∘ x) s| ≤
-      ((3 / 2 : ℝ) ^ n N * (n N : ℝ) ^ ((n N : ℝ) / 2)) * (4 : ℝ) ^ (n N * m) *
+      ((3 / 2 : ℝ) ^ n N * (n N : ℝ) ^ ((n N : ℝ) / 2)) * (2 : ℝ) ^ (n N * m) *
         ((2 : ℝ) ^ (2 * h N)) ^ m *
         Real.exp ((n N : ℝ) ^ 2 * (pinFiniteValue N 1 x s + Real.log 2 / 2)) := by
   have hz := append_mem_of hx hy
@@ -785,28 +789,28 @@ theorem abs_mixedDouble_le_caseOne {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p +
       rw [← hpm]
       ring
     omega
-  calc _ ≤ (4 : ℝ) ^ (n N * m) * |realSheetDeterminant N z| *
+  calc _ ≤ (2 : ℝ) ^ (n N * m) * |realSheetDeterminant N z| *
         (∏ j, rowNodeWeight N (y j)) * pinPrincipal N x s := h1
-    _ ≤ (4 : ℝ) ^ (n N * m) * (K₂ / 2 ^ (n N).choose 2 *
+    _ ≤ (2 : ℝ) ^ (n N * m) * (K₂ / 2 ^ (n N).choose 2 *
           ((∏ i, sheetOneWeight N (x i)) * ∏ j, sheetOneWeight N (y j))) *
         (∏ j, rowNodeWeight N (y j)) * pinPrincipal N x s := by
         gcongr
-    _ = (4 : ℝ) ^ (n N * m) * K₂ / 2 ^ (n N).choose 2 *
+    _ = (2 : ℝ) ^ (n N * m) * K₂ / 2 ^ (n N).choose 2 *
           ((∏ j, rowNodeWeight N (y j)) * (∏ j, sheetOneWeight N (y j))) *
           pinMajorantOne N x s := by
         unfold pinMajorantOne
         ring
-    _ ≤ (4 : ℝ) ^ (n N * m) * K₂ / 2 ^ (n N).choose 2 *
+    _ ≤ (2 : ℝ) ^ (n N * m) * K₂ / 2 ^ (n N).choose 2 *
           (((2 : ℝ) ^ (Cdegree N - 1) * (2 : ℝ) ^ (2 * h N)) ^ m) *
           (Ex * ((2 : ℝ) ^ P / (2 : ℝ) ^ (n N * (Cdegree N - 1)))) := by
         rw [hpm1]
         gcongr
-    _ = (4 : ℝ) ^ (n N * m) * K₂ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex *
+    _ = (2 : ℝ) ^ (n N * m) * K₂ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex *
           ((2 : ℝ) ^ ((Cdegree N - 1) * m) * (2 : ℝ) ^ P /
             ((2 : ℝ) ^ (n N * (Cdegree N - 1)) * (2 : ℝ) ^ ((n N).choose 2))) := by
         rw [mul_pow, ← pow_mul]
         field_simp
-    _ ≤ (4 : ℝ) ^ (n N * m) * K₂ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex * 1 := by
+    _ ≤ (2 : ℝ) ^ (n N * m) * K₂ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex * 1 := by
         have hEx0 : 0 ≤ Ex := (Real.exp_pos _).le
         apply mul_le_mul_of_nonneg_left _ (by positivity)
         exact (div_le_one (by positivity)).mpr hexp2
@@ -823,7 +827,7 @@ theorem abs_mixedDouble_le_caseTwo {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p +
         (1 + (Fin.append x y (Fin.cast hpm.symm c)) ^ 2)) ≤ ((n N - 1 - 2 * g N : ℕ) : ℝ)) :
     |CatalanMeasure.mixedDouble (pinRowFun N) (realCoordinateInv ∘ y) (pinColFun N E) pinKernel
         (realCoordinateInv ∘ x) s| ≤
-      (1 + 10 * Real.exp 12 * (n N : ℝ)) ^ n N * (4 : ℝ) ^ (n N * m) *
+      (1 + 10 * Real.exp 12 * (n N : ℝ)) ^ n N * (2 : ℝ) ^ (n N * m) *
         ((2 : ℝ) ^ (2 * h N)) ^ m *
         Real.exp ((n N : ℝ) ^ 2 * (pinFiniteValue N 2 x s + Real.log 2 / 2)) := by
   have hp : p ≤ n N := by omega
@@ -909,26 +913,26 @@ theorem abs_mixedDouble_le_caseTwo {N : ℕ} (hN : 0 < N) {p m : ℕ} (hpm : p +
       rw [← hpm]
       ring
     omega
-  calc _ ≤ (4 : ℝ) ^ (n N * m) * |realSheetDeterminant N z| * Rw * pinPrincipal N x s := h1
-    _ ≤ (4 : ℝ) ^ (n N * m) * (K₁ * (Vx * |cross| * Vy) * ((∏ i, |x i| ^ g N) * Py)) * Rw *
+  calc _ ≤ (2 : ℝ) ^ (n N * m) * |realSheetDeterminant N z| * Rw * pinPrincipal N x s := h1
+    _ ≤ (2 : ℝ) ^ (n N * m) * (K₁ * (Vx * |cross| * Vy) * ((∏ i, |x i| ^ g N) * Py)) * Rw *
           pinPrincipal N x s := by
         gcongr
-    _ = (4 : ℝ) ^ (n N * m) * K₁ * (Vx * (∏ i, |x i| ^ g N) * pinPrincipal N x s) *
+    _ = (2 : ℝ) ^ (n N * m) * K₁ * (Vx * (∏ i, |x i| ^ g N) * pinPrincipal N x s) *
           (|cross| * Vy * Py * Rw) := by ring
-    _ = (4 : ℝ) ^ (n N * m) * K₁ * pinMajorantTwo N x s * (|cross| * Xm * Vy * Py * Rw) := by
+    _ = (2 : ℝ) ^ (n N * m) * K₁ * pinMajorantTwo N x s * (|cross| * Xm * Vy * Py * Rw) := by
         rw [hmaj]
         ring
-    _ ≤ (4 : ℝ) ^ (n N * m) * K₁ *
+    _ ≤ (2 : ℝ) ^ (n N * m) * K₁ *
           (Ex * ((2 : ℝ) ^ P / (2 : ℝ) ^ (n N * (Cdegree N - 1) + (n N).choose 2))) *
           ((2 : ℝ) ^ (p * m) * ((2 : ℝ) ^ (Cdegree N - 1) * (2 : ℝ) ^ (2 * h N)) ^ m) := by
         rw [hpm2]
         gcongr
-    _ = (4 : ℝ) ^ (n N * m) * K₁ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex *
+    _ = (2 : ℝ) ^ (n N * m) * K₁ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex *
           ((2 : ℝ) ^ (p * m) * (2 : ℝ) ^ ((Cdegree N - 1) * m) * (2 : ℝ) ^ P /
             (2 : ℝ) ^ (n N * (Cdegree N - 1) + (n N).choose 2)) := by
         rw [mul_pow, ← pow_mul]
         field_simp
-    _ ≤ (4 : ℝ) ^ (n N * m) * K₁ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex * 1 := by
+    _ ≤ (2 : ℝ) ^ (n N * m) * K₁ * ((2 : ℝ) ^ (2 * h N)) ^ m * Ex * 1 := by
         apply mul_le_mul_of_nonneg_left _ (by positivity)
         exact (div_le_one (by positivity)).mpr hexp2
     _ = _ := by ring

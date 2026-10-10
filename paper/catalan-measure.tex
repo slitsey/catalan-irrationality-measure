@@ -54,13 +54,12 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-82\,700}
+ \left|G-\frac ab\right|>b^{-67\,200}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $82\,700$; without the prime number theorem in the final step the
-same argument gives $245\,200$. The previous best bound, due to Jha, is $10^8$. The new
+exponent of $G$ is at most $67\,200$; without the prime number theorem in the final step the same argument gives $200\,200$. The previous best bound, due to Jha, is $10^8$. The new
 ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
-$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-485N}$ the polynomial moves by
+$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-452N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
 the coefficient of the constant, an Andr\'eief identity with fixed columns, a
 generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
@@ -93,10 +92,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-82\,700}.
+ \left|G-\frac ab\right|>b^{-67\,200}.
 \]
-In particular $\mu(G)\le 82\,700$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-245\,200}$.
+In particular $\mu(G)\le 67\,200$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-200\,200}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -113,9 +112,8 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=485$
-(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1200$, and the
-difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
+functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=452$
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1500$, and the difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
@@ -129,16 +127,14 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
  $\log D_N\le(\mathsf A+o(1))n^2$ (Proposition~\ref{prop:denominators}). So
  $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. OpenAI's nonvanishing argument gives
  $Q_p(a/b)\ne0$ for primes $p\nmid b$ (Proposition~\ref{prop:openai}(d)).
-\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-485N}$,
+\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-452N}$,
  $|\Delta_N(x)-\Delta_N(G)|\le e^{-(\mathsf U-\varepsilon)n^2}$ (Theorem~\ref{thm:perturbation}).
- Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-2016\gamma_0p^2}$ on that
- interval, where $\gamma_0=\mathsf U-\mathsf A$.
+ Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-\eta p^2}$ on that interval, for any $\eta<2304\gamma_0$, where $\gamma_0=\mathsf U-\mathsf A$.
 \item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
  the small interval for a prime $p\nmid b$ of size about $\log b$, which contradicts
  $|Q_p(a/b)|\ge b^{-44p}$.
 \item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2016\gamma_0)\approx485\cdot167.5$, up to the factor coming from the size of
- the prime window.
+ $\rho\cdot44/(2304\gamma_0)\approx452\cdot146.5$, up to the factor coming from the size of the prime window.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -284,8 +280,7 @@ suppose that, for all primes $p\ge P_0$:
 \item $|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$.
 \end{enumerate}
 Put $\kappa=\max(d/\eta,4)+1$. Then $|\xi-a/b|>b^{-(3\rho\kappa+1)}$ for all $a\in\Z$ and all
-sufficiently large $b$. Assuming the prime number theorem, for every $\varepsilon>0$ the same
-holds with the exponent $(1+\varepsilon)\rho\bigl(\max(d/\eta,2/\varepsilon)+1\bigr)+1$.
+sufficiently large $b$. Assuming the prime number theorem, for every $\varepsilon>0$ and every $c>1$ the same holds with the exponent $(1+\varepsilon)\rho\bigl(\max(d/\eta,c/\varepsilon)+1\bigr)+1$.
 \end{proposition}
 
 \begin{proof}
@@ -299,8 +294,7 @@ $|Q_p(a/b)|\le e^{-\eta p^2}$. By (i) and (ii), $b^{dp}Q_p(a/b)$ is a nonzero in
 $e^{-\eta p^2}\ge b^{-dp}$, that is $p\le(d/\eta)\log b<X$. This is a contradiction.
 
 For the second statement use the window $(X,(1+\varepsilon)X]$ with
-$X=(\max(d/\eta,2/\varepsilon)+1)\log b$. Then $\log b\le\varepsilon X/2$, while the prime
-number theorem gives $\vartheta((1+\varepsilon)X)-\vartheta(X)=\varepsilon X+o(X)$.
+$X=(\max(d/\eta,c/\varepsilon)+1)\log b$. Then $\log b\le\varepsilon X/c$, while the prime number theorem gives $\vartheta((1+\varepsilon)X)-\vartheta(X)=\varepsilon X+o(X)$, which exceeds $\varepsilon X/c$ for large $X$.
 \end{proof}
 
 The factor $3$ in the first version, or $1+\varepsilon$ in the second, is the price of
@@ -312,7 +306,7 @@ This section proves the main new ingredient. Recall
 $\mathsf U=2.290939875-\frac12\log2$.
 
 \begin{theorem}[Perturbation estimate]\label{thm:perturbation}
-Let $\rho=485$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
+Let $\rho=452$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
 real $x$ with $|x-G|\le e^{-\rho N}$,
 \[
  |\Delta_N(x)-\Delta_N(G)|\le\exp\bigl(n^2(-\mathsf U+\varepsilon)\bigr).
@@ -423,21 +417,40 @@ $V(y)=\prod_{i<j}(y_j-y_i)$ and $\cV(y)=|V(y)|$.
 \begin{lemma}\label{lem:genvandermonde}
 Let $s_0,\ldots,s_{p-1}\in[0,1]$ and let $E_1,\ldots,E_p<n$ be distinct. Then
 \[
- \bigl|\det[s_j^{E_i}]\bigr|\le4^{n(n-p)}\,\cV(s).
+ \bigl|\det[s_j^{E_i}]\bigr|\le2^{p(n-p)}\,\cV(s).
 \]
 \end{lemma}
 
 \begin{proof}
-For each $e$ let $R_e$ be the polynomial of degree $<p$ with $R_e(s_j)=s_j^e$ for all $j$:
-$R_e=X^e$ if $e<p$, and otherwise $R_e=\sum_{k<p}c_{e,k}W_k$ in Newton form, with
-$W_k=\prod_{l<k}(X-s_l)$ and $c_{e,k}$ the divided differences of $X^e$. Then
-$[s_j^{E_i}]=[s_j^{a}]_{j,a<p}\cdot T$, where column $i$ of $T$ holds the monomial coefficients
-of $R_{E_i}$, so $|\det[s_j^{E_i}]|=\cV(s)|\det T|$. A determinant is bounded by the product of
-the $\ell^1$ norms of its columns. A column with $E_i<p$ is a unit vector. For $e\ge p$ the
-nodes lie in $[0,1]$, so the Newton quotients of $X^e$ have nonnegative coefficients and
-$0\le c_{e,k}\le2^{e+1}$, while $W_k$ has coefficients bounded by $\binom ka$; hence
-$\|R_e\|_1\le\sum_{k<p}2^{e+1}2^k\le4^n$. At most $n-p$ of the $E_i$ are $\ge p$.
+Let $m=n-p$, let $k_1,\ldots,k_m$ be the integers in $[0,n)$ that are not among the $E_i$,
+and let $P(X)=\prod_j(X-s_j)$, a monic polynomial of degree $p$. Consider two $n\times n$
+matrices. The rows of $\Omega$ are the linear functionals $f\mapsto f(s_j)$ ($j<p$) and
+$f\mapsto[X^{k_l}]f$ ($l\le m$), evaluated on the monomials $X^a$, $a<n$. The columns of
+$\Gamma$ are the coefficient vectors of the polynomials $X^b$ ($b<p$) and $X^iP$ ($i<m$), all
+of degree less than $n$.
+\begin{itemize}
+\item Ordering the columns of $\Omega$ as $E_1,\ldots,E_p,k_1,\ldots,k_m$ makes it block
+ triangular, with diagonal blocks $[s_j^{E_i}]$ and the identity. So
+ $|\det\Omega|=|\det[s_j^{E_i}]|$.
+\item In the natural order of the monomials, $\Gamma$ is block triangular with diagonal blocks
+ the identity and the matrix $\bigl([X^{p+l}]X^iP\bigr)_{l,i}$, which is unitriangular because
+ $P$ is monic of degree $p$. So $|\det\Gamma|=1$.
+\item The entries of $\Omega\Gamma$ are the values of the functionals on the polynomials. Since
+ $P(s_j)=0$, the block of evaluations on the $X^iP$ vanishes, so $\Omega\Gamma$ is block
+ triangular with diagonal blocks the Vandermonde matrix $[s_j^b]_{j,b<p}$ and
+ $Q=\bigl([X^{k_l}]X^iP\bigr)_{l,i}$.
+\end{itemize}
+Hence $|\det[s_j^{E_i}]|=\cV(s)\,|\det Q|$. A determinant is bounded by the product of the
+$\ell^1$ norms of its columns, and each column of $Q$ consists of distinct coefficients of
+$X^iP$. Its $\ell^1$ norm is therefore at most the sum of the absolute values of the
+coefficients of $P$, which is $\prod_j(1+s_j)\le2^p$.
 \end{proof}
+
+\begin{remark}
+The bound is close to optimal. The ratio $\det[s_j^{E_i}]/V(s)$ is a Schur polynomial with
+nonnegative coefficients, and its value at $s=(1,\ldots,1)$, for a single missing exponent
+$k$, is $\binom{n-1}k$, of size $2^{n-1}$ up to a polynomial factor.
+\end{remark}
 
 \subsection{The integrand}\label{ssec:integrand}
 
@@ -497,7 +510,7 @@ In the setting of \eqref{eq:detMf}, let $K_n=\max\{(1+K_0n)^n,(3/2)^nn^{n/2}\}$,
 $\kappa=2$ if $\sum_c\frac{1-z_c^2}{1+z_c^2}\le D_*$ and $\kappa=1$ otherwise. Then the
 integrand in \eqref{eq:detMf} is at most
 \[
- K_n\,4^{nm}\,(2^{2h})^m\exp\Bigl(n^2\bigl(E^{(p)}_\kappa(x,s)+\tfrac12\log2\bigr)\Bigr).
+ K_n\,2^{nm}\,(2^{2h})^m\exp\Bigl(n^2\bigl(E^{(p)}_\kappa(x,s)+\tfrac12\log2\bigr)\Bigr).
 \]
 Moreover, if $\kappa=1$ then $\sum_{i<p}\frac{1-x_i^2}{1+x_i^2}>D_*-m$.
 \end{proposition}
@@ -510,7 +523,7 @@ By \eqref{eq:sheet}, Cauchy's evaluation
 \cite[(63)]{OpenAI2026} and
 Lemma~\ref{lem:genvandermonde}, the integrand is at most
 \[
- 4^{nm}\,|\cR_n(z)|\prod_jw(y_j)\cdot\cJ^{(p)}(x,s).
+ 2^{nm}\,|\cR_n(z)|\prod_jw(y_j)\cdot\cJ^{(p)}(x,s).
 \]
 For a fixed node $-1<y<0$ we use $|y|\le1$, $(1-y)^{2h}\le2^{2h}$ and $1+y^2\ge1$, together
 with $C-1+g-(n-1)=A=19N$ (OpenAI's $A$) and $(n-1)/2<C-1+h$:
@@ -523,7 +536,7 @@ We use $\binom n2=\binom p2+pm+\binom m2$ repeatedly.
 \emph{Case $\kappa=1$.} By \eqref{eq:sheet1}, the first inequality in \eqref{eq:fixed-node}
 and \eqref{eq:energy-identity}, the integrand is at most
 \[
- K_n4^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_1+\tfrac12\log2)\bigr)\cdot
+ K_n2^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_1+\tfrac12\log2)\bigr)\cdot
  2^{-\binom n2+m(C-1)+e_1(p)} ,
 \]
 and $-\binom n2+m(C-1)+e_1(p)=\binom p2-\binom n2\le0$. The case condition fails for $z$ and
@@ -537,7 +550,7 @@ and $\cV(1/y)=\cV(y)\prod_j|y_j|^{-(m-1)}\le\prod_j|y_j|^{-(m-1)}$,
 \]
 With the second inequality in \eqref{eq:fixed-node} and \eqref{eq:energy-identity}, the
 integrand is at most
-$K_n4^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_2+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
+$K_n2^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_2+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
 and $pm+m(C-1)+e_2(p)=-\binom m2\le0$.
 \end{proof}
 
@@ -611,21 +624,19 @@ Fix $d>0$ and let $N$ be large. By \eqref{eq:detMf}, Proposition~\ref{prop:point
 Proposition~\ref{prop:energy} and $U_\kappa<-2.290939875=-\mathsf U-\frac12\log 2$, every $f$
 with $m=m(f)$ satisfies
 \[
- |\det M_f|\le2^nK_n\,4^{nm}(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
+ |\det M_f|\le2^nK_n\,2^{nm}(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
 \]
 with
 \[
- M=2^nK_n\,e^{n^2(-\mathsf U+d)},\qquad c=4^n\,2^{2h}\,e^{nc^*}.
+ M=2^nK_n\,e^{n^2(-\mathsf U+d)},\qquad c=2^n\,2^{2h}\,e^{nc^*}.
 \]
 (The degenerate configurations, such as two fixed nodes being equal or a vanishing coordinate,
 have measure zero or make the determinant vanish.) By Lemma~\ref{lem:quadrature},
 $|\beta_{a,k}|\le B=2^{q+2}4^{J-1}e^{J+1}$. Now
 \begin{align*}
- \log(nJBc)&=\log(nJ)+(q+2+2J-2+2n+2h)\log2+(J+1)+nc^*\\
- &=234N\log2+65N+48Nc^*+1+\log(3120N^2),
+ \log(nJBc)&=\log(nJ)+(q+2+2J-2+n+2h)\log2+(J+1)+nc^*\\ &=186N\log2+65N+48Nc^*+1+\log(3120N^2),
 \end{align*}
-and $234\log2+65+48c^*=484.7404\ldots<485$; so $nJBc\le e^{485N}$ for $N\ge200$. If
-$|\delta|\le e^{-485N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+and $186\log2+65+48c^*=451.4694\ldots<452$; so $nJBc\le e^{452N}$ for $N\ge200$. If $|\delta|\le e^{-452N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
 Lemma~\ref{lem:expansion} gives
 \[
  |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
@@ -635,41 +646,44 @@ Since $\log K_n=O(n\log n)$, taking $d=\varepsilon/2$ proves the theorem.
 
 \begin{remark}[The value of $\rho$] Per unit of $N$, the cost $\log(Bc)$ of one perturbed
 column splits as follows: the quadrature weights contribute $134\log2+65\approx157.9$; the
-generalized Vandermonde bound, $96\log2\approx66.5$; the fixed nodes, $4\log2\approx2.8$; and
+generalized Vandermonde bound, $48\log2\approx33.3$; the fixed nodes, $4\log2\approx2.8$; and
 the energy lost by the missing point, $48c^*\approx257.5$.
 \end{remark}
 
 \section{Proof of the main theorem}\label{sec:proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
-Let $\gamma_0=\mathsf U-\mathsf A$ and let $0<\varepsilon\le\gamma_0/32$. For large primes $p$
-and $|x-G|\le e^{-485p}$, Proposition~\ref{prop:openai}(b) and Theorem~\ref{thm:perturbation}
-give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon)}$. Also $\log(44p)!=o(n^2)$ and
-$\log D_p\le(\mathsf A+\varepsilon)n^2$ (Proposition~\ref{prop:denominators}). Hence
+Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot1.30319\cdot10^{-4}$, so that
+$0<\eta<2304\gamma_0$ by \eqref{eq:gap}, and let $\varepsilon=(\gamma_0-\eta/2304)/3>0$. For large
+primes $p$ and $|x-G|\le e^{-452p}$, Proposition~\ref{prop:openai}(b) and
+Theorem~\ref{thm:perturbation} give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon/2)}$. Also
+$\log\bigl(2\,(44p)!\bigr)\le\frac\varepsilon2n^2$ for large $p$, and
+$\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. Hence
 \[
- |Q_p(x)|\le e^{-n^2(\gamma_0-3\varepsilon)}\le e^{-\frac78\gamma_0n^2}=e^{-2016\gamma_0p^2},
+ |Q_p(x)|\le e^{-n^2(\gamma_0-2\varepsilon)}\le e^{-n^2(\gamma_0-3\varepsilon)}
+ =e^{-n^2\eta/2304}=e^{-\eta p^2},
 \]
-since $n^2=2304p^2$ and $\frac78\cdot2304=2016$. By Corollary~\ref{cor:Q} the hypotheses of
-Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, $\eta=2016\gamma_0$ and $\rho=485$.
-By \eqref{eq:gap},
+since $n^2=2304p^2$. By Corollary~\ref{cor:Q} the hypotheses of
+Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=452$, and
 \[
- \frac d\eta=\frac{44}{2016\gamma_0}=167.4756\ldots\le\frac{335}2 .
+ \frac d\eta=\frac{44}{2304\cdot1.30319\cdot10^{-4}}=146.5418\ldots\le\frac{733}5 .
 \]
-With the prime number theorem and $\varepsilon=4/335$ (so that $2/\varepsilon=335/2$), the
-exponent is
+With the prime number theorem, $c=101/100$ and $\varepsilon=101/14660$ (so that
+$c/\varepsilon=733/5$), the exponent is
 \[
- \Bigl(1+\frac4{335}\Bigr)\cdot485\cdot\Bigl(\frac{335}2+1\Bigr)+1=82\,699.29\ldots\le82\,700 .
+ \Bigl(1+\frac{101}{14660}\Bigr)\cdot452\cdot\Bigl(\frac{733}5+1\Bigr)+1
+ =67\,175.83\ldots\le67\,200 .
 \]
-With Chebyshev's bounds it is $3\cdot485\cdot(167.4756\ldots+1)+1=245\,133.04\ldots\le245\,200$.
+With Chebyshev's bounds it is at most $3\cdot452\cdot(733/5+1)+1=200\,146.6\le200\,200$.
 \end{proof}
 
 \begin{remark}[Limits of the method]\label{rem:limits}
-The exponent is essentially $\rho\cdot d/\eta$. With the full gap $\eta\to2304\gamma_0$ and an
-arbitrarily short prime window this would approach $485\cdot44/(2304\gamma_0)\approx7.1\cdot10^4$.
-Substantial improvements must come from $\rho$, that is from the four contributions listed at
-the end of Section~\ref{sec:perturbation}, or from a larger gap $\gamma_0$ in OpenAI's
-estimates. We have not tried to optimize the nodes, the bound of
-Lemma~\ref{lem:genvandermonde}, or the constants $c_\kappa$.
+The exponent is essentially $\rho\cdot d/(2304\gamma_0)\approx452\cdot146.5\approx6.6\cdot10^4$,
+and the bound $67\,200$ is within $1.5\%$ of it. Further improvements must come from $\rho$, that
+is, from the contributions listed in the remark at the end of Section~\ref{sec:perturbation}, or
+from a larger gap $\gamma_0$. Since $\gamma_0\approx1.3\cdot10^{-4}$ is tiny, an improvement of
+the certified real-place constant $2.290939875$ by about $10^{-4}$ would roughly halve the
+exponent. We have not tried to optimize the quadrature nodes or the constants $c_\kappa$.
 \end{remark}
 
 \section{Formalization}\label{sec:formal}
@@ -680,16 +694,15 @@ development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
-and consists of about $5\,400$ lines in eighteen files. It uses OpenAI's definitions directly:
+and consists of about $5\,700$ lines in nineteen files. It uses OpenAI's definitions directly:
 Catalan's constant is \lean{catalan}, defined as the series
 $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_82700}: for all sufficiently large $b\in\N$ and all
- $a\in\Z$, $b^{-82700}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_245200}: the same with exponent $245\,200$;
-\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=485$;
+\item \lean{catalan\_irrationalityMeasure\_67200}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-67200}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_200200}: the same with exponent $200\,200$;
+\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=452$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
 \end{itemize}
@@ -709,7 +722,7 @@ File & Content\\
 \lean{Quadrature} & Lemma~\ref{lem:quadrature}\\
 \lean{DetExpansion} & Lemma~\ref{lem:expansion}\\
 \lean{MixedAndreief} & Lemma~\ref{lem:andreief}\\
-\lean{GenVandermonde} & Lemma~\ref{lem:genvandermonde}\\
+\lean{GenVandermonde}, \lean{GenVandermondeSharp} & Lemma~\ref{lem:genvandermonde}\\
 \lean{PinMajorant} & Proposition~\ref{prop:pointwise} and \eqref{eq:energy-identity}\\
 \lean{PinDampedDual}, \lean{PinSupDual} & Proposition~\ref{prop:energy}\\
 \lean{Lemma6} & nodes, certified constants, Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\

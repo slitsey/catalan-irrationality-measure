@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 /-!
 # Lemma 6: the perturbation estimate, unconditionally
 
-On the disk `|x - G| ≤ exp(-ρ N)` with `ρ = 485`,
+On the disk `|x - G| ≤ exp(-ρ N)` with `ρ = 452`,
 
   `|Δ_N(x) - Δ_N(G)| ≤ exp(n² (-2.290939875 + (log 2)/2 + ε))`  for `N ≥ N₀(ε)`.
 
@@ -296,7 +296,7 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
       ∀ t s : Fin p → ℝ, (∀ i, t i ∈ Ioo (-1 : ℝ) 1) → (∀ j, s j ∈ Ioo (0 : ℝ) 1) →
       |CatalanMeasure.mixedDouble (pinRowFun N) (realCoordinateInv ∘ y) (pinColFun N E)
           pinKernel t s| ≤
-        realDeterminantSheetPrefactor N * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+        realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
           Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + d + Real.log 2 / 2)) *
           Real.exp ((n N : ℝ) * m * lemma6Coef) := by
   obtain ⟨N₁, h₁⟩ := pin_uniform_dual_eventually (k := 1) (lam := barrierLambda1) (Or.inl rfl)
@@ -314,7 +314,7 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
     rw [← hpm]
     push_cast
     ring
-  set RHS := realDeterminantSheetPrefactor N * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+  set RHS := realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
       Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + d + Real.log 2 / 2)) *
       Real.exp ((n N : ℝ) * m * lemma6Coef) with hRHS
   have hRHS0 : 0 ≤ RHS := by
@@ -358,7 +358,7 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
   have hcoef2 : pinMissingCoefficient 2 0 caseTwoBx caseTwoBs ≤ lemma6Coef := le_max_right _ _
   have hfinal : ∀ (K V : ℝ), 0 ≤ K → K ≤ realDeterminantSheetPrefactor N →
       V ≤ -(2290939875 / 1000000000 : ℝ) + d + ((n N : ℝ) - p) / (n N : ℝ) * lemma6Coef →
-      K * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+      K * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
         Real.exp ((n N : ℝ) ^ 2 * (V + Real.log 2 / 2)) ≤ RHS := by
     intro K V hK0 hK hV
     rw [hRHS, mul_assoc _ (Real.exp _) (Real.exp _), ← Real.exp_add]
@@ -371,9 +371,9 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
         rw [hmR]
         field_simp
       nlinarith [sq_nonneg (n N : ℝ)]
-    calc K * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+    calc K * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
           Real.exp ((n N : ℝ) ^ 2 * (V + Real.log 2 / 2))
-        ≤ realDeterminantSheetPrefactor N * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+        ≤ realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
           Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + d + Real.log 2 / 2) +
             (n N : ℝ) * m * lemma6Coef) := by
           have hsp := realDeterminantSheetPrefactor_nonneg N
@@ -469,7 +469,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
       |(CatalanMeasure.atomMatrix (baseMatrix N) (atomVectors N) f).det| ≤
         ((2 : ℝ) ^ n N * realDeterminantSheetPrefactor N *
           Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + d + Real.log 2 / 2))) *
-        ∏ k, (f k).elim 1 (fun _ => (4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
+        ∏ k, (f k).elim 1 (fun _ => (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
           Real.exp ((n N : ℝ) * lemma6Coef)) := by
   obtain ⟨N₀, hN₀⟩ := mixedDouble_uniform_bound hd
   refine ⟨N₀, fun N hN f => ?_⟩
@@ -541,7 +541,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
       (Filter.Eventually.of_forall fun z => ?_)
     simp only [pinRowFun, pinColFun, pinKernel]
     ring
-  set Bd := realDeterminantSheetPrefactor N * (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+  set Bd := realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
       Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + d + Real.log 2 / 2)) *
       Real.exp ((n N : ℝ) * m * lemma6Coef) with hBd
   have hae : ∀ᵐ w ∂(CatalanMeasure.pairMeasure realPlaceMeasure
@@ -553,7 +553,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
   have hdet := CatalanMeasure.abs_det_mixedMatrix_le (realCoordinateInv ∘ yv) hint hae
   rw [← hmat, abs_det_submatrix_equiv, pairMeasure_real_univ] at hdet
   -- the product over the columns
-  set c : ℝ := (4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) * Real.exp ((n N : ℝ) * lemma6Coef) with hc
+  set c : ℝ := (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) * Real.exp ((n N : ℝ) * lemma6Coef) with hc
   have hprod : ∏ k, (f k).elim 1 (fun _ => c) = c ^ m := by
     have : ∀ k, (f k).elim 1 (fun _ => c) = if P k then 1 else c := by
       intro k
@@ -562,7 +562,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
     simp_rw [this]
     rw [prod_ite, prod_const_one, one_mul, prod_const, hm, Fintype.card_subtype]
   rw [hprod]
-  have hcm : c ^ m = (4 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
+  have hcm : c ^ m = (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
       Real.exp ((n N : ℝ) * m * lemma6Coef) := by
     rw [hc, mul_pow, mul_pow, ← pow_mul, ← Real.exp_nat_mul]
     congr 2
@@ -580,7 +580,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
 /-! ### Assembly -/
 
 /-- The radius exponent of the perturbation lemma. -/
-def lemma6Rho : ℝ := 485
+def lemma6Rho : ℝ := 452
 
 theorem delta_matrix_eq {N : ℕ} (hN : 0 < N) (x : ℝ) :
     aeval x (deltaPoly N) = (Matrix.of fun r k : Fin (n N) =>
@@ -595,18 +595,18 @@ theorem delta_matrix_eq {N : ℕ} (hN : 0 < N) (x : ℝ) :
     ← filteredEntry_real_affine hN r.isLt k.isLt]
   ring
 
-/-- The explicit numerical condition defining `ρ = 485`. -/
+/-- The explicit numerical condition defining `ρ = 452`. -/
 theorem rho_condition {N : ℕ} (hN : 200 ≤ N) :
     (n N : ℝ) * (H N : ℝ) * ((2 : ℝ) ^ (q N + 2) * ((4 : ℝ) ^ (H N - 1) *
-      Real.exp ((H N : ℝ) + 1))) * ((4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
+      Real.exp ((H N : ℝ) + 1))) * ((2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
         Real.exp ((n N : ℝ) * lemma6Coef)) ≤ Real.exp (lemma6Rho * N) := by
   have hNR : (200 : ℝ) ≤ N := by exact_mod_cast hN
   have hl := Real.log_two_lt_d9
   have hc := lemma6Coef_lt
-  have hpow : (2 : ℝ) ^ (q N + 2) * (4 : ℝ) ^ (H N - 1) * (4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) =
-      Real.exp ((234 * N : ℕ) * Real.log 2) := by
+  have hpow : (2 : ℝ) ^ (q N + 2) * (4 : ℝ) ^ (H N - 1) * (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) =
+      Real.exp ((186 * N : ℕ) * Real.log 2) := by
     rw [Real.exp_nat_mul, Real.exp_log (by norm_num), show (4 : ℝ) = 2 ^ 2 by norm_num,
-      ← pow_mul, ← pow_mul, ← pow_add, ← pow_add, ← pow_add]
+      ← pow_mul, ← pow_add, ← pow_add, ← pow_add]
     congr 1
     unfold q H n h
     omega
@@ -642,22 +642,22 @@ theorem rho_condition {N : ℕ} (hN : 200 ≤ N) :
   have hH1 : ((H N : ℕ) : ℝ) + 1 = 65 * N + 1 := by
     simp only [H, Nat.cast_mul, Nat.cast_ofNat]
   calc (n N : ℝ) * (H N : ℝ) * ((2 : ℝ) ^ (q N + 2) * ((4 : ℝ) ^ (H N - 1) *
-        Real.exp ((H N : ℝ) + 1))) * ((4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
+        Real.exp ((H N : ℝ) + 1))) * ((2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
           Real.exp ((n N : ℝ) * lemma6Coef))
       = ((n N : ℝ) * (H N : ℝ)) * ((2 : ℝ) ^ (q N + 2) * (4 : ℝ) ^ (H N - 1) *
-          (4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N)) *
+          (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N)) *
           (Real.exp ((H N : ℝ) + 1) * Real.exp ((n N : ℝ) * lemma6Coef)) := by ring
-    _ ≤ (798720 * Real.exp ((N : ℝ) / 8)) * Real.exp ((234 * N : ℕ) * Real.log 2) *
+    _ ≤ (798720 * Real.exp ((N : ℝ) / 8)) * Real.exp ((186 * N : ℕ) * Real.log 2) *
           Real.exp ((65 * N + 1) + 48 * N * (53655 / 10000)) := by
         rw [hpow, ← Real.exp_add, hH1]
         gcongr
-    _ = 798720 * Real.exp 1 * Real.exp ((N : ℝ) / 8 + (234 * N : ℕ) * Real.log 2 +
+    _ = 798720 * Real.exp 1 * Real.exp ((N : ℝ) / 8 + (186 * N : ℕ) * Real.log 2 +
           (65 * N + 48 * N * (53655 / 10000))) := by
         rw [mul_assoc 798720 (Real.exp 1), ← Real.exp_add, mul_assoc 798720, ← Real.exp_add,
           mul_assoc 798720, ← Real.exp_add]
         congr 2
         ring
-    _ ≤ Real.exp 26 * Real.exp ((N : ℝ) / 8 + (234 * N : ℕ) * Real.log 2 +
+    _ ≤ Real.exp 26 * Real.exp ((N : ℝ) / 8 + (186 * N : ℕ) * Real.log 2 +
           (65 * N + 48 * N * (53655 / 10000))) := by gcongr
     _ ≤ Real.exp (lemma6Rho * N) := by
         rw [← Real.exp_add]
@@ -667,7 +667,7 @@ theorem rho_condition {N : ℕ} (hN : 200 ≤ N) :
         norm_num at hl
         nlinarith
 
-/-- **Lemma 6.**  The perturbation estimate, with `ρ = 485`. -/
+/-- **Lemma 6.**  The perturbation estimate, with `ρ = 452`. -/
 theorem lemma6_perturbation :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(lemma6Rho * N)) →
@@ -693,7 +693,7 @@ theorem lemma6_perturbation :
   have hN0 : 0 < N := by omega
   set δ := x - catalan with hδ
   set Bβ : ℝ := (2 : ℝ) ^ (q N + 2) * ((4 : ℝ) ^ (H N - 1) * Real.exp ((H N : ℝ) + 1)) with hBβ
-  set c : ℝ := (4 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) * Real.exp ((n N : ℝ) * lemma6Coef) with hc
+  set c : ℝ := (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) * Real.exp ((n N : ℝ) * lemma6Coef) with hc
   set M : ℝ := (2 : ℝ) ^ n N * realDeterminantSheetPrefactor N *
     Real.exp ((n N : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + ε / 4 + Real.log 2 / 2)) with hM
   have hM0 : 0 ≤ M := by
@@ -769,57 +769,72 @@ theorem lemma6_perturbation :
 
 /-! ### Catalan's constant has a finite irrationality measure -/
 
-/-- **Theorem (Chebyshev window).**  For all large denominators `b` and all integers `a`,
-`|G - a/b| > b ^ (-μ)` with `μ = 3 · 485 · (max (44 / (2016 γ)) 4 + 1) + 1`. -/
-theorem catalan_irrationalityMeasure :
+/-- **Theorem (Chebyshev window).**  For every `0 < η < 2304 γ`, all large denominators `b`
+and all integers `a`, `|G - a/b| > b ^ (-μ)` with `μ = 3 · 452 · (max (44 / η) 4 + 1) + 1`. -/
+theorem catalan_irrationalityMeasure {η : ℝ} (hη0 : 0 < η) (hη : η < 2304 * measureGap) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(3 * lemma6Rho * (max (((44 : ℕ) : ℝ) / (2016 * measureGap)) 4 + 1) + 1)) <
+      (b : ℝ) ^ (-(3 * lemma6Rho * (max (((44 : ℕ) : ℝ) / η) 4 + 1) + 1)) <
         |catalan - a / b| :=
-  catalan_irrationalityMeasure_of_perturbation (by norm_num [lemma6Rho]) lemma6_perturbation
+  catalan_irrationalityMeasure_of_perturbation (by norm_num [lemma6Rho]) hη0 hη
+    lemma6_perturbation
 
-/-- **Theorem (prime number theorem window).**  For every `ε > 0`, the irrationality exponent
-`(1 + ε) · 485 · (max (44 / (2016 γ)) (2 / ε) + 1) + 1`. -/
-theorem catalan_irrationalityMeasure_pnt {ε : ℝ} (hε : 0 < ε) :
+/-- **Theorem (prime number theorem window).**  For every `0 < η < 2304 γ`, `ε > 0` and
+`c > 1`, the irrationality exponent is at most `(1 + ε) · 452 · (max (44 / η) (c / ε) + 1) + 1`. -/
+theorem catalan_irrationalityMeasure_pnt {η ε c : ℝ} (hη0 : 0 < η)
+    (hη : η < 2304 * measureGap) (hε : 0 < ε) (hc : 1 < c) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((1 + ε) * lemma6Rho *
-          (max (((44 : ℕ) : ℝ) / (2016 * measureGap)) (2 / ε) + 1) + 1)) <
+          (max (((44 : ℕ) : ℝ) / η) (c / ε) + 1) + 1)) <
         |catalan - a / b| :=
-  catalan_irrationalityMeasure_of_perturbation_pnt (by norm_num [lemma6Rho]) hε lemma6_perturbation
+  catalan_irrationalityMeasure_of_perturbation_pnt (by norm_num [lemma6Rho]) hη0 hη hε hc
+    lemma6_perturbation
 
-theorem measureGap_ratio_le : ((44 : ℕ) : ℝ) / (2016 * measureGap) ≤ 335 / 2 := by
+/-- A certified lower bound for the gap `γ = U - A`. -/
+theorem measureGap_gt : (13031900 / 100000000000 : ℝ) < measureGap := by
   have hl := Real.log_two_lt_d9
-  have hγ : (13031900 / 100000000000 : ℝ) < measureGap := by
-    unfold measureGap
-    norm_num at hl ⊢
-    linarith
-  have hγ0 : 0 < measureGap := measureGap_pos
-  rw [div_le_iff₀ (by positivity)]
-  push_cast
-  nlinarith
+  unfold measureGap
+  norm_num at hl ⊢
+  linarith
 
-/-- **Catalan's constant has irrationality measure at most `82700`.** -/
-theorem catalan_irrationalityMeasure_82700 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(82700 : ℝ)) < |catalan - a / b| := by
-  have hε : (0 : ℝ) < 4 / 335 := by norm_num
-  filter_upwards [catalan_irrationalityMeasure_pnt hε, eventually_ge_atTop 1] with b hb hb1 a
+/-- The decay rate used in the final theorems: just below the full gap `2304 γ`. -/
+noncomputable def measureEta : ℝ := 2304 * (13031900 / 100000000000)
+
+theorem measureEta_pos : 0 < measureEta := by unfold measureEta; norm_num
+
+theorem measureEta_lt : measureEta < 2304 * measureGap := by
+  unfold measureEta
+  linarith [measureGap_gt]
+
+theorem measureEta_ratio_le : ((44 : ℕ) : ℝ) / measureEta ≤ 733 / 5 := by
+  unfold measureEta
+  norm_num
+
+/-- **Catalan's constant has irrationality measure at most `67200`.** -/
+theorem catalan_irrationalityMeasure_67200 :
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(67200 : ℝ)) < |catalan - a / b| := by
+  have hε : (0 : ℝ) < 101 / 14660 := by norm_num
+  have hc : (1 : ℝ) < 101 / 100 := by norm_num
+  filter_upwards [catalan_irrationalityMeasure_pnt measureEta_pos measureEta_lt hε hc,
+    eventually_ge_atTop 1] with b hb hb1 a
   refine lt_of_le_of_lt ?_ (hb a)
   apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
-  have hX := measureGap_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / (2016 * measureGap)) (2 / (4 / 335)) = 335 / 2 := by
+  have hX := measureEta_ratio_le
+  have hmax : max (((44 : ℕ) : ℝ) / measureEta) ((101 / 100) / (101 / 14660)) = 733 / 5 := by
     rw [max_eq_right (by norm_num at hX ⊢; linarith)]
     norm_num
   rw [hmax]
   unfold lemma6Rho
   norm_num
 
-/-- **Chebyshev-window version: irrationality measure at most `245200`.** -/
-theorem catalan_irrationalityMeasure_245200 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(245200 : ℝ)) < |catalan - a / b| := by
-  filter_upwards [catalan_irrationalityMeasure, eventually_ge_atTop 1] with b hb hb1 a
+/-- **Chebyshev-window version: irrationality measure at most `200200`.** -/
+theorem catalan_irrationalityMeasure_200200 :
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(200200 : ℝ)) < |catalan - a / b| := by
+  filter_upwards [catalan_irrationalityMeasure measureEta_pos measureEta_lt,
+    eventually_ge_atTop 1] with b hb hb1 a
   refine lt_of_le_of_lt ?_ (hb a)
   apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
-  have hX := measureGap_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / (2016 * measureGap)) 4 ≤ 335 / 2 :=
+  have hX := measureEta_ratio_le
+  have hmax : max (((44 : ℕ) : ℝ) / measureEta) 4 ≤ 733 / 5 :=
     max_le hX (by norm_num)
   unfold lemma6Rho
   nlinarith
