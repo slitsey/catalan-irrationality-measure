@@ -54,12 +54,12 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-67\,200}
+ \left|G-\frac ab\right|>b^{-61\,300}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $67\,200$; without the prime number theorem in the final step the same argument gives $200\,200$. The previous best bound, due to Jha, is $10^8$. The new
+exponent of $G$ is at most $61\,300$; without the prime number theorem in the final step the same argument gives $182\,500$. The previous best bound, due to Jha, is $10^8$. The new
 ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
-$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-452N}$ the polynomial moves by
+$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-412N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
 the coefficient of the constant, an Andr\'eief identity with fixed columns, a
 generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
@@ -92,10 +92,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-67\,200}.
+ \left|G-\frac ab\right|>b^{-61\,300}.
 \]
-In particular $\mu(G)\le 67\,200$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-200\,200}$.
+In particular $\mu(G)\le 61\,300$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-182\,500}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -112,8 +112,8 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=452$
-(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1500$, and the difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
+functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=412$
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1600$, and the difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
@@ -127,14 +127,14 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
  $\log D_N\le(\mathsf A+o(1))n^2$ (Proposition~\ref{prop:denominators}). So
  $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. OpenAI's nonvanishing argument gives
  $Q_p(a/b)\ne0$ for primes $p\nmid b$ (Proposition~\ref{prop:openai}(d)).
-\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-452N}$,
+\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-412N}$,
  $|\Delta_N(x)-\Delta_N(G)|\le e^{-(\mathsf U-\varepsilon)n^2}$ (Theorem~\ref{thm:perturbation}).
  Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-\eta p^2}$ on that interval, for any $\eta<2304\gamma_0$, where $\gamma_0=\mathsf U-\mathsf A$.
 \item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
  the small interval for a prime $p\nmid b$ of size about $\log b$, which contradicts
  $|Q_p(a/b)|\ge b^{-44p}$.
 \item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2304\gamma_0)\approx452\cdot146.5$, up to the factor coming from the size of the prime window.
+ $\rho\cdot44/(2304\gamma_0)\approx412\cdot146.5$, up to the factor coming from the size of the prime window.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -306,7 +306,7 @@ This section proves the main new ingredient. Recall
 $\mathsf U=2.290939875-\frac12\log2$.
 
 \begin{theorem}[Perturbation estimate]\label{thm:perturbation}
-Let $\rho=452$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
+Let $\rho=412$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
 real $x$ with $|x-G|\le e^{-\rho N}$,
 \[
  |\Delta_N(x)-\Delta_N(G)|\le\exp\bigl(n^2(-\mathsf U+\varepsilon)\bigr).
@@ -322,7 +322,8 @@ $A_r$ at fixed nodes (\S\ref{ssec:quadrature}); expand the determinant column by
 
 \subsection{A quadrature formula for \texorpdfstring{$\mathcal L_N$}{L\_N}}\label{ssec:quadrature}
 
-Let $\tau_a=-(a+1)/(J+1)$ for $0\le a<J$, so $-1<\tau_a<0$, and let
+Let $x_a=\cos\bigl((2a+1)\pi/(2J)\bigr)$ for $0\le a<J$ be the roots of the Chebyshev
+polynomial $T_J$, let $\tau_a=(x_a-1)/2\in(-1,0)$, and let
 $\ell_a(t)=\prod_{c\ne a}(t-\tau_c)/(\tau_a-\tau_c)$ be the Lagrange basis.
 
 \begin{lemma}\label{lem:quadrature}
@@ -331,19 +332,24 @@ For $0\le r,k<n$,
  \mathcal L_N(r,k)=\sum_{a<J}A_r(\tau_a)\,\beta_{a,k},\qquad
  \beta_{a,k}=\sum_{v=0}^q(-1)^v\binom qv\sum_{i<H}[t^i]\ell_a\cdot4\,c_{(i-b-k-v)/2},
 \]
-and $|\beta_{a,k}|\le B:=2^{q+2}\,4^{J-1}\,e^{J+1}$.
+and $|\beta_{a,k}|\le B:=2^{q+2}\,(3+2\sqrt2)^{J}$.
 \end{lemma}
 
 \begin{proof}
 Since $\deg P_r<H=J$, Lagrange interpolation gives $[t^i]P_r=\sum_aP_r(\tau_a)[t^i]\ell_a$.
 Substitute this into \eqref{eq:L} and use $A_r(\tau)=P_r(\tau)$ for $\tau\le0$. For the bound,
-$\sum_v\binom qv=2^q$, $|4c_l|\le4$, and $\sum_i|[t^i]\ell_a|\le\prod_{c\ne a}(1+|\tau_c|)/
-\prod_{c\ne a}|\tau_a-\tau_c|$. Here $\prod_{c\ne a}(1+|\tau_c|)\le2^{J-1}$ and
-$\prod_{c\ne a}|\tau_a-\tau_c|=a!\,(J-1-a)!/(J+1)^{J-1}$, so the ratio is
-\[
- \binom{J-1}{a}\frac{(J+1)^{J-1}}{(J-1)!}\cdot2^{J-1}\le2^{J-1}\cdot e^{J+1}\cdot2^{J-1},
-\]
-using $(J+1)^{J-1}/(J-1)!\le(J+1)^{J+1}/(J+1)!\le e^{J+1}$.
+$\sum_v\binom qv=2^q$, $|4c_l|\le4$, and, since all $\tau_c<0$,
+$\sum_i|[t^i]\ell_a|=\prod_{c\ne a}(1-\tau_c)/\prod_{c\ne a}|\tau_a-\tau_c|$. We have
+$T_J=2^{J-1}\prod_c(X-x_c)$. For the numerator,
+\begin{gather*}
+ \prod_{c\ne a}(1-\tau_c)\le\prod_c\frac{3-x_c}2=\frac{T_J(3)}{2^{2J-1}},\\
+ T_J(3)=\cosh\bigl(J\log(3+2\sqrt2)\bigr)\le(3+2\sqrt2)^J .
+\end{gather*}
+For the denominator, $\prod_{c\ne a}|\tau_a-\tau_c|=2^{1-J}\prod_{c\ne a}|x_a-x_c|$ and
+$\prod_{c\ne a}(x_a-x_c)=2^{1-J}T_J'(x_a)=2^{1-J}J\,U_{J-1}(x_a)$. Since
+$U_{J-1}(\cos\theta)\sin\theta=\sin(J\theta)$ and $\sin(J\theta_a)=\pm1$ at
+$\theta_a=(2a+1)\pi/(2J)$, we get $|U_{J-1}(x_a)|\ge1$, so the denominator is at least
+$J\,2^{2-2J}$. The ratio is therefore at most $T_J(3)/(2J)\le(3+2\sqrt2)^J$.
 \end{proof}
 
 Let $\Phi$ be the $n\times J$ matrix $\Phi(r,a)=A_r(\tau_a)$. Then
@@ -634,9 +640,9 @@ with
 have measure zero or make the determinant vanish.) By Lemma~\ref{lem:quadrature},
 $|\beta_{a,k}|\le B=2^{q+2}4^{J-1}e^{J+1}$. Now
 \begin{align*}
- \log(nJBc)&=\log(nJ)+(q+2+2J-2+n+2h)\log2+(J+1)+nc^*\\ &=186N\log2+65N+48Nc^*+1+\log(3120N^2),
+ \log(nJBc)&=\log(nJ)+(q+2+n+2h)\log2+J\log(3+2\sqrt2)+nc^*\\ &=(56N+2)\log2+65N\log(3+2\sqrt2)+48Nc^*+\log(3120N^2),
 \end{align*}
-and $186\log2+65+48c^*=451.4694\ldots<452$; so $nJBc\le e^{452N}$ for $N\ge200$. If $|\delta|\le e^{-452N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+and $56\log2+65\log(3+2\sqrt2)+48c^*=410.9388\ldots<412$; so $nJBc\le e^{412N}$ for $N\ge200$. If $|\delta|\le e^{-412N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
 Lemma~\ref{lem:expansion} gives
 \[
  |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
@@ -645,7 +651,7 @@ Since $\log K_n=O(n\log n)$, taking $d=\varepsilon/2$ proves the theorem.
 \end{proof}
 
 \begin{remark}[The value of $\rho$] Per unit of $N$, the cost $\log(Bc)$ of one perturbed
-column splits as follows: the quadrature weights contribute $134\log2+65\approx157.9$; the
+column splits as follows: the quadrature weights contribute $4\log2+65\log(3+2\sqrt2)\approx117.4$; the
 generalized Vandermonde bound, $48\log2\approx33.3$; the fixed nodes, $4\log2\approx2.8$; and
 the energy lost by the missing point, $48c^*\approx257.5$.
 \end{remark}
@@ -655,7 +661,7 @@ the energy lost by the missing point, $48c^*\approx257.5$.
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
 Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot1.30319\cdot10^{-4}$, so that
 $0<\eta<2304\gamma_0$ by \eqref{eq:gap}, and let $\varepsilon=(\gamma_0-\eta/2304)/3>0$. For large
-primes $p$ and $|x-G|\le e^{-452p}$, Proposition~\ref{prop:openai}(b) and
+primes $p$ and $|x-G|\le e^{-412p}$, Proposition~\ref{prop:openai}(b) and
 Theorem~\ref{thm:perturbation} give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon/2)}$. Also
 $\log\bigl(2\,(44p)!\bigr)\le\frac\varepsilon2n^2$ for large $p$, and
 $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. Hence
@@ -664,26 +670,25 @@ $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. 
  =e^{-n^2\eta/2304}=e^{-\eta p^2},
 \]
 since $n^2=2304p^2$. By Corollary~\ref{cor:Q} the hypotheses of
-Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=452$, and
+Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=412$, and
 \[
  \frac d\eta=\frac{44}{2304\cdot1.30319\cdot10^{-4}}=146.5418\ldots\le\frac{733}5 .
 \]
 With the prime number theorem, $c=101/100$ and $\varepsilon=101/14660$ (so that
 $c/\varepsilon=733/5$), the exponent is
 \[
- \Bigl(1+\frac{101}{14660}\Bigr)\cdot452\cdot\Bigl(\frac{733}5+1\Bigr)+1
- =67\,175.83\ldots\le67\,200 .
+ \Bigl(1+\frac{101}{14660}\Bigr)\cdot412\cdot\Bigl(\frac{733}5+1\Bigr)+1 =61\,231.15\ldots\le61\,300 .
 \]
-With Chebyshev's bounds it is at most $3\cdot452\cdot(733/5+1)+1=200\,146.6\le200\,200$.
+With Chebyshev's bounds it is at most $3\cdot412\cdot(733/5+1)+1=182\,434.6\le182\,500$.
 \end{proof}
 
 \begin{remark}[Limits of the method]\label{rem:limits}
-The exponent is essentially $\rho\cdot d/(2304\gamma_0)\approx452\cdot146.5\approx6.6\cdot10^4$,
-and the bound $67\,200$ is within $1.5\%$ of it. Further improvements must come from $\rho$, that
+The exponent is essentially $\rho\cdot d/(2304\gamma_0)\approx412\cdot146.5\approx6.04\cdot10^4$,
+and the bound $61\,300$ is within $1.5\%$ of it. Further improvements must come from $\rho$, that
 is, from the contributions listed in the remark at the end of Section~\ref{sec:perturbation}, or
 from a larger gap $\gamma_0$. Since $\gamma_0\approx1.3\cdot10^{-4}$ is tiny, an improvement of
 the certified real-place constant $2.290939875$ by about $10^{-4}$ would roughly halve the
-exponent. We have not tried to optimize the quadrature nodes or the constants $c_\kappa$.
+exponent. We have not tried to optimize the constants $c_\kappa$.
 \end{remark}
 
 \section{Formalization}\label{sec:formal}
@@ -694,15 +699,15 @@ development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
-and consists of about $5\,700$ lines in nineteen files. It uses OpenAI's definitions directly:
+and consists of about $5\,800$ lines in twenty files. It uses OpenAI's definitions directly:
 Catalan's constant is \lean{catalan}, defined as the series
 $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_67200}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-67200}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_200200}: the same with exponent $200\,200$;
-\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=452$;
+\item \lean{catalan\_irrationalityMeasure\_61300}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-61300}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_182500}: the same with exponent $182\,500$;
+\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=412$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
 \end{itemize}
@@ -719,7 +724,7 @@ File & Content\\
 \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
 \lean{Nonvanishing} & Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$\\
 \lean{PrimeWindow}, \lean{Criterion}, \lean{PNTWindow}, \lean{Main} & Proposition~\ref{prop:criterion} and the reduction to Theorem~\ref{thm:perturbation}\\
-\lean{Quadrature} & Lemma~\ref{lem:quadrature}\\
+\lean{Quadrature}, \lean{ChebyshevNodes} & Lemma~\ref{lem:quadrature}\\
 \lean{DetExpansion} & Lemma~\ref{lem:expansion}\\
 \lean{MixedAndreief} & Lemma~\ref{lem:andreief}\\
 \lean{GenVandermonde}, \lean{GenVandermondeSharp} & Lemma~\ref{lem:genvandermonde}\\
