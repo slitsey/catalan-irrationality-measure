@@ -15,8 +15,8 @@ Catalan's constant is `G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`; it is written out
 The two statements say that for every sufficiently large denominator `b` and every integer
 numerator `a`,
 
-* `|G - a / b| > b ^ (-67200)` (so the irrationality exponent of `G` is at most `67200`), and
-* `|G - a / b| > b ^ (-200200)`, the bound obtained with Chebyshev's estimates in place of the
+* `|G - a / b| > b ^ (-61300)` (so the irrationality exponent of `G` is at most `61300`), and
+* `|G - a / b| > b ^ (-182500)`, the bound obtained with Chebyshev's estimates in place of the
   prime number theorem in the final step.
 
 Reference: S. Litsey, *An irrationality measure for Catalan's constant* (2026), building on
@@ -26,19 +26,19 @@ OpenAI, *Catalan's constant is irrational* (2026).
 namespace CatalanIrrationalityMeasure
 
 /-- **Irrationality measure for Catalan's constant.** For all sufficiently large natural
-numbers `b` and all integers `a`, `b ^ (-67200) < |G - a / b|`, where
-`G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`.  Hence `μ(G) ≤ 67200`. -/
-theorem catalan_irrationalityMeasure_67200 :
+numbers `b` and all integers `a`, `b ^ (-61300) < |G - a / b|`, where
+`G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`.  Hence `μ(G) ≤ 61300`. -/
+theorem catalan_irrationalityMeasure_61300 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(67200 : ℝ)) <
+      (b : ℝ) ^ (-(61300 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   sorry
 
-/-- The same statement with exponent `200200`, which the argument gives when the prime number
+/-- The same statement with exponent `182500`, which the argument gives when the prime number
 theorem is replaced by Chebyshev's bounds in the final step. -/
-theorem catalan_irrationalityMeasure_200200 :
+theorem catalan_irrationalityMeasure_182500 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(200200 : ℝ)) <
+      (b : ℝ) ^ (-(182500 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   sorry
 
