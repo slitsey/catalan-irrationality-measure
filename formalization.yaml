@@ -37,7 +37,7 @@ sources:
     note: >-
       The result is first presented together with this formalization, in the
       companion paper by S. Litsey, "An irrationality measure for Catalan's
-      constant" (2026, submitted to Hexagon), whose arguments the Lean
+      constant" (2026, Hexagon preprint hexagon:2610.00187v1), whose arguments the Lean
       development follows.
   - title: "Catalan's constant is irrational"
     authors:

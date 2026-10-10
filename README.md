@@ -12,7 +12,8 @@ A Lean 4 formalization of the following theorem.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
-Catalan's constant* (2026), is in [`paper/`](paper/) (LaTeX source and PDF). R. K. Jha proved earlier, independently, the weaker bound
+Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`paper/`](paper/)
+(LaTeX source and PDF). R. K. Jha proved earlier, independently, the weaker bound
 `μ(G) ≤ 10^8` ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
 
 ## What to read
