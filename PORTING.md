@@ -15,8 +15,10 @@ Each file received:
 - `@[expose] public section` directly after the imports, so that every declaration stays
   public and definitions keep their bodies visible to later files, as before.
 
-Nothing else in these files was changed. On the original toolchain (Lean v4.34.1, OpenAI's
-Mathlib pin), the converted development builds without errors.
+Nothing else in these files was changed, except that `CatalanMeasure/ChebyshevNodes.lean` imports
+`Mathlib.Analysis.SpecialFunctions.Log.Basic` explicitly, since modules do not re-export private
+imports. On the original toolchain (Lean v4.34.1, OpenAI's Mathlib pin), the converted
+development (all 509 files) builds without errors.
 
 ## 2. Toolchain update to Lean v4.35.0-rc2
 
