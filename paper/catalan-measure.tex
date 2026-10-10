@@ -1,0 +1,798 @@
+\documentclass[11pt]{amsart}
+\IfFileExists{lmodern.sty}%
+  {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
+  {\usepackage[expansion=false]{microtype}}
+\usepackage{amssymb,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\emergencystretch=2.5em
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ---------------------------------------------------------------------------
+% Location of the Lean formalization.
+\newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
+\newcommand{\FormalizationLink}{\url{\FormalizationURL}}
+% ---------------------------------------------------------------------------
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\cV}{\mathcal V}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cI}{\mathcal I}
+\newcommand{\cJ}{\mathcal J}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title{An irrationality measure for Catalan's constant}
+
+\author{Sean Litsey}
+\email{sean.litsey@gmail.com}
+
+\date{October 10, 2026}
+
+\subjclass[2020]{Primary 11J82; Secondary 11J72, 68V20}
+
+\keywords{Catalan's constant, irrationality measure, irrationality exponent, determinants,
+Andr\'eief identity, formal verification, Lean}
+
+\begin{abstract}
+Building on OpenAI's recent proof that Catalan's constant
+$G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
+\[
+ \left|G-\frac ab\right|>b^{-82\,700}
+\]
+for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
+exponent of $G$ is at most $82\,700$; without the prime number theorem in the final step the
+same argument gives $245\,200$. The previous best bound, due to Jha, is $10^8$. The new
+ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
+$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-485N}$ the polynomial moves by
+no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
+the coefficient of the constant, an Andr\'eief identity with fixed columns, a
+generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
+fewer points. Every step, including the final theorem, is formalized in Lean~4 on top of
+OpenAI's formalization, without \texttt{sorry} and with only the standard axioms.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+OpenAI \cite{OpenAI2026} recently proved that Catalan's constant
+\[
+ G=\sum_{j=0}^\infty\frac{(-1)^j}{(2j+1)^2}=0.91596\,55941\ldots
+\]
+is irrational, and formalized the proof in Lean. (An earlier claimed proof
+\cite{Sun2026} was found to contain a gap \cite{Wachs2026}.) The argument is by contradiction:
+under the hypothesis $G\in\Q$ an explicit determinant $\Delta_N$ of size $n=48N$ is a
+nonzero rational number whose denominator is controlled prime by prime, so that
+$\log|\Delta_N|\ge-(\mathsf A+o(1))n^2$; on the other hand a real-variable estimate gives
+$\log|\Delta_N|\le-(\mathsf U-o(1))n^2$ with $\mathsf U>\mathsf A$. The margin is small:
+$\mathsf U-\mathsf A\approx1.3\cdot10^{-4}$.
+As OpenAI remarks, the argument proves qualitative irrationality; an irrationality measure
+requires additional control of rational approximations.
+
+Recall that the \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the
+infimum of the $\mu$ such that $|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all
+sufficiently large $b$.
+
+\begin{theorem}\label{thm:main}
+For every integer $a$ and every sufficiently large integer $b$,
+\[
+ \left|G-\frac ab\right|>b^{-82\,700}.
+\]
+In particular $\mu(G)\le 82\,700$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-245\,200}$.
+\end{theorem}
+
+Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
+Lean~4 proof assistant on top of OpenAI's formalization, with no unproved steps and only the
+standard axioms; see Section~\ref{sec:formal}. The formalization is available at \FormalizationLink. The use of AI in this work is disclosed at the end of the paper.
+
+\subsection{Previous results}
+The first finite irrationality measure for $G$ was obtained by Jha \cite{Jha2026}, who proved
+$\mu(G)\le10^8$, also with a Lean formalization built on OpenAI's. The present work was
+carried out independently; we found Jha's preprint in a literature search after our proof was
+complete. Both arguments have the shape that OpenAI's proof suggests: one replaces the
+determinant by a polynomial in the constant, clears denominators, and needs a perturbation
+estimate near $G$. They differ in the perturbation estimate. Jha bounds the complementary
+minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
+codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
+written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
+functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=485$
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1200$, and the
+difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
+\cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
+\cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
+related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
+
+\subsection{Outline of the proof}
+OpenAI's matrix has entries in $\Q+\Q G$ (Proposition~\ref{prop:openai}(a)). Replacing $G$ by a
+variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Arithmetic} (Section~\ref{sec:arith}). $\deg\Delta_N\le44N$ (Lemma~\ref{lem:degree}).
+ OpenAI's local estimates, applied at integer points, give a common denominator $D_N$ with
+ $\log D_N\le(\mathsf A+o(1))n^2$ (Proposition~\ref{prop:denominators}). So
+ $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. OpenAI's nonvanishing argument gives
+ $Q_p(a/b)\ne0$ for primes $p\nmid b$ (Proposition~\ref{prop:openai}(d)).
+\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-485N}$,
+ $|\Delta_N(x)-\Delta_N(G)|\le e^{-(\mathsf U-\varepsilon)n^2}$ (Theorem~\ref{thm:perturbation}).
+ Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-2016\gamma_0p^2}$ on that
+ interval, where $\gamma_0=\mathsf U-\mathsf A$.
+\item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
+ the small interval for a prime $p\nmid b$ of size about $\log b$, which contradicts
+ $|Q_p(a/b)|\ge b^{-44p}$.
+\item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
+ $\rho\cdot44/(2016\gamma_0)\approx485\cdot167.5$, up to the factor coming from the size of
+ the prime window.
+\end{enumerate}
+
+\subsection{Notation and conventions}
+We use the notation of OpenAI's paper \cite{OpenAI2026} and refer to it for the constructions; we
+restate only what we use. Citations of the form \cite[Prop.~2.1]{OpenAI2026} point to
+numbered statements, sections and equations of OpenAI's paper. We write $\log$ for the natural
+logarithm.
+
+\section{OpenAI's construction and the facts we use}\label{sec:setup}
+
+For a positive integer $N$ put \cite[(2)]{OpenAI2026}
+\begin{gather*}
+ n=48N,\qquad b=7N,\qquad q=g=4N,\qquad h=2N,\\
+ L=59N,\qquad C=63N,\qquad H=65N,\qquad A=19N,
+\end{gather*}
+and $D_*=n-1-2g=40N-1$. (The letter $A$ for $19N$ is OpenAI's; the constant $\mathsf A$ below
+is different.) The row polynomials $P_r,D_r\in\Z[t]$ ($0\le r<n$) are those of
+\cite[(3)]{OpenAI2026}; we only need that
+\begin{equation}\label{eq:rows}
+ P_r(t)=(1-t)^ht^{C-1}T_{|r-g|}(1/t),\qquad \deg P_r<H,
+\end{equation}
+where $T_d$ is the Chebyshev polynomial. In particular $P_r$ depends only on $|r-g|$. Let
+$f(t)=\sqrt{1-t^2}$, $d\mu(t)=|t|\,dt/f(t)$ on $(-1,1)$ (a measure of mass $2$),
+\[
+ A_r(t)=P_r(t)-\frac32\,\mathbf 1_{\{t>0\}}\frac{f(t)}{t}D_r(t),\qquad
+ \psi_k(s)=s^{b+k}(1-s)^q ,
+\]
+and let $\cA_N$ be the real $n\times n$ matrix
+\begin{equation}\label{eq:matrix}
+ \cA_N(r,k)=\int_{-1}^1\int_0^1 A_r(t)\,\frac{\psi_k(s)}{1-ts}\,ds\,d\mu(t)
+ \qquad(0\le r,k<n),
+\end{equation}
+so that OpenAI's determinant is $\det\cA_N$ \cite[(7) and \S5.1]{OpenAI2026}. Put
+$c_l=4^{-l}\binom{2l}{l}$ for integers $l\ge0$ and $c_z=0$ otherwise.
+
+\begin{proposition}[OpenAI]\label{prop:openai}
+\leavevmode
+\begin{enumerate}[label=(\alph*)]
+\item \emph{(Rational structure \cite[Prop.~2.1 and (20)]{OpenAI2026}.)} There are rational
+ matrices $\cA^0_N,\mathcal L_N\in\Q^{n\times n}$ with $\cA_N=\cA^0_N+G\,\mathcal L_N$ and
+ \begin{equation}\label{eq:L}
+  \mathcal L_N(r,k)=\sum_{v=0}^{q}(-1)^v\binom qv\sum_{i}[t^i]P_r\cdot4\,c_{(i-b-k-v)/2}.
+ \end{equation}
+\item \emph{(Real place \cite[Prop.~7.1]{OpenAI2026}.)} With
+ $\mathsf U=2.290939875-\tfrac12\log2$,
+ \[
+  \limsup_{N\to\infty}\frac{\log|\det\cA_N|}{n^2}\le-\mathsf U .
+ \]
+\item \emph{(Local estimates \cite[Prop.~2.2, \S3, Prop.~3.4]{OpenAI2026}.)} For every rational
+ $z$ OpenAI bounds $v_\ell(\det(\cA^0_N+z\mathcal L_N))$ from below at every prime $\ell$, by
+ quantities depending on $\ell$, $N$ and the denominator of $z$. The sum of these bounds, weighted by
+ $\log\ell$, is at most $(\mathsf A+o(1))n^2$, where
+ \[
+  \mathsf A=\frac{8609}{4608}+\frac{505}{4608}\log2 .
+ \]
+\item \emph{(Nonvanishing \cite[Prop.~4.1]{OpenAI2026}.)} There is an absolute constant
+ $P_*\ge260$ such that, for every prime $p>P_*$ and every $z\in\Q$ whose denominator is not
+ divisible by $p$, $v_p\bigl(\det(\cA^0_p+z\mathcal L_p)\bigr)=-96p$; in particular this
+ determinant is nonzero.
+\end{enumerate}
+\end{proposition}
+
+Two remarks on (c) and (d). OpenAI states them under the hypothesis $G=z\in\Q$, but the proofs only use the arithmetic of the rational matrix $\cA^0_N+z\mathcal L_N$. In (d) OpenAI assumes $p>\max(P_*,\operatorname{den}z)$, but the proof only uses $p\nmid\operatorname{den}z$;
+this uniformity in $z$ is essential for an irrationality measure, and is how we use the
+result.
+
+We also use OpenAI's real-place machinery: the double integral, the two sheet estimates
+\cite[Props.~5.2, 5.3]{OpenAI2026}, and the certified energy dual \cite[Prop.~6.1, \S7]{OpenAI2026}.
+They are recalled where needed in Section~\ref{sec:perturbation}.
+
+\begin{definition}
+$\Delta_N(X)=\det(\cA^0_N+X\mathcal L_N)\in\Q[X]$. Thus $\Delta_N(G)=\det\cA_N$, and
+$\Delta_N(z)$ for $z\in\Q$ is the rational determinant OpenAI studies under the hypothesis
+$G=z$. We write $\gamma_0=\mathsf U-\mathsf A$.
+\end{definition}
+
+Numerically $\mathsf U=1.9443662\ldots$, $\mathsf A=1.9442359\ldots$ and
+\begin{equation}\label{eq:gap}
+ 1.30319\cdot10^{-4}<\gamma_0=1.303198\ldots\cdot10^{-4}.
+\end{equation}
+OpenAI's irrationality proof is the statement $\gamma_0>0$.
+
+\section{Arithmetic of \texorpdfstring{$\Delta_N(X)$}{Delta\_N(X)}}\label{sec:arith}
+
+\begin{lemma}[Degree]\label{lem:degree}
+$\deg\Delta_N\le44N$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:L} row $r$ of $\mathcal L_N$ depends only on $P_r$, hence only on $|r-g|$ by
+\eqref{eq:rows}. So rows $r$ and $2g-r$ of $\mathcal L_N$ agree for $0\le r<g$. Subtracting
+row $r$ from row $2g-r$ for each $r<g$ is a unipotent change of rows, which does not change the
+determinant, and it makes the $g$ rows of index in $(g,2g]$ of the new $X$-coefficient
+vanish. A determinant $\det(B+XL')$ in which $L'$ has only $n-g$ nonzero rows has degree at
+most $n-g=44N$ in $X$.
+\end{proof}
+
+\begin{proposition}[Common denominator]\label{prop:denominators}
+There are positive integers $D_N$ such that $D_N\Delta_N(i)\in\Z$ for every $i\in\N$, and for
+every $\varepsilon>0$, $\log D_N\le(\mathsf A+\varepsilon)n^2$ for all large $N$.
+\end{proposition}
+
+\begin{proof}
+At an integer $z=i$ the denominator of $z$ is $1$, and OpenAI's local lower bounds for
+$v_\ell(\Delta_N(i))$ become independent of $i$: at odd primes they depend only on $\ell$ and
+$N$ (and vanish for $\ell>H$), and at $\ell=2$ they depend on $z$ only through a quantity that,
+over the integers, is largest at $z=0$. Let $e_\ell(N)\ge0$ be the resulting bound, and put
+$D_N=\prod_{\ell\le H}\ell^{e_\ell(N)}$. Then $v_\ell(D_N\Delta_N(i))\ge0$ for every prime $\ell$,
+and summing the bounds $e_\ell(N)\log\ell$ exactly as in OpenAI's proof of its finite-place bound
+\cite[Prop.~3.4]{OpenAI2026} gives $\log D_N\le(\mathsf A+o(1))n^2$. 
+\end{proof}
+
+\begin{lemma}[Integer-valued polynomials]\label{lem:intvalued}
+If $f\in\Q[X]$ has degree at most $d$ and $f(\N)\subseteq\Z$, then $d!\,f\in\Z[X]$.
+\end{lemma}
+
+\begin{proof}
+The $d$-th forward difference of $f$ is $d!$ times its coefficient of $X^d$, and it is an
+integer combination of $f(0),\ldots,f(d)$. Subtract that coefficient times the integer-valued
+polynomial $X(X-1)\cdots(X-d+1)$ and induct on $d$.
+\end{proof}
+
+\begin{corollary}\label{cor:Q}
+$Q_N=(44N)!\,D_N\,\Delta_N(X)$ lies in $\Z[X]$ and has degree at most $44N$. If $p>P_*$ is
+prime, $a\in\Z$, $b\ge1$ and $p\nmid b$, then $Q_p(a/b)\ne0$ and hence $b^{44p}|Q_p(a/b)|\ge1$.
+\end{corollary}
+
+\begin{proof}
+The first claims follow from Lemmas~\ref{lem:degree} and~\ref{lem:intvalued} and
+Proposition~\ref{prop:denominators}. The denominator of $a/b$ divides $b$, so
+Proposition~\ref{prop:openai}(d) gives $\Delta_p(a/b)\ne0$. Finally $b^{44p}Q_p(a/b)$ is a
+nonzero integer.
+\end{proof}
+
+\section{The irrationality-measure criterion}\label{sec:criterion}
+
+\begin{proposition}\label{prop:criterion}
+Let $\xi\in\R$, $d\in\N$ and $\eta,\rho>0$. Let $Q_p\in\Z[X]$ be defined for primes $p$ and
+suppose that, for all primes $p\ge P_0$:
+\begin{enumerate}[label=(\roman*)]
+\item $\deg Q_p\le dp$;
+\item $Q_p(a/b)\ne0$ for all $a\in\Z$ and $b\ge1$ with $p\nmid b$;
+\item $|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$.
+\end{enumerate}
+Put $\kappa=\max(d/\eta,4)+1$. Then $|\xi-a/b|>b^{-(3\rho\kappa+1)}$ for all $a\in\Z$ and all
+sufficiently large $b$. Assuming the prime number theorem, for every $\varepsilon>0$ the same
+holds with the exponent $(1+\varepsilon)\rho\bigl(\max(d/\eta,2/\varepsilon)+1\bigr)+1$.
+\end{proposition}
+
+\begin{proof}
+Suppose $|\xi-a/b|\le b^{-(3\rho\kappa+1)}$ with $b$ large, and put $X=\kappa\log b$. If every
+prime in $(X,3X]$ divided $b$, then $\vartheta(3X)-\vartheta(X)\le\log b\le X/4$, where
+$\vartheta$ is Chebyshev's function. But Chebyshev's bounds $\vartheta(x)\le x\log4$ and
+$\vartheta(x)\ge(x-1)\log2-O(\sqrt x\log x)$ give $\vartheta(3X)-\vartheta(X)\ge X\log2-o(X)$.
+Hence for large $b$ there is a prime $p\in(X,3X]$ with $p\nmid b$, and $p\ge P_0$. Since
+$\rho p\le3\rho\kappa\log b$, we get $|a/b-\xi|\le e^{-\rho p}$, so by (iii)
+$|Q_p(a/b)|\le e^{-\eta p^2}$. By (i) and (ii), $b^{dp}Q_p(a/b)$ is a nonzero integer, so
+$e^{-\eta p^2}\ge b^{-dp}$, that is $p\le(d/\eta)\log b<X$. This is a contradiction.
+
+For the second statement use the window $(X,(1+\varepsilon)X]$ with
+$X=(\max(d/\eta,2/\varepsilon)+1)\log b$. Then $\log b\le\varepsilon X/2$, while the prime
+number theorem gives $\vartheta((1+\varepsilon)X)-\vartheta(X)=\varepsilon X+o(X)$.
+\end{proof}
+
+The factor $3$ in the first version, or $1+\varepsilon$ in the second, is the price of
+finding a prime $p\nmid b$ in a window of the right size.
+
+\section{The perturbation estimate}\label{sec:perturbation}
+
+This section proves the main new ingredient. Recall
+$\mathsf U=2.290939875-\frac12\log2$.
+
+\begin{theorem}[Perturbation estimate]\label{thm:perturbation}
+Let $\rho=485$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
+real $x$ with $|x-G|\le e^{-\rho N}$,
+\[
+ |\Delta_N(x)-\Delta_N(G)|\le\exp\bigl(n^2(-\mathsf U+\varepsilon)\bigr).
+\]
+\end{theorem}
+
+Let $\delta=x-G$, so that $\Delta_N(x)=\det(\cA_N+\delta\mathcal L_N)$. The plan: write
+$\mathcal L_N=\Phi\beta$, where the columns of $\Phi$ are values of OpenAI's row functions
+$A_r$ at fixed nodes (\S\ref{ssec:quadrature}); expand the determinant column by column
+(\S\ref{ssec:expansion}); write each resulting mixed determinant as an integral
+(\S\ref{ssec:andreief}); and bound the integrand by OpenAI's method
+(\S\S\ref{ssec:vandermonde}--\ref{ssec:energy}). Throughout, $J=H=65N$.
+
+\subsection{A quadrature formula for \texorpdfstring{$\mathcal L_N$}{L\_N}}\label{ssec:quadrature}
+
+Let $\tau_a=-(a+1)/(J+1)$ for $0\le a<J$, so $-1<\tau_a<0$, and let
+$\ell_a(t)=\prod_{c\ne a}(t-\tau_c)/(\tau_a-\tau_c)$ be the Lagrange basis.
+
+\begin{lemma}\label{lem:quadrature}
+For $0\le r,k<n$,
+\[
+ \mathcal L_N(r,k)=\sum_{a<J}A_r(\tau_a)\,\beta_{a,k},\qquad
+ \beta_{a,k}=\sum_{v=0}^q(-1)^v\binom qv\sum_{i<H}[t^i]\ell_a\cdot4\,c_{(i-b-k-v)/2},
+\]
+and $|\beta_{a,k}|\le B:=2^{q+2}\,4^{J-1}\,e^{J+1}$.
+\end{lemma}
+
+\begin{proof}
+Since $\deg P_r<H=J$, Lagrange interpolation gives $[t^i]P_r=\sum_aP_r(\tau_a)[t^i]\ell_a$.
+Substitute this into \eqref{eq:L} and use $A_r(\tau)=P_r(\tau)$ for $\tau\le0$. For the bound,
+$\sum_v\binom qv=2^q$, $|4c_l|\le4$, and $\sum_i|[t^i]\ell_a|\le\prod_{c\ne a}(1+|\tau_c|)/
+\prod_{c\ne a}|\tau_a-\tau_c|$. Here $\prod_{c\ne a}(1+|\tau_c|)\le2^{J-1}$ and
+$\prod_{c\ne a}|\tau_a-\tau_c|=a!\,(J-1-a)!/(J+1)^{J-1}$, so the ratio is
+\[
+ \binom{J-1}{a}\frac{(J+1)^{J-1}}{(J-1)!}\cdot2^{J-1}\le2^{J-1}\cdot e^{J+1}\cdot2^{J-1},
+\]
+using $(J+1)^{J-1}/(J-1)!\le(J+1)^{J+1}/(J+1)!\le e^{J+1}$.
+\end{proof}
+
+Let $\Phi$ be the $n\times J$ matrix $\Phi(r,a)=A_r(\tau_a)$. Then
+$\Delta_N(x)=\det\bigl(\cA_N+\delta\,\Phi\beta\bigr)$.
+
+\subsection{Column expansion}\label{ssec:expansion}
+
+For a map $f\colon\{0,\ldots,n-1\}\to\{\varnothing\}\cup\{0,\ldots,J-1\}$ let $M_f$ be the
+matrix whose column $k$ is column $k$ of $\cA_N$ if $f(k)=\varnothing$ and the column
+$\Phi(\cdot,f(k))$ otherwise, and let $m(f)=\#\{k:f(k)\ne\varnothing\}$.
+
+\begin{lemma}\label{lem:expansion}
+If $|\beta_{a,k}|\le B$ and $|\det M_f|\le M c^{m(f)}$ for every $f$, with $M,c\ge0$, then
+\[
+ \bigl|\det(\cA_N+\delta\Phi\beta)-\det\cA_N\bigr|\le M\bigl((1+J|\delta|Bc)^n-1\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Column $k$ of $\cA_N+\delta\Phi\beta$ is $\cA_N(\cdot,k)+\sum_a\delta\beta_{a,k}\Phi(\cdot,a)$.
+Multilinearity gives
+$\det(\cA_N+\delta\Phi\beta)=\sum_f\prod_{k:f(k)\ne\varnothing}\delta\beta_{f(k),k}\det M_f$.
+The term $f\equiv\varnothing$ is $\det\cA_N$, and the others sum in absolute value to at most
+$M\sum_{f\not\equiv\varnothing}(|\delta|Bc)^{m(f)}=M((1+J|\delta|Bc)^n-1)$.
+\end{proof}
+
+\subsection{A mixed Andr\'eief identity}\label{ssec:andreief}
+
+Fix $f$, and let $p=n-m(f)$. Permuting columns (which only changes the sign of the
+determinant), $M_f$ has $p$ integral columns $\cA_N(\cdot,E_i)$, $0\le E_1<\cdots<E_p<n$,
+followed by $m=n-p$ point columns $(A_r(\tau'_j))_r$, where $\tau'_j=\tau_{f(k_j)}\in(-1,0)$.
+
+\begin{lemma}\label{lem:andreief}
+Let $\mu,\nu$ be finite measures, $F_r$ ($r<p+m$), $G_i$ ($i<p$) and $K$ functions with the
+required integrability, and $B$ the $(p+m)\times(p+m)$ matrix with
+$B(r,i)=\iint F_r(t)K(t,s)G_i(s)\,d\mu(t)\,d\nu(s)$ for $i<p$ and $B(r,p+j)=F_r(\tau'_j)$.
+Then
+\begin{multline*}
+ (p!)^2\det B=\int\!\!\int\det\bigl[F_r((t\mathbin\Vert\tau')_c)\bigr]_{r,c}\\
+ \times\det[K(t_i,s_j)]_{i,j<p}\,\det[G_i(s_j)]_{j,i<p}\;d\mu^p(t)\,d\nu^p(s),
+\end{multline*}
+where $t\mathbin\Vert\tau'$ is the concatenated list of length $p+m$. Consequently $|\det B|$
+is at most $(p!)^{-2}$ times the total mass of $\mu^p\otimes\nu^p$ times the supremum of the
+absolute value of the integrand.
+\end{lemma}
+
+\begin{proof}
+For $m=0$ this is Andr\'eief's identity applied twice \cite{Forrester2018Andreief}, as used by
+OpenAI for \cite[(62)]{OpenAI2026}. In general expand $\det B$ by multilinearity in the first
+$p$ columns, which integrates $t$ and $s$ variables column by column, and then antisymmetrize
+first in the $t$ variables and then in the $s$ variables; the last $m$ columns are constant
+throughout.
+\end{proof}
+
+We apply this with $F_r=A_r$, $G_i=\psi_{E_i}$, $K(t,s)=1/(1-ts)$, $\mu$ as in
+\S\ref{sec:setup} and $\nu$ Lebesgue measure on $(0,1)$; the integrability is OpenAI's
+\cite[\S5.1]{OpenAI2026}. The mass of $\mu^p\otimes\nu^p$ is $2^p\le2^n$, so
+\begin{equation}\label{eq:detMf}
+ |\det M_f|\le2^n\sup_{t,s}\Bigl|\det[A_r((t\mathbin\Vert\tau')_c)]\cdot
+ \det\Bigl[\frac1{1-t_is_j}\Bigr]\cdot\det[\psi_{E_i}(s_j)]\Bigr|,
+\end{equation}
+the supremum over $t\in(-1,1)^p$ and $s\in(0,1)^p$ with distinct nonzero coordinates (a set of
+full measure). We have bounded the factor $(p!)^{-2}$ by $1$.
+
+\subsection{A generalized Vandermonde bound}\label{ssec:vandermonde}
+
+The column determinant is
+$\det[\psi_{E_i}(s_j)]=\prod_js_j^b(1-s_j)^q\cdot\det[s_j^{E_i}]$. Write
+$V(y)=\prod_{i<j}(y_j-y_i)$ and $\cV(y)=|V(y)|$.
+
+\begin{lemma}\label{lem:genvandermonde}
+Let $s_0,\ldots,s_{p-1}\in[0,1]$ and let $E_1,\ldots,E_p<n$ be distinct. Then
+\[
+ \bigl|\det[s_j^{E_i}]\bigr|\le4^{n(n-p)}\,\cV(s).
+\]
+\end{lemma}
+
+\begin{proof}
+For each $e$ let $R_e$ be the polynomial of degree $<p$ with $R_e(s_j)=s_j^e$ for all $j$:
+$R_e=X^e$ if $e<p$, and otherwise $R_e=\sum_{k<p}c_{e,k}W_k$ in Newton form, with
+$W_k=\prod_{l<k}(X-s_l)$ and $c_{e,k}$ the divided differences of $X^e$. Then
+$[s_j^{E_i}]=[s_j^{a}]_{j,a<p}\cdot T$, where column $i$ of $T$ holds the monomial coefficients
+of $R_{E_i}$, so $|\det[s_j^{E_i}]|=\cV(s)|\det T|$. A determinant is bounded by the product of
+the $\ell^1$ norms of its columns. A column with $E_i<p$ is a unit vector. For $e\ge p$ the
+nodes lie in $[0,1]$, so the Newton quotients of $X^e$ have nonnegative coefficients and
+$0\le c_{e,k}\le2^{e+1}$, while $W_k$ has coefficients bounded by $\binom ka$; hence
+$\|R_e\|_1\le\sum_{k<p}2^{e+1}2^k\le4^n$. At most $n-p$ of the $E_i$ are $\ge p$.
+\end{proof}
+
+\subsection{The integrand}\label{ssec:integrand}
+
+Use OpenAI's coordinate $t=2x/(1+x^2)$, $x\in(-1,1)$ \cite[(64)]{OpenAI2026}, write $x_i$ for
+the coordinates of the free nodes $t_i$ and $y_j\in(-1,0)$ for those of the fixed nodes
+$\tau'_j$, and $z=x\mathbin\Vert y\in(-1,1)^n$. For a list $z$ of $n$ distinct nonzero numbers
+in $(-1,1)$ OpenAI's column factorization \cite[\S5.1, before (65)]{OpenAI2026} reads
+\begin{equation}\label{eq:sheet}
+ \det[A_r(t_c)]_{r,c}=\cR_n(z)\prod_c t_c^{C-1}(1-t_c)^h ,
+\end{equation}
+where $\cR_n$ is OpenAI's sheet determinant. OpenAI proves two bounds for it
+\cite[Props.~5.2, 5.3]{OpenAI2026}, with $K_0=10e^{12}$:
+\begin{align}
+ |\cR_n(z)|&\le(1+K_0n)^n\,\cV(1/z)\prod_c|z_c|^g
+ &&\text{if }\textstyle\sum_c\frac{1-z_c^2}{1+z_c^2}\le D_*,\label{eq:sheet2}\\
+ |\cR_n(z)|&\le(3/2)^nn^{n/2}2^{-\binom n2}\prod_c(1+z_c^2)^{\frac{n-1}2}|z_c|^{g-(n-1)}
+ &&\text{always}.\label{eq:sheet1}
+\end{align}
+Following OpenAI, $\kappa=2$ refers to \eqref{eq:sheet2} and $\kappa=1$ to \eqref{eq:sheet1}.
+Let $w(x)=|t|^{C-1}(1-t)^h=2^{C-1}|x|^{C-1}(1-x)^{2h}(1+x^2)^{-(C-1+h)}$.
+
+\subsubsection*{The $p$-node majorants and their energy}
+For $x\in(-1,1)^p$ and $s\in(0,1)^p$ with distinct nonzero entries, put $t_i=2x_i/(1+x_i^2)$
+and
+\begin{align*}
+ \cJ^{(p)}(x,s)&=\prod_iw(x_i)\cdot\frac{\cV(t)\cV(s)^2}{\prod_{i,j}(1-t_is_j)}
+   \prod_js_j^b(1-s_j)^q,\\
+ \cI^{(p)}_2(x,s)&=\cJ^{(p)}(x,s)\,\cV(1/x)\prod_i|x_i|^{g-(n-p)},\\
+ \cI^{(p)}_1(x,s)&=\cJ^{(p)}(x,s)\prod_i(1+x_i^2)^{\frac{n-1}2}|x_i|^{g-(n-1)}.
+\end{align*}
+For $p=n$ these are OpenAI's majorants $\cI_{2,n}$ and $2^{\binom n2}\cI_{1,n}$
+\cite[(74)]{OpenAI2026}. Let OpenAI's one-point fields be \cite[(76)]{OpenAI2026}
+\begin{gather*}
+ W_\kappa(x)=\tfrac{19}{48}\log|x|+\tfrac1{12}\log(1-x)-\bigl(\tfrac\kappa2+\tfrac{17}{48}\bigr)\log(1+x^2),\\
+ W_s(s)=\tfrac7{48}\log s+\tfrac1{12}\log(1-s),\qquad
+ D(x)=\tfrac16-\tfrac{2x^2}{1+x^2},
+\end{gather*}
+and define the normalized energy
+\begin{align*}
+ E^{(p)}_\kappa(x,s)={}&\Bigl(\frac Cn+\frac{\kappa-2}2-\frac{\kappa+1}{2n}\Bigr)\log2
+ +\frac1n\sum_jW_s(s_j)\\
+ &+\frac1n\sum_{i}\Bigl(W_\kappa(x_i)+\frac{\kappa+2}{2n}\log(1+x_i^2)\Bigr)\\
+ &+\frac1{n^2}\Bigl(\kappa\sum_{i<j}\log|x_i-x_j|+\sum_{i<j}\log(1-x_ix_j)\Bigr)\\
+ &+\frac2{n^2}\sum_{i<j}\log|s_i-s_j|-\frac1{n^2}\sum_{i,j}\log(1-2x_is_j+x_i^2),
+\end{align*}
+all sums over indices $<p$; note the normalization by $n$, not $p$. For $p=n$ this is the
+normalized logarithm $n^{-2}\log\cI_{\kappa,n}-\frac12\log 2$ of OpenAI's energy argument.
+Expanding the coordinate change $t=2x/(1+x^2)$ gives, for every
+$p\le n$,
+\begin{equation}\label{eq:energy-identity}
+ \log\cI^{(p)}_\kappa(x,s)=n^2\Bigl(E^{(p)}_\kappa(x,s)+\tfrac12\log2\Bigr)+e_\kappa(p)\log2,
+\end{equation}
+with $e_1(p)=p(C-1)+\binom p2-n(C-1)$ and $e_2(p)=e_1(p)-\binom n2$.
+
+\begin{proposition}[Pointwise bound]\label{prop:pointwise}
+In the setting of \eqref{eq:detMf}, let $K_n=\max\{(1+K_0n)^n,(3/2)^nn^{n/2}\}$, and let
+$\kappa=2$ if $\sum_c\frac{1-z_c^2}{1+z_c^2}\le D_*$ and $\kappa=1$ otherwise. Then the
+integrand in \eqref{eq:detMf} is at most
+\[
+ K_n\,4^{nm}\,(2^{2h})^m\exp\Bigl(n^2\bigl(E^{(p)}_\kappa(x,s)+\tfrac12\log2\bigr)\Bigr).
+\]
+Moreover, if $\kappa=1$ then $\sum_{i<p}\frac{1-x_i^2}{1+x_i^2}>D_*-m$.
+\end{proposition}
+
+\begin{proof}
+By \eqref{eq:sheet}, Cauchy's evaluation
+\[
+ \det\Bigl[\frac1{1-t_is_j}\Bigr]=\frac{V(t)V(s)}{\prod_{i,j}(1-t_is_j)}
+\]
+\cite[(63)]{OpenAI2026} and
+Lemma~\ref{lem:genvandermonde}, the integrand is at most
+\[
+ 4^{nm}\,|\cR_n(z)|\prod_jw(y_j)\cdot\cJ^{(p)}(x,s).
+\]
+For a fixed node $-1<y<0$ we use $|y|\le1$, $(1-y)^{2h}\le2^{2h}$ and $1+y^2\ge1$, together
+with $C-1+g-(n-1)=A=19N$ (OpenAI's $A$) and $(n-1)/2<C-1+h$:
+\begin{equation}\label{eq:fixed-node}
+ w(y)\,(1+y^2)^{\frac{n-1}2}|y|^{g-(n-1)}\le2^{C-1}2^{2h},\qquad
+ w(y)\,|y|^{g-(n-1)}\le2^{C-1}2^{2h}.
+\end{equation}
+We use $\binom n2=\binom p2+pm+\binom m2$ repeatedly.
+
+\emph{Case $\kappa=1$.} By \eqref{eq:sheet1}, the first inequality in \eqref{eq:fixed-node}
+and \eqref{eq:energy-identity}, the integrand is at most
+\[
+ K_n4^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_1+\tfrac12\log2)\bigr)\cdot
+ 2^{-\binom n2+m(C-1)+e_1(p)} ,
+\]
+and $-\binom n2+m(C-1)+e_1(p)=\binom p2-\binom n2\le0$. The case condition fails for $z$ and
+each fixed node contributes at most $1$ to its sum, which gives the last assertion.
+
+\emph{Case $\kappa=2$.} By \eqref{eq:sheet2} we must bound $\cV(1/z)\prod_c|z_c|^g$. Split
+$\cV(1/z)=\cV(1/x)\prod_{i,j}|1/y_j-1/x_i|\,\cV(1/y)$. Since $|1/y-1/x|=|x-y|/|xy|\le2/|xy|$
+and $\cV(1/y)=\cV(y)\prod_j|y_j|^{-(m-1)}\le\prod_j|y_j|^{-(m-1)}$,
+\[
+ \cV(1/z)\prod_c|z_c|^g\le2^{pm}\,\cV(1/x)\prod_i|x_i|^{g-m}\prod_j|y_j|^{g-(n-1)}.
+\]
+With the second inequality in \eqref{eq:fixed-node} and \eqref{eq:energy-identity}, the
+integrand is at most
+$K_n4^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_2+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
+and $pm+m(C-1)+e_2(p)=-\binom m2\le0$.
+\end{proof}
+
+\begin{remark}
+Each fixed node brings a factor $2^{C-1}$ from $w(y)$. It is exactly compensated by the
+difference between the $n$-node and $p$-node normalizations of the energy, so what remains is
+$2^{2h}=4^{2N}$ per fixed node, coming from $(1-y)^{2h}$.
+\end{remark}
+
+\subsection{The energy bound for \texorpdfstring{$p\le n$}{p<=n} nodes}\label{ssec:energy}
+
+OpenAI's certificate \cite[\S7]{OpenAI2026} supplies, for $\kappa=1,2$, a parameter
+$\lambda_\kappa\ge0$ ($\lambda_2=0$, $\lambda_1=2.47405979$), trial sequences
+$u^{(\kappa)},v^{(\kappa)}$ (OpenAI's $p,v$), and rational upper bounds
+\begin{gather*}
+ \sup_{-1\le x<1,\,x\ne0}\bigl\{W_\kappa+\lambda_\kappa D-2\kappa T(u^{(\kappa)},\cdot)-S(v^{(\kappa)},\cdot)\bigr\}\le B^\kappa_x,\\
+ \sup_{0<s<1}\bigl\{W_s+2T(v^{(\kappa)},\cdot)\bigr\}\le B^\kappa_s,
+\end{gather*}
+in the notation of \cite[(77)--(78)]{OpenAI2026}, namely
+\[
+ B^1_x=-1.324376,\ B^1_s=-1.427976,\ B^2_x=-0.983966,\ B^2_s=-1.608876.
+\]
+With these, the dual value
+\[
+ U_\kappa=-\tfrac{11}{16}\log2+\kappa\|u^{(\kappa)}\|_*^2+\tfrac12\|v^{(\kappa)}\|_*^2+B^\kappa_x+B^\kappa_s
+\]
+satisfies $U_\kappa<-2.290939875$ for both $\kappa$; this is the content of OpenAI's certificate
+\cite[Prop.~7.1]{OpenAI2026}, with these explicit constants. Put
+\[
+ c_\kappa=(\kappa+2)\log2+|B^\kappa_x|+|B^\kappa_s|+\lambda_\kappa/6,
+\]
+so that $c_1=5.24413\ldots$ and $c_2=5.36543\ldots$,
+and $c^*=53655/10000>\max(c_1,c_2)$.
+
+\begin{proposition}[Energy bound with missing points]\label{prop:energy}
+For every $d>0$ there is $N_0$ such that for all $N\ge N_0$, all $p\le n$ (with $m=n-p$) and
+all $x\in(-1,1)^p$, $s\in(0,1)^p$ with distinct nonzero coordinates,
+\[
+ E^{(p)}_\kappa(x,s)\le U_\kappa+d+\frac mn\,c_\kappa ,
+\]
+for $\kappa=2$ unconditionally and for $\kappa=1$ under
+$\sum_{i<p}\frac{1-x_i^2}{1+x_i^2}>D_*-m$.
+\end{proposition}
+
+\begin{proof}
+OpenAI's proof of \cite[Prop.~6.1]{OpenAI2026} 
+regularizes the logarithmic interactions by matched damping, controls the diagonal and endpoint
+corrections, and completes two squares with the trial sequences. All of these steps are
+estimates for sums over the points, normalized by $n$, and they remain valid, with the same
+error terms, uniformly for any number $p\le n$ of points. The quadratic terms are bounded by
+$\kappa\|u\|_*^2+\frac12\|v\|_*^2$ as before. Only three places change.
+\begin{enumerate}[label=(\arabic*)]
+\item The constant term. For $p=n$ the powers of $2$ combine to $-\frac{11}{16}\log2$. For
+ $p<n$ the same computation gives $-\frac{11}{16}\log2+(\frac\kappa2+1)(1-p^2/n^2)\log2$, and
+ $1-p^2/n^2\le2m/n$.
+\item The one-point terms. They are $\frac1n\sum_{i<p}X(x_i)\le\frac pnB_x=B_x+\frac mn|B_x|$,
+ since $B_x<0$, and likewise for the column field with $B_s$.
+\item The case field ($\kappa=1$ only). OpenAI uses $\lambda\,\frac1n\sum_iD(x_i)\ge-\lambda/n$
+ when \eqref{eq:sheet2}'s condition fails. Since $D(x)=\frac{1-x^2}{1+x^2}-\frac56$ and
+ $D_*=\frac56n-1$, the shifted condition gives $\sum_{i<p}D(x_i)>-1-\frac m6$, which costs
+ $\lambda(1+m/6)/n$.
+\end{enumerate}
+The damping parameter is chosen in terms of $d$ alone, and the remaining errors are
+$O_d(1/n)$, uniformly in $p$ and the configuration. 
+\end{proof}
+
+\subsection{Completion of the proof}\label{ssec:assembly}
+
+\begin{proof}[Proof of Theorem~\ref{thm:perturbation}]
+Fix $d>0$ and let $N$ be large. By \eqref{eq:detMf}, Proposition~\ref{prop:pointwise},
+Proposition~\ref{prop:energy} and $U_\kappa<-2.290939875=-\mathsf U-\frac12\log 2$, every $f$
+with $m=m(f)$ satisfies
+\[
+ |\det M_f|\le2^nK_n\,4^{nm}(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
+\]
+with
+\[
+ M=2^nK_n\,e^{n^2(-\mathsf U+d)},\qquad c=4^n\,2^{2h}\,e^{nc^*}.
+\]
+(The degenerate configurations, such as two fixed nodes being equal or a vanishing coordinate,
+have measure zero or make the determinant vanish.) By Lemma~\ref{lem:quadrature},
+$|\beta_{a,k}|\le B=2^{q+2}4^{J-1}e^{J+1}$. Now
+\begin{align*}
+ \log(nJBc)&=\log(nJ)+(q+2+2J-2+2n+2h)\log2+(J+1)+nc^*\\
+ &=234N\log2+65N+48Nc^*+1+\log(3120N^2),
+\end{align*}
+and $234\log2+65+48c^*=484.7404\ldots<485$; so $nJBc\le e^{485N}$ for $N\ge200$. If
+$|\delta|\le e^{-485N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+Lemma~\ref{lem:expansion} gives
+\[
+ |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
+\]
+Since $\log K_n=O(n\log n)$, taking $d=\varepsilon/2$ proves the theorem.
+\end{proof}
+
+\begin{remark}[The value of $\rho$] Per unit of $N$, the cost $\log(Bc)$ of one perturbed
+column splits as follows: the quadrature weights contribute $134\log2+65\approx157.9$; the
+generalized Vandermonde bound, $96\log2\approx66.5$; the fixed nodes, $4\log2\approx2.8$; and
+the energy lost by the missing point, $48c^*\approx257.5$.
+\end{remark}
+
+\section{Proof of the main theorem}\label{sec:proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $\gamma_0=\mathsf U-\mathsf A$ and let $0<\varepsilon\le\gamma_0/32$. For large primes $p$
+and $|x-G|\le e^{-485p}$, Proposition~\ref{prop:openai}(b) and Theorem~\ref{thm:perturbation}
+give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon)}$. Also $\log(44p)!=o(n^2)$ and
+$\log D_p\le(\mathsf A+\varepsilon)n^2$ (Proposition~\ref{prop:denominators}). Hence
+\[
+ |Q_p(x)|\le e^{-n^2(\gamma_0-3\varepsilon)}\le e^{-\frac78\gamma_0n^2}=e^{-2016\gamma_0p^2},
+\]
+since $n^2=2304p^2$ and $\frac78\cdot2304=2016$. By Corollary~\ref{cor:Q} the hypotheses of
+Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, $\eta=2016\gamma_0$ and $\rho=485$.
+By \eqref{eq:gap},
+\[
+ \frac d\eta=\frac{44}{2016\gamma_0}=167.4756\ldots\le\frac{335}2 .
+\]
+With the prime number theorem and $\varepsilon=4/335$ (so that $2/\varepsilon=335/2$), the
+exponent is
+\[
+ \Bigl(1+\frac4{335}\Bigr)\cdot485\cdot\Bigl(\frac{335}2+1\Bigr)+1=82\,699.29\ldots\le82\,700 .
+\]
+With Chebyshev's bounds it is $3\cdot485\cdot(167.4756\ldots+1)+1=245\,133.04\ldots\le245\,200$.
+\end{proof}
+
+\begin{remark}[Limits of the method]\label{rem:limits}
+The exponent is essentially $\rho\cdot d/\eta$. With the full gap $\eta\to2304\gamma_0$ and an
+arbitrarily short prime window this would approach $485\cdot44/(2304\gamma_0)\approx7.1\cdot10^4$.
+Substantial improvements must come from $\rho$, that is from the four contributions listed at
+the end of Section~\ref{sec:perturbation}, or from a larger gap $\gamma_0$ in OpenAI's
+estimates. We have not tried to optimize the nodes, the bound of
+Lemma~\ref{lem:genvandermonde}, or the constants $c_\kappa$.
+\end{remark}
+
+\section{Formalization}\label{sec:formal}
+
+All results of this paper are formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib},
+on top of OpenAI's Lean formalization of the irrationality of $G$ \cite{OpenAI2026}. The
+development is available at
+\begin{center}
+\FormalizationLink
+\end{center}
+and consists of about $5\,400$ lines in eighteen files. It uses OpenAI's definitions directly:
+Catalan's constant is \lean{catalan}, defined as the series
+$\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
+\lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
+\lean{OAI.InternalCatalan}, are:
+\begin{itemize}
+\item \lean{catalan\_irrationalityMeasure\_82700}: for all sufficiently large $b\in\N$ and all
+ $a\in\Z$, $b^{-82700}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_245200}: the same with exponent $245\,200$;
+\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=485$;
+\item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
+ the general exponents of Proposition~\ref{prop:criterion}.
+\end{itemize}
+There is no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
+standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem enters through OpenAI's
+workspace, which already uses it for Proposition~\ref{prop:openai}(c).
+
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.58\textwidth}}
+\toprule
+File & Content\\
+\midrule
+\lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
+\lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
+\lean{Nonvanishing} & Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$\\
+\lean{PrimeWindow}, \lean{Criterion}, \lean{PNTWindow}, \lean{Main} & Proposition~\ref{prop:criterion} and the reduction to Theorem~\ref{thm:perturbation}\\
+\lean{Quadrature} & Lemma~\ref{lem:quadrature}\\
+\lean{DetExpansion} & Lemma~\ref{lem:expansion}\\
+\lean{MixedAndreief} & Lemma~\ref{lem:andreief}\\
+\lean{GenVandermonde} & Lemma~\ref{lem:genvandermonde}\\
+\lean{PinMajorant} & Proposition~\ref{prop:pointwise} and \eqref{eq:energy-identity}\\
+\lean{PinDampedDual}, \lean{PinSupDual} & Proposition~\ref{prop:energy}\\
+\lean{Lemma6} & nodes, certified constants, Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The development was built with Lean \texttt{v4.34.1} and Mathlib at commit \texttt{d13f23b},
+the versions pinned by OpenAI's repository at commit \texttt{fd4aeeb}.
+
+\section*{Disclosure of AI use}
+
+The entire work reported here is due to the AI system Claude Opus~5.5 (Anthropic): the
+mathematics, including the perturbation estimate and all proofs; the Lean formalization; the
+numerical checks; the literature search; and the text of this paper. Claude worked in a series
+of conversations at the request of the author, who posed the problem, directed the work, and is
+responsible for this submission. The underlying irrationality proof and its formalization are
+OpenAI's \cite{OpenAI2026}.
+The formal verification in Lean is intended as an independent check of every step of the
+argument above.
+
+\begin{thebibliography}{99}
+
+\bibitem{CDT2024}
+F.~Calegari, V.~Dimitrov and Y.~Tang,
+\emph{The linear independence of $1$, $\zeta(2)$, and $L(2,\chi_{-3})$},
+preprint, \href{https://arxiv.org/abs/2408.15403}{arXiv:2408.15403}.
+
+\bibitem{Eskandari2026}
+P.~Eskandari,
+\emph{Improved rational approximations to Catalan's constant},
+preprint (2026), \href{https://arxiv.org/abs/2609.26354}{arXiv:2609.26354}.
+
+\bibitem{Forrester2018Andreief}
+P.~J.~Forrester,
+\emph{Meet Andr\'eief, Bordeaux 1886, and Andreev, Kharkov 1882--83},
+preprint (2018), \href{https://arxiv.org/abs/1806.10411}{arXiv:1806.10411}.
+
+\bibitem{Jha2026}
+R.~K.~Jha,
+\emph{A finite irrationality measure for Catalan's constant},
+preprint v1, October 8, 2026,
+\href{https://doi.org/10.5281/zenodo.23237269}{doi:10.5281/zenodo.23237269};
+Lean sources at \url{https://github.com/rohitkrjha/catalan-measure}.
+
+\bibitem{Mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and
+Proofs (CPP 2020), 367--381.
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean~4 theorem prover and programming language},
+in: Automated Deduction -- CADE 28, Lecture Notes in Computer Science 12699, Springer, 2021,
+625--635.
+
+\bibitem{OpenAI2026}
+OpenAI,
+\emph{Catalan's constant is irrational},
+preprint (September 24, 2026), with a Lean formalization, available at
+\url{https://github.com/openai/math} (commit \texttt{fd4aeeb}, October 7, 2026).
+
+\bibitem{RivoalZudilin2003}
+T.~Rivoal and W.~Zudilin,
+\emph{Diophantine properties of numbers related to Catalan's constant},
+Math. Ann. \textbf{326} (2003), 705--721.
+
+\bibitem{Sun2026}
+Z.-W.~Sun,
+\emph{Catalan's constant is irrational},
+preprint (2026), \href{https://arxiv.org/abs/2609.04176}{arXiv:2609.04176}.
+
+\bibitem{Wachs2026}
+D.~Wachs,
+\emph{A note on a recent claimed proof of the irrationality of Catalan's constant},
+preprint (2026), \href{https://arxiv.org/abs/2609.22339}{arXiv:2609.22339}.
+
+\bibitem{Zudilin2003}
+W.~Zudilin,
+\emph{An Ap\'ery-like difference equation for Catalan's constant},
+Electron. J. Combin. \textbf{10} (2003), R14.
+
+\end{thebibliography}
+
+\end{document}
