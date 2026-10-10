@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-82700)`.
+> `|G - a/b| > b^(-67200)`.
 >
-> So the irrationality exponent of `G` is at most `82700`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-245200)`.
+> So the irrationality exponent of `G` is at most `67200`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-200200)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -37,9 +37,9 @@ Catalan's constant* (2026), is in [`paper/`](paper/) (LaTeX source and PDF). R. 
 | `CatalanMeasure/Quadrature.lean` | quadrature formula for the coefficient of the constant |
 | `CatalanMeasure/DetExpansion.lean` | column expansion of `det(A + δΦβ)` |
 | `CatalanMeasure/MixedAndreief.lean` | Andréief's identity with fixed point columns |
-| `CatalanMeasure/GenVandermonde.lean` | `|det[s_l^{E_i}]| ≤ 4^{n(n-p)} |V(s)|` |
+| `CatalanMeasure/GenVandermonde.lean`, `GenVandermondeSharp.lean` | `|det[s_l^{E_i}]| ≤ 2^{p(n-p)} |V(s)|` for nodes in `[0, 1]` |
 | `CatalanMeasure/PinMajorant.lean`, `PinDampedDual.lean`, `PinSupDual.lean` | pointwise bound for the mixed integrands; OpenAI's energy dual for `p ≤ n` points |
-| `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 485`, and the final theorems |
+| `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 452`, and the final theorems |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 

@@ -12,7 +12,7 @@ public import OAI.NumberTheory.Catalan.PrimeLimits.ImportedPNTCoreBridge
 costs a factor `3` in the exponent.  With the prime number theorem `θ(x) ~ x` (available in
 OpenAI's workspace through the patched PrimeNumberTheoremAnd, `theta_ratio_tendsto_one`), the
 window `(X, (1 + ε) X]` works for every `ε > 0`, and the exponent becomes
-`(1 + ε) ρ (max (d / η) (2 / ε) + 1) + 1`.
+`(1 + ε) ρ (max (d / η) (c / ε) + 1) + 1` for any `c > 1`.
 -/
 
 open Real Filter Chebyshev Polynomial
@@ -44,13 +44,17 @@ theorem theta_window_le_log {b : ℕ} (hb : 0 < b) {X Y : ℝ} (hX : 0 ≤ X) (h
   · rw [← Nat.cast_prod]
     exact_mod_cast hprod_le
 
-/-- **Prime window from the prime number theorem.** -/
-theorem eventually_prime_window_not_dvd {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ X : ℝ in atTop, ∀ b : ℕ, 0 < b → log b ≤ ε * X / 2 →
+/-- **Prime window from the prime number theorem.**  For `ε > 0` and `c > 1`, once `X` is large,
+every `b ≥ 1` with `log b ≤ ε X / c` has a prime `p ∤ b` in `(X, (1 + ε) X]`. -/
+theorem eventually_prime_window_not_dvd {ε c : ℝ} (hε : 0 < ε) (hc : 1 < c) :
+    ∀ᶠ X : ℝ in atTop, ∀ b : ℕ, 0 < b → log b ≤ ε * X / c →
       ∃ p : ℕ, p.Prime ∧ X < p ∧ (p : ℝ) ≤ (1 + ε) * X ∧ ¬ p ∣ b := by
-  set δ : ℝ := ε / (4 * (2 + ε)) with hδdef
-  have hδ0 : 0 < δ := by positivity
-  have hδ : δ * (2 + ε) = ε / 4 := by
+  have hc0 : 0 < c := by linarith
+  set δ : ℝ := ε * (c - 1) / (2 * c * (2 + ε)) with hδdef
+  have hδ0 : 0 < δ := by
+    have : 0 < c - 1 := by linarith
+    positivity
+  have hδ : δ * (2 + ε) = ε * (c - 1) / (2 * c) := by
     rw [hδdef]
     field_simp
   have hθ := OAI.Zeta5.W12.ImportedPNTCoreBridge.theta_ratio_tendsto_one
@@ -67,36 +71,46 @@ theorem eventually_prime_window_not_dvd {ε : ℝ} (hε : 0 < ε) :
   have h1 : (1 - δ) * ((1 + ε) * X) < θ ((1 + ε) * X) :=
     (lt_div_iff₀ (by positivity)).mp hX2
   have h2 : θ X < (1 + δ) * X := (div_lt_iff₀ hX0).mp hX1
-  have hδX : δ * (2 + ε) * X = ε / 4 * X := by rw [hδ]
+  have hδX : δ * (2 + ε) * X = ε * (c - 1) / (2 * c) * X := by rw [hδ]
+  have hkey : ε * X / c ≤ ε * X - ε * (c - 1) / (2 * c) * X := by
+    have hεX : 0 < ε * X := mul_pos hε hX0
+    have : ε * X - ε * (c - 1) / (2 * c) * X - ε * X / c = ε * X * (c - 1) / (2 * c) := by
+      field_simp
+      ring
+    have h3 : 0 ≤ ε * X * (c - 1) / (2 * c) := by
+      have : 0 ≤ c - 1 := by linarith
+      positivity
+    linarith
   nlinarith [mul_pos hε hX0]
 
 /-- **Irrationality-measure criterion, prime number theorem version.** -/
-theorem irrationality_measure_of_polynomials_pnt (G : ℝ) (d : ℕ) {η ρ ε : ℝ}
-    (hη : 0 < η) (hρ : 0 < ρ) (hε : 0 < ε) (Q : ℕ → ℤ[X]) (P₀ : ℕ)
+theorem irrationality_measure_of_polynomials_pnt (G : ℝ) (d : ℕ) {η ρ ε c : ℝ}
+    (hη : 0 < η) (hρ : 0 < ρ) (hε : 0 < ε) (hc : 1 < c) (Q : ℕ → ℤ[X]) (P₀ : ℕ)
     (hdeg : ∀ p, (Q p).natDegree ≤ d * p)
     (hnz : ∀ p, P₀ ≤ p → p.Prime → ∀ (a : ℤ) (b : ℕ), 0 < b → ¬ p ∣ b →
         aeval ((a : ℝ) / b) (Q p) ≠ 0)
     (hsmall : ∀ p, P₀ ≤ p → p.Prime → ∀ x : ℝ, |x - G| ≤ exp (-(ρ * p)) →
         |aeval x (Q p)| ≤ exp (-(η * (p : ℝ) ^ 2))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((1 + ε) * ρ * (max ((d : ℝ) / η) (2 / ε) + 1) + 1)) < |G - a / b| := by
-  set κ : ℝ := max ((d : ℝ) / η) (2 / ε) + 1 with hκ
-  have hκε : 2 / ε + 1 ≤ κ := by rw [hκ]; linarith [le_max_right ((d : ℝ) / η) (2 / ε)]
-  have hκd : (d : ℝ) / η + 1 ≤ κ := by rw [hκ]; linarith [le_max_left ((d : ℝ) / η) (2 / ε)]
+      (b : ℝ) ^ (-((1 + ε) * ρ * (max ((d : ℝ) / η) (c / ε) + 1) + 1)) < |G - a / b| := by
+  have hc0 : 0 < c := by linarith
+  set κ : ℝ := max ((d : ℝ) / η) (c / ε) + 1 with hκ
+  have hκε : c / ε + 1 ≤ κ := by rw [hκ]; linarith [le_max_right ((d : ℝ) / η) (c / ε)]
+  have hκd : (d : ℝ) / η + 1 ≤ κ := by rw [hκ]; linarith [le_max_left ((d : ℝ) / η) (c / ε)]
   have hκ0 : 0 < κ := by
-    have : 0 < 2 / ε := by positivity
+    have : 0 < c / ε := by positivity
     linarith
-  have hεκ : 2 ≤ ε * κ := by
+  have hεκ : c ≤ ε * κ := by
     have h := mul_le_mul_of_nonneg_left hκε hε.le
     rw [mul_add, mul_div_cancel₀ _ hε.ne'] at h
     linarith
   have hlogb : Tendsto (fun b : ℕ => κ * log b) atTop atTop :=
     Tendsto.const_mul_atTop hκ0 (Real.tendsto_log_atTop.comp tendsto_natCast_atTop_atTop)
   have hev : ∀ᶠ b : ℕ in atTop,
-      (∀ b' : ℕ, 0 < b' → log b' ≤ ε * (κ * log b) / 2 →
+      (∀ b' : ℕ, 0 < b' → log b' ≤ ε * (κ * log b) / c →
         ∃ p : ℕ, p.Prime ∧ κ * log b < p ∧ (p : ℝ) ≤ (1 + ε) * (κ * log b) ∧ ¬ p ∣ b') ∧
       max (P₀ : ℝ) 1 ≤ κ * log b :=
-    (hlogb.eventually (eventually_prime_window_not_dvd hε)).and
+    (hlogb.eventually (eventually_prime_window_not_dvd hε hc)).and
       (hlogb.eventually (eventually_ge_atTop _))
   filter_upwards [hev, eventually_ge_atTop 2] with b hb hb2 a
   obtain ⟨hwin, hbig⟩ := hb
@@ -106,7 +120,8 @@ theorem irrationality_measure_of_polynomials_pnt (G : ℝ) (d : ℕ) {η ρ ε :
   have hbR : (1 : ℝ) < b := by exact_mod_cast (show 1 < b by omega)
   have hb0R : (0 : ℝ) < b := by linarith
   have hlogpos : 0 < log (b : ℝ) := Real.log_pos hbR
-  have hlogX : log b ≤ ε * (κ * log b) / 2 := by
+  have hlogX : log b ≤ ε * (κ * log b) / c := by
+    rw [le_div_iff₀ hc0]
     nlinarith [mul_le_mul_of_nonneg_right hεκ hlogpos.le]
   obtain ⟨p, hp, hXp, hpX, hpb⟩ := hwin b hb0 hlogX
   have hP₀ : P₀ ≤ p := by
