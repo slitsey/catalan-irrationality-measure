@@ -551,19 +551,19 @@ private theorem barrierCase2Y9_YV_tail_upper :
 
 private theorem barrierCase2Y9_approx_upper :
     barrierCase2YApproxRat Y9 (-1) (-3) (8031988371 / 5000000000) (1968011629 / 1250000000) + (-1145816337530 / 1000000000000) <
-      (-160890 / 100000 - 1 / 1000000000000000 : ℚ) := by
+      (-16089463 / 10000000 - 1 / 1000000000000000 : ℚ) := by
   unfold barrierCase2YApproxRat barrierCase2YRat
   rw [barrierCase2TV_eq_explicit]
   simp only [barrierScaledLogRat, barrierLogHRat_two_eq]
   decide +kernel
 
-theorem barrierCase2Y9_lt : barrierCase2Y (Y9 : ℝ) < (-160890 / 100000 : ℝ) := by
+theorem barrierCase2Y9_lt : barrierCase2Y (Y9 : ℝ) < (-16089463 / 10000000 : ℝ) := by
   have hx : |(Y9 : ℝ)| ≤ 1 := by norm_num [Y9]
   have he := (abs_lt.mp (barrierCase2Y_realLog_approx_error Y9 hx
     (-1) (-3) (8031988371 / 5000000000) (1968011629 / 1250000000)
     Y9_normalizations.1 Y9_normalizations.2)).2
   have ha : ((barrierCase2YApproxRat Y9 (-1) (-3) (8031988371 / 5000000000) (1968011629 / 1250000000) : ℚ) : ℝ) +
-      (-1145816337530 / 1000000000000) < (-160890 / 100000 - 1 / 1000000000000000 : ℝ) := by
+      (-1145816337530 / 1000000000000) < (-16089463 / 10000000 - 1 / 1000000000000000 : ℝ) := by
     convert (Rat.cast_lt (K := ℝ)).2 barrierCase2Y9_approx_upper using 1 <;> norm_num
   linarith only [he, ha, barrierCase2Y9_YV_tail_upper]
 
@@ -576,7 +576,7 @@ namespace InternalCatalan
 
 theorem barrierCase2X_bracket_left_lt (m : ℤ)
     (hm : m ∈ barrierCase2XBrackets) :
-    barrierCase2X (barrierBracketLeft m : ℝ) < (-98399 / 100000 : ℝ) := by
+    barrierCase2X (barrierBracketLeft m : ℝ) < (-9840333 / 10000000 : ℝ) := by
   simp only [barrierCase2XBrackets, List.mem_cons, List.not_mem_nil, or_false] at hm
   rcases hm with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · convert barrierCase2X0_lt using 1
@@ -618,7 +618,7 @@ theorem barrierCase2X_bracket_left_lt (m : ℤ)
 
 theorem barrierCase2Y_bracket_left_lt (m : ℤ)
     (hm : m ∈ barrierCase2YBrackets) :
-    barrierCase2Y (barrierBracketLeft m : ℝ) < (-160890 / 100000 : ℝ) := by
+    barrierCase2Y (barrierBracketLeft m : ℝ) < (-16089463 / 10000000 : ℝ) := by
   simp only [barrierCase2YBrackets, List.mem_cons, List.not_mem_nil, or_false] at hm
   rcases hm with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · convert barrierCase2Y0_lt using 1
@@ -652,7 +652,7 @@ theorem barrierCase2Y_bracket_left_lt (m : ℤ)
   · convert barrierCase2Y14_lt using 1
     norm_num [barrierBracketLeft, Case2PointData.Y14]
 
-theorem barrierCase2X_neg_one_lt : barrierCase2X (-1) < (-98399 / 100000 : ℝ) := by
+theorem barrierCase2X_neg_one_lt : barrierCase2X (-1) < (-9840333 / 10000000 : ℝ) := by
   simpa [Case2PointData.X18] using barrierCase2X18_lt
 
 
@@ -660,11 +660,12 @@ theorem barrierCase2X_neg_one_lt : barrierCase2X (-1) < (-98399 / 100000 : ℝ) 
 
 
 
-theorem barrierCase2X_global_upper {x : ℝ}
+/-- Sharpened form of OpenAI's bound (the bracket-point values certified to seven digits). -/
+theorem barrierCase2X_global_upper_sharp {x : ℝ}
     (hx : -1 ≤ x ∧ x < 1 ∧ x ≠ 0) :
-    barrierCase2X x ≤ (-98399 / 100000 : ℝ) + 24 / 1000000 := by
+    barrierCase2X x ≤ (-9840333 / 10000000 : ℝ) + 24 / 1000000 := by
   have hbound := barrierCase2X_le_of_bracket_bounds
-    ((-98399 / 100000 : ℝ) + 24 / 1000000)
+    ((-9840333 / 10000000 : ℝ) + 24 / 1000000)
     (by linarith [barrierCase2X_neg_one_lt])
     (by
       intro m hm y hy
@@ -677,14 +678,24 @@ theorem barrierCase2X_global_upper {x : ℝ}
   · exact Or.inr ⟨by rcases hx with ⟨_, _, hx0⟩; rcases lt_or_gt_of_ne hx0 with h | h <;> linarith,
       hx.2.1⟩
 
-theorem barrierCase2Y_global_upper {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) 1) :
-    barrierCase2Y x ≤ (-160890 / 100000 : ℝ) + 24 / 1000000 := by
+/-- Sharpened form of OpenAI's bound (the bracket-point values certified to seven digits). -/
+theorem barrierCase2Y_global_upper_sharp {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) 1) :
+    barrierCase2Y x ≤ (-16089463 / 10000000 : ℝ) + 24 / 1000000 := by
   apply barrierCase2Y_le_of_bracket_bounds
-    ((-160890 / 100000 : ℝ) + 24 / 1000000) _ x hx
+    ((-16089463 / 10000000 : ℝ) + 24 / 1000000) _ x hx
   intro m hm y hy
   have hp := barrierCase2Y_bracket_left_lt m hm
   have hh := barrierCase2Y_bracket_height m hm hy
   linarith
+
+theorem barrierCase2X_global_upper {x : ℝ}
+    (hx : -1 ≤ x ∧ x < 1 ∧ x ≠ 0) :
+    barrierCase2X x ≤ (-98399 / 100000 : ℝ) + 24 / 1000000 := by
+  linarith [barrierCase2X_global_upper_sharp hx]
+
+theorem barrierCase2Y_global_upper {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) 1) :
+    barrierCase2Y x ≤ (-160890 / 100000 : ℝ) + 24 / 1000000 := by
+  linarith [barrierCase2Y_global_upper_sharp hx]
 
 end InternalCatalan
 

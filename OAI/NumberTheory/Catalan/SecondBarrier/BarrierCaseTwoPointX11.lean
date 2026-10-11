@@ -530,19 +530,19 @@ private theorem barrierCase2X11_XV_tail_upper :
 
 private theorem barrierCase2X11_approx_upper :
     barrierCase2XApproxRat X11 (-2) (-1) (0) (802046621 / 625000000) (1697953379 / 1250000000) (6893278782257517641 / 6250000000000000000) + (872063380780 / 1000000000000) + (215909921281 / 1000000000000) <
-      (-98399 / 100000 - 2 / 1000000000000000 : ℚ) := by
+      (-9840333 / 10000000 - 2 / 1000000000000000 : ℚ) := by
   unfold barrierCase2XApproxRat barrierCase2XRat
   rw [barrierCase2TP_eq_explicit, barrierCase2SV_eq_explicit]
   simp only [barrierScaledLogRat, barrierLogHRat_two_eq]
   decide +kernel
 
-theorem barrierCase2X11_lt : barrierCase2X (X11 : ℝ) < (-98399 / 100000 : ℝ) := by
+theorem barrierCase2X11_lt : barrierCase2X (X11 : ℝ) < (-9840333 / 10000000 : ℝ) := by
   have hx : |(X11 : ℝ)| ≤ 1 := by norm_num [X11]
   have he := (abs_lt.mp (barrierCase2X_realLog_approx_error X11 hx
     (-2) (-1) (0) (802046621 / 625000000) (1697953379 / 1250000000) (6893278782257517641 / 6250000000000000000)
     X11_normalizations.1 X11_normalizations.2.1 X11_normalizations.2.2)).2
   have ha : ((barrierCase2XApproxRat X11 (-2) (-1) (0) (802046621 / 625000000) (1697953379 / 1250000000) (6893278782257517641 / 6250000000000000000) : ℚ) : ℝ) +
-      (872063380780 / 1000000000000) + (215909921281 / 1000000000000) < (-98399 / 100000 - 2 / 1000000000000000 : ℝ) := by
+      (872063380780 / 1000000000000) + (215909921281 / 1000000000000) < (-9840333 / 10000000 - 2 / 1000000000000000 : ℝ) := by
     convert (Rat.cast_lt (K := ℝ)).2 barrierCase2X11_approx_upper using 1 <;> norm_num
   linarith only [he, ha, barrierCase2X11_XP_tail_upper, barrierCase2X11_XV_tail_upper]
 
