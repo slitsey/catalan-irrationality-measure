@@ -50,6 +50,21 @@ jobs:
           cat "$RUNNER_TEMP/cfg.json"
           stamp() { while IFS= read -r l; do printf '%s %s\n' "$(date -u +%H:%M:%S)" "$l"; done; }
           echo "start" | stamp | tee "$RUNNER_TEMP/out.log"
+          # Heartbeat every 10 minutes: each kernel/lean process with its CPU time, memory, and
+          # bytes read so far (against the sizes of any export files), so a timeout shows progress.
+          (
+            while true; do
+              sleep 600
+              {
+                echo "--- heartbeat"; free -m | sed -n 2,3p
+                ps -eo pid,etime,time,rss,args --sort=-time | grep -E "nanoda|con-ron|leanchecker|leanexport|lean |comparator" | grep -v grep | head -8 | cut -c1-200
+                for p in $(pgrep -f "nanoda_bin|con-ron|leanchecker|leanexport"); do
+                  echo "pid $p read $(awk '/rchar/{print $2}' /proc/$p/io 2>/dev/null) bytes"
+                done
+                find / -xdev \( -name "*.export" -o -name "*.ndjson" \) -size +10M -printf "%s %p\n" 2>/dev/null | head -5
+              } | stamp >> "$RUNNER_TEMP/out.log"
+            done
+          ) &
           lake exe cache get 2>&1 | tail -2 | stamp | tee -a "$RUNNER_TEMP/out.log"
           ( /usr/bin/time -v lake comparator --config "$RUNNER_TEMP/cfg.json" 2>&1; echo "exit $?" ) | stamp | tee -a "$RUNNER_TEMP/out.log"
       - name: Report timing
@@ -58,5 +73,5 @@ jobs:
         run: |
           f="$RUNNER_TEMP/out.log"
           [ -f "$f" ] || { echo "::error title=no log::no log"; exit 0; }
-          msg=$( (head -n 12 "$f"; echo ...; grep -iE "kernel|replay|check|nanoda|con-ron|build|Maximum resident|Elapsed|exit" "$f" | tail -n 25; echo ...; tail -n 12 "$f") | tail -c 3800 | sed -e 's/%/%25/g' | sed -e ':a;N;$!ba;s/\n/%0A/g')
+          msg=$( (head -n 12 "$f"; echo ...; grep -iE "kernel|replay|check|nanoda|con-ron|build|Maximum resident|Elapsed|exit|heartbeat|read |export" "$f" | tail -n 30; echo ...; tail -n 12 "$f") | tail -c 3800 | sed -e 's/%/%25/g' | sed -e ':a;N;$!ba;s/\n/%0A/g')
           echo "::warning title=Timing ${{ matrix.kernels }}::$msg"
