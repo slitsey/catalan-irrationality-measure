@@ -127,7 +127,7 @@ jobs:
   comparator:
     name: Check statement against solution
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -137,6 +137,14 @@ jobs:
       - uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           build: false
+      - name: Make room for the kernel replay
+        # The replay of OpenAI's vendored certificates through three kernels needs more
+        # memory and disk than a standard runner has free; add swap and drop unused SDKs.
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo fallocate -l 24G /swapfile2 && sudo chmod 600 /swapfile2
+          sudo mkswap /swapfile2 >/dev/null && sudo swapon /swapfile2
+          free -m; df -h /
       - name: Install bubblewrap for lake comparator's sandbox
         # Ubuntu 24.04 restricts unprivileged user namespaces through AppArmor,
         # which `bwrap` needs for the sandbox; the runner is disposable.
