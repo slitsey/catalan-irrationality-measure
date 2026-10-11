@@ -2,8 +2,8 @@
   "challenge_module": "Challenge",
   "solution_module": "Solution",
   "theorem_names": [
-    "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_8720",
-    "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_24850"
+    "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_8127",
+    "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_23168"
   ],
   "definition_names": [],
   "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],

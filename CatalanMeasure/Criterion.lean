@@ -15,7 +15,7 @@ Suppose that for every large prime `p` there is an integer polynomial `Q p` with
   (smallness on a disk around `G`).
 
 Then `G` has a finite irrationality measure: eventually in `b`,
-`|G - a / b| > b ^ (-(3 ρ (max (d / η) 4 + 1) + 1))` for every integer `a`.
+`|G - a / b| > b ^ (-(3 ρ max (d / η) 4))` for every integer `a`.
 
 The proof picks a prime `p ∤ b` in `(X, 3X]` with `X = κ log b` (Chebyshev, see
 `CatalanMeasure.PrimeWindow`) and compares `1 ≤ b^(d p) |Q p (a / b)|` (Liouville) with
@@ -35,10 +35,10 @@ theorem irrationality_measure_of_polynomials (G : ℝ) (d : ℕ) {η ρ : ℝ}
     (hsmall : ∀ p, P₀ ≤ p → p.Prime → ∀ x : ℝ, |x - G| ≤ exp (-(ρ * p)) →
         |aeval x (Q p)| ≤ exp (-(η * (p : ℝ) ^ 2))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(3 * ρ * (max ((d : ℝ) / η) 4 + 1) + 1)) < |G - a / b| := by
-  set κ : ℝ := max ((d : ℝ) / η) 4 + 1 with hκ
-  have hκ4 : 5 ≤ κ := by rw [hκ]; linarith [le_max_right ((d : ℝ) / η) 4]
-  have hκd : (d : ℝ) / η + 1 ≤ κ := by rw [hκ]; linarith [le_max_left ((d : ℝ) / η) 4]
+      (b : ℝ) ^ (-(3 * ρ * max ((d : ℝ) / η) 4)) < |G - a / b| := by
+  set κ : ℝ := max ((d : ℝ) / η) 4 with hκ
+  have hκ4 : 4 ≤ κ := le_max_right _ _
+  have hκd : (d : ℝ) / η ≤ κ := le_max_left _ _
   have hlogb : Tendsto (fun b : ℕ => κ * log b) atTop atTop :=
     Tendsto.const_mul_atTop (by linarith)
       (Real.tendsto_log_atTop.comp tendsto_natCast_atTop_atTop)
@@ -76,11 +76,10 @@ theorem irrationality_measure_of_polynomials (G : ℝ) (d : ℕ) {η ρ : ℝ}
     congr 1
     push_cast
     ring
-  -- `p > κ log b ≥ (d / η + 1) log b` forces `d p log b < η p²`
+  -- `p > κ log b ≥ (d / η) log b` forces `d p log b < η p²`
   have hdlog : (d : ℝ) * log b < η * p := by
-    have hpX : ((d : ℝ) / η + 1) * log b < p :=
+    have h' : (d : ℝ) / η * log b < p :=
       lt_of_le_of_lt (mul_le_mul_of_nonneg_right hκd hlogpos.le) hXp
-    have h' : (d : ℝ) / η * log b < p := by nlinarith
     calc (d : ℝ) * log b = η * ((d : ℝ) / η * log b) := by field_simp
       _ < η * p := mul_lt_mul_of_pos_left h' hη
   have hlt : (d : ℝ) * p * log b - η * (p : ℝ) ^ 2 < 0 := by

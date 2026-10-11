@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-8720)`.
+> `|G - a/b| > b^(-8127)`.
 >
-> So the irrationality exponent of `G` is at most `8720`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-24850)`.
+> So the irrationality exponent of `G` is at most `8127`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-23168)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -36,6 +36,7 @@ Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`pap
 | `CatalanMeasure/Nonvanishing.lean` | `Δ_p(a/b) ≠ 0` for large primes `p ∤ b` |
 | `CatalanMeasure/PrimeWindow.lean`, `Criterion.lean`, `PNTWindow.lean`, `Main.lean` | the irrationality-measure criterion, with Chebyshev and prime-number-theorem prime windows |
 | `CatalanMeasure/Quadrature.lean`, `ChebyshevNodes.lean` | quadrature formula for the coefficient of the constant, at the roots of `T_J` moved to `[-1, 0]` |
+| `CatalanMeasure/QuadCircle.lean` | the quadrature weights bounded through the unit circle: `|β| ≤ 8 J² K^N` with `K = 95 · 10^46` |
 | `CatalanMeasure/DetExpansion.lean` | column expansion of `det(A + δΦβ)` |
 | `CatalanMeasure/MixedAndreief.lean` | Andréief's identity with fixed point columns |
 | `CatalanMeasure/GenVandermonde.lean`, `GenVandermondeSharp.lean` | `|det[s_l^{E_i}]| ≤ 2^{p(n-p)} |V(s)|` for nodes in `[0, 1]` |
@@ -43,7 +44,7 @@ Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`pap
 | `CatalanMeasure/Cert/` | general lemmas for kernel-checked bounds on the energy trial fields: computable polynomials, root exclusion (Descartes), logarithm approximations, field values, derivatives, closed-form norms |
 | `CatalanMeasure/Dual/`, `CatalanMeasure/DualTwo.lean` | a new certificate for the second case of OpenAI's energy dual (generated data and kernel checks): real-place constant `U = 2.29180925 - (log 2)/2` |
 | `CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
-| `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 412`, and the final theorems |
+| `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 404.25`, and the final theorems |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 

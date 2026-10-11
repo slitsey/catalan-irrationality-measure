@@ -92,17 +92,17 @@ theorem irrationality_measure_of_polynomials_pnt (G : ℝ) (d : ℕ) {η ρ ε c
     (hsmall : ∀ p, P₀ ≤ p → p.Prime → ∀ x : ℝ, |x - G| ≤ exp (-(ρ * p)) →
         |aeval x (Q p)| ≤ exp (-(η * (p : ℝ) ^ 2))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((1 + ε) * ρ * (max ((d : ℝ) / η) (c / ε) + 1) + 1)) < |G - a / b| := by
+      (b : ℝ) ^ (-((1 + ε) * ρ * max ((d : ℝ) / η) (c / ε))) < |G - a / b| := by
   have hc0 : 0 < c := by linarith
-  set κ : ℝ := max ((d : ℝ) / η) (c / ε) + 1 with hκ
-  have hκε : c / ε + 1 ≤ κ := by rw [hκ]; linarith [le_max_right ((d : ℝ) / η) (c / ε)]
-  have hκd : (d : ℝ) / η + 1 ≤ κ := by rw [hκ]; linarith [le_max_left ((d : ℝ) / η) (c / ε)]
+  set κ : ℝ := max ((d : ℝ) / η) (c / ε) with hκ
+  have hκε : c / ε ≤ κ := le_max_right _ _
+  have hκd : (d : ℝ) / η ≤ κ := le_max_left _ _
   have hκ0 : 0 < κ := by
     have : 0 < c / ε := by positivity
     linarith
   have hεκ : c ≤ ε * κ := by
     have h := mul_le_mul_of_nonneg_left hκε hε.le
-    rw [mul_add, mul_div_cancel₀ _ hε.ne'] at h
+    rw [mul_div_cancel₀ _ hε.ne'] at h
     linarith
   have hlogb : Tendsto (fun b : ℕ => κ * log b) atTop atTop :=
     Tendsto.const_mul_atTop hκ0 (Real.tendsto_log_atTop.comp tendsto_natCast_atTop_atTop)
@@ -144,9 +144,8 @@ theorem irrationality_measure_of_polynomials_pnt (G : ℝ) (d : ℕ) {η ρ ε c
     push_cast
     ring
   have hdlog : (d : ℝ) * log b < η * p := by
-    have hpX' : ((d : ℝ) / η + 1) * log b < p :=
+    have h' : (d : ℝ) / η * log b < p :=
       lt_of_le_of_lt (mul_le_mul_of_nonneg_right hκd hlogpos.le) hXp
-    have h' : (d : ℝ) / η * log b < p := by nlinarith
     calc (d : ℝ) * log b = η * ((d : ℝ) / η * log b) := by field_simp
       _ < η * p := mul_lt_mul_of_pos_left h' hη
   have hlt : (d : ℝ) * p * log b - η * (p : ℝ) ^ 2 < 0 := by
