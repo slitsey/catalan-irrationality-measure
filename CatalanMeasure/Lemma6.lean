@@ -6,6 +6,7 @@ public import CatalanMeasure.DetExpansion
 public import CatalanMeasure.PinMajorant
 public import Mathlib.Analysis.Complex.ExponentialBounds
 public import CatalanMeasure.ChebyshevNodes
+public import CatalanMeasure.DualTwo
 
 @[expose] public section
 
@@ -69,8 +70,8 @@ theorem chebBase_pow_le : (3 + 2 * √2 : ℝ) ^ 65 ≤ 2 * Real.exp 114 := by
 
 noncomputable def caseOneBx : ℝ := -13244 / 10000 + 24 / 1000000
 noncomputable def caseOneBs : ℝ := -14280 / 10000 + 24 / 1000000
-noncomputable def caseTwoBx : ℝ := -9840333 / 10000000 + 24 / 1000000
-noncomputable def caseTwoBs : ℝ := -16089463 / 10000000 + 24 / 1000000
+noncomputable def caseTwoBx : ℝ := dualBx
+noncomputable def caseTwoBs : ℝ := dualBs
 
 theorem caseOne_row_bound : ∀ z ∈ Ico (-1 : ℝ) 1, z ≠ 0 →
     realEnergyRowTrialField 1 barrierLambda1 barrierP1 barrierV1 z ≤ caseOneBx := by
@@ -85,38 +86,30 @@ theorem caseOne_col_bound : ∀ z ∈ Ioo (0 : ℝ) 1,
     barrierCase1Y_global_upper hz
 
 theorem caseTwo_row_bound : ∀ z ∈ Ico (-1 : ℝ) 1, z ≠ 0 →
-    realEnergyRowTrialField 2 0 barrierP2 barrierV2 z ≤ caseTwoBx := by
-  intro z hz hz0
-  simpa [realEnergyRowTrialField, barrierCase2X, barrierLambda2, caseTwoBx,
-    show (2 : ℝ) * 2 = 4 by norm_num] using barrierCase2X_global_upper_sharp ⟨hz.1, hz.2, hz0⟩
+    realEnergyRowTrialField 2 0 dualP2 dualV2 z ≤ caseTwoBx := dual_row_bound
 
 theorem caseTwo_col_bound : ∀ z ∈ Ioo (0 : ℝ) 1,
-    realEnergyColumnTrialField barrierV2 z ≤ caseTwoBs := by
-  intro z hz
-  simpa only [realEnergyColumnTrialField, barrierCase2Y, caseTwoBs] using
-    barrierCase2Y_global_upper_sharp hz
+    realEnergyColumnTrialField dualV2 z ≤ caseTwoBs := dual_col_bound
 
 theorem caseOne_dual_lt :
     realEnergyDualConstant 1 barrierP1 barrierV1 caseOneBx caseOneBs <
-      -(22910468 / 10000000 : ℝ) := by
+      -(229180925 / 100000000 : ℝ) := by
   unfold realEnergyDualConstant caseOneBx caseOneBs
   nlinarith [barrier_case1_norm_coarse_upper, barrier_one_coarse_total_sharp_lt]
 
 theorem caseTwo_dual_lt :
-    realEnergyDualConstant 2 barrierP2 barrierV2 caseTwoBx caseTwoBs <
-      -(22910468 / 10000000 : ℝ) := by
-  unfold realEnergyDualConstant caseTwoBx caseTwoBs
-  nlinarith [barrier_case2_norm_rational_upper, sharpBarrier_total_lt]
+    realEnergyDualConstant 2 dualP2 dualV2 caseTwoBx caseTwoBs <
+      -(229180925 / 100000000 : ℝ) := dual_dual_lt
 
 /-- The cost of one atom column in the energy. -/
 noncomputable def lemma6Coef : ℝ :=
   max (pinMissingCoefficient 1 barrierLambda1 caseOneBx caseOneBs)
     (pinMissingCoefficient 2 0 caseTwoBx caseTwoBs)
 
-theorem lemma6Coef_lt : lemma6Coef < 53656 / 10000 := by
+theorem lemma6Coef_lt : lemma6Coef < 53678 / 10000 := by
   have hl := Real.log_two_lt_d9
   have hl0 : 0 < Real.log 2 := Real.log_pos (by norm_num)
-  unfold lemma6Coef pinMissingCoefficient caseOneBx caseOneBs caseTwoBx caseTwoBs
+  unfold lemma6Coef pinMissingCoefficient caseOneBx caseOneBs caseTwoBx caseTwoBs dualBx dualBs
   rw [barrierLambda1]
   apply max_lt
   · rw [abs_of_neg (by norm_num), abs_of_neg (by norm_num)]
@@ -188,14 +181,13 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
       |CatalanMeasure.mixedDouble (pinRowFun N) (realCoordinateInv ∘ y) (pinColFun N E)
           pinKernel t s| ≤
         realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2)) *
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2)) *
           Real.exp ((n N : ℝ) * m * lemma6Coef) := by
   obtain ⟨N₁, h₁⟩ := pin_uniform_dual_eventually (k := 1) (lam := barrierLambda1) (Or.inl rfl)
     barrier_lambdas.2.1 barrierP1 barrierV1 barrier_trials_abs_summable.2.2.1
     barrier_trials_abs_summable.2.2.2 caseOne_row_bound caseOne_col_bound hd
   obtain ⟨N₂, h₂⟩ := pin_uniform_dual_eventually (k := 2) (lam := 0) (Or.inr rfl)
-    le_rfl barrierP2 barrierV2 barrier_trials_abs_summable.1
-    barrier_trials_abs_summable.2.1 caseTwo_row_bound caseTwo_col_bound hd
+    le_rfl dualP2 dualV2 dualP2_summable dualV2_summable caseTwo_row_bound caseTwo_col_bound hd
   refine ⟨max (max N₁ N₂) 1, ?_⟩
   intro N hN p m hpm E hE hEn y hy t s ht hs
   have hN0 : 0 < N := by omega
@@ -206,7 +198,7 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
     push_cast
     ring
   set RHS := realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
-      Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2)) *
+      Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2)) *
       Real.exp ((n N : ℝ) * m * lemma6Coef) with hRHS
   have hRHS0 : 0 ≤ RHS := by
     have := realDeterminantSheetPrefactor_nonneg N
@@ -248,13 +240,13 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
     le_max_left _ _
   have hcoef2 : pinMissingCoefficient 2 0 caseTwoBx caseTwoBs ≤ lemma6Coef := le_max_right _ _
   have hfinal : ∀ (K V : ℝ), 0 ≤ K → K ≤ realDeterminantSheetPrefactor N →
-      V ≤ -(22910468 / 10000000 : ℝ) + d + ((n N : ℝ) - p) / (n N : ℝ) * lemma6Coef →
+      V ≤ -(229180925 / 100000000 : ℝ) + d + ((n N : ℝ) - p) / (n N : ℝ) * lemma6Coef →
       K * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
         Real.exp ((n N : ℝ) ^ 2 * (V + Real.log 2 / 2)) ≤ RHS := by
     intro K V hK0 hK hV
     rw [hRHS, mul_assoc _ (Real.exp _) (Real.exp _), ← Real.exp_add]
     have hexp : Real.exp ((n N : ℝ) ^ 2 * (V + Real.log 2 / 2)) ≤
-        Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2) +
+        Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2) +
           (n N : ℝ) * m * lemma6Coef) := by
       apply Real.exp_le_exp.mpr
       have h2 : (n N : ℝ) ^ 2 * (((n N : ℝ) - p) / (n N : ℝ) * lemma6Coef) =
@@ -265,7 +257,7 @@ theorem mixedDouble_uniform_bound {d : ℝ} (hd : 0 < d) :
     calc K * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
           Real.exp ((n N : ℝ) ^ 2 * (V + Real.log 2 / 2))
         ≤ realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2) +
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2) +
             (n N : ℝ) * m * lemma6Coef) := by
           have hsp := realDeterminantSheetPrefactor_nonneg N
           gcongr
@@ -359,7 +351,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
     ∃ N₀ : ℕ, ∀ N : ℕ, N₀ ≤ N → ∀ f : Fin (n N) → Option (Fin (H N)),
       |(CatalanMeasure.atomMatrix (baseMatrix N) (atomVectors N) f).det| ≤
         ((2 : ℝ) ^ n N * realDeterminantSheetPrefactor N *
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2))) *
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2))) *
         ∏ k, (f k).elim 1 (fun _ => (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) *
           Real.exp ((n N : ℝ) * lemma6Coef)) := by
   obtain ⟨N₀, hN₀⟩ := mixedDouble_uniform_bound hd
@@ -433,7 +425,7 @@ theorem atomMatrix_det_bound {d : ℝ} (hd : 0 < d) :
     simp only [pinRowFun, pinColFun, pinKernel]
     ring
   set Bd := realDeterminantSheetPrefactor N * (2 : ℝ) ^ (n N * m) * ((2 : ℝ) ^ (2 * h N)) ^ m *
-      Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + d + Real.log 2 / 2)) *
+      Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + d + Real.log 2 / 2)) *
       Real.exp ((n N : ℝ) * m * lemma6Coef) with hBd
   have hae : ∀ᵐ w ∂(CatalanMeasure.pairMeasure realPlaceMeasure
       (MeasureTheory.volume.restrict (Ioo (0 : ℝ) 1)) p),
@@ -533,7 +525,7 @@ theorem rho_condition {N : ℕ} (hN : 200 ≤ N) :
     rw [this]
     calc (798720 * 4 : ℝ) ≤ (2.7 : ℝ) ^ 16 := by norm_num
       _ ≤ Real.exp 1 ^ 16 := pow_le_pow_left₀ (by norm_num) h2 16
-  have hcR : (n N : ℝ) * lemma6Coef ≤ 48 * N * (53656 / 10000) := by
+  have hcR : (n N : ℝ) * lemma6Coef ≤ 48 * N * (53678 / 10000) := by
     simp only [n, Nat.cast_mul, Nat.cast_ofNat]
     nlinarith [lemma6Coef_nonneg]
   have hnH0 : (0 : ℝ) ≤ (n N : ℝ) * (H N : ℝ) := by positivity
@@ -546,15 +538,15 @@ theorem rho_condition {N : ℕ} (hN : 200 ≤ N) :
           ((2 : ℝ) ^ (q N + 2) * (2 : ℝ) ^ N * (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N)) *
           (Real.exp (114 * N) * Real.exp ((n N : ℝ) * lemma6Coef)) := by ring
     _ ≤ (798720 * Real.exp ((N : ℝ) / 8)) * (4 * Real.exp ((57 * N : ℕ) * Real.log 2)) *
-          Real.exp (114 * N + 48 * N * (53656 / 10000)) := by
+          Real.exp (114 * N + 48 * N * (53678 / 10000)) := by
         rw [hpow, ← Real.exp_add]
         gcongr
     _ = (798720 * 4) * Real.exp ((N : ℝ) / 8 + (57 * N : ℕ) * Real.log 2 +
-          (114 * N + 48 * N * (53656 / 10000))) := by
+          (114 * N + 48 * N * (53678 / 10000))) := by
         simp only [Real.exp_add]
         ring
     _ ≤ Real.exp 16 * Real.exp ((N : ℝ) / 8 + (57 * N : ℕ) * Real.log 2 +
-          (114 * N + 48 * N * (53656 / 10000))) := by gcongr
+          (114 * N + 48 * N * (53678 / 10000))) := by gcongr
     _ ≤ Real.exp (lemma6Rho * N) := by
         rw [← Real.exp_add]
         apply Real.exp_le_exp.mpr
@@ -568,7 +560,7 @@ theorem lemma6_perturbation :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(lemma6Rho * N)) →
         |aeval x (deltaPoly N) - aeval catalan (deltaPoly N)| ≤
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + ε)) := by
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + Real.log 2 / 2 + ε)) := by
   intro ε hε
   obtain ⟨N₁, hD⟩ := atomMatrix_det_bound (d := ε / 4) (by positivity)
   obtain ⟨N₂, hpre⟩ := realDeterminantPrefactor_eventually_le_exp (d := ε / 8) (by positivity)
@@ -591,7 +583,7 @@ theorem lemma6_perturbation :
   set Bβ : ℝ := (2 : ℝ) ^ (q N + 2) * (3 + 2 * √2) ^ H N with hBβ
   set c : ℝ := (2 : ℝ) ^ n N * (2 : ℝ) ^ (2 * h N) * Real.exp ((n N : ℝ) * lemma6Coef) with hc
   set M : ℝ := (2 : ℝ) ^ n N * realDeterminantSheetPrefactor N *
-    Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + ε / 4 + Real.log 2 / 2)) with hM
+    Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + ε / 4 + Real.log 2 / 2)) with hM
   have hM0 : 0 ≤ M := by
     have := realDeterminantSheetPrefactor_nonneg N
     positivity
@@ -643,17 +635,17 @@ theorem lemma6_perturbation :
   calc M * ((1 + (H N : ℝ) * (|δ| * Bβ * c)) ^ n N - 1) ≤ M * 2 :=
         mul_le_mul_of_nonneg_left hfactor hM0
     _ ≤ Real.exp (ε / 16 * (n N : ℝ) ^ 2) * ((2 : ℝ) ^ n N * realDeterminantSheetPrefactor N) *
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + ε / 4 + Real.log 2 / 2)) := by
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + ε / 4 + Real.log 2 / 2)) := by
         rw [hM]
         have := realDeterminantSheetPrefactor_nonneg N
-        nlinarith [Real.exp_pos ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + ε / 4 +
+        nlinarith [Real.exp_pos ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + ε / 4 +
           Real.log 2 / 2)), mul_nonneg (pow_nonneg (by norm_num : (0 : ℝ) ≤ 2) (n N)) this]
     _ ≤ Real.exp (ε / 16 * (n N : ℝ) ^ 2) *
           (Real.exp (ε / 8 * (n N : ℝ) ^ 2) * Real.exp (ε / 16 * (n N : ℝ) ^ 2) ^ 2) *
-          Real.exp ((n N : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + ε / 4 + Real.log 2 / 2)) := by
+          Real.exp ((n N : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + ε / 4 + Real.log 2 / 2)) := by
         gcongr
     _ = Real.exp ((n N : ℝ) ^ 2 *
-          (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + (9 / 16) * ε)) := by
+          (-(229180925 / 100000000 : ℝ) + Real.log 2 / 2 + (9 / 16) * ε)) := by
         rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
         congr 1
         push_cast
@@ -686,14 +678,14 @@ theorem catalan_irrationalityMeasure_pnt {η ε c : ℝ} (hη0 : 0 < η)
     lemma6_perturbation
 
 /-- A certified lower bound for the gap `γ = U - A`. -/
-theorem measureGap_gt : (2372440 / 10000000000 : ℝ) < measureGap := by
+theorem measureGap_gt : (9996945 / 10000000000 : ℝ) < measureGap := by
   have hl := Real.log_two_lt_d9
   unfold measureGap
   norm_num at hl ⊢
   linarith
 
 /-- The decay rate used in the final theorems: just below the full gap `2304 γ`. -/
-noncomputable def measureEta : ℝ := 2304 * (2372440 / 10000000000)
+noncomputable def measureEta : ℝ := 2304 * (9996945 / 10000000000)
 
 theorem measureEta_pos : 0 < measureEta := by unfold measureEta; norm_num
 
@@ -701,36 +693,36 @@ theorem measureEta_lt : measureEta < 2304 * measureGap := by
   unfold measureEta
   linarith [measureGap_gt]
 
-theorem measureEta_ratio_le : ((44 : ℕ) : ℝ) / measureEta ≤ 804962 / 10000 := by
+theorem measureEta_ratio_le : ((44 : ℕ) : ℝ) / measureEta ≤ 191031 / 10000 := by
   unfold measureEta
   norm_num
 
-/-- **Catalan's constant has irrationality measure at most `34000`.** -/
-theorem catalan_irrationalityMeasure_34000 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(34000 : ℝ)) < |catalan - a / b| := by
-  have hε : (0 : ℝ) < 5005 / 402481 := by norm_num
+/-- **Catalan's constant has irrationality measure at most `8720`.** -/
+theorem catalan_irrationalityMeasure_8720 :
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(8720 : ℝ)) < |catalan - a / b| := by
+  have hε : (0 : ℝ) < 10010 / 191031 := by norm_num
   have hc : (1 : ℝ) < 1001 / 1000 := by norm_num
   filter_upwards [catalan_irrationalityMeasure_pnt measureEta_pos measureEta_lt hε hc,
     eventually_ge_atTop 1] with b hb hb1 a
   refine lt_of_le_of_lt ?_ (hb a)
   apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
   have hX := measureEta_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / measureEta) ((1001 / 1000) / (5005 / 402481)) = 804962 / 10000 := by
+  have hmax : max (((44 : ℕ) : ℝ) / measureEta) ((1001 / 1000) / (10010 / 191031)) = 191031 / 10000 := by
     rw [max_eq_right (by norm_num at hX ⊢; linarith)]
     norm_num
   rw [hmax]
   unfold lemma6Rho
   norm_num
 
-/-- **Chebyshev-window version: irrationality measure at most `100800`.** -/
-theorem catalan_irrationalityMeasure_100800 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(100800 : ℝ)) < |catalan - a / b| := by
+/-- **Chebyshev-window version: irrationality measure at most `24850`.** -/
+theorem catalan_irrationalityMeasure_24850 :
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(24850 : ℝ)) < |catalan - a / b| := by
   filter_upwards [catalan_irrationalityMeasure measureEta_pos measureEta_lt,
     eventually_ge_atTop 1] with b hb hb1 a
   refine lt_of_le_of_lt ?_ (hb a)
   apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
   have hX := measureEta_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / measureEta) 4 ≤ 804962 / 10000 :=
+  have hmax : max (((44 : ℕ) : ℝ) / measureEta) 4 ≤ 191031 / 10000 :=
     max_le hX (by norm_num)
   unfold lemma6Rho
   nlinarith

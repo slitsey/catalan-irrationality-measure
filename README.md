@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-34000)`.
+> `|G - a/b| > b^(-8720)`.
 >
-> So the irrationality exponent of `G` is at most `34000`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-100800)`.
+> So the irrationality exponent of `G` is at most `8720`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-24850)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -40,7 +40,9 @@ Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`pap
 | `CatalanMeasure/MixedAndreief.lean` | Andréief's identity with fixed point columns |
 | `CatalanMeasure/GenVandermonde.lean`, `GenVandermondeSharp.lean` | `|det[s_l^{E_i}]| ≤ 2^{p(n-p)} |V(s)|` for nodes in `[0, 1]` |
 | `CatalanMeasure/PinMajorant.lean`, `PinDampedDual.lean`, `PinSupDual.lean` | pointwise bound for the mixed integrands; OpenAI's energy dual for `p ≤ n` points |
-| `CatalanMeasure/SharpBarrier.lean` | OpenAI's real-place constant read to seven digits: `U = 2.2910468 - (log 2)/2` |
+| `CatalanMeasure/Cert/` | general lemmas for kernel-checked bounds on the energy trial fields: computable polynomials, root exclusion (Descartes), logarithm approximations, field values, derivatives, closed-form norms |
+| `CatalanMeasure/Dual/`, `CatalanMeasure/DualTwo.lean` | a new certificate for the second case of OpenAI's energy dual (generated data and kernel checks): real-place constant `U = 2.29180925 - (log 2)/2` |
+| `CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
 | `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 412`, and the final theorems |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
@@ -73,7 +75,9 @@ ruby scripts/validate-formalization.rb
 ```
 
 Building OpenAI's code takes a while (roughly an hour on a few cores, after the Mathlib
-cache). The comparator script needs Linux and `bwrap` (bubblewrap).
+cache). The kernel checks in `CatalanMeasure/Dual/` take about half an hour more and need about
+4.5 GB of memory per Lean process. The generator for these files is in
+[`scripts/certgen/`](scripts/certgen/). The comparator script needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 

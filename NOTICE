@@ -33,4 +33,5 @@ It contains third-party material, also licensed under the Apache License, Versio
    adapted to this project.
 
 Everything else (CatalanMeasure/, CatalanMeasure.lean, Challenge.lean, Solution.lean,
-comparator.json, formalization.yaml, README.md, PORTING.md, paper/) is new work for this project.
+comparator.json, formalization.yaml, README.md, PORTING.md, paper/, scripts/certgen/) is new work
+for this project.
