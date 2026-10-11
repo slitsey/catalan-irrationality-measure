@@ -107,7 +107,17 @@ jobs:
           MATHLIB_NO_CACHE_ON_UPDATE: "1"
           DISABLE_EQUATIONS: "1"
           DOCGEN_SRC: github
-        run: lake build CatalanMeasure:docs
+        shell: bash
+        run: |
+          set +e
+          lake build CatalanMeasure:docs 2>&1 | tee "$RUNNER_TEMP/step.log"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            # Surface the end of the log as an annotation, readable without the log archive.
+            msg=$(grep -v '^\s*$' "$RUNNER_TEMP/step.log" | tail -c 3800 | sed -e 's/%/%25/g' | sed -e ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=Tail of the failing step::$msg"
+          fi
+          exit "$status"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: api-documentation
@@ -135,4 +145,14 @@ jobs:
           sudo apt-get install -y -qq bubblewrap >/dev/null
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run the toolchain's lake comparator
-        run: ./scripts/verify-comparator.sh
+        shell: bash
+        run: |
+          set +e
+          ./scripts/verify-comparator.sh 2>&1 | tee "$RUNNER_TEMP/step.log"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            # Surface the end of the log as an annotation, readable without the log archive.
+            msg=$(grep -v '^\s*$' "$RUNNER_TEMP/step.log" | tail -c 3800 | sed -e 's/%/%25/g' | sed -e ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=Tail of the failing step::$msg"
+          fi
+          exit "$status"
