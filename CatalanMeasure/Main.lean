@@ -233,14 +233,14 @@ theorem catalan_irrationalityMeasure_of_perturbation {ρ η : ℝ} (hρ : 0 < ρ
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
           Real.exp ((n p : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(3 * ρ * (max (((44 : ℕ) : ℝ) / η) 4 + 1) + 1)) <
+      (b : ℝ) ^ (-(3 * ρ * max (((44 : ℕ) : ℝ) / η) 4)) <
         |catalan - a / b| := by
   obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hη hpert
   exact CatalanMeasure.irrationality_measure_of_polynomials catalan 44 hη0 hρ measureIntPoly P₀
     measureIntPoly_natDegree_le hnz hsmall
 
 /-- **Main theorem (prime number theorem window).**  For every `ε > 0`, the exponent
-`(1 + ε) ρ (max (44 / η) (c / ε) + 1) + 1` for any `0 < η < 2304 γ` and `c > 1`. -/
+`(1 + ε) ρ max (44 / η) (c / ε)` for any `0 < η < 2304 γ` and `c > 1`. -/
 theorem catalan_irrationalityMeasure_of_perturbation_pnt {ρ η ε c : ℝ} (hρ : 0 < ρ)
     (hη0 : 0 < η) (hη : η < 2304 * measureGap) (hε : 0 < ε) (hc : 1 < c)
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
@@ -248,7 +248,7 @@ theorem catalan_irrationalityMeasure_of_perturbation_pnt {ρ η ε c : ℝ} (hρ
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
           Real.exp ((n p : ℝ) ^ 2 * (-(229180925 / 100000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((1 + ε) * ρ * (max (((44 : ℕ) : ℝ) / η) (c / ε) + 1) + 1)) <
+      (b : ℝ) ^ (-((1 + ε) * ρ * max (((44 : ℕ) : ℝ) / η) (c / ε))) <
         |catalan - a / b| := by
   obtain ⟨P₀, hnz, hsmall⟩ := measureIntPoly_hypotheses hη hpert
   exact CatalanMeasure.irrationality_measure_of_polynomials_pnt catalan 44 hη0 hρ hε hc
