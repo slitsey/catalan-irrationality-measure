@@ -8,6 +8,7 @@ public import CatalanMeasure.Degree
 public import CatalanMeasure.Denominators
 public import CatalanMeasure.Nonvanishing
 public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantUpper
+public import CatalanMeasure.SharpBarrier
 public import OAI.NumberTheory.Catalan.Arithmetic.FinitePlaceNumerics
 
 @[expose] public section
@@ -38,7 +39,7 @@ namespace OAI.InternalCatalan
 
 /-- `U - A`: OpenAI's real-place exponent minus the finite-place exponent. -/
 noncomputable def measureGap : ℝ :=
-  (2290939875 / 1000000000 - Real.log 2 / 2) - (8609 / 4608 + 505 / 4608 * Real.log 2)
+  (22910468 / 10000000 - Real.log 2 / 2) - (8609 / 4608 + 505 / 4608 * Real.log 2)
 
 theorem measureGap_pos : 0 < measureGap := by
   unfold measureGap
@@ -120,7 +121,7 @@ theorem measureIntPoly_hypotheses {ρ η : ℝ} (hη : η < 2304 * measureGap)
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
-          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + ε))) :
+          Real.exp ((n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∃ P₀ : ℕ,
       (∀ p, P₀ ≤ p → p.Prime → ∀ (a : ℤ) (b : ℕ), 0 < b → ¬ p ∣ b →
         aeval ((a : ℝ) / b) (measureIntPoly p) ≠ 0) ∧
@@ -134,9 +135,9 @@ theorem measureIntPoly_hypotheses {ρ η : ℝ} (hη : η < 2304 * measureGap)
   have hev : ∀ᶠ p : ℕ in atTop,
       (∀ x : ℝ, |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
-          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e))) ∧
+          Real.exp ((n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + e))) ∧
       |determinant p| ≤
-        Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e)) ∧
+        Real.exp ((n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + e)) ∧
       Real.log (denomBound p) ≤ (8609 / 4608 + 505 / 4608 * Real.log 2 + e) * (n p : ℝ) ^ 2 ∧
       (((n p) ! : ℕ) : ℝ) ≤ Real.exp (e * (n p : ℝ) ^ 2) ∧
       Real.log 2 ≤ e * (n p : ℝ) ^ 2 ∧
@@ -152,7 +153,7 @@ theorem measureIntPoly_hypotheses {ρ η : ℝ} (hη : η < 2304 * measureGap)
           ((tendsto_pow_atTop (n := 2) (by norm_num)).comp tendsto_natCast_atTop_atTop)
       exact htend.eventually (eventually_ge_atTop _)
     filter_upwards [hpert (e) he0,
-      eventually_realDeterminant_abs_upper_sharp (ε := e) he0,
+      eventually_realDeterminant_abs_upper_sharper (ε := e) he0,
       log_denomBound_eventually_le (ε := e) he0,
       factorial_n_le_exp (c := e) he0, hlog2,
       eventually_gt_atTop fixedDeterminantPrimeCutoff, eventually_gt_atTop 0]
@@ -180,7 +181,7 @@ theorem measureIntPoly_hypotheses {ρ η : ℝ} (hη : η < 2304 * measureGap)
       refine le_trans ?_ hfacn
       exact_mod_cast Nat.factorial_le (by unfold n; omega)
     rw [aeval_measureIntPoly hp0]
-    set E : ℝ := (n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + e)
+    set E : ℝ := (n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + e)
       with hE
     have hΔ : |aeval x (deltaPoly p)| ≤ 2 * Real.exp E := by
       have h1 := hpert' x hx
@@ -230,7 +231,7 @@ theorem catalan_irrationalityMeasure_of_perturbation {ρ η : ℝ} (hρ : 0 < ρ
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
-          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + ε))) :
+          Real.exp ((n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(3 * ρ * (max (((44 : ℕ) : ℝ) / η) 4 + 1) + 1)) <
         |catalan - a / b| := by
@@ -245,7 +246,7 @@ theorem catalan_irrationalityMeasure_of_perturbation_pnt {ρ η ε c : ℝ} (hρ
     (hpert : ∀ ε : ℝ, 0 < ε → ∀ᶠ p : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(ρ * p)) →
         |aeval x (deltaPoly p) - aeval catalan (deltaPoly p)| ≤
-          Real.exp ((n p : ℝ) ^ 2 * (-(2290939875 / 1000000000 : ℝ) + Real.log 2 / 2 + ε))) :
+          Real.exp ((n p : ℝ) ^ 2 * (-(22910468 / 10000000 : ℝ) + Real.log 2 / 2 + ε))) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((1 + ε) * ρ * (max (((44 : ℕ) : ℝ) / η) (c / ε) + 1) + 1)) <
         |catalan - a / b| := by

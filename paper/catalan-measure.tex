@@ -54,16 +54,17 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-61\,300}
+ \left|G-\frac ab\right|>b^{-34\,000}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $61\,300$; without the prime number theorem in the final step the same argument gives $182\,500$. The previous best bound, due to Jha, is $10^8$. The new
+exponent of $G$ is at most $34\,000$; without the prime number theorem in the final step the same argument gives $100\,800$. The previous best bound, due to Jha, is $10^8$. The new
 ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
 $\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-412N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
 the coefficient of the constant, an Andr\'eief identity with fixed columns, a
 generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
-fewer points. Every step, including the final theorem, is formalized in Lean~4 on top of
+fewer points. We also observe that OpenAI's certified real-place constant can be read off its
+certificate to more digits, which nearly doubles the margin of the argument. Every step, including the final theorem, is formalized in Lean~4 on top of
 OpenAI's formalization, without \texttt{sorry} and with only the standard axioms.
 \end{abstract}
 
@@ -92,10 +93,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-61\,300}.
+ \left|G-\frac ab\right|>b^{-34\,000}.
 \]
-In particular $\mu(G)\le 61\,300$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-182\,500}$.
+In particular $\mu(G)\le 34\,000$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-100\,800}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -113,7 +114,7 @@ minors of OpenAI's matrix in every dimension, by an energy estimate with node pa
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
 functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=412$
-(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $1600$, and the difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $2900$, and the difference comes mainly from this step. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
@@ -133,8 +134,11 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
 \item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
  the small interval for a prime $p\nmid b$ of size about $\log b$, which contradicts
  $|Q_p(a/b)|\ge b^{-44p}$.
-\item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2304\gamma_0)\approx412\cdot146.5$, up to the factor coming from the size of the prime window.
+\item \emph{Numerics} (Sections~\ref{ssec:sharp} and~\ref{sec:proof}). OpenAI's certificate
+ bounds the real-place constant by $\mathsf U\ge2.290939875-\frac12\log2$, but the computations
+ in it prove $\mathsf U\ge2.2910468-\frac12\log2$ (Proposition~\ref{prop:sharp}). This raises
+ $\gamma_0$ from $1.30\cdot10^{-4}$ to $2.37\cdot10^{-4}$. The exponent is then about
+ $\rho\cdot44/(2304\gamma_0)\approx412\cdot80.5$, up to the factor coming from the size of the prime window.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -179,9 +183,9 @@ $c_l=4^{-l}\binom{2l}{l}$ for integers $l\ge0$ and $c_z=0$ otherwise.
   \mathcal L_N(r,k)=\sum_{v=0}^{q}(-1)^v\binom qv\sum_{i}[t^i]P_r\cdot4\,c_{(i-b-k-v)/2}.
  \end{equation}
 \item \emph{(Real place \cite[Prop.~7.1]{OpenAI2026}.)} With
- $\mathsf U=2.290939875-\tfrac12\log2$,
+ $\mathsf U_{\mathrm{OAI}}=2.290939875-\tfrac12\log2$,
  \[
-  \limsup_{N\to\infty}\frac{\log|\det\cA_N|}{n^2}\le-\mathsf U .
+  \limsup_{N\to\infty}\frac{\log|\det\cA_N|}{n^2}\le-\mathsf U_{\mathrm{OAI}} .
  \]
 \item \emph{(Local estimates \cite[Prop.~2.2, \S3, Prop.~3.4]{OpenAI2026}.)} For every rational
  $z$ OpenAI bounds $v_\ell(\det(\cA^0_N+z\mathcal L_N))$ from below at every prime $\ell$, by
@@ -205,17 +209,25 @@ We also use OpenAI's real-place machinery: the double integral, the two sheet es
 \cite[Props.~5.2, 5.3]{OpenAI2026}, and the certified energy dual \cite[Prop.~6.1, \S7]{OpenAI2026}.
 They are recalled where needed in Section~\ref{sec:perturbation}.
 
+OpenAI's irrationality proof is the inequality $\mathsf U_{\mathrm{OAI}}>\mathsf A$, and
+$\mathsf U_{\mathrm{OAI}}-\mathsf A=1.3031\ldots\cdot10^{-4}$. The computations in OpenAI's
+certificate prove more than it records: Proposition~\ref{prop:sharp} below shows that (b) holds
+with
+\[
+ \mathsf U=2.2910468-\tfrac12\log2
+\]
+in place of $\mathsf U_{\mathrm{OAI}}$. We use this constant throughout.
+
 \begin{definition}
 $\Delta_N(X)=\det(\cA^0_N+X\mathcal L_N)\in\Q[X]$. Thus $\Delta_N(G)=\det\cA_N$, and
 $\Delta_N(z)$ for $z\in\Q$ is the rational determinant OpenAI studies under the hypothesis
 $G=z$. We write $\gamma_0=\mathsf U-\mathsf A$.
 \end{definition}
 
-Numerically $\mathsf U=1.9443662\ldots$, $\mathsf A=1.9442359\ldots$ and
+Numerically $\mathsf U=1.9444732\ldots$, $\mathsf A=1.9442359\ldots$ and
 \begin{equation}\label{eq:gap}
- 1.30319\cdot10^{-4}<\gamma_0=1.303198\ldots\cdot10^{-4}.
+ 2.37244\cdot10^{-4}<\gamma_0=2.372448\ldots\cdot10^{-4}.
 \end{equation}
-OpenAI's irrationality proof is the statement $\gamma_0>0$.
 
 \section{Arithmetic of \texorpdfstring{$\Delta_N(X)$}{Delta\_N(X)}}\label{sec:arith}
 
@@ -303,7 +315,7 @@ finding a prime $p\nmid b$ in a window of the right size.
 \section{The perturbation estimate}\label{sec:perturbation}
 
 This section proves the main new ingredient. Recall
-$\mathsf U=2.290939875-\frac12\log2$.
+$\mathsf U=2.2910468-\frac12\log2$.
 
 \begin{theorem}[Perturbation estimate]\label{thm:perturbation}
 Let $\rho=412$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
@@ -571,25 +583,28 @@ $2^{2h}=4^{2N}$ per fixed node, coming from $(1-y)^{2h}$.
 OpenAI's certificate \cite[\S7]{OpenAI2026} supplies, for $\kappa=1,2$, a parameter
 $\lambda_\kappa\ge0$ ($\lambda_2=0$, $\lambda_1=2.47405979$), trial sequences
 $u^{(\kappa)},v^{(\kappa)}$ (OpenAI's $p,v$), and rational upper bounds
-\begin{gather*}
+\begin{equation}\label{eq:Bfields}
+\begin{gathered}
  \sup_{-1\le x<1,\,x\ne0}\bigl\{W_\kappa+\lambda_\kappa D-2\kappa T(u^{(\kappa)},\cdot)-S(v^{(\kappa)},\cdot)\bigr\}\le B^\kappa_x,\\
  \sup_{0<s<1}\bigl\{W_s+2T(v^{(\kappa)},\cdot)\bigr\}\le B^\kappa_s,
-\end{gather*}
-in the notation of \cite[(77)--(78)]{OpenAI2026}, namely
+\end{gathered}
+\end{equation}
+in the notation of \cite[(77)--(78)]{OpenAI2026}. OpenAI's certificate gives
+$B^1_x=-1.324376$ and $B^1_s=-1.427976$, and, as explained in \S\ref{ssec:sharp},
 \[
- B^1_x=-1.324376,\ B^1_s=-1.427976,\ B^2_x=-0.983966,\ B^2_s=-1.608876.
+ B^2_x=-0.9840093,\qquad B^2_s=-1.6089223 .
 \]
 With these, the dual value
 \[
  U_\kappa=-\tfrac{11}{16}\log2+\kappa\|u^{(\kappa)}\|_*^2+\tfrac12\|v^{(\kappa)}\|_*^2+B^\kappa_x+B^\kappa_s
 \]
-satisfies $U_\kappa<-2.290939875$ for both $\kappa$; this is the content of OpenAI's certificate
-\cite[Prop.~7.1]{OpenAI2026}, with these explicit constants. Put
+satisfies $U_1<-2.296789875$ \cite[Prop.~7.1]{OpenAI2026} and $U_2<-2.2910468$
+(Proposition~\ref{prop:sharp}). Put
 \[
  c_\kappa=(\kappa+2)\log2+|B^\kappa_x|+|B^\kappa_s|+\lambda_\kappa/6,
 \]
-so that $c_1=5.24413\ldots$ and $c_2=5.36543\ldots$,
-and $c^*=53655/10000>\max(c_1,c_2)$.
+so that $c_1=5.24413\ldots$ and $c_2=5.36552\ldots$,
+and $c^*=53656/10000>\max(c_1,c_2)$.
 
 \begin{proposition}[Energy bound with missing points]\label{prop:energy}
 For every $d>0$ there is $N_0$ such that for all $N\ge N_0$, all $p\le n$ (with $m=n-p$) and
@@ -623,11 +638,59 @@ The damping parameter is chosen in terms of $d$ alone, and the remaining errors 
 $O_d(1/n)$, uniformly in $p$ and the configuration. 
 \end{proof}
 
+\subsection{OpenAI's certificate read more precisely}\label{ssec:sharp}
+
+OpenAI's certificate for $\kappa=2$ bounds the two suprema in \eqref{eq:Bfields} by
+$-0.98399+2.4\cdot10^{-5}$ and $-1.60890+2.4\cdot10^{-5}$, and the norm term by $0.77844$. Its
+computations prove more.
+
+\begin{proposition}\label{prop:sharp}
+For $\kappa=2$ the bounds \eqref{eq:Bfields} hold with $B^2_x=-0.9840333+2.4\cdot10^{-5}$ and
+$B^2_s=-1.6089463+2.4\cdot10^{-5}$, and
+$2\|u^{(2)}\|_*^2+\frac12\|v^{(2)}\|_*^2\le48651467/62500000$. Hence $U_2<-2.2910468$, and
+Proposition~\ref{prop:openai}(b) holds with $\mathsf U=2.2910468-\frac12\log2$ in place of
+$\mathsf U_{\mathrm{OAI}}$.
+\end{proposition}
+
+\begin{proof}
+We recall how OpenAI's certificate \cite[\S7]{OpenAI2026} bounds the supremum of each of the two
+fields $F$ in \eqref{eq:Bfields}. The derivative $F'$ is a rational function, and Descartes's
+rule of signs on explicit subintervals shows that every stationary point of $F$ in the domain
+lies in one of finitely many brackets $[m\cdot10^{-10},(m+2)\cdot10^{-10}]$, $m\in\Z$. A
+uniform bound for $|F'|$ near the brackets shows that $F$ varies by at most $2.4\cdot10^{-5}$ on
+each bracket. Finally, $F$ is evaluated at the left end of every bracket (and at $x=-1$) with an
+error below $10^{-11}$, using rational approximations of the logarithms in exact rational
+arithmetic, and each value is compared with $-0.98399$ or $-1.60890$. The trial sequences are
+optimized, so the fields nearly equioscillate; the largest of these values are
+$-0.98403338\ldots$ and $-1.60894641\ldots$. The same computations therefore show that every
+value is below $-0.9840333$, respectively $-1.6089463$, and the variation bound on the brackets
+gives the stated $B^2_x$ and $B^2_s$. The norm term is bounded in the certificate by the
+rational number $48651467/62500000=0.778423472$ before being rounded up to $0.77844$. Hence
+\begin{align*}
+ U_2&\le-\tfrac{11}{16}\log2+0.778423472-0.9840093-1.6089223\\
+ &=-2.29104681\ldots<-2.2910468 .
+\end{align*}
+OpenAI's proof of \cite[Prop.~7.1]{OpenAI2026} gives
+$\limsup_N\log|\det\cA_N|/n^2\le\max(U_1,U_2)+\frac12\log2$, and $U_1<-2.296789875$.
+\end{proof}
+
+In the formalization only the comparison constants in OpenAI's thirty-seven point-evaluation
+files change; the brackets, the evaluation points and the rational approximations are OpenAI's,
+and Lean's kernel rechecks the comparisons.
+
+\begin{remark}
+The certificate has further slack: the variation bound $2.4\cdot10^{-5}$ on each bracket is
+crude, since $F'$ vanishes inside the bracket, and evaluating OpenAI's dual with the same trial
+sequences to high precision gives $U_2=-2.2911025\ldots$. Numerically, re-optimizing the trial
+sequences in a larger space lowers $U_2$ to about $-2.2918$. We have not certified these
+values.
+\end{remark}
+
 \subsection{Completion of the proof}\label{ssec:assembly}
 
 \begin{proof}[Proof of Theorem~\ref{thm:perturbation}]
 Fix $d>0$ and let $N$ be large. By \eqref{eq:detMf}, Proposition~\ref{prop:pointwise},
-Proposition~\ref{prop:energy} and $U_\kappa<-2.290939875=-\mathsf U-\frac12\log 2$, every $f$
+Proposition~\ref{prop:energy} and $U_\kappa<-2.2910468=-\mathsf U-\frac12\log 2$, every $f$
 with $m=m(f)$ satisfies
 \[
  |\det M_f|\le2^nK_n\,2^{nm}(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
@@ -642,7 +705,7 @@ $|\beta_{a,k}|\le B=2^{q+2}4^{J-1}e^{J+1}$. Now
 \begin{align*}
  \log(nJBc)&=\log(nJ)+(q+2+n+2h)\log2+J\log(3+2\sqrt2)+nc^*\\ &=(56N+2)\log2+65N\log(3+2\sqrt2)+48Nc^*+\log(3120N^2),
 \end{align*}
-and $56\log2+65\log(3+2\sqrt2)+48c^*=410.9388\ldots<412$; so $nJBc\le e^{412N}$ for $N\ge200$. If $|\delta|\le e^{-412N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+and $56\log2+65\log(3+2\sqrt2)+48c^*=410.9436\ldots<412$; so $nJBc\le e^{412N}$ for $N\ge200$. If $|\delta|\le e^{-412N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
 Lemma~\ref{lem:expansion} gives
 \[
  |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
@@ -659,9 +722,9 @@ the energy lost by the missing point, $48c^*\approx257.5$.
 \section{Proof of the main theorem}\label{sec:proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
-Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot1.30319\cdot10^{-4}$, so that
+Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot2.37244\cdot10^{-4}$, so that
 $0<\eta<2304\gamma_0$ by \eqref{eq:gap}, and let $\varepsilon=(\gamma_0-\eta/2304)/3>0$. For large
-primes $p$ and $|x-G|\le e^{-412p}$, Proposition~\ref{prop:openai}(b) and
+primes $p$ and $|x-G|\le e^{-412p}$, Proposition~\ref{prop:sharp} and
 Theorem~\ref{thm:perturbation} give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon/2)}$. Also
 $\log\bigl(2\,(44p)!\bigr)\le\frac\varepsilon2n^2$ for large $p$, and
 $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. Hence
@@ -672,23 +735,24 @@ $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. 
 since $n^2=2304p^2$. By Corollary~\ref{cor:Q} the hypotheses of
 Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=412$, and
 \[
- \frac d\eta=\frac{44}{2304\cdot1.30319\cdot10^{-4}}=146.5418\ldots\le\frac{733}5 .
+ \frac d\eta=\frac{44}{2304\cdot2.37244\cdot10^{-4}}=80.49612\ldots\le R=80.4962 .
 \]
-With the prime number theorem, $c=101/100$ and $\varepsilon=101/14660$ (so that
-$c/\varepsilon=733/5$), the exponent is
+With the prime number theorem, $c=1001/1000$ and $\varepsilon=c/R=5005/402481$, the exponent is
 \[
- \Bigl(1+\frac{101}{14660}\Bigr)\cdot412\cdot\Bigl(\frac{733}5+1\Bigr)+1 =61\,231.15\ldots\le61\,300 .
+ \Bigl(1+\frac{5005}{402481}\Bigr)\cdot412\cdot(R+1)+1 =33\,994.96\ldots\le34\,000 .
 \]
-With Chebyshev's bounds it is at most $3\cdot412\cdot(733/5+1)+1=182\,434.6\le182\,500$.
+With Chebyshev's bounds it is at most $3\cdot412\cdot(R+1)+1=100\,730.3\ldots\le100\,800$.
 \end{proof}
 
 \begin{remark}[Limits of the method]\label{rem:limits}
-The exponent is essentially $\rho\cdot d/(2304\gamma_0)\approx412\cdot146.5\approx6.04\cdot10^4$,
-and the bound $61\,300$ is within $1.5\%$ of it. Further improvements must come from $\rho$, that
+The exponent is essentially $\rho\cdot d/(2304\gamma_0)\approx412\cdot80.5\approx3.32\cdot10^4$,
+and the bound $34\,000$ is within $2.5\%$ of it. Further improvements must come from $\rho$, that
 is, from the contributions listed in the remark at the end of Section~\ref{sec:perturbation}, or
-from a larger gap $\gamma_0$. Since $\gamma_0\approx1.3\cdot10^{-4}$ is tiny, an improvement of
-the certified real-place constant $2.290939875$ by about $10^{-4}$ would roughly halve the
-exponent. We have not tried to optimize the constants $c_\kappa$.
+from a larger gap $\gamma_0$. Since $\gamma_0\approx2.4\cdot10^{-4}$ is small, every
+improvement of the certified real-place constant by $10^{-4}$ lowers the exponent by roughly a
+third. By the remark at the end of \S\ref{ssec:sharp}, a new certificate with re-optimized trial
+sequences would give $\gamma_0\approx10^{-3}$ and an exponent of about $8\,000$. We have not
+tried to optimize the constants $c_\kappa$.
 \end{remark}
 
 \section{Formalization}\label{sec:formal}
@@ -699,14 +763,15 @@ development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
-and consists of about $5\,800$ lines in twenty files. It uses OpenAI's definitions directly:
+and consists of about $5\,900$ lines in twenty-one files, together with the change of constants in OpenAI's certificate described in \S\ref{ssec:sharp}. It uses OpenAI's definitions directly:
 Catalan's constant is \lean{catalan}, defined as the series
 $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_61300}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-61300}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_182500}: the same with exponent $182\,500$;
+\item \lean{catalan\_irrationalityMeasure\_34000}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-34000}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_100800}: the same with exponent $100\,800$;
+\item \lean{eventually\_realDeterminant\_abs\_upper\_sharper}: Proposition~\ref{prop:sharp};
 \item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=412$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
@@ -730,6 +795,7 @@ File & Content\\
 \lean{GenVandermonde}, \lean{GenVandermondeSharp} & Lemma~\ref{lem:genvandermonde}\\
 \lean{PinMajorant} & Proposition~\ref{prop:pointwise} and \eqref{eq:energy-identity}\\
 \lean{PinDampedDual}, \lean{PinSupDual} & Proposition~\ref{prop:energy}\\
+\lean{SharpBarrier} & Proposition~\ref{prop:sharp}\\
 \lean{Lemma6} & nodes, certified constants, Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\
 \bottomrule
 \end{tabular}

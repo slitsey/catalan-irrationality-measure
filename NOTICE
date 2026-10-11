@@ -11,8 +11,15 @@ It contains third-party material, also licensed under the Apache License, Versio
    Only the files needed by this development are included. They were modified as follows:
    - each file was mechanically converted to Lean's module system (a `module` header,
      `public import`, and `@[expose] public section` after the imports);
-   - minimal changes were made for Lean v4.35.0-rc2 and Mathlib v4.35.0-rc2 (see PORTING.md).
-   The mathematical content and the declarations are unchanged.
+   - minimal changes were made for Lean v4.35.0-rc2 and Mathlib v4.35.0-rc2 (see PORTING.md);
+   - in the 37 point-evaluation files OAI/NumberTheory/Catalan/SecondBarrier/
+     BarrierCaseTwoPoint{X0..X18,Y0..Y17}.lean and in BarrierCaseTwoGlobalBounds.lean, the
+     comparison constants -98399/100000 and -160890/100000 were replaced by the sharper
+     -9840333/10000000 and -16089463/10000000; the evaluation points and rational
+     approximations are unchanged, and BarrierCaseTwoGlobalBounds.lean keeps OpenAI's original
+     statements as corollaries (barrierCase2X_global_upper, barrierCase2Y_global_upper).
+   Apart from these sharpened constants, the mathematical content and the declarations are
+   unchanged.
 
 2. PrimeNumberTheoremAnd/  (10 files)
    Files that OpenAI's repository adds to the PrimeNumberTheoremAnd project

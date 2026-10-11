@@ -516,19 +516,19 @@ private theorem barrierCase2Y11_YV_tail_upper :
 
 private theorem barrierCase2Y11_approx_upper :
     barrierCase2YApproxRat Y11 (-1) (-5) (1197220229 / 625000000) (52779771 / 39062500) + (-1027917206152 / 1000000000000) <
-      (-160890 / 100000 - 1 / 1000000000000000 : ℚ) := by
+      (-16089463 / 10000000 - 1 / 1000000000000000 : ℚ) := by
   unfold barrierCase2YApproxRat barrierCase2YRat
   rw [barrierCase2TV_eq_explicit]
   simp only [barrierScaledLogRat, barrierLogHRat_two_eq]
   decide +kernel
 
-theorem barrierCase2Y11_lt : barrierCase2Y (Y11 : ℝ) < (-160890 / 100000 : ℝ) := by
+theorem barrierCase2Y11_lt : barrierCase2Y (Y11 : ℝ) < (-16089463 / 10000000 : ℝ) := by
   have hx : |(Y11 : ℝ)| ≤ 1 := by norm_num [Y11]
   have he := (abs_lt.mp (barrierCase2Y_realLog_approx_error Y11 hx
     (-1) (-5) (1197220229 / 625000000) (52779771 / 39062500)
     Y11_normalizations.1 Y11_normalizations.2)).2
   have ha : ((barrierCase2YApproxRat Y11 (-1) (-5) (1197220229 / 625000000) (52779771 / 39062500) : ℚ) : ℝ) +
-      (-1027917206152 / 1000000000000) < (-160890 / 100000 - 1 / 1000000000000000 : ℝ) := by
+      (-1027917206152 / 1000000000000) < (-16089463 / 10000000 - 1 / 1000000000000000 : ℝ) := by
     convert (Rat.cast_lt (K := ℝ)).2 barrierCase2Y11_approx_upper using 1 <;> norm_num
   linarith only [he, ha, barrierCase2Y11_YV_tail_upper]
 
