@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-7891)`.
+> `|G - a/b| > b^(-7447)`.
 >
-> So the irrationality exponent of `G` is at most `7891`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-22494)`.
+> So the irrationality exponent of `G` is at most `7447`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-21228)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -48,6 +48,7 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 | `CatalanMeasure/VandermondeProduct.lean`, `WeightedMajorant.lean` | retain `∏(1+s)` in the mixed determinant bound |
 | `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound |
 | `CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
+| `CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 
@@ -91,7 +92,7 @@ workflow records its timings. The generator for these files is in
 
 The original mathematics, Lean development, module conversion and companion paper were
 produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
-refinement, endpoint certificates, dependency refactor and corresponding paper revisions were
+refinement, endpoint certificates, fixed-node decay inequality, dependency refactor and corresponding paper revisions were
 developed with OpenAI Codex at his request. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
