@@ -7,7 +7,7 @@ public import CatalanMeasure.DeltaPoly
 public import CatalanMeasure.Degree
 public import CatalanMeasure.Denominators
 public import CatalanMeasure.Nonvanishing
-public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantUpper
+public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantCore
 public import CatalanMeasure.DualTwo
 public import OAI.NumberTheory.Catalan.Arithmetic.FinitePlaceNumerics
 

@@ -1,4 +1,5 @@
 /.cache/
 /.lake/
 /docbuild/.lake/
+__pycache__/
 

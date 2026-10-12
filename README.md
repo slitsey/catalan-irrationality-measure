@@ -5,15 +5,15 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-8127)`.
+> `|G - a/b| > b^(-7891)`.
 >
-> So the irrationality exponent of `G` is at most `8127`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-23168)`.
+> So the irrationality exponent of `G` is at most `7891`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-22494)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
-Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`paper/`](paper/)
-(LaTeX source and PDF). R. K. Jha proved earlier, independently, the weaker bound
+Catalan's constant* (2026), has revised LaTeX source and PDF in [`paper/`](paper/). The earlier 8127 version was
+Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload a new preprint version. R. K. Jha proved earlier, independently, the weaker bound
 `μ(G) ≤ 10^8` ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
 
 ## What to read
@@ -44,7 +44,10 @@ Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`pap
 | `CatalanMeasure/Cert/` | general lemmas for kernel-checked bounds on the energy trial fields: computable polynomials, root exclusion (Descartes), logarithm approximations, field values, derivatives, closed-form norms |
 | `CatalanMeasure/Dual/`, `CatalanMeasure/DualTwo.lean` | a new certificate for the second case of OpenAI's energy dual (generated data and kernel checks): real-place constant `U = 2.29180925 - (log 2)/2` |
 | `CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
-| `CatalanMeasure/Lemma6.lean` | the perturbation estimate with `ρ = 404.25`, and the final theorems |
+| `CatalanMeasure/Lemma6.lean` | the original perturbation estimate with `ρ = 404.25`, and the historical 8127/23168 bounds |
+| `CatalanMeasure/VandermondeProduct.lean`, `WeightedMajorant.lean` | retain `∏(1+s)` in the mixed determinant bound |
+| `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound |
+| `CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 
@@ -52,7 +55,7 @@ Catalan's constant* (2026), Hexagon preprint `hexagon:2610.00187v1`, is in [`pap
 
 Palomar requires Lean v4.35.0-rc2 or later, and every file a submission imports must use Lean's
 module system. OpenAI's repository is pinned to Lean v4.34.1 and does not use modules, so it
-cannot be imported directly. The 478 files of OpenAI's formalization that this proof uses (from
+cannot be imported directly. The 478 original files of OpenAI's formalization vendored for this development (from
 commit `fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb` of
 [openai/math](https://github.com/openai/math)) and the 10 files that OpenAI adds to
 PrimeNumberTheoremAnd are therefore copied here. Each was converted mechanically to a module (a
@@ -60,7 +63,10 @@ PrimeNumberTheoremAnd are therefore copied here. Each was converted mechanically
 the newer Lean and Mathlib (see [`PORTING.md`](PORTING.md)). In 37 point-evaluation files of
 OpenAI's second-barrier certificate the comparison constants were sharpened from five to seven
 digits (the computations themselves are unchanged; see `NOTICE` and `CatalanMeasure/SharpBarrier.lean`).
-Otherwise their mathematical content is unchanged. Licences and attributions are in [`NOTICE`](NOTICE); all of this code is under the
+The generic determinant lemmas were subsequently moved without mathematical changes to
+`RealDeterminantCore.lean`, bringing the OAI directory to 479 files. Generic denominator lemmas
+were copied into `CatalanMeasure/Cert/DenominatorBounds.lean` to avoid importing the superseded
+second-case certificate into the main proof. Otherwise their mathematical content is unchanged. Licences and attributions are in [`NOTICE`](NOTICE); all of this code is under the
 Apache License 2.0.
 
 ## Building and checking
@@ -75,16 +81,18 @@ ruby scripts/validate-formalization.rb
 ./scripts/verify-comparator.sh
 ```
 
-Building OpenAI's code takes a while (roughly an hour on a few cores, after the Mathlib
-cache). The kernel checks in `CatalanMeasure/Dual/` take about half an hour more and need about
-4.5 GB of memory per Lean process. The generator for these files is in
+The exact numerical checks are resource-intensive and can use several GiB per Lean process;
+use a small worker count (for example `LEAN_NUM_THREADS=2`) on memory-constrained machines.
+Independent-kernel replay can take substantially longer than compilation; the CI diagnostic
+workflow records its timings. The generator for these files is in
 [`scripts/certgen/`](scripts/certgen/). The comparator script needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 
-The mathematics, all of the Lean code in `CatalanMeasure/`, `Challenge.lean` and
-`Solution.lean`, the module conversion, and the companion paper were produced by the AI system
-Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. Sean Litsey posed the problem,
+The original mathematics, Lean development, module conversion and companion paper were
+produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
+refinement, endpoint certificates, dependency refactor and corresponding paper revisions were
+developed with OpenAI Codex at his request. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
 

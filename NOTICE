@@ -35,3 +35,10 @@ It contains third-party material, also licensed under the Apache License, Versio
 Everything else (CatalanMeasure/, CatalanMeasure.lean, Challenge.lean, Solution.lean,
 comparator.json, formalization.yaml, README.md, PORTING.md, paper/, scripts/certgen/) is new work
 for this project.
+
+The general determinant lemmas and first-case dual bound were later moved, with unchanged
+statements and proof bodies, from RealDeterminantUpper.lean into the new vendored file
+OAI/NumberTheory/Catalan/Determinants/RealDeterminantCore.lean. Two generic denominator
+lemmas from OpenAI's Case2Height namespace were also copied, with unchanged proof bodies,
+into CatalanMeasure/Cert/DenominatorBounds.lean. These changes isolate reusable lemmas from
+the old second-case certificate, which the current main proof supersedes.

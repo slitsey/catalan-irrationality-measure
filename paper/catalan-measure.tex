@@ -43,7 +43,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 10, 2026}
+\date{October 12, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 68V20}
 
@@ -54,12 +54,12 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-8\,127}
+ \left|G-\frac ab\right|>b^{-7\,891}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $8\,127$; without the prime number theorem in the final step the same argument gives $23\,168$. The previous best bound, due to Jha, is $10^8$. The new
+exponent of $G$ is at most $7\,891$; without the prime number theorem in the final step the same argument gives $22\,494$. The previous best bound, due to Jha, is $10^8$. The new
 ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
-$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-404.25N}$ the polynomial moves by
+$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-392.5N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
 the coefficient of the constant, an Andr\'eief identity with fixed columns, a
 generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
@@ -94,10 +94,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-8\,127}.
+ \left|G-\frac ab\right|>b^{-7\,891}.
 \]
-In particular $\mu(G)\le 8\,127$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-23\,168}$.
+In particular $\mu(G)\le 7\,891$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-22\,494}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -114,7 +114,7 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=404.25$
+functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=392.5$
 (Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $12\,000$; the difference comes from this step and from the new energy certificate described below. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
@@ -129,7 +129,7 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
  $\log D_N\le(\mathsf A+o(1))n^2$ (Proposition~\ref{prop:denominators}). So
  $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. OpenAI's nonvanishing argument gives
  $Q_p(a/b)\ne0$ for primes $p\nmid b$ (Proposition~\ref{prop:openai}(d)).
-\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-404.25N}$,
+\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-392.5N}$,
  $|\Delta_N(x)-\Delta_N(G)|\le e^{-(\mathsf U-\varepsilon)n^2}$ (Theorem~\ref{thm:perturbation}).
  Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-\eta p^2}$ on that interval, for any $\eta<2304\gamma_0$, where $\gamma_0=\mathsf U-\mathsf A$.
 \item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
@@ -142,7 +142,7 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
  $2.290939875-\frac12\log2$ to $\mathsf U=2.29180925-\frac12\log2$ (Proposition~\ref{prop:dual})
  and raises $\gamma_0$ from $1.30\cdot10^{-4}$ to $1.00\cdot10^{-3}$.
 \item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2304\gamma_0)\approx404.25\cdot19.1$, up to the factor coming from the size of
+ $\rho\cdot44/(2304\gamma_0)\approx392.5\cdot19.1$, up to the factor coming from the size of
  the prime window.
 \end{enumerate}
 
@@ -322,7 +322,7 @@ This section proves the main new ingredient. Recall
 $\mathsf U=2.29180925-\frac12\log2$.
 
 \begin{theorem}[Perturbation estimate]\label{thm:perturbation}
-Let $\rho=404.25$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
+Let $\rho=392.5$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
 real $x$ with $|x-G|\le e^{-\rho N}$,
 \[
  |\Delta_N(x)-\Delta_N(G)|\le\exp\bigl(n^2(-\mathsf U+\varepsilon)\bigr).
@@ -471,7 +471,7 @@ $V(y)=\prod_{i<j}(y_j-y_i)$ and $\cV(y)=|V(y)|$.
 \begin{lemma}\label{lem:genvandermonde}
 Let $s_0,\ldots,s_{p-1}\in[0,1]$ and let $E_1,\ldots,E_p<n$ be distinct. Then
 \[
- \bigl|\det[s_j^{E_i}]\bigr|\le2^{p(n-p)}\,\cV(s).
+ \bigl|\det[s_j^{E_i}]\bigr|\le\Bigl(\prod_j(1+s_j)\Bigr)^{n-p}\cV(s)\le2^{p(n-p)}\,\cV(s).
 \]
 \end{lemma}
 
@@ -559,12 +559,21 @@ $p\le n$,
 \end{equation}
 with $e_1(p)=p(C-1)+\binom p2-n(C-1)$ and $e_2(p)=e_1(p)-\binom n2$.
 
+Retain the product in Lemma~\ref{lem:genvandermonde}, rather than replacing
+each factor by $2$. For $a\in[0,1]$, put
+\[
+ E^{(p)}_{\kappa,a}=E^{(p)}_\kappa+\frac an\sum_{j<p}\log(1+s_j),
+ \qquad t=\frac mn.
+\]
+The retained product contributes exactly $n^2(E^{(p)}_{\kappa,t}-E^{(p)}_\kappa)$
+to the logarithm of the majorant.
+
 \begin{proposition}[Pointwise bound]\label{prop:pointwise}
 In the setting of \eqref{eq:detMf}, let $K_n=\max\{(1+K_0n)^n,(3/2)^nn^{n/2}\}$, and let
 $\kappa=2$ if $\sum_c\frac{1-z_c^2}{1+z_c^2}\le D_*$ and $\kappa=1$ otherwise. Then the
 integrand in \eqref{eq:detMf} is at most
 \[
- K_n\,2^{nm}\,(2^{2h})^m\exp\Bigl(n^2\bigl(E^{(p)}_\kappa(x,s)+\tfrac12\log2\bigr)\Bigr).
+ K_n\,(2^{2h})^m\exp\Bigl(n^2\bigl(E^{(p)}_{\kappa,t}(x,s)+\tfrac12\log2\bigr)\Bigr).
 \]
 Moreover, if $\kappa=1$ then $\sum_{i<p}\frac{1-x_i^2}{1+x_i^2}>D_*-m$.
 \end{proposition}
@@ -577,7 +586,7 @@ By \eqref{eq:sheet}, Cauchy's evaluation
 \cite[(63)]{OpenAI2026} and
 Lemma~\ref{lem:genvandermonde}, the integrand is at most
 \[
- 2^{nm}\,|\cR_n(z)|\prod_jw(y_j)\cdot\cJ^{(p)}(x,s).
+ \Bigl(\prod_j(1+s_j)\Bigr)^m|\cR_n(z)|\prod_jw(y_j)\cdot\cJ^{(p)}(x,s).
 \]
 For a fixed node $-1<y<0$ we use $|y|\le1$, $(1-y)^{2h}\le2^{2h}$ and $1+y^2\ge1$, together
 with $C-1+g-(n-1)=A=19N$ (OpenAI's $A$) and $(n-1)/2<C-1+h$:
@@ -590,7 +599,7 @@ We use $\binom n2=\binom p2+pm+\binom m2$ repeatedly.
 \emph{Case $\kappa=1$.} By \eqref{eq:sheet1}, the first inequality in \eqref{eq:fixed-node}
 and \eqref{eq:energy-identity}, the integrand is at most
 \[
- K_n2^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_1+\tfrac12\log2)\bigr)\cdot
+ K_n(2^{2h})^m\exp\bigl(n^2(E^{(p)}_{1,t}+\tfrac12\log2)\bigr)\cdot
  2^{-\binom n2+m(C-1)+e_1(p)} ,
 \]
 and $-\binom n2+m(C-1)+e_1(p)=\binom p2-\binom n2\le0$. The case condition fails for $z$ and
@@ -604,7 +613,7 @@ and $\cV(1/y)=\cV(y)\prod_j|y_j|^{-(m-1)}\le\prod_j|y_j|^{-(m-1)}$,
 \]
 With the second inequality in \eqref{eq:fixed-node} and \eqref{eq:energy-identity}, the
 integrand is at most
-$K_n2^{nm}(2^{2h})^m\exp\bigl(n^2(E^{(p)}_2+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
+$K_n(2^{2h})^m\exp\bigl(n^2(E^{(p)}_{2,t}+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
 and $pm+m(C-1)+e_2(p)=-\binom m2\le0$.
 \end{proof}
 
@@ -762,26 +771,86 @@ $34\,000$ by the argument of Section~\ref{sec:proof}. This is also formalized
 (\lean{SharpBarrier}).
 \end{remark}
 
+\subsection{A weighted endpoint certificate}\label{ssec:weighted}
+
+For each fixed $a\in\{0,1\}$, repeat the proof of Proposition~\ref{prop:energy}
+with the column field $W_s+2T(v,\cdot)+a\log(1+s)$, retaining the quadratic
+mass correction instead of using $1-p^2/n^2\le2m/n$. Write
+$K_a=\kappa\|u_a\|_*^2+\frac12\|v_a\|_*^2$ and
+$b_a=B_{x,a}+B_{s,a}$. The resulting bound, uniform in the same configurations, is
+\[
+ E^{(p)}_{\kappa,a}\le-\tfrac{11}{16}\log2+K_a+(1-t)b_a
+ +(\tfrac\kappa2+1)(2t-t^2)\log2+\lambda_a t/6+d.
+\]
+Its error is uniform because $0\le a\le1$ and the added field is bounded and smooth
+at the damping endpoint. One may weaken it before damping at a cost
+$a\log2/n$, which tends uniformly to zero.
+Since $E^{(p)}_{\kappa,t}=(1-t)E^{(p)}_{\kappa,0}+tE^{(p)}_{\kappa,1}$,
+the two fixed endpoint inequalities give
+\begin{equation}\label{eq:weighted-quadratic}
+ E^{(p)}_{\kappa,t}\le V_0+tC+t^2Q+d,
+\end{equation}
+where
+\begin{align*}
+ V_0&=-\tfrac{11}{16}\log2+K_0+b_0,\\
+ C&=K_1-K_0+b_1-2b_0+(\kappa+2)\log2+\lambda_0/6,\\
+ Q&=b_0-b_1-(\tfrac\kappa2+1)\log2+(\lambda_1-\lambda_0)/6.
+\end{align*}
+Thus only two fixed trials need certification; no interpolated family of norms is assumed.
+
+For $\kappa=2$, the $a=0$ endpoint is Proposition~\ref{prop:dual}.
+A second rational trial, listed in \lean{WeightedDualTwo/Data.lean}, certifies
+\begin{gather*}
+ B_{x,1}=-0.9498627,\qquad B_{s,1}=-1.2145624,\\
+ \|u_1\|_*^2\le0.0713397,\qquad \|v_1\|_*^2\le1.3114478,
+ \qquad\lambda_0=\lambda_1=0.
+\end{gather*}
+Here $B_{s,1}$ bounds the column field including $\log(1+s)$.
+The same exact rational checks used in Proposition~\ref{prop:dual} apply:
+the derivative numerators have degrees $81$ and $62$, and the covers have
+$159$ and $93$ pieces, including $51$ and $31$ stationary-point brackets.
+These caps give $C\le5.817$, $Q\le0$, and $V_0<-2.29180925$.
+
+For $\kappa=1$, keep OpenAI's original trial at both endpoints, with
+$K_0=K_1=0.9321$ as a common norm cap and $\lambda_0=\lambda_1=2.47405979$.
+The new column check is
+\[
+ W_s+2T(v^{(1)},s)+\log(1+s)\le-0.7586255.
+\]
+Its derivative is rational with numerator degree $9$ and denominator degree $3$;
+a cover of five pieces has one stationary-point bracket. Combined with the old caps,
+it gives $C\le5.913488$, $Q\le-1.70907$, and
+$V_0\le-2.29180925-0.004980625$. The extra constant margin absorbs the
+larger linear coefficient: for $t\ge0$,
+\[
+ 0.096488t-1.70907t^2\le\frac{0.096488^2}{4\cdot1.70907}<0.004980625.
+\]
+Consequently both cases give the common bound
+\begin{equation}\label{eq:weighted-energy}
+ E^{(p)}_{\kappa,t}\le-2.29180925+d+5.817t.
+\end{equation}
+All the new field, norm, cover and algebraic inequalities are checked by Lean's kernel.
+
 \subsection{Completion of the proof}\label{ssec:assembly}
 
 \begin{proof}[Proof of Theorem~\ref{thm:perturbation}]
 Fix $d>0$ and let $N$ be large. By \eqref{eq:detMf}, Proposition~\ref{prop:pointwise},
-Proposition~\ref{prop:energy} and $U_\kappa<-2.29180925=-\mathsf U-\frac12\log 2$, every $f$
+\eqref{eq:weighted-energy}, with $c^*=5.817$ and $-2.29180925=-\mathsf U-\frac12\log 2$, every $f$
 with $m=m(f)$ satisfies
 \[
- |\det M_f|\le2^nK_n\,2^{nm}(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
+ |\det M_f|\le2^nK_n\,(2^{2h})^m\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
 \]
 with
 \[
- M=2^nK_n\,e^{n^2(-\mathsf U+d)},\qquad c=2^n\,2^{2h}\,e^{nc^*}.
+ M=2^nK_n\,e^{n^2(-\mathsf U+d)},\qquad c=2^{2h}\,e^{nc^*}.
 \]
 (The degenerate configurations, such as two fixed nodes being equal or a vanishing coordinate,
 have measure zero or make the determinant vanish.) By Lemma~\ref{lem:quadrature},
 $|\beta_{a,k}|\le B=8J^2K^N$. Now
 \begin{align*}
- \log(nJBc)&=\log(8nJ^3)+(n+2h)\log2+N\log K+nc^*\\ &=52N\log2+N\log K+48Nc^*+\log(8\cdot48\cdot65^3N^4),
+ \log(nJBc)&=\log(8nJ^3)+2h\log2+N\log K+nc^*\\ &=4N\log2+N\log K+48Nc^*+\log(8\cdot48\cdot65^3N^4),
 \end{align*}
-and $52\log2+\log K+48c^*=404.1708\ldots<404.25$; so $nJBc\le e^{404.25N}$ for $N\ge2000$. If $|\delta|\le e^{-404.25N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+and $4\log2+\log K+48c^*<392.464$; so $nJBc\le e^{392.5N}$ for $N\ge4000$. If $|\delta|\le e^{-392.5N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
 Lemma~\ref{lem:expansion} gives
 \[
  |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
@@ -789,12 +858,12 @@ Lemma~\ref{lem:expansion} gives
 Since $\log K_n=O(n\log n)$, taking $d=\varepsilon/2$ proves the theorem.
 \end{proof}
 
-\begin{remark}[The value of $\rho$] Per unit of $N$, the cost $\log(Bc)$ of one perturbed
-column splits as follows: the quadrature weights contribute $\log K\approx110.47$ (the
-maximum bounded in the proof of Lemma~\ref{lem:quadrature} is $e^{110.394\ldots}$, so a
-finer check would save another $0.08$); the
-generalized Vandermonde bound, $48\log2\approx33.3$; the fixed nodes, $4\log2\approx2.8$; and
-the energy lost by the missing point, $48c^*\approx257.7$.
+\begin{remark}[The value of $\rho$]
+Per unit of $N$, the quadrature weights contribute $\log K<110.475$, the
+fixed nodes contribute $4\log2$, and the weighted energy contributes
+$48\cdot5.817=279.216$. The polynomial prefactor is absorbed by the remaining
+margin to $\rho=392.5$. Retaining the Vandermonde product replaces the former
+combined charge $48\log2+48\cdot5.3678$ by $48\cdot5.817$.
 \end{remark}
 
 \section{Proof of the main theorem}\label{sec:proof}
@@ -802,7 +871,7 @@ the energy lost by the missing point, $48c^*\approx257.7$.
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
 Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot9.996945\cdot10^{-4}$, so that
 $0<\eta<2304\gamma_0$ by \eqref{eq:gap}, and let $\varepsilon=(\gamma_0-\eta/2304)/3>0$. For large
-primes $p$ and $|x-G|\le e^{-404.25p}$, Proposition~\ref{prop:dual} and
+primes $p$ and $|x-G|\le e^{-392.5p}$, Proposition~\ref{prop:dual} and
 Theorem~\ref{thm:perturbation} give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon/2)}$. Also
 $\log\bigl(2\,(44p)!\bigr)\le\frac\varepsilon2n^2$ for large $p$, and
 $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. Hence
@@ -811,25 +880,25 @@ $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. 
  =e^{-n^2\eta/2304}=e^{-\eta p^2},
 \]
 since $n^2=2304p^2$. By Corollary~\ref{cor:Q} the hypotheses of
-Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=404.25$, and
+Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=392.5$, and
 \[
  \frac d\eta=\frac{44}{2304\cdot9.996945\cdot10^{-4}}=19.10305\ldots\le R=19.1031 .
 \]
 With the prime number theorem, $c=10001/10000$ and $\varepsilon=c/R=10001/191031$, the exponent is
 \[
- \Bigl(1+\frac{10001}{191031}\Bigr)\cdot404.25\cdot R=404.25\,(R+c)=8\,126.71\ldots\le8\,127 .
+ \Bigl(1+\frac{10001}{191031}\Bigr)\cdot392.5\cdot R=392.5\,(R+c)=7\,890.506\ldots\le7\,891 .
 \]
-With Chebyshev's bounds it is at most $3\cdot404.25\cdot R=23\,167.28\ldots\le23\,168$.
+With Chebyshev's bounds it is at most $3\cdot392.5\cdot R=22\,493.90025\ldots\le22\,494$.
 \end{proof}
 
 \begin{remark}[Limits of the method]\label{rem:limits}
-The exponent is essentially $\rho\,(d/(2304\gamma_0)+c)\approx404.25\cdot20.1\approx8.1\cdot10^3$.
+The exponent is essentially $\rho\,(d/(2304\gamma_0)+c)\approx392.5\cdot20.1\approx7.9\cdot10^3$.
 Further improvements must come from $\rho$, that is, from the contributions listed in the
 remark at the end of Section~\ref{sec:perturbation}, or from a larger gap $\gamma_0$. Numerically,
 enlarging the space of trial sequences in Proposition~\ref{prop:dual} changes $U_2$ only in the
 sixth decimal, so a substantially larger $\gamma_0$ would require a different dual or a
 different determinant. The energy $48c^*$ lost per missing point is the largest part of $\rho$;
-we have not tried to optimize it.
+the weighted endpoint argument reduces it, but further savings would require stronger control of the pinned nodes or new parameters.
 \end{remark}
 
 \section{Formalization}\label{sec:formal}
@@ -840,16 +909,18 @@ development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
-and consists of about $8\,900$ lines of hand-written proofs in twenty-nine files, together with nineteen generated files (about $1\,400$ lines) holding the data and the kernel checks of Proposition~\ref{prop:dual} and the change of constants in OpenAI's certificate described in the remark after Proposition~\ref{prop:dual}. It uses OpenAI's definitions directly:
+and combines analytic and arithmetic proofs with generated rational data and kernel checks
+for Proposition~\ref{prop:dual} and Section~\ref{ssec:weighted}. The historical sharpened
+OpenAI certificate is retained separately. It uses OpenAI's definitions directly:
 Catalan's constant is \lean{catalan}, defined as the series
 $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_8127}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-8127}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_23168}: the same with exponent $23\,168$;
+\item \lean{catalan\_irrationalityMeasure\_7891}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-7891}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_22494}: the same with exponent $22\,494$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
-\item \lean{lemma6\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=404.25$;
+\item \lean{weighted\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=392.5$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
 \end{itemize}
@@ -869,13 +940,14 @@ File & Content\\
 \lean{Quadrature}, \lean{ChebyshevNodes}, \lean{QuadCircle} & Lemma~\ref{lem:quadrature}\\
 \lean{DetExpansion} & Lemma~\ref{lem:expansion}\\
 \lean{MixedAndreief} & Lemma~\ref{lem:andreief}\\
-\lean{GenVandermonde}, \lean{GenVandermondeSharp} & Lemma~\ref{lem:genvandermonde}\\
+\lean{VandermondeProduct} & Lemma~\ref{lem:genvandermonde}\\
 \lean{PinMajorant} & Proposition~\ref{prop:pointwise} and \eqref{eq:energy-identity}\\
 \lean{PinDampedDual}, \lean{PinSupDual} & Proposition~\ref{prop:energy}\\
 \lean{Cert/ListPoly}, \lean{Cert/LogApprox}, \lean{Cert/FieldEval}, \lean{Cert/FieldDeriv}, \lean{Cert/Cover}, \lean{Cert/Norm} & the general lemmas behind the checks of Proposition~\ref{prop:dual}\\
 \lean{Dual/*}, \lean{DualTwo} & the certificate data, the kernel checks, Proposition~\ref{prop:dual}\\
 \lean{SharpBarrier} & the remark after Proposition~\ref{prop:dual}\\
-\lean{Lemma6} & nodes, certified constants, Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\
+\lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
+\lean{WeightedLemma6} & Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -888,11 +960,12 @@ modules; its README describes the details.
 
 \section*{Disclosure of AI use}
 
-The entire work reported here is due to the AI system Claude Opus~5.5 (Anthropic): the
+The original development was produced by the AI system Claude Opus~5.5 (Anthropic): the
 mathematics, including the perturbation estimate and all proofs; the Lean formalization; the
 numerical computations and the certificate generator; the literature search; and the text of this paper. Claude worked in a series
 of conversations at the request of the author, who posed the problem, directed the work, and is
-responsible for this submission. The underlying irrationality proof and its formalization are
+responsible for this submission. The weighted Vandermonde refinement, endpoint certificates, dependency refactor, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
+The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the
 argument above.

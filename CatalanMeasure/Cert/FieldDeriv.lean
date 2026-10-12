@@ -2,7 +2,7 @@ module
 
 public import OAI.NumberTheory.Catalan.Energy.BarrierTrialUHasSum
 public import OAI.NumberTheory.Catalan.Energy.BarrierTrialPowerHasSum
-public import OAI.NumberTheory.Catalan.SecondBarrier.BarrierCaseTwoBracketHeight
+public import CatalanMeasure.Cert.DenominatorBounds
 public import CatalanMeasure.Cert.FieldEval
 
 @[expose] public section
@@ -206,7 +206,7 @@ theorem tailTFrac_spec (t : TailQ) (ht : ‖(TailQ.toC t).1‖ < 1) {x : ℝ} (h
     lpEval (tailTFrac t).2 x ≠ 0 ∧
       ((TailQ.toC t).2 * (TailQ.toC t).1 / barrierTailQuadraticDen (TailQ.toC t).1 x).re =
         lpEval (tailTFrac t).1 x / lpEval (tailTFrac t).2 x := by
-  have hw := Case2Height.quadratic_den_norm_lower hx ht.le
+  have hw := quadratic_den_norm_lower hx ht.le
   have hpos : 0 < ‖barrierTailQuadraticDen (TailQ.toC t).1 x‖ :=
     lt_of_lt_of_le (by nlinarith [norm_nonneg (TailQ.toC t).1]) hw
   have hw0 : barrierTailQuadraticDen (TailQ.toC t).1 x ≠ 0 := norm_pos_iff.mp hpos
@@ -252,7 +252,7 @@ theorem tailSFrac_spec (t : TailQ) (ht : ‖(TailQ.toC t).1‖ < 1) {x : ℝ} (h
     lpEval (tailSFrac t).2 x ≠ 0 ∧
       ((TailQ.toC t).2 * (TailQ.toC t).1 / barrierTailLinearDen (TailQ.toC t).1 x).re =
         lpEval (tailSFrac t).1 x / lpEval (tailSFrac t).2 x := by
-  have hw := Case2Height.linear_den_norm_lower hx (z := (TailQ.toC t).1)
+  have hw := linear_den_norm_lower hx (z := (TailQ.toC t).1)
   have hpos : 0 < ‖barrierTailLinearDen (TailQ.toC t).1 x‖ := lt_of_lt_of_le (by linarith) hw
   have hw0 : barrierTailLinearDen (TailQ.toC t).1 x ≠ 0 := norm_pos_iff.mp hpos
   have hre : (barrierTailLinearDen (TailQ.toC t).1 x).re = 1 - t.zr * x := by

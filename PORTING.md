@@ -26,4 +26,13 @@ Mathlib moves from `d13f23b` (master as of 2026-09-15, plus the v4.34.1 bump) to
 `v4.35.0-rc2` tag (`065356127b1dc0016f66b7283ce0ce2c4055aa55`, 2026-09-16), 69 commits later.
 Source changes needed for this update are listed below.
 
-Status: in progress.
+Status: the current development builds on the pinned Lean v4.35.0-rc2 toolchain.
+
+## 3. Isolating superseded numerical certificates
+
+Generic determinant estimates and the first-case energy bound were moved unchanged
+from `RealDeterminantUpper.lean` into `RealDeterminantCore.lean`. The historical module
+imports the new core and retains the second-case bound. Generic denominator lemmas
+were copied into `CatalanMeasure/Cert/DenominatorBounds.lean`, and the new certificate
+framework imports those directly. The public solution therefore avoids 89 legacy
+second-case modules. Both the current and historical proof modules have been built.

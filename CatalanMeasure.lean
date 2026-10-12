@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.Lemma6
+public import CatalanMeasure.WeightedLemma6

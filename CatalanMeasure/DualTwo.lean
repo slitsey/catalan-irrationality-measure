@@ -1,7 +1,7 @@
 module
 
 public import CatalanMeasure.Dual.Sup
-public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantUpper
+public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantCore
 public import Mathlib.Analysis.Complex.ExponentialBounds
 
 @[expose] public section
