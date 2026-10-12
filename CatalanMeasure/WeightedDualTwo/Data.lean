@@ -2,6 +2,7 @@ module
 
 public import CatalanMeasure.Cert.ModColumn
 public import CatalanMeasure.Cert.Norm
+public import CatalanMeasure.WeightedDualTwo.IntegerData
 
 @[expose] public section
 
@@ -526,7 +527,7 @@ def planY : List Piece := [((0 : ℚ), (44131 / 2000000 : ℚ), false),
   ((199937 / 200000 : ℚ), (2499213 / 2500000 : ℚ), true),
   ((2499213 / 2500000 : ℚ), (1 : ℚ), false)]
 
-def okX (p : Piece) : Bool := gapOK AX p && rowBracketOK Pc Vc P V AX QX MX p
-def okY (p : Piece) : Bool := gapOK AY p && modColBracketOK Vc V AY QY MY p
+def okX (p : Piece) : Bool := integerGapOK AXZ p && integerRowBracketOK Pc Vc P V AXZ QXZ scaleX scaleQX MX p
+def okY (p : Piece) : Bool := integerGapOK AYZ p && integerModColBracketOK Vc V AYZ QYZ scaleY scaleQY MY p
 
 end CatalanMeasure.WeightedDualTwo

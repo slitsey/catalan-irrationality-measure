@@ -28,3 +28,18 @@ The original case-1 trial needs only a certificate for its column field with
 
 These generators produce ordinary `decide +kernel` checks. Generating the files
 does not establish their bounds: build the resulting Lean modules to verify them.
+
+## Integer root covers and bracket ratios
+
+After regenerating the Dual and WeightedDualTwo files, run both postprocessors:
+
+    python3 integer_covers.py
+    python3 integer_brackets.py
+
+They clear the polynomial denominators once, emit integer coefficient lists and
+exact conversion checks, and replace repeated rational polynomial substitutions
+by integer homogeneous/affine substitutions. Trial sequences, endpoints, field
+approximations and certified caps are preserved. The soundness proofs are in
+`Cert/IntegerPoly`, `IntegerGap`, `IntegerAffine`, `IntegerRatio` and `IntegerCover`.
+Every emitted conversion and computational check must pass `decide +kernel`;
+the postprocessors provide no unchecked numerical facts.

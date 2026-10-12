@@ -2,6 +2,7 @@ module
 
 public import CatalanMeasure.Cert.Cover
 public import CatalanMeasure.Cert.Norm
+public import CatalanMeasure.Dual.IntegerData
 
 @[expose] public section
 
@@ -504,7 +505,7 @@ def planY : List Piece := [((0 : ℚ), (31 / 2000 : ℚ), false),
   ((1249567 / 1250000 : ℚ), (4998269 / 5000000 : ℚ), true),
   ((4998269 / 5000000 : ℚ), (1 : ℚ), false)]
 
-def okX (p : Piece) : Bool := gapOK AX p && rowBracketOK Pc Vc P V AX QX MX p
-def okY (p : Piece) : Bool := gapOK AY p && colBracketOK Vc V AY QY MY p
+def okX (p : Piece) : Bool := integerGapOK AXZ p && integerRowBracketOK Pc Vc P V AXZ QXZ scaleX scaleQX MX p
+def okY (p : Piece) : Bool := integerGapOK AYZ p && integerColBracketOK Vc V AYZ QYZ scaleY scaleQY MY p
 
 end CatalanMeasure.Dual

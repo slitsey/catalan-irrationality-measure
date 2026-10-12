@@ -32,12 +32,12 @@ theorem allY : planY.all okY = true := by
 
 theorem row_sup : ∀ x ∈ Set.Ico (-1 : ℝ) 0 ∪ Set.Ioo 0 1,
     realEnergyRowTrialField 2 0 (trialSeq Pc P) (trialSeq Vc V) x ≤ (MX : ℝ) :=
-  rowCheck_spec hAQX hchainX (all_and_left (f := gapOK AX) (g := rowBracketOK Pc Vc P V AX QX MX) allX)
-    (all_and_right (f := gapOK AX) (g := rowBracketOK Pc Vc P V AX QX MX) allX) hendX
+  rowCheck_spec_integer hIntAX hIntQX hAQX hchainX (integerGaps_spec hScaleX hIntAX (all_and_left (f := integerGapOK AXZ) (g := integerRowBracketOK Pc Vc P V AXZ QXZ scaleX scaleQX MX) allX))
+    (all_and_right (f := integerGapOK AXZ) (g := integerRowBracketOK Pc Vc P V AXZ QXZ scaleX scaleQX MX) allX) hendX
 
 theorem col_sup : ∀ x ∈ Set.Ioo (0 : ℝ) 1, realEnergyColumnTrialField (trialSeq Vc V) x ≤ (MY : ℝ) :=
-  colCheck_spec hAQY hchainY (all_and_left (f := gapOK AY) (g := colBracketOK Vc V AY QY MY) allY)
-    (all_and_right (f := gapOK AY) (g := colBracketOK Vc V AY QY MY) allY)
+  colCheck_spec_integer hIntAY hIntQY hAQY hchainY (integerGaps_spec hScaleY hIntAY (all_and_left (f := integerGapOK AYZ) (g := integerColBracketOK Vc V AYZ QYZ scaleY scaleQY MY) allY))
+    (all_and_right (f := integerGapOK AYZ) (g := integerColBracketOK Vc V AYZ QYZ scaleY scaleQY MY) allY)
 
 theorem normP_le : barrierTrialNormSq (trialSeq Pc P) ≤ (NP : ℝ) := normOK_spec hNP
 theorem normV_le : barrierTrialNormSq (trialSeq Vc V) ≤ (NV : ℝ) := normOK_spec hNV

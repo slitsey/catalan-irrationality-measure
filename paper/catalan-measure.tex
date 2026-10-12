@@ -731,7 +731,7 @@ rounded. At the optimum the two fields of \eqref{eq:Bfields} nearly equioscillat
 fifty and thirty local maxima.
 
 \begin{proof}
-All computations below are in exact rational arithmetic and are carried out by Lean's kernel.
+All computations below are in exact integer and rational arithmetic and are carried out by Lean's kernel.
 We follow the structure of OpenAI's certificate, but make each step a decidable check of
 general lemmas.
 
@@ -776,7 +776,11 @@ point lies in a bracket. Comparing the certified values with $B^2_x$ and $B^2_s$
 $\limsup_N\log|\det\cA_N|/n^2\le\max(U_1,U_2)+\frac12\log2$, and $U_1<-2.296789875$.
 \end{proof}
 
-The kernel checks take about half an hour of computing time.
+For efficient replay, the implementation clears polynomial denominators once and performs
+the root-cover and bracket substitutions over $\Z$, retaining rational arithmetic for the
+final scalar ratio and field approximations. Lean proves the coefficient conversions and
+the soundness of both substitutions. This changes the computation of the certificates,
+while preserving their trial sequences, covers and certified bounds.
 
 \begin{remark}
 OpenAI's own certificate for $\kappa=2$ records its bounds to five digits, as
@@ -981,7 +985,7 @@ The original development was produced by the AI system Claude Opus~5.5 (Anthropi
 mathematics, including the perturbation estimate and all proofs; the Lean formalization; the
 numerical computations and the certificate generator; the literature search; and the text of this paper. Claude worked in a series
 of conversations at the request of the author, who posed the problem, directed the work, and is
-responsible for this submission. The fixed-node decay bound and weighted Vandermonde refinement, endpoint certificates, dependency refactor, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
+responsible for this submission. The fixed-node decay bound and weighted Vandermonde refinement, endpoint certificates, dependency refactor, integer certificate computations and their soundness proofs, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
 The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the
