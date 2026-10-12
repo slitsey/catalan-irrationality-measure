@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kernels: [lean-only, nanoda, con-ron]
+        kernels: [nanoda, con-ron]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -50,19 +50,24 @@ jobs:
           cat "$RUNNER_TEMP/cfg.json"
           stamp() { while IFS= read -r l; do printf '%s %s\n' "$(date -u +%H:%M:%S)" "$l"; done; }
           echo "start" | stamp | tee "$RUNNER_TEMP/out.log"
-          # Heartbeat every 10 minutes: each kernel/lean process with its CPU time, memory, and
-          # bytes read so far (against the sizes of any export files), so a timeout shows progress.
+          # Heartbeat every 10 minutes into the log; every 30 minutes also as a live annotation, which
+          # survives even if the job is killed (workflow commands are processed as they are printed).
           (
+            i=0
             while true; do
-              sleep 600
-              {
-                echo "--- heartbeat"; free -m | sed -n 2,3p
-                ps -eo pid,etime,time,rss,args --sort=-time | grep -E "nanoda|con-ron|leanchecker|leanexport|lean |comparator" | grep -v grep | head -8 | cut -c1-200
-                for p in $(pgrep -f "nanoda_bin|con-ron|leanchecker|leanexport"); do
-                  echo "pid $p read $(awk '/rchar/{print $2}' /proc/$p/io 2>/dev/null) bytes"
-                done
-                find / -xdev \( -name "*.export" -o -name "*.ndjson" \) -size +10M -printf "%s %p\n" 2>/dev/null | head -5
-              } | stamp >> "$RUNNER_TEMP/out.log"
+              sleep 600; i=$((i+1))
+              mem=$(free -m | awk '/Mem:/{printf "mem %d/%dMB", $3, $2} /Swap:/{printf " swap %dMB", $3}')
+              kp=$(pgrep -f "nanoda_bin|con-ron|leanchecker|leanexport" | head -1)
+              if [ -n "$kp" ]; then
+                kinfo=$(ps -o comm=,time=,rss= -p "$kp" | awk '{printf "%s cpu %s rss %dMB", $1, $2, $3/1024}')
+                rd=$(awk '/rchar/{printf "%dMB", $2/1048576}' /proc/$kp/io 2>/dev/null)
+                kinfo="$kinfo read $rd"
+              else kinfo="no kernel process"; fi
+              ex=$(find / -xdev \( -name "*.export" -o -name "*.ndjson" -o -name "*.lean4export" \) -size +10M -printf "%s %p\n" 2>/dev/null | sort -n | tail -1 | awk '{printf "export %dMB", $1/1048576}')
+              oom=$(sudo dmesg 2>/dev/null | grep -ci "killed process")
+              line="t+$((i*10))min $kinfo $ex $mem oomkills $oom"
+              echo "$line" | stamp >> "$RUNNER_TEMP/out.log"
+              if [ $((i % 3)) -eq 0 ]; then echo "::warning title=heartbeat $KERNELS::$line"; fi
             done
           ) &
           lake exe cache get 2>&1 | tail -2 | stamp | tee -a "$RUNNER_TEMP/out.log"
