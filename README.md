@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-7447)`.
+> `|G - a/b| > b^(-7181)`.
 >
-> So the irrationality exponent of `G` is at most `7447`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-21228)`.
+> So the irrationality exponent of `G` is at most `7181`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-20993)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -49,6 +49,8 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 | `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound |
 | `CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
 | `CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
+| `CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
+| `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993 |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 
@@ -92,7 +94,7 @@ workflow records its timings. The generator for these files is in
 
 The original mathematics, Lean development, module conversion and companion paper were
 produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
-refinement, endpoint certificates, fixed-node decay inequality, dependency refactor and corresponding paper revisions were
+refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, dependency refactor and corresponding paper revisions were
 developed with OpenAI Codex at his request. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).

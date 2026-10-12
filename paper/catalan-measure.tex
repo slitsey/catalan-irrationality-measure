@@ -3,7 +3,7 @@
   {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
   {\usepackage[expansion=false]{microtype}}
 \usepackage{amssymb,mathtools}
-\usepackage{booktabs,array}
+\usepackage{booktabs,array,longtable}
 \usepackage{enumitem}
 \emergencystretch=2.5em
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
@@ -54,18 +54,18 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-7\,447}
+ \left|G-\frac ab\right|>b^{-7\,181}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $7\,447$; without the prime number theorem in the final step the same argument gives $21\,228$. The previous best bound, due to Jha, is $10^8$. The new
+exponent of $G$ is at most $7\,181$; without the prime number theorem in the final step the same argument gives $20\,993$. The previous best bound, due to Jha, is $10^8$. The new
 ingredient is a perturbation estimate for OpenAI's determinant, viewed as a polynomial
-$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-370.4N}$ the polynomial moves by
+$\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-366.3N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
 the coefficient of the constant, an Andr\'eief identity with fixed columns, a
 generalized Vandermonde bound, and OpenAI's energy method rerun for configurations with
 fewer points. We also give a new certificate, with re-optimized trial sequences, for one of
 the two cases of OpenAI's logarithmic-energy dual; it raises the margin of the argument by a
-factor of almost eight. Every step, including the final theorem, is formalized in Lean~4 on top of
+factor of almost eight. A refinement of nonvanishing permits primes whose squares do not divide the rational denominator, halving the prime-window surcharge. Every step, including the final theorem, is formalized in Lean~4 on top of
 OpenAI's formalization, without \texttt{sorry} and with only the standard axioms.
 \end{abstract}
 
@@ -94,10 +94,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-7\,447}.
+ \left|G-\frac ab\right|>b^{-7\,181}.
 \]
-In particular $\mu(G)\le 7\,447$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-21\,228}$.
+In particular $\mu(G)\le 7\,181$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-20\,993}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -114,8 +114,8 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=370.4$
-(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $12\,000$; the difference comes from this step and from the new energy certificate described below. For other recent work on rational approximations to $G$ see Eskandari
+functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=366.3$
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $14\,000$; the difference comes from this step and from the new energy certificate described below. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
@@ -127,13 +127,13 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
 \item \emph{Arithmetic} (Section~\ref{sec:arith}). $\deg\Delta_N\le44N$ (Lemma~\ref{lem:degree}).
  OpenAI's local estimates, applied at integer points, give a common denominator $D_N$ with
  $\log D_N\le(\mathsf A+o(1))n^2$ (Proposition~\ref{prop:denominators}). So
- $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. OpenAI's nonvanishing argument gives
- $Q_p(a/b)\ne0$ for primes $p\nmid b$ (Proposition~\ref{prop:openai}(d)).
-\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-370.4N}$,
+ $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. A refinement of OpenAI's nonvanishing argument gives
+ $Q_p(a/b)\ne0$ whenever $p^2\nmid b$ (Proposition~\ref{prop:square-nonvanishing}).
+\item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-366.3N}$,
  $|\Delta_N(x)-\Delta_N(G)|\le e^{-(\mathsf U-\varepsilon)n^2}$ (Theorem~\ref{thm:perturbation}).
  Together with OpenAI's real bound this makes $|Q_p(x)|\le e^{-\eta p^2}$ on that interval, for any $\eta<2304\gamma_0$, where $\gamma_0=\mathsf U-\mathsf A$.
 \item \emph{Criterion} (Section~\ref{sec:criterion}). A good approximation $a/b$ of $G$ lies in
- the small interval for a prime $p\nmid b$ of size about $\log b$, which contradicts
+ the small interval for a prime $p^2\nmid b$ of size about $\log b$, which contradicts
  $|Q_p(a/b)|\ge b^{-44p}$.
 \item \emph{The real-place constant} (Section~\ref{ssec:dual}). OpenAI's real-place bound
  comes from a dual of a logarithmic energy, with certified trial sequences, in each of two
@@ -142,7 +142,7 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed in four steps.
  $2.290939875-\frac12\log2$ to $\mathsf U=2.29180925-\frac12\log2$ (Proposition~\ref{prop:dual})
  and raises $\gamma_0$ from $1.30\cdot10^{-4}$ to $1.00\cdot10^{-3}$.
 \item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2304\gamma_0)\approx370.4\cdot19.1$, up to the factor coming from the size of
+ $\rho\cdot44/(2304\gamma_0)\approx366.3\cdot19.1$, up to the factor coming from the size of
  the prime window.
 \end{enumerate}
 
@@ -273,15 +273,35 @@ integer combination of $f(0),\ldots,f(d)$. Subtract that coefficient times the i
 polynomial $X(X-1)\cdots(X-d+1)$ and induct on $d$.
 \end{proof}
 
+
+\begin{proposition}[Square-denominator nonvanishing]\label{prop:square-nonvanishing}
+For every prime $p>P_*$ and rational $z$ such that $pz$ has denominator coprime to $p$,
+$\Delta_p(z)\ne0$. In particular, $\Delta_p(a/b)\ne0$ if $a\in\Z$, $b\ge1$ and $p^2\nmid b$.
+\end{proposition}
+
+\begin{proof}
+The scaled residue matrix in OpenAI's nonvanishing proof is obtained from the rational matrix
+by multiplying each entry by $p^2$ and permuting its rows and columns. Each filtered entry is
+affine in $z$, so its change from the entry at zero is $p^2z\mathcal L_p(r,k)$.
+The central-binomial coefficients $c_l$ have denominators that are powers of $2$, and the
+filter coefficients are integers. Thus the denominator of $\mathcal L_p(r,k)$ is coprime to
+the odd prime $p$. If $pz$ also has denominator coprime to $p$, the change
+$p(pz)\mathcal L_p(r,k)$ has denominator coprime to $p$ and residue zero. The scaled residue
+matrix is therefore exactly the matrix at $z=0$. OpenAI's proof shows that this matrix has
+nonzero determinant for $p>P_*$, proving $\Delta_p(z)\ne0$.
+
+If $p\nmid b$, then $p(a/b)$ has denominator coprime to $p$. Otherwise write $b=pc$;
+$p^2\nmid b$ implies $p\nmid c$, and $p(a/b)=a/c$ again has denominator coprime to $p$.
+\end{proof}
+
 \begin{corollary}\label{cor:Q}
 $Q_N=(44N)!\,D_N\,\Delta_N(X)$ lies in $\Z[X]$ and has degree at most $44N$. If $p>P_*$ is
-prime, $a\in\Z$, $b\ge1$ and $p\nmid b$, then $Q_p(a/b)\ne0$ and hence $b^{44p}|Q_p(a/b)|\ge1$.
+prime, $a\in\Z$, $b\ge1$ and $p^2\nmid b$, then $Q_p(a/b)\ne0$ and hence $b^{44p}|Q_p(a/b)|\ge1$.
 \end{corollary}
 
 \begin{proof}
 The first claims follow from Lemmas~\ref{lem:degree} and~\ref{lem:intvalued} and
-Proposition~\ref{prop:denominators}. The denominator of $a/b$ divides $b$, so
-Proposition~\ref{prop:openai}(d) gives $\Delta_p(a/b)\ne0$. Finally $b^{44p}Q_p(a/b)$ is a
+Proposition~\ref{prop:denominators}. Proposition~\ref{prop:square-nonvanishing} gives $\Delta_p(a/b)\ne0$. Finally $b^{44p}Q_p(a/b)$ is a
 nonzero integer.
 \end{proof}
 
@@ -296,7 +316,7 @@ suppose that, for all primes $p\ge P_0$:
 \item $|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$.
 \end{enumerate}
 Put $\kappa=\max(d/\eta,4)$. Then $|\xi-a/b|>b^{-3\rho\kappa}$ for all $a\in\Z$ and all
-sufficiently large $b$. Assuming the prime number theorem, for every $\varepsilon>0$ and every $c>1$ the same holds with the exponent $(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)$.
+sufficiently large $b$. Assuming the prime number theorem, for every $\varepsilon>0$ and every $c>1$ the same holds with the exponent $(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)$. If (ii) holds whenever $p^2\nmid b$, this PNT exponent improves to $(1+\varepsilon)\rho\max(d/\eta,c/(2\varepsilon))$.
 \end{proposition}
 
 \begin{proof}
@@ -311,6 +331,14 @@ $e^{-\eta p^2}\ge b^{-dp}$, that is $p\le(d/\eta)\log b\le X$. This contradicts 
 
 For the second statement use the window $(X,(1+\varepsilon)X]$ with
 $X=\max(d/\eta,c/\varepsilon)\log b$. Then $\log b\le\varepsilon X/c$, while the prime number theorem gives $\vartheta((1+\varepsilon)X)-\vartheta(X)=\varepsilon X+o(X)$, which exceeds $\varepsilon X/c$ for large $X$.
+
+For the stronger nonvanishing condition, put $X=\max(d/\eta,c/(2\varepsilon))\log b$.
+If every prime in $(X,(1+\varepsilon)X]$ had its square dividing $b$, their distinct prime
+squares would have product dividing $b$. Taking logarithms gives
+$2(\vartheta((1+\varepsilon)X)-\vartheta(X))\le\log b\le2\varepsilon X/c$.
+The PNT contradicts this for large $X$. There is therefore a prime with $p^2\nmid b$ in the
+window, and the polynomial argument proceeds unchanged.
+
 \end{proof}
 
 The factor $3$ in the first version, or $1+\varepsilon$ in the second, is the price of
@@ -322,7 +350,7 @@ This section proves the main new ingredient. Recall
 $\mathsf U=2.29180925-\frac12\log2$.
 
 \begin{theorem}[Perturbation estimate]\label{thm:perturbation}
-Let $\rho=370.4$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
+Let $\rho=366.3$. For every $\varepsilon>0$ there is $N_0$ such that for all $N\ge N_0$ and all
 real $x$ with $|x-G|\le e^{-\rho N}$,
 \[
  |\Delta_N(x)-\Delta_N(G)|\le\exp\bigl(n^2(-\mathsf U+\varepsilon)\bigr).
@@ -573,7 +601,7 @@ In the setting of \eqref{eq:detMf}, let $K_n=\max\{(1+K_0n)^n,(3/2)^nn^{n/2}\}$,
 $\kappa=2$ if $\sum_c\frac{1-z_c^2}{1+z_c^2}\le D_*$ and $\kappa=1$ otherwise. Then the
 integrand in \eqref{eq:detMf} is at most
 \[
- K_n\,2^{-28Nm}\exp\Bigl(n^2\bigl(E^{(p)}_{\kappa,t}(x,s)+\tfrac12\log2\bigr)\Bigr).
+ K_n\,2^{-\omega_\kappa Nm}\exp\Bigl(n^2\bigl(E^{(p)}_{\kappa,t}(x,s)+\tfrac12\log2\bigr)\Bigr),\qquad \omega_1=28,\quad\omega_2=36.
 \]
 Moreover, if $\kappa=1$ then $\sum_{i<p}\frac{1-x_i^2}{1+x_i^2}>D_*-m$.
 \end{proposition}
@@ -603,13 +631,22 @@ and $2u\le(1+u^2)^2$, so
 \]
 The fixed-node numerator has powers $A=19N$ and $2h=4N$. The weaker of the two
 denominator exponents below is $C-1+h-(n-1)/2=41N-1/2\ge40N$ for $N\ge1$.
-Consequently
+For the second case, put $S(u)=u^{19}(1+u)^4/(1+u^2)^{64}$; its denominator exponent is $C-1+h=65N-1\ge64N$. Consequently
 \begin{equation}\label{eq:fixed-node}
 \begin{aligned}
  w(y)(1+y^2)^{\frac{n-1}2}|y|^{g-(n-1)}&\le2^{C-1}R(u)^N\le2^{C-1}2^{-28N},\\
- w(y)|y|^{g-(n-1)}&\le2^{C-1}R(u)^N\le2^{C-1}2^{-28N}.
+ w(y)|y|^{g-(n-1)}&\le2^{C-1}S(u)^N\le2^{C-1}2^{-36N}.
 \end{aligned}
 \end{equation}
+The stronger bound for $S$ follows from two positive-polynomial identities. With $v=1+u^2$,
+\begin{align*}
+3125v^6-46656u^2&=(5u^2-1)^2(125u^8+800u^6+2190u^4+3344u^2+3125),\\
+v^{10}-2u(1+u)^4&=(1-u)^2+u^2(1-6u)^2+u^4(1-u)^2\\
+&\quad+119u^6+\sum_{j=4}^{10}\binom{10}{j}u^{2j}.
+\end{align*}
+Thus $u^2/v^6\le3125/46656$ and $u(1+u)^4/v^{10}\le1/2$, giving
+$S(u)\le\tfrac12(3125/46656)^9\le2^{-36}$.
+
 We use $\binom n2=\binom p2+pm+\binom m2$ repeatedly.
 
 \emph{Case $\kappa=1$.} By \eqref{eq:sheet1}, the first inequality in \eqref{eq:fixed-node}
@@ -629,13 +666,13 @@ and $\cV(1/y)=\cV(y)\prod_j|y_j|^{-(m-1)}\le\prod_j|y_j|^{-(m-1)}$,
 \]
 With the second inequality in \eqref{eq:fixed-node} and \eqref{eq:energy-identity}, the
 integrand is at most
-$K_n2^{-28Nm}\exp\bigl(n^2(E^{(p)}_{2,t}+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
+$K_n2^{-36Nm}\exp\bigl(n^2(E^{(p)}_{2,t}+\tfrac12\log2)\bigr)\cdot2^{pm+m(C-1)+e_2(p)}$,
 and $pm+m(C-1)+e_2(p)=-\binom m2\le0$.
 \end{proof}
 
 \begin{remark}
 Each fixed node brings a factor $2^{C-1}$, exactly compensated by the difference
-between the $n$-node and $p$-node normalizations. The remaining factor is $2^{-28N}$.
+between the $n$-node and $p$-node normalizations. The remaining factors are $2^{-28N}$ and $2^{-36N}$ in the two cases.
 Retaining the numerator and denominator together saves $32N\log2$ per fixed node
 compared with the earlier separate bound $2^{2h}=2^{4N}$.
 \end{remark}
@@ -844,19 +881,24 @@ it gives $C\le5.913488$, $Q\le-1.70907$, and
 $V_0\le-2.29180925-0.004980625$. The extra constant margin absorbs the
 larger linear coefficient: for $t\ge0$,
 \[
- 0.096488t-1.70907t^2\le\frac{0.096488^2}{4\cdot1.70907}<0.004980625.
+ 0.183488t-1.70907t^2\le\frac{0.183488^2}{4\cdot1.70907}<0.004980625.
 \]
-Consequently both cases give the common bound
+Consequently the two cases give
 \begin{equation}\label{eq:weighted-energy}
- E^{(p)}_{\kappa,t}\le-2.29180925+d+5.817t.
+ E^{(p)}_{1,t}\le-2.29180925+d+5.73t,\qquad
+ E^{(p)}_{2,t}\le-2.29180925+d+5.817t.
 \end{equation}
 All the new field, norm, cover and algebraic inequalities are checked by Lean's kernel.
+
+The additional case-two decay absorbs its larger energy cost: since
+$8\log2>48(5.817-5.73)$ and $n=48N$, its product of fixed-node and energy factors is bounded by the common factor
+$2^{-28Nm}\exp(nm\cdot5.73)$. This uses the two cases together and does not change their trial sequences.
 
 \subsection{Completion of the proof}\label{ssec:assembly}
 
 \begin{proof}[Proof of Theorem~\ref{thm:perturbation}]
 Fix $d>0$ and let $N$ be large. By \eqref{eq:detMf}, Proposition~\ref{prop:pointwise},
-\eqref{eq:weighted-energy}, with $c^*=5.817$ and $-2.29180925=-\mathsf U-\frac12\log 2$, every $f$
+\eqref{eq:weighted-energy}, with $c^*=5.73$ and $-2.29180925=-\mathsf U-\frac12\log 2$, every $f$
 with $m=m(f)$ satisfies
 \[
  |\det M_f|\le2^nK_n\,2^{-28Nm}\exp\bigl(n^2(-\mathsf U+d)+nm\,c^*\bigr)=Mc^m,
@@ -871,7 +913,7 @@ $|\beta_{a,k}|\le B=8J^2K^N$. Now
 \begin{align*}
  \log(nJBc)&=\log(8nJ^3)-28N\log2+N\log K+nc^*\\ &= -28N\log2+N\log K+48Nc^*+\log(8\cdot48\cdot65^3N^4),
 \end{align*}
-and $-28\log2+\log K+48c^*<370.283$; so $nJBc\le e^{370.4N}$ for $N\ge4000$. If $|\delta|\le e^{-370.4N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
+and $-28\log2+\log K+48c^*<366.107$; so $nJBc\le e^{366.3N}$ for $N\ge4000$. If $|\delta|\le e^{-366.3N}$ then $J|\delta|Bc\le1/n$ and $(1+J|\delta|Bc)^n-1\le e-1<2$.
 Lemma~\ref{lem:expansion} gives
 \[
  |\Delta_N(x)-\Delta_N(G)|\le2M=2^{n+1}K_n\,e^{n^2(-\mathsf U+d)} .
@@ -882,9 +924,9 @@ Since $\log K_n=O(n\log n)$, taking $d=\varepsilon/2$ proves the theorem.
 \begin{remark}[The value of $\rho$]
 Per unit of $N$, the quadrature weights contribute $\log K<110.475$, the
 fixed nodes contribute $-28\log2$, and the weighted energy contributes
-$48\cdot5.817=279.216$. The polynomial prefactor is absorbed by the remaining
-margin to $\rho=370.4$. Retaining the Vandermonde product replaces the former
-combined charge $48\log2+48\cdot5.3678$ by $48\cdot5.817$.
+$48\cdot5.73=275.04$. The polynomial prefactor is absorbed by the remaining
+margin to $\rho=366.3$. Retaining the Vandermonde product replaces the former
+combined charge $48\log2+48\cdot5.3678$ by the weighted energy charge, then the separate fixed-node caps and the quadratic margin lower it to $48\cdot5.73$.
 \end{remark}
 
 \section{Proof of the main theorem}\label{sec:proof}
@@ -892,7 +934,7 @@ combined charge $48\log2+48\cdot5.3678$ by $48\cdot5.817$.
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
 Let $\gamma_0=\mathsf U-\mathsf A$ and $\eta=2304\cdot9.996945\cdot10^{-4}$, so that
 $0<\eta<2304\gamma_0$ by \eqref{eq:gap}, and let $\varepsilon=(\gamma_0-\eta/2304)/3>0$. For large
-primes $p$ and $|x-G|\le e^{-370.4p}$, Proposition~\ref{prop:dual} and
+primes $p$ and $|x-G|\le e^{-366.3p}$, Proposition~\ref{prop:dual} and
 Theorem~\ref{thm:perturbation} give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon/2)}$. Also
 $\log\bigl(2\,(44p)!\bigr)\le\frac\varepsilon2n^2$ for large $p$, and
 $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. Hence
@@ -901,20 +943,20 @@ $\log D_p\le(\mathsf A+\varepsilon)n^2$ by Proposition~\ref{prop:denominators}. 
  =e^{-n^2\eta/2304}=e^{-\eta p^2},
 \]
 since $n^2=2304p^2$. By Corollary~\ref{cor:Q} the hypotheses of
-Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=370.4$, and
+Proposition~\ref{prop:criterion} hold with $\xi=G$, $d=44$, this $\eta$ and $\rho=366.3$, and
 \[
  \frac d\eta=\frac{44}{2304\cdot9.996945\cdot10^{-4}}=19.10305\ldots\le R=19.1031 .
 \]
-With the prime number theorem, $c=10001/10000$ and $\varepsilon=c/R=10001/191031$, the exponent is
+Use the square-denominator version of Proposition~\ref{prop:criterion}. With the prime number theorem, $c=10001/10000$ and $\varepsilon=c/(2R)=10001/382062$, the exponent is
 \[
- \Bigl(1+\frac{10001}{191031}\Bigr)\cdot370.4\cdot R=370.4\,(R+c)=7\,446.22528\ldots\le7\,447 .
+ \Bigl(1+\frac{10001}{382062}\Bigr)\cdot366.3\cdot R=366.3\,(R+c/2)=7\,180.633845\ldots\le7\,181 .
 \]
-With Chebyshev's bounds it is at most $3\cdot370.4\cdot R=21\,227.36472\ldots\le21\,228$.
+With Chebyshev's bounds it is at most $3\cdot366.3\cdot R=20\,992.39659\ldots\le20\,993$.
 \end{proof}
 
 \begin{remark}[Limits of the method]\label{rem:limits}
-The exponent is essentially $\rho\,(d/(2304\gamma_0)+c)\approx370.4\cdot20.1\approx7.4\cdot10^3$.
-Further improvements must come from $\rho$, that is, from the contributions listed in the
+The exponent is essentially $\rho\,(d/(2304\gamma_0)+c/2)\approx366.3\cdot19.6\approx7.2\cdot10^3$.
+Further substantial improvements can come from $\rho$, that is, from the contributions listed in the
 remark at the end of Section~\ref{sec:perturbation}, or from a larger gap $\gamma_0$. Numerically,
 enlarging the space of trial sequences in Proposition~\ref{prop:dual} changes $U_2$ only in the
 sixth decimal, so a substantially larger $\gamma_0$ would require a different dual or a
@@ -923,6 +965,7 @@ the weighted endpoint argument reduces it, but further savings would require str
 \end{remark}
 
 \section{Formalization}\label{sec:formal}
+\raggedbottom
 
 All results of this paper are formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib},
 on top of OpenAI's Lean formalization of the irrationality of $G$ \cite{OpenAI2026}. The
@@ -938,10 +981,10 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_7447}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-7447}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_21228}: the same with exponent $21\,228$;
+\item \lean{catalan\_irrationalityMeasure\_7181}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-7181}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_20993}: the same with exponent $20\,993$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
-\item \lean{fixed\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=370.4$;
+\item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
 \end{itemize}
@@ -949,11 +992,11 @@ There is no \lean{sorry}, and the command \lean{\#print axioms} reports only the
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem enters through OpenAI's
 workspace, which already uses it for Proposition~\ref{prop:openai}(c).
 
-\begin{center}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.58\textwidth}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.58\textwidth}}
 \toprule
 File & Content\\
 \midrule
+\endhead
 \lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
 \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
 \lean{Nonvanishing} & Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$\\
@@ -968,10 +1011,10 @@ File & Content\\
 \lean{Dual/*}, \lean{DualTwo} & the certificate data, the kernel checks, Proposition~\ref{prop:dual}\\
 \lean{SharpBarrier} & the remark after Proposition~\ref{prop:dual}\\
 \lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
-\lean{FixedNodeLemma6} & Theorem~\ref{thm:perturbation}, Theorem~\ref{thm:main}\\
+\lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
+\lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}, Theorem~\ref{thm:main}\\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{longtable}
 
 The current proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib release.
 OpenAI's original repository at commit \texttt{fd4aeeb} pins Lean \texttt{v4.34.1} and Mathlib
@@ -985,7 +1028,7 @@ The original development was produced by the AI system Claude Opus~5.5 (Anthropi
 mathematics, including the perturbation estimate and all proofs; the Lean formalization; the
 numerical computations and the certificate generator; the literature search; and the text of this paper. Claude worked in a series
 of conversations at the request of the author, who posed the problem, directed the work, and is
-responsible for this submission. The fixed-node decay bound and weighted Vandermonde refinement, endpoint certificates, dependency refactor, integer certificate computations and their soundness proofs, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
+responsible for this submission. The separate fixed-node decay bounds and weighted Vandermonde refinement, endpoint certificates, quadratic case refinement, dependency refactor, integer certificate computations and their soundness proofs, square-denominator nonvanishing and the prime-window refinement, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
 The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the

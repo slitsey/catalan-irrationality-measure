@@ -52,7 +52,9 @@ if "external_kernels" in config:
 config.pop("enable_nanoda", None)
 config["external_kernels"] = {
     "nanoda": [f"{prefix}/bin/nanoda_bin"],
-    "con-ron": [f"{prefix}/bin/con-ron"],
+    # One worker avoids con-ron's concurrent result-table allocation on small
+    # hosted runners. The standard verified mode and embedded pins are unchanged.
+    "con-ron": [f"{prefix}/bin/con-ron", "--jobs=1", "--progress=100"],
 }
 pathlib.Path(destination).write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
 PY

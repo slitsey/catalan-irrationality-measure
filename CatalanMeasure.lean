@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.FixedNodeLemma6
+public import CatalanMeasure.SquareMain
