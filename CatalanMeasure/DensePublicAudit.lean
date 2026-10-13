@@ -1,8 +1,6 @@
 module
-public import Solution
+public import CatalanMeasure.DenseMain
 @[expose] public section
-#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_1981
-#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_5391
 #print axioms OAI.InternalCatalan.catalan_irrationalityMeasure_1981
 #print axioms OAI.InternalCatalan.catalan_irrationalityMeasure_5391
 #print axioms CatalanMeasure.Parametric.determinantRat_early_sparse_prime_valuation

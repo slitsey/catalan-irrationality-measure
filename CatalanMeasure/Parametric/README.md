@@ -1,7 +1,19 @@
 # Parametric research foundation
 
-This development is not imported by the public solution. The published bounds remain
-7181 and 20993. The proposed combined target 3300 is not a theorem.
+The public solution certifies bounds 1981 and 5391 using the baseline construction
+and residue-kernel combinations. The new population-energy construction described
+below remains research; its proposed 1281 bound is not a theorem.
+
+The primitive tuple `(20,3,1,2,1)` now has kernel-checked actual base entries,
+three modular inverse certificates, rational base nonsingularity, and uniform prime
+nonvanishing in `TwentyBase/Nonvanishing`. `PopulationOneLogs` and
+`PopulationPhysicalValue` identify both actual product majorants with their exact
+normalized energies. `FreePopulationFields`, `PopulationFields`, and
+`LogFieldStability` provide the separate free/fixed duals and uniform finite
+endpoint corrections. The shifted-field derivative, approximation, and stationary
+cover framework is proved in `Cert/Shifted*.lean`; the four frozen numerical trials
+still require their concrete certificates. `TwentyPopulationAudit` reports only
+the three standard Lean axioms for fifteen further principal statements.
 
 `Parameters` describes integer multiples of `(n0,b0,q0,g0,h0)`. Admissibility requires
 positive n0,b0,q0,h0 and 2g0<n0. The proposed tuple is `(96,15,7,7,5)`.

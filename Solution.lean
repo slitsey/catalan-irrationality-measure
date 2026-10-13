@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.DenseMain
+public import CatalanMeasure.Parametric.TwentyMain
 
 public section
 
@@ -8,23 +8,23 @@ public section
 # Proofs of the advertised statements
 
 The statements are those of `Challenge.lean`; the proofs are the theorems
-`OAI.InternalCatalan.catalan_irrationalityMeasure_1981` and
-`OAI.InternalCatalan.catalan_irrationalityMeasure_5391` of `CatalanMeasure/DenseMain.lean`, where
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_1281` and
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_3662` of `CatalanMeasure/Parametric/TwentyMain.lean`, where
 Catalan's constant is OpenAI's `OAI.InternalCatalan.catalan`, defined as the same series.
 -/
 
 namespace CatalanIrrationalityMeasure
 
-theorem catalan_irrationalityMeasure_1981 :
+theorem catalan_irrationalityMeasure_1281 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(1981 : ℝ)) <
+      (b : ℝ) ^ (-(1281 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
-  OAI.InternalCatalan.catalan_irrationalityMeasure_1981
+  CatalanMeasure.Parametric.catalan_irrationalityMeasure_1281
 
-theorem catalan_irrationalityMeasure_5391 :
+theorem catalan_irrationalityMeasure_3662 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(5391 : ℝ)) <
+      (b : ℝ) ^ (-(3662 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
-  OAI.InternalCatalan.catalan_irrationalityMeasure_5391
+  CatalanMeasure.Parametric.catalan_irrationalityMeasure_3662
 
 end CatalanIrrationalityMeasure

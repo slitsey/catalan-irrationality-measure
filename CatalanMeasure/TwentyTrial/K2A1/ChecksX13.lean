@@ -1,0 +1,10 @@
+module
+public import CatalanMeasure.TwentyTrial.K2A1.Data
+@[expose] public section
+namespace CatalanMeasure.TwentyTrial.K2A1
+open CatalanMeasure.Cert OAI.InternalCatalan
+set_option maxRecDepth 100000
+set_option maxHeartbeats 6000000
+theorem gapX13 : integerGapOK AZX ((-623299 / 625000 : ℚ),(-9961 / 10000 : ℚ),false)=true :=by decide +kernel
+theorem bracketX13 : shiftedRowBracketOK R Pc Vc P V AX QX MX ((-623299 / 625000 : ℚ),(-9961 / 10000 : ℚ),false)=true :=by decide +kernel
+end CatalanMeasure.TwentyTrial.K2A1

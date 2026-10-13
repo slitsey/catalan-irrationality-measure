@@ -1,0 +1,10 @@
+module
+public import CatalanMeasure.Parametric.TwentyMain
+@[expose] public section
+#print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_spec
+#print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_nonvanishing
+#print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_hypotheses
+#print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_1281
+#print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_3662
+#print axioms CatalanMeasure.Parametric.twenty_log_denomBound_eventually_le
+#print axioms CatalanMeasure.Parametric.twenty_perturbation

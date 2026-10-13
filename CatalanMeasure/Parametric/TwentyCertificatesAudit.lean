@@ -1,0 +1,22 @@
+module
+public import CatalanMeasure.TwentyTrial.K1A0.Sup
+public import CatalanMeasure.TwentyTrial.K1A1.Sup
+public import CatalanMeasure.TwentyTrial.K2A0.Sup
+public import CatalanMeasure.TwentyTrial.K2A1.Sup
+public import CatalanMeasure.TwentyResidualFixed0Certificate
+public import CatalanMeasure.TwentyResidualFixed1Certificate
+@[expose] public section
+#print axioms CatalanMeasure.TwentyTrial.K1A0.row_sup
+#print axioms CatalanMeasure.TwentyTrial.K1A0.column_sup
+#print axioms CatalanMeasure.TwentyTrial.K1A0.normP_le
+#print axioms CatalanMeasure.TwentyTrial.K1A0.normV_le
+#print axioms CatalanMeasure.TwentyTrial.K1A1.row_sup
+#print axioms CatalanMeasure.TwentyTrial.K1A1.column_sup
+#print axioms CatalanMeasure.TwentyTrial.K2A0.row_sup
+#print axioms CatalanMeasure.TwentyTrial.K2A0.column_sup
+#print axioms CatalanMeasure.TwentyTrial.K2A0.normP_le
+#print axioms CatalanMeasure.TwentyTrial.K2A0.normV_le
+#print axioms CatalanMeasure.TwentyTrial.K2A1.row_sup
+#print axioms CatalanMeasure.TwentyTrial.K2A1.column_sup
+#print axioms CatalanMeasure.TwentyResidualFixed0.actual_fixed_field_sup
+#print axioms CatalanMeasure.TwentyResidualFixed1.actual_fixed_field_sup

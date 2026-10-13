@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-1981)`.
+> `|G - a/b| > b^(-1281)`.
 >
-> So the irrationality exponent of `G` is at most `1981`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-5391)`.
+> So the irrationality exponent of `G` is at most `1281`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-3662)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -27,19 +27,27 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 - [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
   scope.
 
-The arithmetic refinement proves uniform six-row relations and linear combinations
-of those relations in the leading prime residues of the actual determinant. The
-combined window `18N <= p <= 21N` saves a continuous trapezoid of exact integral
-`20/3`. Rank-nullity supplies `3p-54N` independent relations in the earlier window;
-this is a uniform proof, not a numerical rank assumption. The resulting decay rate
-`η = 8.969` yields 1981 and 5391 with the existing perturbation exponent `ρ = 366.3`.
-Both new bounds pass Lean's main kernel and the standard-axiom audit.
-Independent-kernel and comparator acceptance remain pending.
+The current theorem uses the admissible determinant tuple `(20,3,1,2,1)`:
+the matrix has `20N` rows and its polynomial has degree at most `18N`. Actual
+physical column-pool valuations and sparse residue relations give odd-prime
+cost `8795/4800`; the actual two-adic smoothing/minor proof gives
+`(21/200) log 2`. Four exact field certificates and a separate treatment of free
+and fixed populations prove dual target `U = 2.256085`. Restricted quadrature
+and joint atom weights yield perturbation exponent `rho = 120`. The final
+criterion uses `eta = 1.77`, proving 1281 and 3662.
+
+Both bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
+and comparator acceptance remain pending; CI optimization is deferred. The earlier
+48-row construction and its 1981/5391 result remain as verified historical modules.
 
 ## Structure of the proof
 
 | Directory or file | Content |
 |---|---|
+| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | final 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
+| `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth |
+| `CatalanMeasure/TwentyTrial/`, `Parametric/TwentyUniformEnergy.lean`, `TwentyWeightedIntegrand.lean` | four kernel-checked endpoint trials and uniform free/fixed population estimates |
+| `CatalanMeasure/JointDetExpansion.lean`, `WeightedMixedAndreief.lean`, `Parametric/TwentyPerturbation.lean` | joint atom weights, actual determinant integration and perturbation on exp(-120N) disks |
 | `CatalanMeasure/DeltaPoly.lean`, `Degree.lean` | OpenAI's determinant as a polynomial `Δ_N(X)` in the constant; `deg Δ_N ≤ 44N` |
 | `CatalanMeasure/Denominators.lean`, `IntegerValued.lean`, `Integrality.lean` | a common denominator `D_N` for `Δ_N` at integers, with `log D_N ≤ (A + ε) n²`; integer-valued polynomials; `Q_N = (44N)! D_N Δ_N ∈ ℤ[X]` |
 | `CatalanMeasure/Nonvanishing.lean` | `Δ_p(a/b) ≠ 0` for large primes `p ∤ b` |
@@ -60,7 +68,7 @@ Independent-kernel and comparator acceptance remain pending.
 | `CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
 | `CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
 | `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993 |
-| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; exploratory proposed-parameter modules are not needed by the final 1981 theorem |
+| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; the earlier proposed-parameter experiments remain separate from the selected twenty-row proof |
 | `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the historical 2742/7675 bounds |
 | `CatalanMeasure/Parametric/EarlySparseValuation.lean`, `ResidueRank.lean`, `SparseCombinationRank.lean` | actual residue rank and early-window determinant saving, with explicit injective row-combination maps |
 | `CatalanMeasure/DensePrimeGain.lean`, `DenseGainPNT.lean`, `DenseDenominators.lean`, `DenseDenominatorGrowth.lean`, `DenseMain.lean` | gain integral 20/3, denominator saving 5/1728, and the 1981/5391 bounds |
@@ -107,7 +115,7 @@ workflow records its timings. The generator for these files is in
 
 The original mathematics, Lean development, module conversion and companion paper were
 produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
-refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, dependency refactor and corresponding paper revisions were
+refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, the twenty-row parameter family, full free/fixed population energy, actual local arithmetic and corresponding paper revisions were
 developed with OpenAI Codex at his request. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).

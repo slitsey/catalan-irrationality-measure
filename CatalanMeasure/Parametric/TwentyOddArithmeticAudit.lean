@@ -1,0 +1,11 @@
+module
+public import CatalanMeasure.Parametric.TwentyOddNormalization
+@[expose] public section
+#print axioms CatalanMeasure.Parametric.paramRawEntryRat_eq_upper_pool_inverse
+#print axioms CatalanMeasure.Parametric.paramUpperInverseCoeff_den_ne_zero
+#print axioms CatalanMeasure.Parametric.paramRawEntryRat_eq_upper_physical_sum
+#print axioms CatalanMeasure.Parametric.filteredEntry_eq_upper_physical_sum
+#print axioms CatalanMeasure.Parametric.determinantRat_upper_prime_valuation
+#print axioms CatalanMeasure.Parametric.twenty_determinant_odd_valuation
+#print axioms CatalanMeasure.Parametric.integral_twentyOddLoss_normalized
+#print axioms CatalanMeasure.Parametric.twenty_determinant_odd_profile

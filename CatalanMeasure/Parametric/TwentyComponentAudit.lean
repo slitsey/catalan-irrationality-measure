@@ -1,0 +1,24 @@
+module
+public import CatalanMeasure.Parametric.TwentyRestrictedWeights
+public import CatalanMeasure.Parametric.TwentySparseValuation
+public import CatalanMeasure.Parametric.TwentyGainPNT
+public import CatalanMeasure.Parametric.TwentyTrialFields
+public import CatalanMeasure.Parametric.TwentyBudgets
+public import CatalanMeasure.Parametric.TwentyResidualTransfer
+public import CatalanMeasure.Parametric.TwentyTwoAdicBudget
+@[expose] public section
+#print axioms CatalanMeasure.Parametric.TwentyCircle.twentyCircle_ineq
+#print axioms CatalanMeasure.Parametric.twenty_norm_restricted_filtered_basis_le
+#print axioms CatalanMeasure.Parametric.twenty_restrictedWeight_joint_le
+#print axioms CatalanMeasure.Parametric.twenty_weighted_restrictedWeight_le
+#print axioms CatalanMeasure.Parametric.twenty_early_sparse_valuation
+#print axioms CatalanMeasure.Parametric.twenty_upper_sparse_valuation
+#print axioms CatalanMeasure.Parametric.integral_twentyPrimeGain
+#print axioms CatalanMeasure.Parametric.twentyPrimeGain_normalized_tendsto
+#print axioms CatalanMeasure.Parametric.twenty_shiftedFirstRowField
+#print axioms CatalanMeasure.Parametric.twenty_shiftedRowField
+#print axioms CatalanMeasure.Parametric.first_population_missing_mass_le
+#print axioms CatalanMeasure.Parametric.twenty_budget_checks
+#print axioms CatalanMeasure.Parametric.twenty_eta_budget
+#print axioms CatalanMeasure.Parametric.twentyResidualTwo_le
+#print axioms CatalanMeasure.Parametric.twenty_two_adic_selector_budget

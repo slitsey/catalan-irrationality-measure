@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.DenseMain
+public import CatalanMeasure.Parametric.TwentyMain
