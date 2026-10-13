@@ -1,0 +1,16 @@
+module
+public import Solution
+@[expose] public section
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_1981
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_5391
+#print axioms OAI.InternalCatalan.catalan_irrationalityMeasure_1981
+#print axioms OAI.InternalCatalan.catalan_irrationalityMeasure_5391
+#print axioms CatalanMeasure.Parametric.determinantRat_early_sparse_prime_valuation
+#print axioms OAI.InternalCatalan.exists_int_denseDenomBound_mul
+#print axioms CatalanMeasure.integral_densePrimeGain
+#print axioms CatalanMeasure.densePrimeGain_normalized_tendsto
+#print axioms OAI.InternalCatalan.log_denseDenomBound_eventually_le
+#print axioms OAI.InternalCatalan.denseMeasureIntPoly_hypotheses
+
+#print axioms CatalanMeasure.Parametric.sparse_combination_residue_rank
+#print axioms CatalanMeasure.Parametric.residue_rank_valuation_lower

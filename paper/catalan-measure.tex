@@ -54,10 +54,10 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's recent proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove that
 \[
- \left|G-\frac ab\right|>b^{-2\,742}
+ \left|G-\frac ab\right|>b^{-1\,981}
 \]
 for all integers $a$ and all sufficiently large integers $b$. Thus the irrationality
-exponent of $G$ is at most $2\,742$; without the prime number theorem in the final step the same argument gives $7\,675$. The previous best bound, due to Jha, is $10^8$. The new ingredients are uniform prime-residue row dependencies that improve the
+exponent of $G$ is at most $1\,981$; without the prime number theorem in the final step the same argument gives $5\,391$. The previous best bound, due to Jha, is $10^8$. The new ingredients are uniform prime-residue row dependencies that improve the
 common denominator, and a perturbation estimate for OpenAI's determinant, viewed as a polynomial
 $\Delta_N(X)$ in the constant: on the interval $|x-G|\le e^{-366.3N}$ the polynomial moves by
 no more than OpenAI's bound for $|\Delta_N(G)|$. It is proved by a quadrature formula for
@@ -94,10 +94,10 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-2\,742}.
+ \left|G-\frac ab\right|>b^{-1\,981}.
 \]
-In particular $\mu(G)\le 2\,742$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-7\,675}$.
+In particular $\mu(G)\le 1\,981$. If in the last step the prime number theorem is replaced by
+Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-5\,391}$.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -115,7 +115,7 @@ minors of OpenAI's matrix in every dimension, by an energy estimate with node pa
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
 functions, and each perturbed column costs a factor $e^{\rho N}$ with $\rho=366.3$
-(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $36\,000$; the difference comes from this step and from the new energy certificate described below. For other recent work on rational approximations to $G$ see Eskandari
+(Theorem~\ref{thm:perturbation}). Our exponent is smaller than Jha's by a factor of about $50\,000$; the difference comes from this step and from the new energy certificate described below. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
@@ -126,7 +126,7 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed through the fo
 \begin{enumerate}[label=(\roman*)]
 \item \emph{Arithmetic} (Section~\ref{sec:arith}). $\deg\Delta_N\le44N$ (Lemma~\ref{lem:degree}).
  OpenAI's local estimates, applied at integer points, give a common denominator $D_N$ with
- $\log D_N\le(\mathsf A_*+o(1))n^2$, where $\mathsf A_*=\mathsf A-1999/1152000$ (Proposition~\ref{prop:sparse-denominators}). So
+ $\log D_N\le(\mathsf A_*+o(1))n^2$, where $\mathsf A_*=\mathsf A-5/1728$ (Proposition~\ref{prop:sparse-denominators}). So
  $Q_N=(44N)!\,D_N\,\Delta_N(X)$ has integer coefficients. A refinement of OpenAI's nonvanishing argument gives
  $Q_p(a/b)\ne0$ whenever $p^2\nmid b$ (Proposition~\ref{prop:square-nonvanishing}).
 \item \emph{Perturbation} (Section~\ref{sec:perturbation}). For $|x-G|\le e^{-366.3N}$,
@@ -142,7 +142,7 @@ variable gives a polynomial $\Delta_N(X)\in\Q[X]$, and we proceed through the fo
  $2.290939875-\frac12\log2$ to $\mathsf U=2.29180925-\frac12\log2$ (Proposition~\ref{prop:dual})
  and raises $\gamma_0$ from $1.30\cdot10^{-4}$ to $1.00\cdot10^{-3}$.
 \item \emph{Numerics} (Section~\ref{sec:proof}). The exponent is about
- $\rho\cdot44/(2304\gamma_*)\approx366.3\cdot7.0$, up to the factor coming from the size of
+ $\rho\cdot44/(2304\gamma_*)\approx366.3\cdot4.91$, up to the factor coming from the size of
  the prime window.
 \end{enumerate}
 
@@ -326,30 +326,71 @@ so $v_p(p^{96N}\Delta_N(z))\ge e$. This proves the claim. A fixed cutoff
 $p\ge10^6$ suffices for the finite rational denominator checks used in the formal proof.
 \end{proof}
 
+\begin{proposition}[An earlier residue window]\label{prop:early-rows}
+Let $N\ge1$ and let $p\ge10^6$ be prime, with $18N\le p$, $3p\le58N$
+and $65N<p^2$. For any rational $z$ whose product $pz$ has denominator coprime to $p$,
+\[
+ v_p(\Delta_N(z))\ge-96N+(3p-54N).
+\]
+The same formal convention at zero applies.
+\end{proposition}
+
+\begin{proof}
+Use all $g=4N$ modes from the preceding proof. Each $Q_d$ is still supported in
+$[2p,3p)$: $3p+g\le C$ and $H\le4p$. The obstruction to the digit identity
+is now quotient zero, contributed by coefficients in $[2p+b,H-p)$.
+For $c\in\mathbb F_p^{g}$ put $Q_c=\sum_{d=1}^{g}c_dQ_d$ and let
+\[
+ B:\mathbb F_p^{g}\longrightarrow\mathbb F_p^{r},\qquad
+ r=H-3p-b=58N-3p,
+\]
+record precisely these coefficients of $Q_c$. Rank--nullity gives
+$\dim\ker B\ge g-r=3p-54N$. When $c\in\ker B$, its combined polynomial has
+support below $2p+b$ and above $L-p$, so only column quotients one and two
+contribute. The same rational digit identity therefore makes
+\[
+ J(c)=\sum_{d=1}^{g}c_d
+ \left(\delta_2-\frac{292}{59}\delta_1+\frac{3281}{177}\delta_0\right)
+\]
+a left null vector of the leading residue matrix. The map $J$ is injective:
+its coefficient at the distinct target row $g+2p+d$ is exactly $c_d$, and all
+source rows lie below $g+2p$ since $g<p$.
+Consequently the residue rank is at most $n-(3p-54N)$.
+
+For completeness, the rank-to-valuation step does not require a particular
+basis of $\ker B$. If a rational matrix $A$ has entries with denominator coprime
+to $p$, and its reduction has rank at most $n-e$, factor that reduction through
+$\mathbb F_p^{n-e}$ and lift the factors to rational matrices with integer entries.
+Write $A=UV+pE$, with $E$ also having denominators coprime to $p$.
+Multilinearity of the determinant kills every term with more than $n-e$ columns
+from $UV$; all remaining terms contain at least $e$ factors $p$. Thus
+$v_p(\det A)\ge e$. Apply this to $A=p^2M$ and $e=3p-54N$.
+\end{proof}
+
 \begin{proposition}[Refined common denominator]\label{prop:sparse-denominators}
 There are positive integers $D_N^*$ such that $D_N^*\Delta_N(i)\in\mathbb Z$ for every
 $i\in\mathbb N$ and, for every $\varepsilon>0$ and all sufficiently large $N$,
 \[
  \log D_N^*\le(\mathsf A_*+\varepsilon)n^2,\qquad
- \mathsf A_* = \mathsf A-\frac{1999}{1152000}.
+ \mathsf A_* = \mathsf A-\frac{5}{1728}.
 \]
 \end{proposition}
 
 \begin{proof}
-In the window of Proposition~\ref{prop:sparse-rows}, take the smaller of the old denominator
-exponent and $96N-e$; keep the old exponent elsewhere. This defines $D_N^*$ and proves
-integrality at all integer points. For large $N$ the old exponent is exactly $96N$ in this
-window. A continuous saving below $e/N$ is
+Take the minimum of the old denominator exponent and the new bounds
+from Propositions~\ref{prop:sparse-rows} and~\ref{prop:early-rows} wherever each applies.
+This defines $D_N^*$ and proves integrality at all integer points.
+For large $N$ the old exponent is exactly $96N$ throughout these windows.
+The resulting continuous saving is
 \[
- f(x)=4000(x-58/3)_+-4000(x-58003/3000)_+
-      -3(x-59/3)_++3(x-21)_+,
+ f(x)=3(x-18)_+-3(x-58/3)_+-3(x-59/3)_++3(x-21)_+,
 \]
-where $y_+=\max(y,0)$. This function rises linearly from zero to four in an interval
-of length $1/1000$, is constant until $59/3$, then decreases linearly to zero at $21$.
-It is nonnegative, supported in $[58/3,21]$, and
-$\int_1^{65}f(x)\,dx=1999/500$. The weighted prime number theorem gives
+where $y_+=\max(y,0)$. It rises from zero to four on $[18,58/3]$,
+is constant on $[58/3,59/3]$, then decreases to zero at $21$.
+It is nonnegative, supported in $[18,21]$, and
+$\int_1^{65}f(x)\,dx=20/3$. The weighted prime number theorem gives
 \[
- \frac{N}{n^2}\sum_{p\le65N}f(p/N)\log p\longrightarrow\frac{1999}{1152000}.
+ \frac{N}{n^2}\sum_{p\le65N}f(p/N)\log p\longrightarrow\frac{5}{1728}.
 \]
 Subtract this saving from Proposition~\ref{prop:denominators} to obtain the result.
 \end{proof}
@@ -1023,9 +1064,9 @@ combined charge $48\log2+48\cdot5.3678$ by the weighted energy charge, then the 
 \section{Proof of the main theorem}\label{sec:proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
-Let $\gamma_*=\mathsf U-\mathsf A_* = \gamma_0+1999/1152000$ and $\eta=63/10$.
+Let $\gamma_*=\mathsf U-\mathsf A_* = \gamma_0+5/1728$ and $\eta=8969/1000$.
 The certified old margin \eqref{eq:gap} implies
-$2304\gamma_*>2304\cdot9.996945\cdot10^{-4}+1999/500>6.3$.
+$2304\gamma_*>2304\cdot9.996945\cdot10^{-4}+20/3>8.969$.
 For sufficiently small $\varepsilon>0$ and large primes $p$, the real bound and perturbation
 estimate give $|\Delta_p(x)|\le2e^{n^2(-\mathsf U+\varepsilon)}$ on
 $|x-G|\le e^{-366.3p}$. The factorial and the factor two are $e^{o(n^2)}$, while
@@ -1035,14 +1076,14 @@ $Q_p=(44p)!D_p^*\Delta_p$ satisfies $|Q_p(x)|\le e^{-\eta p^2}$ for large $p$.
 Corollary~\ref{cor:Q} gives its degree and square-denominator nonvanishing.
 
 Apply Proposition~\ref{prop:criterion} with $d=44$, $\rho=366.3$ and
-$R=d/\eta=440/63$. Choose $c=10001/10000$ and
-$\varepsilon=c/(2R)=630063/8800000$. The PNT exponent is
+$R=d/\eta=44000/8969$. Choose $c=10001/10000$ and
+$\varepsilon=c/(2R)=89698969/880000000$. The PNT exponent is
 \[
- (1+\varepsilon)\rho R=366.3\left(\frac{440}{63}+\frac{10001}{20000}\right)
- =2741.454029\ldots<2742.
+ (1+\varepsilon)\rho R=366.3\left(\frac{44000}{8969}+\frac{10001}{20000}\right)
+ =1980.157945\ldots<1981.
 \]
 With the Chebyshev window the exponent is
-$3\rho R=7674.857142\ldots<7675$.
+$3\rho R=5390.968892\ldots<5391$.
 \end{proof}
 
 \begin{remark}[Further reductions]\label{rem:limits}
@@ -1064,7 +1105,7 @@ development is available at
 \FormalizationLink
 \end{center}
 and combines analytic and arithmetic proofs with generated rational data and kernel checks
-for Proposition~\ref{prop:dual} and Section~\ref{ssec:weighted}. The uniform sparse prime-row dependencies and the weighted-PNT denominator saving are also
+for Proposition~\ref{prop:dual} and Section~\ref{ssec:weighted}. The uniform sparse and combined prime-row dependencies and the weighted-PNT denominator saving are also
 proved in Lean; numerical rank scans alone are not used as proof. The historical sharpened
 OpenAI certificate is retained separately. It uses OpenAI's definitions directly:
 Catalan's constant is \lean{catalan}, defined as the series
@@ -1072,8 +1113,8 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The main statements, in the namespace
 \lean{OAI.InternalCatalan}, are:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_2742}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-2742}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_7675}: the same with exponent $7\,675$;
+\item \lean{catalan\_irrationalityMeasure\_1981}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1981}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_5391}: the same with exponent $5\,391$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
 \item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
@@ -1090,7 +1131,7 @@ File & Content\\
 \endhead
 \lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
 \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
-\lean{SparseDenominators}, \lean{SparseGainPNT}, \lean{SparseMain} & Propositions~\ref{prop:sparse-rows} and~\ref{prop:sparse-denominators}; the final bounds\\
+\lean{SparseDenominators}, \lean{DenseDenominators}, \lean{DenseGainPNT}, \lean{DenseMain} & Propositions~\ref{prop:sparse-rows}--\ref{prop:sparse-denominators}; the final bounds\\
 \lean{Nonvanishing} & Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$\\
 \lean{PrimeWindow}, \lean{Criterion}, \lean{PNTWindow}, \lean{Main} & Proposition~\ref{prop:criterion} and the reduction to Theorem~\ref{thm:perturbation}\\
 \lean{Quadrature}, \lean{ChebyshevNodes}, \lean{QuadCircle} & Lemma~\ref{lem:quadrature}\\
@@ -1120,7 +1161,7 @@ The original development was produced by the AI system Claude Opus~5.5 (Anthropi
 mathematics, including the perturbation estimate and all proofs; the Lean formalization; the
 numerical computations and the certificate generator; the literature search; and the text of this paper. Claude worked in a series
 of conversations at the request of the author, who posed the problem, directed the work, and is
-responsible for this submission. The separate fixed-node decay bounds and weighted Vandermonde refinement, endpoint certificates, quadratic case refinement, dependency refactor, integer certificate computations and their soundness proofs, square-denominator nonvanishing, the prime-window refinement, uniform sparse prime-row dependencies and denominator saving, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
+responsible for this submission. The separate fixed-node decay bounds and weighted Vandermonde refinement, endpoint certificates, quadratic case refinement, dependency refactor, integer certificate computations and their soundness proofs, square-denominator nonvanishing, the prime-window refinement, uniform sparse and combined prime-row dependencies and denominator saving, and corresponding revisions to this paper were developed with OpenAI Codex at the author's request.
 The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the

@@ -5,10 +5,10 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-2742)`.
+> `|G - a/b| > b^(-1981)`.
 >
-> So the irrationality exponent of `G` is at most `2742`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-7675)`.
+> So the irrationality exponent of `G` is at most `1981`. With Chebyshev's bounds in place of
+> the prime number theorem in the final step, the argument gives `b^(-5391)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -27,12 +27,14 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 - [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
   scope.
 
-The new arithmetic refinement proves uniform six-row relations in the leading prime
-residues of the actual determinant. Each prime in the window `58N <= 3p <= 63N` saves
-`min(4N,63N-3p)` denominator powers. A continuous saving of integral `1999/500`
-lifts the decay rate to `η = 6.3`, yielding the bounds 2742 and 7675 with the existing
-perturbation exponent `ρ = 366.3`. Both new bounds pass Lean's main kernel and the
-standard-axiom audit. Independent-kernel and comparator acceptance remain pending.
+The arithmetic refinement proves uniform six-row relations and linear combinations
+of those relations in the leading prime residues of the actual determinant. The
+combined window `18N <= p <= 21N` saves a continuous trapezoid of exact integral
+`20/3`. Rank-nullity supplies `3p-54N` independent relations in the earlier window;
+this is a uniform proof, not a numerical rank assumption. The resulting decay rate
+`η = 8.969` yields 1981 and 5391 with the existing perturbation exponent `ρ = 366.3`.
+Both new bounds pass Lean's main kernel and the standard-axiom audit.
+Independent-kernel and comparator acceptance remain pending.
 
 ## Structure of the proof
 
@@ -58,8 +60,10 @@ standard-axiom audit. Independent-kernel and comparator acceptance remain pendin
 | `CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
 | `CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
 | `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993 |
-| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; exploratory proposed-parameter modules are not needed by the final 2742 theorem |
-| `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the 2742/7675 bounds |
+| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; exploratory proposed-parameter modules are not needed by the final 1981 theorem |
+| `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the historical 2742/7675 bounds |
+| `CatalanMeasure/Parametric/EarlySparseValuation.lean`, `ResidueRank.lean`, `SparseCombinationRank.lean` | actual residue rank and early-window determinant saving, with explicit injective row-combination maps |
+| `CatalanMeasure/DensePrimeGain.lean`, `DenseGainPNT.lean`, `DenseDenominators.lean`, `DenseDenominatorGrowth.lean`, `DenseMain.lean` | gain integral 20/3, denominator saving 5/1728, and the 1981/5391 bounds |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
 
