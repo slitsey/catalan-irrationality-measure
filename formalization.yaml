@@ -5,14 +5,16 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove that
-    |G - a/b| > b^(-7181) for every integer a and every sufficiently large
-    integer b, so the irrationality exponent of G is at most 7181. Replacing
+    |G - a/b| > b^(-2742) for every integer a and every sufficiently large
+    integer b, so the irrationality exponent of G is at most 2742. Replacing
     the prime number theorem by Chebyshev's bounds in the final step gives the
-    exponent 20993, which is also formalized. The proof builds on OpenAI's
+    exponent 7675, which is also formalized. The proof builds on OpenAI's
     proof and Lean formalization of the irrationality of G. OpenAI's
     determinant is viewed as a polynomial Delta_N(X) in the constant, whose
-    degree is at most 44N. Its values at integers have a common denominator
-    of controlled size. For large primes N it does not vanish at rational
+    degree is at most 44N. New uniform six-row dependencies in the leading
+    prime residues save min(4N,63N-3p) denominator powers in the window
+    58N <= 3p and p <= 21N. A continuous saving of exact integral 1999/500,
+    combined with the prime number theorem, lowers the common-denominator exponent. For large primes N it does not vanish at rational
     numbers whose denominator is not divisible by N squared. The new analytic ingredient is a perturbation
     estimate: for |x - G| <= exp(-366.3 N), |Delta_N(x) - Delta_N(G)| is at
     most OpenAI's bound for |Delta_N(G)|. This estimate is proved by a
@@ -35,14 +37,14 @@ classification:
   msc2020: ["11J82", "11J72"]
 
 sources:
-  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-7181) for all large b"
+  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-2742) for all large b"
     type: original-proof
     relationship: other
     note: >-
       The result is first presented together with this formalization, in the
       companion paper by S. Litsey, "An irrationality measure for Catalan's
       constant" (2026), whose arguments the Lean development follows. The repository
-      contains the revised 7181 paper; Hexagon preprint hexagon:2610.00187v1 is the
+      contains the revised 2742 paper; Hexagon preprint hexagon:2610.00187v1 is the
       earlier 8127 version, and this revision has not been uploaded there.
   - title: "Catalan's constant is irrational"
     authors:
@@ -95,7 +97,7 @@ status:
     written out as the series in Challenge.lean. Every lemma of the companion
     paper is formalized, including the perturbation estimate with rho = 366.3 and
     the irrationality-measure criterion. The prime number theorem used in the
-    7181 version comes from OpenAI's vendored formalization. The paper's
+    2742 version comes from OpenAI's vendored formalization. The paper's
     remarks about the limits of the method are not formalized.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -136,7 +138,8 @@ automation:
   notes: >-
     The original mathematical and formal content was produced by Claude Opus 5.5.
     The weighted Vandermonde refinement, fixed-node decay bound, and paper revision were developed with OpenAI
-    Codex, along with the square-denominator nonvanishing and prime-window refinement. Both worked at the request of the human author, who is responsible for the submission.
+    Codex, along with the square-denominator nonvanishing, prime-window refinement,
+    and uniform sparse prime-row dependencies and denominator saving. Both worked at the request of the human author, who is responsible for the submission.
     Lean's kernel and Comparator are the verification of record.
 
 fidelity:
@@ -157,15 +160,15 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1, first statement"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_7181"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2742"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-7181) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-2742) < |G - a/b|."
     - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev version)"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_20993"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_7675"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-20993) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-7675) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; the

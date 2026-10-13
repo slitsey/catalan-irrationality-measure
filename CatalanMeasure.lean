@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.SquareMain
+public import CatalanMeasure.SparseMain
