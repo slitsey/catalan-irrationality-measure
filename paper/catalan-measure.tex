@@ -1284,11 +1284,11 @@ There is no \lean{sorry}, and the command \lean{\#print axioms} reports only the
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem enters through OpenAI's
 workspace, which already uses it for Proposition~\ref{prop:openai}(c).
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
 \toprule
 File & Content\\
 \midrule
-\endhead
 \lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
 \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
 \lean{SparseDenominators}, \lean{DenseDenominators}, \lean{DenseGainPNT}, \lean{DenseMain} & Propositions~\ref{prop:sparse-rows}--\ref{prop:sparse-denominators}; the earlier $1981$ bound\\
@@ -1310,7 +1310,8 @@ File & Content\\
 \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
 \lean{TwentyTrial/*}, \lean{TwentyUniformEnergy}, \lean{TwentyPerturbation} & Certified population fields, mixed integration and $\rho=120$\\
 \bottomrule
-\end{longtable}
+\end{tabular}
+\end{center}
 
 The current proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib release.
 OpenAI's original repository at commit \texttt{fd4aeeb} pins Lean \texttt{v4.34.1} and Mathlib
