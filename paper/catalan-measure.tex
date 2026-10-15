@@ -53,15 +53,15 @@ Andr\'eief identity, formal verification, Lean}
 \begin{abstract}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
-$|G-a/b|>b^{-1\,095}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le1\,095$. The earlier approximation criterion
+$|G-a/b|>b^{-1\,091}$ for every integer $a$ and every sufficiently large
+integer $b$. Thus $\mu(G)\le1\,091$. The earlier approximation criterion
 using Chebyshev's estimates gives the retained bound $3\,662$.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
 sparse residue relations sharpen its common denominator. Four exact energy
 certificates and separate treatment of free, fixed and marked populations
 give a uniform mixed-integrand bound. Full-interval quadrature and joint atom
-weights control the determinant polynomial on $|x-G|\le e^{-108N}$.
+weights control the determinant polynomial on $|x-G|\le e^{-(538/5)N}$.
 Coefficient divisibility recycles denominator prime squares; selecting the
 largest prime with $p^2\nmid b$ completes the improved measure criterion.
 We retain the earlier $48N$ construction and its $1\,981$ bound to explain
@@ -94,9 +94,9 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-1\,095}.
+ \left|G-\frac ab\right|>b^{-1\,091}.
 \]
-In particular $\mu(G)\le 1\,095$. The earlier criterion using Chebyshev's
+In particular $\mu(G)\le 1\,091$. The earlier criterion using Chebyshev's
 bounds gives the additional statement $|G-a/b|>b^{-3\,662}$.
 \end{theorem}
 
@@ -114,7 +114,7 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-polynomials, and the new parameter family has perturbation exponent $\rho=108$
+polynomials, and the new parameter family has perturbation exponent $\rho=538/5$
 (Section~\ref{sec:twenty}). The improvement also uses actual local arithmetic
 and certified energy fields for that family. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
@@ -140,11 +140,11 @@ polynomial, nonzero at $a/b$ for large prime indices $p$ with $p^2\nmid b$.
 \item Four certified endpoint trials and a uniform interpolation between free
 and fixed populations give physical real-place constant
 $2.256085-\tfrac12\log2$. Full-interval marked-sheet bounds and joint
-quadrature weights give perturbation exponent $108$; the arithmetic gap
+quadrature weights give perturbation exponent $538/5$; the arithmetic gap
 permits decay rate $\eta=1.7755$ after normalization.
 \item Coefficientwise divisibility strengthens the integer evaluation bound.
-The largest-good-prime refinement, with $d=18$, $\eta=1.7755$ and $\rho=108$,
-gives exponent $1095$. The earlier Chebyshev argument retains exponent $3662$.
+The largest-good-prime refinement, with $d=18$, $\eta=1.7755$ and $\rho=538/5$,
+gives exponent $1091$. The earlier Chebyshev argument retains exponent $3662$.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1281,7 +1281,15 @@ nodes; they are not values of the physical amplitude $A_r$ there.
 
 For $p$ free and $m$ fixed columns, $p+m=20N$, the marked first-sheet
 Hadamard bound has the same prefactor $(3/2)^{20N}(20N)^{10N}$ as before.
-The full first-case energy certificate gives loss $90Nm$.
+The full first-case energy certificate gives loss $(448/5)Nm$. Here its scalar budget is sharpened from
+$27/5$ to $269/50$: the difference is bounded above by
+\[
+ -\frac8{125}+\frac{593}{1000}a-\frac{693}{500}a^2
+ =-\frac{693}{500}\left(a-\frac{593}{2772}\right)^2
+   -\frac{3167}{5544000}<0.
+\]
+Removing the quadrature term $(9/10)a$ leaves coefficient $112/25$;
+multiplication by $20Nm$ gives the stated loss.
 In the second case expand only positive marked nodes into actual and near
 sheets, using the exact identity $P=-2A+3A_{\rm near}$ after removal of
 the common row weight. The grouped energy certificate retains separate
@@ -1291,10 +1299,10 @@ arbitrarily small quadratic-scale error. Combining them with the joint
 weight bound gives
 \begin{equation}\label{eq:full-marked-bound}
  S_N(540000N)^m
- \exp\!\left((20N)^2\left(-U_{20}+\tfrac12\log2+\epsilon\right)+108Nm\right).
+ \exp\!\left((20N)^2\left(-U_{20}+\tfrac12\log2+\epsilon\right)+(538/5)Nm\right).
 \end{equation}
 Here $S_N$ is the same prefactor as above. In the second case the sharper
-$107Nm$ can be increased to $108Nm$.
+$107Nm$ can be increased to $(538/5)Nm$.
 
 The mixed Andr\'eief bound allows arbitrary fixed column vectors.
 Formally, modify the integrated row functions at finitely many distinct
@@ -1308,21 +1316,21 @@ After integration, put
 \[
  M_N=2^{20N}S_N
  e^{(20N)^2(-U_{20}+\frac12\log2+\epsilon)},\qquad
- c_N=540000N e^{108N}.
+ c_N=540000N e^{(538/5)N}.
 \]
 The exact joint column expansion gives
 \[
  |\Delta_N^{(20)}(G+\delta)-\Delta_N^{(20)}(G)|
  \le M_N\bigl((1+J|\delta|c_N)^{20N}-1\bigr).
 \]
-If $|\delta|\le e^{-108N}$ the binomial factor is at most
+If $|\delta|\le e^{-(538/5)N}$ the binomial factor is at most
 $(1+9720000N^2)^{20N}=e^{O(N\log N)}$. Its logarithm is $o(N^2)$;
 there is no need to bound the factor by an absolute constant.
 Absorb it and the factorial normalization into the regularization error.
 For all sufficiently large $N$,
-\begin{equation}\label{eq:rho108}
+\begin{equation}\label{eq:rho1076}
  |Q_N^{(20)}(x)|\le e^{-(177/100)N^2}
- \quad\text{whenever }|x-G|\le e^{-108N}.
+ \quad\text{whenever }|x-G|\le e^{-(538/5)N}.
 \end{equation}
 
 \subsection{Coefficient recycling and the final prime choice}
@@ -1357,9 +1365,9 @@ The same certified gap used above satisfies the sharper rational bound
  >\frac{17755}{10000}.
 \]
 Indeed the already verified bound $\log2<0.693147181$ suffices.
-The interval estimate \eqref{eq:rho108}, including normalization, therefore
+The interval estimate \eqref{eq:rho1076}, including normalization, therefore
 holds with every $\eta<400\gamma_{20}$, in particular this sharper choice.
-Set $\eta=17755/10000$, $d=18$, $\rho=108$, $k=1095/108$ and
+Set $\eta=17755/10000$, $d=18$, $\rho=538/5$, $k=5455/538$ and
 $\delta_0=1/1000000$. For large $b$, put $L_b=\log b$,
 $U=kL_b$, $V=(k-1)L_b$. The prime number theorem supplies, simultaneously
 for every sufficiently large real $t$,
@@ -1374,8 +1382,8 @@ Every prime $q\in(p,U]$ has $q^2\mid b$, and $U<2V<2p$.
 Take $B$ to be the product of their squares and put
 $T=\theta(U)-\theta(p)$, so $\log B=2T$.
 
-Suppose $|G-a/b|\le b^{-1095}$. Since $\rho p\le\rho U=1095L_b$,
-\eqref{eq:rho108} applies at $a/b$. Prime-index nonvanishing and
+Suppose $|G-a/b|\le b^{-1091}$. Since $\rho p\le\rho U=1091L_b$,
+\eqref{eq:rho1076} applies at $a/b$. Prime-index nonvanishing and
 \eqref{eq:recycled-integer-lower} give
 \[
  \eta p\le d(L_b-2T).
@@ -1385,17 +1393,19 @@ Using $p\le U$ and $2d-\eta>0$ now yields
 \[
  \eta k\le d+4d\delta_0 k,
  \qquad
- \eta k-d-4d\delta_0k=\frac{1561}{1800000}>0,
+ \eta k-d-4d\delta_0k=\frac{47987}{26900000}>0,
 \]
-a contradiction. This proves the $1095$ statement of Theorem~\ref{thm:main}.
-The combined Lean theorem is
-\lean{Parametric.catalan\_irrationalityMeasure\_1095} in
-\lean{Parametric/TwentySharperMain}; its public series version is in
-\lean{Solution.lean}.
-The earlier $1099$ theorem remains unchanged in
-\lean{Parametric/TwentyRecycledMain}. Retaining the sharper rational gap
-gives the limiting exponent $3888000/3551\approx1094.903$; the strong
-eventual statement above uses the integer exponent $1095$.
+a contradiction. This proves the $1091$ statement of Theorem~\ref{thm:main}.
+
+The combined Lean theorem in namespace \lean{CatalanMeasure.Parametric} is
+\lean{catalan\_irrationalityMeasure\_1091}.
+It is proved in \lean{Parametric/}\allowbreak\lean{TwentyCostMain}.
+Its public series version is in \lean{Solution.lean}.
+The earlier $1095$ theorem remains in \lean{Parametric/}\allowbreak\lean{TwentySharperMain};
+the $1099$ theorem remains in \lean{Parametric/}\allowbreak\lean{TwentyRecycledMain}.
+The sharper gap and marked-column cost give the limiting exponent
+$3873600/3551\approx1090.848$; the strong eventual statement above
+uses the integer exponent $1091$.
 
 \section{Formalization}\label{sec:formal}
 \raggedbottom
@@ -1415,7 +1425,7 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_1095}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1095}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_1091}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1091}<|G-a/b|$ (Theorem~\ref{thm:main});
 \item \lean{catalan\_irrationalityMeasure\_3662}: the same with exponent $3\,662$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
 \item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
@@ -1448,9 +1458,9 @@ File & Content\\
 \lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
 \lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
 \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}\\
-\lean{Parametric/} \lean{TwentySharperMain}, \lean{TwentyRecycledMain}, \lean{TwentyIntegerPolynomial} & Section~\ref{sec:twenty}; the current $1095/3662$ bounds\\
+\lean{Parametric/} \lean{TwentyCostMain}, \lean{TwentySharperMain}, \lean{TwentyIntegerPolynomial} & Section~\ref{sec:twenty}; the current $1091/3662$ bounds\\
 \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
-\lean{TwentyTrial/*}, \lean{TwentyUniformEnergy}, \lean{TwentyFullPerturbation} & Certified population and marked fields, mixed integration and $\rho=108$\\
+\lean{TwentyTrial/*}, \lean{TwentyFirstCost}, \lean{TwentyCostPerturbation} & Certified population and marked fields, mixed integration and $\rho=538/5$\\
 \bottomrule
 \end{longtable}
 

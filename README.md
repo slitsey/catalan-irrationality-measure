@@ -5,9 +5,9 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-1095)`.
+> `|G - a/b| > b^(-1091)`.
 >
-> So the irrationality exponent of `G` is at most `1095`. The earlier criterion using
+> So the irrationality exponent of `G` is at most `1091`. The earlier criterion using
 > Chebyshev's bounds gives the retained result `b^(-3662)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
@@ -36,11 +36,13 @@ cost `8795/4800`; the actual two-adic smoothing/minor proof gives
 `(21/200) log 2`. Four exact field certificates and a separate treatment of free
 and fixed populations prove dual target `U = 2.256085`. Full-interval
 quadrature, genuine P-only marked atoms and grouped sheet estimates yield
-perturbation exponent `rho = 108`, including the critical-radius binomial
+perturbation exponent `rho = 538/5`, including the critical-radius binomial
 factor. The new coefficient theorem proves `q^(2j) | coeff_j Q_N` for
 `N < q <= 2N`. Recycling all later bad-prime squares while choosing the
-largest good prime gives 1095 after retaining the already certified gap
-`eta = 1.7755`. The earlier 1099 theorem with `eta = 1.77`, and the
+largest good prime gives 1091 after retaining the already certified gap
+`eta = 1.7755` and sharpening the existing first-population quadratic.
+Its row cost is now `89.6Nm`; the joint atom weights add `18Nm`.
+The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
 1281/3662 checkpoint, remain in their original verified modules.
 
 Both bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
@@ -51,7 +53,8 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | current 1095 bound using the sharper certified gap; retained 1099 bound combines full-interval perturbation and coefficient recycling |
+| `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | current 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
+| `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |
 | `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
 | `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |
 | `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation |

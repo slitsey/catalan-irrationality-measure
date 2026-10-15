@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.Parametric.TwentySharperMain
+public import CatalanMeasure.Parametric.TwentyCostMain
