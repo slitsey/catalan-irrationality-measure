@@ -1,0 +1,5 @@
+module
+public import CatalanMeasure.Parametric.MarkedAmplitude
+#print axioms CatalanMeasure.Parametric.marked_amplitude_entry_factor
+#print axioms CatalanMeasure.Parametric.marked_amplitude_det_factor
+#print axioms CatalanMeasure.Parametric.marked_amplitude_det_bound

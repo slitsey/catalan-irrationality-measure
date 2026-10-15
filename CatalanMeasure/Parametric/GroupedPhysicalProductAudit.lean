@@ -1,0 +1,4 @@
+module
+public import CatalanMeasure.Parametric.GroupedPhysicalProduct
+#print axioms CatalanMeasure.Parametric.log_groupedPairProduct
+#print axioms CatalanMeasure.Parametric.log_groupedPhysicalProduct

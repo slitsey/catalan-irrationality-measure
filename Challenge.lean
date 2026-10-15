@@ -15,7 +15,7 @@ Catalan's constant is `G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`; it is written out
 The two statements say that for every sufficiently large denominator `b` and every integer
 numerator `a`,
 
-* `|G - a / b| > b ^ (-1281)` (so the irrationality exponent of `G` is at most `1281`), and
+* `|G - a / b| > b ^ (-1099)` (so the irrationality exponent of `G` is at most `1099`), and
 * `|G - a / b| > b ^ (-3662)`, the bound obtained with Chebyshev's estimates in place of the
   prime number theorem in the final step.
 
@@ -26,11 +26,11 @@ OpenAI, *Catalan's constant is irrational* (2026).
 namespace CatalanIrrationalityMeasure
 
 /-- **Irrationality measure for Catalan's constant.** For all sufficiently large natural
-numbers `b` and all integers `a`, `b ^ (-1281) < |G - a / b|`, where
-`G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`.  Hence `μ(G) ≤ 1281`. -/
-theorem catalan_irrationalityMeasure_1281 :
+numbers `b` and all integers `a`, `b ^ (-1099) < |G - a / b|`, where
+`G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`.  Hence `μ(G) ≤ 1099`. -/
+theorem catalan_irrationalityMeasure_1099 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(1281 : ℝ)) <
+      (b : ℝ) ^ (-(1099 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   sorry
 

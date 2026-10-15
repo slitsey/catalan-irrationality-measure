@@ -1,0 +1,4 @@
+module
+public import CatalanMeasure.Parametric.GroupedDeterminant
+#print axioms CatalanMeasure.Parametric.orthonormalBasis_det_norm_le_prod_norm
+#print axioms CatalanMeasure.Parametric.grouped_operator_det_bound

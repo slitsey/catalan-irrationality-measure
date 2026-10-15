@@ -5,18 +5,19 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G - a/b| > b^(-1281) for every integer a and every sufficiently large b.
+    |G - a/b| > b^(-1099) for every integer a and every sufficiently large b.
     The final Chebyshev criterion gives exponent 3662. The selected admissible
     tuple (20,3,1,2,1) has matrix size 20N and determinant-polynomial degree
     at most 18N. Actual physical prime-column pools and sparse residue relations
     give exact odd-prime cost 8795/4800. Actual two-adic coefficient-minor
     expansions give cost (21/200) log 2. Four exact endpoint field certificates,
     finite corrections and uniform free/fixed population interpolation prove
-    dual target 2.256085, retaining the physical log(2)/2 correction. Restricted
-    quadrature on a radius1001/1000 circle and joint atom weights give actual
-    determinant perturbation for |x-G| <= exp(-120N). Common denominators,
+    dual target 2.256085, retaining the physical log(2)/2 correction. Full-interval
+    quadrature with genuine marked P-only atoms and joint weights gives actual
+    determinant perturbation for |x-G| <= exp(-108N). Common denominators,
     integer-valued factorial normalization and prime-index nonvanishing when
-    p squared does not divide the rational denominator complete the proof.
+    p squared does not divide the rational denominator, followed by coefficientwise
+    recycling of all later bad-prime squares, complete the proof.
     The original 48-row construction and its 1981/5391 bounds remain verified
     historical modules. The development builds on OpenAI's formalization.
   authors:
@@ -30,14 +31,14 @@ classification:
   msc2020: ["11J82", "11J72"]
 
 sources:
-  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-1281) for all large b"
+  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-1099) for all large b"
     type: original-proof
     relationship: other
     note: >-
       The result is first presented together with this formalization, in the
       companion paper by S. Litsey, "An irrationality measure for Catalan's
       constant" (2026), whose arguments the Lean development follows. The repository
-      contains the revised 1281 paper; Hexagon preprint hexagon:2610.00187v1 is the
+      contains the revised 1099 paper; Hexagon preprint hexagon:2610.00187v1 is the
       earlier 8127 version, and this revision has not been uploaded there.
   - title: "Catalan's constant is irrational"
     authors:
@@ -66,6 +67,19 @@ sources:
       formalized in Lean on top of OpenAI's work. Not used in this proof.
     author_endorsement: not-contacted
 
+  - title: "General designs and an irrationality exponent for Catalan's constant"
+    authors:
+      - "Marcos Costa Santos Carreira"
+    id: "doi:10.5281/zenodo.23326325"
+    type: preprint
+    location: "https://github.com/MarcosCarreira/catalan-designs"
+    relationship: background
+    note: >-
+      Related five-parameter determinant designs and a reported bound mu(G) < 2715.
+      Compared in the companion paper. No code or theorem from that work is
+      imported into this formalization.
+    author_endorsement: not-contacted
+
 related_formalizations:
   - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan"
     relationship: builds-on
@@ -88,9 +102,9 @@ status:
   scope: >-
     Both advertised statements are fully proved, with Catalan's constant
     written out as the series in Challenge.lean. Every lemma of the companion
-    paper is formalized, including the perturbation estimate with rho = 120 and
+    paper is formalized, including the perturbation estimate with rho = 108 and
     the irrationality-measure criterion. The prime number theorem used in the
-    1281 version comes from OpenAI's vendored formalization. The paper's
+    1099 version comes from OpenAI's vendored formalization. The paper's
     remarks about the limits of the method are not formalized.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -134,8 +148,9 @@ automation:
     Codex, along with the square-denominator nonvanishing, prime-window refinement,
     and uniform sparse prime-row dependencies, injective combined-row kernel embeddings,
     and denominator saving, followed by the twenty-row determinant, actual local arithmetic,
-    four certified population endpoints, joint atom estimates and rho120 perturbation. Both worked at the request of the human author, who is responsible for the submission.
-    The current 1281/3662 checkpoint passes the main Lean kernel and standard-axiom
+    four certified population endpoints, joint atom estimates, full-interval marked-sheet bounds and rho108 perturbation,
+    followed by coefficient recycling and largest-good-prime selection. Both worked at the request of the human author, who is responsible for the submission.
+    The current 1099/3662 checkpoint passes the main Lean kernel and standard-axiom
     audits. Independent-kernel and Comparator acceptance remain pending; the author
     deferred CI and Palomar optimization until bound-reduction research stalls.
 
@@ -157,10 +172,10 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1, first statement"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_1281"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_1099"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-1281) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-1099) < |G - a/b|."
     - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev version)"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_3662"
       module: "Challenge"

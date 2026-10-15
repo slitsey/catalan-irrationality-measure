@@ -1,0 +1,6 @@
+module
+public import CatalanMeasure.Parametric.TwentyRecycledMain
+@[expose] public section
+#print axioms CatalanMeasure.Parametric.twenty_full_perturbation
+#print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_full_hypotheses
+#print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_1099

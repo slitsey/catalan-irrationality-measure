@@ -5,16 +5,18 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-1281)`.
+> `|G - a/b| > b^(-1099)`.
 >
-> So the irrationality exponent of `G` is at most `1281`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-3662)`.
+> So the irrationality exponent of `G` is at most `1099`. The earlier criterion using
+> Chebyshev's bounds gives the retained result `b^(-3662)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
 Catalan's constant* (2026), has revised LaTeX source and PDF in [`paper/`](paper/). The earlier 8127 version was
 Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload a new preprint version. R. K. Jha proved earlier, independently, the weaker bound
 `μ(G) ≤ 10^8` ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
+Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
+([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
 
 ## What to read
 
@@ -32,9 +34,13 @@ the matrix has `20N` rows and its polynomial has degree at most `18N`. Actual
 physical column-pool valuations and sparse residue relations give odd-prime
 cost `8795/4800`; the actual two-adic smoothing/minor proof gives
 `(21/200) log 2`. Four exact field certificates and a separate treatment of free
-and fixed populations prove dual target `U = 2.256085`. Restricted quadrature
-and joint atom weights yield perturbation exponent `rho = 120`. The final
-criterion uses `eta = 1.77`, proving 1281 and 3662.
+and fixed populations prove dual target `U = 2.256085`. Full-interval
+quadrature, genuine P-only marked atoms and grouped sheet estimates yield
+perturbation exponent `rho = 108`, including the critical-radius binomial
+factor. The new coefficient theorem proves `q^(2j) | coeff_j Q_N` for
+`N < q <= 2N`. Recycling all later bad-prime squares while choosing the
+largest good prime gives 1099 with `eta = 1.77`. The 1281/3662 checkpoint
+remains in its original verified modules.
 
 Both bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator acceptance remain pending; CI optimization is deferred. The earlier
@@ -44,7 +50,10 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | final 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
+| `CatalanMeasure/Parametric/TwentyRecycledMain.lean` | current 1099 bound; combines full-interval perturbation and coefficient recycling |
+| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
+| `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |
+| `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation |
 | `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth |
 | `CatalanMeasure/TwentyTrial/`, `Parametric/TwentyUniformEnergy.lean`, `TwentyWeightedIntegrand.lean` | four kernel-checked endpoint trials and uniform free/fixed population estimates |
 | `CatalanMeasure/JointDetExpansion.lean`, `WeightedMixedAndreief.lean`, `Parametric/TwentyPerturbation.lean` | joint atom weights, actual determinant integration and perturbation on exp(-120N) disks |
@@ -116,7 +125,9 @@ workflow records its timings. The generator for these files is in
 The original mathematics, Lean development, module conversion and companion paper were
 produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
 refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, the twenty-row parameter family, full free/fixed population energy, actual local arithmetic and corresponding paper revisions were
-developed with OpenAI Codex at his request. Sean Litsey posed the problem,
+developed with OpenAI Codex at his request. The full-interval marked-sheet
+assembly, critical-radius perturbation, coefficient recycling and largest-good-prime
+criterion giving 1099 were also developed with Codex. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
 
