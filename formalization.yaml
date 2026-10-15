@@ -6,7 +6,8 @@ project:
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
     |G - a/b| > b^(-955) for every integer a and every sufficiently large b.
-    The final Chebyshev criterion gives exponent 3662. The selected admissible
+    The final Chebyshev criterion gives exponent 2864, with the old 3662 theorem
+    retained. Denominator and content asymptotics still use PNT. The selected admissible
     tuple (20,3,1,2,1) has matrix size 20N and determinant-polynomial degree
     at most 18N. Actual physical prime-column pools and sparse residue relations
     give exact odd-prime cost 8795/4800. Actual two-adic coefficient-minor
@@ -112,7 +113,7 @@ related_formalizations:
 
 status:
   scope: >-
-    Both advertised statements are fully proved, with Catalan's constant
+    All advertised statements are fully proved, with Catalan's constant
     written out as the series in Challenge.lean. Every lemma of the companion
     paper is formalized, including the perturbation estimate with rho = 538/5 and
     the irrationality-measure criterion. The prime number theorem used in the
@@ -165,8 +166,9 @@ automation:
     followed by coefficient recycling, largest-good-prime selection, and the
     cost-parametric sharper first-population quadratic giving rho107.6, and the
     uniform secondary-content tent and complete actual source/row formalization
-    giving955. Both worked at the request of the human author, who is responsible for the submission.
-    The current955/3662 checkpoint passes the main Lean kernel and standard-axiom
+    giving955, and the Chebyshev final-selection corollary with exact exponent
+    5810400/2029 < 2864. Both worked at the request of the human author, who is responsible for the submission.
+    The current 955/2864/3662 checkpoint passes the main Lean kernel and standard-axiom
     audits. Independent-kernel and Comparator acceptance remain pending; the author
     deferred CI and Palomar optimization until bound-reduction research stalls.
 
@@ -192,7 +194,12 @@ alignment:
       module: "Challenge"
       status: proved
       note: "For all large b and all integers a, b^(-955) < |G - a/b|."
-    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev version)"
+    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2864"
+      module: "Challenge"
+      status: proved
+      note: "For all large b and all integers a, b^(-2864) < |G - a/b|; PNT-backed denominator and content estimates."
+    - source: "Litsey (2026), retained historical Chebyshev statement"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_3662"
       module: "Challenge"
       status: proved

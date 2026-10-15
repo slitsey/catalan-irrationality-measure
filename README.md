@@ -8,7 +8,9 @@ A Lean 4 formalization of the following theorem.
 > `|G - a/b| > b^(-955)`.
 >
 > So the irrationality exponent of `G` is at most `955`. The earlier criterion using
-> Chebyshev's bounds gives the retained result `b^(-3662)`.
+> Chebyshev's bounds for final prime selection gives `b^(-2864)`; the historical
+> `b^(-3662)` theorem remains available. Denominator asymptotics and secondary
+> coefficient content still use the prime number theorem in this version.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
@@ -52,7 +54,7 @@ constraint dimension, coefficient-content and PNT bridges all pass the main kern
 The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
 1281/3662 checkpoint, remain in their original verified modules.
 
-Both bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
+The 955, 2864 and retained 3662 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator acceptance remain pending; CI optimization is deferred. The earlier
 48-row construction and its 1981/5391 result remain as verified historical modules.
 
@@ -61,6 +63,7 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 | Directory or file | Content |
 |---|---|
 | `CatalanMeasure/Parametric/SecondaryTentMain.lean`, `SecondaryTentMeasureTransfer.lean` | current 955 bound from the uniform secondary coefficient-content tent |
+| `CatalanMeasure/Parametric/SecondaryTentChebyshev.lean` | alternate final-selection criterion: exact exponent `5810400/2029 < 2864`, retaining PNT-backed denominator and content estimates |
 | `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank |
 | `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | retained 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
 | `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |

@@ -2,6 +2,7 @@ module
 
 public import CatalanMeasure.Parametric.TwentyCostMain
 public import CatalanMeasure.Parametric.SecondaryTentMain
+public import CatalanMeasure.Parametric.SecondaryTentChebyshev
 
 public section
 
@@ -9,9 +10,11 @@ public section
 # Proofs of the advertised statements
 
 The statements are those of `Challenge.lean`; the proofs are the theorems
-`CatalanMeasure.Parametric.catalan_irrationalityMeasure_955` and
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_955`,
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_2864` and
 `CatalanMeasure.Parametric.catalan_irrationalityMeasure_3662` of
-`SecondaryTentMain.lean` and the retained `TwentyMain.lean`, where
+`SecondaryTentMain.lean`, `SecondaryTentChebyshev.lean` and the retained
+`TwentyMain.lean`, where
 Catalan's constant is OpenAI's `OAI.InternalCatalan.catalan`, defined as the same series.
 -/
 
@@ -44,6 +47,14 @@ theorem catalan_irrationalityMeasure_1099 :
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
   CatalanMeasure.Parametric.catalan_irrationalityMeasure_1099
 
+/-- Chebyshev final prime selection with the PNT-backed content estimate. -/
+theorem catalan_irrationalityMeasure_2864 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(2864 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
+  CatalanMeasure.Parametric.catalan_irrationalityMeasure_2864
+
+/-- The previously published Chebyshev final-selection bound remains available. -/
 theorem catalan_irrationalityMeasure_3662 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(3662 : ℝ)) <

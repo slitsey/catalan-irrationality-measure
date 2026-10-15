@@ -12,12 +12,14 @@ public section
 Catalan's constant is `G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`; it is written out below as a `tsum`
 (the series converges absolutely, so the `tsum` is its sum).
 
-The two statements say that for every sufficiently large denominator `b` and every integer
+The statements say that for every sufficiently large denominator `b` and every integer
 numerator `a`,
 
 * `|G - a / b| > b ^ (-955)` (so the irrationality exponent of `G` is at most `955`), and
-* `|G - a / b| > b ^ (-3662)`, the bound obtained with Chebyshev's estimates in place of the
-  prime number theorem in the final step.
+* `|G - a / b| > b ^ (-2864)`, using Chebyshev's estimates for final prime selection; and
+* the retained historical `|G - a / b| > b ^ (-3662)` statement.
+
+The denominator asymptotics and secondary content estimate still use the prime number theorem.
 
 Reference: S. Litsey, *An irrationality measure for Catalan's constant* (2026), building on
 OpenAI, *Catalan's constant is irrational* (2026).
@@ -34,7 +36,15 @@ theorem catalan_irrationalityMeasure_955 :
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   sorry
 
-/-- The same statement with exponent `3662`, which the argument gives when the prime number
+/-- The same statement with exponent `2864`, using Chebyshev for final prime selection.
+The denominator and content estimates retain their PNT dependence. -/
+theorem catalan_irrationalityMeasure_2864 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(2864 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
+  sorry
+
+/-- The retained statement with exponent `3662`, which the argument gives when the prime number
 theorem is replaced by Chebyshev's bounds in the final step. -/
 theorem catalan_irrationalityMeasure_3662 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,

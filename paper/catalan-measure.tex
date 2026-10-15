@@ -54,8 +54,8 @@ Andr\'eief identity, formal verification, Lean}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
 $|G-a/b|>b^{-955}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le955$. The earlier approximation criterion
-using Chebyshev's estimates gives the retained bound $3\,662$.
+integer $b$. Thus $\mu(G)\le955$. Using Chebyshev's estimates for final
+prime selection gives $2\,864$; denominator and content asymptotics still use PNT.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
 sparse residue relations sharpen its common denominator. Four exact energy
@@ -98,8 +98,9 @@ For every integer $a$ and every sufficiently large integer $b$,
 \[
  \left|G-\frac ab\right|>b^{-955}.
 \]
-In particular $\mu(G)\le955$. The earlier criterion using Chebyshev's
-bounds gives the additional statement $|G-a/b|>b^{-3\,662}$.
+In particular $\mu(G)\le955$. Using Chebyshev's bounds for final prime
+selection gives the additional statement $|G-a/b|>b^{-2\,864}$.
+The denominator and coefficient-content asymptotics still use PNT.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -152,7 +153,8 @@ The largest-good-prime refinement initially gives exponent $1091$.
 of area $16/63$. Dividing by this common coefficient content preserves
 recycling and increases the available normalized gap to $2.029$.
 With $d=18$ and $\rho=538/5$, the same criterion gives $955$.
-The earlier Chebyshev argument retains exponent $3662$.
+The Chebyshev final-selection criterion gives $2864$; its earlier $3662$
+bound remains available.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1271,7 +1273,7 @@ prime window. Its exponent is
  =\frac{377784}{295}<1281.
 \]
 The Chebyshev criterion gives $216000/59<3662$. These prove the earlier
-$1281$ bound and the Chebyshev statement of Theorem~\ref{thm:main}.
+$1281$ bound and the retained historical Chebyshev bound.
 The corresponding Lean statements are in \lean{Parametric/TwentyMain}.
 They have suffixes \lean{1281} and \lean{3662}. We next improve the first bound.
 
@@ -1606,13 +1608,29 @@ Then $\rho k=955$ and the exact remaining margin is
 \[
  \eta k-d-4d\delta_0k=\frac{1291}{168125}>0.
 \]
-This proves Theorem~\ref{thm:main}. The main Lean theorem is
+This proves the first statement of Theorem~\ref{thm:main}. The main Lean theorem is
 \begin{center}
 \lean{catalan\_irrationalityMeasure\_955}
 \end{center}
 in
 \lean{Parametric/}\allowbreak\lean{SecondaryTentMain}. The limiting exponent using the full
 tent area is $244036800/255713\approx954.339$.
+
+Alternatively, apply the Chebyshev final prime-selection criterion of
+Proposition~\ref{prop:criterion} to the same $\widetilde Q_N$. Its degree
+is still at most $18N$. Since $p\nmid b$ implies $p^2\nmid b$, the same
+rational nonvanishing theorem applies. The exact criterion exponent is
+\[
+ 3\frac{538}{5}\max\left(\frac{18}{2029/1000},4\right)
+ =\frac{5810400}{2029}<2864.
+\]
+For $b\ge2$, weakening the exponent gives $b^{-2864}<|G-a/b|$. This proves
+the second statement of Theorem~\ref{thm:main}, formalized as
+\lean{catalan\_}\allowbreak\lean{irrationalityMeasure\_2864} in
+\lean{Parametric/}\allowbreak\lean{SecondaryTentChebyshev}.
+Only final prime selection uses Chebyshev here: the denominator asymptotics
+and the secondary coefficient-content rate remain PNT-backed, as the
+denominator asymptotics already were for the historical $3662$ theorem.
 
 \section{Formalization}\label{sec:formal}
 \raggedbottom
@@ -1633,7 +1651,8 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
 \item \lean{catalan\_irrationalityMeasure\_955}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-955}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_3662}: the same with exponent $3\,662$;
+\item \lean{catalan\_irrationalityMeasure\_2864}: the same with exponent $2\,864$, using Chebyshev for final prime selection;
+\item \lean{catalan\_irrationalityMeasure\_3662}: the retained historical statement with exponent $3\,662$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
 \item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
@@ -1641,8 +1660,10 @@ the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \end{itemize}
 There is no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
-The prime number theorem enters both the secondary prime-content sum
-and the final prime selection. Its formal source is the PNT+ project
+The prime number theorem enters the denominator asymptotics and secondary
+prime-content sum, and also the final prime selection for $955$.
+The $2864$ corollary uses Chebyshev only in that final selection step.
+The formal source for PNT is the PNT+ project
 \cite{PNTPlus}, through OpenAI's workspace and compatibility additions.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
@@ -1668,6 +1689,7 @@ File & Content\\
 \lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
 \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}\\
 \lean{SecondaryTentMain}, \lean{SecondaryTent}\allowbreak\lean{MeasureTransfer} & Section~\ref{ssec:secondary-tent}; current $955$ bound\\
+\lean{SecondaryTentChebyshev} & Alternate final prime selection; $2864$ bound\\
 \lean{SecondaryTent}\allowbreak\lean{Parameters*}, \lean{SecondaryTentRow*}, \lean{SecondaryTentSource*} & Actual uniform row kernel, source compatibility and prime-content tent\\
 \lean{TwentyCostMain}, \lean{TwentySharperMain}, \lean{TwentyIntegerPolynomial} & Retained $1091/3662$ bounds and canonical integer polynomial\\
 \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
