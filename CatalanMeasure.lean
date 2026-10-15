@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.Parametric.TwentyRecycledMain
+public import CatalanMeasure.Parametric.TwentySharperMain

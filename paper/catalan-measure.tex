@@ -53,8 +53,8 @@ Andr\'eief identity, formal verification, Lean}
 \begin{abstract}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
-$|G-a/b|>b^{-1\,099}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le1\,099$. The earlier approximation criterion
+$|G-a/b|>b^{-1\,095}$ for every integer $a$ and every sufficiently large
+integer $b$. Thus $\mu(G)\le1\,095$. The earlier approximation criterion
 using Chebyshev's estimates gives the retained bound $3\,662$.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
@@ -94,9 +94,9 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-1\,099}.
+ \left|G-\frac ab\right|>b^{-1\,095}.
 \]
-In particular $\mu(G)\le 1\,099$. The earlier criterion using Chebyshev's
+In particular $\mu(G)\le 1\,095$. The earlier criterion using Chebyshev's
 bounds gives the additional statement $|G-a/b|>b^{-3\,662}$.
 \end{theorem}
 
@@ -141,10 +141,10 @@ polynomial, nonzero at $a/b$ for large prime indices $p$ with $p^2\nmid b$.
 and fixed populations give physical real-place constant
 $2.256085-\tfrac12\log2$. Full-interval marked-sheet bounds and joint
 quadrature weights give perturbation exponent $108$; the arithmetic gap
-permits decay rate $\eta=1.77$ after normalization.
+permits decay rate $\eta=1.7755$ after normalization.
 \item Coefficientwise divisibility strengthens the integer evaluation bound.
-The largest-good-prime refinement, with $d=18$, $\eta=1.77$ and $\rho=108$,
-gives exponent $1099$. The earlier Chebyshev argument retains exponent $3662$.
+The largest-good-prime refinement, with $d=18$, $\eta=1.7755$ and $\rho=108$,
+gives exponent $1095$. The earlier Chebyshev argument retains exponent $3662$.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1350,8 +1350,17 @@ Thus, whenever $Q_N(a/b)\ne0$,
 \end{equation}
 No coprimality of $a,b$ is required.
 
-Set $\eta=177/100$, $d=18$, $\rho=108$, $k=1099/108$ and
-$\delta_0=1/100000$. For large $b$, put $L_b=\log b$,
+The same certified gap used above satisfies the sharper rational bound
+\[
+ 400\gamma_{20}
+ =400\left(\frac{2256085}{1000000}\right)-\frac{8795}{12}-242\log2
+ >\frac{17755}{10000}.
+\]
+Indeed the already verified bound $\log2<0.693147181$ suffices.
+The interval estimate \eqref{eq:rho108}, including normalization, therefore
+holds with every $\eta<400\gamma_{20}$, in particular this sharper choice.
+Set $\eta=17755/10000$, $d=18$, $\rho=108$, $k=1095/108$ and
+$\delta_0=1/1000000$. For large $b$, put $L_b=\log b$,
 $U=kL_b$, $V=(k-1)L_b$. The prime number theorem supplies, simultaneously
 for every sufficiently large real $t$,
 \[
@@ -1365,7 +1374,7 @@ Every prime $q\in(p,U]$ has $q^2\mid b$, and $U<2V<2p$.
 Take $B$ to be the product of their squares and put
 $T=\theta(U)-\theta(p)$, so $\log B=2T$.
 
-Suppose $|G-a/b|\le b^{-1099}$. Since $\rho p\le\rho U=1099L_b$,
+Suppose $|G-a/b|\le b^{-1095}$. Since $\rho p\le\rho U=1095L_b$,
 \eqref{eq:rho108} applies at $a/b$. Prime-index nonvanishing and
 \eqref{eq:recycled-integer-lower} give
 \[
@@ -1376,13 +1385,17 @@ Using $p\le U$ and $2d-\eta>0$ now yields
 \[
  \eta k\le d+4d\delta_0 k,
  \qquad
- \eta k-d-4d\delta_0k=\frac{457}{112500}>0,
+ \eta k-d-4d\delta_0k=\frac{1561}{1800000}>0,
 \]
-a contradiction. This proves the $1099$ statement of Theorem~\ref{thm:main}.
+a contradiction. This proves the $1095$ statement of Theorem~\ref{thm:main}.
 The combined Lean theorem is
-\lean{Parametric.catalan\_irrationalityMeasure\_1099} in
-\lean{Parametric/TwentyRecycledMain}; its public series version is in
+\lean{Parametric.catalan\_irrationalityMeasure\_1095} in
+\lean{Parametric/TwentySharperMain}; its public series version is in
 \lean{Solution.lean}.
+The earlier $1099$ theorem remains unchanged in
+\lean{Parametric/TwentyRecycledMain}. Retaining the sharper rational gap
+gives the limiting exponent $3888000/3551\approx1094.903$; the strong
+eventual statement above uses the integer exponent $1095$.
 
 \section{Formalization}\label{sec:formal}
 \raggedbottom
@@ -1402,7 +1415,7 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_1099}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1099}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_1095}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1095}<|G-a/b|$ (Theorem~\ref{thm:main});
 \item \lean{catalan\_irrationalityMeasure\_3662}: the same with exponent $3\,662$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
 \item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
@@ -1435,7 +1448,7 @@ File & Content\\
 \lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
 \lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
 \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}\\
-\lean{Parametric/} \lean{TwentyRecycledMain}, \lean{TwentyIntegerPolynomial} & Section~\ref{sec:twenty}; the current $1099/3662$ bounds\\
+\lean{Parametric/} \lean{TwentySharperMain}, \lean{TwentyRecycledMain}, \lean{TwentyIntegerPolynomial} & Section~\ref{sec:twenty}; the current $1095/3662$ bounds\\
 \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
 \lean{TwentyTrial/*}, \lean{TwentyUniformEnergy}, \lean{TwentyFullPerturbation} & Certified population and marked fields, mixed integration and $\rho=108$\\
 \bottomrule
