@@ -1,0 +1,12 @@
+module
+public import CatalanMeasure.Parametric.SecondaryTentRowSeedPair
+public import CatalanMeasure.Parametric.SecondaryTentRowReflection
+@[expose] public section
+
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_t_junction
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_pair_injective
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_fixed_seed_pair_injective
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_fixed_reconstruction_injective
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_reflect
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_numerator_reflect
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_numerator_zero_iff

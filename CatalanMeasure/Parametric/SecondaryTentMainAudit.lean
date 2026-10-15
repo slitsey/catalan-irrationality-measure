@@ -1,0 +1,11 @@
+module
+public import CatalanMeasure.Parametric.SecondaryTentMain
+
+#print axioms CatalanMeasure.Parametric.secondaryTent_source_quotient_actual_response
+#print axioms CatalanMeasure.Parametric.secondaryTent_parameter_actual_bulk_response
+#print axioms CatalanMeasure.Parametric.secondaryTent_positive_actual_raw_response
+#print axioms CatalanMeasure.Parametric.secondaryTent_negative_actual_raw_response
+#print axioms CatalanMeasure.Parametric.secondaryTent_window_data
+#print axioms CatalanMeasure.Parametric.secondaryTent_canonical_rank
+#print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_955
+#check @CatalanMeasure.Parametric.catalan_irrationalityMeasure_955

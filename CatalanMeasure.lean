@@ -1,3 +1,4 @@
 module
 
 public import CatalanMeasure.Parametric.TwentyCostMain
+public import CatalanMeasure.Parametric.SecondaryTentMain

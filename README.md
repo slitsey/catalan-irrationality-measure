@@ -5,9 +5,9 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-1091)`.
+> `|G - a/b| > b^(-955)`.
 >
-> So the irrationality exponent of `G` is at most `1091`. The earlier criterion using
+> So the irrationality exponent of `G` is at most `955`. The earlier criterion using
 > Chebyshev's bounds gives the retained result `b^(-3662)`.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
@@ -42,6 +42,13 @@ factor. The new coefficient theorem proves `q^(2j) | coeff_j Q_N` for
 largest good prime gives 1091 after retaining the already certified gap
 `eta = 1.7755` and sharpening the existing first-population quadratic.
 Its row cost is now `89.6Nm`; the joint atom weights add `18Nm`.
+A further explicit full-row residue construction gives nullity at least
+`max(0,min(floor((9p-52N)/2),floor((44N-7p)/2)))`. Its compatible extra
+coefficient content has logarithmic rate `16/63` and preserves coefficient
+recycling. Using rate `507/2000` raises the available gap to `2.029`, giving
+the current **955** theorem. Its literal raw-source, row support, injectivity,
+constraint dimension, coefficient-content and PNT bridges all pass the main kernel.
+`TwentyCostMain` retains the earlier 1091 result.
 The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
 1281/3662 checkpoint, remain in their original verified modules.
 
@@ -53,7 +60,9 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | current 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
+| `CatalanMeasure/Parametric/SecondaryTentMain.lean`, `SecondaryTentMeasureTransfer.lean` | current 955 bound from the uniform secondary coefficient-content tent |
+| `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank |
+| `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | retained 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
 | `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |
 | `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
 | `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |

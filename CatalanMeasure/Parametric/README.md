@@ -1,7 +1,9 @@
 # Parametric formalization and research foundation
 
-The public solution now certifies bounds 1099 and 3662 for the selected tuple
-`(20,3,1,2,1)`. `TwentyRecycledMain` combines full-interval marked-sheet bounds
+The public solution now certifies bounds 955 and 3662 for the selected tuple
+`(20,3,1,2,1)`. `SecondaryTentMain` proves the actual uniform residue-kernel
+and coefficient-content tent; `TwentyCostMain` retains1091.
+`TwentyRecycledMain` combines full-interval marked-sheet bounds
 and coefficient recycling; `TwentyMain` retains the earlier 1281/3662 checkpoint.
 All of these pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator replay remain deferred. See the repository README for current
