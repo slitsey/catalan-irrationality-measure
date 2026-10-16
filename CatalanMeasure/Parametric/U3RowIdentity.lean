@@ -107,7 +107,7 @@ theorem u3Offset_eq (N r : ℕ) : rowOffset twenty N r = u3Offset N r := by
   simp [rowOffset, u3Offset, Parameters.g, twenty]
 
 theorem u3Offset_natAbs_le {N r : ℕ} (hr : r < 20 * N) :
-    (u3Offset N r).natAbs ≤ 18 * N := by
+    (u3Offset N r).natAbs ≤ 18 * N - 1 := by
   unfold u3Offset; omega
 
 theorem rowP_map_eq {N : ℕ} (hN : 0 < N) {r : ℕ} (hr : r < 20 * N) :
