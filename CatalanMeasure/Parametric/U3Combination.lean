@@ -95,6 +95,31 @@ theorem u3S_natDegree (hp2 : p ≠ 2) (hN : 0 < N) (c : Fin (20 * N) → ZMod p)
     rw [Chebyshev.natDegree_T]; omega
   exact max_le le_rfl hd
 
+theorem u3U_natDegree (hp2 : p ≠ 2) (hN : 0 < N) (c : Fin (20 * N) → ZMod p) :
+    (u3U p N c).natDegree ≤ 26 * N - 1 := by
+  have : NeZero (2 : ZMod p) := ⟨zmod_two_ne_zero p hp2⟩
+  simp only [u3U, combLin_apply]
+  apply natDegree_sum_le_of_forall_le
+  intro r _
+  refine (natDegree_C_mul_le _ _).trans ?_
+  unfold u3Uv
+  refine natDegree_reflect_le.trans ?_
+  have hm := u3Offset_natAbs_le r.isLt
+  have hd : (Chebyshev.U (ZMod p) (u3Offset N r - 1)).natDegree ≤ 26 * N - 1 := by
+    rw [Chebyshev.natDegree_U]; omega
+  exact max_le le_rfl hd
+
+theorem u3D_coeff_zero (hp2 : p ≠ 2) (hN : 0 < N) (c : Fin (20 * N) → ZMod p) {i : ℕ}
+    (hi : 27 * N ≤ i) : ((1 - X) ^ N * u3U p N c).coeff i = 0 := by
+  apply coeff_eq_zero_of_natDegree_lt
+  refine lt_of_le_of_lt natDegree_mul_le ?_
+  have h1 : ((1 - X : (ZMod p)[X]) ^ N).natDegree ≤ N := by
+    calc _ ≤ N * (1 - X : (ZMod p)[X]).natDegree := natDegree_pow_le
+      _ ≤ N * 1 := Nat.mul_le_mul_left _ (by compute_degree)
+      _ = N := by ring
+  have := u3U_natDegree hp2 hN c
+  omega
+
 /-! ### Flag conditions -/
 
 theorem dvd_of_taylor_coeff_zero {R : Type*} [CommRing R] (a : R) (k : ℕ) (f : R[X])
