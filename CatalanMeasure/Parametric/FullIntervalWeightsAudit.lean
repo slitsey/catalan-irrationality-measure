@@ -1,0 +1,4 @@
+module
+public import CatalanMeasure.Parametric.FullIntervalWeights
+#print axioms CatalanMeasure.Parametric.twenty_full_functional_le
+#print axioms CatalanMeasure.Parametric.twenty_full_functional_le_exp

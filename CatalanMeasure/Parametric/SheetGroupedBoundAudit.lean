@@ -1,0 +1,4 @@
+module
+public import CatalanMeasure.Parametric.SheetGroupedBound
+#print axioms CatalanMeasure.Parametric.sheetKernelFamily_linearIndependent
+#print axioms CatalanMeasure.Parametric.sheet_grouped_normalized_det_bound

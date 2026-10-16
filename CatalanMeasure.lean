@@ -1,3 +1,6 @@
 module
 
-public import CatalanMeasure.Parametric.TwentyMain
+public import CatalanMeasure.Parametric.TwentyCostMain
+public import CatalanMeasure.Parametric.SecondaryTentMain
+public import CatalanMeasure.Parametric.SecondaryTentChebyshev
+public import CatalanMeasure.Parametric.GapMain

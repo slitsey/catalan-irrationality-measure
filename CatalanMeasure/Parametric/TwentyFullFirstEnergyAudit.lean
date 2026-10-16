@@ -1,0 +1,3 @@
+module
+public import CatalanMeasure.Parametric.TwentyFullFirstEnergy
+#print axioms CatalanMeasure.Parametric.twenty_full_first_energy_eventually

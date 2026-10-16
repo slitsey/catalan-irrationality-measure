@@ -5,20 +5,24 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-1281)`.
+> `|G - a/b| > b^(-878)`.
 >
-> So the irrationality exponent of `G` is at most `1281`. With Chebyshev's bounds in place of
-> the prime number theorem in the final step, the argument gives `b^(-3662)`.
+> So the irrationality exponent of `G` is at most `878`. Chebyshev's bounds
+> for final prime selection give `b^(-2632)`; the historical
+> `b^(-3662)` theorem remains available. Denominator asymptotics and secondary
+> coefficient content still use the prime number theorem in this version.
 
 The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
 on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
 Catalan's constant* (2026), has revised LaTeX source and PDF in [`paper/`](paper/). The earlier 8127 version was
 Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload a new preprint version. R. K. Jha proved earlier, independently, the weaker bound
 `μ(G) ≤ 10^8` ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
+Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
+([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
 
 ## What to read
 
-- [`Challenge.lean`](Challenge.lean) states the two theorems using Mathlib only, with Catalan's
+- [`Challenge.lean`](Challenge.lean) states the strongest bounds and retained historical statements using Mathlib only, with Catalan's
   constant written out as a series. This is the whole trusted statement surface.
 - [`Solution.lean`](Solution.lean) proves them from the development.
 - [`comparator.json`](comparator.json) tells `lake comparator` to check that `Solution` proves
@@ -27,16 +31,50 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 - [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
   scope.
 
-The current theorem uses the admissible determinant tuple `(20,3,1,2,1)`:
+The current proof retains the admissible tuple `(20,3,1,2,1)`, degree `18N`,
+the actual denominator estimates, secondary content tent and coefficientwise
+recycling. Exact supplied first40/second160 trials give target `2.2563367`.
+Central-gap interpolation with physical gap `401/2500` and transformed gap
+`2005000/6410801` gives residual cap `-0.0524` on the marked domain; its
+global near-field cap is `-0.75`. The first and second marked row costs are
+`84.2Nm` and `85.8944Nm`. An actual 55-piece circle proof gives joint
+coefficient-functional weight exponent `17.913`. Thus `rho = 519037/5000`
+and the content-adjusted gap is `eta = 425979/200000`. The limiting recycled
+exponent is `41522960/47331 < 878`; Chebyshev final selection gives
+`41522960/15777 < 2632`.
+
+All numerical bounds are ordinary kernel-checked rational certificates.
+A generic Descartes root budget and disjoint-bracket exhaustion use five
+coarse counts and 241 opposite-sign brackets to cover the X/Y critical
+points. Field values and the restricted residual intervals are separately
+checked. The immutable trial inputs and hashes are recorded in
+[`scripts/certgen/gap878/`](scripts/certgen/gap878/); the authoritative
+proof data are the Lean source literals.
+
+The retained 955/2864 checkpoint uses the admissible determinant tuple `(20,3,1,2,1)`:
 the matrix has `20N` rows and its polynomial has degree at most `18N`. Actual
 physical column-pool valuations and sparse residue relations give odd-prime
 cost `8795/4800`; the actual two-adic smoothing/minor proof gives
 `(21/200) log 2`. Four exact field certificates and a separate treatment of free
-and fixed populations prove dual target `U = 2.256085`. Restricted quadrature
-and joint atom weights yield perturbation exponent `rho = 120`. The final
-criterion uses `eta = 1.77`, proving 1281 and 3662.
+and fixed populations prove dual target `U = 2.256085`. Full-interval
+quadrature, genuine P-only marked atoms and grouped sheet estimates yield
+perturbation exponent `rho = 538/5`, including the critical-radius binomial
+factor. The new coefficient theorem proves `q^(2j) | coeff_j Q_N` for
+`N < q <= 2N`. Recycling all later bad-prime squares while choosing the
+largest good prime gives 1091 after retaining the already certified gap
+`eta = 1.7755` and sharpening the existing first-population quadratic.
+Its row cost is now `89.6Nm`; the joint atom weights add `18Nm`.
+A further explicit full-row residue construction gives nullity at least
+`max(0,min(floor((9p-52N)/2),floor((44N-7p)/2)))`. Its compatible extra
+coefficient content has logarithmic rate `16/63` and preserves coefficient
+recycling. Using rate `507/2000` raises the available gap to `2.029`, giving
+the retained **955** theorem. Its literal raw-source, row support, injectivity,
+constraint dimension, coefficient-content and PNT bridges all pass the main kernel.
+`TwentyCostMain` retains the earlier 1091 result.
+The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
+1281/3662 checkpoint, remain in their original verified modules.
 
-Both bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
+The 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator acceptance remain pending; CI optimization is deferred. The earlier
 48-row construction and its 1981/5391 result remain as verified historical modules.
 
@@ -44,7 +82,19 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | final 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
+| `CatalanMeasure/Parametric/GapMain.lean`, `GapFinalTransfer.lean` | current unconditional 878 / 2632 endpoints |
+| `CatalanMeasure/FirstStrongTrial/`, `StrongTrial/` | supplied trial norms, field values and root-coverage certificates |
+| `CatalanMeasure/Parametric/GapNodal.lean`, `GapQuadrature.lean`, `GapAtomCost.lean` | exact gap nodes, marked support and coefficient selection |
+| `CatalanMeasure/GapCircle/`, `Parametric/GapActualWeights.lean` | actual circle and coefficient-functional weights |
+| `CatalanMeasure/Cert/DescartesBudget.lean`, `RootBracket.lean`, `IntegerHorner.lean`, `RootBudgetCover.lean` | ordinary-kernel root counts, bracket signs and coverage |
+| `CatalanMeasure/Parametric/SecondaryTentMain.lean`, `SecondaryTentMeasureTransfer.lean` | retained 955 bound from the uniform secondary coefficient-content tent |
+| `CatalanMeasure/Parametric/SecondaryTentChebyshev.lean` | alternate final-selection criterion: exact exponent `5810400/2029 < 2864`, retaining PNT-backed denominator and content estimates |
+| `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank |
+| `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | retained 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
+| `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |
+| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
+| `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |
+| `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation |
 | `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth |
 | `CatalanMeasure/TwentyTrial/`, `Parametric/TwentyUniformEnergy.lean`, `TwentyWeightedIntegrand.lean` | four kernel-checked endpoint trials and uniform free/fixed population estimates |
 | `CatalanMeasure/JointDetExpansion.lean`, `WeightedMixedAndreief.lean`, `Parametric/TwentyPerturbation.lean` | joint atom weights, actual determinant integration and perturbation on exp(-120N) disks |
@@ -116,7 +166,12 @@ workflow records its timings. The generator for these files is in
 The original mathematics, Lean development, module conversion and companion paper were
 produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
 refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, the twenty-row parameter family, full free/fixed population energy, actual local arithmetic and corresponding paper revisions were
-developed with OpenAI Codex at his request. Sean Litsey posed the problem,
+developed with OpenAI Codex at his request. The full-interval marked-sheet
+assembly, critical-radius perturbation, coefficient recycling and largest-good-prime
+criterion giving 1099 were also developed with Codex. The later cost refinement,
+secondary content tent, supplied trials, central-gap interpolation, actual
+circle weights, root-budget certificates and 878/2632 assembly were developed
+with Codex at his request. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
 

@@ -1,0 +1,20 @@
+module
+public import CatalanMeasure.Parametric.SecondaryTentRowInputInjective
+public import CatalanMeasure.Parametric.SecondaryTentRowFlags
+public import CatalanMeasure.Parametric.SecondaryTentRowDegree
+@[expose] public section
+
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowHom_eval₂
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowHom_mul
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_X_pow_mul
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_X_sub_one_pow_mul
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_quadratic_payment
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_lower_factor
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_bulk_denominators_paid
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_positive_beta_flag
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_negative_beta_flag
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_top_coeff
+#print axioms CatalanMeasure.Parametric.secondaryTent_rowInput_injective_bounded
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_UV_flag_factorization
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_regular_shared_cap
+#print axioms CatalanMeasure.Parametric.secondaryTent_row_bulk_degree_actual

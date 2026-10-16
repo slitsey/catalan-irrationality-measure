@@ -1,8 +1,14 @@
-# Parametric research foundation
+# Parametric formalization and research foundation
 
-The public solution certifies bounds 1981 and 5391 using the baseline construction
-and residue-kernel combinations. The new population-energy construction described
-below remains research; its proposed 1281 bound is not a theorem.
+The public solution now certifies bounds 955 and 3662 for the selected tuple
+`(20,3,1,2,1)`. `SecondaryTentMain` proves the actual uniform residue-kernel
+and coefficient-content tent; `TwentyCostMain` retains1091.
+`TwentyRecycledMain` combines full-interval marked-sheet bounds
+and coefficient recycling; `TwentyMain` retains the earlier 1281/3662 checkpoint.
+All of these pass Lean's main kernel and standard-axiom audits. Independent-kernel
+and comparator replay remain deferred. See the repository README for current
+entry points. The remaining text is a historical research inventory; claims
+about unfinished twenty-row certificates there are superseded by this paragraph.
 
 The primitive tuple `(20,3,1,2,1)` now has kernel-checked actual base entries,
 three modular inverse certificates, rational base nonsingularity, and uniform prime

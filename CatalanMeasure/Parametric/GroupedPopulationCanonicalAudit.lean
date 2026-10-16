@@ -1,0 +1,3 @@
+module
+public import CatalanMeasure.Parametric.GroupedPopulationCanonical
+#print axioms CatalanMeasure.Parametric.grouped_population_canonical

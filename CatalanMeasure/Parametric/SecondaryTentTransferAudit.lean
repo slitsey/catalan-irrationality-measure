@@ -1,0 +1,14 @@
+module
+public import CatalanMeasure.Parametric.SecondaryTentMeasureTransfer
+public import CatalanMeasure.Parametric.SecondaryTentFixedSeeds
+
+#print axioms CatalanMeasure.Parametric.coeff_prime_dvd_of_eval_and_tail
+#print axioms CatalanMeasure.Parametric.coeff_prime_pow_dvd_of_eval_and_tail
+#print axioms CatalanMeasure.Parametric.coeff_prime_pow_dvd_of_weighted_eval
+#print axioms CatalanMeasure.Parametric.secondaryTent_seed_integer_left_inverse
+#print axioms CatalanMeasure.Parametric.secondaryTent_seed_field_left_inverse
+#print axioms CatalanMeasure.Parametric.secondaryTent_seed_coefficients_injective
+#print axioms CatalanMeasure.Parametric.secondaryTent_seed_coefficients_injective_zmod
+#print axioms CatalanMeasure.Parametric.secondaryTentExponent_le_N
+#print axioms CatalanMeasure.Parametric.secondaryTent_content_of_canonical_rank
+#print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_955_of_canonical_tent_rank

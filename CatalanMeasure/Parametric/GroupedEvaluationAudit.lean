@@ -1,0 +1,4 @@
+module
+public import CatalanMeasure.Parametric.GroupedEvaluation
+#print axioms CatalanMeasure.Parametric.adjoint_norm_le_of_bound
+#print axioms CatalanMeasure.Parametric.grouped_evaluation_det_bound

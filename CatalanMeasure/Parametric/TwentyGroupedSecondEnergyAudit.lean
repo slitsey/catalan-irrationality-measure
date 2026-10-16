@@ -1,0 +1,3 @@
+module
+public import CatalanMeasure.Parametric.TwentyGroupedSecondEnergy
+#print axioms CatalanMeasure.Parametric.twenty_grouped_second_energy_eventually

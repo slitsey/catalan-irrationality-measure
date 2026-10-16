@@ -43,7 +43,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 13, 2026}
+\date{October 15, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 68V20}
 
@@ -53,16 +53,20 @@ Andr\'eief identity, formal verification, Lean}
 \begin{abstract}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
-$|G-a/b|>b^{-1\,281}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le1\,281$; replacing the prime number theorem
-in the final approximation criterion by Chebyshev's estimates gives $3\,662$.
+$|G-a/b|>b^{-878}$ for every integer $a$ and every sufficiently large
+integer $b$. Thus $\mu(G)\le878$. Using Chebyshev's estimates for final
+prime selection gives $2\,632$; denominator and content asymptotics still use PNT.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
-sparse residue relations sharpen its common denominator. Four exact energy
-certificates and a separate treatment of free and fixed populations give a
-uniform mixed-integrand bound. Restricted quadrature and joint atom weights
-then control the determinant polynomial on $|x-G|\le e^{-120N}$.
-Prime-index nonvanishing when $p^2\nmid b$ completes the measure criterion.
+sparse residue relations sharpen its common denominator. Exact energy
+certificates and separate treatment of free, fixed and marked populations
+give a uniform mixed-integrand bound. Stronger supplied energy trials,
+central-gap quadrature and jointly paid atom weights control the same
+determinant polynomial on $|x-G|\le e^{-(519037/5000)N}$.
+An explicit uniform residue-kernel construction supplies additional common
+coefficient content of quadratic logarithmic rate $16/63$.
+Coefficient divisibility recycles denominator prime squares; selecting the
+largest prime with $p^2\nmid b$ completes the improved measure criterion.
 We retain the earlier $48N$ construction and its $1\,981$ bound to explain
 the methods. Every ingredient of the new global theorem is formalized in
 Lean~4 with only the standard axioms and no unproved steps.
@@ -93,10 +97,11 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-1\,281}.
+ \left|G-\frac ab\right|>b^{-878}.
 \]
-In particular $\mu(G)\le 1\,281$. If in the last step the prime number theorem is replaced by
-Chebyshev's bounds, the same argument gives $|G-a/b|>b^{-3\,662}$.
+In particular $\mu(G)\le878$. Using Chebyshev's bounds for final prime
+selection gives the additional statement $|G-a/b|>b^{-2\,632}$.
+The denominator and coefficient-content asymptotics still use PNT.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -113,12 +118,22 @@ estimate near $G$. They differ in the perturbation estimate. Jha bounds the comp
 minors of OpenAI's matrix in every dimension, by an energy estimate with node padding, with a
 codimension loss of the form $\exp(1000\,n(n-m))$. Here the perturbation of the matrix is
 written, by a quadrature formula, as a combination of point evaluations of OpenAI's row
-functions, and the new parameter family has perturbation exponent $\rho=120$
-(Section~\ref{sec:twenty}). The improvement also uses actual local arithmetic
+polynomials. The selected parameter family first gave perturbation exponent
+$\rho=538/5$; the supplied trials and central-gap quadrature below sharpen
+it to $\rho=519037/5000$ (Section~\ref{ssec:gap878}). The improvement also uses actual local arithmetic
 and certified energy fields for that family. For other recent work on rational approximations to $G$ see Eskandari
 \cite{Eskandari2026}; for earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003}; for an effective approach to linear independence of
 related $L$-values see Calegari, Dimitrov and Tang \cite{CDT2024}.
+
+Marcos Costa Santos Carreira \cite[Sections~2--6]{Carreira2026} studies five-parameter determinant designs and
+reports $\mu(G)<2715$ for the design $(96,15,6,8,5)$, using partial-population
+energy estimates and sharper row and column determinant bounds. His work
+also develops a two-measure equilibrium formulation. Our selected design
+is $(20,3,1,2,1)$. His general-design analysis and two-measure equilibrium
+formulation provide related structural viewpoints. The estimates proved
+here use full-interval marked polynomial atoms, coefficientwise prime-square
+recycling and the explicit secondary coefficient-content construction below.
 
 \subsection{Outline of the proof}
 Sections~\ref{sec:setup}--\ref{sec:proof} develop the $48N$ determinant and
@@ -131,10 +146,22 @@ $8795/4800+(21/200)\log2$. Multiplication by $(18N)!$ gives an integer
 polynomial, nonzero at $a/b$ for large prime indices $p$ with $p^2\nmid b$.
 \item Four certified endpoint trials and a uniform interpolation between free
 and fixed populations give physical real-place constant
-$2.256085-\tfrac12\log2$. Joint quadrature weights give perturbation exponent
-$120$; the arithmetic gap permits decay rate $\eta=1.77$ after normalization.
-\item The prime-window criterion of Section~\ref{sec:criterion} applied with
-$d=18$, $\eta=1.77$ and $\rho=120$ gives exponents less than $1281$ and $3662$.
+$2.256085-\tfrac12\log2$. Full-interval marked-sheet bounds and joint
+quadrature weights give perturbation exponent $538/5$; the arithmetic gap
+permits decay rate $\eta=1.7755$ after normalization.
+\item Coefficientwise divisibility strengthens the integer evaluation bound.
+The largest-good-prime refinement initially gives exponent $1091$.
+\item A uniform full-row residue kernel gives a secondary prime-content tent
+of area $16/63$. Dividing by this common coefficient content preserves
+recycling and increases the available normalized gap to $2.029$.
+With $d=18$ and $\rho=538/5$, the same criterion gives the retained
+$955/2864$ checkpoint.
+\item Supplied $40$-mode and $160$-mode trials improve the dual target to
+$2.2563367$. Interpolation nodes avoiding a central physical gap jointly
+improve the marked field and actual coefficient-functional price. With
+$\rho=519037/5000$ and $\eta=425979/200000$, the criterion gives
+$878$; final Chebyshev selection gives $2632$. The historical $3662$
+statement remains available.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1081,16 +1108,18 @@ $3\rho R=5390.968892\ldots<5391$.
 The sparse-row mechanism raises the denominator gap without changing the determinant's
 degree or the perturbation estimate. Further improvements can come from additional residue
 dependencies in other prime windows, more efficient determinant parameters, or a smaller
-perturbation exponent. The contribution $\rho/2$ of the square-prime window alone exceeds
-two even for the improved $\rho=120$, so reaching irrationality exponent two requires
-a further structural improvement; the present proof does not establish such a bound.
+perturbation exponent. Coefficient recycling below removes the overhead of
+the earlier square-prime selection step. The remaining analytic and arithmetic
+constants still give a bound far above two; the present proof does not
+establish an irrationality exponent near two.
 \end{remark}
 
 \section{A twenty-row parameter family}\label{sec:twenty}
 
 The preceding sections explain the $48N$ construction and its $1981$ bound.
-We now change the determinant parameters and prove the stronger bound in
-Theorem~\ref{thm:main}. This change requires new arithmetic and real-place
+We now change the determinant parameters, first derive the $1281$ checkpoint,
+then refine quadrature and prime selection to prove Theorem~\ref{thm:main}.
+This change requires new arithmetic and real-place
 estimates; substituting parameters into the earlier numerical constants would
 not suffice.
 
@@ -1229,7 +1258,7 @@ eventually, for every $\epsilon>0$ the actual determinant polynomial satisfies
  \quad\text{if }|x-G|\le e^{-120N}.
 \end{align*}
 
-\subsection{The resulting measure}
+\subsection{The $1281$ checkpoint}
 Set
 \[
  A_{20}=\frac{8795}{4800}+\frac{21}{200}\log2,
@@ -1250,10 +1279,540 @@ prime window. Its exponent is
            \frac{1001/1000}{2(247/5000)}\right)
  =\frac{377784}{295}<1281.
 \]
-The Chebyshev criterion gives $216000/59<3662$. These prove
-Theorem~\ref{thm:main}. The Lean statements in \lean{Parametric/TwentyMain}
-are \lean{catalan\_irrationalityMeasure\_1281} and its \lean{3662}
-counterpart; the public series statements appear in \lean{Solution.lean}.
+The Chebyshev criterion gives $216000/59<3662$. These prove the earlier
+$1281$ bound and the retained historical Chebyshev bound.
+The corresponding Lean statements are in \lean{Parametric/TwentyMain}.
+They have suffixes \lean{1281} and \lean{3662}. We next improve the first bound.
+
+\subsection{Full-interval marked atoms and the critical radius}
+Keep the same integer polynomial $Q_N^{(20)}$, and let $J=18N$.
+Take $\tau_1,\ldots,\tau_J$ to be all roots of $T_J$ in $(-1,1)$.
+Since $J$ is even none is zero. Exact coefficient quadrature now gives
+\begin{gather*}
+ (\mathcal L_N)_{rk}=\sum_{a=1}^J P_r(\tau_a)\beta_{ak},
+ \qquad \kappa_N(t)=t^{8N}(1-t)^N,\\
+ |\kappa_N(\tau_a)\beta_{ak}|\le108000N e^{18N}.
+\end{gather*}
+The fixed vectors are values of the original $P_r$, including at positive
+nodes; they are not values of the physical amplitude $A_r$ there.
+
+For $p$ free and $m$ fixed columns, $p+m=20N$, the marked first-sheet
+Hadamard bound has the same prefactor $(3/2)^{20N}(20N)^{10N}$ as before.
+The full first-case energy certificate gives loss $(448/5)Nm$. Here its scalar budget is sharpened from
+$27/5$ to $269/50$: the difference is bounded above by
+\[
+ -\frac8{125}+\frac{593}{1000}a-\frac{693}{500}a^2
+ =-\frac{693}{500}\left(a-\frac{593}{2772}\right)^2
+   -\frac{3167}{5544000}<0.
+\]
+Removing the quadrature term $(9/10)a$ leaves coefficient $112/25$;
+multiplication by $20Nm$ gives the stated loss.
+In the second case expand only positive marked nodes into actual and near
+sheets, using the exact identity $P=-2A+3A_{\rm near}$ after removal of
+the common row weight. The grouped energy certificate retains separate
+Vandermonde factors for actual and near nodes; its loss is $89Nm$.
+The expansion costs at most $5^m$. Both estimates include a uniform
+arbitrarily small quadratic-scale error. Combining them with the joint
+weight bound gives
+\begin{equation}\label{eq:full-marked-bound}
+ S_N(540000N)^m
+ \exp\!\left((20N)^2\left(-U_{20}+\tfrac12\log2+\epsilon\right)+(538/5)Nm\right).
+\end{equation}
+Here $S_N$ is the same prefactor as above. In the second case the sharper
+$107Nm$ can be increased to $(538/5)Nm$.
+
+The mixed Andr\'eief bound allows arbitrary fixed column vectors.
+Formally, modify the integrated row functions at finitely many distinct
+auxiliary points; the atomless measure makes this change invisible to
+the integrals. Repeated fixed atoms give identical columns and determinant
+zero. Free/free and free/fixed collisions are excluded on null sets.
+No equality of a positive marked $P$ column and an actual free column is
+assumed. These arguments also cover $p=0$ and $m=0$.
+
+After integration, put
+\[
+ M_N=2^{20N}S_N
+ e^{(20N)^2(-U_{20}+\frac12\log2+\epsilon)},\qquad
+ c_N=540000N e^{(538/5)N}.
+\]
+The exact joint column expansion gives
+\[
+ |\Delta_N^{(20)}(G+\delta)-\Delta_N^{(20)}(G)|
+ \le M_N\bigl((1+J|\delta|c_N)^{20N}-1\bigr).
+\]
+If $|\delta|\le e^{-(538/5)N}$ the binomial factor is at most
+$(1+9720000N^2)^{20N}=e^{O(N\log N)}$. Its logarithm is $o(N^2)$;
+there is no need to bound the factor by an absolute constant.
+Absorb it and the factorial normalization into the regularization error.
+For all sufficiently large $N$,
+\begin{equation}\label{eq:rho1076}
+ |Q_N^{(20)}(x)|\le e^{-(177/100)N^2}
+ \quad\text{whenever }|x-G|\le e^{-(538/5)N}.
+\end{equation}
+
+\subsection{Coefficient recycling and the final prime choice}
+Write $Q_N=Q_N^{(20)}=\sum_j c_{Nj}X^j$ and $D=18N$.
+For every sufficiently large $N$ and every prime $N<q\le2N$,
+\begin{equation}\label{eq:coefficient-recycling}
+ q^{2j}\mid c_{Nj}\qquad(j\ge0).
+\end{equation}
+Indeed $q^2\mathcal A_N^0$ and $\mathcal L_N$ are $q$-integral, while
+$q^{40N}\mid D_N^{(20)}$. The $20N$ determinant therefore shows that
+\[
+ Q_N(X/q^2)=(18N)!\frac{D_N^{(20)}}{q^{40N}}
+       \det(q^2\mathcal A_N^0+X\mathcal L_N)
+\]
+is coefficientwise $q$-integral. Its $j$th coefficient is $c_{Nj}/q^{2j}$,
+which proves \eqref{eq:coefficient-recycling}. This conclusion uses
+coefficientwise local integrality, not integer-valued specialization.
+
+If $B$ is a product of distinct prime squares $q^2\mid b$ with $N<q\le2N$,
+then $B\mid b$ and $B^j\mid c_{Nj}$. Each summand in
+$b^D Q_N(a/b)=\sum_{j=0}^D c_{Nj}a^j b^{D-j}$ is divisible by $B^D$.
+Thus, whenever $Q_N(a/b)\ne0$,
+\begin{equation}\label{eq:recycled-integer-lower}
+ 1\le(b/B)^D|Q_N(a/b)|.
+\end{equation}
+No coprimality of $a,b$ is required.
+
+The same certified gap used above satisfies the sharper rational bound
+\[
+ 400\gamma_{20}
+ =400\left(\frac{2256085}{1000000}\right)-\frac{8795}{12}-242\log2
+ >\frac{17755}{10000}.
+\]
+Indeed the already verified bound $\log2<0.693147181$ suffices.
+The interval estimate \eqref{eq:rho1076}, including normalization, therefore
+holds with every $\eta<400\gamma_{20}$, in particular this sharper choice.
+Set $\eta=17755/10000$, $d=18$, $\rho=538/5$, $k=5455/538$ and
+$\delta_0=1/1000000$. For large $b$, put $L_b=\log b$,
+$U=kL_b$, $V=(k-1)L_b$. The prime number theorem supplies, simultaneously
+for every sufficiently large real $t$,
+\[
+ (1-\delta_0)t\le\theta(t)\le(1+\delta_0)t.
+\]
+If every prime in $(V,U]$ had its square dividing $b$, then
+$2(\theta(U)-\theta(V))\le L_b$. The displayed PNT bounds contradict this,
+since $2(1-\delta_0(2k-1))>1$.
+Choose the \emph{largest} prime $p\in(V,U]$ for which $p^2\nmid b$.
+Every prime $q\in(p,U]$ has $q^2\mid b$, and $U<2V<2p$.
+Take $B$ to be the product of their squares and put
+$T=\theta(U)-\theta(p)$, so $\log B=2T$.
+
+Suppose $|G-a/b|\le b^{-1091}$. Since $\rho p\le\rho U=1091L_b$,
+\eqref{eq:rho1076} applies at $a/b$. Prime-index nonvanishing and
+\eqref{eq:recycled-integer-lower} give
+\[
+ \eta p\le d(L_b-2T).
+\]
+But the PNT bounds imply $T\ge U-p-2\delta_0U$.
+Using $p\le U$ and $2d-\eta>0$ now yields
+\[
+ \eta k\le d+4d\delta_0 k,
+ \qquad
+ \eta k-d-4d\delta_0k=\frac{47987}{26900000}>0,
+\]
+a contradiction. This proves the retained $1091$ bound.
+
+The combined Lean theorem in namespace \lean{CatalanMeasure.Parametric} is
+\lean{catalan\_irrationalityMeasure\_1091}.
+It is proved in \lean{Parametric/}\allowbreak\lean{TwentyCostMain}.
+Its public series version is in \lean{Solution.lean}.
+The earlier $1095$ theorem remains in \lean{Parametric/}\allowbreak\lean{TwentySharperMain};
+the $1099$ theorem remains in \lean{Parametric/}\allowbreak\lean{TwentyRecycledMain}.
+The sharper gap and marked-column cost give the limiting exponent
+$3873600/3551\approx1090.848$; the strong eventual statement above
+uses the integer exponent $1091$. The following arithmetic refinement gives the $955$ checkpoint;
+Section~\ref{ssec:gap878} then sharpens its real estimate to the current
+statement of Theorem~\ref{thm:main}.
+
+\subsection{A uniform secondary coefficient-content tent}\label{ssec:secondary-tent}
+
+Write $\mathcal A_{N,p}$ for the reduction of $p^2$ times the actual
+filtered base matrix. For all sufficiently large $N$ and primes
+$52N/9<p<44N/7$, we prove
+\begin{equation}\label{eq:tent-rank}
+ \begin{gathered}
+ \operatorname{rank}\mathcal A_{N,p}\le20N-e_N(p),\\
+ e_N(p)=\max\left(0,\min\left(\left\lfloor\frac{9p-52N}{2}\right\rfloor,
+                  \left\lfloor\frac{44N-7p}{2}\right\rfloor\right)\right).
+ \end{gathered}
+\end{equation}
+The finitely many primes dividing
+$B_*=6310886697782126553600$ may be excluded. Every assertion in this
+subsection concerns the full canonical row range, including its endpoints.
+
+Here is an explicit construction and its dimension count. Work over
+$\mathbf F_p$, set $n=(p-1)/2$, $g=27N-4p$, $a=p-g$, $b=p-3N$, and use
+\[
+ x=(z+z^{-1})/2,\quad s=(z-z^{-1})/2,\quad
+ h=\frac{z^{26N}(z-1)^{2N}}{(1+z^2)^{27N}},\quad
+ b_0=\frac{z^4(z-1)}{(1+z^2)^4}.
+\]
+In terms of the signed moments $M_{u,J}$ and $Z_{u,J}$ from OpenAI's
+entry formulas \cite{OpenAI2026}, put
+\[
+ A_J(x)=\sum_{v=0}^5M_{v-1,J}x^v,\qquad
+ B_J(x)=\frac32\sum_{v=0}^4Z_{v,J}x^v,\qquad
+ a_J=B_J-sA_J/x.
+\]
+In particular the signed boundary moment $M_{-1,J}$ is retained.
+The raw source for column $j=Jp+e$, $0\le e<p$, is the Laurent jump of
+$2^{26N-1}h x^e a_J^p$; this follows directly by grouping the literal
+entry coefficients into base-$p$ digits.
+
+Use the six ordinary differentials
+$dz/z,dz,z\,dz,dz/(z-1),dz/(1+z^2),z\,dz/(1+z^2)$, followed by
+the boundary differential $dz/z^2$. For a coefficient vector
+$c=(\alpha_0,\alpha_1,\alpha_2,\beta,\gamma,\zeta,\omega)$ define
+\begin{align*}
+ P_c&=\gamma+(2\alpha_0-2\alpha_2+\beta+\zeta)x
+             +(2\alpha_1+2\omega)x^2+4\alpha_2x^3,\\
+ Q_c&=-\zeta+(-2\alpha_1+\beta+\zeta+2\omega)x
+             +(2\alpha_1-4\alpha_2-2\omega)x^2+4\alpha_2x^3.
+\end{align*}
+Thus the differential is $(U_c+sV_c)dz/z$, where
+$P_c=2xU_c$ and $Q_c=2x(x-1)V_c$. Its macro response is the coefficient
+of $x^5$ in
+\begin{equation}\label{eq:tent-trace}
+ H_{J,c}=\bigl((xB_J-(x-1)A_J)P_c+
+                  (xB_J-(x+1)A_J)Q_c\bigr)/16.
+\end{equation}
+This identity follows by adding the two expressions related by $z\mapsto z^{-1}$.
+
+For reproducibility the complete fixed response matrix, multiplied by
+$4608$, is
+\[
+ \begin{pmatrix}
+ 976&64&4640&-48&25&551&80\\
+ -984&3768&-3336&-792&764&-532&1704\\
+ 2208&-1680&-6384&1440&-354&1602&-1632\\
+ -2008&-1768&2104&-600&1196&-1028&-344\\
+ -1320&288&16&-552&-935&-1025&1752
+ \end{pmatrix}.
+\]
+Rows are $J=0,\ldots,4$. The first four ordinary columns in the first
+four rows have determinant $46085/1769472$ before this scaling.
+Consequently there are ordinary seeds $\eta_0,\eta_1,\eta_2,\eta_E$
+whose first four responses are respectively
+$(1,1,1,1)$, $(0,0,0,0)$, $(0,0,0,0)$ and $(1,0,0,0)$.
+Choose their $(\gamma,\zeta)$ coordinates to be
+$(0,0),(1,0),(0,1),(0,0)$, respectively; the first four coordinates
+are then uniquely determined by the displayed invertible matrix.
+The fifth seed is explicitly
+\[
+ \eta_B=\frac{dz}{z^2}+\frac{20981}{91559}\frac{dz}{z}
+             -\frac{40734}{91559}dz-\frac{5430}{91559}z\,dz.
+\]
+Its first four responses are $(0,0,0,-22627/732472)$, and its
+$\beta,\gamma,\zeta$ coordinates vanish. These five seeds are independent:
+the boundary pole distinguishes the fifth, the two free coordinates
+distinguish the kernel seeds, and the two remaining response vectors
+are independent. Multiplication of all seeds by
+$D=747824613120$ makes their coefficients integral. All reductions and
+independence certificates are valid away from $B_*$.
+
+For five inputs $I_i$ of degree $<p$, form
+\[
+ H_U=\sum_iP_i^p I_i,\quad H_V=\sum_iQ_i^p I_i,\quad
+ K=(z-1)^p\mathcal T_{4p-1}H_U+(z+1)^p\mathcal T_{4p-1}H_V,
+\]
+where $\mathcal T_d I=(2z)^d I((1+z^2)/(2z))$ and the seeds now include
+the common factor $D$. Impose the flags
+\begin{gather*}
+ x^a\mid H_U,H_V,\qquad (x-1)^N\mid H_U,\qquad
+ (x+1)^n\mid H_U,\qquad (x-1)^{N+n}\mid H_V,\\
+ \deg\sum_i\alpha_{2,i}I_i<2p-8N-1.
+\end{gather*}
+The last condition is one shared top-degree cap. Together with the lower
+endpoint condition described below, these imply
+\[
+ T=z^{24N-2p}(1+z^2)^a(z-1)^{p+2N-1}(z+1)^{p-1}\mid K,
+ \qquad \deg K+8N+3\le10p.
+\]
+Thus $R=K/T$ has degree $<20N$, and $u=z^{-2N}R$ is an actual full
+row packet. The map from the five inputs to this row is injective:
+the involution separates the two natural channels, and Frobenius
+interleaving separates each input coefficient and the independent seeds.
+Both division and extraction of the $20N$ row coefficients preserve this
+injection under the displayed flags.
+
+The literal raw response of this row is
+\begin{equation}\label{eq:tent-raw-response}
+ -8\,2^{26N-1}\sum_i[x^5]H_{J,i}\,[x^{p-1-e}]I_i.
+\end{equation}
+One elementary way to verify the jump calculation is the finite Laurent
+identity $\operatorname{CT}_{z=0}(sL(x(z)))=-[x^{-1}]L$.
+Combining it with \eqref{eq:tent-trace} and
+\[
+ [x^{6p-1-e}](H(x)^pI(x))=[x^5]H\,[x^{p-1-e}]I
+ \quad(\deg I<p)
+\]
+proves \eqref{eq:tent-raw-response} directly. Hence no generic
+surjectivity of the raw matrix or of its polynomial responses is needed.
+
+Take $I_0=F$ with $(x-1)^{p-N}\mid F$ and $\deg F<p$.
+It has $N$ parameters, and $[x^{p-1-e}]F=f(e)$ for a polynomial
+$f$ of degree $<N$. Explicitly, the basis $(x-1)^{p-1-k}$,
+$0\le k<N$, corresponds to the Newton basis $\binom{e}{k}$.
+Set $I_1=x^af_1$, $I_2=x^af_2$, $\deg f_i<g$, and
+$I_E=x^bh_E$, $\deg h_E<3N$. These choices pay the $x=0$ flags.
+For $p=6N+\delta$, $\delta>0$, allow $\deg I_B<4\delta$;
+for $p+d=6N$, set $I_B=0$.
+The remaining constraint costs are
+\[
+\begin{array}{c|c|c}
+ &p=6N+\delta&p+d=6N\\\hline
+ \text{parameter dimension}&N+2g+3N+4\delta&N+2g+3N\\
+ \text{small beta flag}&3N&g\\
+ \text{two }H_U\text{ branch flags}&N+n&N+n\\
+ \text{shared top cap}&8N-p+1&8N-p+1\\
+ \text{extra endpoint/response flags}&0&4d+4d
+\end{array}
+\]
+For the beta flag use $Q_i(1)=\beta_i$ and
+$(x-1)^p\mid Q_i^p-Q_i(1)$; its small polynomial vanishes after
+the indicated number of coefficient constraints. Since
+$N+n\le p-N$, this pays the entire $H_V$ branch flag.
+On the upper side the boundary input degree pays the lower endpoint
+$z^{24N-2p}\mid K$. On the lower side it is paid by the first $4d$
+coefficients after the automatic $z^{2p}$ factor; impose another $4d$
+literal raw-response conditions on the available $J=4$ columns.
+
+The $E$ response is confined to the unavailable $J=0$, $e<3N$ block.
+On the upper side the $B$ response is confined to unavailable $J=3$
+columns, because every available such column has $e<p-4\delta$.
+Thus every available raw response is the same nonzero scalar times
+$f(e)$, including the lower side's explicitly constrained $J=4$ block.
+The $N$th column difference annihilates it. Subtracting the displayed
+costs gives nullity at least
+$N-(7\delta+1)/2$ on the upper side and $N-(9d+1)/2$ on the lower side,
+with integer quotients; these are exactly \eqref{eq:tent-rank}.
+
+The actual canonical normalization pays the flat $p^{40N}$ denominator,
+and the scaled perturbation matrix vanishes modulo $p$ in this window.
+The rank bound therefore puts $p^{e_N(p)}$ in \emph{every coefficient}
+of $Q_N$, rather than just its integer values. Let
+\[
+ c_N=\prod_{52N/9<p<44N/7}p^{e_N(p)}
+\]
+for sufficiently large $N$, taking $c_N=1$ at the finitely many earlier
+indices. Weighted PNT summation \cite{PNTPlus} gives
+\[
+ \log c_N=(16/63+o(1))N^2,\qquad
+ \frac{16}{63}=\frac19+\frac17.
+\]
+These new primes exceed $2N$ and have no overlap with the already counted
+gain in this window. The integral polynomial $\widetilde Q_N=Q_N/c_N$
+retains the degree bound, rational nonvanishing and all recycled prime
+squares. Its uniform decay is available with
+\[
+ \eta=\frac{3551}{2000}+\frac{507}{2000}=\frac{2029}{1000},
+ \qquad \frac{507}{2000}<\frac{16}{63}.
+\]
+Apply the preceding largest-good-prime argument to $\widetilde Q_N$ with
+$k=4775/538$, $\rho=538/5$, $d=18$ and $\delta_0=10^{-6}$.
+Then $\rho k=955$ and the exact remaining margin is
+\[
+ \eta k-d-4d\delta_0k=\frac{1291}{168125}>0.
+\]
+This proves the retained $955$ checkpoint. Its Lean theorem is
+\begin{center}
+\lean{catalan\_irrationalityMeasure\_955}
+\end{center}
+in
+\lean{Parametric/}\allowbreak\lean{SecondaryTentMain}. The limiting exponent using the full
+tent area is $244036800/255713\approx954.339$.
+
+Alternatively, apply the Chebyshev final prime-selection criterion of
+Proposition~\ref{prop:criterion} to the same $\widetilde Q_N$. Its degree
+is still at most $18N$. Since $p\nmid b$ implies $p^2\nmid b$, the same
+rational nonvanishing theorem applies. The exact criterion exponent is
+\[
+ 3\frac{538}{5}\max\left(\frac{18}{2029/1000},4\right)
+ =\frac{5810400}{2029}<2864.
+\]
+For $b\ge2$, weakening the exponent gives $b^{-2864}<|G-a/b|$. This proves
+the retained $2864$ checkpoint, formalized as
+\lean{catalan\_}\allowbreak\lean{irrationality}\allowbreak\lean{Measure\_2864} in
+\lean{Parametric/}\allowbreak\lean{SecondaryTentChebyshev}.
+Only final prime selection uses Chebyshev here: the denominator asymptotics
+and the secondary coefficient-content rate remain PNT-backed, as the
+denominator asymptotics already were for the historical $3662$ theorem.
+
+
+\subsection{Supplied trials and central-gap interpolation}\label{ssec:gap878}
+
+We now retain the same canonical determinant polynomial, degree bound,
+integer normalization, own-prime nonvanishing and coefficient-content
+divisor, and improve its real estimates. This changes neither the local
+arithmetic nor the polynomial's rational zeros. The preceding $955/2864$
+proofs remain available as separate checkpoints.
+
+\paragraph{The supplied trial contracts.}
+Set
+\[
+ \begin{gathered}
+ U_* =2.2563367,\quad c_1=4.21,\quad c_2=4.29472,\\
+ g=\frac{401}{2500},\quad
+ a=\frac{2g}{1+g^2}=\frac{2005000}{6410801}.
+ \end{gathered}
+\]
+The first-population trial has $40$ finite modes and its saved geometric
+tails. The second has $160$ finite modes and its saved real and complex
+tails. Their coefficients are exact rationals in
+\lean{FirstStrongTrial/Data} and \lean{StrongTrial/Data}; the certificate
+generation records fix their input hashes. The effective first sequence
+is $p=2P$, so its norm contribution is $4\|P\|^2+\|V\|^2/2$;
+the second uses $2\|P\|^2+\|V\|^2/2$. These conventions are part of
+the supplied-field contracts, rather than an identification of the two
+trial norms. The certified caps are
+\[
+\begin{array}{c|ccc}
+ &\text{weighted norm}&\text{row plus column cap}&\lambda\\ \hline
+ \text{first}&.67761&-2.47913&1.68493357\\
+ \text{second}&.77424975&-2.54538346&0 .
+\end{array}
+\]
+The second sequence also satisfies $p_1\ge .18$. Its marked residual
+satisfies the stronger, restricted bound
+\begin{equation}\label{eq:gap878-residual}
+ -\frac9{10}\log(1+x^2)-2T(P,x)\le -.0524
+ \quad(g\le |x|\le1).
+\end{equation}
+The near-field bound remains global: for $0<y<1$,
+\[
+ -\frac9{10}\log(1+y^2)
+ +\frac{16N-1}{20N}\log y-p_1y\le-\frac34
+ \qquad(N\ge1).
+\]
+The coefficient $(16N-1)/(20N)\ge3/4$, and $\log y<0$,
+reduce this to the certified one-variable inequality with $p_1\ge .18$.
+All row, column and restricted residual caps cover their entire domains,
+including endpoint neighborhoods; sampled maxima are not proof inputs.
+
+For the second trial, Descartes' rule gives distinct-root budgets
+$59,22,23,50$ on the four dyadic subintervals of $(-1,1)$ split at
+$-1/2$, $0$ and $1/2$. The column derivative has budget $87$ on $(0,1)$.
+The $241$ rational brackets have strictly opposite endpoint signs.
+The intermediate value theorem supplies a distinct root in each bracket;
+exhausting each budget therefore covers every critical point. Values at
+$\pm1/2$ are nonzero, and zero is excluded from the logarithmic domains.
+Point and derivative bounds on these brackets, the endpoint bounds, and
+the separate closed-interval residual certificates prove the displayed
+suprema. These are ordinary Lean proofs of exact rational checks.
+
+For clarity, the second grouped population budget has
+$0\le\tau\le\alpha\le1$ and difference
+\[
+ \begin{aligned}
+ &h_0+\bigl(2.6\log2-F+R-c_2\bigr)\alpha-2\log2\,\alpha^2\\
+ &\qquad +(\log2-R-.75)\tau-\log2\,\tau^2,
+ \end{aligned}
+\]
+where $h_0=.77424975+F+U_*-.7\log2$,
+$F=-2.54538346$ and $R=-.0524$.
+The constant is negative; the $\tau$ coefficient is negative; and
+completing the $\alpha$ square gives a strictly negative upper.
+For example, using $.693147180<\log2<.693147181$, the latter
+square has positive margin at least
+\[
+ \frac{4948963197}{46209812000000000000}.
+\]
+The analogous first-population square, with the supplied first trial and
+$\lambda=1.68493357$, gives $c_1=4.21$. Thus the two actual marked row
+prices are $84.2Nm$ and $85.8944Nm$. The domain restriction in
+\eqref{eq:gap878-residual} is applied only to selected marked atoms;
+the integrated free variables retain their full original domains.
+
+\paragraph{Exact nodes and their jointly paid weights.}
+Use the $18N$ roots of
+\[
+ P_N(t)=T_{9N}\!\left(\frac{2t^2-(1+a^2)}{1-a^2}\right).
+\]
+They are distinct, lie in $(-1,-a)\cup(a,1)$, and have the explicit form
+\[
+ t_{j,\pm}=\pm\sqrt{a^2+(1-a^2)(1+s_j)/2},
+ \qquad T_{9N}(s_j)=0.
+\]
+The physical inverse satisfies $t=2x/(1+x^2)$; hence every selected
+marked point has $|x|>g$. This property survives the second-sheet
+grouping because its marked coordinates are selections of these points.
+Polynomial interpolation is exact at these nodes, so the same residual
+coefficient functional and common-factor cancellation apply.
+
+At a root, the Chebyshev derivative identity gives
+\[
+ |P_N'(t_{j,\pm})|\ge\frac{36Na}{1-a^2}.
+\]
+Fix $r=1001/1000$ and write $s=|\operatorname{Re}z|$ on $|z|=r$.
+For $w=(2z^2-(1+a^2))/(1-a^2)$, its exact ellipse half-sum is
+\[
+ H(s)=\frac{\sqrt{(r^2+1)^2-4s^2}
+                +\sqrt{(r^2+a^2)^2-4a^2s^2}}{1-a^2}.
+\]
+It decreases with $s$, whereas $|1-z|^2\le r^2+1+2s$ increases.
+A contiguous cover of $[0,r]$ by $55$ rational intervals, with upward
+square-root bounds and certified logarithms, proves
+\[
+ 9\log\bigl(H(s)+\sqrt{H(s)^2-1}\bigr)
+       +\log(r^2+1+2s)<17.913.
+\]
+Since $|z-t_{j,\pm}|\ge1/1000$ and $(1-a^2)/(36a)\le1$,
+the same coefficient-functional argument as before yields the actual
+joint bound
+\[
+ \bigl|\Phi_{N,k}(C_N L_{j,\pm})\bigr|
+       \le108000N\exp(17.913N).
+\]
+Here $L_{j,\pm}$ is the cardinal polynomial of the new nodes and $C_N$
+is the existing common factor. The residual cap and this increased nodal
+price are paid together. A smaller field cap without its changed weights
+would not give this conclusion.
+
+\paragraph{The completed ledger.}
+The larger marked row price is $20c_2=85.8944$. Adding the actual weight
+price gives
+\[
+ \rho=20c_2+17.913=\frac{519037}{5000}=103.8074.
+\]
+The exact unperturbed gap is
+$400U_*-8795/12-242\log2>375279/200000$;
+dividing by the unchanged content divisor adds
+$507/2000$. Thus the integer polynomial has the same degree bound
+$dN=18N$, with usable decay
+\[
+ \eta=\frac{375279}{200000}+\frac{507}{2000}
+       =\frac{425979}{200000}=2.129895.
+\]
+Apply the largest-good-prime criterion with
+\[
+ k=\frac{4390000}{519037},\qquad \delta_0=10^{-7}.
+\]
+Its window and integer-payment margins are respectively
+\[
+ \frac{2595176739037}{2595185000000}>0,
+ \qquad
+ \eta k-18-72\delta_0k=\frac{3770721}{259518500}>0.
+\]
+Since $\rho k=878$, this proves the first statement of
+Theorem~\ref{thm:main}. The limiting exponent of this paid ledger is
+\[
+ \frac{18\rho}{\eta}=\frac{41522960}{47331}
+          =877.288880\ldots<878.
+\]
+For final Chebyshev selection the same integer polynomial and its
+nonvanishing theorem give
+\[
+ 3\rho\max\left(\frac{18}{\eta},4\right)
+      =\frac{41522960}{15777}<2632.
+\]
+Weakening this exponent for $b\ge2$ proves the second statement.
+Denominator growth and secondary content still use PNT in both results.
+The two new main theorems are
+\lean{catalan\_irrationalityMeasure\_878} and
+\lean{catalan\_irrationalityMeasure\_2632} in
+\lean{Parametric/GapMain}.
 
 \section{Formalization}\label{sec:formal}
 \raggedbottom
@@ -1273,22 +1832,30 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_1281}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-1281}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_3662}: the same with exponent $3\,662$;
+\item \lean{catalan\_irrationalityMeasure\_878}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-878}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_2632}: the same with exponent $2\,632$, using Chebyshev for final prime selection;
+\item \lean{catalan\_irrationalityMeasure\_955}: the retained $955$ checkpoint;
+\item \lean{catalan\_irrationalityMeasure\_2864}: the same with exponent $2\,864$, using Chebyshev for final prime selection;
+\item \lean{catalan\_irrationalityMeasure\_3662}: the retained historical statement with exponent $3\,662$;
 \item \lean{eventually\_realDeterminant\_abs\_upper\_dual}: Proposition~\ref{prop:dual};
 \item \lean{separate\_perturbation}: Theorem~\ref{thm:perturbation}, with $\rho=366.3$;
 \item \lean{catalan\_irrationalityMeasure} and\\ \lean{catalan\_irrationalityMeasure\_pnt}:
  the general exponents of Proposition~\ref{prop:criterion}.
 \end{itemize}
-There is no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
-standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem enters through OpenAI's
-workspace, which already uses it for Proposition~\ref{prop:openai}(c).
+The solution has no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
+standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
+The prime number theorem enters the denominator asymptotics and secondary
+prime-content sum, and also the final prime selection for $878$.
+The $2632$ corollary uses Chebyshev only in that final selection step.
+The $955/2864$ checkpoint has the same PNT scope.
+The formal source for PNT is the PNT+ project
+\cite{PNTPlus}, through OpenAI's workspace and compatibility additions.
 
-\begin{center}\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
 \toprule
 File & Content\\
 \midrule
+\endhead
 \lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
 \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
 \lean{SparseDenominators}, \lean{DenseDenominators}, \lean{DenseGainPNT}, \lean{DenseMain} & Propositions~\ref{prop:sparse-rows}--\ref{prop:sparse-denominators}; the earlier $1981$ bound\\
@@ -1306,12 +1873,18 @@ File & Content\\
 \lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
 \lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
 \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}\\
-\lean{Parametric/TwentyMain}, \lean{TwentyIntegerPolynomial} & Section~\ref{sec:twenty}; the current $1281/3662$ bounds\\
+\lean{Parametric/GapMain}, \lean{GapFinalTransfer} & Section~\ref{ssec:gap878}; current $878/2632$ bounds\\
+\lean{FirstStrongTrial/*}, \lean{StrongTrial/*} & Supplied exact trials, point values and root-coverage certificates\\
+\lean{GapNodal}, \lean{GapCircle/*}, \lean{GapWeights} & Central-gap quadrature and actual joint weight bounds\\
+\lean{Cert/DescartesBudget}, \lean{Cert/IntegerHorner} & Distinct-root budgets and checked bracket endpoints\\
+\lean{SecondaryTentMain}, \lean{SecondaryTent}\allowbreak\lean{MeasureTransfer} & Section~\ref{ssec:secondary-tent}; retained $955$ bound\\
+\lean{SecondaryTentChebyshev} & Alternate final prime selection; $2864$ bound\\
+\lean{SecondaryTent}\allowbreak\lean{Parameters*}, \lean{SecondaryTentRow*}, \lean{SecondaryTentSource*} & Actual uniform row kernel, source compatibility and prime-content tent\\
+\lean{TwentyCostMain}, \lean{TwentySharperMain}, \lean{TwentyIntegerPolynomial} & Retained $1091/3662$ bounds and canonical integer polynomial\\
 \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
-\lean{TwentyTrial/*}, \lean{TwentyUniformEnergy}, \lean{TwentyPerturbation} & Certified population fields, mixed integration and $\rho=120$\\
+\lean{TwentyTrial/*}, \lean{TwentyFirstCost}, \lean{TwentyCostPerturbation} & Certified population and marked fields, mixed integration and $\rho=538/5$\\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{longtable}
 
 The current proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib release.
 OpenAI's original repository at commit \texttt{fd4aeeb} pins Lean \texttt{v4.34.1} and Mathlib
@@ -1326,7 +1899,13 @@ mathematics, including the perturbation estimate and all proofs; the Lean formal
 numerical computations and the certificate generator; the literature search; and the text of this paper. Claude worked in a series
 of conversations at the request of the author, who posed the problem, directed the work, and is
 responsible for this submission. The separate fixed-node decay bounds and weighted Vandermonde refinement, endpoint certificates, quadratic case refinement, dependency refactor, integer certificate computations and their soundness proofs, square-denominator nonvanishing, the prime-window refinement, uniform sparse and combined prime-row dependencies and denominator saving, the twenty-row parameter family, certified free and fixed population fields, joint atom integration, and corresponding revisions to this paper were developed by OpenAI Codex running GPT-6.1 Sol (OpenAI) at the author's request.
-The underlying irrationality proof and its formalization are
+The full-interval marked-sheet assembly, critical-radius perturbation,
+coefficient recycling, largest-good-prime criterion and the uniform secondary
+coefficient-content tent with its complete source and row formalization were developed
+with Codex at the author's request. The subsequent supplied-trial refinements,
+central-gap interpolation, actual circle weights, reusable root-count
+coverage certificates and the $878/2632$ assembly were also developed with
+Codex at the author's request. The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the
 argument above.
@@ -1337,6 +1916,13 @@ argument above.
 F.~Calegari, V.~Dimitrov and Y.~Tang,
 \emph{The linear independence of $1$, $\zeta(2)$, and $L(2,\chi_{-3})$},
 preprint, \href{https://arxiv.org/abs/2408.15403}{arXiv:2408.15403}.
+
+\bibitem{Carreira2026}
+Marcos Costa Santos Carreira,
+\emph{General designs and an irrationality exponent for Catalan's constant},
+preprint v1 (October 9, 2026),
+\href{https://doi.org/10.5281/zenodo.23326325}{doi:10.5281/zenodo.23326325};
+sources at \url{https://github.com/MarcosCarreira/catalan-designs}.
 
 \bibitem{Eskandari2026}
 P.~Eskandari,
@@ -1371,12 +1957,23 @@ in: Automated Deduction -- CADE 28, Lecture Notes in Computer Science 12699, Spr
 OpenAI,
 \emph{Catalan's constant is irrational},
 preprint (September 24, 2026), with a Lean formalization, available at
-\url{https://github.com/openai/math} (commit \texttt{fd4aeeb}, October 7, 2026).
+\href{https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Catalans-constant-is-irrational-September-24-2026/paper.pdf}{the original paper PDF}
+and
+\href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan}{the Lean formalization}
+(repository commit \texttt{fd4aeeb}, October 7, 2026).
 
 \bibitem{RivoalZudilin2003}
 T.~Rivoal and W.~Zudilin,
 \emph{Diophantine properties of numbers related to Catalan's constant},
 Math. Ann. \textbf{326} (2003), 705--721.
+
+\bibitem{PNTPlus}
+The PrimeNumberTheoremAnd contributors,
+\emph{The PNT+ project: a Lean formalization of the prime number theorem
+and related results},
+\url{https://github.com/AlexKontorovich/PrimeNumberTheoremAnd}.
+The vendored compatibility additions used here are recorded in the
+repository's \texttt{NOTICE} and \texttt{PORTING.md}.
 
 \bibitem{Sun2026}
 Z.-W.~Sun,
