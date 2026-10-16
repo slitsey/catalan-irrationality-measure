@@ -301,21 +301,34 @@ private theorem marked_selected_sheet_le_grouped {P : Parameters} (hP : Admissib
         linarith) (by omega : p + a ≤ P.n N)) hG
 
 /-- All marked selections retain the original free principal factor in the second case. -/
-theorem twenty_second_marked_sheet_product_eventually {ε : ℝ} (hε : 0 < ε) :
+def GroupedMarkedProductCostOn (target cost : ℝ) (G : ℝ → Prop) : Prop :=
+  ∀ ε : ℝ, 0<ε →
+    ∀ᶠ N : ℕ in atTop, ∀ (r a b : ℕ), r + a + b = twenty.n N →
+      ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
+      (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, G (x i)) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
+      Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
+      groupedPhysicalProduct twenty N z x y s ≤
+        Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          cost * N * (a + b))
+
+theorem second_marked_sheet_product_on (target cost : ℝ) (G : ℝ → Prop)
+    (hgrouped : GroupedMarkedProductCostOn target cost G) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = twenty.n N)
       (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
       (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
-      (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) →
+      (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) → (∀ j, G (y j)) →
       (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective (Fin.append x y) →
       Function.Injective s →
       ((∑ i : Fin (p + m), paramCaseField twenty N (Fin.append x y i)) ≤ -1) →
       markedSheetProduct twenty N hpm x y s ≤
         5 ^ m * (1 + 10 * Real.exp 12 * (twenty.n N : ℝ)) ^ twenty.n N *
-          Real.exp ((20 * (N : ℝ)) ^ 2 * (-twentyDualTarget + Real.log 2 / 2 + ε) +
-            89 * N * m) := by
+          Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+            cost * N * m) := by
   classical
-  filter_upwards [twenty_grouped_marked_product_eventually hε,
-    eventually_gt_atTop (2 : ℕ)] with N he hN3 p m hpm x y s hx hx0 hy hy0 hs hzi hsi hcase
+  filter_upwards [hgrouped ε hε,
+    eventually_gt_atTop (2 : ℕ)] with N he hN3 p m hpm x y s hx hx0 hy hy0 hyG hs hzi hsi hcase
   have hN : 0 < N := by omega
   have hn48 : 48 ≤ twenty.n N := by simp only [Parameters.n, twenty]; omega
   have hng : 2 * twenty.g N + 1 < twenty.n N := by
@@ -337,7 +350,7 @@ theorem twenty_second_marked_sheet_product_eventually {ε : ℝ} (hε : 0 < ε) 
   let w := marked_sheet_scalar twenty N x y s
   let marked : Fin (p + m) → Bool := Fin.addCases (fun _ => false) (fun _ => true)
   let M := (1 + 10 * Real.exp 12 * (twenty.n N : ℝ)) ^ twenty.n N *
-    Real.exp ((20 * (N : ℝ)) ^ 2 * (-twentyDualTarget + Real.log 2 / 2 + ε) + 89 * N * m)
+    Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + cost * N * m)
   have hw : 0 ≤ w := by
     dsimp [w, marked_sheet_scalar]
     exact div_nonneg (mul_nonneg (mul_nonneg
@@ -379,7 +392,7 @@ theorem twenty_second_marked_sheet_product_eventually {ε : ℝ} (hε : 0 < ε) 
         (fun i : Fin b => Fin.append x y (marked_selection_equiv (p := p) e (Sum.inr i))) at hh
       rw [marked_selection_near_nodes] at hh
       exact hh
-    have henergy := he p a b hcount x ya yb s hx hx0 hya hyb hs hxi hai hbi hsi
+    have henergy := he p a b hcount x ya yb s hx hx0 hya (fun i => hyG _) hyb hs hxi hai hbi hsi
     have habR : (a : ℝ) + b = m := by exact_mod_cast hab
     rw [habR] at henergy
     have hsel := marked_selected_sheet_le_grouped twenty_admissible hN hpm hab e ty
@@ -406,6 +419,75 @@ theorem twenty_second_marked_sheet_product_eventually {ε : ℝ} (hε : 0 < ε) 
   calc
     _ ≤ M * 5 ^ m := hbound
     _ = _ := by dsimp [M]; ring
+
+
+
+
+def GroupedMarkedProductCostAt (target cost : ℝ) : Prop :=
+  ∀ ε : ℝ, 0<ε →
+    ∀ᶠ N : ℕ in atTop, ∀ (r a b : ℕ), r + a + b = twenty.n N →
+      ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
+      (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
+      Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
+      groupedPhysicalProduct twenty N z x y s ≤
+        Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          cost * N * (a + b))
+
+theorem second_marked_sheet_product_at_cost (target cost : ℝ)
+    (hgrouped : GroupedMarkedProductCostAt target cost) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = twenty.n N)
+      (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+      (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective (Fin.append x y) →
+      Function.Injective s →
+      ((∑ i : Fin (p + m), paramCaseField twenty N (Fin.append x y i)) ≤ -1) →
+      markedSheetProduct twenty N hpm x y s ≤
+        5 ^ m * (1 + 10 * Real.exp 12 * (twenty.n N : ℝ)) ^ twenty.n N *
+          Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+            cost * N * m) := by
+  have hgroupedOn : GroupedMarkedProductCostOn target cost (fun _ => True) := by
+    intro ε hε
+    filter_upwards [hgrouped ε hε] with N he
+    intro r a b hc z x y s hz hz0 hx _ hy hs hzi hxi hyi hsi
+    exact he r a b hc z x y s hz hz0 hx hy hs hzi hxi hyi hsi
+  filter_upwards [second_marked_sheet_product_on target cost (fun _ => True) hgroupedOn hε] with N he
+  intro p m hpm x y s hx hx0 hy hy0 hs hzi hsi hcase
+  exact he p m hpm x y s hx hx0 hy hy0 (fun _ => True.intro) hs hzi hsi hcase
+
+def GroupedMarkedProductAt (target : ℝ) : Prop := GroupedMarkedProductCostAt target 89
+
+theorem second_marked_sheet_product_at_target (target : ℝ)
+    (hgrouped : GroupedMarkedProductAt target) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = twenty.n N)
+      (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+      (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective (Fin.append x y) →
+      Function.Injective s →
+      ((∑ i : Fin (p + m), paramCaseField twenty N (Fin.append x y i)) ≤ -1) →
+      markedSheetProduct twenty N hpm x y s ≤
+        5 ^ m * (1 + 10 * Real.exp 12 * (twenty.n N : ℝ)) ^ twenty.n N *
+          Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+            89 * N * m) :=
+  second_marked_sheet_product_at_cost target 89 hgrouped hε
+
+theorem twenty_second_marked_sheet_product_eventually {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = twenty.n N)
+      (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+      (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective (Fin.append x y) →
+      Function.Injective s →
+      ((∑ i : Fin (p + m), paramCaseField twenty N (Fin.append x y i)) ≤ -1) →
+      markedSheetProduct twenty N hpm x y s ≤
+        5 ^ m * (1 + 10 * Real.exp 12 * (twenty.n N : ℝ)) ^ twenty.n N *
+          Real.exp ((20 * (N : ℝ)) ^ 2 * (-twentyDualTarget + Real.log 2 / 2 + ε) +
+            89 * N * m) :=
+  second_marked_sheet_product_at_target twentyDualTarget
+    (fun _ hε => twenty_grouped_marked_product_eventually hε) hε
 
 end
 end CatalanMeasure.Parametric

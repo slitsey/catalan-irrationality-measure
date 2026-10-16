@@ -5,32 +5,22 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G - a/b| > b^(-955) for every integer a and every sufficiently large b.
-    The final Chebyshev criterion gives exponent 2864, with the old 3662 theorem
-    retained. Denominator and content asymptotics still use PNT. The selected admissible
-    tuple (20,3,1,2,1) has matrix size 20N and determinant-polynomial degree
-    at most 18N. Actual physical prime-column pools and sparse residue relations
-    give exact odd-prime cost 8795/4800. Actual two-adic coefficient-minor
-    expansions give cost (21/200) log 2. Four exact endpoint field certificates,
-    finite corrections and uniform free/fixed population interpolation prove
-    dual target 2.256085, retaining the physical log(2)/2 correction. Full-interval
-    quadrature with genuine marked P-only atoms and joint weights gives actual
-    determinant perturbation for |x-G| <= exp(-(538/5)N). Common denominators,
-    integer-valued factorial normalization and prime-index nonvanishing when
-    p squared does not divide the rational denominator, followed by coefficientwise
-    recycling of all later bad-prime squares, complete the proof. Retaining
-    the certified normalized gap eta = 1.7755 and sharpening the existing
-    first-population quadratic give the retained bound 1091. An explicit uniform
-    actual full-row residue kernel gives an extra coefficient-content tent with
-    area 16/63. Fixed-source trace identities, literal polynomial row support,
-    injectivity and exact constraint dimensions prove the uniform rank bound.
-    Coefficientwise content division preserves recycling; prime-product rate
-    507/2000 raises the available gap to 2.029 and proves the current bound955.
-    The cost-parametric
-    marked-atom chain uses row cost 89.6Nm and unchanged joint atom cost 18Nm.
-    The earlier 1095 and 1099 statements remain verified in their original modules.
-    The original 48-row construction and its 1981/5391 bounds remain verified
-    historical modules. The development builds on OpenAI's formalization.
+    |G-a/b| > b^(-878) for every integer a and all sufficiently large b.
+    Chebyshev final prime selection gives exponent 2632; denominator and
+    coefficient-content asymptotics still use PNT. The admissible tuple
+    (20,3,1,2,1), matrix size 20N, polynomial degree at most 18N, actual
+    prime-column valuations and secondary coefficient-content tent are retained.
+    Supplied exact first40/second160 trials give target 2.2563367. Central-gap
+    interpolation with physical gap 401/2500 gives marked row costs 84.2Nm and
+    85.8944Nm. Actual circle/functional price 17.913 yields rho = 519037/5000.
+    Compatible content rate 507/2000 gives eta = 425979/200000 and limiting
+    recycled exponent 41522960/47331 < 878. Coefficientwise prime-square
+    recycling and own-prime nonvanishing are preserved. Five coarse Descartes
+    budgets and 241 opposite-sign brackets exhaust the X/Y critical points;
+    point values and restricted residual certificates are separately checked.
+    Previous 955/2864, 1091, 1095, 1099 and earlier verified checkpoints remain.
+    The development builds on OpenAI's formalization; all certificate bounds
+    are converted to ordinary kernel-checked rational proofs.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -42,14 +32,14 @@ classification:
   msc2020: ["11J82", "11J72"]
 
 sources:
-  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-955) for all large b"
+  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-878) for all large b"
     type: original-proof
     relationship: other
     note: >-
       The result is first presented together with this formalization, in the
       companion paper by S. Litsey, "An irrationality measure for Catalan's
       constant" (2026), whose arguments the Lean development follows. The repository
-      contains the revised 955 paper; Hexagon preprint hexagon:2610.00187v1 is the
+      contains the revised 878 paper; Hexagon preprint hexagon:2610.00187v1 is the
       earlier 8127 version, and this revision has not been uploaded there.
   - title: "Catalan's constant is irrational"
     authors:
@@ -115,11 +105,15 @@ status:
   scope: >-
     All advertised statements are fully proved, with Catalan's constant
     written out as the series in Challenge.lean. Every lemma of the companion
-    paper is formalized, including the perturbation estimate with rho = 538/5 and
+    paper is formalized, including the actual central-gap perturbation with
+    rho = 519037/5000 in Parametric/GapMain and
     the irrationality-measure criterion. The prime number theorem used in the
     largest-good-prime and secondary prime-content steps comes from the PNT+
     project through OpenAI's vendored formalization and compatibility additions. The paper's
-    remarks about the limits of the method are not formalized.
+    remarks about the limits of the method are not formalized. The solution
+    development has no sorry; Challenge retains statement-template holes.
+    Public 878/2632 and retained 955/2864 axiom reports contain only propext,
+    Classical.choice and Quot.sound; no additional axioms are introduced.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -167,8 +161,11 @@ automation:
     cost-parametric sharper first-population quadratic giving rho107.6, and the
     uniform secondary-content tent and complete actual source/row formalization
     giving955, and the Chebyshev final-selection corollary with exact exponent
-    5810400/2029 < 2864. Both worked at the request of the human author, who is responsible for the submission.
-    The current 955/2864/3662 checkpoint passes the main Lean kernel and standard-axiom
+    5810400/2029 < 2864. The supplied-trial refinement, generalized first and
+    second population budgets, central-gap nodes, exact circle weights and
+    ordinary-kernel root-budget coverage give the current 878/2632 endpoints.
+    Both worked at the request of the human author, who is responsible for the submission.
+    The current 878/2632 and retained 955/2864 checkpoints pass the main Lean kernel and standard-axiom
     audits. Independent-kernel and Comparator acceptance remain pending; the author
     deferred CI and Palomar optimization until bound-reduction research stalls.
 
@@ -190,15 +187,25 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1, first statement"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_878"
+      module: "Challenge"
+      status: proved
+      note: "For all large b and all integers a, b^(-878) < |G - a/b|."
+    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2632"
+      module: "Challenge"
+      status: proved
+      note: "For all large b and all integers a, b^(-2632) < |G - a/b|; denominator and content estimates retain PNT."
+    - source: "Litsey (2026), retained 955 checkpoint"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_955"
       module: "Challenge"
       status: proved
       note: "For all large b and all integers a, b^(-955) < |G - a/b|."
-    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
+    - source: "Litsey (2026), retained 2864 Chebyshev checkpoint"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2864"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-2864) < |G - a/b|; PNT-backed denominator and content estimates."
+      note: "For all large b and all integers a, b^(-2864) < |G - a/b|."
     - source: "Litsey (2026), retained historical Chebyshev statement"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_3662"
       module: "Challenge"

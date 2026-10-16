@@ -1,0 +1,6 @@
+module
+public import Solution
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_878
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2632
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_955
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2864

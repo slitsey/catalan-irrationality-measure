@@ -15,9 +15,9 @@ Catalan's constant is `G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`; it is written out
 The statements say that for every sufficiently large denominator `b` and every integer
 numerator `a`,
 
-* `|G - a / b| > b ^ (-955)` (so the irrationality exponent of `G` is at most `955`), and
-* `|G - a / b| > b ^ (-2864)`, using Chebyshev's estimates for final prime selection; and
-* the retained historical `|G - a / b| > b ^ (-3662)` statement.
+* `|G - a / b| > b ^ (-878)` (so the irrationality exponent of `G` is at most `878`), and
+* `|G - a / b| > b ^ (-2632)`, using Chebyshev's estimates for final prime selection; and
+* the retained historical statements with exponents `955`, `2864` and `3662`.
 
 The denominator asymptotics and secondary content estimate still use the prime number theorem.
 
@@ -26,6 +26,22 @@ OpenAI, *Catalan's constant is irrational* (2026).
 -/
 
 namespace CatalanIrrationalityMeasure
+
+/-- **Irrationality measure for Catalan's constant.** The central-gap interpolation
+and supplied analytic trials give the eventual approximation bound with exponent `878`. -/
+theorem catalan_irrationalityMeasure_878 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(878 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
+  sorry
+
+/-- The same bound with exponent `2632`, using Chebyshev for final prime selection.
+The denominator and content estimates retain their PNT dependence. -/
+theorem catalan_irrationalityMeasure_2632 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(2632 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
+  sorry
 
 /-- **Irrationality measure for Catalan's constant.** For all sufficiently large natural
 numbers `b` and all integers `a`, `b ^ (-955) < |G - a / b|`, where

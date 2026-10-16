@@ -3,22 +3,35 @@ module
 public import CatalanMeasure.Parametric.TwentyCostMain
 public import CatalanMeasure.Parametric.SecondaryTentMain
 public import CatalanMeasure.Parametric.SecondaryTentChebyshev
+public import CatalanMeasure.Parametric.GapMain
 
 public section
 
 /-!
 # Proofs of the advertised statements
 
-The statements are those of `Challenge.lean`; the proofs are the theorems
-`CatalanMeasure.Parametric.catalan_irrationalityMeasure_955`,
-`CatalanMeasure.Parametric.catalan_irrationalityMeasure_2864` and
-`CatalanMeasure.Parametric.catalan_irrationalityMeasure_3662` of
-`SecondaryTentMain.lean`, `SecondaryTentChebyshev.lean` and the retained
-`TwentyMain.lean`, where
+The strongest statements of `Challenge.lean` are proved by
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_878` and
+`CatalanMeasure.Parametric.catalan_irrationalityMeasure_2632` in `GapMain.lean`.
+The earlier `955`, `2864`, `1091`, `1095`, `1099` and `3662` statements
+remain available from the retained secondary-tent and twenty-row proofs, where
 Catalan's constant is OpenAI's `OAI.InternalCatalan.catalan`, defined as the same series.
 -/
 
 namespace CatalanIrrationalityMeasure
+
+theorem catalan_irrationalityMeasure_878 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(878 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
+  CatalanMeasure.Parametric.catalan_irrationalityMeasure_878
+
+/-- Chebyshev final prime selection with the PNT-backed denominator and content estimates. -/
+theorem catalan_irrationalityMeasure_2632 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(2632 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| :=
+  CatalanMeasure.Parametric.catalan_irrationalityMeasure_2632
 
 theorem catalan_irrationalityMeasure_955 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
