@@ -15,6 +15,7 @@ Catalan's constant is `G = ∑_{j ≥ 0} (-1)^j / (2j + 1)^2`; it is written out
 The statements say that for every sufficiently large denominator `b` and every integer
 numerator `a`,
 
+* `|G - a / b| > b ^ (-759)` and `> b ^ (-2276)` (Lemma U3 content);
 * `|G - a / b| > b ^ (-878)` (so the irrationality exponent of `G` is at most `878`), and
 * `|G - a / b| > b ^ (-2632)`, using Chebyshev's estimates for final prime selection; and
 * the retained historical statements with exponents `955`, `2864` and `3662`.
@@ -26,6 +27,20 @@ OpenAI, *Catalan's constant is irrational* (2026).
 -/
 
 namespace CatalanIrrationalityMeasure
+
+/-- **Irrationality measure for Catalan's constant, exponent `759`.** -/
+theorem catalan_irrationalityMeasure_759 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(759 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
+  sorry
+
+/-- The same bound with exponent `2276`, using Chebyshev for final prime selection. -/
+theorem catalan_irrationalityMeasure_2276 :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(2276 : ℝ)) <
+        |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
+  sorry
 
 /-- **Irrationality measure for Catalan's constant.** The central-gap interpolation
 and supplied analytic trials give the eventual approximation bound with exponent `878`. -/
