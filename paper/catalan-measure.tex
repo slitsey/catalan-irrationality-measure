@@ -3,7 +3,7 @@
   {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
   {\usepackage[expansion=false]{microtype}}
 \usepackage{amssymb,mathtools}
-\usepackage{booktabs,array,longtable}
+\usepackage{booktabs,array}
 \usepackage{enumitem}
 \emergencystretch=2.5em
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
@@ -1851,40 +1851,63 @@ The $955/2864$ checkpoint has the same PNT scope.
 The formal source for PNT is the PNT+ project
 \cite{PNTPlus}, through OpenAI's workspace and compatibility additions.
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{0.38\textwidth}>{\raggedright\arraybackslash}p{0.53\textwidth}}
-\toprule
-File & Content\\
-\midrule
-\endhead
-\lean{DeltaPoly}, \lean{Degree} & $\Delta_N(X)$; Lemma~\ref{lem:degree}\\
-\lean{Denominators}, \lean{IntegerValued}, \lean{Integrality} & Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}\\
-\lean{SparseDenominators}, \lean{DenseDenominators}, \lean{DenseGainPNT}, \lean{DenseMain} & Propositions~\ref{prop:sparse-rows}--\ref{prop:sparse-denominators}; the earlier $1981$ bound\\
-\lean{Nonvanishing} & Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$\\
-\lean{PrimeWindow}, \lean{Criterion}, \lean{PNTWindow}, \lean{Main} & Proposition~\ref{prop:criterion} and the reduction to Theorem~\ref{thm:perturbation}\\
-\lean{Quadrature}, \lean{ChebyshevNodes}, \lean{QuadCircle} & Lemma~\ref{lem:quadrature}\\
-\lean{DetExpansion} & Lemma~\ref{lem:expansion}\\
-\lean{MixedAndreief} & Lemma~\ref{lem:andreief}\\
-\lean{VandermondeProduct} & Lemma~\ref{lem:genvandermonde}\\
-\lean{PinMajorant}, \lean{FixedNodes}, \lean{FixedNodeMajorant} & Proposition~\ref{prop:pointwise}, \eqref{eq:fixed-node}, and \eqref{eq:energy-identity}\\
-\lean{PinDampedDual}, \lean{PinSupDual} & Proposition~\ref{prop:energy}\\
-\lean{Cert/ListPoly}, \lean{Cert/LogApprox}, \lean{Cert/FieldEval}, \lean{Cert/FieldDeriv}, \lean{Cert/Cover}, \lean{Cert/Norm} & the general lemmas behind the checks of Proposition~\ref{prop:dual}\\
-\lean{Dual/*}, \lean{DualTwo} & the certificate data, the kernel checks, Proposition~\ref{prop:dual}\\
-\lean{SharpBarrier} & the remark after Proposition~\ref{prop:dual}\\
-\lean{WeightedEnergy}, \lean{WeightedBounds} & Section~\ref{ssec:weighted}\\
-\lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6} & Theorem~\ref{thm:perturbation}\\
-\lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain} & Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}\\
-\lean{Parametric/GapMain}, \lean{GapFinalTransfer} & Section~\ref{ssec:gap878}; current $878/2632$ bounds\\
-\lean{FirstStrongTrial/*}, \lean{StrongTrial/*} & Supplied exact trials, point values and root-coverage certificates\\
-\lean{GapNodal}, \lean{GapCircle/*}, \lean{GapWeights} & Central-gap quadrature and actual joint weight bounds\\
-\lean{Cert/DescartesBudget}, \lean{Cert/IntegerHorner} & Distinct-root budgets and checked bracket endpoints\\
-\lean{SecondaryTentMain}, \lean{SecondaryTent}\allowbreak\lean{MeasureTransfer} & Section~\ref{ssec:secondary-tent}; retained $955$ bound\\
-\lean{SecondaryTentChebyshev} & Alternate final prime selection; $2864$ bound\\
-\lean{SecondaryTent}\allowbreak\lean{Parameters*}, \lean{SecondaryTentRow*}, \lean{SecondaryTentSource*} & Actual uniform row kernel, source compatibility and prime-content tent\\
-\lean{TwentyCostMain}, \lean{TwentySharperMain}, \lean{TwentyIntegerPolynomial} & Retained $1091/3662$ bounds and canonical integer polynomial\\
-\lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss} & Actual local arithmetic and common-denominator growth\\
-\lean{TwentyTrial/*}, \lean{TwentyFirstCost}, \lean{TwentyCostPerturbation} & Certified population and marked fields, mixed integration and $\rho=538/5$\\
-\bottomrule
-\end{longtable}
+\begingroup
+\noindent The following file groups implement the indicated parts of the proof.\par\medskip
+\noindent \lean{DeltaPoly}, \lean{Degree}\par
+$\Delta_N(X)$; Lemma~\ref{lem:degree}.\par\medskip
+\noindent \lean{Denominators}, \lean{IntegerValued}, \lean{Integrality}\par
+Proposition~\ref{prop:denominators}; Lemma~\ref{lem:intvalued}; Corollary~\ref{cor:Q}.\par\medskip
+\noindent \lean{SparseDenominators}, \lean{DenseDenominators}, \lean{DenseGainPNT}, \lean{DenseMain}\par
+Propositions~\ref{prop:sparse-rows}--\ref{prop:sparse-denominators}; the earlier $1981$ bound.\par\medskip
+\noindent \lean{Nonvanishing}\par
+Proposition~\ref{prop:openai}(d) for $p\nmid\operatorname{den}z$.\par\medskip
+\noindent \lean{PrimeWindow}, \lean{Criterion}, \lean{PNTWindow}, \lean{Main}\par
+Proposition~\ref{prop:criterion} and the reduction to Theorem~\ref{thm:perturbation}.\par\medskip
+\noindent \lean{Quadrature}, \lean{ChebyshevNodes}, \lean{QuadCircle}\par
+Lemma~\ref{lem:quadrature}.\par\medskip
+\noindent \lean{DetExpansion}\par
+Lemma~\ref{lem:expansion}.\par\medskip
+\noindent \lean{MixedAndreief}\par
+Lemma~\ref{lem:andreief}.\par\medskip
+\noindent \lean{VandermondeProduct}\par
+Lemma~\ref{lem:genvandermonde}.\par\medskip
+\noindent \lean{PinMajorant}, \lean{FixedNodes}, \lean{FixedNodeMajorant}\par
+Proposition~\ref{prop:pointwise}, \eqref{eq:fixed-node}, and \eqref{eq:energy-identity}.\par\medskip
+\noindent \lean{PinDampedDual}, \lean{PinSupDual}\par
+Proposition~\ref{prop:energy}.\par\medskip
+\noindent \lean{Cert/ListPoly}, \lean{Cert/LogApprox}, \lean{Cert/FieldEval}, \lean{Cert/FieldDeriv}, \lean{Cert/Cover}, \lean{Cert/Norm}\par
+the general lemmas behind the checks of Proposition~\ref{prop:dual}.\par\medskip
+\noindent \lean{Dual/*}, \lean{DualTwo}\par
+the certificate data, the kernel checks, Proposition~\ref{prop:dual}.\par\medskip
+\noindent \lean{SharpBarrier}\par
+the remark after Proposition~\ref{prop:dual}.\par\medskip
+\noindent \lean{WeightedEnergy}, \lean{WeightedBounds}\par
+Section~\ref{ssec:weighted}.\par\medskip
+\noindent \lean{SeparateFixedNodes}, \lean{SeparateBounds}, \lean{SeparateLemma6}\par
+Theorem~\ref{thm:perturbation}.\par\medskip
+\noindent \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain}\par
+Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}.\par\medskip
+\noindent \lean{Parametric/GapMain}, \lean{GapFinalTransfer}\par
+Section~\ref{ssec:gap878}; current $878/2632$ bounds.\par\medskip
+\noindent \lean{FirstStrongTrial/*}, \lean{StrongTrial/*}\par
+Supplied exact trials, point values and root-coverage certificates.\par\medskip
+\noindent \lean{GapNodal}, \lean{GapCircle/*}, \lean{GapWeights}\par
+Central-gap quadrature and actual joint weight bounds.\par\medskip
+\noindent \lean{Cert/DescartesBudget}, \lean{Cert/IntegerHorner}\par
+Distinct-root budgets and checked bracket endpoints.\par\medskip
+\noindent \lean{SecondaryTentMain}, \lean{SecondaryTent}\allowbreak\lean{MeasureTransfer}\par
+Section~\ref{ssec:secondary-tent}; retained $955$ bound.\par\medskip
+\noindent \lean{SecondaryTentChebyshev}\par
+Alternate final prime selection; $2864$ bound.\par\medskip
+\noindent \lean{SecondaryTent}\allowbreak\lean{Parameters*}, \lean{SecondaryTentRow*}, \lean{SecondaryTentSource*}\par
+Actual uniform row kernel, source compatibility and prime-content tent.\par\medskip
+\noindent \lean{TwentyCostMain}, \lean{TwentySharperMain}, \lean{TwentyIntegerPolynomial}\par
+Retained $1091/3662$ bounds and canonical integer polynomial.\par\medskip
+\noindent \lean{TwentyDenominators}, \lean{TwentyTwoAdicNorm}, \lean{TwentyCombinedOddLoss}\par
+Actual local arithmetic and common-denominator growth.\par\medskip
+\noindent \lean{TwentyTrial/*}, \lean{TwentyFirstCost}, \lean{TwentyCostPerturbation}\par
+Certified population and marked fields, mixed integration and $\rho=538/5$.\par\medskip
+\endgroup
 
 The current proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib release.
 OpenAI's original repository at commit \texttt{fd4aeeb} pins Lean \texttt{v4.34.1} and Mathlib
