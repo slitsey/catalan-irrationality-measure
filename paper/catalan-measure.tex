@@ -43,7 +43,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 15, 2026}
+\date{October 16, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 68V20}
 
@@ -53,9 +53,10 @@ Andr\'eief identity, formal verification, Lean}
 \begin{abstract}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
-$|G-a/b|>b^{-878}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le878$. Using Chebyshev's estimates for final
-prime selection gives $2\,632$; denominator and content asymptotics still use PNT.
+$|G-a/b|>b^{-759}$ for every integer $a$ and every sufficiently large
+integer $b$. Thus $\mu(G)\le759$. Using Chebyshev's estimates for final
+prime selection gives $2\,276$; denominator and content asymptotics still use PNT.
+The earlier bounds $878$ and $2\,632$ remain proved.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
 sparse residue relations sharpen its common denominator. Exact energy
@@ -64,7 +65,9 @@ give a uniform mixed-integrand bound. Stronger supplied energy trials,
 central-gap quadrature and jointly paid atom weights control the same
 determinant polynomial on $|x-G|\le e^{-(519037/5000)N}$.
 An explicit uniform residue-kernel construction supplies additional common
-coefficient content of quadratic logarithmic rate $16/63$.
+coefficient content of quadratic logarithmic rate $16/63$. A further
+lemma (Lemma~U3, derived by Claude with the author) adds content of
+rate $1/3$ at the primes in $(8N,9N)$.
 Coefficient divisibility recycles denominator prime squares; selecting the
 largest prime with $p^2\nmid b$ completes the improved measure criterion.
 We retain the earlier $48N$ construction and its $1\,981$ bound to explain
@@ -97,11 +100,13 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-878}.
+ \left|G-\frac ab\right|>b^{-759}.
 \]
-In particular $\mu(G)\le878$. Using Chebyshev's bounds for final prime
-selection gives the additional statement $|G-a/b|>b^{-2\,632}$.
+In particular $\mu(G)\le759$. Using Chebyshev's bounds for final prime
+selection gives the additional statement $|G-a/b|>b^{-2\,276}$.
 The denominator and coefficient-content asymptotics still use PNT.
+The earlier statements with exponents $878$ and $2\,632$ (Section~\ref{ssec:gap878})
+remain proved.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -162,6 +167,10 @@ improve the marked field and actual coefficient-functional price. With
 $\rho=519037/5000$ and $\eta=425979/200000$, the criterion gives
 $878$; final Chebyshev selection gives $2632$. The historical $3662$
 statement remains available.
+\item A third residue-kernel lemma (Lemma~U3, Section~\ref{sec:u3}) gives
+coefficient content at the primes $8N<p<9N$ of area $1/3$. Dividing by it
+raises the usable decay to $\eta=492599/200000$, and the same criterion
+gives $759$; final Chebyshev selection gives $2276$.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1423,8 +1432,8 @@ the $1099$ theorem remains in \lean{Parametric/}\allowbreak\lean{TwentyRecycledM
 The sharper gap and marked-column cost give the limiting exponent
 $3873600/3551\approx1090.848$; the strong eventual statement above
 uses the integer exponent $1091$. The following arithmetic refinement gives the $955$ checkpoint;
-Section~\ref{ssec:gap878} then sharpens its real estimate to the current
-statement of Theorem~\ref{thm:main}.
+Section~\ref{ssec:gap878} then sharpens its real estimate to the $878$
+bound, and Section~\ref{sec:u3} to the current statement of Theorem~\ref{thm:main}.
 
 \subsection{A uniform secondary coefficient-content tent}\label{ssec:secondary-tent}
 
@@ -1795,8 +1804,8 @@ Its window and integer-payment margins are respectively
  \qquad
  \eta k-18-72\delta_0k=\frac{3770721}{259518500}>0.
 \]
-Since $\rho k=878$, this proves the first statement of
-Theorem~\ref{thm:main}. The limiting exponent of this paid ledger is
+Since $\rho k=878$, this proves the $878$ bound
+(the first statement of the previous version of Theorem~\ref{thm:main}). The limiting exponent of this paid ledger is
 \[
  \frac{18\rho}{\eta}=\frac{41522960}{47331}
           =877.288880\ldots<878.
@@ -1809,10 +1818,164 @@ nonvanishing theorem give
 \]
 Weakening this exponent for $b\ge2$ proves the second statement.
 Denominator growth and secondary content still use PNT in both results.
-The two new main theorems are
+The two theorems of this subsection are
 \lean{catalan\_irrationalityMeasure\_878} and
 \lean{catalan\_irrationalityMeasure\_2632} in
 \lean{Parametric/GapMain}.
+
+\section{The third-band content: Lemma U3}\label{sec:u3}
+
+The secondary tent of Section~\ref{ssec:secondary-tent} lives at primes
+$p\approx6N$. A second residue-kernel family sits at the primes
+$8N<p<9N$. Its rank bound was derived by Claude (Anthropic) working with the
+author; the proof below is the one formalized in Lean. Throughout, the design is
+$(20,3,1,2,1)$, so the matrix has size $20N$ and the base matrix is
+$A_N$ (the filtered matrix at the Catalan parameter $0$). Rows are indexed by
+$0\le r<20N$ with signed offset $m=r-2N\in[-2N,18N-1]$, and the raw
+columns are $j\in[3N,24N)$. For a prime $p$ write $h=(p+1)/2$ and work in $\mathbb F_p[X]$.
+
+\begin{theorem}[Lemma U3]\label{thm:u3}
+Let $N\ge1$ and let $p$ be a prime with $8N<p<9N$. Then
+$\operatorname{rank}_{\mathbb F_p}\operatorname{red}(p^2A_N)\le 20N-(18N-2p-1)$,
+that is, the nullity of the reduced scaled base matrix is at least $18N-2p-1$.
+\end{theorem}
+
+The raw row polynomials of the design are
+$P_r=(1-X)^N\,\mathrm{rev}(T_{|m|})$ and $D_r=\operatorname{sgn}(m)(1-X)^N\,\mathrm{rev}(U_{|m|-1})$,
+where $T_k,U_k$ are Chebyshev polynomials and $\mathrm{rev}$ reverses coefficients
+inside degree $26N-1$. The Lean-proved digit formula (the existing
+\lean{rawEntry\_primeDigitPair}) says that for a column $j=Jp+\ell$ ($0\le\ell<p$)
+the residue of $p^2\cdot$(raw entry) is a fixed linear function of the digits
+$(X W P_r)[vp+\ell]$ and $D_r[vp+\ell]$, $v\ge0$, with $W=(1-X^2)^{(p-1)/2}$,
+and the filtered matrix is the raw matrix on $[3N,24N)$ multiplied by the
+alternating binomial filter $\Delta$ of order $N$. For a coefficient vector
+$c\in\mathbb F_p^{20N}$ put $P_c=\sum c_rP_r$ and $D_c=\sum c_rD_r$. Every
+$c$ whose raw response vanishes on $[3N,24N)$ lies in the left kernel of
+$\operatorname{red}(p^2A_N)$; the proof counts linear conditions that force this.
+
+\begin{lemma}[Chebyshev Frobenius reflection]\label{lem:u3-reflect}
+Let $p$ be an odd prime. In $\mathbb F_p[X]$, for every integer $m$,
+\[
+ T_{p-m}=X^pT_m-(X^2-1)^{h}\,U_{m-1}.
+\]
+\end{lemma}
+\begin{proof}
+Both sides satisfy the three-term Chebyshev recurrence in $m$, so it suffices to check
+$m=0,1$. This needs $T_p=X^p$ (Dickson) and $U_{p-1}=(X^2-1)^{(p-1)/2}$. The latter follows
+from the Pell identity $T_n^2-(X^2-1)U_{n-1}^2=1$ at $n=p$,
+$(X^2-1)^p=X^{2p}-1$, cancellation of $X^2-1$, and comparison of leading
+coefficients to fix the sign. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and $T_{p-1}=2XT_p-T_{p+1}$.
+\end{proof}
+
+\paragraph{Step 1: identity K.}
+Reflecting the identity of Lemma~\ref{lem:u3-reflect} at degree $p+26N$ gives, for
+each row,
+\[
+ (1-X^2)^h\,\mathrm{rev}(U_{m-1})-X\,\mathrm{rev}(T_m)
+   =-X^{p+1}\,\mathrm{rev}(T_{p-m}),
+\]
+and $\mathrm{rev}(T_{p-m})$ is divisible by $X^{26N-1-|p-m|}$ with $|p-m|\le p+2N$ because
+$m\ge-2N$ and $8N<p$. Hence $X^{24N}\mid(1-X^2)^hD_c-XP_c$ for \emph{every} $c$. This is the
+form in which the formalization proves identity K (the analytic proof by the substitution
+$x=(z+z^{-1})/2$ and $s^p=x^p-z^{-p}$ is equivalent).
+
+\paragraph{Step 2: the flag subspace.}
+Let $V$ be the set of $c$ with $(1-X^2)^h\mid P_c$. Since $(1-X)^N\mid P_r$ always, the
+condition consists of $h-N$ Taylor-coefficient equations at $X=1$ and $h$ at $X=-1$, that
+is $p+1-N$ linear equations. For $c\in V$ write $P_c=(1-X^2)^hY$ and
+$\widetilde Q=XY$. Because $(1-X^2)^p=1-X^{2p}$ in characteristic $p$,
+\[
+ XWP_c=(1-X^{2p})\,\widetilde Q .
+\]
+Moreover $P_c$ has no coefficients below $X^{8N}$ and none from $X^{27N}$ on,
+so $\widetilde Q$ is supported in degrees $[8N+1,\,27N-p-1]$. Dividing the
+congruence of Step~1 by the unit $(1-X^2)^h$ modulo $X^{24N}$ gives
+\[
+ D_c[k]=\widetilde Q[k]\qquad(k<24N).
+\]
+
+\paragraph{Step 3: rank-one columns.}
+Let $27N-3p\le\ell<24N-2p$. Then the digits of $XWP_c$ at residue $\ell$ are
+$(0,q,0,-q,0,\dots)$ with $q=\widetilde Q[p+\ell]$ (the digits of
+$\widetilde Q$ at this residue vanish except for $v=1$, by the support, and
+$X^{2p}\widetilde Q$ shifts the digit sequence by two places), and the digits of $D_c$ are
+$(0,q,0,0,\dots)$ (by identity K for $v\le2$ and degree for $v\ge3$, since $3p+\ell\ge27N$).
+Therefore the response at every column $j=Jp+\ell$ equals
+$q\,\kappa_J$ with $\kappa_J$ independent of $c$: the columns of this residue
+class have rank at most one on $V$.
+
+\paragraph{Step 4: counting.}
+For $p\in(8N,9N)$ the columns $j\in[3N,24N)$ with residue $\ell$ are:
+$J\in\{1,2\}$ if $\ell<27N-3p$ (two columns), $J\in\{0,1,2\}$ for
+$27N-3p\le\ell<24N-2p$ (rank one), and $J\in\{0,1\}$ for $24N-2p\le\ell<p$ (two columns). The
+number of linear functionals needed to kill the response on $V$ is therefore
+\[
+ 2(27N-3p)+(p-3N)+2(3p-24N)=3N+p .
+\]
+Adding the $p+1-N$ flag equations, the kernel of all $2p+2N+1$ conditions has dimension at least
+$20N-(2p+2N+1)=18N-2p-1$ and lies in the left kernel of $\operatorname{red}(p^2A_N)$.
+This proves Theorem~\ref{thm:u3}. The formal statement is
+\lean{u3\_canonical\_rank}; the exact numerical checks (identity K, $\dim V=21N-p-1$, and rank $3N+p$ on $V$ at
+$(N,p)=(7,59),(7,61),(13,107),(13,113),(19,157),(19,167)$) agree with the proof.
+
+\paragraph{From nullity to coefficient content.}
+For $8N<p<9N$ and $N\ge10^{12}$ the actual normalizer has $p$-exponent
+\[
+ 40N-(26N-3p)^+,
+\]
+because the odd-loss function equals $40$ on $[0,10]$ and the prime gain is $26-3x$ on
+$[8,26/3]$ and $0$ beyond. Rescaling the determinant polynomial by $X\mapsto X/p^2$ then shows
+that $p^{2i-(26N-3p)^+}$ divides the $i$-th coefficient of $Q_N$. A nullity of at least
+$18N-2p-1$ gives $v_p\det(A_N+zB_N)\ge-(22N+2p+1)$ for rational $z$ with $p\nmid\operatorname{den}z$, hence
+$p^{e}\mid Q_N(z)$ for every integer $z$ with
+\[
+ e=e_N(p)=\min\bigl(p-8N-1,\;18N-2p-1\bigr)^+ ,
+\]
+which equals $18N-2p-1-\max(26N-3p,0)$. Since $e\le2p-(26N-3p)^+$ for the tail
+$i\ge p$, the integer-valued criterion with a $p^e$-divisible tail gives
+$p^{e}\mid\operatorname{coeff}_i(Q_N)$ for all $i$ (formalized as
+\lean{twentyMeasure}\allowbreak\lean{IntPoly\_third\_coeff\_dvd}). The exponent satisfies
+$N\theta(p/N)-1\le e\le N\theta(p/N)$ for the tent $\theta(x)=\max(0,\min(x-8,18-2x))$
+of area $1/3$ on $[8,9]$. These primes exceed $2N$ and are disjoint from the primes
+of Section~\ref{ssec:secondary-tent}, so the combined content
+$c_N=\prod p^{e_N(p)}\cdot\prod_{52N/9<p<44N/7}p^{e'_N(p)}$ keeps all recycled prime
+squares. Weighted PNT summation gives $\log c_N^{\mathrm{new}}\ge(\tfrac13-o(1))N^2\ge\tfrac{3331}{10000}N^2$
+eventually, so the total content rate used is
+\[
+ \chi=\frac{507}{2000}+\frac{3331}{10000}.
+\]
+
+\paragraph{The 759 ledger.}
+With the unchanged real-place gap $375279/200000$ the usable decay is
+\[
+ \eta=\frac{375279}{200000}+\frac{507}{2000}+\frac{3331}{10000}=\frac{492599}{200000}=2.462995 .
+\]
+The perturbation exponent and the degree are unchanged: $\rho=519037/5000$, $d=18$. Apply the
+largest-good-prime criterion with
+\[
+ k=\frac{3795000}{519037},\qquad \delta_0=10^{-7}.
+\]
+Then $\rho k=759$, $k>2$, $\eta<36$, and the window and payment margins are
+\[
+ \frac{2595177929037}{2595185000000}>0,
+ \qquad
+ \eta k-18-72\delta_0k=\frac{4372701}{519037000}>0 .
+\]
+This proves $|G-a/b|>b^{-759}$ for all large $b$. The limiting exponent of the paid
+ledger is $18\rho/\eta=373706640/492599=758.6427\ldots<759$. For final Chebyshev
+selection,
+\[
+ 3\rho\max\left(\frac{18}{\eta},4\right)=\frac{1121119920}{492599}=2275.928\ldots<2276 .
+\]
+The new main theorems are \lean{catalan\_irrationalityMeasure\_759} and
+\lean{catalan\_irrationalityMeasure\_2276} in \lean{Parametric/U3Main}; the earlier $878$ and $2632$
+bounds remain proved.
+
+\begin{remark}
+The increment $3331/10000$ is the part of the area $1/3$ of the third-band tent that is
+banked; the unbanked remainder $1/3-3331/10000$ is below $10^{-3}$. Reaching $758$
+would require a further content window of area about $0.0019$ beyond Theorem~\ref{thm:u3}.
+\end{remark}
 
 \section{Formalization}\label{sec:formal}
 \raggedbottom
@@ -1832,8 +1995,11 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_878}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-878}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_2632}: the same with exponent $2\,632$, using Chebyshev for final prime selection;
+\item \lean{catalan\_irrationalityMeasure\_759}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-759}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_2276}: the same with exponent $2\,276$, using Chebyshev for final prime selection;
+\item \lean{u3\_canonical\_rank}: Theorem~\ref{thm:u3};
+\item \lean{catalan\_irrationalityMeasure\_878}: the earlier bound with exponent $878$;
+\item \lean{catalan\_irrationalityMeasure\_2632}: the earlier bound with exponent $2\,632$, using Chebyshev for final prime selection;
 \item \lean{catalan\_irrationalityMeasure\_955}: the retained $955$ checkpoint;
 \item \lean{catalan\_irrationalityMeasure\_2864}: the same with exponent $2\,864$, using Chebyshev for final prime selection;
 \item \lean{catalan\_irrationalityMeasure\_3662}: the retained historical statement with exponent $3\,662$;
@@ -1845,8 +2011,8 @@ the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 The solution has no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
 The prime number theorem enters the denominator asymptotics and secondary
-prime-content sum, and also the final prime selection for $878$.
-The $2632$ corollary uses Chebyshev only in that final selection step.
+prime-content sum, and also the final prime selection for $759$ and $878$.
+The $2276$ and $2632$ corollaries uses Chebyshev only in that final selection step.
 The $955/2864$ checkpoint has the same PNT scope.
 The formal source for PNT is the PNT+ project
 \cite{PNTPlus}, through OpenAI's workspace and compatibility additions.
@@ -1887,8 +2053,14 @@ Section~\ref{ssec:weighted}.\par\medskip
 Theorem~\ref{thm:perturbation}.\par\medskip
 \noindent \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain}\par
 Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}.\par\medskip
+\noindent \lean{Parametric/U3Main}, \lean{U3Audit}\par
+Section~\ref{sec:u3}; current $759/2276$ bounds.\par\medskip
+\noindent \lean{U3ChebyshevFrobenius}, \lean{U3RowIdentity}, \lean{U3Combination}, \lean{U3Digits}, \lean{U3Rank}\par
+Lemma~\ref{lem:u3-reflect}, identity K, the flag subspace, the digit response and Theorem~\ref{thm:u3}.\par\medskip
+\noindent \lean{U3Content}, \lean{U3PrimeGrowth}\par
+Nullity to coefficient content for $8N<p<9N$ and the area-$1/3$ prime sum.\par\medskip
 \noindent \lean{Parametric/GapMain}, \lean{GapFinalTransfer}\par
-Section~\ref{ssec:gap878}; current $878/2632$ bounds.\par\medskip
+Section~\ref{ssec:gap878}; the $878/2632$ bounds.\par\medskip
 \noindent \lean{FirstStrongTrial/*}, \lean{StrongTrial/*}\par
 Supplied exact trials, point values and root-coverage certificates.\par\medskip
 \noindent \lean{GapNodal}, \lean{GapCircle/*}, \lean{GapWeights}\par
@@ -1928,7 +2100,10 @@ coefficient-content tent with its complete source and row formalization were dev
 with Codex at the author's request. The subsequent supplied-trial refinements,
 central-gap interpolation, actual circle weights, reusable root-count
 coverage certificates and the $878/2632$ assembly were also developed with
-Codex at the author's request. The underlying irrationality proof and its formalization are
+Codex at the author's request. Lemma~U3 (Section~\ref{sec:u3}): its derivation, including identity K and
+the dimension count, its Lean formalization, the content transfer to primes in $(8N,9N)$ and the
+$759/2276$ assembly were carried out by Claude (Anthropic) working with Sean Litsey, building on the
+Codex-developed pipeline above. The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the
 argument above.

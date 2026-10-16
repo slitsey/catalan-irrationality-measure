@@ -5,10 +5,11 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-878)`.
+> `|G - a/b| > b^(-759)`.
 >
-> So the irrationality exponent of `G` is at most `878`. Chebyshev's bounds
-> for final prime selection give `b^(-2632)`; the historical
+> So the irrationality exponent of `G` is at most `759`. Chebyshev's bounds
+> for final prime selection give `b^(-2276)`; the earlier `b^(-878)` and
+> `b^(-2632)` theorems and the historical
 > `b^(-3662)` theorem remains available. Denominator asymptotics and secondary
 > coefficient content still use the prime number theorem in this version.
 
@@ -31,7 +32,22 @@ Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determina
 - [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
   scope.
 
-The current proof retains the admissible tuple `(20,3,1,2,1)`, degree `18N`,
+The current `759` / `2276` bounds add one new coefficient-content lemma (Lemma U3) to the
+`878` / `2632` development below. For `N >= 1` and every prime `p` with `8N < p < 9N`, the
+nullity of the reduced scaled base matrix is at least `18N - 2p - 1`
+(`CatalanMeasure.Parametric.u3_canonical_rank`). The proof restricts to the flag subspace
+`{c : (1-X^2)^((p+1)/2) | P_c}` (`p + 1 - N` linear conditions), proves identity K
+`D_c = Q~_c` below degree `24N` from the Chebyshev Frobenius reflection identity
+`T_{p-m} = X^p T_m - (X^2-1)^((p+1)/2) U_{m-1}` in characteristic `p`, shows that the raw
+columns in the residue window `27N-3p <= l < 24N-2p` have rank at most one, and counts
+`2p + 2N + 1` conditions in total. The resulting content exponent
+`min(p-8N-1, 18N-2p-1)^+` over the primes in `(8N, 9N)` (a tent of area `1/3`) adds
+`3331/10000` to the gap: `eta = 492599/200000`, `rho = 519037/5000`,
+`kappa = 3795000/519037`, `rho * kappa = 759`; the limiting exponent is
+`373706640/492599 = 758.64...` and the Chebyshev exponent `1121119920/492599 = 2275.93...`.
+The derivation of Lemma U3 is due to Claude (Anthropic) working with Sean Litsey.
+
+The `878` / `2632` development retains the admissible tuple `(20,3,1,2,1)`, degree `18N`,
 the actual denominator estimates, secondary content tent and coefficientwise
 recycling. Exact supplied first40/second160 trials give target `2.2563367`.
 Central-gap interpolation with physical gap `401/2500` and transformed gap
@@ -74,7 +90,7 @@ constraint dimension, coefficient-content and PNT bridges all pass the main kern
 The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
 1281/3662 checkpoint, remain in their original verified modules.
 
-The 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
+The 759/2276, 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator acceptance remain pending; CI optimization is deferred. The earlier
 48-row construction and its 1981/5391 result remain as verified historical modules.
 
@@ -82,7 +98,10 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/GapMain.lean`, `GapFinalTransfer.lean` | current unconditional 878 / 2632 endpoints |
+| `CatalanMeasure/Parametric/U3Main.lean`, `U3Audit.lean` | current unconditional 759 / 2276 endpoints |
+| `CatalanMeasure/Parametric/U3ChebyshevFrobenius.lean`, `U3RowIdentity.lean`, `U3Combination.lean`, `U3Digits.lean`, `U3Rank.lean` | Lemma U3: Frobenius reflection identity, identity K, flag subspace, digit response and canonical rank bound |
+| `CatalanMeasure/Parametric/U3Content.lean`, `U3PrimeGrowth.lean` | nullity to coefficient content for `8N < p < 9N` and the area-`1/3` prime sum |
+| `CatalanMeasure/Parametric/GapMain.lean`, `GapFinalTransfer.lean` | retained unconditional 878 / 2632 endpoints |
 | `CatalanMeasure/FirstStrongTrial/`, `StrongTrial/` | supplied trial norms, field values and root-coverage certificates |
 | `CatalanMeasure/Parametric/GapNodal.lean`, `GapQuadrature.lean`, `GapAtomCost.lean` | exact gap nodes, marked support and coefficient selection |
 | `CatalanMeasure/GapCircle/`, `Parametric/GapActualWeights.lean` | actual circle and coefficient-functional weights |
@@ -171,7 +190,9 @@ assembly, critical-radius perturbation, coefficient recycling and largest-good-p
 criterion giving 1099 were also developed with Codex. The later cost refinement,
 secondary content tent, supplied trials, central-gap interpolation, actual
 circle weights, root-budget certificates and 878/2632 assembly were developed
-with Codex at his request. Sean Litsey posed the problem,
+with Codex at his request. Lemma U3, its formalization, the content transfer to the primes
+in `(8N, 9N)` and the 759/2276 assembly were developed by Claude (Anthropic) working with
+Sean Litsey, on top of the Codex pipeline. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
 
