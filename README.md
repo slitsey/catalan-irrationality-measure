@@ -5,11 +5,11 @@ A Lean 4 formalization of the following theorem.
 > **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
 > `a` and every sufficiently large integer `b`,
 >
-> `|G - a/b| > b^(-759)`.
+> `|G - a/b| > b^(-740)`.
 >
-> So the irrationality exponent of `G` is at most `759`. Chebyshev's bounds
-> for final prime selection give `b^(-2276)`; the earlier `b^(-878)` and
-> `b^(-2632)` theorems and the historical
+> So the irrationality exponent of `G` is at most `740`. Chebyshev's bounds
+> for final prime selection give `b^(-2220)`; the earlier `b^(-759)`, `b^(-2276)`,
+> `b^(-878)` and `b^(-2632)` theorems and the historical
 > `b^(-3662)` theorem remains available. Denominator asymptotics and secondary
 > coefficient content still use the prime number theorem in this version.
 
@@ -32,7 +32,28 @@ Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determina
 - [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
   scope.
 
-The current `759` / `2276` bounds add one new coefficient-content lemma (Lemma U3) to the
+The current `740` / `2220` bounds add a sixth coefficient-content window (Lemma U6) to the
+`759` / `2276` development. For `N >= 1` and every prime `p` with `4N < p` and `2p < 9N`,
+the rank of the reduced scaled base matrix is at most `20N - (p - 4N - 1)/2`
+(`CatalanMeasure.Parametric.u6_canonical_rank`). The proof is column-side rather than
+row-side. Put `d = p - 4N` (odd, with `2d < N`). Identity K6,
+`2 X W S_c - (2 - X^(2p)) U_c = 0 (mod X^(24N))` for every row combination `c` (from the
+integer identity `U_{m-1} T_n - T_m U_{n-1} = U_{m-n-1}` with `m = 2p`, together with
+`T_p = X^p` and `U_{p-1} = (X^2-1)^((p-1)/2)` in characteristic `p`), lets every filtered
+column of a block of `5d` columns be written as a constant combination of the digits
+`(X-1)^N X W (1-X)^N S_c` at positions `u p + mu`, `u = 2..6`. The Frobenius law
+`(1-X)^e Q = (1-X^p) Y`, `e = (d+1)/2`, makes `(d-1)/2` of these digits redundant by a
+telescoping class-sum identity. Constraining the `20N - 5d` remaining columns and the other
+`4d + e` digits therefore costs `20N - (d-1)/2` conditions, which forces the whole block to
+vanish. For `4N < p < 9N/2` the canonical normalizer already has `p`-exponent `40N`, so the
+content exponent is `(p - 4N - 1)/2` (a profile `(x-4)/2` of area `1/16` on `[4, 9/2]`) and
+adds `624/10000` to the gap: `eta = 505079/200000`, `rho = 519037/5000`,
+`kappa = 3700000/519037`, `rho * kappa = 740`; the limiting exponent is
+`373706640/505079 = 739.897...` and the Chebyshev exponent `1121119920/505079 = 2219.69...`.
+The derivation and formalization of Lemma U6 are due to Claude (Anthropic) working with
+Sean Litsey.
+
+The `759` / `2276` bounds add one earlier coefficient-content lemma (Lemma U3) to the
 `878` / `2632` development below. For `N >= 1` and every prime `p` with `8N < p < 9N`, the
 nullity of the reduced scaled base matrix is at least `18N - 2p - 1`
 (`CatalanMeasure.Parametric.u3_canonical_rank`). The proof restricts to the flag subspace
@@ -90,7 +111,7 @@ constraint dimension, coefficient-content and PNT bridges all pass the main kern
 The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
 1281/3662 checkpoint, remain in their original verified modules.
 
-The 759/2276, 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
+The 740/2220, 759/2276, 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
 and comparator acceptance remain pending; CI optimization is deferred. The earlier
 48-row construction and its 1981/5391 result remain as verified historical modules.
 
@@ -98,7 +119,10 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 
 | Directory or file | Content |
 |---|---|
-| `CatalanMeasure/Parametric/U3Main.lean`, `U3Audit.lean` | current unconditional 759 / 2276 endpoints |
+| `CatalanMeasure/Parametric/U6Main.lean`, `U6Audit.lean` | current unconditional 740 / 2220 endpoints |
+| `CatalanMeasure/Parametric/U6Chebyshev.lean`, `U6Identity.lean`, `U6Block.lean`, `U6Digits.lean`, `U6Rank.lean` | Lemma U6: doubled Chebyshev identity, identity K6, Frobenius class-sum law, block column responses and canonical rank bound |
+| `CatalanMeasure/Parametric/U6Content.lean`, `U6PrimeGrowth.lean` | rank to coefficient content for `4N < p < 9N/2` and the area-`1/16` prime sum |
+| `CatalanMeasure/Parametric/U3Main.lean`, `U3Audit.lean` | retained unconditional 759 / 2276 endpoints |
 | `CatalanMeasure/Parametric/U3ChebyshevFrobenius.lean`, `U3RowIdentity.lean`, `U3Combination.lean`, `U3Digits.lean`, `U3Rank.lean` | Lemma U3: Frobenius reflection identity, identity K, flag subspace, digit response and canonical rank bound |
 | `CatalanMeasure/Parametric/U3Content.lean`, `U3PrimeGrowth.lean` | nullity to coefficient content for `8N < p < 9N` and the area-`1/3` prime sum |
 | `CatalanMeasure/Parametric/GapMain.lean`, `GapFinalTransfer.lean` | retained unconditional 878 / 2632 endpoints |
@@ -192,7 +216,8 @@ secondary content tent, supplied trials, central-gap interpolation, actual
 circle weights, root-budget certificates and 878/2632 assembly were developed
 with Codex at his request. Lemma U3, its formalization, the content transfer to the primes
 in `(8N, 9N)` and the 759/2276 assembly were developed by Claude (Anthropic) working with
-Sean Litsey, on top of the Codex pipeline. Sean Litsey posed the problem,
+Sean Litsey, on top of the Codex pipeline; so were Lemma U6, its formalization, the content
+transfer to the primes in `(4N, 9N/2)` and the 740/2220 assembly. Sean Litsey posed the problem,
 directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
 above).
 

@@ -5,9 +5,13 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G-a/b| > b^(-759) for every integer a and all sufficiently large b.
-    Chebyshev final prime selection gives exponent 2276; the earlier 878 and
-    2632 bounds remain proved. Lemma U3 (nullity of the reduced scaled base
+    |G-a/b| > b^(-740) for every integer a and all sufficiently large b.
+    Chebyshev final prime selection gives exponent 2220; the earlier 759, 2276,
+    878 and 2632 bounds remain proved. Lemma U6 (rank of the reduced scaled
+    base matrix at most 20N-(p-4N-1)/2 for primes 4N < p < 9N/2, proved from
+    the doubled Chebyshev Frobenius identity K6, a Frobenius class-sum law and
+    a column-block count) adds content of area 1/16 and, together with U3,
+    gives eta = 505079/200000. Lemma U3 (nullity of the reduced scaled base
     matrix at least 18N-2p-1 for primes 8N < p < 9N, proved from a Chebyshev
     Frobenius reflection identity and a flag-subspace count) adds content of
     area 1/3 and gives eta = 492599/200000. Denominator and
@@ -116,7 +120,7 @@ status:
     project through OpenAI's vendored formalization and compatibility additions. The paper's
     remarks about the limits of the method are not formalized. The solution
     development has no sorry; Challenge retains statement-template holes.
-    Public 759/2276, 878/2632 and retained 955/2864 axiom reports contain only propext,
+    Public 740/2220, 759/2276, 878/2632 and retained 955/2864 axiom reports contain only propext,
     Classical.choice and Quot.sound; no additional axioms are introduced.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -169,10 +173,11 @@ automation:
     second population budgets, central-gap nodes, exact circle weights and
     ordinary-kernel root-budget coverage give the 878/2632 endpoints. Lemma U3,
     its Lean formalization, the content transfer to primes in (8N, 9N) and the
-    current 759/2276 assembly were derived and formalized by Claude (Anthropic)
-    working with the human author.
+    759/2276 assembly, and likewise Lemma U6, its formalization, the content
+    transfer to primes in (4N, 9N/2) and the current 740/2220 assembly, were
+    derived and formalized by Claude (Anthropic) working with the human author.
     Both worked at the request of the human author, who is responsible for the submission.
-    The current 878/2632 and retained 955/2864 checkpoints pass the main Lean kernel and standard-axiom
+    The current 740/2220, the 759/2276, 878/2632 and retained 955/2864 checkpoints pass the main Lean kernel and standard-axiom
     audits. Independent-kernel and Comparator acceptance remain pending; the author
     deferred CI and Palomar optimization until bound-reduction research stalls.
 
@@ -194,11 +199,21 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1, first statement"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_740"
+      module: "Challenge"
+      status: proved
+      note: "For all large b and all integers a, b^(-740) < |G - a/b|."
+    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2220"
+      module: "Challenge"
+      status: proved
+      note: "For all large b and all integers a, b^(-2220) < |G - a/b|; denominator and content estimates retain PNT."
+    - source: "Litsey (2026), earlier 759 bound"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_759"
       module: "Challenge"
       status: proved
       note: "For all large b and all integers a, b^(-759) < |G - a/b|."
-    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
+    - source: "Litsey (2026), earlier 2276 Chebyshev bound"
       lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2276"
       module: "Challenge"
       status: proved

@@ -53,10 +53,10 @@ Andr\'eief identity, formal verification, Lean}
 \begin{abstract}
 Building on OpenAI's proof that Catalan's constant
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$ is irrational, we prove
-$|G-a/b|>b^{-759}$ for every integer $a$ and every sufficiently large
-integer $b$. Thus $\mu(G)\le759$. Using Chebyshev's estimates for final
-prime selection gives $2\,276$; denominator and content asymptotics still use PNT.
-The earlier bounds $878$ and $2\,632$ remain proved.
+$|G-a/b|>b^{-740}$ for every integer $a$ and every sufficiently large
+integer $b$. Thus $\mu(G)\le740$. Using Chebyshev's estimates for final
+prime selection gives $2\,220$; denominator and content asymptotics still use PNT.
+The earlier bounds $759$, $2\,276$, $878$ and $2\,632$ remain proved.
 We change the determinant parameters, obtaining a $20N$ matrix and a
 polynomial of degree at most $18N$. Uniform physical prime-column pools and
 sparse residue relations sharpen its common denominator. Exact energy
@@ -67,7 +67,9 @@ determinant polynomial on $|x-G|\le e^{-(519037/5000)N}$.
 An explicit uniform residue-kernel construction supplies additional common
 coefficient content of quadratic logarithmic rate $16/63$. A further
 lemma (Lemma~U3, derived by Claude with the author) adds content of
-rate $1/3$ at the primes in $(8N,9N)$.
+rate $1/3$ at the primes in $(8N,9N)$, and a column-block lemma (Lemma~U6,
+derived by Claude with the author) adds content of rate $1/16$ at the primes
+in $(4N,9N/2)$.
 Coefficient divisibility recycles denominator prime squares; selecting the
 largest prime with $p^2\nmid b$ completes the improved measure criterion.
 We retain the earlier $48N$ construction and its $1\,981$ bound to explain
@@ -100,13 +102,13 @@ sufficiently large $b$.
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-759}.
+ \left|G-\frac ab\right|>b^{-740}.
 \]
-In particular $\mu(G)\le759$. Using Chebyshev's bounds for final prime
-selection gives the additional statement $|G-a/b|>b^{-2\,276}$.
+In particular $\mu(G)\le740$. Using Chebyshev's bounds for final prime
+selection gives the additional statement $|G-a/b|>b^{-2\,220}$.
 The denominator and coefficient-content asymptotics still use PNT.
-The earlier statements with exponents $878$ and $2\,632$ (Section~\ref{ssec:gap878})
-remain proved.
+The earlier statements with exponents $759$ and $2\,276$ (Section~\ref{sec:u3}) and
+$878$ and $2\,632$ (Section~\ref{ssec:gap878}) remain proved.
 \end{theorem}
 
 Theorem~\ref{thm:main}, together with every result in this paper, has been verified in the
@@ -171,6 +173,10 @@ statement remains available.
 coefficient content at the primes $8N<p<9N$ of area $1/3$. Dividing by it
 raises the usable decay to $\eta=492599/200000$, and the same criterion
 gives $759$; final Chebyshev selection gives $2276$.
+\item A fourth lemma (Lemma~U6, Section~\ref{sec:u6}), a rank bound for a block of
+columns at the primes $4N<p<9N/2$, gives coefficient content of area $1/16$.
+Dividing by it raises the usable decay to $\eta=505079/200000$, and the same criterion
+gives $740$; final Chebyshev selection gives $2220$.
 \end{enumerate}
 
 \subsection{Notation and conventions}
@@ -1433,7 +1439,7 @@ The sharper gap and marked-column cost give the limiting exponent
 $3873600/3551\approx1090.848$; the strong eventual statement above
 uses the integer exponent $1091$. The following arithmetic refinement gives the $955$ checkpoint;
 Section~\ref{ssec:gap878} then sharpens its real estimate to the $878$
-bound, and Section~\ref{sec:u3} to the current statement of Theorem~\ref{thm:main}.
+bound, Section~\ref{sec:u3} to the $759$ bound, and Section~\ref{sec:u6} to the current statement of Theorem~\ref{thm:main}.
 
 \subsection{A uniform secondary coefficient-content tent}\label{ssec:secondary-tent}
 
@@ -1977,6 +1983,162 @@ banked; the unbanked remainder $1/3-3331/10000$ is below $10^{-3}$. Reaching $75
 would require a further content window of area about $0.0019$ beyond Theorem~\ref{thm:u3}.
 \end{remark}
 
+\section{The sixth-window content: Lemma U6}\label{sec:u6}
+
+The third-band content of Section~\ref{sec:u3} lives at the primes $8N<p<9N$. A
+further residue-kernel family sits at the primes $4N<p<9N/2$, below every
+earlier window. Unlike Lemma~U3, whose linear conditions are imposed on the
+rows of the base matrix through a flag subspace, Lemma~U6 is a statement about
+a block of \emph{columns}. Its derivation and formalization are due to Claude
+(Anthropic) working with the author; the proof below is the one formalized in Lean.
+We keep the design $(20,3,1,2,1)$, the notation of Section~\ref{sec:u3}, and work in
+$\mathbb F_p[X]$.
+
+\begin{theorem}[Lemma U6]\label{thm:u6}
+Let $N\ge1$ and let $p$ be a prime with $4N<p$ and $2p<9N$. Then
+\[
+ \operatorname{rank}_{\mathbb F_p}\operatorname{red}(p^2A_N)\le 20N-\frac{p-4N-1}{2},
+\]
+that is, the nullity of the reduced scaled base matrix is at least $(p-4N-1)/2$.
+\end{theorem}
+
+Put $d=p-4N$, which is odd; the hypothesis $2p<9N$ is equivalent to $2d<N$. Put
+$e=(d+1)/2$, so that $2N+\frac{p-1}2+e=p$, and $W=(1-X^2)^{(p-1)/2}$.
+For a coefficient vector $c\in\mathbb F_p^{20N}$ let
+$S_c=\sum_rc_r\,\mathrm{rev}(T_{m_r})$ and $U_c=\sum_rc_r\,\mathrm{rev}(U_{m_r-1})$
+with $m_r=r-2N$, the reversal being taken inside degree $26N-1$; thus $P_c=(1-X)^NS_c$ and
+$D_c=(1-X)^NU_c$ in the notation of Section~\ref{sec:u3}. Define
+\[
+ \widehat Q_c=(X-1)^N\,XW\,(1-X)^NS_c,\qquad
+ \widehat D_c=(X-1)^N(1-X)^NU_c .
+\]
+
+\paragraph{Step 1: identity K6.}
+Over any commutative ring,
+\[
+ U_{m-1}T_n-T_mU_{n-1}=U_{m-n-1},
+\]
+because both sides satisfy the Chebyshev recurrence in $n$ and agree for $n=0,1$.
+In characteristic $p$ take $m=2p$ and use $T_p=X^p$, $U_{p-1}=(X^2-1)^{(p-1)/2}$ (Lemma~\ref{lem:u3-reflect} and
+its proof), $T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}$:
+\[
+ 2X^p(X^2-1)^{(p-1)/2}\,T_n-(2X^{2p}-1)\,U_{n-1}=U_{2p-n-1}.
+\]
+Reflecting at degree $2p+26N-1$ gives, for each row with $m_r\ge-2N$,
+\[
+ 2XW\,\mathrm{rev}(T_{m_r})-(2-X^{2p})\,\mathrm{rev}(U_{m_r-1})=\mathrm{rev}(U_{2p-m_r-1}),
+\]
+and the right side is divisible by $X^{24N}$ as soon as $p\ge4N$ (the degree of
+$U_{2p-m_r-1}$ is then at most $2p+2N-1$; for $p<4N$ the identity fails). Summing over rows
+with weights $c_r$ and multiplying by $(X-1)^N(1-X)^N$ gives, for every $c$ and every $i<24N$,
+\begin{equation}\label{eq:K6}
+ 2\,\widehat Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p],
+\end{equation}
+where a coefficient with negative index is $0$.
+
+\paragraph{Step 2: a block of columns.}
+Let $M=[p-7d,\,p-6d)$ and, for $J\in\{1,\dots,5\}$ and $\mu\in M$, put $k(J,\mu)=Jp+\mu-4N$.
+Writing $\mu=p-7d+t$ with $0\le t<d$ one finds $k=4NJ+(J-6)d+t$, so these are $5d$ distinct
+columns of $A_N$, inside $[0,20N)$. The filtered column $k$ is the alternating binomial filter
+of order $N$ applied to the raw columns $3N+k+v=Jp+(\mu-N+v)$, $0\le v\le N$. Since
+$\mu\ge p-7d=4N-6d>N$ and $\mu<p$ (this is the only use of $2d<N$), all of these
+raw columns have the same prime digit $J$ and residues $\mu-N+v\in[0,p)$. The Lean-proved digit
+formula (\lean{rawEntry\_primeDigitPair}) expresses the residue of $p^2\cdot$(raw entry) through the digits
+$(XWP_c)[up+\ell]$ and $D_c[up+\ell]$, and the alternating binomial sum
+$\sum_v(-1)^v\binom Nv a_{m+v}$ is the coefficient of $X^{m+N}$ in $(X-1)^N\sum_ia_iX^i$.
+Hence the response of the block column $k(J,\mu)$ on $c$ is
+\[
+ \sum_{u}\alpha_{J,u}\,\widehat Q_c[up+\mu]-\frac32\sum_u\beta_{J,u}\,\widehat D_c[up+\mu],
+\]
+with constants $\alpha_{J,u},\beta_{J,u}$ independent of $c$ and $\mu$ (their values are never used).
+
+\paragraph{Step 3: supports and elimination of $\widehat D$.}
+$S_c$ is divisible by $X^{8N}$ and $U_c$ by $X^{8N+1}$, so $\widehat Q_c$ and $\widehat D_c$ have no
+coefficients up to $X^{8N}$; and $\deg\widehat Q_c\le28N+p-1$, $\deg\widehat D_c\le28N-1$. For
+$\mu\in M$ we have $p+\mu<8N$, $6p+\mu\ge28N$ and $7p+\mu>28N+p-1$, so only the digits
+$u=2,\dots,6$ of $\widehat Q_c$ and $u=2,\dots,5$ of $\widehat D_c$ can be nonzero. For $u=2,\dots,5$
+we have $up+\mu<24N$, so \eqref{eq:K6} reads
+$\widehat D_c[up+\mu]=\widehat Q_c[up+\mu]+\tfrac12\widehat D_c[(u-2)p+\mu]$, and $\widehat D_c[(u-2)p+\mu]$
+vanishes for $u\le3$ by order. Thus:
+\emph{if $\widehat Q_c[up+\mu]=0$ for $2\le u\le6$ and $\mu\in M$, then every block column vanishes on $c$.}
+
+\paragraph{Step 4: the Frobenius class-sum law.}
+Since $(1-X)^p=1-X^p$ in characteristic $p$ and $2N+\frac{p-1}2+e=p$,
+\[
+ (1-X)^e\,\widehat Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^NX(1+X)^{(p-1)/2}S_c .
+\]
+For $i\ge p$ this gives $[X^i]\bigl((X-1)^e\widehat Q_c\bigr)=(-1)^e\bigl(Y_c[i]-Y_c[i-p]\bigr)$, and
+summing over $i=up+\mu$, $u=2,\dots,6$, telescopes to $(-1)^e\bigl(Y_c[6p+\mu]-Y_c[p+\mu]\bigr)$.
+Now $Y_c[p+\mu]=0$ because $Y_c$ has no coefficients up to $X^{8N}$, and $Y_c[6p+\mu]=0$ whenever
+$6p+\mu>\deg Y_c$, i.e.\ for $\mu\ge p-7d+e$. Expanding the left side by the same binomial identity,
+every $\mu=p-7d+t$ with $e\le t<d$ yields the relation
+\[
+ \sum_{u=2}^{6}\sum_{v=0}^{e}(-1)^v\binom ev\,\widehat Q_c\bigl[up+(p-7d)+(t-e+v)\bigr]=0 .
+\]
+There are $d-e=(d-1)/2$ such relations. The term $v=e$ contributes
+$(-1)^e\sum_{u=2}^6\widehat Q_c[up+\mu]$ and all other terms involve strictly smaller offsets $t-e+v<t$, so
+the relations are triangular.
+
+\paragraph{Step 5: counting.}
+Impose on $c$: (i) the filtered column $k$ vanishes for each of the $20N-5d$ columns outside the block;
+(ii) $\widehat Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$ ($4d$ conditions);
+(iii) $\widehat Q_c[6p+\mu]=0$ for the first $e$ values of $\mu\in M$ ($e$ conditions).
+By strong induction on $t$ the relations of Step~4 force $\widehat Q_c[6p+(p-7d+t)]=0$ for $t\ge e$ as well, hence all digits
+$2\le u\le6$ vanish, and by Step~3 so does every block column. Thus the kernel of the
+$20N-5d+4d+e=20N-(d-1)/2$ conditions lies in the left kernel of $\operatorname{red}(p^2A_N)$, which therefore has dimension at least
+$(d-1)/2=(p-4N-1)/2$. This proves Theorem~\ref{thm:u6}; the formal statement is \lean{u6\_canonical\_rank}.
+In exact modular rank computations made while deriving the lemma, the block of $5d$ columns has rank at most $4d+e$, with nullity exactly
+$(d-1)/2$, at every prime of the window for $5\le N\le41$ and for $N\in\{53,61,97,151\}$; identity K6 holds exactly when $p>4N$ and fails for $p<4N$.
+
+\paragraph{From the rank bound to coefficient content.}
+For $4N<p<9N/2$ and $N\ge10^{12}$ the odd-loss function equals $40$ and the prime gain vanishes
+(the prime gain is $0$ for $p/N\le22/3$), so the canonical normalizer has the full $p$-exponent $40N$ and no
+rescaling is needed. A rank deficit $e_N(p)=\lfloor(p-4N-1)/2\rfloor\le N$ gives $p^{e_N(p)}\mid Q_N(z)$
+for every integer $z$, and together with the divisibility $p^{2i}\mid\operatorname{coeff}_i(Q_N)$ of the
+double-pole weights it gives $p^{e_N(p)}\mid\operatorname{coeff}_i(Q_N)$ for all $i$ (formalized as
+\lean{twentyMeasure}\allowbreak\lean{IntPoly\_sixth\_coeff\_dvd}). The exponent satisfies
+$N\vartheta(p/N)-1\le e_N(p)\le N\vartheta(p/N)$ for $\vartheta(x)=\max(x-4,0)/2$, whose area on $[4,9/2]$
+is $1/16$. If $2p=9N$ then $3\mid p$, so no prime has $2p=9N$ and the window is exactly the set of primes in
+$(4N,\lfloor9N/2\rfloor]$. Weighted PNT summation gives $\log c^{(6)}_N\ge(\tfrac1{16}-o(1))N^2\ge\tfrac{624}{10000}N^2$ eventually. The primes
+of this window exceed $2N$ and are disjoint from those of Section~\ref{ssec:secondary-tent} and
+Section~\ref{sec:u3}, so the three contents multiply and keep all recycled prime squares. The total content rate is
+\[
+ \chi=\frac{507}{2000}+\frac{3331}{10000}+\frac{624}{10000}.
+\]
+
+\paragraph{The 740 ledger.}
+With the unchanged real-place gap $375279/200000$ the usable decay is
+\[
+ \eta=\frac{375279}{200000}+\frac{507}{2000}+\frac{3331}{10000}+\frac{624}{10000}=\frac{505079}{200000}=2.525395 .
+\]
+The perturbation exponent and the degree are unchanged: $\rho=519037/5000$, degree $18$. Apply the
+largest-good-prime criterion with
+\[
+ k=\frac{3700000}{519037},\qquad \delta_0=10^{-7}.
+\]
+Then $\rho k=740$, $k>2$, $\eta<36$, and the window and payment margins are
+\[
+ \frac{2595178119037}{2595185000000}>0,
+ \qquad
+ \eta k-18-72\delta_0k=\frac{63443}{25951850}>0 .
+\]
+This proves $|G-a/b|>b^{-740}$ for all large $b$. The limiting exponent of the paid
+ledger is $18\rho/\eta=373706640/505079=739.8974\ldots<740$. For final Chebyshev
+selection,
+\[
+ 3\rho\max\left(\frac{18}{\eta},4\right)=\frac{1121119920}{505079}=2219.692\ldots<2220 .
+\]
+The new main theorems are \lean{catalan\_irrationalityMeasure\_740} and
+\lean{catalan\_irrationalityMeasure\_2220} in \lean{Parametric/U6Main}; the earlier $759$, $2276$, $878$ and $2632$
+bounds remain proved.
+
+\begin{remark}
+The increment $624/10000$ is the part of the area $1/16$ of the profile $\vartheta$ that is banked; the
+unbanked remainder is $1/10000$. The cutoff $9N/2$ is structural: the filter window of a block column leaves
+the digit $J$ once $2d>N$. Reaching $739$ would require the usable decay to exceed about $2.5285$,
+that is a further content window of area about $0.0031$ beyond Theorem~\ref{thm:u6}.
+\end{remark}
+
 \section{Formalization}\label{sec:formal}
 \raggedbottom
 
@@ -1995,8 +2157,11 @@ $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are 
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
 the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 \begin{itemize}
-\item \lean{catalan\_irrationalityMeasure\_759}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-759}<|G-a/b|$ (Theorem~\ref{thm:main});
-\item \lean{catalan\_irrationalityMeasure\_2276}: the same with exponent $2\,276$, using Chebyshev for final prime selection;
+\item \lean{catalan\_irrationalityMeasure\_740}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-740}<|G-a/b|$ (Theorem~\ref{thm:main});
+\item \lean{catalan\_irrationalityMeasure\_2220}: the same with exponent $2\,220$, using Chebyshev for final prime selection;
+\item \lean{u6\_canonical\_rank}: Theorem~\ref{thm:u6};
+\item \lean{catalan\_irrationalityMeasure\_759}: the earlier bound with exponent $759$;
+\item \lean{catalan\_irrationalityMeasure\_2276}: the earlier bound with exponent $2\,276$, using Chebyshev for final prime selection;
 \item \lean{u3\_canonical\_rank}: Theorem~\ref{thm:u3};
 \item \lean{catalan\_irrationalityMeasure\_878}: the earlier bound with exponent $878$;
 \item \lean{catalan\_irrationalityMeasure\_2632}: the earlier bound with exponent $2\,632$, using Chebyshev for final prime selection;
@@ -2011,8 +2176,8 @@ the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
 The solution has no \lean{sorry}, and the command \lean{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
 The prime number theorem enters the denominator asymptotics and secondary
-prime-content sum, and also the final prime selection for $759$ and $878$.
-The $2276$ and $2632$ corollaries uses Chebyshev only in that final selection step.
+prime-content sum, and also the final prime selection for $740$, $759$ and $878$.
+The $2220$, $2276$ and $2632$ corollaries use Chebyshev only in that final selection step.
 The $955/2864$ checkpoint has the same PNT scope.
 The formal source for PNT is the PNT+ project
 \cite{PNTPlus}, through OpenAI's workspace and compatibility additions.
@@ -2053,8 +2218,14 @@ Section~\ref{ssec:weighted}.\par\medskip
 Theorem~\ref{thm:perturbation}.\par\medskip
 \noindent \lean{SquareNonvanishing}, \lean{SquarePNTWindow}, \lean{SquareMain}\par
 Proposition~\ref{prop:square-nonvanishing}, strengthened Proposition~\ref{prop:criterion}.\par\medskip
+\noindent \lean{Parametric/U6Main}, \lean{U6Audit}\par
+Section~\ref{sec:u6}; current $740/2220$ bounds.\par\medskip
+\noindent \lean{U6Chebyshev}, \lean{U6Identity}, \lean{U6Block}, \lean{U6Digits}, \lean{U6Rank}\par
+Identity K6, the Frobenius class-sum law, the block column responses and Theorem~\ref{thm:u6}.\par\medskip
+\noindent \lean{U6Content}, \lean{U6PrimeGrowth}\par
+Rank to coefficient content for $4N<p<9N/2$ and the area-$1/16$ prime sum.\par\medskip
 \noindent \lean{Parametric/U3Main}, \lean{U3Audit}\par
-Section~\ref{sec:u3}; current $759/2276$ bounds.\par\medskip
+Section~\ref{sec:u3}; the $759/2276$ bounds.\par\medskip
 \noindent \lean{U3ChebyshevFrobenius}, \lean{U3RowIdentity}, \lean{U3Combination}, \lean{U3Digits}, \lean{U3Rank}\par
 Lemma~\ref{lem:u3-reflect}, identity K, the flag subspace, the digit response and Theorem~\ref{thm:u3}.\par\medskip
 \noindent \lean{U3Content}, \lean{U3PrimeGrowth}\par
@@ -2103,7 +2274,9 @@ coverage certificates and the $878/2632$ assembly were also developed with
 Codex at the author's request. Lemma~U3 (Section~\ref{sec:u3}): its derivation, including identity K and
 the dimension count, its Lean formalization, the content transfer to primes in $(8N,9N)$ and the
 $759/2276$ assembly were carried out by Claude (Anthropic) working with Sean Litsey, building on the
-Codex-developed pipeline above. The underlying irrationality proof and its formalization are
+Codex-developed pipeline above. Lemma~U6 (Section~\ref{sec:u6}): its derivation, including identity K6 and the
+class-sum law, its Lean formalization, the content transfer to primes in $(4N,9N/2)$ and the
+$740/2220$ assembly were likewise carried out by Claude (Anthropic) working with Sean Litsey. The underlying irrationality proof and its formalization are
 OpenAI's \cite{OpenAI2026}.
 The formal verification in Lean is intended as an independent check of every step of the
 argument above.
