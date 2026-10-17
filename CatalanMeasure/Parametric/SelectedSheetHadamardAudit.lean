@@ -1,3 +1,0 @@
-module
-public import CatalanMeasure.Parametric.SelectedSheetHadamard
-#print axioms CatalanMeasure.Parametric.selected_laurent_hadamard_bound

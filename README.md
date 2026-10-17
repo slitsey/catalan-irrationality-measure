@@ -132,13 +132,13 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 | `CatalanMeasure/Cert/DescartesBudget.lean`, `RootBracket.lean`, `IntegerHorner.lean`, `RootBudgetCover.lean` | ordinary-kernel root counts, bracket signs and coverage |
 | `CatalanMeasure/Parametric/SecondaryTentMain.lean`, `SecondaryTentMeasureTransfer.lean` | retained 955 bound from the uniform secondary coefficient-content tent |
 | `CatalanMeasure/Parametric/SecondaryTentChebyshev.lean` | alternate final-selection criterion: exact exponent `5810400/2029 < 2864`, retaining PNT-backed denominator and content estimates |
-| `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank |
+| `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\SecondaryTentParametersAudit.lean`, `Parametric\SecondaryTentRowAudit.lean`, `Parametric\SecondaryTentRowDirectAudit.lean`, `Parametric\SecondaryTentRowPacketAudit.lean`, `Parametric\SecondaryTentRowRationalAudit.lean`, `Parametric\SecondaryTentRowSourceAudit.lean`, `Parametric\SecondaryTentSourceAudit.lean`, `Parametric\SecondaryTentSourceBridgeAudit.lean`, `Parametric\SecondaryTentSourceBulkResponses.lean`, `Parametric\SecondaryTentSourceGeometry.lean`. |
 | `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | retained 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
 | `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |
 | `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
 | `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |
-| `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation |
-| `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth |
+| `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\MarkedSheetExpansionAudit.lean`, `Parametric\TwentyMarkedIntegrandAudit.lean`. |
+| `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\TwentyTwoAdicAudit.lean`. |
 | `CatalanMeasure/TwentyTrial/`, `Parametric/TwentyUniformEnergy.lean`, `TwentyWeightedIntegrand.lean` | four kernel-checked endpoint trials and uniform free/fixed population estimates |
 | `CatalanMeasure/JointDetExpansion.lean`, `WeightedMixedAndreief.lean`, `Parametric/TwentyPerturbation.lean` | joint atom weights, actual determinant integration and perturbation on exp(-120N) disks |
 | `CatalanMeasure/DeltaPoly.lean`, `Degree.lean` | OpenAI's determinant as a polynomial `Δ_N(X)` in the constant; `deg Δ_N ≤ 44N` |
@@ -153,20 +153,35 @@ and comparator acceptance remain pending; CI optimization is deferred. The earli
 | `CatalanMeasure/PinMajorant.lean`, `PinDampedDual.lean`, `PinSupDual.lean` | pointwise bound for the mixed integrands; OpenAI's energy dual for `p ≤ n` points |
 | `CatalanMeasure/Cert/` | general lemmas for kernel-checked bounds on the energy trial fields: computable polynomials, root exclusion (Descartes), logarithm approximations, field values, derivatives, closed-form norms |
 | `CatalanMeasure/Dual/`, `CatalanMeasure/DualTwo.lean` | a new certificate for the second case of OpenAI's energy dual (generated data and kernel checks): real-place constant `U = 2.29180925 - (log 2)/2` |
-| `CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
+| `archive/CatalanArchive/CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
 | `CatalanMeasure/Lemma6.lean` | the original perturbation estimate with `ρ = 404.25`, and the historical 8127/23168 bounds |
 | `CatalanMeasure/VandermondeProduct.lean`, `WeightedMajorant.lean` | retain `∏(1+s)` in the mixed determinant bound |
-| `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound |
-| `CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
-| `CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
-| `CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
-| `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993 |
-| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; the earlier proposed-parameter experiments remain separate from the selected twenty-row proof |
-| `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the historical 2742/7675 bounds |
-| `CatalanMeasure/Parametric/EarlySparseValuation.lean`, `ResidueRank.lean`, `SparseCombinationRank.lean` | actual residue rank and early-window determinant saving, with explicit injective row-combination maps |
-| `CatalanMeasure/DensePrimeGain.lean`, `DenseGainPNT.lean`, `DenseDenominators.lean`, `DenseDenominatorGrowth.lean`, `DenseMain.lean` | gain integral 20/3, denominator saving 5/1728, and the 1981/5391 bounds |
+| `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo\AQ.lean`, `WeightedDualTwo\ChecksX0.lean`, `WeightedDualTwo\ChecksX1.lean`, `WeightedDualTwo\ChecksX2.lean`, `WeightedDualTwo\ChecksX3.lean`, `WeightedDualTwo\ChecksX4.lean`, `WeightedDualTwo\ChecksX5.lean`, `WeightedDualTwo\ChecksX6.lean`, `WeightedDualTwo\ChecksX7.lean`, `WeightedDualTwo\ChecksX8.lean`, `WeightedDualTwo\ChecksY0.lean`, `WeightedDualTwo\ChecksY1.lean`, `WeightedDualTwo\ChecksY2.lean`, `WeightedDualTwo\ChecksY3.lean`, `WeightedDualTwo\ChecksY4.lean`, `WeightedDualTwo\ChecksY5.lean`, `WeightedDualTwo\Data.lean`, `WeightedDualTwo\IntegerData.lean`, `WeightedDualTwo\Norms.lean`, `WeightedDualTwo\Sup.lean`. |
+| `archive/CatalanArchive/CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
+| `archive/CatalanArchive/CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
+| `archive/CatalanArchive/CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
+| `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `SquareMain.lean`. |
+| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; the earlier proposed-parameter experiments remain separate from the selected twenty-row proof. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\SparseAudit.lean`. |
+| `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the historical 2742/7675 bounds. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `SparseDenominatorGrowth.lean`, `SparseDenominators.lean`, `SparseGainPNT.lean`, `SparseMain.lean`. |
+| `CatalanMeasure/Parametric/EarlySparseValuation.lean`, `ResidueRank.lean`, `SparseCombinationRank.lean` | actual residue rank and early-window determinant saving, with explicit injective row-combination maps. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric/EarlySparseValuation.lean`. |
+| `archive/CatalanArchive/CatalanMeasure/DensePrimeGain.lean`, `DenseGainPNT.lean`, `DenseDenominators.lean`, `DenseDenominatorGrowth.lean`, `DenseMain.lean` | gain integral 20/3, denominator saving 5/1728, and the 1981/5391 bounds |
 | `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
 | `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
+
+## Archive
+
+The Lean files for the historical theorems (the earlier bounds such as 1981/5391, 2742/7675
+and 7181/20993, and their audits and certificates), which the current published bounds no longer
+import, now live under `archive/CatalanArchive/CatalanMeasure/`. They are not part of the default
+build, but remain buildable with
+
+```text
+lake build Archive
+```
+
+The archived modules are named `CatalanArchive.CatalanMeasure.*` (Lake cannot share the
+`CatalanMeasure` namespace between two source directories, and Mathlib owns the `Archive.*` prefix); their declarations keep their
+original names. The main tree never imports the archive.
 
 ## Vendored code
 
@@ -179,7 +194,7 @@ PrimeNumberTheoremAnd are therefore copied here. Each was converted mechanically
 `module` header, `public import`s, `@[expose] public section`) and adjusted where needed for
 the newer Lean and Mathlib (see [`PORTING.md`](PORTING.md)). In 37 point-evaluation files of
 OpenAI's second-barrier certificate the comparison constants were sharpened from five to seven
-digits (the computations themselves are unchanged; see `NOTICE` and `CatalanMeasure/SharpBarrier.lean`).
+digits (the computations themselves are unchanged; see `NOTICE` and `archive/CatalanArchive/CatalanMeasure/SharpBarrier.lean`).
 The generic determinant lemmas were subsequently moved without mathematical changes to
 `RealDeterminantCore.lean`, bringing the OAI directory to 479 files. Generic denominator lemmas
 were copied into `CatalanMeasure/Cert/DenominatorBounds.lean` to avoid importing the superseded
@@ -193,7 +208,7 @@ You need [elan](https://github.com/leanprover/elan) and several GiB of free disk
 ```text
 lake exe cache get
 python3 scripts/check-lean-sources.py
-lake build
+lake build            # default targets; `lake build Archive` builds the historical theorems
 ruby scripts/validate-formalization.rb
 ./scripts/verify-comparator.sh
 ```

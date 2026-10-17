@@ -35,3 +35,14 @@ roots = ["Challenge"]
 [[lean_lib]]
 name = "Solution"
 roots = ["Solution"]
+
+# Historical theorems, superseded by the current bounds and not needed by
+# CatalanMeasure/Challenge/Solution.  Not a default target; build with
+# `lake build Archive`.  Modules are named CatalanArchive.CatalanMeasure.* (files live in
+# archive/CatalanArchive/CatalanMeasure/*; Lake cannot share the CatalanMeasure namespace
+# between two source directories, and Mathlib already owns the top-level `Archive` module prefix).  The main tree never imports the archive.
+[[lean_lib]]
+name = "Archive"
+srcDir = "archive"
+roots = ["CatalanArchive"]
+globs = ["CatalanArchive.+"]
