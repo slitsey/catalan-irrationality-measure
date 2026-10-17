@@ -1,5 +1,7 @@
 module
 public import Solution
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_740
+#print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2220
 #print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_759
 #print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2276
 #print axioms CatalanIrrationalityMeasure.catalan_irrationalityMeasure_878
