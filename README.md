@@ -36,9 +36,9 @@ The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
 - Metadata: [`formalization-lambda.yaml`](formalization-lambda.yaml).
 - Paper: [`paper-lambda/`](paper-lambda/), with certificate scripts in `paper-lambda/scripts/`. The paper also proves two stronger
   bounds that are **not formalized**. Both rest on proofs audited by independent Claude agents, not on a human referee:
-  - μ(λ) ≤ 57.85 and μ(λ′) ≤ 57.85, by a determinant evaluation.
+  - μ(λ) ≤ 52.69 and μ(λ′) ≤ 52.69 (also for G + 5π²/48), by a determinant evaluation, with the nonvanishing pair chosen freely (v8; earlier versions gave 57.85).
   - **μ(λ) ≤ 46.45**, by a rectangular "hybrid" Löwner frame. Its interval-arithmetic decay and window certificate is in
-    `paper-lambda/scripts-hybrid/`. The hybrid has not been done for λ′, which stays at 57.85.
+    `paper-lambda/scripts-hybrid/`. The hybrid has not been done for λ′, whose best bound is 52.69.
 
 Build the λ result with `lake build CatalanLambda ChallengeLambda SolutionLambda`. It is not a default target.
 
