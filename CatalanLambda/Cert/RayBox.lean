@@ -146,8 +146,7 @@ def L1Q (xlo yhi : ℤ) : ℚ := (logUpS (xlo * xlo + yhi * yhi).toNat : ℚ) / 
 def lQ (xhi ylo : ℤ) : ℚ := (logLoS ((2 ^ 40 - xhi) ^ 2 + ylo ^ 2).toNat : ℚ) / 2 ^ 64
 def vloQ (xlo ylo yhi : ℤ) : ℚ := (ylo : ℚ) * 2 ^ 40 / ((xlo : ℚ) * xlo + yhi * yhi - xlo * 2 ^ 40)
 
-def boxLB (pts : List Pt) (xlo xhi ylo yhi : ℤ) : ℚ :=
-  let Ls : ℚ := -(sigSum xlo xhi ylo yhi pts : ℚ) / 2 ^ 97
+def boxLBg (Ls : ℚ) (xlo xhi ylo yhi : ℤ) : ℚ :=
   let L1 := L1Q xlo yhi
   let Aup : ℚ := (1 / 2) * qmax ((-(xhi : ℚ) / 2 ^ 40) * L1) ((-(xlo : ℚ) / 2 ^ 40) * L1)
   let l := lQ xhi ylo
@@ -157,20 +156,22 @@ def boxLB (pts : List Pt) (xlo xhi ylo yhi : ℤ) : ℚ :=
   let Cup : ℚ := -qmin ((ylo : ℚ) / 2 ^ 40 * th) ((yhi : ℚ) / 2 ^ 40 * th)
   Ls - (1 + Aup + Bup + Cup) + (999 / 1000) * PILO * ((ylo : ℚ) / 2 ^ 40)
 
+def boxLB (pts : List Pt) (xlo xhi ylo yhi : ℤ) : ℚ :=
+  boxLBg (-(sigSum xlo xhi ylo yhi pts : ℚ) / 2 ^ 97) xlo xhi ylo yhi
+
 def boxOK (pts : List Pt) (mp : ℚ) (b : ℤ × ℤ × ℤ × ℤ) : Bool :=
   decide (mp ≤ boxLB pts b.1 b.2.1 b.2.2.1 b.2.2.2)
 
-/-- main reduction lemma -/
-theorem box_sound (pts : List Pt) (mp : ℚ) (xlo xhi ylo yhi : ℤ)
+/-- main reduction lemma, with an abstract lower bound `Ls` for the sigma part -/
+theorem box_sound_g (pts : List Pt) (Ls mp : ℚ) (xlo xhi ylo yhi : ℤ)
     (hxhi : xhi < 0) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
-    (hchk : boxOK pts mp (xlo, xhi, ylo, yhi) = true)
+    (hchk : mp ≤ boxLBg Ls xlo xhi ylo yhi)
     (x y : ℝ)
     (hx1 : (xlo : ℝ) / 2 ^ 40 ≤ x) (hx2 : x ≤ (xhi : ℝ) / 2 ^ 40)
-    (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40) :
+    (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40)
+    (hS : (Ls : ℝ) ≤ Usig pts x y) :
     (mp : ℝ) ≤ gfun pts x y := by
-  simp only [boxOK, decide_eq_true_eq] at hchk
-  have hchk' : (mp : ℝ) ≤ ((boxLB pts xlo xhi ylo yhi : ℚ) : ℝ) := by exact_mod_cast hchk
-  have hS := Usig_ge xlo xhi ylo yhi x y hx1 hx2 hy1 hy2 pts
+  have hchk' : (mp : ℝ) ≤ ((boxLBg Ls xlo xhi ylo yhi : ℚ) : ℝ) := by exact_mod_cast hchk
   have hxhiR : (xhi : ℝ) ≤ -1 := by exact_mod_cast (by omega : xhi ≤ -1)
   have hxloR : (xlo : ℝ) ≤ -1 := by
     have : xlo ≤ -1 := by omega
@@ -328,7 +329,7 @@ theorem box_sound (pts : List Pt) (mp : ℚ) (xlo xhi ylo yhi : ℤ)
       _ ≤ Real.pi * y := mul_le_mul_of_nonneg_left hy1 Real.pi_pos.le
   -- assemble
   unfold gfun Utau
-  simp only [boxLB] at hchk'
+  simp only [boxLBg] at hchk'
   push_cast at hchk'
   have hA' := hA
   have hC' := hC
@@ -337,5 +338,19 @@ theorem box_sound (pts : List Pt) (mp : ℚ) (xlo xhi ylo yhi : ℤ)
         (((2 ^ 40 - (xlo : ℝ)) / 2 ^ 40) * (lQ xhi ylo : ℝ)) ≥
       -((1 - x) * (Real.log ((1 - x) ^ 2 + y ^ 2) / 2)) := hB
   nlinarith [hchk', hS, hA', hBc, hC', hD]
+
+/-- original statement -/
+theorem box_sound (pts : List Pt) (mp : ℚ) (xlo xhi ylo yhi : ℤ)
+    (hxhi : xhi < 0) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
+    (hchk : boxOK pts mp (xlo, xhi, ylo, yhi) = true)
+    (x y : ℝ)
+    (hx1 : (xlo : ℝ) / 2 ^ 40 ≤ x) (hx2 : x ≤ (xhi : ℝ) / 2 ^ 40)
+    (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40) :
+    (mp : ℝ) ≤ gfun pts x y := by
+  simp only [boxOK, decide_eq_true_eq] at hchk
+  refine box_sound_g pts _ mp xlo xhi ylo yhi hxhi hxlohi hylo hchk x y hx1 hx2 hy1 hy2 ?_
+  have h := Usig_ge xlo xhi ylo yhi x y hx1 hx2 hy1 hy2 pts
+  push_cast
+  exact h
 
 end CatalanLambda.Cert
