@@ -1,1 +1,1 @@
-import CatalanLambda.Defs
+import CatalanLambda.Main

@@ -98,5 +98,105 @@ lemma entries_good (hlK : ℓ + 1 = 4 * K) {h m : ℕ} (hKm : K + m = h) (hhl : 
       · exact entry_hh_off hlK (by omega) (by omega) hdl
       · rw [M0n_comm]; exact entry_hh_off hlK (by omega) (by omega) hcl
 
+/-- truncated sum `Gs s a b = ∑_{j=1}^s 1/((a+j)(b+j))`. -/
+noncomputable def Gs (ℓ s a b : ℕ) [Fact ℓ.Prime] : ZMod ℓ :=
+  ∑ t ∈ range s, 1 / ((((a : ℕ) : ZMod ℓ) + 1 + (t : ℕ)) * (((b : ℕ) : ZMod ℓ) + 1 + (t : ℕ)))
+
+lemma G_eq_Gs (a b : ℕ) : G ℓ K a b = Gs ℓ (ℓ - K) a b := rfl
+
+/-- shifted summand -/
+noncomputable def Fa (ℓ : ℕ) [Fact ℓ.Prime] (s a b t : ℕ) : ZMod ℓ :=
+  1 / ((((a : ℕ) : ZMod ℓ) + 1 + ((s + t : ℕ) : ZMod ℓ)) *
+    (((b : ℕ) : ZMod ℓ) + 1 + ((s + t : ℕ) : ZMod ℓ)))
+
+lemma Bsum (hlK : ℓ + 1 = 4 * K) {m s h : ℕ} (hKm : K + m = h) (hs : s = ℓ - h) (hhl : h ≤ ℓ)
+    (a b : Fin K) :
+    ∑ c : Fin m, Bm ℓ K m a c * Bm ℓ K m b c = (G ℓ K a b - Gs ℓ s a b) / 16 := by
+  have hN : ℓ - K = s + m := by omega
+  have hKl : K ≤ ℓ := by omega
+  have hsplit : G ℓ K a b = Gs ℓ s a b + ∑ t ∈ range m, Fa ℓ s a b t := by
+    rw [G_eq_Gs, hN]
+    unfold Gs
+    rw [Finset.sum_range_add]
+    rfl
+  have hrefl := Finset.sum_range_reflect (Fa ℓ s a b) m
+  have key : ∀ c : Fin m, Bm ℓ K m a c * Bm ℓ K m b c = (1 / 16) * Fa ℓ s a b (m - 1 - c) := by
+    intro c
+    have hcm := c.2
+    obtain ⟨t, ht⟩ : ∃ t, t = s + (m - 1 - (c : ℕ)) := ⟨_, rfl⟩
+    have hnat : t + 1 + (c : ℕ) = ℓ - K := by omega
+    have hcast : (t : ZMod ℓ) + 1 + ((c : ℕ) : ZMod ℓ) = -(K : ZMod ℓ) := by
+      have := congrArg (Nat.cast : ℕ → ZMod ℓ) hnat
+      push_cast at this
+      rw [N_cast hKl] at this
+      exact_mod_cast this
+    unfold Fa
+    rw [← ht]
+    simp only [Bm, Matrix.of_apply]
+    push_cast
+    have e1 : (a : ZMod ℓ) + 1 + t = -((K : ZMod ℓ) + c - a) := by linear_combination hcast
+    have e2 : (b : ZMod ℓ) + 1 + t = -((K : ZMod ℓ) + c - b) := by linear_combination hcast
+    rw [e1, e2]
+    field_simp
+    ring
+  have hfin : ∑ c : Fin m, Bm ℓ K m a c * Bm ℓ K m b c =
+      ∑ c : Fin m, (1 / 16 : ZMod ℓ) * Fa ℓ s a b (m - 1 - (c : ℕ)) :=
+    Finset.sum_congr rfl (fun c _ => key c)
+  rw [hfin, Fin.sum_univ_eq_sum_range (fun c => (1 / 16 : ZMod ℓ) * Fa ℓ s a b (m - 1 - c)) m,
+    ← Finset.mul_sum, hrefl, hsplit]
+  ring
+
+lemma schur_eq (hlK : ℓ + 1 = 4 * K) {m s h : ℕ} (hKm : K + m = h) (hs : s = ℓ - h) (hhl : h ≤ ℓ)
+    (rb : ZMod ℓ) :
+    Xm ℓ K rb - Bm ℓ K m * (Bm ℓ K m)ᵀ =
+      (1 / 16 : ZMod ℓ) • ((16 * rb + cc ℓ K) • (1 : Matrix (Fin K) (Fin K) (ZMod ℓ)) +
+        Cm ℓ K s * (Cm ℓ K s)ᵀ) := by
+  ext a b
+  have h4 := four_ne (ℓ := ℓ) hlK
+  have h16 : (16 : ZMod ℓ) ≠ 0 := by
+    have : (16 : ZMod ℓ) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero h4 h4
+  have hC : (Cm ℓ K s * (Cm ℓ K s)ᵀ) a b = Gs ℓ s a b := by
+    simp only [Matrix.mul_apply, Matrix.transpose_apply, Cm, Matrix.of_apply]
+    rw [Fin.sum_univ_eq_sum_range (fun j => 1 / (((a : ℕ) : ZMod ℓ) + 1 + (j : ℕ)) *
+      (1 / (((b : ℕ) : ZMod ℓ) + 1 + (j : ℕ)))) s]
+    unfold Gs
+    exact Finset.sum_congr rfl fun j _ => one_div_mul_one_div _ _
+  have hB : (Bm ℓ K m * (Bm ℓ K m)ᵀ) a b = (G ℓ K a b - Gs ℓ s a b) / 16 := by
+    rw [Matrix.mul_apply]
+    simpa only [Matrix.transpose_apply] using Bsum hlK hKm hs hhl a b
+  simp only [Matrix.sub_apply, Matrix.smul_apply, Matrix.add_apply, hB, hC, Xm, Matrix.of_apply,
+    Matrix.one_apply, smul_eq_mul]
+  by_cases hab : a = b
+  · simp only [hab, if_true, mul_one]
+    field_simp
+    ring
+  · simp only [hab, if_false, mul_zero, zero_add]
+    field_simp
+    ring
+
+theorem key_det (hlK : ℓ + 1 = 4 * K) (hK : 2 ≤ K) {h : ℕ} (hh1 : K + 1 ≤ h) (hh2 : h ≤ ℓ - 1)
+    {r : ℚ} (hr : r ∈ S ℓ) (hP : P h r = 0) :
+    ((16 * red ℓ r + cc ℓ K) • (1 : Matrix (Fin K) (Fin K) (ZMod ℓ)) +
+      Cm ℓ K (ℓ - h) * (Cm ℓ K (ℓ - h))ᵀ).det = 0 := by
+  obtain ⟨m, hm⟩ : ∃ m, K + m = h := ⟨h - K, by omega⟩
+  have hgood : Good ℓ r (red ℓ r) := ⟨hr, rfl⟩
+  have hdet := red_det ((Nq ℓ K h r).submatrix (eq' K m h hm) (eq' K m h hm))
+    (Matrix.fromBlocks (Xm ℓ K (red ℓ r)) (Bm ℓ K m) (Bm ℓ K m)ᵀ 1)
+    (fun i j => entries_good hlK hm (by omega) hgood i j)
+  rw [Matrix.det_submatrix_equiv_self, det_Nq, hP, mul_zero] at hdet
+  have h0 : (Matrix.fromBlocks (Xm ℓ K (red ℓ r)) (Bm ℓ K m) (Bm ℓ K m)ᵀ 1).det = 0 := by
+    have := hdet.2
+    simpa [red] using this.symm
+  rw [Matrix.det_fromBlocks_one₂₂, schur_eq hlK hm rfl (by omega), Matrix.det_smul] at h0
+  have h4 := four_ne (ℓ := ℓ) hlK
+  have h16 : (16 : ZMod ℓ) ≠ 0 := by
+    have : (16 : ZMod ℓ) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero h4 h4
+  rcases mul_eq_zero.1 h0 with h | h
+  · exfalso
+    exact (pow_ne_zero _ (one_div_ne_zero h16)) h
+  · exact h
+
 end Assembly
 end CatalanLambda
