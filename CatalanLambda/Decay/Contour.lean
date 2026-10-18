@@ -60,8 +60,9 @@ lemma eterm_eq_g3 (n : ℤ) (a b : ℕ) (z : ℂ) :
   ring
 
 /-- Poles of `e_n` to the right of `x*` (`n ≥ -N0`): no contribution. -/
-theorem contL_eterm_east (N0 a b : ℕ) (n : ℤ) (hn : -(N0 : ℤ) ≤ n) :
-    contL (xstar N0) phiC (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 := by
+theorem contL_eterm_east_gen {φ : ℝ} (hφ1 : Real.pi / 2 < φ) (hφ2 : φ < Real.pi)
+    (N0 a b : ℕ) (n : ℤ) (hn : -(N0 : ℤ) ≤ n) :
+    contL (xstar N0) φ (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 := by
   have hn' : -(N0 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have ha : (0 : ℝ) ≤ a := Nat.cast_nonneg a
   have hb : (0 : ℝ) ≤ b := Nat.cast_nonneg b
@@ -69,18 +70,19 @@ theorem contL_eterm_east (N0 a b : ℕ) (n : ℤ) (hn : -(N0 : ℤ) ≤ n) :
   have hfun : (fun z : ℂ => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹))
       = fun z => g3 ((n : ℝ) + 1 / 4) a b z - g3 (n : ℝ) a b z := by
     funext z; exact eterm_eq_g3 n a b z
-  rw [hfun, contL_sub_g3 _ _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+  rw [hfun, contL_sub_g3 _ _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith) (by rw [hx]; linarith)]
   unfold g3
-  rw [contL_tri_east _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+  rw [contL_tri_east _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith),
-    contL_tri_east _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+    contL_tri_east _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith)]
   ring
 
 /-- Poles of `e_{-(m+1)}` to the left of `x*` (`m ≥ N0`): the atom term. -/
-theorem contL_eterm_west (N0 a b m : ℕ) (hm : N0 ≤ m) :
-    contL (xstar N0) phiC (fun z => eterm z (-((m : ℤ) + 1)) * ((z - a)⁻¹ * (z - b)⁻¹))
+theorem contL_eterm_west_gen {φ : ℝ} (hφ1 : Real.pi / 2 < φ) (hφ2 : φ < Real.pi)
+    (N0 a b m : ℕ) (hm : N0 ≤ m) :
+    contL (xstar N0) φ (fun z => eterm z (-((m : ℤ) + 1)) * ((z - a)⁻¹ * (z - b)⁻¹))
       = -(2 * Real.pi * I) * (atomTerm a b m : ℝ) := by
   have hm' : (N0 : ℝ) ≤ m := by exact_mod_cast hm
   have ha : (0 : ℝ) ≤ a := Nat.cast_nonneg a
@@ -92,12 +94,12 @@ theorem contL_eterm_west (N0 a b m : ℕ) (hm : N0 ≤ m) :
     funext z; exact eterm_eq_g3 _ a b z
   have e1 : ((((-((m : ℤ) + 1) : ℤ)) : ℝ)) = -(m : ℝ) - 1 := by push_cast; ring
   rw [hfun, e1]
-  rw [contL_sub_g3 _ _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+  rw [contL_sub_g3 _ _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith) (by rw [hx]; linarith)]
   unfold g3
-  rw [contL_tri_west _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+  rw [contL_tri_west _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith),
-    contL_tri_west _ _ _ _ _ phiC_gt phiC_lt (by rw [hx]; linarith) (by rw [hx]; linarith)
+    contL_tri_west _ _ _ _ _ hφ1 hφ2 (by rw [hx]; linarith) (by rw [hx]; linarith)
     (by rw [hx]; linarith)]
   have hR : (1 / (((-(m : ℝ) - 1 + 1 / 4) - a) * ((-(m : ℝ) - 1 + 1 / 4) - b))
       - 1 / (((-(m : ℝ) - 1) - a) * ((-(m : ℝ) - 1) - b))) = atomTerm a b m := by
@@ -244,13 +246,14 @@ theorem rayI_E_hasSum (N0 a b : ℕ) {θ : ℝ} (hs : Real.sin θ ≠ 0) :
 
 
 /-- The contour integral of `E v_a v_b` equals minus `2πi` times the tail of the atom series. -/
-theorem contL_E_eq (N0 a b : ℕ) :
-    contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹))
+theorem contL_E_eq_gen {φ : ℝ} (hφ1 : Real.pi / 2 < φ) (hφ2 : φ < Real.pi)
+    (N0 a b : ℕ) :
+    contL (xstar N0) φ (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹))
       = -(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ) := by
   have hpi := Real.pi_pos
-  have hsφ : Real.sin phiC ≠ 0 := by
-    apply ne_of_gt; apply Real.sin_pos_of_pos_of_lt_pi <;> linarith [phiC_gt, phiC_lt]
-  have hsφ' : Real.sin (-phiC) ≠ 0 := by rw [Real.sin_neg]; exact neg_ne_zero.2 hsφ
+  have hsφ : Real.sin φ ≠ 0 := by
+    apply ne_of_gt; apply Real.sin_pos_of_pos_of_lt_pi <;> linarith [hφ1, hφ2]
+  have hsφ' : Real.sin (-φ) ≠ 0 := by rw [Real.sin_neg]; exact neg_ne_zero.2 hsφ
   have hU := rayI_E_hasSum N0 a b hsφ
   have hL := rayI_E_hasSum N0 a b hsφ'
   have hC := hL.sub hU
@@ -260,9 +263,9 @@ theorem contL_E_eq (N0 a b : ℕ) :
     simp only [i] at h
     omega
   have hzero : ∀ n : ℤ, n ∉ Set.range i →
-      contL (xstar N0) phiC (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 := by
+      contL (xstar N0) φ (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 := by
     intro n hn
-    apply contL_eterm_east
+    apply contL_eterm_east_gen hφ1 hφ2
     by_contra h
     push_neg at h
     apply hn
@@ -274,24 +277,25 @@ theorem contL_E_eq (N0 a b : ℕ) :
   have hcomp : HasSum (fun m' : ℕ => -(2 * Real.pi * I) * ((atomTerm a b (m' + N0) : ℝ) : ℂ))
       (-(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ)) :=
     (Complex.hasSum_ofReal.2 hreal).mul_left _
-  have hT : HasSum (fun n : ℤ => contL (xstar N0) phiC
+  have hT : HasSum (fun n : ℤ => contL (xstar N0) φ
       (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)))
       (-(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ)) := by
     rw [← hi.hasSum_iff hzero]
     refine hcomp.congr_fun ?_
     intro m'
-    exact contL_eterm_west N0 a b (m' + N0) (Nat.le_add_left _ _)
+    exact contL_eterm_west_gen hφ1 hφ2 N0 a b (m' + N0) (Nat.le_add_left _ _)
   exact hC.unique hT
 
 /-- **The contour identity.**  With `x* = -N0 - 3/8`, `φ = 3π/5`, `Γ` the two rays `x* + r e^{±iφ}`
 traversed downward (`contL`: lower ray outbound minus upper ray outbound),
 `16 T_{ab} = - ∑_{m<N0} (u_{m+3/4}(a)u_{m+3/4}(b) - u_{m+1}(a)u_{m+1}(b)) + (1/2πi) ∫_Γ E v_a v_b dz`. -/
-theorem contour_identity (N0 a b : ℕ) :
+theorem contour_identity_gen {φ : ℝ} (hφ1 : Real.pi / 2 < φ) (hφ2 : φ < Real.pi)
+    (N0 a b : ℕ) :
     ((16 * Tent a b : ℝ) : ℂ)
       = -((∑ m ∈ Finset.range N0, atomTerm a b m : ℝ) : ℂ)
         + (2 * Real.pi * I)⁻¹ *
-          contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹)) := by
-  rw [contL_E_eq]
+          contL (xstar N0) φ (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹)) := by
+  rw [contL_E_eq_gen hφ1 hφ2]
   have h2 : (2 * Real.pi * I : ℂ) ≠ 0 := by
     have := Real.pi_pos
     simp [Real.pi_ne_zero]
@@ -357,5 +361,28 @@ theorem integrableOn_E_ray (N0 a b : ℕ) {θ : ℝ} (hs : Real.sin θ ≠ 0) :
         ((∑' n : ℤ, ‖eterm (x : ℂ) n‖ / K ^ 2) * ((1 / K ^ 2) * (1 / (3 / 8 + r) ^ 2))) :=
       hsum.hasSum.mul_right _
     exact HasSum.norm_le_of_bounded (hlim r) hb (fun n => normF_le N0 a b n hs (le_of_lt hr))
+
+
+theorem contL_eterm_east (N0 a b : ℕ) (n : ℤ) (hn : -(N0 : ℤ) ≤ n) :
+    contL (xstar N0) phiC (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 :=
+  contL_eterm_east_gen phiC_gt phiC_lt N0 a b n hn
+
+theorem contL_eterm_west (N0 a b m : ℕ) (hm : N0 ≤ m) :
+    contL (xstar N0) phiC (fun z => eterm z (-((m : ℤ) + 1)) * ((z - a)⁻¹ * (z - b)⁻¹))
+      = -(2 * Real.pi * I) * (atomTerm a b m : ℝ) :=
+  contL_eterm_west_gen phiC_gt phiC_lt N0 a b m hm
+
+theorem contL_E_eq (N0 a b : ℕ) :
+    contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹))
+      = -(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ) :=
+  contL_E_eq_gen phiC_gt phiC_lt N0 a b
+
+/-- The contour identity for `φ = 3π/5`. -/
+theorem contour_identity (N0 a b : ℕ) :
+    ((16 * Tent a b : ℝ) : ℂ)
+      = -((∑ m ∈ Finset.range N0, atomTerm a b m : ℝ) : ℂ)
+        + (2 * Real.pi * I)⁻¹ *
+          contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹)) :=
+  contour_identity_gen phiC_gt phiC_lt N0 a b
 
 end CatalanLambda.Decay
