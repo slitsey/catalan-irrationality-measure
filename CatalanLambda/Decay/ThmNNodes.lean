@@ -71,11 +71,10 @@ lemma elog_node {h : ℕ} (hh : 0 < h) (a b : ℕ) (hab : a ≠ b) :
 
 lemma elog_node_self (h a : ℕ) : elog (nodeC h a) (nodeC h a) = 0 := elog_self _
 
-/-- **[R3]** `∑_b e(t_a, t_b) ≤ h U^τ(t_a)`: error-free removed-node bound. -/
-theorem node_sum_le {h : ℕ} (hh : 0 < h) (a : ℕ) (ha : a < h) :
-    ∑ b ∈ range h, elog (nodeC h a) (nodeC h b) ≤ h * Utau (nodeC h a) := by
+theorem node_sum_eq {h : ℕ} (hh : 0 < h) (a : ℕ) (ha : a < h) :
+    ∑ b ∈ range h, elog (nodeC h a) (nodeC h b)
+      = ((h : ℝ) - 1) * Real.log h - Real.log (a.factorial) - Real.log ((h - 1 - a).factorial) := by
   have hh' : (0 : ℝ) < h := by exact_mod_cast hh
-  have hlogh := Real.log_nonneg (show (1 : ℝ) ≤ h by exact_mod_cast hh)
   -- evaluate the sum
   have hsplit : ∑ b ∈ range h, elog (nodeC h a) (nodeC h b)
       = ∑ b ∈ range a, elog (nodeC h a) (nodeC h b) + elog (nodeC h a) (nodeC h a)
@@ -112,6 +111,14 @@ theorem node_sum_le {h : ℕ} (hh : 0 < h) (a : ℕ) (ha : a < h) :
       rw [Nat.cast_sub (by omega), Nat.cast_sub (by omega)]; simp
     rw [e2]; ring
   rw [hsplit, p1, p3, elog_node_self, add_zero]
+  ring
+
+/-- **[R3]** `∑_b e(t_a, t_b) ≤ h U^τ(t_a)`: error-free removed-node bound. -/
+theorem node_sum_le {h : ℕ} (hh : 0 < h) (a : ℕ) (ha : a < h) :
+    ∑ b ∈ range h, elog (nodeC h a) (nodeC h b) ≤ h * Utau (nodeC h a) := by
+  have hh' : (0 : ℝ) < h := by exact_mod_cast hh
+  have hlogh := Real.log_nonneg (show (1 : ℝ) ≤ h by exact_mod_cast hh)
+  rw [node_sum_eq hh a ha]
   -- closed form of U^tau
   have ht0 : (0 : ℝ) ≤ (a : ℝ) / h := by positivity
   have ht1 : (a : ℝ) / h ≤ 1 := by
