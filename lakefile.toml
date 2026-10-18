@@ -46,3 +46,9 @@ name = "Archive"
 srcDir = "archive"
 roots = ["CatalanArchive"]
 globs = ["CatalanArchive.+"]
+
+# Lambda nonvanishing (ell-adic Schur complement) development.  Not a default target.
+[[lean_lib]]
+name = "CatalanLambda"
+roots = ["CatalanLambda"]
+globs = ["CatalanLambda.+"]
