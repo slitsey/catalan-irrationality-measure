@@ -23,7 +23,7 @@ lemma det_cast (h : ℕ) (r : ℚ) :
   rw [this]
   congr 1
   ext a b
-  by_cases hab : a = b <;> simp [hab, Matrix.one_apply]
+  by_cases hab : a = b <;> simp [hab]
 
 /-- **Separation core.**  If `0 < θ < D_cert - 313/105`, then for all large `h`, whenever
 `P_h(p/q) ≠ 0` and `|λ - p/q| ≤ exp(-c_cert h)`, we get `θ h ≤ log q`. -/
