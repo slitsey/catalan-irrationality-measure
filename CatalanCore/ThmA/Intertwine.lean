@@ -118,4 +118,35 @@ theorem Tmat_mul_Cmat (K s : ℕ) (hF : ∀ n : ℕ, 0 < n → n ≤ K + s → (
     rw [add_sub_cancel_right] at key
     linear_combination key
 
+lemma Tmat_transpose (K s : ℕ) : (Tmat F K s)ᵀ = Tmat F K s := tri_transpose _ _
+lemma Ymat_transpose (K s : ℕ) : (Ymat F K s)ᵀ = Ymat F K s := tri_transpose _ _
+
+/-- (1b): `T` commutes with `N = C Cᵀ`. -/
+theorem Tmat_commute_N (K s : ℕ) (hF : ∀ n : ℕ, 0 < n → n ≤ K + s → (n : F) ≠ 0) :
+    Commute (Cmat F K s * (Cmat F K s)ᵀ) (Tmat F K s) := by
+  have h := Tmat_mul_Cmat (F := F) K s hF
+  have h' := congrArg Matrix.transpose h
+  rw [Matrix.transpose_mul, Matrix.transpose_mul, Tmat_transpose, Ymat_transpose] at h'
+  show _ * _ = _ * _
+  calc Cmat F K s * (Cmat F K s)ᵀ * Tmat F K s
+      = Cmat F K s * ((Cmat F K s)ᵀ * Tmat F K s) := by rw [Matrix.mul_assoc]
+    _ = Cmat F K s * (Ymat F K s * (Cmat F K s)ᵀ) := by rw [h']
+    _ = (Cmat F K s * Ymat F K s) * (Cmat F K s)ᵀ := by rw [Matrix.mul_assoc]
+    _ = (Tmat F K s * Cmat F K s) * (Cmat F K s)ᵀ := by rw [h]
+    _ = Tmat F K s * (Cmat F K s * (Cmat F K s)ᵀ) := by rw [Matrix.mul_assoc]
+
+/-- (1b'): `Y` commutes with `M = Cᵀ C`. -/
+theorem Ymat_commute_M (K s : ℕ) (hF : ∀ n : ℕ, 0 < n → n ≤ K + s → (n : F) ≠ 0) :
+    Commute ((Cmat F K s)ᵀ * Cmat F K s) (Ymat F K s) := by
+  have h := Tmat_mul_Cmat (F := F) K s hF
+  have h' := congrArg Matrix.transpose h
+  rw [Matrix.transpose_mul, Matrix.transpose_mul, Tmat_transpose, Ymat_transpose] at h'
+  show _ * _ = _ * _
+  calc (Cmat F K s)ᵀ * Cmat F K s * Ymat F K s
+      = (Cmat F K s)ᵀ * (Cmat F K s * Ymat F K s) := by rw [Matrix.mul_assoc]
+    _ = (Cmat F K s)ᵀ * (Tmat F K s * Cmat F K s) := by rw [h]
+    _ = ((Cmat F K s)ᵀ * Tmat F K s) * Cmat F K s := by rw [Matrix.mul_assoc]
+    _ = (Ymat F K s * (Cmat F K s)ᵀ) * Cmat F K s := by rw [h']
+    _ = Ymat F K s * ((Cmat F K s)ᵀ * Cmat F K s) := by rw [Matrix.mul_assoc]
+
 end CatalanCore.ThmA
