@@ -140,4 +140,30 @@ theorem kdet_chain (T : Matrix (Fin n) (Fin n) F) (v : ℕ → Fin n → F) (r :
   rw [kdet, krylov_eq_colMat]
   exact det_cols_tri _ v _ fun k => hP k k.2
 
+/-- A three-term chain gives the span condition of `kdet_chain`. -/
+lemma chain_step_mem (T : Matrix (Fin n) (Fin n) F) (v : ℕ → Fin n → F) (r m l : ℕ → F)
+    (hT : ∀ j, j + 1 < n → T *ᵥ v j = r j • v (j + 1) + m j • v j + l j • v (j - 1))
+    (hl0 : l 0 = 0) (j : ℕ) (hj : j + 1 < n) :
+    T *ᵥ v j - r j • v (j + 1) ∈ Submodule.span F (v '' Set.Iio (j + 1)) := by
+  rw [hT j hj]
+  have e : r j • v (j + 1) + m j • v j + l j • v (j - 1) - r j • v (j + 1) =
+      m j • v j + l j • v (j - 1) := by abel
+  rw [e]
+  refine Submodule.add_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, by simp, rfl⟩)) ?_
+  rcases Nat.eq_zero_or_pos j with h | h
+  · subst h; rw [hl0]; simp
+  · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j - 1, by simp, rfl⟩)
+
+/-- Nonvanishing of a chain Krylov determinant. -/
+theorem kdet_ne_zero_of_chain (T : Matrix (Fin n) (Fin n) F) (v : ℕ → Fin n → F) (r m l : ℕ → F)
+    (hT : ∀ j, j + 1 < n → T *ᵥ v j = r j • v (j + 1) + m j • v j + l j • v (j - 1))
+    (hl0 : l 0 = 0) (hr : ∀ j, j + 1 < n → r j ≠ 0) (hdet : (colMat v).det ≠ 0) :
+    kdet T (v 0) ≠ 0 := by
+  rw [kdet_chain T v r (chain_step_mem T v r m l hT hl0)]
+  refine mul_ne_zero ?_ hdet
+  refine Finset.prod_ne_zero_iff.2 fun k _ => Finset.prod_ne_zero_iff.2 fun j hj => hr j ?_
+  have := k.2
+  simp at hj
+  omega
+
 end CatalanCore
