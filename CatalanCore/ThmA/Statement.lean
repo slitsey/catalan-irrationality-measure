@@ -2,6 +2,7 @@ module
 
 public import CatalanCore.ThmA.Defs
 public import CatalanCore.ThmA.CC
+public import CatalanCore.ThmA.NoCommonRoot
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.BigOperators.Ring.Finset
@@ -52,14 +53,6 @@ theorem closed_form (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s) : uK ℚ K s =
 /-- **Unit-ratio lemma** (STATEMENT ONLY). -/
 theorem unit_of_lt (l : ℕ) [Fact l.Prime] (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s)
     (hlt : s + K < l) : uK (ZMod l) K s ≠ 0 := by
-  sorry
-
-/-- **Corollary kr** (STATEMENT ONLY): if `u(A, v) ≠ 0` ... the two Gram matrices `N_s`, `N_{s+1}`
-have no common eigenvalue (for every `z`, one of `det(z + N_s)`, `det(z + N_{s+1})` is nonzero). -/
-theorem no_common_root_of_krylov {F : Type*} [Field F] (K s : ℕ)
-    (hF : ∀ n : ℕ, 0 < n → n ≤ K + s + 1 → (n : F) ≠ 0) (hu : uK F K s ≠ 0) (z : F) :
-    (z • (1 : Matrix (Fin K) (Fin K) F) + Nmat F K s).det ≠ 0 ∨
-      (z • (1 : Matrix (Fin K) (Fin K) F) + Nmat F K (s + 1)).det ≠ 0 := by
   sorry
 
 /-- **Cauchy determinant, two-family form** (STATEMENT ONLY). -/
