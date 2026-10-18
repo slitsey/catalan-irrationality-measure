@@ -31,7 +31,7 @@ theorem exists_h_nonvanishing (ℓ : ℕ) [Fact ℓ.Prime] (h3 : ℓ % 4 = 1) (h
 theorem exists_prime_one_mod_four (N : ℕ) (q : ℤ) (hq : q ≠ 0) :
     ∃ ℓ : ℕ, N < ℓ ∧ ℓ.Prime ∧ ℓ % 4 = 1 ∧ ¬ ℓ ∣ q.natAbs := by
   obtain ⟨ℓ, hℓN, hℓp, hℓm⟩ := Nat.forall_exists_prime_gt_and_eq_mod (q := 4) (a := 1)
-    (by decide) (max N q.natAbs)
+    (by decide +kernel) (max N q.natAbs)
   refine ⟨ℓ, lt_of_le_of_lt (le_max_left _ _) hℓN, hℓp, ?_, ?_⟩
   · have := (ZMod.natCast_eq_natCast_iff' ℓ 1 4).1 (by simpa using hℓm)
     simpa using this
