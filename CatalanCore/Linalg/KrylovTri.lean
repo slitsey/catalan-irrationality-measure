@@ -166,4 +166,11 @@ theorem kdet_ne_zero_of_chain (T : Matrix (Fin n) (Fin n) F) (v : ℕ → Fin n 
   simp at hj
   omega
 
+/-- Equality form of the chain lemma, with the three-term recurrence as input. -/
+theorem kdet_eq_of_chain (T : Matrix (Fin n) (Fin n) F) (v : ℕ → Fin n → F) (r m l : ℕ → F)
+    (hT : ∀ j, j + 1 < n → T *ᵥ v j = r j • v (j + 1) + m j • v j + l j • v (j - 1))
+    (hl0 : l 0 = 0) :
+    kdet T (v 0) = (∏ k : Fin n, ∏ j ∈ Finset.range k, r j) * (colMat v).det :=
+  kdet_chain T v r (chain_step_mem T v r m l hT hl0)
+
 end CatalanCore

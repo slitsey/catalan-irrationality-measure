@@ -2,6 +2,7 @@ module
 
 public import CatalanCore.ThmA.ChainKdet
 public import CatalanCore.Linalg.TridiagCyclic
+public import CatalanCore.Linalg.Cauchy
 
 /-!
 # Row chains: `Y c̃_a = b̃(a) c̃_{a+1} + T_aa c̃_a + b̃(a-1) c̃_{a-1}`
@@ -156,5 +157,76 @@ theorem kdet_Y_ne (h : CharGt F N) (K s : ℕ) (hs1 : 1 ≤ s) (hsK : s ≤ K) (
   · simp [bt_neg_one]
   · intro j hj
     exact bt_nat_ne h K s j (by omega) hK (by omega)
+
+/-- The row chain `Y c̃_{a₀+j}` (three-term recurrence), for `a₀ = 0` or `bt(a₀ - 1) = 0`. -/
+lemma Y_hT (h : CharGt F N) (K s a0 : ℕ) (hl0 : bt (K : F) (s : F) ((a0 : F) - 1) = 0)
+    (hN : a0 + 2 * s ≤ N + 1) :
+    ∀ j, j + 1 < s → Ymat F K s *ᵥ ctil F s (((a0 + j : ℕ)) : F) =
+      bt (K : F) (s : F) (((a0 + j : ℕ)) : F) • ctil F s (((a0 + (j + 1) : ℕ)) : F) +
+      Td (K : F) (s : F) (((a0 + j : ℕ)) : F) • ctil F s (((a0 + j : ℕ)) : F) +
+      bt (K : F) (s : F) ((((a0 + j : ℕ)) : F) - 1) • ctil F s (((a0 + (j - 1) : ℕ)) : F) := by
+  intro j hj
+  have hy : ∀ y : Fin s, (y : ℕ) < s := fun y => y.2
+  by_cases h0 : a0 + j = 0
+  · have ha : a0 = 0 := by omega
+    have hj0 : j = 0 := by omega
+    subst ha hj0
+    have two : (2 : F) ≠ 0 := by simpa using h.ne (n := 2) (by omega) (by omega)
+    rw [show ((0 + 0 : ℕ) : F) = 0 by simp]
+    rw [Ymat_mulVec_ctil_zero K s two
+      (fun y => by
+        have := h.ne (n := (y : ℕ) + 1) (by omega) (by have := hy y; omega); simpa using this)
+      (fun y => by
+        have := h.ne (n := (y : ℕ) + 1 + 1) (by omega) (by have := hy y; omega); simpa using this)
+      (fun y hy0 => h.ne (by omega) (by have := hy y; omega))]
+    simp [bt_neg_one]
+  · have hn : 0 < a0 + j := Nat.pos_of_ne_zero h0
+    set a : F := (((a0 + j : ℕ)) : F) with ha
+    rw [Ymat_mulVec_ctil K s a
+      (fun y => by
+        have e : ((y : ℕ) : F) + 1 + a = (((y : ℕ) + 1 + (a0 + j) : ℕ) : F) := by
+          rw [ha]; push_cast; ring
+        rw [e]; exact h.ne (by omega) (by have := hy y; omega))
+      (fun y => by
+        have e : ((y : ℕ) : F) + 1 + 1 + a = (((y : ℕ) + 1 + 1 + (a0 + j) : ℕ) : F) := by
+          rw [ha]; push_cast; ring
+        rw [e]; exact h.ne (by omega) (by have := hy y; omega))
+      (fun y => by
+        have e : ((y : ℕ) : F) + a = (((y : ℕ) + (a0 + j) : ℕ) : F) := by
+          rw [ha]; push_cast; ring
+        rw [e]; exact h.ne (by omega) (by have := hy y; omega))]
+    have e1 : a + 1 = (((a0 + (j + 1) : ℕ)) : F) := by rw [ha]; push_cast; ring
+    rw [e1]
+    rcases j with _ | j
+    · have hz : bt (K : F) (s : F) (a - 1) = 0 := by simpa [ha] using hl0
+      rw [hz]; simp
+    · have e2 : a - 1 = (((a0 + (j + 1 - 1) : ℕ)) : F) := by
+        rw [ha]
+        have : a0 + (j + 1 - 1) = a0 + j := by omega
+        rw [this]; push_cast; ring
+      rw [e2]
+
+/-- Explicit form of the row-chain Krylov determinant `u(Y, c̃_{a₀})`. -/
+theorem kdet_Y_eq (h : CharGt F N) (K s a0 : ℕ) (hl0 : bt (K : F) (s : F) ((a0 : F) - 1) = 0)
+    (hN : a0 + 2 * s ≤ N + 1) (hs : 1 ≤ s) :
+    kdet (Ymat F K s) (ctil F s ((a0 : ℕ) : F)) =
+      (∏ k : Fin s, ∏ j ∈ Finset.range (k : ℕ), bt (K : F) (s : F) (((a0 + j : ℕ)) : F)) *
+        ((∏ i : Fin s, ∏ j ∈ Finset.Ioi i,
+            ((((j : ℕ) : F) + 1 - (((i : ℕ) : F) + 1)) *
+              ((((a0 + (j : ℕ) : ℕ)) : F) - (((a0 + (i : ℕ) : ℕ)) : F)))) /
+          ∏ i : Fin s, ∏ j : Fin s, (((i : ℕ) : F) + 1 + (((a0 + (j : ℕ) : ℕ)) : F))) := by
+  have v0 : ctil F s ((a0 : ℕ) : F) = ctil F s (((a0 + 0 : ℕ)) : F) := by simp
+  rw [v0, kdet_eq_of_chain (Ymat F K s) (fun j => ctil F s (((a0 + j : ℕ)) : F))
+    (fun j => bt (K : F) (s : F) (((a0 + j : ℕ)) : F)) (fun j => Td (K : F) (s : F) (((a0 + j : ℕ)) : F))
+    (fun j => bt (K : F) (s : F) ((((a0 + j : ℕ)) : F) - 1)) (Y_hT h K s a0 hl0 hN)
+    (by simpa using hl0)]
+  congr 1
+  have hne : ∀ i j : Fin s, ((i : ℕ) : F) + 1 + (((a0 + (j : ℕ) : ℕ)) : F) ≠ 0 := fun a j => by
+    have e : ((a : ℕ) : F) + 1 + (((a0 + (j : ℕ) : ℕ)) : F) = (((a : ℕ) + 1 + (a0 + j) : ℕ) : F) := by
+      push_cast; ring
+    have := a.2
+    have := j.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  exact cauchy_det (fun i : Fin s => ((i : ℕ) : F) + 1) (fun j : Fin s => (((a0 + (j : ℕ) : ℕ)) : F)) hne
 
 end CatalanCore.ThmA

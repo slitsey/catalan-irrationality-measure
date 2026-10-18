@@ -17,7 +17,9 @@ open Finset Matrix
 
 namespace CatalanCore
 
-variable {F : Type*} [Field F] {n : ℕ}
+section RingDefs
+
+variable {F : Type*} [CommRing F] {n : ℕ}
 
 /-- The Krylov matrix `[v, A v, …, A^{n-1} v]`. -/
 def krylov (A : Matrix (Fin n) (Fin n) F) (v : Fin n → F) : Matrix (Fin n) (Fin n) F :=
@@ -32,6 +34,32 @@ lemma krylov_apply (A : Matrix (Fin n) (Fin n) F) (v : Fin n → F) (i k : Fin n
 lemma mul_krylov_apply (X A : Matrix (Fin n) (Fin n) F) (v : Fin n → F) (i k : Fin n) :
     (X * krylov A v) i k = (X *ᵥ ((A ^ (k : ℕ)) *ᵥ v)) i := by
   simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, krylov_apply]
+
+section Map
+
+variable {G : Type*} [CommRing G]
+
+lemma krylov_map (f : F →+* G) (A : Matrix (Fin n) (Fin n) F) (v : Fin n → F) :
+    krylov (A.map f) (f ∘ v) = (krylov A v).map f := by
+  ext i k
+  simp only [krylov_apply, Matrix.map_apply]
+  rw [RingHom.map_mulVec]
+  have : (A ^ (k : ℕ)).map f = (A.map f) ^ (k : ℕ) := by
+    have := map_pow f.mapMatrix A (k : ℕ)
+    simpa using this
+  rw [this]
+
+/-- Krylov determinants commute with ring homomorphisms. -/
+lemma kdet_map (f : F →+* G) (A : Matrix (Fin n) (Fin n) F) (v : Fin n → F) :
+    f (kdet A v) = kdet (A.map f) (f ∘ v) := by
+  rw [kdet, kdet, krylov_map, RingHom.map_det]
+  rfl
+
+end Map
+
+end RingDefs
+
+variable {F : Type*} [Field F] {n : ℕ}
 
 /-- A matrix commuting with `T` is determined by its value on a cyclic vector. -/
 lemma eq_of_commute_of_cyclic {T A B : Matrix (Fin n) (Fin n) F} {v₀ : Fin n → F}

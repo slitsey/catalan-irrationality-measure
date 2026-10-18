@@ -3,6 +3,7 @@ module
 public import CatalanCore.ThmA.Chain
 public import CatalanCore.Linalg.KrylovTri
 public import CatalanCore.Linalg.CauchyNe
+public import CatalanCore.Linalg.Cauchy
 
 /-!
 # Nonvanishing of the chain Krylov determinants `u(T, c_σ)` and `u(T, c_{σ+1})`
@@ -57,6 +58,37 @@ def yDown (F : Type*) [Field F] (σ j : ℕ) : F := (σ : F) - (j : F)
 /-- Upward chain nodes `σ + 1 + j`. -/
 def yUp (F : Type*) [Field F] (σ j : ℕ) : F := (σ : F) + 1 + (j : F)
 
+lemma T_down_hT (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤ σ) (hN : σ + 2 * K ≤ N + 1) :
+    ∀ j, j + 1 < K → Tmat F K σ *ᵥ cvec F K (yDown F σ j) =
+      bb (K : F) (σ : F) (yDown F σ j - 1) • cvec F K (yDown F σ (j + 1)) +
+      Yd (K : F) (σ : F) (yDown F σ j) • cvec F K (yDown F σ j) +
+      bb (K : F) (σ : F) (yDown F σ j) • cvec F K (yDown F σ (j - 1)) := by
+  intro j hj
+  have d0 : ∀ a : Fin K, (a : F) + yDown F σ j ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yDown F σ j = (((a : ℕ) + σ - j : ℕ) : F) := by
+      rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  have d1 : ∀ a : Fin K, (a : F) + yDown F σ j + 1 ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yDown F σ j + 1 = (((a : ℕ) + σ + 1 - j : ℕ) : F) := by
+      rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  have d2 : ∀ a : Fin K, (a : F) + yDown F σ j - 1 ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yDown F σ j - 1 = (((a : ℕ) + σ - (j + 1) : ℕ) : F) := by
+      rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  rw [Tmat_mulVec_cvec K σ (yDown F σ j) d0 d1 d2]
+  have e1 : yDown F σ (j + 1) = yDown F σ j - 1 := by unfold yDown; push_cast; ring
+  rcases j with _ | j
+  · have : bb (K : F) (σ : F) (yDown F σ 0) = 0 := by simp [yDown, bb]
+    simp only [this, zero_smul, add_zero, zero_add]
+    rw [e1]; abel
+  · have e2 : yDown F σ j = yDown F σ (j + 1) + 1 := by unfold yDown; push_cast; ring
+    simp only [Nat.add_sub_cancel]
+    rw [e2, e1]; abel
+
 theorem kdet_T_down_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤ σ)
     (hN : σ + 2 * K ≤ N + 1) : kdet (Tmat F K σ) (cvec F K (σ : F)) ≠ 0 := by
   have v0 : cvec F K (σ : F) = cvec F K (yDown F σ 0) := by simp [yDown]
@@ -64,31 +96,7 @@ theorem kdet_T_down_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤
   refine kdet_ne_zero_of_chain (Tmat F K σ) (fun j => cvec F K (yDown F σ j))
     (fun j => bb (K : F) (σ : F) (yDown F σ j - 1)) (fun j => Yd (K : F) (σ : F) (yDown F σ j))
     (fun j => bb (K : F) (σ : F) (yDown F σ j)) ?_ ?_ ?_ ?_
-  · intro j hj
-    have d0 : ∀ a : Fin K, (a : F) + yDown F σ j ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yDown F σ j = (((a : ℕ) + σ - j : ℕ) : F) := by
-        rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    have d1 : ∀ a : Fin K, (a : F) + yDown F σ j + 1 ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yDown F σ j + 1 = (((a : ℕ) + σ + 1 - j : ℕ) : F) := by
-        rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    have d2 : ∀ a : Fin K, (a : F) + yDown F σ j - 1 ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yDown F σ j - 1 = (((a : ℕ) + σ - (j + 1) : ℕ) : F) := by
-        rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    rw [Tmat_mulVec_cvec K σ (yDown F σ j) d0 d1 d2]
-    have e1 : yDown F σ (j + 1) = yDown F σ j - 1 := by unfold yDown; push_cast; ring
-    rcases j with _ | j
-    · have : bb (K : F) (σ : F) (yDown F σ 0) = 0 := by simp [yDown, bb]
-      simp only [this, zero_smul, add_zero, zero_add]
-      rw [e1]; abel
-    · have e2 : yDown F σ j = yDown F σ (j + 1) + 1 := by unfold yDown; push_cast; ring
-      simp only [Nat.add_sub_cancel]
-      rw [e2, e1]; abel
+  · exact T_down_hT h K σ hK hσ hN
   · simp [yDown, bb]
   · intro j hj
     have e : yDown F σ j - 1 = (((σ - (j + 1) : ℕ)) : F) := by
@@ -105,6 +113,37 @@ theorem kdet_T_down_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤
         rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
       rw [e]; exact h.ne (by omega) (by omega)
 
+lemma T_up_hT (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ σ) (hN : σ + 2 * K ≤ N + 1) :
+    ∀ j, j + 1 < K → Tmat F K σ *ᵥ cvec F K (yUp F σ j) =
+      bb (K : F) (σ : F) (yUp F σ j) • cvec F K (yUp F σ (j + 1)) +
+      Yd (K : F) (σ : F) (yUp F σ j) • cvec F K (yUp F σ j) +
+      bb (K : F) (σ : F) (yUp F σ j - 1) • cvec F K (yUp F σ (j - 1)) := by
+  intro j hj
+  have d0 : ∀ a : Fin K, (a : F) + yUp F σ j ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yUp F σ j = (((a : ℕ) + σ + 1 + j : ℕ) : F) := by
+      unfold yUp; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  have d1 : ∀ a : Fin K, (a : F) + yUp F σ j + 1 ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yUp F σ j + 1 = (((a : ℕ) + σ + 1 + j + 1 : ℕ) : F) := by
+      unfold yUp; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  have d2 : ∀ a : Fin K, (a : F) + yUp F σ j - 1 ≠ 0 := fun a => by
+    have e : ((a : ℕ) : F) + yUp F σ j - 1 = (((a : ℕ) + σ + j : ℕ) : F) := by
+      unfold yUp; push_cast; ring
+    have := a.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  rw [Tmat_mulVec_cvec K σ (yUp F σ j) d0 d1 d2]
+  have e1 : yUp F σ (j + 1) = yUp F σ j + 1 := by unfold yUp; push_cast; ring
+  rcases j with _ | j
+  · have : bb (K : F) (σ : F) (yUp F σ 0 - 1) = 0 := by simp [yUp, bb]
+    simp only [this, zero_smul, add_zero, zero_add]
+    rw [e1]
+  · have e2 : yUp F σ j = yUp F σ (j + 1) - 1 := by unfold yUp; push_cast; ring
+    simp only [Nat.add_sub_cancel]
+    rw [e2, e1]
+
 theorem kdet_T_up_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ σ)
     (hN : σ + 2 * K ≤ N + 1) : kdet (Tmat F K σ) (cvec F K ((σ : F) + 1)) ≠ 0 := by
   have v0 : cvec F K ((σ : F) + 1) = cvec F K (yUp F σ 0) := by simp [yUp]
@@ -112,31 +151,7 @@ theorem kdet_T_up_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ �
   refine kdet_ne_zero_of_chain (Tmat F K σ) (fun j => cvec F K (yUp F σ j))
     (fun j => bb (K : F) (σ : F) (yUp F σ j)) (fun j => Yd (K : F) (σ : F) (yUp F σ j))
     (fun j => bb (K : F) (σ : F) (yUp F σ j - 1)) ?_ ?_ ?_ ?_
-  · intro j hj
-    have d0 : ∀ a : Fin K, (a : F) + yUp F σ j ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yUp F σ j = (((a : ℕ) + σ + 1 + j : ℕ) : F) := by
-        unfold yUp; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    have d1 : ∀ a : Fin K, (a : F) + yUp F σ j + 1 ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yUp F σ j + 1 = (((a : ℕ) + σ + 1 + j + 1 : ℕ) : F) := by
-        unfold yUp; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    have d2 : ∀ a : Fin K, (a : F) + yUp F σ j - 1 ≠ 0 := fun a => by
-      have e : ((a : ℕ) : F) + yUp F σ j - 1 = (((a : ℕ) + σ + j : ℕ) : F) := by
-        unfold yUp; push_cast; ring
-      have := a.2
-      rw [e]; exact h.ne (by omega) (by omega)
-    rw [Tmat_mulVec_cvec K σ (yUp F σ j) d0 d1 d2]
-    have e1 : yUp F σ (j + 1) = yUp F σ j + 1 := by unfold yUp; push_cast; ring
-    rcases j with _ | j
-    · have : bb (K : F) (σ : F) (yUp F σ 0 - 1) = 0 := by simp [yUp, bb]
-      simp only [this, zero_smul, add_zero, zero_add]
-      rw [e1]
-    · have e2 : yUp F σ j = yUp F σ (j + 1) - 1 := by unfold yUp; push_cast; ring
-      simp only [Nat.add_sub_cancel]
-      rw [e2, e1]
+  · exact T_up_hT h K σ hK hσ hN
   · simp [yUp, bb]
   · intro j hj
     have e : yUp F σ j = ((σ + 1 + j : ℕ) : F) := by unfold yUp; push_cast; ring
@@ -151,5 +166,47 @@ theorem kdet_T_up_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ �
       have e : (a : F) + yUp F σ j = ((a + σ + 1 + j : ℕ) : F) := by
         unfold yUp; push_cast; ring
       rw [e]; exact h.ne (by omega) (by omega)
+
+/-- Explicit form of `u(T, c_σ)` (downward chain). -/
+theorem kdet_T_down_eq (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤ σ)
+    (hN : σ + 2 * K ≤ N + 1) :
+    kdet (Tmat F K σ) (cvec F K (σ : F)) =
+      (∏ k : Fin K, ∏ j ∈ Finset.range (k : ℕ), bb (K : F) (σ : F) (yDown F σ j - 1)) *
+        ((∏ i : Fin K, ∏ j ∈ Finset.Ioi i,
+            ((((j : ℕ) : F) - ((i : ℕ) : F)) * (yDown F σ j - yDown F σ i))) /
+          ∏ i : Fin K, ∏ j : Fin K, (((i : ℕ) : F) + yDown F σ j)) := by
+  have v0 : cvec F K (σ : F) = cvec F K (yDown F σ 0) := by simp [yDown]
+  rw [v0, kdet_eq_of_chain (Tmat F K σ) (fun j => cvec F K (yDown F σ j))
+    (fun j => bb (K : F) (σ : F) (yDown F σ j - 1)) (fun j => Yd (K : F) (σ : F) (yDown F σ j))
+    (fun j => bb (K : F) (σ : F) (yDown F σ j)) (T_down_hT h K σ hK hσ hN) (by simp [yDown, bb])]
+  congr 1
+  have hne : ∀ i j : Fin K, ((i : ℕ) : F) + yDown F σ j ≠ 0 := fun a j => by
+    have e : (((a : ℕ)) : F) + yDown F σ j = (((a : ℕ) + σ - j : ℕ) : F) := by
+      rw [Nat.cast_sub (by have := j.2; have := a.2; omega)]; unfold yDown; push_cast; ring
+    have := a.2
+    have := j.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  exact cauchy_det (fun i : Fin K => ((i : ℕ) : F)) (fun j : Fin K => yDown F σ j) hne
+
+/-- Explicit form of `u(T, c_{σ+1})` (upward chain). -/
+theorem kdet_T_up_eq (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ σ)
+    (hN : σ + 2 * K ≤ N + 1) :
+    kdet (Tmat F K σ) (cvec F K ((σ : F) + 1)) =
+      (∏ k : Fin K, ∏ j ∈ Finset.range (k : ℕ), bb (K : F) (σ : F) (yUp F σ j)) *
+        ((∏ i : Fin K, ∏ j ∈ Finset.Ioi i,
+            ((((j : ℕ) : F) - ((i : ℕ) : F)) * (yUp F σ j - yUp F σ i))) /
+          ∏ i : Fin K, ∏ j : Fin K, (((i : ℕ) : F) + yUp F σ j)) := by
+  have v0 : cvec F K ((σ : F) + 1) = cvec F K (yUp F σ 0) := by simp [yUp]
+  rw [v0, kdet_eq_of_chain (Tmat F K σ) (fun j => cvec F K (yUp F σ j))
+    (fun j => bb (K : F) (σ : F) (yUp F σ j)) (fun j => Yd (K : F) (σ : F) (yUp F σ j))
+    (fun j => bb (K : F) (σ : F) (yUp F σ j - 1)) (T_up_hT h K σ hK hσ hN) (by simp [yUp, bb])]
+  congr 1
+  have hne : ∀ i j : Fin K, ((i : ℕ) : F) + yUp F σ j ≠ 0 := fun a j => by
+    have e : (((a : ℕ)) : F) + yUp F σ j = (((a : ℕ) + σ + 1 + j : ℕ) : F) := by
+      unfold yUp; push_cast; ring
+    have := a.2
+    have := j.2
+    rw [e]; exact h.ne (by omega) (by omega)
+  exact cauchy_det (fun i : Fin K => ((i : ℕ) : F)) (fun j : Fin K => yUp F σ j) hne
 
 end CatalanCore.ThmA
