@@ -71,3 +71,16 @@ theorem Dsq_eq (k : ℕ) (hk : 1 ≤ k) :
   ring
 
 end CatalanFrames.P6
+
+/-! ### Negative control C: entries against exact rationals (`p6.py`, `x0 = 0`) -/
+
+namespace CatalanFrames.P6
+
+example : p6Frame.Mn 0 1 = 1 / 36 := by decide +kernel
+example : p6Frame.Mn 1 1 = -7 / 36 := by decide +kernel
+example : p6Frame.Mn 0 3 = 26 / 2835 := by decide +kernel
+example : p6Frame.Mn 3 3 = -620939 / 3175200 := by decide +kernel
+example : p6Frame.Mn 2 5 = -17 / 84240 := by decide +kernel
+example : p6Frame.Mn 6 6 = -609040620211 / 3116623910400 := by decide +kernel
+
+end CatalanFrames.P6
