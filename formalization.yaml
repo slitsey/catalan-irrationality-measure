@@ -40,14 +40,14 @@ classification:
   msc2020: ["11J82", "11J72"]
 
 sources:
-  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-878) for all large b"
+  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-740) for all large b"
     type: original-proof
     relationship: other
     note: >-
       The result is first presented together with this formalization, in the
       companion paper by S. Litsey, "An irrationality measure for Catalan's
       constant" (2026), whose arguments the Lean development follows. The repository
-      contains the revised 878 paper; Hexagon preprint hexagon:2610.00187v1 is the
+      contains the revised 740 paper; Hexagon preprint hexagon:2610.00187v1 is the
       earlier 8127 version, and this revision has not been uploaded there.
   - title: "Catalan's constant is irrational"
     authors:

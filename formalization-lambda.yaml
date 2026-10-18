@@ -33,7 +33,7 @@ related_formalizations:
 
 status:
   scope: >-
-    All three advertised statements are fully proved (SolutionLambda.lean, via
+    All eight advertised statements are fully proved (SolutionLambda.lean, via
     CatalanLambda/Final.lean). The development has no sorry and no native_decide.
     Axioms: propext, Classical.choice, Quot.sound only.
   sorry_count: 0
