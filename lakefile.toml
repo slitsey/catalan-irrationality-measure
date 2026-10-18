@@ -61,6 +61,14 @@ roots = ["ChallengeLambda"]
 name = "SolutionLambda"
 roots = ["SolutionLambda"]
 
+[[lean_lib]]
+name = "ChallengeChi3"
+roots = ["ChallengeChi3"]
+
+[[lean_lib]]
+name = "SolutionChi3"
+roots = ["SolutionChi3"]
+
 # Modular architecture (design FU).  None of these is a default target.
 # CatalanCore: frame-generic mathematics; CatalanFrames: per-constant instances;
 # CatalanParity: temporary old-vs-new parity checks (deleted at cut-over).
