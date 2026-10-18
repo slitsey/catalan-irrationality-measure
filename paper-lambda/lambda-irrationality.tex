@@ -39,7 +39,7 @@
 
 \begin{document}
 
-\title{Irrationality of $G-5\pi^2/48$ and an irrationality exponent}
+\title{Irrationality of $G\pm5\pi^2/48$ and irrationality exponents}
 
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
@@ -55,7 +55,7 @@ Andr\'eief identity, $p$-adic nonvanishing, computer-assisted proof, Lean}
 Let $G$ be Catalan's constant and put $\lambda=G/2-5\pi^2/96$, so that
 $G-5\pi^2/48=2\lambda$. We prove that $\lambda$ is irrational and that
 $|\lambda-a/b|>b^{-57.85}$ for every integer $a$ and every sufficiently large integer $b$;
-thus $\mu(\lambda)\le57.85$. The proof uses the determinants $P_h(\lambda)$ of
+thus $\mu(\lambda)\le57.85$. The same holds for the mirror constant $\lambda'=G/2+5\pi^2/96$, so that $G+5\pi^2/48=2\lambda'$: $\lambda'$ is irrational and $\mu(\lambda')\le57.85$ (the two constants satisfy $\lambda+\lambda'=G$, but the two measures do not combine to a measure for $G$). The proof uses the determinants $P_h(\lambda)$ of
 the $h\times h$ matrices $T_h=\lambda I+M_0$, which are (up to a factor $1/16$) the
 L\"owner matrices of $\psi(z+1)-\psi(z+3/4)$ at the nodes $0,\dots,h-1$.
 The common denominator of $P_h$ satisfies $\log\den P_h\le(313/105+o(1))h^2$; a
@@ -68,7 +68,7 @@ values $h=\ell-K,\ \ell-K-1$ ($K=(\ell+1)/4$) attached to any prime $\ell\equiv3
 evaluation (a product formula) of a family of Krylov determinants of Cauchy-type Gram matrices. For the measure we
 prove a node-removal bound on every principal minor of $T_h$, again with a certified numerical
 constant, which yields an exponentially wide window around $\lambda$ in which $P_h$ is small.
-The Lean~4 formalization proves the irrationality and $\mu(\lambda)\le77.28$ (exponent $31682445459/409965000$; with the simpler choice of $h$), unconditionally; the determinant evaluation of \S\ref{sec:krylov} and the bound $57.85$ are not formalized.
+The Lean~4 formalization proves the irrationality and $\mu(\lambda)\le77.28$ (exponent $31682445459/409965000$; with the simpler choice of $h$), unconditionally; the determinant evaluation of \S\ref{sec:krylov} and the bound $57.85$ are not formalized. The mirror theorem is formalized with the same weaker exponent ($78$ for $\lambda'$, $79$ for $G+5\pi^2/48$).
 \end{abstract}
 
 \maketitle
@@ -90,7 +90,7 @@ number
  \lambda \;=\; \frac G2-\frac{5\pi^2}{96}\;=\;\sum_{k\ge1}\Bigl(\frac1{16k^2}-\frac1{(4k-1)^2}\Bigr)
  \;=\;-0.05605\ldots
 \]
-(see \S\ref{sec:matrix}). Equivalently $G-5\pi^2/48=2\lambda$.
+(see \S\ref{sec:matrix}). Equivalently $G-5\pi^2/48=2\lambda$. We also treat the ``mirror'' constant $\lambda'=G/2+5\pi^2/96$ (\S\ref{sec:mirror}), for which $G+5\pi^2/48=2\lambda'$ and $\lambda+\lambda'=G$.
 
 \begin{theorem}\label{thm:irr}
 The number $\lambda=G/2-5\pi^2/96$ is irrational. Equivalently, $G-5\pi^2/48\notin\Q$.
@@ -105,12 +105,17 @@ In particular $\mu(\lambda)\le57.85$ (the computed value is $57.841$).
 \end{theorem}
 A simpler choice of $h$ (without the determinant evaluation of \S\ref{sec:krylov}) gives the weaker bound $77.13$; see Remark~\ref{rem:77}. The Lean formalization proves, unconditionally, the irrationality and $\mu(\lambda)\le77.28$ (exponent $31682445459/409965000$; with the simpler choice of $h$; the value $77.28$ rather than $77.13$ comes from rounding the certified constants to short rationals); the determinant evaluation of \S\ref{sec:krylov} and the bound $57.85$ are not formalized.
 
+\begin{theorem}[the mirror constant]\label{thm:mirror}
+The number $\lambda'=G/2+5\pi^2/96$ is irrational, and for every integer $a$ and every sufficiently large integer $b$, $|\lambda'-a/b|>b^{-57.85}$; thus $\mu(\lambda')\le57.85$. Consequently $G+5\pi^2/48\notin\Q$ and $\mu(G+5\pi^2/48)\le57.85$.
+\end{theorem}
+The proof of Theorem~\ref{thm:mirror} (\S\ref{sec:mirror}) is the same architecture with the frame $\psi(z+1)-\psi(z+\frac14)$; the constants (content $313/105$, the decay certificate, $c_{\rm cert}$) are identical, and only the $\ell$-adic part and some $o(1)$ bookkeeping change. Since $\lambda+\lambda'=G$ it is natural to ask whether Theorems~\ref{thm:main} and~\ref{thm:mirror} give a measure for $G$; they do not (Remark~\ref{rem:nocombine}). The Lean formalization does not cover Theorem~\ref{thm:mirror}.
+
 Here the \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the $\mu$ such that
 $|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all sufficiently large $b$.
 We stress that Theorem~\ref{thm:irr} concerns one specific linear form in
 $1,G,\pi^2$; it is not a statement about $G$ alone, whose irrationality is OpenAI's theorem.
 
-A search of the literature (including work of Rivoal and Zudilin and of Calegari, Dimitrov and Tang on linear forms involving $G$) did not turn up a previous proof of the irrationality of $G-5\pi^2/48$.
+A search of the literature (including work of Rivoal and Zudilin and of Calegari, Dimitrov and Tang on linear forms involving $G$) did not turn up a previous proof of the irrationality of $G-5\pi^2/48$ or of $G+5\pi^2/48$.
 
 \subsection{Method}
 For $h\ge1$ let $M_0$ be the explicit rational $h\times h$ matrix of \S\ref{sec:matrix} and $T_h=\lambda I+M_0$;
@@ -144,10 +149,10 @@ thus $P_h(X)=\det(XI+M_0)\in\Q[X]$ and $P_h(\lambda)=\det T_h$.
 \end{enumerate}
 
 \subsection{Status of the proofs}
-The proofs of Theorems~\ref{thm:irr} and~\ref{thm:main} were derived by Claude (Anthropic) agents
+The proofs of Theorems~\ref{thm:irr}, \ref{thm:main} and~\ref{thm:mirror} were derived by Claude (Anthropic) agents
 working with the author, and each part was re-derived and spot-checked numerically by separate Claude audit
 agents; no human referee has checked them. Two steps are computer-assisted (interval-arithmetic certificates, \S\ref{ssec:cert} and
-\S\ref{ssec:cert2}). The Krylov determinant evaluation (Theorem~A) and the choice of $h$ of \S\ref{sec:krylov} were derived and then audited by separate Claude agents (exact rational checks; see \S\ref{sec:formal}). The Lean formalization proves the irrationality and the weaker bound $77.13$, conditional on the numerical certificate facts; Theorem~A and the deduction of $57.85$ are not yet formalized. See
+\S\ref{ssec:cert2}). The Krylov determinant evaluation (Theorem~A) and the choice of $h$ of \S\ref{sec:krylov} were derived and then audited by separate Claude agents (exact rational checks; see \S\ref{sec:formal}). The Lean formalization proves the irrationality and the weaker bound $77.13$, conditional on the numerical certificate facts; Theorem~A and the deduction of $57.85$ are not yet formalized, and the mirror theorem, Theorem~\ref{thm:mirror}, is formalized with the same weaker exponent ($78$ for $\lambda'$, $79$ for $G+5\pi^2/48$). See
 \S\ref{sec:formal} for an exact account.
 
 \subsection{Notation}
@@ -980,6 +985,127 @@ If in the proof of Theorem~\ref{thm:measure} one uses Theorem~\ref{thm:nonvanish
 \end{remark}
 
 %%% --------------------------------------------------------------------
+\section{The mirror constant}\label{sec:mirror}
+
+Put
+\[
+ \lambda'\;:=\;\sum_{k\ge1}\Bigl(\frac1{(4k-3)^2}-\frac1{16k^2}\Bigr)\;=\;\Bigl(\frac{\pi^2}{16}+\frac G2\Bigr)-\frac{\pi^2}{96}\;=\;\frac G2+\frac{5\pi^2}{96}\;=\;0.972\ldots,
+\]
+using $\sum_{n\equiv1(4)}n^{-2}=\frac{\pi^2}{16}+\frac G2$ (the companion of the sums in \S\ref{sec:matrix}); thus $G+5\pi^2/48=2\lambda'$ and $\lambda+\lambda'=G$.
+The proof of Theorem~\ref{thm:mirror} is the proof of Theorems~\ref{thm:irr} and~\ref{thm:main} for the \emph{mirror frame}
+\[
+ \bar F(z)=\psi(z+1)-\psi(z+\tfrac14)=\sum_{j\ge0}\Bigl[\frac1{z+j+\frac14}-\frac1{z+j+1}\Bigr],
+\]
+with poles $+1$ at $-(j+\frac14)$ and $-1$ at $-(j+1)$. The shift $\frac34\to\frac14$ exchanges the roles of the residue classes $1$ and $3$ modulo~$4$.
+We list \emph{every} place where the argument changes; everything not listed is used verbatim. The constants $\Lm=313/105$, $D_{\rm cert}\ge3.1113790$, $c_{\rm cert}=6.8717994$, $\eta\ge0.1304266$ are the same, so the numerical value of the exponent is the same, $57.841\le57.85$ (and $77.1213$ for the simpler choice of $h$).
+
+\subsection{The matrices}
+From $\bar F(k)-\bar F(k-1)=\frac1k-\frac4{4k-3}=-\frac3{k(4k-3)}$ and the analogous identity for $\bar F'$ one gets, exactly as for \eqref{eq:Loff}, \eqref{eq:Ldiag},
+\[
+ \bar L[a][b]=-\frac3{b-a}\sum_{a<k\le b}\frac1{k(4k-3)}\ (a<b),\qquad
+ \bar L[a][a]=\bar F'(0)+\sum_{k\le a}\Bigl(\frac{16}{(4k-3)^2}-\frac1{k^2}\Bigr),
+\]
+and $\bar F'(0)=\psi'(1)-\psi'(\tfrac14)=\frac{\pi^2}6-(\pi^2+8G)=-16\lambda'$. Let $N_0=N_0^{(h)}$ be the symmetric rational matrix with
+\[
+ N_0[a][b]=\frac3{16(b-a)}\sum_{a<k\le b}\frac1{k(4k-3)}\ (a<b),\qquad
+ N_0[a][a]=\frac1{16}\sum_{k\le a}\Bigl(\frac1{k^2}-\frac{16}{(4k-3)^2}\Bigr),
+\]
+and put $\bar T_h=\frac1{16}\bar L=-(\lambda'I+N_0)$, $\bar P_h(X)=\det(XI+N_0)\in\Q[X]$ (monic of degree $h$). Then $\bar P_h(\lambda'+t)=(-1)^h\det(\bar T_h-tI)$, and Lemma~\ref{lem:integrality} holds verbatim for $\bar Q_h=\den(\bar P_h)\bar P_h$.
+
+\subsection{Content}
+For $p\ge5$ and $q=p^e$ the least $k\ge1$ with $q\mid k(4k-3)$ is $k_q=(j_qq+3)/4$, where now $j_q=1$ if $q\equiv1\pmod4$ and $j_q=3$ if $q\equiv3\pmod 4$ (indeed $4k-3=jq$ forces $jq\equiv1\pmod 4$; $k$ and $4k-3$ are coprime for $p\ge5$, and $k_q<q$). So the classes are \emph{swapped} relative to the construction before Lemma~\ref{lem:dual}; the dual certificate (the potentials $u,v$ and Lemma~\ref{lem:dual}) is verbatim. Since $|k_q-j_qq/4|\le\frac34$, the per-level bound is $\delta(q)\le h\,g_{j_q}(q/h)+\frac32$, and the error costs $O(h)$ in total. The two integrals $\int g_1=21/5$ and $\int g_3=37/21$ are now attached to the classes $1$ and $3$ mod~$4$ respectively; by the prime number theorem in progressions the two classes have equal weight, so $\Lm=\frac12(\frac{21}5+\frac{37}{21})=\frac{313}{105}$ again. The primes $2,3$ contribute $O(h\log h)$ as before. Hence $\log\den\bar P_h\le(\frac{313}{105}+o(1))h^2$.
+
+\subsection{Nonvanishing}
+Let $\ell\equiv1\pmod4$ be prime, $\ell\ge13$, $K=(\ell+3)/4$ (so $4K-3=\ell$), and $K+1\le h\le\ell-1$; low and high indices are as in \S\ref{sec:nonvanishing}.
+
+\begin{lemma}[$\ell$-singular structure, mirror]\label{lem:mstruct}
+Among $k,\ 4k-3,\ b-a,\ 16$ and the numerator $3$ occurring in the entries of $N_0$ only $4k-3$ can be divisible by $\ell$, and this occurs only for $k=K$. Hence every high diagonal entry of $N_0$ contains the term $-\ell^{-2}$, every low--high entry contains $3/(16K\ell(b-a))$, and all other entries lie in $\Z_{(\ell)}$.
+\end{lemma}
+\begin{proof}
+If $\ell\mid4k-3$ with $4k-3\le4h-7<4\ell$, then $4k-3\in\{\ell,2\ell,3\ell\}$; $2\ell$ is even and $3\ell\equiv3\not\equiv1\pmod4$. The numerator $3$ is a unit since $\ell\ne3$. The rest is as in Lemma~\ref{lem:struct}.
+\end{proof}
+
+\begin{lemma}\label{lem:m1}
+With $D=\mathrm{diag}(I_K,\ell I_{h-K})$, modulo $\ell$
+\[
+ D(XI+N_0)D\equiv\begin{pmatrix}XI_K+A&\hat B\\\hat B^\top&-I\end{pmatrix},\qquad \hat B_{ab}\equiv\frac3{16K(b-a)}\equiv\frac1{4(b-a)},
+\]
+because $16K=4\ell+12\equiv12$. The Schur complement of the block $-I$ gives
+$\ell^{2(h-K)}\bar P_h(X)\equiv(-1)^{h-K}\det(XI_K+A+\hat B\hat B^\top)$, which is monic of degree $K$ up to sign; so $v_\ell(\den\bar P_h)=2(h-K)$. (The sign in front of $\hat B\hat B^\top$ is the \emph{opposite} of that in Lemma~\ref{lem:1}, because the high block is $-I$ instead of $+I$.)
+\end{lemma}
+
+\begin{lemma}[key identity, mirror]\label{lem:m2}
+Let $s=\ell-h$, $m=\ell-K$, let $C_s$ be as in Lemma~\ref{lem:2} (note $a+j\le K-1+s<\ell$), and put $Y=-(16X+H^{(2)}_m)$. Then in $\mathbb F_\ell[X]$
+\[
+ 16^K\ell^{2(h-K)}\bar P_h(X)\equiv(-1)^h\det\bigl(YI_K+C_sC_s^\top\bigr).
+\]
+\end{lemma}
+\begin{proof}
+Modulo $\ell$, $4K\equiv3$, so $\frac4{4k-3}=\frac1{k-3/4}\equiv\frac1{k-K}\equiv\frac1{k+m}$, hence $\frac3{k(4k-3)}\equiv\frac1{k+m}-\frac1k$ and $\frac{16}{(4k-3)^2}\equiv\frac1{(k+m)^2}$. For $a<b<K$ (so $b+m<\ell$)
+\[
+ 16A_{ab}\equiv-\frac1{b-a}\sum_{k=a+1}^b\Bigl(\frac1k-\frac1{k+m}\Bigr)=-\sum_{j=1}^m\frac1{(a+j)(b+j)},\qquad
+ 16A_{aa}\equiv\sum_{k\le a}\Bigl(\frac1{k^2}-\frac1{(k+m)^2}\Bigr)=H^{(2)}_m-\sum_{j=1}^m\frac1{(a+j)^2},
+\]
+that is $16A\equiv H^{(2)}_mI-C_mC_m^\top$. As in the proof of Lemma~\ref{lem:2} (substitute $j=\ell-b$, so $b-a\equiv-(a+j)$), $16\hat B\hat B^\top\equiv\sum_{j=s+1}^mw_jw_j^\top=C_mC_m^\top-C_sC_s^\top$. Therefore $16(A+\hat B\hat B^\top)\equiv H^{(2)}_mI-C_sC_s^\top$, and
+$\det\bigl(XI+\frac1{16}(H^{(2)}_mI-C_sC_s^\top)\bigr)=16^{-K}(-1)^K\det(YI+C_sC_s^\top)$. Combine with Lemma~\ref{lem:m1}: the sign is $(-1)^{h-K}(-1)^K=(-1)^h$.
+\end{proof}
+
+\begin{theorem}[choice of $h$, mirror]\label{thm:mnonvanish2}
+Let $\ell\equiv1\pmod4$ be prime, $\ell\ge13$, $K=(\ell+3)/4$, and $r\in\Q$ with $\ell\nmid\den r$. Then one of
+$h\in\{\ell-K,\ \ell-K-1\}=\{\tfrac{3\ell-3}4,\tfrac{3\ell-7}4\}$ satisfies $v_\ell(\bar P_h(r))=-2(h-K)$; in particular $\bar P_h(r)\ne0$.
+\end{theorem}
+\begin{proof}
+Here $s=\ell-h\in\{K,K+1\}$; both values satisfy $K+1\le h\le\ell-1$ and $1\le s\le\ell-K-1$ for $\ell\ge13$, so Lemmas~\ref{lem:m1}, \ref{lem:m2} apply: $\ell^{2(h-K)}\bar P_h(r)$ is an $\ell$-adic unit iff $D_s(Y)=\det(YI_K+N_s)$ does not vanish at $Y=y:=-(16r+H^{(2)}_m)\in\mathbb F_\ell$. Suppose $D_K(y)=D_{K+1}(y)=0$. As before $D_K(0)=\det(C_K)^2\ne0$ (a Cauchy determinant in integers $\le2K-1<\ell$), so $y\ne0$ and $-y\ne0$ is a common eigenvalue of $N_K$ and $N_{K+1}$. Lemma~CC holds for any $K$, any $s\ge K$ and any prime $\ell>K+s$: its proof (Krylov reduction and Theorem~A at $\theta=0$) uses only that $u(K,s)$ is a rational number all of whose prime factors are integers in $[1,K+s]$, and never mentions the residue class of $\ell$ (Theorem~A is an identity in $(n,s,\theta)$). Here $K+s=2K=(\ell+3)/2<\ell$ for $s=K$. This contradicts Lemma~CC.
+\end{proof}
+(The same argument gives the three-$h$ version, $h\in\{\ell-1,\ell-2,\ell-K\}$, with $\Xi_{11}=H^{(2)}_K$ and $\Xi_{12}=K/(K+1)\ne0$; this is the route to $77.13$.)
+
+\begin{lemma}[primes dividing the denominator, mirror]\label{lem:m3}
+Let $\ell\equiv1\pmod4$ be prime, $\ell\ge13$, $K+1\le h\le\ell-1$, $r=p/q$ with $e=v_\ell(q)\ge1$ and $u=\ell^er$. If $e=1$, or $e\ge3$, or $e=2$ and $u\not\equiv+1\pmod\ell$, then $\bar P_h(r)\ne0$ for every admissible $h$.
+\end{lemma}
+\begin{proof}
+As for Lemma~\ref{lem:3}, with high block $\ell^2rI+J$ and now $J\equiv-I$ (Lemma~\ref{lem:mstruct}): the reduced determinants are $u^K$ for $e=1$, $u^K(u-1)^{h-K}$ for $e=2$, and $u^h$ for $e\ge3$.
+\end{proof}
+Thus the exceptional case is $e=2$, $u\equiv+1$ (instead of $u\equiv-1$); since it still requires $v_\ell(q)=2$, the selection ``$v_\ell(q)\ne2$'' in the proof of Theorem~\ref{thm:measure} is unchanged.
+(Checked on $574$ exact cases for $\ell=13,17,29$, all admissible $h$ and $e\le4$; the exception $e=2$, $u\equiv1$ does occur. Lemma~\ref{lem:m2} was checked by exact characteristic polynomials for $h=12,20$ and all $\ell\equiv1\pmod4$ in $(h,4h]$.)
+
+\subsection{Decay and node removal}
+\emph{The certificate is the same.} The certificates for $D_{\rm cert}$ (\S\ref{ssec:cert}) and for $g_{\min}$ (\S\ref{ssec:cert2}) concern one fixed function $g$ on the scaled plane; they do not depend on $F$, on $h$, or on where the atoms lie modulo~$1$. What changes is only the contour identity and the $o(1)$ bookkeeping, as follows.
+
+\emph{Reflection.} From $\psi(1+z)=\psi(-z)-\pi\cot\pi z$ and $\psi(\frac14+z)=\psi(\frac34-z)-\pi\cot(\pi z+\frac\pi4)$,
+\[
+ \bar F=\tilde F+\bar E,\qquad \tilde F(z)=\psi(-z)-\psi(\tfrac34-z),\quad
+ \bar E(z)=\frac{-\pi\sin(\pi/4)}{\sin\pi z\,\sin(\pi z+\pi/4)},
+\]
+with $\tilde F$ analytic and $O(1/|z|)$ in $\Re z<0$, and $\bar E$ $1$-periodic with $|\bar E(x+iy)|\le Ce^{-2\pi|y|}$ for $|y|\ge1$.
+
+\emph{The contour.} Take $N_0=\lfloor r_0h\rfloor$ as before and $x^*=-N_0+\frac38$, the midpoint of the gap $(-N_0,-N_0+\frac34)$ between consecutive poles of $\bar F$, so $x^*\equiv\frac38\pmod1$. On the part of $\Gamma_h=x^*+u(-1\pm3i)$ with $|\Im z|<1$ one has $\Re z\in(-N_0+\frac1{24},-N_0+\frac38]$, inside that gap. The poles to the right of $x^*$ are $-(j+\frac14)$, $0\le j<N_0$ (residue $+1$), and $-(j+1)$, $0\le j<N_0-1$ (residue $-1$); so the set of atoms is
+\[
+ \bar{\mathcal A}=\{j+\tfrac14:\ 0\le j<N_0\}\ \cup\ \{j+1:\ 0\le j<N_0-1\},\qquad|\bar{\mathcal A}|=2N_0-1,
+\]
+with $c_\mu=+1$ on the first part and $-1$ on the second, and Proposition~\ref{prop:contour} holds verbatim:
+$\bar L=-\sum_{\mu\in\bar{\mathcal A}}c_\mu u_\mu u_\mu^\top+\frac1{2\pi i}\int_{\Gamma_h}\bar E\,vv^\top dz$
+(checked entrywise to $2.4\cdot10^{-17}$ at 25 digits for $N_0=1,2,7$, and independently for $(N_0,h)=(4,3),(3,4)$).
+
+\emph{Changes in Andr\'eief's bound, Lemmas~\ref{lem:A}, \ref{lem:B} and Theorem~\ref{thm:N}.} All are in $o(1)$ terms:
+\begin{itemize}[leftmargin=*]
+\item the support of the measure has $\Re z\le-\frac14$ (the nearest atom is $-\frac14$), so $|v_a|\le4$ (instead of $\frac83$), and the corresponding loss is $\log(1+4h)/h\to0$;
+\item $C_E$ and $c_\kappa$ are independent of $h$, by periodicity and $x^*\equiv\frac38\pmod 1$ (the contour crosses the real axis at distance $\frac38$ from the poles at $0$ and $\frac34$ modulo~$1$);
+\item in Lemma~\ref{lem:B}, $x^*/h=-r_0+\delta_h$ with $\delta_h=(r_0h-N_0+\frac38)/h\in[\frac3{8h},\frac{11}{8h})$, so $|\delta_h|\le\omega=2^{-30}$ as soon as $h\ge\frac{11}8\cdot2^{30}$; the atoms lie in $-(\Z_{\ge0}+\frac14)/h\,\cup\,-\Z_{\ge1}/h\subset[-r_0,0]$ (the largest is $N_0-\frac34\le r_0h$), two progressions of spacing $1/h$, so $N_\ell\le2h(b_\ell-a_\ell)+2$ exactly as before.
+\end{itemize}
+The function $g$, the boxes (R), the segment cells (S), the line cells (L) and $I_\rho(\sigma)$ are identical. Hence Theorem~\ref{thm:decay} holds for $\bar P_h$ with $D^+=D_{\rm cert}\ge3.1113790$, Theorem~\ref{thm:N} with $c\le6.8717994$, and Corollary~\ref{cor:window}: $|\bar P_h(\lambda'+t)|\le e^{-(D_{\rm cert}-o(1))h^2}$ for $|t|\le e^{-ch}$.
+
+\begin{remark}
+Exact determinants (Arb, rational entries) give $-\log|\det\bar T_h|/h^2=3.030,\,3.060,\,3.075,\,3.084,\,3.090,\,3.094$ at $h=32,48,64,80,96,112$, against $3.068,\,3.084,\,3.093,\,3.098,\,3.101,\,3.104$ for $T_h$. The difference of the logarithms is $\approx1.06\,h+4.7$, linear in $h$ (the near atom $-\frac14$ costs $O(h)$, not $O(h^2)$), so the $h^2$-constants coincide; a margin ``$\eta\approx0.10$'' read off from the finite-$h$ slopes is a finite-$h$ artefact. These computations are consistency checks and are not used in the proof.
+\end{remark}
+
+\subsection{The measure}
+The proof of Theorem~\ref{thm:measure} is verbatim with: primes $\ell\equiv1\pmod4$ in $(X,Y]$ (using $\vartheta(x;4,1)=x/2+o(x)$); Theorem~\ref{thm:mnonvanish2} in place of Theorem~\ref{thm:nonvanish2}; Lemma~\ref{lem:m3} in place of Lemma~\ref{lem:3}; and $h\in\{\frac{3\ell-7}4,\frac{3\ell-3}4\}$, so that $kL-\frac74<h<\frac34Y$. With $\eta$, $c_{\rm cert}$ as above this yields: for every $\nu>c_{\rm cert}(1/\eta+\frac34)$ there are only finitely many $p/q$ with $|\lambda'-p/q|<q^{-\nu}$, and $c_{\rm cert}(1/\eta+\frac34)\le57.841<57.85$ ($57.8409$ unrounded). With the three values of $h$ one gets $c_{\rm cert}(4/(3\eta)+1)\le77.1217$. This proves Theorem~\ref{thm:mirror}: $\lambda'$ is irrational and $\mu(\lambda')\le57.85$; since $\mu(a\xi+b)=\mu(\xi)$ for rational $a\ne0$ and $b$, also $\mu(G+5\pi^2/48)\le57.85$ and $G+5\pi^2/48\notin\Q$.
+
+\begin{remark}[the two measures do not combine]\label{rem:nocombine}
+Since $\lambda+\lambda'=G$ one might hope to deduce something about $G$ from Theorems~\ref{thm:main} and~\ref{thm:mirror}. This is impossible by any black-box argument. Fix a Liouville number $\theta$. For Lebesgue-almost every real $x$ one has $\mu(x)=2$ and $\mu(\theta-x)=2$ (the exceptional sets are null and invariant under $x\mapsto\theta-x$), yet $x+(\theta-x)=\theta$ has $\mu=\infty$. So bounds on $\mu(\xi_1)$ and $\mu(\xi_2)$ say nothing about $\mu(\xi_1+\xi_2)$, and the pair of results gives no measure for $G$ (nor a new proof that $G$ is irrational, which is OpenAI's theorem \cite{OpenAI2026}). Theorems~\ref{thm:main} and~\ref{thm:mirror} concern two different linear forms, $G-5\pi^2/48$ and $G+5\pi^2/48$, in $1,G,\pi^2$.
+\end{remark}
+
+%%% --------------------------------------------------------------------
 \section{Formalization status}\label{sec:formal}
 
 We state this carefully. The companion paper \cite{Litsey2026} on Catalan\'s constant is fully formalized in Lean~4, and so are the irrationality of $\lambda$ and the bound $\mu(\lambda)\le77.28$ proved here; Theorem~A, Lemma~CC and the bound $57.85$ are not. Each of the Lean results below compiles without \texttt{sorry} and depends only on the axioms \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. The library uses the Lean module system; a full build of the $\lambda$ library takes about $14$ minutes, and the kernel-checked numerical certificate about one CPU-hour.
@@ -994,12 +1120,15 @@ We state this carefully. The companion paper \cite{Litsey2026} on Catalan\'s con
 \item \textbf{Formalized: the kernel $k_\rho$, Theorem~\ref{thm:N} and the deduction.} The positive-definiteness lemma for the kernel $k_\rho$ (Lemmas~\ref{lem:F}, \ref{lem:G}, \ref{lem:K} and Corollary~\ref{cor:Kp}); the contour identity for a general ray angle (including the direction $(-1,3)$ used here); Theorem~\ref{thm:N} (node removal $N_\rho$), as \lean{CatalanLambda.Decay.theoremN}, together with \lean{CatalanLambda.Decay.window_liminf_P}; Lemma~\ref{lem:3} as \lean{CatalanLambda.Measure.lemma3_pq}; and the deduction of the irrationality and of the bound of Remark~\ref{rem:77} from the certificate facts, as \lean{CatalanLambda.Measure.lambda_irrational} and \lean{CatalanLambda.Measure.lambda_measure_one}.
 \item \textbf{Formalized: the numerical certificate.} The structure \lean{CatalanLambda.Cert.certFacts} collecting the numerical facts of \S\ref{ssec:cert} and \S\ref{ssec:cert2} (the certified values of $D_{\rm cert}$, $m^\prime$, $S_{\rm cert}$, $g_{\min}$) is inhabited by a kernel-checked proof: about $27.6$k ray boxes, $2.8$k segment cells and $512$ line cells, the bound on $I_\rho$ and the tail estimate. The proof uses a far-field first-order Taylor model with verified rational tables for the logarithm and the arctangent, and takes about one CPU-hour in the kernel. Lean works with the short rational constants $D_{\rm cert}=31111/10000$ and $c_{\rm cert}=68726/10000$ obtained by rounding the certified values, which is why it proves $77.28$ rather than $77.13$.
 \item \textbf{Formalized: the final theorems.} \lean{CatalanLambda.lambda_irrational_final} ($\lambda$ is irrational), \lean{CatalanLambda.catalan_sub_irrational} ($G-5\pi^2/48$ is irrational), \lean{CatalanLambda.lambda_measure_final} ($\mu(\lambda)\le31682445459/409965000\approx77.28$) and \lean{CatalanLambda.lambda_measure_78_catalan} (the round exponent $78$), all unconditional. The statements are in \texttt{ChallengeLambda.lean}, which needs only Mathlib and writes $G$ as the series $\sum_{j\ge0}(-1)^j/(2j+1)^2$; the proofs are in \texttt{SolutionLambda.lean}.
+\item \textbf{Formalized: the mirror theorem (weaker exponent).} The irrationality of $\lambda'=G/2+5\pi^2/96$ and of $G+5\pi^2/48$, and the measure with the same exponent $31682445459/409965000\approx77.28$ (hence $78$; and $79$ for $G+5\pi^2/48$) are formalized in \lean{CatalanLambda/Mirror/}, with the three-$h$ nonvanishing for $\ell\equiv1\pmod4$ (no Theorem~A), the mirror contour identity, and the \emph{same} kernel-checked certificate \lean{CatalanLambda.Cert.certFacts}. The final statements are \lean{CatalanLambda.Mirror.lambda_mirror_measure_78_catalan}, \lean{CatalanLambda.Mirror.catalan_add_irrational} and \lean{CatalanLambda.Mirror.catalan_add_measure_79}, with challenge statements \lean{CatalanLambdaChallenge.lambdaMirror_irrationalityMeasure_78} and \lean{CatalanLambdaChallenge.catalan_add_irrationalityMeasure_79}; axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. The bound $57.85$ for $\lambda'$ (via Theorem~A) is not formalized.
 \item \textbf{Not formalized.} Theorem~A, Lemma~CC and Theorem~\ref{thm:nonvanish2} (\S\ref{sec:krylov}), and the deduction of the bound $57.85$ in Theorem~\ref{thm:measure}. The Lean statement is the weaker bound $77.28$, obtained with the simpler choice of $h$ (Remark~\ref{rem:77}) and the rounded constants.
 \item \textbf{Computer-assisted.} Theorem~\ref{thm:decay} and Theorem~\ref{thm:N} were established by interval-arithmetic computations in Arb (\S\ref{ssec:cert} and \S\ref{ssec:cert2}), carried out by the Python script \texttt{kcert.py} on the certificate measure \texttt{sigma300.json} (produced from a float optimum by the dyadic rounding script \texttt{roundsig.py}; \texttt{mkdata.py} re-derives the data in exact rationals; \texttt{scan.py} is the supplementary content scan). The script was re-run by an independent audit agent, which reproduced the numbers of \S\ref{ssec:cert} and sampled the certified cell bounds against floating-point values at about $5\times10^5$ ray points, $4\times10^4$ segment points and $10^4$ points of the line; but this sampling is not a proof; the certificate facts themselves are re-proved in Lean (the item on the numerical certificate above), by a separate kernel-checked computation. The float construction of $\sigma$ need not be correct since the certificate is checked as it stands. The scripts are archived in the directory 	exttt{paper-lambda/scripts/} of \FormalizationLink.
 \end{itemize}
 The Lean sources are in the directory \texttt{CatalanLambda/} of the repository \FormalizationLink, with the files \texttt{ChallengeLambda.lean} and \texttt{SolutionLambda.lean} at its top level.
 
-All other claims were audited by independent Claude (Anthropic) agents who re-derived the statements by hand and re-ran the numerical checks: the content bound; Lemmas~\ref{lem:1}, \ref{lem:2} and Theorem~\ref{thm:nonvanish} (exact characteristic polynomials at $h=8,12,16,20$ and all admissible $\ell$; $\gcd=1$ for $\ell=7,\dots,383$; no violation of the tropical bound against the exact $v_p(\den P_h)$ at $h=32,64$); Lemmas~\ref{lem:F}, \ref{lem:G}, \ref{lem:K} and Corollary~\ref{cor:Kp} (by hand, with a random numerical test of the inequality in 2000 trials); the contour identity for the direction $(-1,3)$ (by hand and to $10^{-17}$ numerically); Lemma~\ref{lem:B} and Theorem~\ref{thm:N}, checked line by line against the circle-smoothing version; the certificate re-run (reproducing $D_{\rm cert}\ge3.11137905$, $c\le6.87179932$); Lemma~\ref{lem:3} ($1044$ exact cases); and the simpler deduction of Remark~\ref{rem:77} ($4/(3\eta)+1=11.2228582$, $77.12123<77.13$). The new material of \S\ref{sec:krylov} and Theorem~\ref{thm:measure} was audited by a further independent Claude agent (full pass): Theorem~A (including the sign) was checked in exact rational arithmetic at $90$ random rational pairs $(\theta,s)$, including non-integer and negative $s$, for $n\le10$, and against the direct Cauchy Gram matrices ($\theta=0$, $s\le2n+1$, $n\le10$); $u(K,K)$ modulo $\ell$ is nonzero and equals the closed form for all $86$ primes $\ell\equiv3\pmod4$ with $7\le\ell<1000$; the resultant identity (R) was checked exactly; the characteristic polynomials of $N_K$, $N_{K+1}$ are coprime for $39$ primes $\ell<400$; Lemma~\ref{lem:2} was checked for $\ell=7,11,19,23$ and $h=\ell-K,\ell-K-1$; and the numbers $6.8717994\,(1/0.1304266+0.75)=57.84095$, $62.9948$ (without Lemma~\ref{lem:3}) and $77.1213$ were recomputed. The formula of Theorem~A was also verified exactly for every $n\le12$. Exact computation of $u(K,K)$ modulo $\ell$ for all $\ell\equiv3\pmod 4$, $7\le\ell<4500$, gave no zero. The deduction of Theorem~\ref{thm:measure} is written out in \S\ref{sec:measure} from the audited arithmetic. The audit listed only cosmetic issues, which are corrected in this text (notably the factor $4/h$ in $\eta$). This is not a substitute for human refereeing.
+All other claims were audited by independent Claude (Anthropic) agents who re-derived the statements by hand and re-ran the numerical checks: the content bound; Lemmas~\ref{lem:1}, \ref{lem:2} and Theorem~\ref{thm:nonvanish} (exact characteristic polynomials at $h=8,12,16,20$ and all admissible $\ell$; $\gcd=1$ for $\ell=7,\dots,383$; no violation of the tropical bound against the exact $v_p(\den P_h)$ at $h=32,64$); Lemmas~\ref{lem:F}, \ref{lem:G}, \ref{lem:K} and Corollary~\ref{cor:Kp} (by hand, with a random numerical test of the inequality in 2000 trials); the contour identity for the direction $(-1,3)$ (by hand and to $10^{-17}$ numerically); Lemma~\ref{lem:B} and Theorem~\ref{thm:N}, checked line by line against the circle-smoothing version; the certificate re-run (reproducing $D_{\rm cert}\ge3.11137905$, $c\le6.87179932$); Lemma~\ref{lem:3} ($1044$ exact cases); and the simpler deduction of Remark~\ref{rem:77} ($4/(3\eta)+1=11.2228582$, $77.12123<77.13$). The new material of \S\ref{sec:krylov} and Theorem~\ref{thm:measure} was audited by a further independent Claude agent (full pass): Theorem~A (including the sign) was checked in exact rational arithmetic at $90$ random rational pairs $(\theta,s)$, including non-integer and negative $s$, for $n\le10$, and against the direct Cauchy Gram matrices ($\theta=0$, $s\le2n+1$, $n\le10$); $u(K,K)$ modulo $\ell$ is nonzero and equals the closed form for all $86$ primes $\ell\equiv3\pmod4$ with $7\le\ell<1000$; the resultant identity (R) was checked exactly; the characteristic polynomials of $N_K$, $N_{K+1}$ are coprime for $39$ primes $\ell<400$; Lemma~\ref{lem:2} was checked for $\ell=7,11,19,23$ and $h=\ell-K,\ell-K-1$; and the numbers $6.8717994\,(1/0.1304266+0.75)=57.84095$, $62.9948$ (without Lemma~\ref{lem:3}) and $77.1213$ were recomputed. The formula of Theorem~A was also verified exactly for every $n\le12$. Exact computation of $u(K,K)$ modulo $\ell$ for all $\ell\equiv3\pmod 4$, $7\le\ell<4500$, gave no zero. The deduction of Theorem~\ref{thm:measure} is written out in \S\ref{sec:measure} from the audited arithmetic. The audit listed only cosmetic issues, which are corrected in this text (notably the factor $4/h$ in $\eta$).
+
+The mirror section \S\ref{sec:mirror} was audited by a separate Claude agent (full pass, no fatal issues; four cosmetic points, corrected here). Lemmas~\ref{lem:mstruct}--\ref{lem:m2} were re-derived by hand (Schur complement with high block $-I$); $N_0$ was checked against $-(\lambda'I+\bar T_h)$ to $10^{-51}$ at $h=9$; the reflection $\bar F=\tilde F+\bar E$ was checked by hand and to $10^{-22}$, and the contour identity independently to $2\cdot10^{-17}$, with the atom set compared to the poles right of $x^*$; the valuation $2(h-K)$ and degree $K$ were checked for all $131$ admissible $(\ell,h)$ with $\ell=13,17,29,37$; the characteristic polynomials of $N_K,N_{K+1}$ are coprime over $\mathbb F_\ell$ for all $58$ primes $\ell\equiv1\pmod4$, $13\le\ell<700$; Lemma~\ref{lem:m3} deviates only for $e=2$, $u\equiv1$; $v_p(\den\bar P_h)\le\sum_e\delta(p^e)$ for all $p\ge5$ at $h=16,32,64,128$; and $6.8717994\,(1/0.13042662+0.75)=57.84094$, $77.12126$ were recomputed. This is not a substitute for human refereeing.
 
 %%% --------------------------------------------------------------------
 \section*{Acknowledgments and provenance}

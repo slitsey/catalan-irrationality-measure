@@ -21,12 +21,13 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
 ([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
 
-## Companion result: an irrationality measure for G − 5π²/48
+## Companion result: irrationality measures for G ∓ 5π²/48
 
 The repository also contains a separate, fully formalized result. Write
-`λ = G/2 − 5π²/96`, so that `G − 5π²/48 = 2λ`. Then λ is irrational, and for all coprime `p, q` with `q`
-sufficiently large,
-`|λ − p/q| > q^(-78)`. The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
+`λ = G/2 − 5π²/96` and `λ′ = G/2 + 5π²/96`, so that `G ∓ 5π²/48 = 2λ, 2λ′`. Both λ and λ′ are irrational.
+For all coprime `p, q` with `q` sufficiently large,
+`|λ − p/q| > q^(-78)` and `|λ′ − p/q| > q^(-78)`, and `|G + 5π²/48 − p/q| > q^(-79)`.
+The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
 
 - Statements: [`ChallengeLambda.lean`](ChallengeLambda.lean) (Mathlib only, with G written as a series).
 - Proofs: [`SolutionLambda.lean`](SolutionLambda.lean) and the library [`CatalanLambda/`](CatalanLambda/).
