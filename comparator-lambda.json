@@ -1,0 +1,12 @@
+{
+  "challenge_module": "ChallengeLambda",
+  "solution_module": "SolutionLambda",
+  "theorem_names": [
+    "CatalanLambdaChallenge.lambda_irrational",
+    "CatalanLambdaChallenge.lambda_irrationalityMeasure",
+    "CatalanLambdaChallenge.lambda_irrationalityMeasure_78"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}

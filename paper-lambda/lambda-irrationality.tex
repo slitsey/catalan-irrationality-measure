@@ -1,0 +1,1097 @@
+\documentclass[11pt]{amsart}
+\IfFileExists{lmodern.sty}%
+  {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
+  {\usepackage[expansion=false]{microtype}}
+\usepackage{amssymb,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\emergencystretch=2.5em
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ---------------------------------------------------------------------------
+% Location of the Lean formalization.
+\newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
+\newcommand{\FormalizationLink}{\url{\FormalizationURL}}
+% ---------------------------------------------------------------------------
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\C}{\mathbb C}
+\newcommand{\lean}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\den}{\operatorname{den}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\Lm}{\Lambda}      % content constant 313/105
+\newcommand{\Gram}{\mathcal G} % Gram matrix
+
+\begin{document}
+
+\title{Irrationality of $G-5\pi^2/48$ and an irrationality exponent}
+
+\author{Sean Litsey}
+\email{sean.litsey.math@gmail.com}
+
+\date{October 17, 2026}
+
+\subjclass[2020]{Primary 11J72; Secondary 11J82, 11Y60, 68V20}
+
+\keywords{Catalan's constant, irrationality, irrationality exponent, L\"owner matrices,
+Andr\'eief identity, $p$-adic nonvanishing, computer-assisted proof, Lean}
+
+\begin{abstract}
+Let $G$ be Catalan's constant and put $\lambda=G/2-5\pi^2/96$, so that
+$G-5\pi^2/48=2\lambda$. We prove that $\lambda$ is irrational and that
+$|\lambda-a/b|>b^{-57.85}$ for every integer $a$ and every sufficiently large integer $b$;
+thus $\mu(\lambda)\le57.85$. The proof uses the determinants $P_h(\lambda)$ of
+the $h\times h$ matrices $T_h=\lambda I+M_0$, which are (up to a factor $1/16$) the
+L\"owner matrices of $\psi(z+1)-\psi(z+3/4)$ at the nodes $0,\dots,h-1$.
+The common denominator of $P_h$ satisfies $\log\den P_h\le(313/105+o(1))h^2$; a
+contour representation of the L\"owner matrix and Andr\'eief's identity give
+$\log|P_h(\lambda)|\le-(3.1113\ldots-o(1))h^2$, the energy step using the conditionally positive definite
+kernel $-\frac12\log(|z-w|^2+\rho^2)$ and the numerical input being an
+interval-arithmetic certificate for a measure with $300$ point masses; and an $\ell$-adic Schur-complement argument shows
+that $P_h$ cannot vanish at a given rational simultaneously for the two
+values $h=\ell-K,\ \ell-K-1$ ($K=(\ell+1)/4$) attached to any prime $\ell\equiv3\pmod 4$; this rests on a closed-form
+evaluation (a product formula) of a family of Krylov determinants of Cauchy-type Gram matrices. For the measure we
+prove a node-removal bound on every principal minor of $T_h$, again with a certified numerical
+constant, which yields an exponentially wide window around $\lambda$ in which $P_h$ is small.
+The Lean~4 formalization proves the irrationality and $\mu(\lambda)\le77.28$ (exponent $31682445459/409965000$; with the simpler choice of $h$), unconditionally; the determinant evaluation of \S\ref{sec:krylov} and the bound $57.85$ are not formalized.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+OpenAI \cite{OpenAI2026} recently proved that Catalan's constant
+\[
+ G=\sum_{j=0}^\infty\frac{(-1)^j}{(2j+1)^2}=0.91596\,55941\ldots
+\]
+is irrational, and formalized the proof in Lean. (An earlier claimed proof
+\cite{Sun2026} was found to contain a gap \cite{Wachs2026}.) Their argument, and the
+irrationality-measure results built on it \cite{Jha2026,Carreira2026,Litsey2026}, use a
+determinant of large size whose denominators and decay are balanced very closely.
+
+In the present paper we study a different, much smaller, family of determinants, attached to the
+number
+\[
+ \lambda \;=\; \frac G2-\frac{5\pi^2}{96}\;=\;\sum_{k\ge1}\Bigl(\frac1{16k^2}-\frac1{(4k-1)^2}\Bigr)
+ \;=\;-0.05605\ldots
+\]
+(see \S\ref{sec:matrix}). Equivalently $G-5\pi^2/48=2\lambda$.
+
+\begin{theorem}\label{thm:irr}
+The number $\lambda=G/2-5\pi^2/96$ is irrational. Equivalently, $G-5\pi^2/48\notin\Q$.
+\end{theorem}
+
+\begin{theorem}\label{thm:main}
+For every integer $a$ and every sufficiently large integer $b$,
+\[
+ \left|\lambda-\frac ab\right|>b^{-57.85}.
+\]
+In particular $\mu(\lambda)\le57.85$ (the computed value is $57.841$).
+\end{theorem}
+A simpler choice of $h$ (without the determinant evaluation of \S\ref{sec:krylov}) gives the weaker bound $77.13$; see Remark~\ref{rem:77}. The Lean formalization proves, unconditionally, the irrationality and $\mu(\lambda)\le77.28$ (exponent $31682445459/409965000$; with the simpler choice of $h$; the value $77.28$ rather than $77.13$ comes from rounding the certified constants to short rationals); the determinant evaluation of \S\ref{sec:krylov} and the bound $57.85$ are not formalized.
+
+Here the \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the $\mu$ such that
+$|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all sufficiently large $b$.
+We stress that Theorem~\ref{thm:irr} concerns one specific linear form in
+$1,G,\pi^2$; it is not a statement about $G$ alone, whose irrationality is OpenAI's theorem.
+
+A search of the literature (including work of Rivoal and Zudilin and of Calegari, Dimitrov and Tang on linear forms involving $G$) did not turn up a previous proof of the irrationality of $G-5\pi^2/48$.
+
+\subsection{Method}
+For $h\ge1$ let $M_0$ be the explicit rational $h\times h$ matrix of \S\ref{sec:matrix} and $T_h=\lambda I+M_0$;
+thus $P_h(X)=\det(XI+M_0)\in\Q[X]$ and $P_h(\lambda)=\det T_h$.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item \emph{Content} (\S\ref{sec:content}). A prime-by-prime tropical (assignment) bound, with an explicit
+ dual certificate, gives $\log\den P_h\le(313/105+o(1))h^2$.
+\item \emph{Decay} (\S\ref{sec:decay}). $T_h$ is $\tfrac1{16}$ times a L\"owner matrix. Moving the Hermite contour integral
+ to a two-ray contour produces finitely many signed atoms plus an integral against an exponentially small
+ analytic weight, and Andr\'eief's identity then bounds $|P_h(\lambda)|\le16^{-h}\det\Gram_h$ with $\Gram_h$ a
+ positive definite Gram matrix. The energy of the resulting point configuration is bounded below with the kernel
+ $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)$, $\rho=1/1024$, which is conditionally positive definite on finite sums
+ (Frullani's integral and Gaussian sums), against a certificate measure $\sigma$ of $300$ dyadic point masses; the
+ resulting finite inequalities are checked in interval arithmetic and give $\det\Gram_h\le\exp(-(3.1113-o(1))h^2)$. The decay beats the content by the margin
+ $3.1113790-313/105>0.1304$.
+\item \emph{Nonvanishing} (\S\ref{sec:nonvanishing}). For a prime $\ell\equiv3\pmod4$, $\ell\ge7$, and any rational $r$
+ with $\ell\nmid\den r$, one of $P_{\ell-1}(r),P_{\ell-2}(r),P_{(3\ell-1)/4}(r)$ is nonzero, because
+ the $\ell$-adic Schur complement of $D(rI+M_0)D$ has a transparent Cauchy-matrix form.
+ This gives irrationality with no information on the smallest eigenvalue of $T_h$.
+\item \emph{A determinant evaluation and the choice of $h$} (\S\ref{sec:krylov}). Lemma~CC says that two consecutive
+ Gram-type matrices $N_K,N_{K+1}$ over $\mathbb F_\ell$ have no common eigenvalue. It is reduced to the non-vanishing modulo $\ell$ of a Krylov determinant
+ $u(K,K)=\det[w,N_Kw,\dots,N_K^{K-1}w]$, and Theorem~A evaluates $|u|$ as a product of powers of integers $\le2K<\ell$
+ (zeros and poles in two shift parameters by Weyl's inequality and a cluster lemma, the constant by a recursion). Consequently, for any rational $r$
+ with $\ell\nmid\den r$, one of $P_{\ell-K}(r),P_{\ell-K-1}(r)$ is nonzero, and the two values of $h$ are within a factor $1+O(1/\ell)$ of each other.
+\item \emph{Measure} (\S\ref{sec:nodeline}--\ref{sec:measure}). The proof of the decay bound extends to every principal
+ minor of $T_h$: removing $j=\beta h$ nodes costs at most $e^{c\beta h^2}$, with $c=2(m'-g_{\min})\le6.8717994$ and
+ $g_{\min}$ certified in interval arithmetic (Theorem~\ref{thm:N}). Expanding $\det(T_h+tI)$ in principal minors, this gives
+ $|P_h(\lambda+t)|\le e^{-(3.1113-o(1))h^2}$ for all $|t|\le e^{-ch}$. A rational $p/q$ very close to $\lambda$ lies in this window,
+ and the arithmetic of the choice of $\ell$ and of $h\in\{\ell-K,\ell-K-1\}$ yields
+ $\mu(\lambda)\le c\,(1/\eta+3/4)<57.85$, $\eta=3.1113790\ldots-313/105=0.1304266\ldots$ (the computed value is $57.841$; with the simpler choice of $h$ of Theorem~\ref{thm:nonvanish} one gets $c\,(4/(3\eta)+1)<77.13$, Remark~\ref{rem:77}; an earlier circle-smoothed energy step gave $79.35$ with that choice, Remark~\ref{rem:circle}).
+\end{enumerate}
+
+\subsection{Status of the proofs}
+The proofs of Theorems~\ref{thm:irr} and~\ref{thm:main} were derived by Claude (Anthropic) agents
+working with the author, and each part was re-derived and spot-checked numerically by separate Claude audit
+agents; no human referee has checked them. Two steps are computer-assisted (interval-arithmetic certificates, \S\ref{ssec:cert} and
+\S\ref{ssec:cert2}). The Krylov determinant evaluation (Theorem~A) and the choice of $h$ of \S\ref{sec:krylov} were derived and then audited by separate Claude agents (exact rational checks; see \S\ref{sec:formal}). The Lean formalization proves the irrationality and the weaker bound $77.13$, conditional on the numerical certificate facts; Theorem~A and the deduction of $57.85$ are not yet formalized. See
+\S\ref{sec:formal} for an exact account.
+
+\subsection{Notation}
+$\psi$ is the digamma function, $H_n=\sum_{k\le n}1/k$, $H^{(2)}_n=\sum_{k\le n}1/k^2$, and
+$\vartheta(x)$, $\vartheta(x;4,a)=\sum_{p\le x,\;p\equiv a\,(4)}\log p$ are Chebyshev functions.
+For $P\in\Q[X]$, $\den P$ is the least positive integer $d$ with $dP\in\Z[X]$.
+Steps resting on numerical certificates are labelled ``computer-assisted''.
+
+%%% --------------------------------------------------------------------
+\section{The matrices}\label{sec:matrix}
+
+\subsection{The number $\lambda$}
+Since $\sum_{n\equiv1(4)}n^{-2}-\sum_{n\equiv3(4)}n^{-2}=G$ and the sum of both is $\pi^2/8$ (sums over $n\ge1$),
+\[
+ \sum_{n\equiv3\,(4)}n^{-2}=\frac{\pi^2}{16}-\frac G2,\qquad
+ \sum_{k\ge1}\frac1{16k^2}=\frac{\pi^2}{96},
+\]
+so
+\begin{equation}\label{eq:lambda}
+ \lambda:=\sum_{k\ge1}\Bigl(\frac1{16k^2}-\frac1{(4k-1)^2}\Bigr)=\frac{\pi^2}{96}-\frac{\pi^2}{16}+\frac G2=\frac G2-\frac{5\pi^2}{96}.
+\end{equation}
+
+\subsection{L\"owner structure}
+Let
+\[
+ F(z)=\psi(z+1)-\psi(z+\tfrac34)=\sum_{j\ge0}\Bigl[\frac1{z+j+\frac34}-\frac1{z+j+1}\Bigr],
+\]
+meromorphic with simple poles at $-(j+\frac34)$ (residue $+1$) and $-(j+1)$ (residue $-1$), $j\ge0$.
+For nodes $x_0,\dots,x_{h-1}$ the \emph{L\"owner matrix} of $F$ is
+$L_F[a][b]=(F(x_b)-F(x_a))/(x_b-x_a)$ for $a\ne b$ and $L_F[a][a]=F'(x_a)$.
+Take the nodes to be $x_a=a$, $a=0,\dots,h-1$.
+
+From $F(k)-F(k-1)=\frac1k-\frac1{k-1/4}=-\frac1{k(4k-1)}$ and the corresponding identity for $F'$,
+\begin{align}
+ L_F[a][b]&=-\frac1{b-a}\sum_{a<k\le b}\frac1{k(4k-1)}\qquad(a<b),\label{eq:Loff}\\
+ L_F[a][a]&=F'(0)+\sum_{k\le a}\Bigl(\frac{16}{(4k-1)^2}-\frac1{k^2}\Bigr),\label{eq:Ldiag}
+\end{align}
+and $F'(0)=\sum_{j\ge0}\bigl[(j+1)^{-2}-(j+\frac34)^{-2}\bigr]=\frac{\pi^2}6-16\sum_{n\equiv3(4)}n^{-2}=8G-\frac{5\pi^2}6=16\lambda$.
+
+\begin{definition}
+Let $M_0=M_0^{(h)}$ be the symmetric rational $h\times h$ matrix with, for $0\le a<b<h$,
+\[
+ M_0[a][b]=-\frac1{4(b-a)}\sum_{k=a+1}^{b}\frac1{4k(4k-1)},\qquad
+ M_0[a][a]=-\sum_{k=1}^{a}\Bigl(\frac1{16k^2}-\frac1{(4k-1)^2}\Bigr),
+\]
+and set $T_h=\lambda I+M_0$ and $P_h(X)=\det(XI+M_0)\in\Q[X]$, monic of degree $h$.
+\end{definition}
+
+\begin{proposition}\label{prop:lowner}
+$T_h=\frac1{16}L_F$ at the nodes $0,\dots,h-1$. In particular $P_h(\lambda)=16^{-h}\det L_F$, and
+$P_h(\lambda+t)=\det(T_h+tI)$ for $t\in\R$.
+\end{proposition}
+\begin{proof}
+Compare \eqref{eq:Loff}, \eqref{eq:Ldiag} with the definition, using $F'(0)=16\lambda$ and
+$\frac1{16k^2}-\frac1{(4k-1)^2}=\frac1{16}\bigl(\frac1{k^2}-\frac{16}{(4k-1)^2}\bigr)$.
+\end{proof}
+
+\begin{remark}
+The coefficients of $P_h$ are sums of principal minors of $M_0$, whose entries are
+harmonic-type partial sums; there is no factorial closed form. Also $L_F$ is not
+a Gram matrix of a positive measure, since the ``Stieltjes measure'' of $F$ consists of the signed
+atoms $+1$ at $-(j+\frac34)$ and $-1$ at $-(j+1)$; this is the reason for the contour step in \S\ref{sec:decay}.
+\end{remark}
+
+\begin{lemma}[integrality]\label{lem:integrality}
+Let $Q_h=\den(P_h)\cdot P_h\in\Z[X]$. If $a/b$ is in lowest terms and $Q_h(a/b)\ne0$, then $|Q_h(a/b)|\ge b^{-h}$.
+\end{lemma}
+\begin{proof}
+$Q_h$ has degree $h$ and integer coefficients, so $b^hQ_h(a/b)\in\Z\setminus\{0\}$.
+\end{proof}
+
+%%% --------------------------------------------------------------------
+\section{The denominator bound}\label{sec:content}
+
+\begin{theorem}\label{thm:content}
+$\log\den P_h\le\bigl(\tfrac{313}{105}+o(1)\bigr)h^2$ as $h\to\infty$.
+\end{theorem}
+
+We write $\Lm=313/105=2.98095\ldots$. The proof is prime by prime. For a prime $p$ put
+$W_{ab}=\max(0,-v_p(M_0[a][b]))$.
+
+\subsection{Tropical bound}
+\begin{lemma}\label{lem:trop}
+Let $\tau_p$ be the maximum of $\sum_aW_{a,\sigma(a)}$ over permutations $\sigma$ of $\{0,\dots,h-1\}$. Then
+$v_p(\den P_h)\le\tau_p$. If $u_a,v_b\ge0$ satisfy $W_{ab}\le u_a+v_b$ for all $a,b$, then $\tau_p\le\sum_au_a+\sum_bv_b$.
+\end{lemma}
+\begin{proof}
+The coefficient of $X^{h-j}$ in $\det(XI+M_0)$ is a sum of $j\times j$ principal minors, each a signed sum of
+products $\prod_{a\in S}M_0[a][\sigma(a)]$ over permutations $\sigma$ of a $j$-set $S$. Each product has
+$-v_p\le\sum_{a\in S}W_{a\sigma(a)}$, and since $W\ge0$, extending $\sigma$ by the identity off $S$ shows this is at most
+$\tau_p$. For the second statement, $\sum_aW_{a\sigma(a)}\le\sum_a(u_a+v_{\sigma(a)})$.
+\end{proof}
+
+\subsection{Valuation majorant}
+Let $p$ be odd and $\nu(k)=v_p(k(4k-1))=\max(v_p(k),v_p(4k-1))$ (the factors $k$ and $4k-1$ are coprime). Let $\mu(a)=\max_{1\le k\le a}\nu(k)$. By the ultrametric inequality applied to the formulas
+of the Definition,
+\begin{equation}\label{eq:major}
+ W_{ab}\le v_p(b-a)+\max_{a<k\le b}\nu(k)\;(a<b),\qquad W_{aa}\le2\mu(a).
+\end{equation}
+For $q=p^e$ set
+\begin{align*}
+ \mathrm{div}_q(a,b)&=\mathbf 1[q\mid b-a,\ a\ne b],\\
+ \mathrm{supp}_q(a,b)&=\mathbf 1[\exists k\in(\min(a,b),\max(a,b)]:\ q\mid k(4k-1)]\ (a\ne b),\qquad
+ \mathrm{supp}_q(a,a)=2\cdot\mathbf 1[\mu(a)\ge e].
+\end{align*}
+Because $v_p(n)=\sum_{e\ge1}\mathbf 1[p^e\mid n]$ and $\max_k\nu(k)=\sum_e\mathbf 1[\exists k:\ p^e\mid k(4k-1)]$,
+\eqref{eq:major} says $W\le\sum_{e\ge1}w^{(e)}$ entrywise with $w^{(e)}=\mathrm{div}_{p^e}+\mathrm{supp}_{p^e}\in\{0,1,2\}$.
+Since a maximum of a sum is at most the sum of maxima, $\tau_p\le\sum_e\tau(w^{(e)})$.
+
+\subsection{Per-level dual certificate}
+Let $q=p^e$ be an odd prime power. The least $k\ge1$ with $q\mid k(4k-1)$ is $k_q=(j_qq+1)/4$,
+where $j_q=1$ if $q\equiv3\pmod4$ and $j_q=3$ if $q\equiv1\pmod4$ (indeed $4k-1=jq$ forces $jq\equiv3\pmod 4$, and the branch $q\mid k$ gives $k\ge q>k_q$).
+Hence $\mathrm{supp}_q(a,b)\ne0$ forces $\max(a,b)\ge k_q$. Put $n_q=\min(h,k_q)$ and define potentials
+\[
+ u_a=v_a=\begin{cases}1&a\ge k_q\ (\text{``high''}),\\ \mathbf 1[a\le h-1-q]&a<k_q\ (\text{``low''}).\end{cases}
+\]
+
+\begin{lemma}\label{lem:dual}
+$w^{(e)}_{ab}\le u_a+v_b$ for all $a,b$. Consequently
+\[
+ \tau(w^{(e)})\le\delta(q):=\min\bigl(2h,\ 2(h-n_q)+2\min(n_q,(h-q)_+)\bigr),
+\]
+and $\delta(q)=0$ if $q\ge h$ and $k_q\ge h$; in particular $\tau_p=0$ for $p>4h$.
+\end{lemma}
+\begin{proof}
+Note $k_q<q$. \emph{Both low:} $|b-a|<k_q<q$ so $\mathrm{div}=0$, and $(a,b]\subset[1,k_q-1]$ so $\mathrm{supp}=0$ (diagonal likewise).
+\emph{Both high:} $w\le2=u_a+v_b$. \emph{$a$ low, $b$ high:} $\mathrm{supp}\le1=v_b$; if $\mathrm{div}=1$ then $b\ge a+q$, $b\le h-1$, so $a\le h-1-q$ and $u_a=1$; the case $a$ high, $b$ low is symmetric.
+The diagonal is $0$ at low and at most $2$ at high indices. Now apply Lemma~\ref{lem:trop}: $\sum u+\sum v=2\#\{\text{high}\}+2\#\{a<n_q:\,a\le h-1-q\}$, and the trivial potentials $u=v\equiv1$ give $2h$.
+\end{proof}
+By Lemma~\ref{lem:trop}, $v_p(\den P_h)\le\sum_{e\ge1}\delta(p^e)$ for odd $p$.
+
+\subsection{Summation}
+\textbf{Prime $2$.} Every entry of $M_0$ has $-v_2\le4+2\log_2h$ (from the factors $1/(4(b-a))$, $1/(4k(4k-1))$, $1/(16k^2)$), so the prime $2$ contributes $O(h\log h)$ to $\log\den P_h$.
+
+\textbf{Levels $e\ge2$.} Here $\delta\le2h$, so these contribute at most $2h\,(\sum_{p^e\le4h,e\ge2}\log p)=2h(\psi_{\rm Ch}(4h)-\vartheta(4h))=O(h^{3/2})$ (Chebyshev: $\psi_{\rm Ch}(x)-\vartheta(x)=O(\sqrt x)$).
+
+\textbf{Level $e=1$.} For $q=p$ a direct computation from Lemma~\ref{lem:dual} (using $|k_q-j_qq/4|\le1/4$ and that $\delta$ is $2$-Lipschitz in $n_q$) gives $\delta(p)\le h\,g_j(p/h)+\tfrac12$, $j=j_p$, where
+\[
+ g_j(\theta)=\begin{cases}
+ 2&0\le\theta\le\frac4{4+j},\\
+ 4-\frac{(4+j)\theta}2&\frac4{4+j}\le\theta\le1,\\
+ 2-\frac{j\theta}2&1\le\theta\le\frac4j,\\
+ 0&\theta\ge\frac4j.\end{cases}
+\]
+Indeed for $\theta\le4/(4+j)$ one has $n_q\le h-q$ and $\delta=2h$; for $4/(4+j)\le\theta\le1$, $\delta=2(h-n_q)+2(h-q)$; for $\theta\ge1$, $\delta=2(h-n_q)$.
+The function $g_j$ is continuous, non-increasing and piecewise linear, with $\int_0^\infty g_j=\frac4j+\frac j{4+j}$, that is
+\[
+ \int g_1=\frac{21}5\ (p\equiv3\bmod4),\qquad \int g_3=\frac{37}{21}\ (p\equiv1\bmod4).
+\]
+By partial summation, since $-g_j'\ge0$ is supported on $\theta\ge4/7$,
+\[
+ \frac1h\sum_{p\equiv a\,(4)}\log p\;g_j(p/h)=\frac1h\int(-g_j'(\theta))\,\vartheta(\theta h;4,a)\,d\theta\le\frac{1+\varepsilon_h}2\int g_j,
+\]
+where $\varepsilon_h=\sup_{4h/7\le x\le4h}\bigl(2\vartheta(x;4,a)/x-1\bigr)\to0$ by the prime number theorem in arithmetic progressions mod~$4$
+(de la Vall\'ee Poussin; see e.g.\ \cite[Ch.~20]{Davenport} or \cite[Cor.~11.19]{MV}); only an upper bound for $\vartheta(x;4,a)$ is needed because the weights are non-negative.
+Collecting terms,
+\[
+ \frac{\log\den P_h}{h^2}\le(1+\varepsilon_h)\Bigl(\frac12\cdot\frac{21}5+\frac12\cdot\frac{37}{21}\Bigr)+O\Bigl(\frac1{\sqrt h}\Bigr)
+ =(1+\varepsilon_h)\frac{313}{105}+o(1).
+\]
+This proves Theorem~\ref{thm:content}. \qed
+
+\begin{remark}[computer-assisted supplement; not used]
+Evaluating the per-$h$ bound $\sum_q\delta(q)\log p$ (plus a bound for $p=2$) exactly for every $h\le2\cdot10^5$ gives
+$\log\den P_h\le2.98635\,h^2$, with maximum at $h=1844$ (script \texttt{scan.py}). This is not needed for the
+theorems. The dual certificate is also essentially sharp: for odd primes and $h=64,\dots,256$ the model value equals the exact tropical optimum except at $p=3$.
+\end{remark}
+
+%%% --------------------------------------------------------------------
+\section{The decay bound}\label{sec:decay}
+
+\subsection{A contour representation of $L_F$}
+Hermite's formula gives, for any contour $C$ enclosing the nodes and no pole of $F$,
+\[
+ L_F=\frac1{2\pi i}\oint_CF(z)\,v(z)v(z)^{\!\top}dz,\qquad v_a(z)=\frac1{z-a}
+\]
+(the residue at $z=a\neq b$ gives $(F(a)-F(b))/(a-b)$, the double pole gives $F'(a)$).
+By the reflection formulas $\psi(1+z)=\psi(-z)-\pi\cot\pi z$ and $\psi(\frac34+z)=\psi(\frac14-z)+\pi\cot(\frac\pi4-\pi z)$,
+\begin{equation}\label{eq:reflect}
+ F=\tilde F+E,\qquad \tilde F(z)=\psi(-z)-\psi(\tfrac14-z),\quad
+ E(z)=-\pi\bigl[\cot\pi z+\cot(\tfrac\pi4-\pi z)\bigr]=\frac{-\pi\sin(\pi/4)}{\sin\pi z\,\sin(\pi/4-\pi z)}.
+\end{equation}
+Here $\tilde F$ is analytic in $\Re z<0$ and $O(1/|z|)$ there, while $E$ is $1$-periodic, has poles only on the real axis, and $|E(x+iy)|\le C e^{-2\pi|y|}$ for $|y|\ge1$.
+
+Fix $r_0=7/50$, $N_0=\lfloor r_0h\rfloor$, $x^*=-N_0-\frac38$ (which lies in the gap $(-N_0-\frac34,-N_0)$ between poles of $F$). Let $\Gamma_h$ be the two rays
+$x^*+u(-1\pm3i)$, $u\ge0$ (the \emph{rational direction} $(-1,\pm3)$, at angle $\pi-\arctan3=0.6024\pi$ from the positive axis), traversed downward, and let $\mathcal A=\{j+\frac34,\;j+1:\ 0\le j<N_0\}$, $|\mathcal A|=2N_0$. For $\mu\in\mathcal A$ let $c_\mu=+1$ for $\mu=j+\frac34$ and $-1$ for $\mu=j+1$, and $u_\mu(a)=1/(a+\mu)$.
+The direction enters only through three facts: the left wedge bounded by $\Gamma_h$ has half-angle $\arctan3<\pi/2$, so $\Re z\le x^*<0$ on it; $E$ and $x^*\equiv5/8\pmod1$ are periodic; and on the part of $\Gamma_h$ with $|\Im z|<1$ (that is, $u<\frac13$) one has $\Re z\in(x^*-\frac13,x^*]=(-N_0-0.7083\ldots,-N_0-\frac38]$, strictly inside the gap between the poles $-N_0-\frac34$ and $-N_0$.
+
+\begin{proposition}[contour identity]\label{prop:contour}
+For every $h$,
+\[
+ L_F=-\sum_{\mu\in\mathcal A}c_\mu\,u_\mu u_\mu^{\!\top}+\frac1{2\pi i}\int_{\Gamma_h}E(z)\,v(z)v(z)^{\!\top}dz.
+\]
+\end{proposition}
+\begin{proof}
+Move the contour in Hermite's formula from around the nodes to $\Gamma_h$, closing on the right where the integrand is $O(|z|^{-3})$; this picks up the residues of $F$ at the $2N_0$ poles $-\mu$, $\mu\in\mathcal A$, which lie to the right of $x^*$, each contributing $\pm c_\mu u_\mu u_\mu^\top$ according to orientation. Then split $F=\tilde F+E$; the $\tilde F$ part integrates to $0$ over $\Gamma_h$, by closing in the left wedge where $\tilde Fvv^\top$ is analytic and $O(|z|^{-3})$.
+\end{proof}
+(The identity, with the stated orientation and signs, was checked entrywise to $10^{-17}$ with 25-digit arithmetic at $N_0=2$ and $N_0=7$, for the direction $(-1,3)$ and for the earlier angle $3\pi/5$.)
+
+\subsection{Absolute-value Andr\'eief bound}
+Let $|m|=\sum_{\mu\in\mathcal A}\delta_{-\mu}+\frac1{2\pi}|E(z)||dz|$ on $\Gamma_h$, and
+\[
+ \Gram_h=\sum_{\mu\in\mathcal A}u_\mu u_\mu^{\!\top}+\frac1{2\pi}\int_{\Gamma_h}|E|\,v\,v^*|dz|,
+\]
+a Hermitian positive definite matrix (the $v_a$ are linearly independent functions).
+\begin{proposition}\label{prop:andreief}
+$|\det L_F|\le\det\Gram_h$; hence $|P_h(\lambda)|\le16^{-h}\det\Gram_h$. More generally, for real $t$,
+$|P_h(\lambda+t)|\le\det\bigl(\Gram_h/16+|t|I\bigr)$.
+Moreover
+\[
+ \det\Gram_h=\frac1{h!}\int\prod_{i<j}|z_i-z_j|^2\prod_{a<b}(b-a)^2\prod_{i,a}|z_i-a|^{-2}\prod_i d|m|(z_i).
+\]
+\end{proposition}
+\begin{proof}
+By Proposition~\ref{prop:contour}, $L_F[a][b]=\int v_av_b\,dm$ for a complex measure $m$ with total variation $|m|$.
+Andr\'eief's identity \cite{Forrester2018Andreief} gives
+$\det L_F=\frac1{h!}\int\det[v_a(z_i)]^2\prod dm(z_i)$, so $|\det L_F|\le\frac1{h!}\int|\det[v_a(z_i)]|^2\prod d|m|(z_i)=\det\int v_a\overline{v_b}\,d|m|=\det\Gram_h$,
+and the displayed formula is Cauchy's determinant $\det[1/(z_i-a)]=\pm\prod_{i<j}(z_i-z_j)\prod_{a<b}(b-a)\big/\prod(z_i-a)$.
+For the last assertion, $T_h+tI$ is the Gram integral $\int\Phi_a\Phi_b\,dM$ on the disjoint union of $\Gamma_h\cup(-\mathcal A)$ and the node set, with $\Phi_a=v_a/4$ on the first part and $\Phi_a=\mathbf 1_{\{a\}}$ on the second, and $M=m\sqcup t\cdot\#$; the same argument bounds $|\det|$ by $\det(\Gram_h/16+|t|I)$.
+\end{proof}
+
+\subsection{The kernel $k_\rho$}\label{ssec:krho}
+Fix $\rho=1/1024$ and put
+\[
+ k_\rho(z,w):=-\tfrac12\log\bigl(|z-w|^2+\rho^2\bigr)\qquad(z,w\in\C),\qquad k_\rho(z,z)=-\log\rho .
+\]
+The energy step below uses $k_\rho$ in place of the logarithmic kernel. Its virtue is that the conditional positive definiteness it needs is a statement about \emph{finite} sums and is proved by three elementary integrals (no Fourier transform and no measure on $\C$), and that no regularity constant for the potential of the certificate measure is ever needed.
+
+\begin{lemma}[comparison]\label{lem:K0}
+For $z\ne w$, $k_\rho(z,w)\le-\log|z-w|$.
+\end{lemma}
+\begin{proof}
+$|z-w|^2<|z-w|^2+\rho^2$ and $\log$ is increasing.
+\end{proof}
+
+\begin{lemma}[Frullani form of the logarithm]\label{lem:F}
+For $a>0$, $\displaystyle\log a=\int_0^\infty\frac{e^{-t}-e^{-at}}t\,dt$, and the integrand is integrable on $(0,\infty)$.
+\end{lemma}
+\begin{proof}
+For $t>0$, $(e^{-t}-e^{-at})/t=\int_1^ae^{-tu}\,du$ (oriented integral); the integrand is bounded by $|a-1|$ near $0$ and by $2e^{-\min(1,a)t}$ on $[1,\infty)$. If $a\ge1$ the function $(t,u)\mapsto e^{-tu}$ on $(0,\infty)\times[1,a]$ is non-negative and $\int_1^a(\int_0^\infty e^{-tu}\,dt)\,du=\int_1^a du/u=\log a<\infty$, so Tonelli lets us exchange the integrals. If $0<a<1$, interchange with reversed orientation (the integrand is then $-\int_a^1e^{-tu}du$).
+\end{proof}
+
+\begin{lemma}[finite Gaussian sums]\label{lem:G}
+For $t\ge0$, finitely many points $p_\alpha=(x_\alpha,y_\alpha)\in\R^2$ and reals $w_\alpha$, $\sum_{\alpha,\beta}w_\alpha w_\beta e^{-t|p_\alpha-p_\beta|^2}\ge0$.
+\end{lemma}
+\begin{proof}
+Put $v_\alpha=w_\alpha e^{-t|p_\alpha|^2}$; the sum is $\sum v_\alpha v_\beta e^{2t\langle p_\alpha,p_\beta\rangle}=\sum_{n\ge0}\frac{(2t)^n}{n!}\sum_{\alpha,\beta}v_\alpha v_\beta\langle p_\alpha,p_\beta\rangle^n$. By the binomial theorem $\langle p,p'\rangle^n=\sum_{k=0}^n\binom nk(x^ky^{n-k})(x'^ky'^{n-k})$, hence
+\[\sum_{\alpha,\beta}v_\alpha v_\beta\langle p_\alpha,p_\beta\rangle^n=\sum_{k=0}^n\binom nk\Bigl(\sum_\alpha v_\alpha x_\alpha^ky_\alpha^{n-k}\Bigr)^2\ge0,\]
+a finite identity. A finite sum of convergent series is the series of the finite sums, and a series of non-negative terms is non-negative.
+\end{proof}
+
+\begin{lemma}[conditional positive definiteness]\label{lem:K}
+Let $p_1,\dots,p_N\in\C$ (repetitions allowed) and $q_1,\dots,q_N\in\R$ with $\sum q_\alpha=0$. Then $\sum_{\alpha,\beta}q_\alpha q_\beta\,k_\rho(p_\alpha,p_\beta)\ge0$.
+\end{lemma}
+\begin{proof}
+Put $a_{\alpha\beta}=|p_\alpha-p_\beta|^2+\rho^2>0$. By Lemma~\ref{lem:F} and linearity,
+$\sum q_\alpha q_\beta(-\log a_{\alpha\beta})=\int_0^\infty\sum_{\alpha,\beta}q_\alpha q_\beta\frac{e^{-ta_{\alpha\beta}}-e^{-t}}t\,dt$.
+The $e^{-t}$ part is $(\sum q_\alpha)^2e^{-t}/t=0$ pointwise. What remains is $\frac{e^{-t\rho^2}}t\sum q_\alpha q_\beta e^{-t|p_\alpha-p_\beta|^2}\ge0$ by Lemma~\ref{lem:G}. Multiply by $\frac12$.
+\end{proof}
+
+For a finite set $X\subset\C$ with $|X|=h$ and a certificate measure $\sigma=\sum_{k\le n_\sigma}m_k\delta_{c_k}$ ($m_k>0$, $\sum m_k=1$) put
+\[
+ U^\sigma_\rho(z)=\sum_km_k\,k_\rho(z,c_k),\qquad I_\rho(\sigma)=\sum_{k,l}m_km_l\,k_\rho(c_k,c_l).
+\]
+\begin{corollary}\label{cor:Kp}
+$\displaystyle\frac1{h^2}\sum_{x\ne y\in X}k_\rho(x,y)\ \ge\ \frac2h\sum_{x\in X}U^\sigma_\rho(x)-I_\rho(\sigma)+\frac{\log\rho}h.$
+\end{corollary}
+\begin{proof}
+Apply Lemma~\ref{lem:K} to the list $(X,c_1,\dots,c_{n_\sigma})$ with weights $(\frac1h,\dots,\frac1h,-m_1,\dots,-m_{n_\sigma})$, which sum to $0$. Expanding, $\frac1{h^2}\sum_{x,y\in X}k_\rho(x,y)-\frac2h\sum_xU^\sigma_\rho(x)+I_\rho(\sigma)\ge0$, and the diagonal terms $x=y$ contribute $\frac1{h^2}\cdot h\cdot(-\log\rho)$ to the left, which we move across.
+\end{proof}
+
+\subsection{The energy functional and the certificate}\label{ssec:cert}
+Scale $z=hs$ and put $\tau=$ Lebesgue measure on $[0,1]$ and $U^\tau(s)=-\int_0^1\log|s-t|\,dt$, so that $I(\tau)=3/2$. For $\Re z<0$ and $y=\Im z\ge0$ one has the closed form
+\[
+ U^\tau(x+iy)=1-x\log|z|-(1-x)\log|1-z|-y\arctan\frac y{x^2+y^2-x},
+\]
+symmetric in $y\mapsto-y$; on the real line $U^\tau(t)=1-t\log|t|-(1-t)\log|1-t|$. Write $\Gamma$ for the rays $\{-r_0+u(-1\pm3i):u\ge0\}$ and $\kappa=10^{-3}$. For a fixed \emph{certificate measure} $\sigma$ define
+\[
+ g(s)=U^\sigma_\rho(s)-U^\tau(s)+(1-\kappa)\pi|\Im s|.
+\]
+The only requirement on $\sigma$ is that its quantities are computed rigorously; its relation to an optimizer is irrelevant.
+
+\textbf{The measure $\sigma$.} $\sigma=\sum_{k=1}^{n_\sigma}m_k\delta_{c_k}$ is a sum of $n_\sigma=300$ point masses (84 real points and 108 conjugate pairs, so $\sigma$ and $g$ are conjugation-symmetric), with dyadic data: coordinates of $c_k$ of the form $X/2^{24}$, $Y/2^{24}$ with integers $X,Y$ of at most 23 bits, and masses $n_k/2^{32}$ with $\sum m_k=1$ \emph{exactly}. The data are in the file \texttt{sigma300.json}. Everything below is a finite computation with these rationals; in particular there are no circles, no Lipschitz constant and no continuum energy $I(\sigma)$.
+
+\textbf{What is certified.} Put $\omega=2^{-30}$ (a box half-width absorbing the horizontal shift of $\Gamma_h/h$) and $u_{\max}=\frac32$.
+\begin{enumerate}[label=(\textbf{\arabic*}),leftmargin=*]
+\item[(R)] A cover of $u\in[0,u_{\max}]$ by intervals $[u_a,u_b]$ such that $g\ge m'$ on each box $[-r_0-u_b-\omega,-r_0-u_a+\omega]\times[3u_a,3u_b]$, together with the tail bound $T(u_{\max})\ge m'$: for $u\ge u_{\max}$, $|z|\le r_0+\omega+u\sqrt{10}$, $U^\sigma_\rho(z)\ge-\frac12\log((|z|+R_\sigma)^2+\rho^2)$ with $R_\sigma=\max|c_k|$, $U^\tau(z)\le-\log(|z|-1)$, and the field term is $\ge(1-\kappa)3\pi u$; the resulting lower bound $T(u)$ is increasing.
+\item[(S)] A partition of $[-r_0,0]$ into cells $C_\ell=[a_\ell,b_\ell]$ with $g\ge\gamma_\ell$ on $C_\ell$. Put $S_{\rm cert}:=2\sum_\ell(b_\ell-a_\ell)\min(\gamma_\ell-m',0)$.
+\item[(L)] A cover of $[0,1]$ (in fact of $[-\frac1{64},1]$) by cells on which $U^\sigma_\rho-U^\tau\ge g_{\min}$.
+\end{enumerate}
+Then put
+\[
+ D_{\rm cert}:=2(m'+S_{\rm cert})-I_\rho(\sigma)+\tfrac32,\qquad c:=2(m'-g_{\min}).
+\]
+On a box or cell the lower bound for $U^\sigma_\rho$ is $-\frac12\sum_km_k\log(d_{x,k}^2+d_{y,k}^2+\rho^2)$ with $d_{x,k},d_{y,k}$ the largest horizontal and vertical distances from $c_k$ to the box, which makes every logarithm argument as large as possible on the box (the two coordinates decouple, so the maximum is attained); $U^\tau$ is bounded above on ray boxes by ball arithmetic on the closed form, on segment cells by its value at the right end (it is increasing on $(-\infty,0]$), and on cells of $[0,1]$ by monotonicity on each side of $\frac12$ (the supremum is $U^\tau(b)$ if $b\le\frac12$, $U^\tau(a)$ if $a\ge\frac12$, and $1+\log2$ otherwise).
+
+\textbf{Certified numbers (computer-assisted).} The script \texttt{kcert.py} (Arb \cite{Arb}, 96-bit precision; ray boxes bisected adaptively) was run on \texttt{sigma300.json} with the following results; $S_{\rm cert}$ is assembled from exact rationals, and all other entries are lower or upper bounds as indicated.
+\begin{center}
+\begin{tabular}{p{0.5\textwidth}p{0.3\textwidth}l}
+\toprule
+quantity & certified value & cells\\
+\midrule
+$I_\rho(\sigma)$ (exact finite sum) & $\le2.1107199269$ & $\binom{n_\sigma+1}2$ terms\\
+$m'$: $\inf g$ over the ray boxes, $u\in[0,\frac32]$ & $\ge1.9718000062$ & $26{,}977$ boxes\\
+tail $T(\frac32)$ & $\ge13.735$ (analytic) & --\\
+$S_{\rm cert}$ & $\ge-0.1107505186$ & $14{,}000$ cells\\
+$g_{\min}$ on $[-\frac1{64},1]$ & $\ge-1.4640996549$ & $4{,}423$ cells\\
+\midrule
+$D_{\rm cert}$ & $\ge3.1113790$ & \\
+$c=2(m'-g_{\min})$ & $\le6.8717994$ & \\
+$\eta=D_{\rm cert}-\Lm$ & $\ge0.1304266$ & \\
+$c\,(1/\eta+3/4)$ (with Lemma~\ref{lem:3}) & $\le57.85$ (computed: $57.841$) & \\
+$c\,(1/\eta+3/2)$ (without Lemma~\ref{lem:3}) & $<63$ (computed: $62.995$) & \\
+$c\,(4/(3\eta)+1)$ (simpler $h$, Remark~\ref{rem:77}) & $\le77.1217$ (unrounded: $77.1212$) & \\
+\bottomrule
+\end{tabular}
+\end{center}
+(The rational data of the certificate were also re-derived in exact arithmetic by \texttt{mkdata.py}, with the masses rounded down to $2^{-32}$; this gave $D\ge3.11137905$ and $c\le6.87179932$.)
+The certificate is valid for $h\ge1/\omega=2^{30}$. It is a computation about the fixed function $g$ and does not depend on $h$.
+
+\subsection{The decay theorem}
+\begin{lemma}[pointwise energy inequality $A_\rho$]\label{lem:A}
+Let $w_\kappa=|E|^{1-\kappa}$ on $\Gamma_h$ and $w_\kappa=1$ at the atoms. For every configuration $z_1,\dots,z_h\in\Gamma_h\cup(-\mathcal A)$ of pairwise distinct points (otherwise the Cauchy determinant vanishes), writing $s_i=z_i/h$,
+\begin{multline*}
+ -\log\Bigl(\prod_{i<j}|z_i-z_j|^2\prod_{a<b}(b-a)^2\prod_{i,a}|z_i-a|^{-2}\prod w_\kappa(z_i)\Bigr)\\
+ \ge\ h^2\Bigl[\tfrac2h\textstyle\sum_ig(s_i)-I_\rho(\sigma)+\tfrac32-\eta_1(h)\Bigr],
+\end{multline*}
+with $\eta_1(h)=\frac{|\log\rho|}h+\frac{2\log(1+8h/3)}h+\varepsilon_2(h)+\frac{\log^+C_E}h\to0$, where $C_E=\sup_{\Gamma_h}|E|e^{2\pi|\Im z|}<\infty$ is independent of $h$ and $\varepsilon_2(h)=O((\log h)/h)$.
+\end{lemma}
+\begin{proof}[Proof (this is the case $S=\{0,\dots,h-1\}$ of the proof of Theorem~\ref{thm:N})]
+The exponent is $2h\log h+h^2H$, and the term $2h\log h\ge0$ is dropped. We write $H=H_1+H_2+H_3+H_4$.
+(H$_1$) The $h$ points $s_i$ are distinct, so by Lemma~\ref{lem:K0} and Corollary~\ref{cor:Kp}, $\frac1{h^2}\sum_{i\ne j}-\log|s_i-s_j|\ge\frac1{h^2}\sum_{i\ne j}k_\rho(s_i,s_j)\ge\frac2h\sum_iU^\sigma_\rho(s_i)-I_\rho(\sigma)-\frac{|\log\rho|}h$.
+(H$_2$) Since $\Re z_i\le-3/8$, $t\mapsto\log|s-t|$ is increasing on $[0,1]$ and the left Riemann sum for $U^\tau$ loses at most $\log(1+1/|s|)/h\le\log(1+8h/3)/h$; this gives $\frac2h\sum_i(-U^\tau(s_i))-\frac{2\log(1+8h/3)}h$.
+(H$_3$) With $t_a=a/h$, $\frac1{h^2}\sum_{a\ne b}-\log|t_a-t_b|=\frac1{h^2}[h(h-1)\log h-2\sum_{n<h}\log n!]\ge\frac32-\varepsilon_2(h)$, using $\log n!\le(n+\frac12)\log n-n+1$.
+(H$_4$) $-\log|E|^{1-\kappa}\ge(1-\kappa)(2\pi|\Im z|-\log^+C_E)$, with $C_E$ independent of $h$ because $E$ is $1$-periodic and $x^*\equiv5/8\pmod1$. Since $|\Im z|=h|\Im s|$, the sum of the field terms is $h^2\cdot\frac2h\sum_i(1-\kappa)\pi|\Im s_i|-h\log^+C_E$. Adding (H$_1$)--(H$_4$) gives the claim.
+\end{proof}
+
+\begin{lemma}[finite-cell bound $B_\rho$]\label{lem:B}
+Let $h\ge2^{30}$ and let $s_1,\dots,s_k$ be the scaled points of any admissible configuration of $k\le h$ points of $\Gamma_h\cup(-\mathcal A)$ (atoms pairwise distinct). Then
+\[
+ \frac1h\sum_{i\le k}g(s_i)\ \ge\ \frac kh\,m'+S_{\rm cert}-\frac2h\sum_\ell(m'-\gamma_\ell)^+ .
+\]
+\end{lemma}
+\begin{proof}
+Write $\frac1h\sum_ig(s_i)=\frac khm'+\frac1h\sum_i(g(s_i)-m')$.
+\emph{Contour points.} Write $x^*/h=-r_0+\delta_h$, $\delta_h=(r_0h-N_0-\frac38)/h\in[-\frac3{8h},\frac5{8h})$, so $|\delta_h|<1/h\le\omega$ and $s_i=-r_0+\delta_h+u(-1\pm3i)$. For $u\le u_{\max}$ the point $s_i$ (or its conjugate; $g$ is conjugation-symmetric) lies in a box of (R), and for $u>u_{\max}$ the tail bound applies; in either case $g(s_i)\ge m'$.
+\emph{Atoms.} Atoms lie in $-(\Z_{\ge0}+\frac34)/h\,\cup\,-\Z_{\ge1}/h\subset[-r_0,0]$ and are distinct. Assign each to one cell containing it (an atom on a shared endpoint is assigned once). The two progressions have spacing $1/h$, so a closed cell $C_\ell$ receives $N_\ell\le2h(b_\ell-a_\ell)+2$ atoms. Since $g\ge\gamma_\ell$ on $C_\ell$ and $\min(\gamma_\ell-m',0)\le0$,
+$\frac1h\sum_{\rm atoms}(g-m')\ge\sum_\ell\frac{N_\ell}h\min(\gamma_\ell-m',0)\ge S_{\rm cert}-\frac2h\sum_\ell(m'-\gamma_\ell)^+$.
+Here $N_\ell/h\le2(b_\ell-a_\ell)+2/h$ and $2\sum_\ell(b_\ell-a_\ell)\min(\gamma_\ell-m',0)=S_{\rm cert}$.
+\end{proof}
+
+\begin{theorem}[decay; computer-assisted]\label{thm:decay}
+$\displaystyle\det\Gram_h\le\exp\bigl(-(D^+-o(1))h^2\bigr)$ with $D^+=D_{\rm cert}\ge3.1113790$. Hence $|P_h(\lambda)|\le\exp(-(D^+-o(1))h^2)$.
+\end{theorem}
+\begin{proof}
+Split $d|m|=w_\kappa\,d\Omega_\kappa$ with $\Omega_\kappa=\sum_{\mathcal A}\delta+\frac1{2\pi}|E|^\kappa|dz|$, of total mass $\le2h+c_\kappa$, $c_\kappa=\frac1{2\pi}\int_{\Gamma_0}|E|^\kappa|dz|<\infty$ independent of $h$ by periodicity. By Lemmas~\ref{lem:A} and~\ref{lem:B} (with $k=h$), the integrand of Proposition~\ref{prop:andreief} against $\prod w_\kappa$ is at most $\exp(-h^2[D_{\rm cert}-\eta_1-2\eta_2])$ pointwise, where $\eta_2(h)=\frac2h\sum_\ell(m'-\gamma_\ell)^+$ (the cell number is fixed, so this is $O(1/h)$). Therefore
+\[
+ \det\Gram_h\le\frac1{h!}(2h+c_\kappa)^h\exp\bigl(-h^2[D_{\rm cert}-\eta_1-2\eta_2]\bigr),
+\]
+and $\log(2h+c_\kappa)/h\to0$. Finally $|P_h(\lambda)|\le16^{-h}\det\Gram_h$ by Proposition~\ref{prop:andreief}.
+\end{proof}
+
+\begin{remark}
+The error terms $\eta_1,\eta_2$ are $O((\log h)/h)$ with moderate explicit constants; no explicit $h_0$ is claimed (the certificate itself requires $h\ge2^{30}$). The exponent $D^+\ge3.1113790$ is certified; numerics suggest that the true limit is $\frac92\log2=3.11916\ldots$ (not used). The margin for the deductions below is
+\[
+ \eta:=D^+-\Lm\ \ge\ 3.1113790-2.9809524=0.1304266,
+\]
+and the argument of \S\ref{sec:measure} uses the decay theorem only through this margin.
+\end{remark}
+
+\begin{remark}[cross-check by circle smoothing]\label{rem:circle}
+An earlier version of the energy step replaced each point by a uniform measure on a circle of radius $1/h$ and used a certificate measure $\sigma$ supported on $448$ disjoint circles together with the inequality $I(\nu-\sigma)\ge0$ for signed measures of mass zero \cite[Lemma~I.1.8]{SaffTotik} and a Lipschitz bound for $U^\sigma$ ($L_\sigma\le1522.04$). That route, with an independent interval-arithmetic certificate, gives $D^+\ge3.1072419$, $m'\ge1.9681060$, $S\ge-0.1101022$, $g_{\min}\ge-1.4643531$, $c\le6.8650$ and $\mu(\lambda)\le79.35$ (the value $79.3439$). We keep it only as an independent cross-check of the decay exponent: the two certificates use different kernels, different measures $\sigma$ and a different ray angle ($3\pi/5$), and agree on $D^+\approx3.11$. The $k_\rho$ route gives the larger $D^+$ because its certificate measure was re-optimised.
+\end{remark}
+
+
+%%% --------------------------------------------------------------------
+\section{$\ell$-adic nonvanishing}\label{sec:nonvanishing}
+
+Let $\ell\equiv3\pmod4$ be a prime with $\ell\ge7$, $K=(\ell+1)/4$ (an integer $\ge2$), and let $K+1\le h\le\ell-1$. Let $\Z_{(\ell)}$ be the localization of $\Z$ at $\ell$.
+Call the indices $a<K$ \emph{low} and $a\ge K$ \emph{high}.
+
+\begin{lemma}[$\ell$-singular structure]\label{lem:struct}
+Among the quantities $k,\;4k-1,\;b-a,\;4$ occurring in the entries of $M_0$ ($0\le a<b<h$, $1\le k\le h-1$) only $4k-1$ can be divisible by $\ell$, and this occurs only for $k=K$ (with $4K-1=\ell$). Consequently every high diagonal entry of $M_0$ contains the term $+\ell^{-2}$, every low--high entry contains $-1/(16K\ell(b-a))$, and all other entries lie in $\Z_{(\ell)}$.
+\end{lemma}
+\begin{proof}
+$k,b-a<\ell$. If $\ell\mid4k-1$ with $4k-1\le4h-5<4\ell$ then $4k-1\in\{\ell,2\ell,3\ell\}$; $2\ell$ is even and $3\ell\equiv1\pmod4$, so $4k-1=\ell$, i.e.\ $k=K$.
+The sum $\sum_{a<k\le b}$ contains $k=K$ iff $a<K\le b$ (low--high); the diagonal sum $\sum_{k\le a}$ contains it iff $a\ge K$.
+\end{proof}
+
+\begin{lemma}\label{lem:1}
+Let $D=\mathrm{diag}(I_K,\ell I_{h-K})$. Then $D(XI+M_0)D\in M_h(\Z_{(\ell)}[X])$ and, modulo $\ell$,
+\[
+ D(XI+M_0)D\equiv\begin{pmatrix}XI_K+A&\hat B\\\hat B^\top&I\end{pmatrix},\qquad
+ A=M_0|_{\rm low}\bmod\ell,\quad \hat B_{ab}\equiv-\frac1{4(b-a)}\ (a<K\le b),
+\]
+and hence $\ell^{2(h-K)}P_h(X)\equiv\det(XI_K+A-\hat B\hat B^\top)\pmod\ell$. The right-hand side is monic of degree $K$; in particular $v_\ell(\den P_h)=2(h-K)$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:struct}: the high diagonal entries times $\ell^2$ are $\equiv1$ (the term $\ell^{-2}$), the low--high entries times $\ell$ are $\equiv-1/(16K(b-a))\equiv-1/(4(b-a))$ since $16K=4\ell+4$, the high--high off-diagonal entries times $\ell^2$ and the term $X\ell^2$ are $\equiv0$, and the low block is unchanged. Take the Schur complement of the identity block; $\det D=\ell^{h-K}$.
+\end{proof}
+
+\begin{lemma}[key identity]\label{lem:2}
+Let $s=\ell-h\in[1,\ell-K-1]$, $m=\ell-K$, and $C_s=\bigl[1/(a+j)\bigr]_{0\le a<K,\ 1\le j\le s}$ (entries in $\mathbb F_\ell$; note $a+j\le K-1+s<\ell$). Put $c=-H^{(2)}_m\in\mathbb F_\ell$ and $Y=16X+c$. Then, in $\mathbb F_\ell[X]$,
+\[
+ 16^{K}\ell^{2(h-K)}P_h(X)\equiv\det\bigl(Y\,I_K+C_sC_s^\top\bigr).
+\]
+\end{lemma}
+\begin{proof}
+Modulo $\ell$, $4K=\ell+1\equiv1$, so $\frac4{4k-1}=\frac1{k-1/4}\equiv\frac1{k-K}\equiv\frac1{k+m}$ and thus
+$-\frac1{k(4k-1)}\equiv\frac1k-\frac1{k+m}$ and $\frac{16}{(4k-1)^2}\equiv\frac1{(k+m)^2}$.
+For $a<b<K$ (so $b+m<\ell$) summing over $a<k\le b$ and using $\frac1{(b-a)}\bigl(\frac1{a+j}-\frac1{b+j}\bigr)=\frac1{(a+j)(b+j)}$,
+\[
+ 16A_{ab}\equiv\frac1{b-a}\sum_{k=a+1}^{b}\Bigl(\frac1k-\frac1{k+m}\Bigr)=\sum_{j=1}^{m}\frac1{(a+j)(b+j)},\qquad
+ 16A_{aa}\equiv\sum_{k\le a}\Bigl(\frac1{(k+m)^2}-\frac1{k^2}\Bigr)=\sum_{j=1}^m\frac1{(a+j)^2}-H^{(2)}_m.
+\]
+Thus $16A\equiv cI+C_mC_m^\top$. Next, $16(\hat B\hat B^\top)_{aa'}\equiv\sum_{b=K}^{h-1}\frac1{(b-a)(b-a')}$. Substituting $j=\ell-b$ (which runs over $s+1,\dots,m$ as $b$ runs over $h-1,\dots,K$) we have $a+j\equiv-(b-a)$, so this equals $\sum_{j=s+1}^m\frac1{(a+j)(a'+j)}$. Subtracting,
+$16(A-\hat B\hat B^\top)\equiv cI+C_sC_s^\top$, and Lemma~\ref{lem:1} gives the claim, since $\det(XI+(cI+C_sC_s^\top)/16)=16^{-K}\det(YI+C_sC_s^\top)$.
+\end{proof}
+(This was checked by exact characteristic-polynomial reduction for $h=12,20$ and every $\ell\equiv3\pmod4$ in $(h,4h]$.)
+
+Write $\Xi_s=C_s^\top C_s$, i.e.\ $(\Xi_s)_{ij}=\sum_{a=0}^{K-1}\frac1{(a+i)(a+j)}$. By Sylvester's determinant identity, for $s\le K$,
+\begin{equation}\label{eq:sylv}
+ \det(YI_K+C_sC_s^\top)=Y^{K-s}\det(YI_s+\Xi_s).
+\end{equation}
+
+\begin{theorem}[$\ell$-adic nonvanishing]\label{thm:nonvanish}
+Let $\ell\equiv3\pmod4$ be prime, $\ell\ge7$, $K=(\ell+1)/4$, and let $r\in\Q$ with $\ell\nmid\den r$. Then at least one of
+\[
+ h_1=\ell-1,\qquad h_2=\ell-2,\qquad h_3=\ell-K=\tfrac{3\ell-1}4
+\]
+satisfies $v_\ell\bigl(P_{h}(r)\bigr)=-2(h-K)$; in particular $P_h(r)\ne0$.
+\end{theorem}
+\begin{proof}
+All three $h_i$ satisfy $K+1\le h_i\le\ell-1$ (for $h_3$: $\frac{3\ell-1}4\ge\frac{\ell+5}4\iff\ell\ge3$), and have $s=1,2,K$ respectively, all $\le K$ since $K\ge2$.
+By Lemmas~\ref{lem:1} and~\ref{lem:2}, $\ell^{2(h-K)}P_h(r)$ is an $\ell$-adic unit iff the polynomial \eqref{eq:sylv} does not vanish at $Y=y:=16r+c\in\mathbb F_\ell$. Suppose it vanishes at $y$ for all three values of $s$.
+\begin{itemize}[leftmargin=*]
+\item $s=K$: at $Y=0$ the value of \eqref{eq:sylv} is $\det(\Xi_K)=\det(C_K)^2$, where $C_K=[1/(a+j)]$ is a Cauchy matrix with $\det C_K=\prod_{a<a'}(a'-a)\prod_{j<j'}(j'-j)/\prod_{a,j}(a+j)$, a ratio of products of integers in $[1,2K-1]$, and $2K-1<\ell$. So $\det C_K\ne0$ in $\mathbb F_\ell$, the polynomial does not vanish at $0$, and hence $y\ne0$.
+\item $s=1$: the value is $y^{K-1}(y+\Xi_{11})$ with $\Xi_{11}=\sum_{a<K}(a+1)^{-2}=H_K^{(2)}$. As $y\ne0$, $y=-\Xi_{11}\ne0$.
+\item $s=2$: the value is $y^{K-2}\det\begin{pmatrix}0&\Xi_{12}\\\Xi_{12}&\Xi_{22}-\Xi_{11}\end{pmatrix}=-y^{K-2}\Xi_{12}^2$, and $\Xi_{12}=\sum_{a<K}\bigl(\frac1{a+1}-\frac1{a+2}\bigr)=\frac K{K+1}\ne0$ in $\mathbb F_\ell$ since $1\le K<K+1<\ell$. This is nonzero, a contradiction.
+\end{itemize}
+(If $\ell=7$ then $h_2=h_3$, $K=2$, and the argument is unchanged.) Hence for some $i$ the reduction is nonzero, so $v_\ell(P_{h_i}(r))=-2(h_i-K)$.
+\end{proof}
+(Exact characteristic polynomials for $\ell=7,11,19,23,31,43$ confirm that the three reductions have $\gcd=1$ and the stated valuations.)
+
+\begin{lemma}[primes dividing the denominator]\label{lem:3}
+Let $\ell\equiv3\pmod4$ be prime, $\ell\ge7$, $K+1\le h\le\ell-1$, and $r=p/q$ with $e=v_\ell(q)\ge1$; put $u=\ell^er\in\Z_{(\ell)}^\times$. If $e=1$, or $e\ge3$, or $e=2$ and $u\not\equiv-1\pmod\ell$, then $P_h(r)\ne0$ \emph{for every admissible $h$}.
+\end{lemma}
+\begin{proof}
+Let $N=D(rI+M_0)D$. By Lemmas~\ref{lem:struct}, \ref{lem:1}, its blocks are $rI+M_{0,LL}$, $\ell M_{0,LH}\equiv\hat B$, and $\ell^2rI+J$ with $J\equiv I$, all entries other than the $r$'s being $\ell$-integral. Multiply the low rows by $\ell^e$ (and, if $e\ge3$, the high rows by $\ell^{e-2}$). Modulo $\ell$ the matrix becomes
+$\begin{pmatrix}uI&0\\\hat B^\top&I\end{pmatrix}$ for $e=1$ (determinant $u^K$),
+$\begin{pmatrix}uI&0\\\hat B^\top&(u+1)I\end{pmatrix}$ for $e=2$ (determinant $u^K(u+1)^{h-K}$),
+$uI_h$ for $e\ge3$ (determinant $u^h$). These are units in the stated cases.
+\end{proof}
+(Checked on $1044$ exact cases; the exception $e=2$, $u\equiv-1$ does occur.)
+
+\subsection{Proof of Theorem~\ref{thm:irr}}
+Suppose $\lambda=a/b$ in lowest terms. Choose a prime $\ell\equiv3\pmod4$, $\ell\ge7$, $\ell\nmid b$, as large as we please (there are infinitely many primes $\equiv 3\pmod 4$). Theorem~\ref{thm:nonvanish} gives $h\ge(3\ell-1)/4$ with $P_h(\lambda)\ne0$. By Lemma~\ref{lem:integrality}, Theorem~\ref{thm:content} and Theorem~\ref{thm:decay},
+\[
+ 1\le b^h\den(P_h)\,|P_h(\lambda)|\le\exp\bigl(h\log b-(D^+-\Lm-o(1))h^2\bigr),
+\]
+which is false for large $h$ because $D^+-\Lm>0.130$. \qed
+
+%%% --------------------------------------------------------------------
+\section{A determinant evaluation and the choice of $h$}\label{sec:krylov}
+
+Theorem~\ref{thm:nonvanish} uses three values of $h$ whose ratio $h_{\max}/h_{\min}$ is $4/3$ (the factor $4/3$ in the exponent of Theorem~\ref{thm:measure}). In this section we show that already the two values
+\[
+ h\in\{\ell-K,\ \ell-K-1\}\qquad(\text{that is, } s=\ell-h\in\{K,K+1\})
+\]
+suffice; their ratio is $1+O(1/\ell)$. The proof rests on a statement about two consecutive Gram-type matrices over $\mathbb F_\ell$ (Lemma~CC below), which in turn reduces to the non-vanishing modulo~$\ell$ of an explicit Krylov determinant; the latter is evaluated in closed form (Theorem~A). By~\eqref{eq:sylv} the polynomial $\det(YI_K+C_sC_s^\top)$ has the factor $Y^{K-s}$ for $s<K$, so the value $y=0$ cannot be excluded for any $h>\ell-K$; this is why the smallest usable $s$ is $K$.
+
+Throughout this section $\ell\equiv3\pmod 4$ is a prime, $\ell\ge7$, $K=(\ell+1)/4$, and for $s\ge0$ with $K+s<\ell$ we use, over $\mathbb F_\ell$,
+\[
+ C_s=\Bigl[\frac1{a+j}\Bigr]_{0\le a<K,\;1\le j\le s},\qquad N_s=C_sC_s^\top\in M_K(\mathbb F_\ell),\qquad w_j=\Bigl(\frac1{a+j}\Bigr)_{0\le a<K},
+\]
+so that $N_{s+1}=N_s+w_{s+1}w_{s+1}^\top$. All denominators are $\ell$-units because $a+j\le K-1+s+1<\ell$.
+
+\subsection{Statement}
+
+\begin{lemma}[Lemma CC]\label{lem:CC}
+Let $s\ge K$ with $K+s<\ell$. Then $N_s$ and $N_{s+1}$ have no common eigenvalue in $\overline{\mathbb F}_\ell$. Equivalently, the polynomials $\det(YI_K+N_s)$ and $\det(YI_K+N_{s+1})$ have no common root in $\overline{\mathbb F}_\ell$. In particular this holds for $s=K$ (note $2K<\ell$).
+\end{lemma}
+
+The proof (\S\ref{ssec:CCproof}) is the combination of the Krylov reduction of \S\ref{ssec:kryred} with the evaluation of Theorem~A below.
+
+\begin{theorem}[Choice of $h$]\label{thm:nonvanish2}
+Let $\ell\equiv3\pmod4$ be prime, $\ell\ge7$, $K=(\ell+1)/4$, and let $r\in\Q$ with $\ell\nmid\den r$. Then at least one of
+\[
+ h_1=\ell-K=\tfrac{3\ell-1}4,\qquad h_2=\ell-K-1=\tfrac{3\ell-5}4
+\]
+satisfies $v_\ell\bigl(P_h(r)\bigr)=-2(h-K)$; in particular $P_h(r)\ne0$.
+\end{theorem}
+
+\subsection{The Krylov reduction}\label{ssec:kryred}
+
+\begin{lemma}\label{lem:kr1}
+Let $F$ be a field of characteristic $\ne2$, $N\in M_K(F)$ symmetric, $w\in F^K$. If $z\in F$ is a common root of $\det(z-N)$ and $\det(z-N-ww^\top)$, then there is $x\ne0$ with $Nx=zx$ and $w^\top x=0$.
+\end{lemma}
+\begin{proof}
+The matrix determinant lemma gives $\det(z-N-ww^\top)=\det(z-N)-w^\top\operatorname{adj}(z-N)\,w$, so $w^\top\operatorname{adj}(z-N)\,w=0$. Since $\det(z-N)=0$, $\operatorname{rank}(z-N)\le K-1$. If $\operatorname{rank}(z-N)\le K-2$, then $\ker(z-N)$ has dimension $\ge2$ and so contains some $x\ne0$ with $w^\top x=0$. If $\operatorname{rank}(z-N)=K-1$, then $\operatorname{adj}(z-N)$ is symmetric of rank one with columns in $\ker(z-N)=\langle x\rangle$, so $\operatorname{adj}(z-N)=\gamma\,xx^\top$ with $\gamma\ne0$, and $\gamma(w^\top x)^2=0$ forces $w^\top x=0$.
+\end{proof}
+(This covers isotropic eigenvectors, $x^\top x=0$, which genuinely occur modulo $\ell$.)
+
+\begin{lemma}\label{lem:kr2}
+Let $N\in M_K(F)$ be symmetric and $w\in F^K$. If some $x\ne0$ satisfies $Nx=zx$ and $w^\top x=0$, then $\det[w,Nw,\dots,N^{K-1}w]=0$.
+\end{lemma}
+\begin{proof}
+$x^\top N^kw=(N^kx)^\top w=z^kx^\top w=0$ for every $k$, so $x$ lies in the left kernel of the Krylov matrix.
+\end{proof}
+
+\begin{corollary}\label{cor:kr}
+Let $s\ge1$, $K+s<\ell$, and $u(K,s):=\det[w_{s+1},N_sw_{s+1},\dots,N_s^{K-1}w_{s+1}]\in\mathbb F_\ell$. If $u(K,s)\ne0$, then $N_s$ and $N_{s+1}$ have no common eigenvalue in $\overline{\mathbb F}_\ell$.
+\end{corollary}
+\begin{proof}
+Apply Lemmas~\ref{lem:kr1} and~\ref{lem:kr2} over $F=\overline{\mathbb F}_\ell$ with $N=N_s$ and $w=w_{s+1}$.
+\end{proof}
+
+\subsection{Theorem A}
+
+For real $L,\rho\notin\{0,-1,-2,\dots\}$ and $n\ge1$ let $c_y=(1/(a+y))_{a=0}^{n-1}\in\R^n$ and
+\[
+ N(L,\rho):=\sum_{k\ge0}\bigl[c_{L+k}c_{L+k}^\top-c_{\rho+k}c_{\rho+k}^\top\bigr]\in M_n(\R),
+\]
+which converges absolutely (each term is $O(k^{-3})$). We write $\theta=L-1$, $s=\rho-L$ (so $\rho=\theta+s+1$), and
+\[
+ u_n(\theta,s):=\det\bigl[w,Nw,\dots,N^{n-1}w\bigr],\qquad N=N(\theta+1,\theta+s+1),\ w=c_{\theta+s+1}.
+\]
+
+\begin{lemma}\label{lem:N}
+(a) $N(L,\rho)$ is real symmetric, meromorphic in $(L,\rho)$, with poles only where $L+k+a=0$ or $\rho+k+a=0$ for some $0\le a<n$, $k\ge0$; near any point only finitely many terms are singular.
+(b) If $s=\rho-L\in\Z_{\ge0}$, then $N(L,\rho)=\sum_{y=L}^{\rho-1}c_yc_y^\top$ (a sum of $s$ terms); if $L-\rho=c\in\Z_{\ge0}$, then $N(L,\rho)=-\sum_{y=\rho}^{L-1}c_yc_y^\top$.
+(c) $N(L,\rho+1)=N(L,\rho)+c_\rho c_\rho^\top$ and $N(L,\rho)=c_Lc_L^\top+N(L+1,\rho)$.
+(d) Off-diagonal entries are rational functions of $(L,\rho)$, and $N(L,\rho)=N^{\rm rat}(L,\rho)+(\psi'(L)-\psi'(\rho))\,I$ with $N^{\rm rat}$ rational.
+(e) $u_n$ is a rational function of $(\theta,s)$.
+(f) For integer $s\ge0$ and $\theta=0$: $N(1,s+1)=N_s$ (the matrix of~\S\ref{ssec:kryred}, over $\Q$) and $w=c_{s+1}=w_{s+1}$; thus $u_n(0,s)=u(n,s)$ with $K=n$.
+\end{lemma}
+\begin{proof}
+(a)--(c) are immediate from the definition (telescoping). For (d), $\sum_{k\ge0}\frac1{(a+y+k)(b+y+k)}=\frac1{b-a}\sum_{j=0}^{b-a-1}\frac1{a+y+j}$ for $a<b$, and $\sum_{k\ge0}(a+y+k)^{-2}=\psi'(y)-\sum_{j<a}(y+j)^{-2}$, i.e.\ $\psi'(y)$ minus a rational function. For (e), the Krylov determinant is invariant under $N\mapsto N+\tau I$ (the change of basis from $N^kw$ to $(N+\tau)^kw$ is unitriangular), so $\psi'(L)-\psi'(\rho)$ can be dropped, and $u_n$ is a polynomial in the entries of $N^{\rm rat}$ and $w$. (f) is (b).
+\end{proof}
+
+\begin{theorem}[Theorem A]\label{thm:A}
+Put $T(m)=m(m+1)/2$ and
+\begin{align*}
+ A_n(s)&=\prod_{c=1}^{n-1}\bigl[(s+c)(s+1-c)\bigr]^{T(n-c)}, & B_n(\theta)&=\prod_{i=1}^{n-1}(\theta+i)^{2i(n-i)},\\
+ C_n(t)&=\prod_{c=1}^{n}(t+c)^{\beta_c},\quad \beta_c=2c(n+1-c)-n, & \kappa_n^+&=\prod_{m=1}^{n-1}m^{2(n-m)(n-2m)}.
+\end{align*}
+Then there is a constant $\kappa_n\in\R$ with $|\kappa_n|=\kappa_n^+$ such that, as rational functions of $(\theta,s)$,
+\[
+ u_n(\theta,s)=\kappa_n\,\frac{A_n(s)}{B_n(\theta)\,C_n(\theta+s)} .
+\]
+\end{theorem}
+
+
+\begin{remark}\label{rem:signA}
+\emph{Only $|u_n|$ is needed.} Numerically $\kappa_n=(-1)^{\lfloor n/2\rfloor}\kappa_n^+$; the sign is not proved here and is not used. The formula was also verified exactly (rational arithmetic) for every $n\le12$, at random rational $(\theta,s)$ including non-integer and negative $s$, and with the Cauchy Gram matrices $N_s$ themselves (\S\ref{sec:formal}). For $n=3$, $\theta=0$ it gives $u(3,s)=-s^3(s-1)/\bigl(64(s+2)^4(s+3)^3\bigr)$.
+\end{remark}
+
+\subsection{Tools}
+
+\begin{lemma}[resultant identity]\label{lem:res}
+Let $N$ be real symmetric $n\times n$ with eigenvalues $\lambda_1,\dots,\lambda_n$, let $w\in\R^n$, and let $N'=N+ww^\top$ have eigenvalues $\mu_1,\dots,\mu_n$. Then
+\[
+ \det[w,Nw,\dots,N^{n-1}w]^2=\pm\prod_{i,k}(\lambda_i-\mu_k).
+\]
+\end{lemma}
+\begin{proof}
+Write $N=U\operatorname{diag}(\lambda)U^\top$ with $U$ orthogonal and $\tilde w=U^\top w$. Then $\det[w,Nw,\dots]=\det U\cdot\prod_k\tilde w_k\cdot\prod_{i<j}(\lambda_j-\lambda_i)$. On the other hand $\chi_{N'}(z)=\chi_N(z)\bigl(1-\sum_k\tilde w_k^2/(z-\lambda_k)\bigr)$, so $\chi_{N'}(\lambda_k)=-\tilde w_k^2\prod_{j\ne k}(\lambda_k-\lambda_j)$, and $\prod_{i,k}(\lambda_i-\mu_k)=\pm\prod_k\chi_{N'}(\lambda_k)=\pm\prod_k\tilde w_k^2\prod_{i<j}(\lambda_i-\lambda_j)^2$. (This is the classical identity for the resultant of the characteristic polynomials of $N$ and $N'$.)
+\end{proof}
+We call this identity (R). It exhibits $|u_n|^2$ as a product over pairs $(i,k)$ of the differences $|\lambda_i-\mu_k|$.
+
+\begin{lemma}[cluster lemma]\label{lem:cluster}
+Let $M(\varepsilon)=\varepsilon^{-2}\sigma J+\varepsilon^{-1}Y+Z(\varepsilon)$ be real symmetric $n\times n$ matrices, $\varepsilon\to0$, where $\sigma=\pm1$, $J=I_r\oplus0_{n-r}$, $Y$ is real symmetric with both diagonal blocks (the $r\times r$ and the $(n-r)\times(n-r)$ block) equal to zero, and $Z(\varepsilon)$ is bounded. Then $M(\varepsilon)$ has $r$ eigenvalues $\sigma\varepsilon^{-2}+O(1)$ and $n-r$ eigenvalues $O(1)$.
+\end{lemma}
+\begin{proof}
+Write $\varepsilon^2M=\sigma J+\varepsilon Y+O(\varepsilon^2)$. Let $S=\begin{pmatrix}0&X\\-X^\top&0\end{pmatrix}$ with $X=-\sigma Y_{12}$ ($Y_{12}$ the off-diagonal block of $Y$), and $Q=\exp(\varepsilon S)$, which is orthogonal. Since $[J,S]=\begin{pmatrix}0&X\\X^\top&0\end{pmatrix}$,
+\[
+ Q^\top(\varepsilon^2M)Q=\sigma J+\varepsilon\bigl(Y+\sigma[J,S]\bigr)+O(\varepsilon^2)=\sigma J+O(\varepsilon^2),
+\]
+because the diagonal blocks of $Y$ vanish and the off-diagonal block of $Y+\sigma[J,S]$ is $Y_{12}+\sigma X=0$. Weyl's inequality $|\lambda_i(X_1+X_2)-\lambda_i(X_1)|\le\|X_2\|$ shows that $\varepsilon^2M$ has $r$ eigenvalues $\sigma+O(\varepsilon^2)$ and $n-r$ eigenvalues $O(\varepsilon^2)$.
+\end{proof}
+
+\subsection{Proof of Theorem~A}\label{ssec:proofA}
+
+Throughout, $\theta\in\R\setminus\Z$ is fixed (generic) unless said otherwise, so that the points $s=-\theta-c$ (poles) and the integers $s=j$ (zeros) below are distinct. We write $\lambda_i$, $\mu_k$ for the eigenvalues of $N$ and $N'=N+ww^\top$ and use (R) throughout.
+
+\medskip\noindent\textbf{Step 1: zeros in $s$.}
+\emph{At $s=j$, $0\le j\le n-2$.} By Lemma~\ref{lem:N}(b), $N$ is a sum of $j$ rank-one terms, so $0$ is an eigenvalue of $N$ of multiplicity $\ge n-j$ and of $N'$ of multiplicity $\ge n-j-1$. Near $s=j$ the matrix $N$ is analytic in $s$ (for $\theta\notin\Z$ no term is singular), so by Weyl's inequality these eigenvalues are $O(|s-j|)$. This gives at least $(n-j)(n-j-1)$ factors of size $O(|s-j|)$ in (R), all other factors being bounded; hence $u_n$ vanishes at $s=j$ to order $\ge T(n-1-j)$.
+\emph{At $s=-c$, $1\le c\le n-1$.} By Lemma~\ref{lem:N}(b), $N=-\sum_{y=\rho}^{L-1}c_yc_y^\top$ has rank $\le c$, and $w=c_\rho$ is one of these terms, so $N'$ has rank $\le c-1$. The same argument gives $(n-c)(n-c+1)$ small factors and order $\ge T(n-c)$.
+Since $A_n(s)$ vanishes exactly at these points to exactly these orders ($s+1-c=0$ at $s=j=c-1$, with exponent $T(n-c)=T(n-1-j)$), $u_n/A_n$ has no pole in $s$ at the zeros of $A_n$.
+
+\medskip\noindent\textbf{Step 2: poles in $s$.} For fixed $\theta$ the entries of $N$ and $w$ are singular only at $\rho=1-c$, i.e. $s=-\theta-c$, $c\ge1$. Near $\rho=1-c+\varepsilon$, the singular terms are $c_{\rho+k}c_{\rho+k}^\top$ with $k=c-1-a$ for $a$ in the set $\{0,\dots,\min(c,n)-1\}$ (call its size $c^*=\min(c,n)$); entry $a$ of $c_{\rho+k}$ has a simple pole, so each singular term contributes $-\varepsilon^{-2}e_ae_a^\top$ plus an $\varepsilon^{-1}$ term plus a bounded part. Thus
+\[
+ N=-\varepsilon^{-2}J_{c^*}+\varepsilon^{-1}Y+O(1).
+\]
+The $\varepsilon^{-1}$-coefficient $Y$ has vanishing diagonal blocks: for $p\ne q$ in the singular set, the contributions $1/(q-p)$ (from the term singular at $p$) and $1/(p-q)$ (from the term singular at $q$) cancel; the diagonal entries have no $\varepsilon^{-1}$ term since $(\varepsilon+m)^{-2}$ is regular for $m\ne0$; and entries with both indices outside the singular set are regular.
+\emph{Case $c>n$.} Then $J_{c^*}=I$, $w$ is regular, and $N$, $N'$ are $-\varepsilon^{-2}I+\varepsilon^{-1}Y+O(1)$ with $Y=0$ (only the first block exists); all eigenvalues of both are $-\varepsilon^{-2}+O(1)$, all differences are $O(1)$, so $u_n$ is bounded: no pole.
+\emph{Case $c\le n$.} Here $w=c_\rho$ has the pole in coordinate $a=c-1$, and $ww^\top$ is exactly the term $k=0$ of the $\rho$-series, so $N'=N+ww^\top$ has the same form with $J_{c-1}$ (and the same vanishing of the diagonal blocks of its $\varepsilon^{-1}$ coefficient). By Lemma~\ref{lem:cluster} (with $\sigma=-1$), $N$ has $c$ ``big'' eigenvalues $-\varepsilon^{-2}+O(1)$ and $n-c$ ``small'' ones $O(1)$, and $N'$ has $c-1$ big and $n-c+1$ small ones. In (R), big--big and small--small differences are $O(1)$, and each of the
+\[
+ c(n-c+1)+(c-1)(n-c)=2c(n+1-c)-n=\beta_c
+\]
+big--small differences has size $\varepsilon^{-2}$. Hence $u_n=O(\varepsilon^{-\beta_c})$.
+
+\medskip\noindent\textbf{Step 3: poles in $\theta$ at $\theta=-i$, $1\le i\le n-1$, $s$ generic.} Put $L=1-i+\varepsilon$. The singular terms are $c_{L+k}c_{L+k}^\top$, $k=i-1-a$, $a\in\{0,\dots,i-1\}$, and exactly as in Step 2, but with sign $+$, $N=+\varepsilon^{-2}J_i+\varepsilon^{-1}Y+O(1)$ with $Y$ having vanishing diagonal blocks. Now $w=c_\rho$ is regular, so $N'$ has the same singular part. Both have $i$ big and $n-i$ small eigenvalues, giving $2i(n-i)$ big--small differences, so $u_n=O(\varepsilon^{-2i(n-i)})$.
+
+\medskip\noindent\textbf{Step 4: identification in $s$.}
+As $\rho\to\infty$ with $L$ fixed, $N=R_\infty(L)+O(1/\rho)$ with $R_\infty(L)=\sum_{k\ge0}c_{L+k}c_{L+k}^\top$, analytic in $1/\rho$, and $\rho w=\mathbf 1+O(1/\rho)$ with $\mathbf 1$ the all-ones vector. Hence $\rho^nu_n\to\det[\mathbf 1,R_\infty\mathbf 1,\dots,R_\infty^{n-1}\mathbf 1]$, finite, and $u_n=O(s^{-n})$.
+Consider $F(s):=u_nC_n(\theta+s)/A_n(s)$ as a rational function of $s$. By Steps 1--2, $F$ has no poles (the poles of $u_n$ are at $s=-\theta-c$, $c\le n$, of order $\le\beta_c$, where $A_n\ne0$; the zeros of $A_n$ are integers, where $u_n$ vanishes to at least the order of $A_n$ and $C_n(\theta+s)\ne0,\infty$), so $F$ is a polynomial in $s$. Both $A_n$ and $C_n$ are monic and
+\[
+ \deg C_n-\deg A_n=\Bigl[\tfrac{n(n+1)(n+2)}3-n^2\Bigr]-\tfrac{(n-1)n(n+1)}3=n,
+\]
+so $F(s)=O(s^{-n}s^{n})=O(1)$, and $F$ is a constant $K_n(\theta)$:
+\begin{equation}\label{eq:Ks}
+ u_n(\theta,s)=K_n(\theta)\,\frac{A_n(s)}{C_n(\theta+s)}.
+\end{equation}
+Moreover $K_n(\theta)=\lim_{s\to\infty}s^nu_n=\det[\mathbf 1,R_\infty\mathbf 1,\dots]$ with $L=\theta+1$.
+
+\medskip\noindent\textbf{Step 5: identification in $\theta$.}
+By Lemma~\ref{lem:N}(d), $K_n$ is a rational function of $\theta$ (the scalar $\psi'(L)$ in $R_\infty$ drops out of the Krylov determinant), and its entries $\sum_{k\ge0}c_{L+k}c_{L+k}^\top-\psi'(L)I$ have poles only where $L+j=0$ for some $0\le j\le n-2$, that is $\theta=-i$, $1\le i\le n-1$. Comparing \eqref{eq:Ks} with Step~3 (at $\theta=-i$ and generic $s$, $A_n(s)/C_n(\theta+s)$ is finite and nonzero), the pole of $K_n$ at $-i$ has order $\le2i(n-i)$. Hence $K_nB_n$ is a polynomial in $\theta$.
+Now let $L\to\infty$ with $\rho$ fixed and generic. Then $N(L,\rho)\to-\sum_{k\ge0}c_{\rho+k}c_{\rho+k}^\top$ (the $L$-series is $O(1/L)$) and $w=c_\rho$ is fixed, so $u_n$ stays bounded. In \eqref{eq:Ks}, $s=\rho-L$ and $C_n(\theta+s)=C_n(\rho-1)$ is a fixed nonzero number, while $A_n(\rho-L)$ is of exact order $L^{\deg A_n}$. Hence $K_n(\theta)=O(\theta^{-\deg A_n})$. Since $\deg B_n=\sum_i2i(n-i)=\frac{(n-1)n(n+1)}3=\deg A_n$, the polynomial $K_nB_n$ is bounded, hence a constant $\kappa_n$. This proves the shape of Theorem~A:
+\begin{equation}\label{eq:shapeA}
+ u_n=\kappa_n\frac{A_n(s)}{B_n(\theta)\,C_n(\theta+s)}.
+\end{equation}
+
+\medskip\noindent\textbf{Step 6: the constant, by recursion in $n$.}
+
+\begin{lemma}[recursion]\label{lem:rec}
+Fix non-integer $s$. As $\theta=-1+\varepsilon\to-1$,
+\[
+ \varepsilon^{2(n-1)}\,|u_n(-1+\varepsilon,s)|\ \longrightarrow\ \frac1{|s|}\,\bigl|u_{n-1}(1,\,s-1)\bigr|\qquad(n\ge2),
+\]
+where on the right $u_{n-1}$ is the $(n-1)$-dimensional function evaluated at $\theta'=1$, $s'=s-1$.
+\end{lemma}
+\begin{proof}
+Here $L=\varepsilon$ and $\rho=s+\varepsilon$. We have $c_L=\varepsilon^{-1}p$ with $p=e_0+O(\varepsilon)$, and by Lemma~\ref{lem:N}(c) $N=\varepsilon^{-2}pp^\top+A(\varepsilon)$ with $A(\varepsilon)=N(1+\varepsilon,\rho)$ analytic at $\varepsilon=0$. Put $N'=N+ww^\top=\varepsilon^{-2}pp^\top+A'(\varepsilon)$, $A'=A+ww^\top$; $w=c_\rho$ has first coordinate $w_0=1/\rho\to1/s$.
+\emph{Big eigenvalues.} The largest eigenvalues are $\lambda_{\rm big}=\varepsilon^{-2}|p|^2+\hat p^\top A\hat p+O(\varepsilon^2)$ and $\mu_{\rm big}=\varepsilon^{-2}|p|^2+\hat p^\top A'\hat p+O(\varepsilon^2)$ with $\hat p=p/|p|\to e_0$; so $\mu_{\rm big}-\lambda_{\rm big}\to w_0^2=1/s^2$.
+\emph{Small eigenvalues.} $\varepsilon^2\chi_N(z)=\varepsilon^2\det(z-A)-p^\top\operatorname{adj}(z-A)p\to-\det\bigl(z-A(0)[1{:}]\bigr)$, where $A(0)[1{:}]$ is the compression of $A(0)=N(1,s)$ to the coordinates $1,\dots,n-1$; likewise for $N'$ with $A'(0)[1{:}]=A(0)[1{:}]+\tilde w\tilde w^\top$, $\tilde w=(w_a)_{a\ge1}$. Hence the other $n-1$ eigenvalues of $N$ (resp.\ $N'$) converge to those of $A(0)[1{:}]$ (resp.\ $A'(0)[1{:}]$). Re-indexing $a'=a-1$, the entries of $A(0)[1{:}]$ are $\sum_k\bigl[\frac1{(a'+2+k)(b'+2+k)}-\frac1{(a'+s+1+k)(b'+s+1+k)}\bigr]=N(2,s+1)_{a'b'}$ and $\tilde w=c_{s+1}$, that is, the $(n-1)$-dimensional problem with $L'=2$, $\rho'=s+1$, i.e.\ $\theta'=1$, $s'=s-1$.
+Now apply (R). The big--big difference tends to $1/s^2$; each of the $2(n-1)$ big--small differences is $\pm\varepsilon^{-2}(1+o(1))$; the small--small differences tend to the corresponding product for the $(n-1)$-dimensional problem, which is $\pm u_{n-1}(1,s-1)^2$ by (R). Thus $|u_n|^2\sim s^{-2}\varepsilon^{-4(n-1)}u_{n-1}(1,s-1)^2$.
+\end{proof}
+
+\begin{lemma}[exponent bookkeeping]\label{lem:expo}
+$C_n(s-1)\,A_{n-1}(s-1)=s\,C_{n-1}(s)\,A_n(s)$ as polynomials in $s$.
+\end{lemma}
+\begin{proof}
+Compare the exponent of $(s+d)$ on both sides ($T(m)=0$ for $m\le0$):
+for $1\le d\le n-3$: $2(d+1)(n-d)-n+T(n-2-d)=2d(n-d)-n+1+T(n-d)$;
+$d=n-2$: both sides equal $3n-4$; $d=n-1$: both equal $n$; $d=0$: $n+T(n-2)=1+T(n-1)$; $d<0$ (the factors $s+1-c$): both equal $T(n-1+d)$.
+\end{proof}
+(The identity of Lemma~\ref{lem:expo} was also checked by exact computation for $2\le n\le8$.)
+
+\begin{proof}[Proof of Theorem~A, conclusion]
+Evaluate \eqref{eq:shapeA} at $\theta=-1+\varepsilon$. Since $B_n(-1+\varepsilon)=\varepsilon^{2(n-1)}\prod_{i=2}^{n-1}(i-1+\varepsilon)^{2i(n-i)}$,
+\[
+ \varepsilon^{2(n-1)}|u_n|\to\frac{|\kappa_n|\,|A_n(s)|}{\prod_{i=2}^{n-1}(i-1)^{2i(n-i)}\,|C_n(s-1)|}.
+\]
+By Lemma~\ref{lem:rec} and \eqref{eq:shapeA} for $n-1$ at $(\theta',s')=(1,s-1)$, the limit is also $\dfrac{|\kappa_{n-1}|\,|A_{n-1}(s-1)|}{|s|\,B_{n-1}(1)\,|C_{n-1}(s)|}$, with $B_{n-1}(1)=\prod_{i=1}^{n-2}(i+1)^{2i(n-1-i)}$. By Lemma~\ref{lem:expo}, $A_{n-1}(s-1)/(s\,C_{n-1}(s))=A_n(s)/C_n(s-1)$, so all $s$-dependence cancels and
+\[
+ |\kappa_n|=|\kappa_{n-1}|\cdot\frac{\prod_{i=2}^{n-1}(i-1)^{2i(n-i)}}{\prod_{i=1}^{n-2}(i+1)^{2i(n-1-i)}}=|\kappa_{n-1}|\prod_{m=1}^{n-1}m^{2(2n-1-3m)},
+\]
+where the exponent of $m$ is $2[(m+1)(n-m-1)-(m-1)(n-m)]=2(2n-1-3m)$. Since $u_1=1/(\theta+s+1)$, $\kappa_1=1$, and summing the exponents of $m$ over $N=m+1,\dots,n$ gives $2\sum_{N=m+1}^{n}(2N-1-3m)=2(n-m)(n-2m)$. Hence $|\kappa_n|=\prod_{m=1}^{n-1}m^{2(n-m)(n-2m)}=\kappa_n^+$. \qed
+\end{proof}
+
+\subsection{Proofs of Lemma CC and Theorem~\ref{thm:nonvanish2}}\label{ssec:CCproof}
+
+\begin{proof}[Proof of Lemma~CC]
+Let $n=K$ and $s\ge K$, $K+s<\ell$. By Lemma~\ref{lem:N}(f) and Theorem~A at $\theta=0$,
+\[
+ u(K,s)=\kappa_K\,\frac{A_K(s)}{B_K(0)\,C_K(s)}\quad\text{in }\Q,
+\]
+with $\kappa_K$ of absolute value $\prod_{m<K}m^{2(K-m)(K-2m)}$ (exponents may be negative). The bases occurring are: the integers $m\in[1,K-1]$ (from $\kappa_K$ and $B_K(0)=\prod i^{2i(K-i)}$); $s+c$ with $1\le c\le K$, so $s+c\in[s+1,s+K]$ (from $A_K$ and $C_K$); and $s+1-c\in[s-K+2,s]\subset[2,s]$ (from $A_K$). All are integers in $[1,K+s]$, and $K+s<\ell$, so every base is an $\ell$-unit and $u(K,s)$ is a nonzero element of $\Z_{(\ell)}$ that is a unit. The entries of $N_s$ and $w_{s+1}$ are $\ell$-integral, so the reduction modulo~$\ell$ of $u(K,s)$ is the Krylov determinant over $\mathbb F_\ell$ of Corollary~\ref{cor:kr}, which is therefore nonzero. Corollary~\ref{cor:kr} gives Lemma~CC. \qed
+\end{proof}
+Note that only $|u|$ enters: we use only that $u(K,s)$ is a nonzero rational number all of whose prime factors are $<\ell$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:nonvanish2}]
+For $h_1=\ell-K$ and $h_2=\ell-K-1$ we have $s=\ell-h=K$ and $K+1$ respectively. Both satisfy $K+1\le h_i\le\ell-1$ ($h_2\ge K+1\iff\ell\ge5$) and $1\le s\le\ell-K-1$ ($K+1\le\ell-K-1\iff\ell\ge5$), so Lemmas~\ref{lem:1} and~\ref{lem:2} apply: $\ell^{2(h-K)}P_h(r)$ is an $\ell$-adic unit iff $D_s(Y):=\det(YI_K+N_s)$ does not vanish at $Y=y:=16r+c\in\mathbb F_\ell$. Suppose $D_K(y)=D_{K+1}(y)=0$. As in the proof of Theorem~\ref{thm:nonvanish}, $D_K(0)=\det(C_K)^2\ne0$ (Cauchy matrix with entries of size $<\ell$), so $y\ne0$; thus $-y\ne0$ is a common eigenvalue of $N_K$ and $N_{K+1}$, contradicting Lemma~CC with $s=K$ ($2K<\ell$). Hence for some $i$ the reduction is nonzero and $v_\ell(P_{h_i}(r))=-2(h_i-K)$. \qed
+\end{proof}
+
+\begin{remark}[numerical checks]
+Independently of Theorem~A, the nonvanishing of $u(K,K)$ modulo $\ell$ (and hence Lemma~CC for $s=K$) was verified by exact computation of the Krylov determinant for all $\ell\equiv3\pmod4$ with $7\le\ell<4500$ (307 primes); for $39$ primes $\ell<400$ the characteristic polynomials of $N_K$ and $N_{K+1}$ over $\mathbb F_\ell$ were checked to be coprime, and Lemma~\ref{lem:2} was checked for $\ell=7,11,19,23$ and $h=\ell-K,\ell-K-1$ and all $X\in\mathbb F_\ell$. These are consistency checks, not used in the proof.
+\end{remark}
+
+%%% --------------------------------------------------------------------
+\section{Node removal and the root-free window}\label{sec:nodeline}
+
+\subsection{Why a small value is not enough}
+Let $Q_h=\den(P_h)P_h$ and $|\lambda-p/q|=|t|$. The mean-value route, $|Q_h(p/q)-Q_h(\lambda)|\le|t|\max|Q_h'|$, with $\max|Q_h'|$ of size $e^{\Lm h^2+O(h)}$, only yields a bound of the shape $\exp(-C\log^2q)$, which is not a finite irrationality measure. What is needed is smallness of $|P_h|$ on a whole window $|x-\lambda|\le e^{-ch}$ of \emph{exponential radius}, together with $Q_h(p/q)\ne0$. The second requirement is supplied by Theorem~\ref{thm:nonvanish} (valid at every rational, including $p/q$). For the first, note that
+\begin{equation}\label{eq:expand}
+ P_h(\lambda+t)=\det(T_h+tI)=\sum_{S\subseteq\{0,\dots,h-1\}}t^{\,h-|S|}\det T_h[S],
+\end{equation}
+by multilinearity in the columns, where $T_h[S]$ is the principal submatrix on $S$. So the window requires a bound for \emph{every} principal minor, not only for the full determinant, and uniform in the number $j=h-|S|$ of removed nodes. The proof of Theorem~\ref{thm:decay} extends to principal minors; the only new feature is a cost for each removed node.
+
+\subsection{Statement}
+Retain the notation of \S\ref{ssec:cert}: the certificate measure $\sigma$ with $n_\sigma=300$ point masses, $\rho=1/1024$, $g=U^\sigma_\rho-U^\tau+(1-\kappa)\pi|\Im s|$, and the certified data $m'\ge1.9718000062$, $S_{\rm cert}\ge-0.1107505186$, $g_{\min}\ge-1.4640996549$ and $D_{\rm cert}\ge3.1113790$. On the real line the field term vanishes, so $g=U^\sigma_\rho-U^\tau$ there, and $g_{\min}$ bounds it below on $[0,1]$. Recall $c=2(m'-g_{\min})\le c_{\rm cert}:=6.8717994$.
+
+\begin{theorem}[node removal $N_\rho$; computer-assisted]\label{thm:N}
+There are $\eta(h)=O((\log h)/h)$ and a constant $c_\kappa$, both independent of $S$, such that for every $h\ge2^{30}$ and every $S\subseteq\{0,\dots,h-1\}$, with $k=|S|$, $j=h-k$ and $\beta=j/h$,
+\[
+ |\det T_h[S]|\ \le\ 16^{-k}\,(2h+c_\kappa)^k\,\exp\bigl(-h^2[D_{\rm cert}-\beta c]+h^2\eta(h)\bigr).
+\]
+Explicitly, $\eta(h)=\frac{|\log\rho|}h+\frac{2\log(1+8h/3)}h+\varepsilon_2(h)+\frac{\log^+C_E}h+\frac4h\sum_\ell(m'-\gamma_\ell)^+$.
+\end{theorem}
+For $S=\{0,\dots,h-1\}$ ($\beta=0$) this is Theorem~\ref{thm:decay}. The proof is that of Lemmas~\ref{lem:A} and~\ref{lem:B} line by line; we record what changes. (The coefficient of the last term of $\eta$ is $4/h$ because $H_S$ carries the factor $2/h$ in front of $\sum g$, so the error $\frac2h\sum_\ell(m'-\gamma_\ell)^+$ of Lemma~\ref{lem:B} is doubled.)
+
+\subsection{Proof of Theorem~\ref{thm:N}}\label{ssec:proofN}
+\textbf{Inputs.} By Proposition~\ref{prop:contour} the identity $L_F[a][b]=\int v_av_b\,dm$ is entrywise, so it holds for principal submatrices: $L_F[S]=\int\phi_S\phi_S^{\top}dm$ with $\phi_S=(v_a)_{a\in S}$, and $T_h[S]=L_F[S]/16$. As $m$ has finite total variation and $|v_a|\le8/3$ on its support, Andr\'eief's identity gives $\det L_F[S]=\frac1{k!}\int\det[v_a(z_i)]_{i\le k,a\in S}^2\prod dm(z_i)$ (for $k=0$ both sides are $1$), and therefore
+\[\begin{gathered}
+ |\det L_F[S]|\le\frac1{k!}\int|C_S(z)|^2\prod_{i\le k}d|m|(z_i),\\
+ |C_S|^2=\frac{\prod_{i\ne i'}|z_i-z_{i'}|\prod_{a\ne b\in S}|a-b|}{\prod_{i,\,a\in S}|z_i-a|^2},
+\end{gathered}\]
+by Cauchy's determinant. Split $d|m|=w_\kappa\,d\Omega_\kappa$ as in the proof of Theorem~\ref{thm:decay}; then $\Omega_\kappa(\Sigma_h)\le2h+c_\kappa$ and $c_\kappa$ is independent of $h$. Every point of the support of $m$ has $\Re z\le-\frac38$ while the nodes lie in $[0,h-1]$, so free points and nodes never coincide. It therefore suffices to prove the pointwise bound
+\begin{equation}\label{eq:pointN}
+ |C_S(z)|^2\prod_iw_\kappa(z_i)\le\exp\bigl(-h^2[D_{\rm cert}-\beta c-\eta(h)]\bigr),
+\end{equation}
+since integrating it against $\prod\Omega_\kappa$ and using $1/k!\le1$ gives the theorem.
+
+\textbf{Scaling.} Put $s_i=z_i/h$, $t_a=a/h$. Counting powers of $h$: $-k(k-1)$ from the free pairs, $-k(k-1)$ from the node pairs inside $S$ and $+2k^2$ from the cross terms, in total $2k\log h\ge0$ in the exponent of the reciprocal, which is dropped. Hence $-\log(|C_S|^2\prod w_\kappa)\ge h^2H_S$ with
+\[\begin{aligned}
+ h^2H_S={}&\sum_{i\ne i'}-\log|s_i-s_{i'}|+\sum_{a\ne b\in S}-\log|t_a-t_b|\\
+ &+2\!\!\sum_{i,\,b\in S}\!\log|s_i-t_b|+\sum_i-\log w_\kappa(z_i).
+\end{aligned}\]
+
+\textbf{Completing the node set.} Let $S^c$ be the $j$ removed nodes, and let all pairs be of distinct elements. Two exact identities, from adding and removing the pairs meeting $S^c$ (for the second: the ordered pairs meeting $S^c$ are those with first entry in $S^c$, plus those with second entry in $S^c$, minus those with both; the summand is symmetric), are
+\[
+ 2\!\!\sum_{i,\,b\in S}\!\log|s_i-t_b|=2\!\sum_{i,\,\text{all }b}\!\log|s_i-t_b|+2\!\!\sum_{i,\,a\in S^c}\!(-\log|s_i-t_a|),
+\]
+\[
+ \sum_{b\ne b'\in S}=\sum_{\text{all }b\ne b'}-2\sum_{a\in S^c}\sum_{b\ne a}+\sum_{a\ne a'\in S^c}\qquad\text{(applied to }-\log|t_b-t_{b'}|).
+\]
+Let $X$ be the set of the $h$ distinct points $s_1,\dots,s_k$ and $t_a$ ($a\in S^c$); it has $k+j=h$ elements. The free--free, free--removed and removed--removed terms assemble to $\sum_{x\ne y\in X}-\log|x-y|$, and
+\[\begin{aligned}
+ h^2H_S={}&\underbrace{\sum_{x\ne y\in X}-\log|x-y|}_{[B]}+\underbrace{2\!\sum_{i,\,\text{all }b}\!\log|s_i-t_b|}_{[R1]}\\
+ &+\underbrace{\sum_{\text{all }b\ne b'}\!-\log|t_b-t_{b'}|}_{[R2]}\\
+ &+\underbrace{2\!\sum_{a\in S^c}\sum_{b\ne a}\!\log|t_a-t_b|}_{[R3]}+\underbrace{\sum_i-\log w_\kappa(z_i)}_{[R4]}.
+\end{aligned}\]
+For $S=\{0,\dots,h-1\}$ the term $[R3]$ is absent and this is the decomposition in the proof of Lemma~\ref{lem:A}.
+
+\textbf{The term $[B]$ (replaces circle smoothing).} The pairs of removed nodes occur in $[B]$ and once more, with the opposite sign, in the second identity above; so \emph{the interaction of the removed nodes among themselves is counted exactly once and no energy of the removed set is left over}. Apply Lemma~\ref{lem:K0} to every ordered pair of distinct points of $X$, free or removed, and then Corollary~\ref{cor:Kp} with this $X$:
+\begin{multline*}
+ [B]=\sum_{x\ne y\in X}-\log|x-y|\ \ge\ \sum_{x\ne y\in X}k_\rho(x,y)\\
+ \ge\ h^2\Bigl[\tfrac2h\textstyle\sum_{x\in X}U^\sigma_\rho(x)-I_\rho(\sigma)\Bigr]+h\log\rho,
+\end{multline*}
+that is, $\frac{[B]}{h^2}\ge\frac2h\sum_{i\le k}U^\sigma_\rho(s_i)+\frac2h\sum_{a\in S^c}U^\sigma_\rho(t_a)-I_\rho(\sigma)-\frac{|\log\rho|}h$. There is no Lipschitz term, no smoothing and no continuum energy: only the finite-sum Lemma~\ref{lem:K}.
+
+\textbf{The terms $[R1]$, $[R2]$, $[R4]$.} As in Lemma~\ref{lem:A}: $[R1]/h^2\ge-\frac2h\sum_iU^\tau(s_i)-\frac{2k}{h^2}\log(1+\frac{8h}3)$ (monotonicity of $u\mapsto\log|s-u|$ on $[0,1]$ for $\Re s\le0$, and $|s_i|\ge\frac3{8h}$), and $[R4]/h^2\ge\frac2h\sum_i(1-\kappa)\pi|\Im s_i|-\frac k{h^2}\log^+C_E$. The term $[R2]=h(h-1)\log h-2\sum_{n<h}\log n!$ involves all $h$ nodes and is independent of $S$. Using $\log n!\le(n+\frac12)\log n-n+1$ for $n\ge1$ gives $[R2]/h^2\ge\frac32-\varepsilon_2(h)$ with $\varepsilon_2(h)=O((\log h)/h)$. Nodes carry no weight, so no field term arises at the removed nodes.
+
+\textbf{The term $[R3]$: the removed-node term.} For a node $a$ with $t=a/h$,
+\[
+ \sum_{b\ne a}\log|t_a-t_b|=\log\bigl(a!\,(h-1-a)!\bigr)-(h-1)\log h .
+\]
+By $n!\ge(n/e)^n$, valid for all $n\ge0$, applied to $a!$ and to $(h-1-a)!=(h-a)!/(h-a)$, we get $\log(a!(h-1-a)!)\ge h[t\log t+(1-t)\log(1-t)]+h\log h-h-\log h$, that is, $\sum_{b\ne a}\log|t_a-t_b|\ge-h\,U^\tau(t_a)$ \emph{with no error term}. Hence $[R3]/h^2\ge-\frac2h\sum_{a\in S^c}U^\tau(t_a)$.
+
+\textbf{Collecting.} On the real line $U^\sigma_\rho-U^\tau=g$, so
+\begin{equation}\label{eq:HS}
+ H_S\ \ge\ \frac2h\sum_{i\le k}g(s_i)+\frac2h\sum_{a\in S^c}g(t_a)-I_\rho(\sigma)+\frac32-\eta_1(h),
+\end{equation}
+with $\eta_1(h)=\frac{|\log\rho|}h+\frac{2\log(1+8h/3)}h+\varepsilon_2(h)+\frac{\log^+C_E}h$, which uses only $k\le h$ and so is uniform in $S$.
+
+\emph{Removed nodes.} Since $t_a\in[0,1)$, (L) gives $\frac2h\sum_{a\in S^c}g(t_a)\ge2\beta\,g_{\min}$. As $g_{\min}<0$, a removed node costs.
+
+\emph{Free points (Lemma~\ref{lem:B}).} The free points have mass $k/h=1-\beta$, and Lemma~\ref{lem:B} gives
+\[
+ \frac1h\sum_{i\le k}g(s_i)\ \ge\ (1-\beta)m'+S_{\rm cert}-\frac2h\sum_\ell(m'-\gamma_\ell)^+ .
+\]
+Inserting both into \eqref{eq:HS},
+\[
+ \begin{aligned}H_S&\ge2(1-\beta)m'+2S_{\rm cert}+2\beta g_{\min}-I_\rho(\sigma)+\tfrac32-\eta_1-\tfrac4h\textstyle\sum_\ell(m'-\gamma_\ell)^+\\
+ &=D_{\rm cert}-\beta\cdot2(m'-g_{\min})-\eta(h),\end{aligned}
+\]
+where (since $D_{\rm cert}=2(m'+S_{\rm cert})-I_\rho(\sigma)+\frac32$, with $S_{\rm cert}$ the sum of Lemma~\ref{lem:B}) the expression in the statement is exactly $D_{\rm cert}-\beta c$, and $\eta=\eta_1+\frac4h\sum_\ell(m'-\gamma_\ell)^+$ is independent of $S$. This is \eqref{eq:pointN}. \qed
+
+\subsection{The certificate for $g_{\min}$}\label{ssec:cert2}
+The number $g_{\min}$ is part of the certificate of \S\ref{ssec:cert}, produced by the same script \texttt{kcert.py} on the same \texttt{sigma300.json}. The interval $[-\frac1{64},1]\supset[0,1]$ is divided into $4423$ exact cells and each cell becomes one Arb enclosure \cite{Arb} (full-cell enclosures, so no Lipschitz bound is needed). On each cell the lower bound for $U^\sigma_\rho$ is the one described in \S\ref{ssec:cert}, and $U^\tau(t)=1-t\log|t|-(1-t)\log|1-t|$ has $(U^\tau)'=\log|1-t|-\log|t|$, which is positive for $t<\frac12$ and negative for $t>\frac12$ (also across $0$), so its supremum on a cell $[a,b]$ is $U^\tau(b)$ if $b\le\frac12$, $U^\tau(a)$ if $a\ge\frac12$, and $U^\tau(\frac12)=1+\log2$ otherwise. The certified infimum is
+\[
+ g_{\min}\ \ge\ -1.4640996549,
+\]
+with the minimiser near $t\approx0.7499$ in floating point. Hence $c=2(m'-g_{\min})\le2(1.9718000062+1.4640996549)=6.8717993\ldots\le c_{\rm cert}:=6.8717994$.
+
+\subsection{The window corollary}
+\begin{corollary}\label{cor:window}
+For $h\ge2^{30}$ and every real $t$ with $|t|\le e^{-ch}$,
+\[
+ |P_h(\lambda+t)|\ \le\ \exp\bigl(-D_{\rm cert}h^2+h^2\eta(h)+h\log\bigl(2(2h+c_\kappa)\bigr)\bigr)=e^{-(D_{\rm cert}-o(1))h^2},
+\]
+where the $o(1)$ does not depend on $t$. In particular this holds for $|t|\le e^{-c_{\rm cert}h}$.
+\end{corollary}
+\begin{proof}
+By \eqref{eq:expand}, grouping the subsets $S$ by $j=h-|S|$ (there are $\binom hj$ of them) and applying Theorem~\ref{thm:N}, with $\beta=j/h$ so that $e^{h^2\beta c}=e^{jch}$,
+\[
+ |P_h(\lambda+t)|\le(2h+c_\kappa)^he^{h^2\eta}e^{-D_{\rm cert}h^2}\sum_{j=0}^h\binom hj16^{-(h-j)}\bigl(|t|e^{ch}\bigr)^j .
+\]
+(Here $(2h+c_\kappa)^{k}\le(2h+c_\kappa)^h$ for $2h+c_\kappa\ge1$.) If $|t|e^{ch}\le1$ every summand is at most $\binom hj$, and the sum is at most $2^h$. \end{proof}
+
+\begin{remark}[earlier versions]
+An earlier version of this paper used a Gram-eigenvalue bound, giving $\mu(\lambda)\le126$. The node-removal bound replaced it, first with the circle-smoothing energy step (Remark~\ref{rem:circle}, $\mu(\lambda)\le79.35$) and now with the $k_\rho$ energy step.
+\end{remark}
+
+%%% --------------------------------------------------------------------
+\section{Proof of the main theorem}\label{sec:measure}
+
+\begin{theorem}\label{thm:measure}
+Let $\eta=D_{\rm cert}-\Lm\ge0.1304266$ and $c_{\rm cert}=6.8717994$. Then for every $\nu>c_{\rm cert}\,(1/\eta+3/4)$ there are only finitely many rationals $p/q$ with $|\lambda-p/q|<q^{-\nu}$. In particular, since $c_{\rm cert}(1/\eta+3/4)\le57.841$ (it is $57.8410$ for the unrounded values) and $57.841<57.85$, Theorem~\ref{thm:main} holds.
+\end{theorem}
+
+\begin{proof}
+Let $\nu>c_{\rm cert}(\frac1\eta+\frac34)$ and suppose $|\lambda-p/q|=:|t|<q^{-\nu}$ with $q$ large; put $L=\log q$. Choose $\delta>0$ so small that still $\nu>c_{\rm cert}\,(1+\delta)\bigl(\frac1\eta+\frac34\bigr)$, and set
+\[
+ k=\frac{1+\delta}\eta,\qquad X=\tfrac43kL,\qquad Y=X+(1+\delta)L.
+\]
+\emph{Choice of $\ell$.} By the prime number theorem in arithmetic progressions mod~$4$ (de la Vall\'ee Poussin; \cite[Ch.~20]{Davenport}, \cite[Cor.~11.19]{MV}), $\vartheta(x;4,3)=x/2+o(x)$, so the primes $\ell\equiv3\pmod4$ in $(X,Y]$ have product $\exp\bigl(\tfrac12(Y-X)(1+o(1))\bigr)>q^{1/2}$ for large $q$. The primes $\ell$ with $v_\ell(q)=2$ have product at most $q^{1/2}$, since their squares divide $q$. Hence there is a prime $\ell\equiv3\pmod4$ in $(X,Y]$ (so $\ell\ge7$) with $v_\ell(q)\ne2$.
+
+\emph{Choice of $h$.} Put $K=(\ell+1)/4$. If $\ell\nmid q$, Theorem~\ref{thm:nonvanish2} gives $h\in\{\ell-K,\ell-K-1\}=\{\frac{3\ell-1}4,\frac{3\ell-5}4\}$ with $P_h(p/q)\ne0$. If $\ell\mid q$, then $v_\ell(q)=1$ or $\ge3$ and Lemma~\ref{lem:3} gives $P_h(p/q)\ne0$ for every admissible $h$, in particular for $h=\ell-K$. In every case
+\[
+ \tfrac{3\ell-5}4\le h\le\tfrac{3\ell-1}4,\qquad\text{so}\qquad kL-\tfrac54< h<\tfrac34Y
+\]
+(because $\ell>X=\frac43kL$ and $\ell\le Y$), $h\ge2^{30}$ for large $q$, and $Q_h(p/q)\ne0$, whence by Lemma~\ref{lem:integrality}
+\[
+ |Q_h(p/q)|\ge q^{-h}=e^{-hL}.
+\]
+\emph{Window.} Here $\frac34Y=kL+\frac34(1+\delta)L=(1+\delta)\bigl(\frac1\eta+\frac34\bigr)L$, so $h<\frac34Y$ and the choice of $\delta$ give $c_{\rm cert}\,h<\nu L$. Hence $|t|<e^{-\nu L}\le e^{-c_{\rm cert}h}\le e^{-ch}$, and Corollary~\ref{cor:window} and Theorem~\ref{thm:content} give
+\[
+ |Q_h(p/q)|\le\den(P_h)\,|P_h(\lambda+t)|\le\exp\bigl((\Lm-D_{\rm cert}+o(1))h^2\bigr)=\exp\bigl(-(\eta-o(1))h^2\bigr).
+\]
+\emph{Contradiction.} Combining, $(\eta-o(1))h\le L$. But $h>kL-\frac54$ gives $\eta h\ge(1+\delta)L-\frac54\eta$, a contradiction for large $q$. \end{proof}
+
+\begin{remark}[sensitivity]
+The exponent is $c(\frac1\eta+\frac34)$ with $\eta=D_{\rm cert}-\Lm$ and $c=2(m'-g_{\min})$. The term $c/\eta=52.687$ is what remains if the interval for $\ell$ has length $0$; the term $\frac34c$ comes from the length $(1+\delta)L$ of that interval, which is needed to find a prime $\ell\equiv3\pmod4$ with $v_\ell(q)\ne2$, multiplied by $h/\ell\approx\frac34$. Lemma~\ref{lem:3} is what lets one use $\ell\mid q$ when $v_\ell(q)\ne2$; without it one must avoid every $\ell\mid q$, the interval for $\ell$ must have length $(2+\delta)L$, the term $\frac34$ becomes $\frac32$, and the bound is $c(\frac1\eta+\frac32)=62.995$ (see the table of \S\ref{ssec:cert}).
+\end{remark}
+
+\begin{remark}[a simpler choice of $h$ gives $77.13$]\label{rem:77}
+If in the proof of Theorem~\ref{thm:measure} one uses Theorem~\ref{thm:nonvanish} instead of Theorem~\ref{thm:nonvanish2}, that is $h\in\{\ell-1,\ell-2,\frac{3\ell-1}4\}$ (and $h=\ell-1$ when $\ell\mid q$), only $\frac{3\ell-1}4\le h\le\ell-1$ is available. With $X=\frac43kL$, $Y=X+(1+\delta)L$ as above one gets $kL-\frac14\le h\le Y$, and the window condition $c_{\rm cert}\,Y<\nu L$ requires $\nu>c_{\rm cert}\bigl(\frac{4(1+\delta)}{3\eta}+1+\delta\bigr)$. The rest of the proof is unchanged and gives: for every $\nu>c_{\rm cert}\,(4/(3\eta)+1)$ there are only finitely many $p/q$ with $|\lambda-p/q|<q^{-\nu}$. Since $4/(3\eta)+1\le11.2229$ ($11.22286\ldots$ unrounded) and $c_{\rm cert}\cdot11.2229\le77.1217<77.13$ (unrounded $77.1212$), this gives $\mu(\lambda)\le77.13$. The factor $\frac43$ comes from the spread of the three values of $h$, and without Lemma~\ref{lem:3} the bound is $c(4/(3\eta)+2)<84$ ($83.99$). The Lean formalization currently covers this version (\S\ref{sec:formal}), and it does not use Theorem~A.
+\end{remark}
+
+%%% --------------------------------------------------------------------
+\section{Formalization status}\label{sec:formal}
+
+We state this carefully. The companion paper \cite{Litsey2026} on Catalan\'s constant is fully formalized in Lean~4, and so are the irrationality of $\lambda$ and the bound $\mu(\lambda)\le77.28$ proved here; Theorem~A, Lemma~CC and the bound $57.85$ are not. Each of the Lean results below compiles without \texttt{sorry} and depends only on the axioms \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. The library uses the Lean module system; a full build of the $\lambda$ library takes about $14$ minutes, and the kernel-checked numerical certificate about one CPU-hour.
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Formalized (Lean~4 and Mathlib): nonvanishing.} The $\ell$-adic nonvanishing theorem, Theorem~\ref{thm:nonvanish}: for a prime $\ell\equiv3\pmod 4$, $\ell\ge7$, and $r\in\Q$ with $\ell\nmid\den r$, one of $P_{\ell-1}(r),P_{\ell-2}(r),P_{(3\ell-1)/4}(r)$ is nonzero. The theorem is \lean{CatalanLambda.lambda_nonvanishing}. The formalized proof is organized slightly differently from \S\ref{sec:nonvanishing}: it works in the subring $\Z_{(\ell)}$ with the reduction map to $\Z/\ell$, uses the telescoping $\frac1k-\frac1{k+\ell-K}=-\frac1{k(4k-1)}$ directly, and absorbs the constant $-H^{(2)}_m$ into a single constant. It does not formalize the valuation statement $v_\ell=-2(h-K)$.
+\item \textbf{Formalized: the prime number theorem in arithmetic progressions.} The theorem for every modulus, used in Theorems~\ref{thm:content} and~\ref{thm:measure}, as \lean{CatalanLambda.pnt_AP}, together with the upper bound \lean{CatalanLambda.theta_mod4_upper}. It is derived from the vendored Wiener--Ikehara theorem and Mathlib's results on Dirichlet $L$-functions.
+\item \textbf{Formalized: the content bound.} The integrality estimate (Lemma~\ref{lem:integrality}) as \lean{CatalanLambda.integrality}, and the denominator bound of Theorem~\ref{thm:content} in the form \lean{CatalanLambda.log_Dden_le_eventually}.
+\item \textbf{Formalized: the L\"owner form.} The off-diagonal and diagonal formulas for the matrices $T_h$ as L\"owner matrices (Proposition~\ref{prop:lowner}), as \lean{CatalanLambda.Decay.lowner_offdiag} and \lean{CatalanLambda.Decay.lowner_diag}, and the identity $\lambda=G/2-5\pi^2/96$ as \lean{CatalanLambda.Decay.lamS_eq}.
+\item \textbf{Formalized: the contour identity.} Proposition~\ref{prop:contour} as \lean{CatalanLambda.Decay.contour_identity}.
+\item \textbf{Formalized: Andr\'eief and Cauchy.} The Andr\'eief-type determinant bound (Proposition~\ref{prop:andreief}) as \lean{CatalanLambda.Decay.tent_andreief_bound}, and the Cauchy determinant as \lean{CatalanLambda.Decay.cauchy_det}.
+\item \textbf{Formalized: the kernel $k_\rho$, Theorem~\ref{thm:N} and the deduction.} The positive-definiteness lemma for the kernel $k_\rho$ (Lemmas~\ref{lem:F}, \ref{lem:G}, \ref{lem:K} and Corollary~\ref{cor:Kp}); the contour identity for a general ray angle (including the direction $(-1,3)$ used here); Theorem~\ref{thm:N} (node removal $N_\rho$), as \lean{CatalanLambda.Decay.theoremN}, together with \lean{CatalanLambda.Decay.window_liminf_P}; Lemma~\ref{lem:3} as \lean{CatalanLambda.Measure.lemma3_pq}; and the deduction of the irrationality and of the bound of Remark~\ref{rem:77} from the certificate facts, as \lean{CatalanLambda.Measure.lambda_irrational} and \lean{CatalanLambda.Measure.lambda_measure_one}.
+\item \textbf{Formalized: the numerical certificate.} The structure \lean{CatalanLambda.Cert.certFacts} collecting the numerical facts of \S\ref{ssec:cert} and \S\ref{ssec:cert2} (the certified values of $D_{\rm cert}$, $m^\prime$, $S_{\rm cert}$, $g_{\min}$) is inhabited by a kernel-checked proof: about $27.6$k ray boxes, $2.8$k segment cells and $512$ line cells, the bound on $I_\rho$ and the tail estimate. The proof uses a far-field first-order Taylor model with verified rational tables for the logarithm and the arctangent, and takes about one CPU-hour in the kernel. Lean works with the short rational constants $D_{\rm cert}=31111/10000$ and $c_{\rm cert}=68726/10000$ obtained by rounding the certified values, which is why it proves $77.28$ rather than $77.13$.
+\item \textbf{Formalized: the final theorems.} \lean{CatalanLambda.lambda_irrational_final} ($\lambda$ is irrational), \lean{CatalanLambda.catalan_sub_irrational} ($G-5\pi^2/48$ is irrational), \lean{CatalanLambda.lambda_measure_final} ($\mu(\lambda)\le31682445459/409965000\approx77.28$) and \lean{CatalanLambda.lambda_measure_78_catalan} (the round exponent $78$), all unconditional. The statements are in \texttt{ChallengeLambda.lean}, which needs only Mathlib and writes $G$ as the series $\sum_{j\ge0}(-1)^j/(2j+1)^2$; the proofs are in \texttt{SolutionLambda.lean}.
+\item \textbf{Not formalized.} Theorem~A, Lemma~CC and Theorem~\ref{thm:nonvanish2} (\S\ref{sec:krylov}), and the deduction of the bound $57.85$ in Theorem~\ref{thm:measure}. The Lean statement is the weaker bound $77.28$, obtained with the simpler choice of $h$ (Remark~\ref{rem:77}) and the rounded constants.
+\item \textbf{Computer-assisted.} Theorem~\ref{thm:decay} and Theorem~\ref{thm:N} were established by interval-arithmetic computations in Arb (\S\ref{ssec:cert} and \S\ref{ssec:cert2}), carried out by the Python script \texttt{kcert.py} on the certificate measure \texttt{sigma300.json} (produced from a float optimum by the dyadic rounding script \texttt{roundsig.py}; \texttt{mkdata.py} re-derives the data in exact rationals; \texttt{scan.py} is the supplementary content scan). The script was re-run by an independent audit agent, which reproduced the numbers of \S\ref{ssec:cert} and sampled the certified cell bounds against floating-point values at about $5\times10^5$ ray points, $4\times10^4$ segment points and $10^4$ points of the line; but this sampling is not a proof; the certificate facts themselves are re-proved in Lean (the item on the numerical certificate above), by a separate kernel-checked computation. The float construction of $\sigma$ need not be correct since the certificate is checked as it stands. The scripts are archived in the directory 	exttt{paper-lambda/scripts/} of \FormalizationLink.
+\end{itemize}
+The Lean sources are in the directory \texttt{CatalanLambda/} of the repository \FormalizationLink, with the files \texttt{ChallengeLambda.lean} and \texttt{SolutionLambda.lean} at its top level.
+
+All other claims were audited by independent Claude (Anthropic) agents who re-derived the statements by hand and re-ran the numerical checks: the content bound; Lemmas~\ref{lem:1}, \ref{lem:2} and Theorem~\ref{thm:nonvanish} (exact characteristic polynomials at $h=8,12,16,20$ and all admissible $\ell$; $\gcd=1$ for $\ell=7,\dots,383$; no violation of the tropical bound against the exact $v_p(\den P_h)$ at $h=32,64$); Lemmas~\ref{lem:F}, \ref{lem:G}, \ref{lem:K} and Corollary~\ref{cor:Kp} (by hand, with a random numerical test of the inequality in 2000 trials); the contour identity for the direction $(-1,3)$ (by hand and to $10^{-17}$ numerically); Lemma~\ref{lem:B} and Theorem~\ref{thm:N}, checked line by line against the circle-smoothing version; the certificate re-run (reproducing $D_{\rm cert}\ge3.11137905$, $c\le6.87179932$); Lemma~\ref{lem:3} ($1044$ exact cases); and the simpler deduction of Remark~\ref{rem:77} ($4/(3\eta)+1=11.2228582$, $77.12123<77.13$). The new material of \S\ref{sec:krylov} and Theorem~\ref{thm:measure} was audited by a further independent Claude agent (full pass): Theorem~A (including the sign) was checked in exact rational arithmetic at $90$ random rational pairs $(\theta,s)$, including non-integer and negative $s$, for $n\le10$, and against the direct Cauchy Gram matrices ($\theta=0$, $s\le2n+1$, $n\le10$); $u(K,K)$ modulo $\ell$ is nonzero and equals the closed form for all $86$ primes $\ell\equiv3\pmod4$ with $7\le\ell<1000$; the resultant identity (R) was checked exactly; the characteristic polynomials of $N_K$, $N_{K+1}$ are coprime for $39$ primes $\ell<400$; Lemma~\ref{lem:2} was checked for $\ell=7,11,19,23$ and $h=\ell-K,\ell-K-1$; and the numbers $6.8717994\,(1/0.1304266+0.75)=57.84095$, $62.9948$ (without Lemma~\ref{lem:3}) and $77.1213$ were recomputed. The formula of Theorem~A was also verified exactly for every $n\le12$. Exact computation of $u(K,K)$ modulo $\ell$ for all $\ell\equiv3\pmod 4$, $7\le\ell<4500$, gave no zero. The deduction of Theorem~\ref{thm:measure} is written out in \S\ref{sec:measure} from the audited arithmetic. The audit listed only cosmetic issues, which are corrected in this text (notably the factor $4/h$ in $\eta$). This is not a substitute for human refereeing.
+
+%%% --------------------------------------------------------------------
+\section*{Acknowledgments and provenance}
+The irrationality of Catalan's constant, and the Lean formalization on which the author's
+earlier work builds, are due to OpenAI \cite{OpenAI2026}. The mathematics of this paper
+---the matrices $T_h$, the content, decay, nonvanishing and node-removal arguments, the numerical
+certificates and the text---were derived by Claude (Anthropic) agents working at the request
+of the author, who posed the problem, directed the work, and is responsible for this
+submission; independent Claude agents performed the audits described in \S\ref{sec:formal}.
+The Lean formalization was likewise written by Claude agents working with the author.
+The repository infrastructure, vendored formalizations and certificate tooling of the companion project, which this work reuses, were developed with OpenAI Codex as described in \cite{Litsey2026}.
+We use Lean~4 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus} (whose Wiener--Ikehara theorem we use to formalize the prime number theorem in progressions), and Arb \cite{Arb} for interval arithmetic.
+The use of AI in this work is disclosed here in the same spirit as in \cite{Litsey2026}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Arb}
+F.~Johansson,
+\emph{Arb: efficient arbitrary-precision midpoint-radius interval arithmetic},
+IEEE Trans.\ Comput.\ \textbf{66} (2017), 1281--1292.
+
+\bibitem{Carreira2026}
+Marcos Costa Santos Carreira,
+\emph{General designs and an irrationality exponent for Catalan's constant},
+preprint v1 (October 9, 2026),
+\href{https://doi.org/10.5281/zenodo.23326325}{doi:10.5281/zenodo.23326325}.
+
+\bibitem{Davenport}
+H.~Davenport,
+\emph{Multiplicative Number Theory}, 3rd ed., Graduate Texts in Mathematics 74, Springer, 2000.
+
+\bibitem{Forrester2018Andreief}
+P.~J.~Forrester,
+\emph{Meet Andr\'eief, Bordeaux 1886, and Andreev, Kharkov 1882--83},
+preprint (2018), \href{https://arxiv.org/abs/1806.10411}{arXiv:1806.10411}.
+
+\bibitem{Jha2026}
+R.~K.~Jha,
+\emph{A finite irrationality measure for Catalan's constant},
+preprint v1, October 8, 2026,
+\href{https://doi.org/10.5281/zenodo.23237269}{doi:10.5281/zenodo.23237269}.
+
+\bibitem{Litsey2026}
+S.~Litsey,
+\emph{An irrationality measure for Catalan's constant},
+preprint, October 16, 2026; formalization at \FormalizationLink.
+
+\bibitem{Mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and
+Proofs (CPP 2020), 367--381.
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean~4 theorem prover and programming language},
+in: Automated Deduction -- CADE 28, Lecture Notes in Computer Science 12699, Springer, 2021,
+625--635.
+
+\bibitem{MV}
+H.~L.~Montgomery and R.~C.~Vaughan,
+\emph{Multiplicative Number Theory I: Classical Theory}, Cambridge Studies in Advanced Mathematics 97, Cambridge University Press, 2007.
+
+\bibitem{OpenAI2026}
+OpenAI,
+\emph{Catalan's constant is irrational},
+preprint (September 24, 2026), with a Lean formalization, available at
+\href{https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Catalans-constant-is-irrational-September-24-2026/paper.pdf}{the original paper PDF}
+and
+\href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan}{the Lean formalization}
+(repository commit \texttt{fd4aeeb}, October 7, 2026).
+
+\bibitem{PNTPlus}
+The PrimeNumberTheoremAnd contributors,
+\emph{The PNT+ project: a Lean formalization of the prime number theorem
+and related results},
+\url{https://github.com/AlexKontorovich/PrimeNumberTheoremAnd}.
+
+\bibitem{SaffTotik}
+E.~B.~Saff and V.~Totik,
+\emph{Logarithmic Potentials with External Fields}, Grundlehren der mathematischen Wissenschaften 316, Springer, 1997.
+
+\bibitem{Sun2026}
+Z.-W.~Sun,
+\emph{Catalan's constant is irrational},
+preprint (2026), \href{https://arxiv.org/abs/2609.04176}{arXiv:2609.04176}.
+
+\bibitem{Wachs2026}
+D.~Wachs,
+\emph{A note on a recent claimed proof of the irrationality of Catalan's constant},
+preprint (2026), \href{https://arxiv.org/abs/2609.22339}{arXiv:2609.22339}.
+
+\end{thebibliography}
+
+\end{document}

@@ -21,6 +21,23 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
 ([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
 
+## Companion result: an irrationality measure for G − 5π²/48
+
+The repository also contains a separate, fully formalized result. Write
+`λ = G/2 − 5π²/96`, so that `G − 5π²/48 = 2λ`. Then λ is irrational, and for all coprime `p, q` with `q`
+sufficiently large,
+`|λ − p/q| > q^(-78)`. The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
+
+- Statements: [`ChallengeLambda.lean`](ChallengeLambda.lean) (Mathlib only, with G written as a series).
+- Proofs: [`SolutionLambda.lean`](SolutionLambda.lean) and the library [`CatalanLambda/`](CatalanLambda/).
+- Kernel-checked certificate: `CatalanLambda.Cert.certFacts`, using `decide +kernel` only.
+- Checking: [`comparator-lambda.json`](comparator-lambda.json). Axioms are `propext`, `Quot.sound` and `Classical.choice`.
+- Metadata: [`formalization-lambda.yaml`](formalization-lambda.yaml).
+- Paper: [`paper-lambda/`](paper-lambda/), with certificate scripts in `paper-lambda/scripts/`. The paper also proves the stronger bound
+  μ(λ) ≤ 57.85 by a determinant evaluation that is not yet formalized.
+
+Build the λ result with `lake build CatalanLambda ChallengeLambda SolutionLambda`. It is not a default target.
+
 ## What to read
 
 - [`Challenge.lean`](Challenge.lean) states the strongest bounds and retained historical statements using Mathlib only, with Catalan's
