@@ -11,11 +11,11 @@ open CatalanLambda.Decay
 /-- Existence of the data required by `measure_core` with `s = 2`: a prime `ℓ ≡ 3 (4)` in
 `(a log q, b log q]` not dividing `q`, and then nonvanishing at one of the three indices. -/
 theorem hex_two (a b : ℝ) (ha : 0 < a) (hab : a + 2 < b) :
-    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q →
+    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), True → q₀ ≤ q →
       ∃ ℓ h : ℕ, a * Real.log q < ℓ ∧ (ℓ : ℝ) ≤ b * Real.log q ∧ (3 * ℓ - 1) / 4 ≤ h ∧
         h ≤ ℓ - 1 ∧ CatalanLambda.P h ((p : ℚ) / (q : ℚ)) ≠ 0 := by
   obtain ⟨q₁, hq₁⟩ := exists_prime_window a b ha hab
-  refine ⟨max q₁ ⌈Real.exp (8 / a)⌉₊, fun p q hq => ?_⟩
+  refine ⟨max q₁ ⌈Real.exp (8 / a)⌉₊, fun p q _ hq => ?_⟩
   obtain ⟨ℓ, hp, h3, hl1, hl2, hnd⟩ := hq₁ q (le_trans (le_max_left _ _) hq)
   have hqe : Real.exp (8 / a) ≤ q :=
     le_trans (Nat.le_ceil _) (by exact_mod_cast le_trans (le_max_right _ _) hq)
@@ -42,6 +42,7 @@ theorem lambda_measure_two {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin 
       (q : ℝ) ^ (-((F.ccert : ℝ) * (4 / (3 * ((F.Dcert : ℝ) - 313 / 105)) + 2) + e))
         < |(catalanG / 2 - 5 * Real.pi ^ 2 / 96) - (p : ℝ) / q| := by
   rw [← lamS_eq]
-  exact measure_core F hD hc 2 two_pos hex_two he
+  obtain ⟨q₀, H⟩ := measure_core F hD hc 2 two_pos (fun _ _ => True) hex_two he
+  exact ⟨q₀, fun p q hq => H p q trivial hq⟩
 
 end CatalanLambda.Measure

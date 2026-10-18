@@ -18,12 +18,12 @@ there are `ℓ ∈ (a log q, b log q]` and `h ∈ [(3ℓ-1)/4, ℓ-1]` with `P_h
 `η = D_cert - 313/105`. -/
 theorem measure_core {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
     (F : CertFacts K ρ ε c m) (hD : (313 / 105 : ℝ) < F.Dcert) (hc : 0 < (F.ccert : ℝ))
-    (s : ℝ) (hs : 0 < s)
-    (Hex : ∀ a b : ℝ, 0 < a → a + s < b → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q →
+    (s : ℝ) (hs : 0 < s) (Pr : ℤ → ℕ → Prop)
+    (Hex : ∀ a b : ℝ, 0 < a → a + s < b → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), Pr p q → q₀ ≤ q →
       ∃ ℓ h : ℕ, a * Real.log q < ℓ ∧ (ℓ : ℝ) ≤ b * Real.log q ∧ (3 * ℓ - 1) / 4 ≤ h ∧
         h ≤ ℓ - 1 ∧ CatalanLambda.P h ((p : ℚ) / (q : ℚ)) ≠ 0)
     {e : ℝ} (he : 0 < e) :
-    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q →
+    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), Pr p q → q₀ ≤ q →
       (q : ℝ) ^ (-((F.ccert : ℝ) * (4 / (3 * ((F.Dcert : ℝ) - 313 / 105)) + s) + e))
         < |lamS - (p : ℝ) / q| := by
   set η : ℝ := (F.Dcert : ℝ) - 313 / 105 with hη
@@ -49,7 +49,7 @@ theorem measure_core {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → 
   obtain ⟨h₀, H⟩ := sep_core F hθ0 (by rw [hη] at hθη; exact hθη)
   obtain ⟨q₁, hq₁⟩ := Hex a b ha0 hab
   set L₁ : ℝ := max ((4 * h₀ + 8) / a) (2 * θ / δ + 1) with hL₁
-  refine ⟨max q₁ ⌈Real.exp L₁⌉₊, fun p q hq => ?_⟩
+  refine ⟨max q₁ ⌈Real.exp L₁⌉₊, fun p q hPr hq => ?_⟩
   have hq1 : q₁ ≤ q := le_trans (le_max_left _ _) hq
   have hqe : Real.exp L₁ ≤ q := le_trans (Nat.le_ceil _) (by exact_mod_cast le_trans (le_max_right _ _) hq)
   have hqpos : (0 : ℝ) < q := lt_of_lt_of_le (Real.exp_pos _) hqe
@@ -58,7 +58,7 @@ theorem measure_core {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → 
   set L := Real.log q with hLdef
   by_contra hcon
   push Not at hcon
-  obtain ⟨ℓ, h, hl1, hl2, hh1, hh2, hP⟩ := hq₁ p q hq1
+  obtain ⟨ℓ, h, hl1, hl2, hh1, hh2, hP⟩ := hq₁ p q hPr hq1
   have hLa : (4 * h₀ + 8 : ℝ) ≤ a * L := by
     have : (4 * h₀ + 8 : ℝ) / a ≤ L := le_trans (le_max_left _ _) hL
     rw [div_le_iff₀ ha0] at this; linarith
