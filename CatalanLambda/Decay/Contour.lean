@@ -305,4 +305,57 @@ theorem contour_identity (N0 a b : ℕ) :
   field_simp
   ring
 
+
+lemma normF_le (N0 a b : ℕ) (n : ℤ) {θ r : ℝ} (hs : Real.sin θ ≠ 0) (hr : 0 ≤ r) :
+    ‖(eterm (rayPt (xstar N0) θ r) n
+        * ((rayPt (xstar N0) θ r - a)⁻¹ * (rayPt (xstar N0) θ r - b)⁻¹)) * exp ((θ : ℂ) * I)‖
+      ≤ (‖eterm ((xstar N0 : ℝ) : ℂ) n‖ / Real.sqrt (kap2 θ) ^ 2)
+        * ((1 / Real.sqrt (kap2 θ) ^ 2) * (1 / (3 / 8 + r) ^ 2)) := by
+  have hK := Real.sqrt_pos.2 (kap2_pos hs)
+  set K := Real.sqrt (kap2 θ)
+  rw [norm_mul, norm_mul, norm_mul, norm_exp_ofReal_mul_I, mul_one]
+  have h1 := norm_eterm_ray_le N0 n hs hr
+  have h2 := norm_inv_ray_nat_le N0 a hs hr
+  have h3 := norm_inv_ray_nat_le N0 b hs hr
+  have hpos : 0 < K * (3 / 8 + r) := by positivity
+  calc ‖eterm (rayPt (xstar N0) θ r) n‖ * (‖(rayPt (xstar N0) θ r - (a : ℂ))⁻¹‖
+        * ‖(rayPt (xstar N0) θ r - (b : ℂ))⁻¹‖)
+      ≤ (‖eterm ((xstar N0 : ℝ) : ℂ) n‖ / K ^ 2) * ((1 / (K * (3 / 8 + r))) * (1 / (K * (3 / 8 + r)))) := by
+        apply mul_le_mul h1 (mul_le_mul h2 h3 (norm_nonneg _) (by positivity))
+          (by positivity) (by positivity)
+    _ = _ := by field_simp
+
+/-- The ray integrand of `E v_a v_b` is integrable on `(0, ∞)` (so `contL` is a genuine integral). -/
+theorem integrableOn_E_ray (N0 a b : ℕ) {θ : ℝ} (hs : Real.sin θ ≠ 0) :
+    IntegrableOn (fun r : ℝ => (EC (rayPt (xstar N0) θ r)
+      * ((rayPt (xstar N0) θ r - a)⁻¹ * (rayPt (xstar N0) θ r - b)⁻¹)) * exp ((θ : ℂ) * I))
+      (Ioi 0) := by
+  have hK := Real.sqrt_pos.2 (kap2_pos hs)
+  set K := Real.sqrt (kap2 θ) with hKdef
+  set x := xstar N0 with hxdef
+  have hsum : Summable (fun n : ℤ => ‖eterm (x : ℂ) n‖ / K ^ 2) :=
+    (summable_norm_iff.2 (summable_eterm (x : ℂ))).div_const _
+  have hlim : ∀ r : ℝ, HasSum (fun n : ℤ => (eterm (rayPt x θ r) n
+      * ((rayPt x θ r - a)⁻¹ * (rayPt x θ r - b)⁻¹)) * exp ((θ : ℂ) * I))
+      ((EC (rayPt x θ r) * ((rayPt x θ r - a)⁻¹ * (rayPt x θ r - b)⁻¹)) * exp ((θ : ℂ) * I)) :=
+    fun r => ((summable_eterm _).hasSum.mul_right _).mul_right _
+  have hmeas : ∀ n : ℤ, Measurable fun r : ℝ => (eterm (rayPt x θ r) n
+      * ((rayPt x θ r - a)⁻¹ * (rayPt x θ r - b)⁻¹)) * exp ((θ : ℂ) * I) := by
+    intro n
+    unfold rayPt eterm
+    fun_prop
+  refine Integrable.mono' (g := fun r => (∑' n : ℤ, ‖eterm (x : ℂ) n‖ / K ^ 2)
+      * ((1 / K ^ 2) * (1 / (3 / 8 + r) ^ 2))) ?_ ?_ ?_
+  · exact ((integrableOn_invsq (3 / 8) (by norm_num)).const_mul (1 / K ^ 2)).const_mul _
+  · refine aestronglyMeasurable_of_tendsto_ae (atTop : Filter (Finset ℤ))
+      (f := fun s r => ∑ n ∈ s, (eterm (rayPt x θ r) n
+        * ((rayPt x θ r - a)⁻¹ * (rayPt x θ r - b)⁻¹)) * exp ((θ : ℂ) * I))
+      (fun s => (Finset.measurable_sum s (fun n _ => hmeas n)).aestronglyMeasurable)
+      (Eventually.of_forall fun r => hlim r)
+  · refine (ae_restrict_iff' measurableSet_Ioi).2 (Eventually.of_forall fun r hr => ?_)
+    have hb : HasSum (fun n : ℤ => (‖eterm (x : ℂ) n‖ / K ^ 2) * ((1 / K ^ 2) * (1 / (3 / 8 + r) ^ 2)))
+        ((∑' n : ℤ, ‖eterm (x : ℂ) n‖ / K ^ 2) * ((1 / K ^ 2) * (1 / (3 / 8 + r) ^ 2))) :=
+      hsum.hasSum.mul_right _
+    exact HasSum.norm_le_of_bounded (hlim r) hb (fun n => normF_le N0 a b n hs (le_of_lt hr))
+
 end CatalanLambda.Decay
