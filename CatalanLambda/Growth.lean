@@ -27,10 +27,10 @@ def T1 (h a : ℕ) : ℕ := max (4 * a + 2) (h - 1 - a)
 def T3 (h a : ℕ) : ℕ := max ((4 * a + 2) / 3) (h - 1 - a)
 
 /-- the set of active odd prime powers at `a` -/
-noncomputable def Fa (h a : ℕ) : Finset ℕ := (Qset h).filter (fun q => uq h q a)
+noncomputable def FaSet (h a : ℕ) : Finset ℕ := (Qset h).filter (fun q => uq h q a)
 
 lemma prime_part (h a : ℕ) :
-    ∑ q ∈ (Fa h a).filter Nat.Prime, Real.log q ≤ th 3 (T1 h a) + th 1 (T3 h a) := by
+    ∑ q ∈ (FaSet h a).filter Nat.Prime, Real.log q ≤ th 3 (T1 h a) + th 1 (T3 h a) := by
   set S3 := (Finset.range (T1 h a + 1)).filter (fun n => n.Prime ∧ n % 4 = 3)
   set S1 := (Finset.range (T3 h a + 1)).filter (fun n => n.Prime ∧ n % 4 = 1)
   have hdisj : Disjoint S3 S1 := by
@@ -39,9 +39,9 @@ lemma prime_part (h a : ℕ) :
     have := (Finset.mem_filter.mp h3).2.2
     have := (Finset.mem_filter.mp h1).2.2
     omega
-  have hsub : (Fa h a).filter Nat.Prime ⊆ S3 ∪ S1 := by
+  have hsub : (FaSet h a).filter Nat.Prime ⊆ S3 ∪ S1 := by
     intro q hq
-    simp only [Fa, Qset, Finset.mem_filter, Finset.mem_range] at hq
+    simp only [FaSet, Qset, Finset.mem_filter, Finset.mem_range] at hq
     obtain ⟨⟨⟨hq4, hpp, hodd⟩, hu⟩, hqp⟩ := hq
     have hq2 : q % 2 = 1 := Nat.odd_iff.mp hodd
     simp only [Finset.mem_union, S3, S1, Finset.mem_filter, Finset.mem_range]
@@ -59,7 +59,7 @@ lemma prime_part (h a : ℕ) :
       rw [hj] at hu
       unfold T3
       refine ⟨by omega, hqp, h1⟩
-  calc ∑ q ∈ (Fa h a).filter Nat.Prime, Real.log q
+  calc ∑ q ∈ (FaSet h a).filter Nat.Prime, Real.log q
       ≤ ∑ q ∈ S3 ∪ S1, Real.log q := by
         apply Finset.sum_le_sum_of_subset_of_nonneg hsub
         intro n hn _
@@ -72,16 +72,16 @@ lemma prime_part (h a : ℕ) :
 noncomputable def Qnp (h : ℕ) : Finset ℕ := (Qset h).filter (fun q => ¬ q.Prime)
 
 lemma nonprime_part (h a : ℕ) (hh : 1 ≤ h) :
-    ∑ q ∈ (Fa h a).filter (fun q => ¬ q.Prime), Real.log (q.minFac : ℝ)
+    ∑ q ∈ (FaSet h a).filter (fun q => ¬ q.Prime), Real.log (q.minFac : ℝ)
       ≤ (Qnp h).card * Real.log (4 * h) := by
   have h4 : (1 : ℝ) ≤ 4 * h := by
     have : (1 : ℝ) ≤ h := by exact_mod_cast hh
     linarith
-  calc ∑ q ∈ (Fa h a).filter (fun q => ¬ q.Prime), Real.log (q.minFac : ℝ)
-      ≤ ∑ q ∈ (Fa h a).filter (fun q => ¬ q.Prime), Real.log (4 * h : ℝ) := by
+  calc ∑ q ∈ (FaSet h a).filter (fun q => ¬ q.Prime), Real.log (q.minFac : ℝ)
+      ≤ ∑ q ∈ (FaSet h a).filter (fun q => ¬ q.Prime), Real.log (4 * h : ℝ) := by
         apply Finset.sum_le_sum
         intro q hq
-        simp only [Fa, Qset, Finset.mem_filter, Finset.mem_range] at hq
+        simp only [FaSet, Qset, Finset.mem_filter, Finset.mem_range] at hq
         obtain ⟨⟨⟨hq4, hpp, hodd⟩, hu⟩, hqp⟩ := hq
         have hqpos : 0 < q := hpp.pos
         have : q.minFac ≤ q := Nat.minFac_le hqpos
@@ -91,7 +91,7 @@ lemma nonprime_part (h a : ℕ) (hh : 1 ≤ h) :
     _ ≤ ∑ q ∈ Qnp h, Real.log (4 * h : ℝ) := by
         apply Finset.sum_le_sum_of_subset_of_nonneg
         · intro q hq
-          simp only [Fa, Qnp, Finset.mem_filter] at hq ⊢
+          simp only [FaSet, Qnp, Finset.mem_filter] at hq ⊢
           exact ⟨hq.1.1, hq.2⟩
         · intros; exact Real.log_nonneg h4
     _ = (Qnp h).card * Real.log (4 * h) := by
@@ -99,14 +99,14 @@ lemma nonprime_part (h a : ℕ) (hh : 1 ≤ h) :
 
 lemma log_W (h a : ℕ) :
     Real.log (W h a) = Real.log 4 + (Nat.log 2 h) * Real.log 2 +
-      ∑ q ∈ Fa h a, Real.log (q.minFac : ℝ) := by
-  have hq : ∀ q ∈ Fa h a, (q.minFac : ℝ) ≠ 0 := fun q _ => by
+      ∑ q ∈ FaSet h a, Real.log (q.minFac : ℝ) := by
+  have hq : ∀ q ∈ FaSet h a, (q.minFac : ℝ) ≠ 0 := fun q _ => by
     exact_mod_cast (Nat.minFac_pos q).ne'
-  have : (W h a : ℝ) = 4 * (2 ^ Nat.log 2 h * ∏ q ∈ Fa h a, (q.minFac : ℝ)) := by
-    unfold W Wm Wodd Fa
+  have : (W h a : ℝ) = 4 * (2 ^ Nat.log 2 h * ∏ q ∈ FaSet h a, (q.minFac : ℝ)) := by
+    unfold W Wm Wodd FaSet
     push_cast
     rfl
-  have hprod : (∏ q ∈ Fa h a, (q.minFac : ℝ)) ≠ 0 := Finset.prod_ne_zero_iff.mpr hq
+  have hprod : (∏ q ∈ FaSet h a, (q.minFac : ℝ)) ≠ 0 := Finset.prod_ne_zero_iff.mpr hq
   rw [this, Real.log_mul (by norm_num) (mul_ne_zero (by positivity) hprod),
     Real.log_mul (by positivity) hprod, Real.log_pow, Real.log_prod hq]
   push_cast; ring
@@ -115,9 +115,9 @@ lemma log_W_le (h a : ℕ) (hh : 1 ≤ h) :
     Real.log (W h a) ≤ Real.log 4 + (Nat.log 2 h) * Real.log 2 +
       (th 3 (T1 h a) + th 1 (T3 h a)) + (Qnp h).card * Real.log (4 * h) := by
   rw [log_W]
-  rw [← Finset.sum_filter_add_sum_filter_not (Fa h a) Nat.Prime]
-  have e : ∑ q ∈ (Fa h a).filter Nat.Prime, Real.log (q.minFac : ℝ)
-      = ∑ q ∈ (Fa h a).filter Nat.Prime, Real.log (q : ℝ) := by
+  rw [← Finset.sum_filter_add_sum_filter_not (FaSet h a) Nat.Prime]
+  have e : ∑ q ∈ (FaSet h a).filter Nat.Prime, Real.log (q.minFac : ℝ)
+      = ∑ q ∈ (FaSet h a).filter Nat.Prime, Real.log (q : ℝ) := by
     refine Finset.sum_congr rfl fun q hq => ?_
     rw [(Finset.mem_filter.mp hq).2.minFac_eq]
   rw [e]
