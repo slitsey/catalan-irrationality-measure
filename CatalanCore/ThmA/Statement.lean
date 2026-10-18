@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.ThmA.Defs
+public import CatalanCore.ThmA.CC
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.BigOperators.Ring.Finset
@@ -8,7 +9,7 @@ public import Mathlib.Algebra.BigOperators.Ring.Finset
 /-!
 # Frozen statements for Theorem A at `θ = 0`
 
-**STATUS: statements only; proofs are in progress.**  Every `sorry` in this file is a placeholder
+**STATUS: statements only; proofs are in progress.**  (`uK_ne_zero_CC`, the Lemma CC shortcut, is now proved in `CatalanCore.ThmA.CC`, which this file imports.)  Every `sorry` in this file is a placeholder
 for work being done elsewhere in `CatalanCore`; do not rely on them as proved.  The signatures are
 frozen so that other packages (P6 nonvanishing, the λ upgrade) can build against them.
 -/
@@ -51,12 +52,6 @@ theorem closed_form (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s) : uK ℚ K s =
 /-- **Unit-ratio lemma** (STATEMENT ONLY). -/
 theorem unit_of_lt (l : ℕ) [Fact l.Prime] (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s)
     (hlt : s + K < l) : uK (ZMod l) K s ≠ 0 := by
-  sorry
-
-/-- **Lemma CC, shortcut (i)** (STATEMENT ONLY): over `𝔽_ℓ`, `ℓ ≡ 3 (mod 4)`,
-`K = (ℓ+1)/4`, `s ∈ {K, K+1}`. -/
-theorem uK_ne_zero_CC (l : ℕ) [Fact l.Prime] (K s : ℕ) (hl : l % 4 = 3) (hl7 : 7 ≤ l)
-    (hK : K = (l + 1) / 4) (hs : s = K ∨ s = K + 1) : uK (ZMod l) K s ≠ 0 := by
   sorry
 
 /-- **Corollary kr** (STATEMENT ONLY): if `u(A, v) ≠ 0` ... the two Gram matrices `N_s`, `N_{s+1}`
