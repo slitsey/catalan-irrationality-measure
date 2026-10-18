@@ -4,3 +4,4 @@
 - `lean-cert/`: generators for the kernel-checked Lean certificate in `CatalanLambda/Cert/`, and exact-integer mirrors of the Lean definitions (`mirror*.py`). Paths are relative to the repository root.
 
 The Lean certificate (`CatalanLambda.Cert.certFacts`) does not depend on these scripts. They document how its data were produced.
+- `scripts-hybrid/`: hybrid (μ(λ) ≤ 46.45) Arb decay/window certificate and exact checks; see its README.

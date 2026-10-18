@@ -34,8 +34,11 @@ The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
 - Kernel-checked certificate: `CatalanLambda.Cert.certFacts`, using `decide +kernel` only.
 - Checking: [`comparator-lambda.json`](comparator-lambda.json). Axioms are `propext`, `Quot.sound` and `Classical.choice`.
 - Metadata: [`formalization-lambda.yaml`](formalization-lambda.yaml).
-- Paper: [`paper-lambda/`](paper-lambda/), with certificate scripts in `paper-lambda/scripts/`. The paper also proves the stronger bound
-  μ(λ) ≤ 57.85 by a determinant evaluation that is not yet formalized.
+- Paper: [`paper-lambda/`](paper-lambda/), with certificate scripts in `paper-lambda/scripts/`. The paper also proves two stronger
+  bounds that are **not formalized**. Both rest on proofs audited by independent Claude agents, not on a human referee:
+  - μ(λ) ≤ 57.85 and μ(λ′) ≤ 57.85, by a determinant evaluation.
+  - **μ(λ) ≤ 46.45**, by a rectangular "hybrid" Löwner frame. Its interval-arithmetic decay and window certificate is in
+    `paper-lambda/scripts-hybrid/`. The hybrid has not been done for λ′, which stays at 57.85.
 
 Build the λ result with `lake build CatalanLambda ChallengeLambda SolutionLambda`. It is not a default target.
 
