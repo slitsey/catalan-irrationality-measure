@@ -3,6 +3,7 @@ module
 public import CatalanCore.ThmA.Defs
 public import CatalanCore.ThmA.CC
 public import CatalanCore.ThmA.NoCommonRoot
+public import CatalanCore.Linalg.Cauchy
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.BigOperators.Ring.Finset
@@ -55,12 +56,12 @@ theorem unit_of_lt (l : ℕ) [Fact l.Prime] (K s : ℕ) (hK : 1 ≤ K) (hs : K -
     (hlt : s + K < l) : uK (ZMod l) K s ≠ 0 := by
   sorry
 
-/-- **Cauchy determinant, two-family form** (STATEMENT ONLY). -/
+/-- **Cauchy determinant, two-family form** (proved in `CatalanCore.Linalg.Cauchy`). -/
 theorem cauchy_det {F : Type*} [Field F] {n : ℕ} (x y : Fin n → F)
     (hxy : ∀ i j, x i + y j ≠ 0) :
     (Matrix.of fun i j => 1 / (x i + y j)).det =
       (∏ i : Fin n, ∏ j ∈ Finset.Ioi i, ((x j - x i) * (y j - y i))) /
-        ∏ i : Fin n, ∏ j : Fin n, (x i + y j) := by
-  sorry
+        ∏ i : Fin n, ∏ j : Fin n, (x i + y j) :=
+  CatalanCore.cauchy_det x y hxy
 
 end CatalanCore.ThmA
