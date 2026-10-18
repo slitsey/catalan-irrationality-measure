@@ -128,6 +128,19 @@ theorem det_fullN_eq_aeval {K : Type*} [Field K] [Algebra ℚ K] (c : ι → ℕ
   rw [← h2, det_fullN_eq Fr c xs ys hD]
   simp
 
+/-- **Minor expansion** (unconditional): with `t` added only at the common diagonal,
+`det Full(x+t) = ∑_{S ⊆ ι} t^{|ι|-|S|} det Full_S(x)`, `Full_S` = rows `S ∪ X'`, columns `S ∪ Y'`. -/
+theorem det_fullN_expansion {K : Type*} [Field K] [Algebra ℚ K] (c : ι → ℕ) (xs ys : κ → ℕ)
+    (x t : K) :
+    (FullN Fr c xs ys (x + t)).det
+      = ∑ S ∈ (univ : Finset ι).powerset, t ^ (Fintype.card ι - S.card) *
+          (FullN Fr (fun a : S => c a.1) xs ys x).det := by
+  have h := det_blk_expansion (blkA Fr c : Matrix ι ι K) (blkB Fr c ys) (blkC Fr c xs)
+    (blkD Fr xs ys) x t
+  unfold FullN
+  rw [h]
+  exact Finset.sum_congr rfl (fun S _ => rfl)
+
 end Over
 
 end CatalanCore.Rect
