@@ -524,4 +524,135 @@ theorem contL_S111 (u v w x φ : ℝ) (h1 : Real.pi / 2 < φ) (h2 : φ < Real.pi
       Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons]
   rfl
 
+
+lemma rayI_add_smul {x θ : ℝ} (f1 f2 : ℂ → ℂ) (c : ℂ)
+    (h1 : IntegrableOn (fun r : ℝ => f1 (rayPt x θ r) * exp ((θ : ℂ) * I)) (Ioi 0))
+    (h2 : IntegrableOn (fun r : ℝ => f2 (rayPt x θ r) * exp ((θ : ℂ) * I)) (Ioi 0)) :
+    rayI x θ (fun z => f1 z + c * f2 z) = rayI x θ f1 + c * rayI x θ f2 := by
+  unfold rayI
+  rw [← integral_const_mul, ← integral_add h1 (h2.const_mul c)]
+  congr 1
+  funext r
+  ring
+
+/-- Double pole at `u` plus simple pole at `v`. -/
+theorem contL_S21 (u v x φ : ℝ) (h1 : Real.pi / 2 < φ) (h2 : φ < Real.pi)
+    (huv : u ≠ v) (hu : u ≠ x) (hv : v ≠ x) :
+    contL x φ (fun z => (z - u)⁻¹ * (z - u)⁻¹ * (z - v)⁻¹)
+      = -(2 * Real.pi * I) *
+        ((if v < x then 1 / (((v : ℂ) - u) ^ 2) else 0)
+        - (if u < x then 1 / (((v : ℂ) - u) ^ 2) else 0)) := by
+  have hpi := Real.pi_pos
+  have hsφ : Real.sin φ ≠ 0 := by
+    apply ne_of_gt; apply Real.sin_pos_of_pos_of_lt_pi <;> linarith
+  have hsφ' : Real.sin (-φ) ≠ 0 := by rw [Real.sin_neg]; exact neg_ne_zero.2 hsφ
+  have cuv : (u : ℂ) - v ≠ 0 := sub_ne_zero.2 (by exact_mod_cast huv)
+  have cvu : (v : ℂ) - u ≠ 0 := sub_ne_zero.2 (by exact_mod_cast huv.symm)
+  set A : ℂ := 1 / (((v : ℂ) - u) ^ 2) with hA
+  set C : ℂ := 1 / ((u : ℂ) - v) with hC
+  set α : Fin 2 → ℂ := ![A, -A] with hα
+  set p : Fin 2 → ℝ := ![v, u] with hp
+  have hrep : ∀ z : ℂ, z - u ≠ 0 → z - v ≠ 0 →
+      (z - u)⁻¹ * (z - u)⁻¹ * (z - v)⁻¹
+        = (∑ i : Fin 2, α i / (z - p i)) + C * ((z - u)⁻¹ * (z - u)⁻¹) := by
+    intro z a b
+    simp only [Fin.sum_univ_two, hα, hp, hA, hC, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons]
+    field_simp
+    ring
+  have hsum0 : ∑ i : Fin 2, α i = 0 := by
+    simp [Fin.sum_univ_two, hα]
+  have hpne : ∀ i ∈ (Finset.univ : Finset (Fin 2)), p i ≠ x := by
+    intro i _
+    fin_cases i <;> simp [hp, hu, hv]
+  have hcg : ∀ θ : ℝ, Real.sin θ ≠ 0 → ∀ r : ℝ, 0 ≤ r →
+      (rayPt x θ r - u)⁻¹ * (rayPt x θ r - u)⁻¹ * (rayPt x θ r - v)⁻¹
+        = (∑ i : Fin 2, α i / (rayPt x θ r - p i)) + C * ((rayPt x θ r - u)⁻¹ * (rayPt x θ r - u)⁻¹) := by
+    intro θ hs r hr
+    exact hrep _ (rayPt_sub_ne hu hs hr) (rayPt_sub_ne hv hs hr)
+  have hpow : ∀ θ : ℝ, Real.sin θ ≠ 0 → IntegrableOn (fun r : ℝ =>
+      ((rayPt x θ r - u)⁻¹ * (rayPt x θ r - u)⁻¹) * exp ((θ : ℂ) * I)) (Ioi 0) :=
+    fun θ hs => integrableOn_ray2 u u hu hu hs
+  have hint : ∀ θ : ℝ, Real.sin θ ≠ 0 → IntegrableOn
+      (fun r : ℝ => (∑ i : Fin 2, α i / (rayPt x θ r - p i)) * exp ((θ : ℂ) * I)) (Ioi 0) := by
+    intro θ hs
+    have h3 := ((integrableOn_ray3 u u v hu hu hv hs).sub ((hpow θ hs).const_mul C))
+    refine h3.congr_fun (fun r hr => ?_) measurableSet_Ioi
+    simp only [Pi.sub_apply, hcg θ hs r (le_of_lt hr)]
+    ring
+  have hR : ∀ θ : ℝ, Real.sin θ ≠ 0 →
+      rayI x θ (fun z => (z - u)⁻¹ * (z - u)⁻¹ * (z - v)⁻¹)
+        = rayI x θ (fun z => ∑ i : Fin 2, α i / (z - p i))
+          + C * rayI x θ (fun z => (z - u)⁻¹ * (z - u)⁻¹) := by
+    intro θ hs
+    have hh := rayI_add_smul (x := x) (θ := θ) (fun z => ∑ i : Fin 2, α i / (z - p i))
+      (fun z => (z - u)⁻¹ * (z - u)⁻¹) C (hint θ hs) (hpow θ hs)
+    rw [← hh]
+    exact rayI_congr (fun r hr => hcg θ hs r hr)
+  have hc : contL x φ (fun z => (z - u)⁻¹ * (z - u)⁻¹ * (z - v)⁻¹)
+      = contL x φ (fun z => ∑ i : Fin 2, α i / (z - p i)) := by
+    unfold contL
+    rw [hR (-φ) hsφ', hR φ hsφ, rayI_pow2 u hu hsφ', rayI_pow2 u hu hsφ]
+    ring
+  rw [hc, contL_logsum Finset.univ α p x φ h1 h2 (by simpa using hsum0) hpne (hint φ hsφ)
+    (hint (-φ) hsφ')]
+  simp only [Fin.sum_univ_two, hα, hp, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  by_cases hvx : v < x <;> by_cases hux : u < x <;> simp [hvx, hux, hA]
+
+/-- Triple pole: contributes nothing. -/
+theorem contL_S3 (u x φ : ℝ) (h1 : Real.pi / 2 < φ) (h2 : φ < Real.pi) (hu : u ≠ x) :
+    contL x φ (fun z => (z - u)⁻¹ * (z - u)⁻¹ * (z - u)⁻¹) = 0 := by
+  have hpi := Real.pi_pos
+  have hsφ : Real.sin φ ≠ 0 := by
+    apply ne_of_gt; apply Real.sin_pos_of_pos_of_lt_pi <;> linarith
+  have hsφ' : Real.sin (-φ) ≠ 0 := by rw [Real.sin_neg]; exact neg_ne_zero.2 hsφ
+  unfold contL
+  rw [rayI_pow3 u hu hsφ, rayI_pow3 u hu hsφ']
+  ring
+
+
+/-- One pole to the left of `x`, the other two (possibly equal) to the right. -/
+theorem contL_tri_west (p a b x φ : ℝ) (h1 : Real.pi / 2 < φ) (h2 : φ < Real.pi)
+    (hp : p < x) (ha : x < a) (hb : x < b) :
+    contL x φ (fun z => (z - p)⁻¹ * (z - a)⁻¹ * (z - b)⁻¹)
+      = -(2 * Real.pi * I) * (1 / (((p : ℂ) - a) * ((p : ℂ) - b))) := by
+  by_cases hab : a = b
+  · subst hab
+    have hf : (fun z : ℂ => (z - p)⁻¹ * (z - a)⁻¹ * (z - a)⁻¹)
+        = fun z : ℂ => (z - a)⁻¹ * (z - a)⁻¹ * (z - p)⁻¹ := by funext z; ring
+    rw [hf, contL_S21 a p x φ h1 h2 (by linarith) (by linarith) (by linarith)]
+    simp [hp, not_lt.2 ha.le, sq]
+  · rw [contL_S111 p a b x φ h1 h2 (by linarith) (by linarith) hab (by linarith) (by linarith)
+      (by linarith)]
+    simp [hp, not_lt.2 ha.le, not_lt.2 hb.le]
+
+/-- All three poles to the right of `x`: the contour integral vanishes. -/
+theorem contL_tri_east (p a b x φ : ℝ) (h1 : Real.pi / 2 < φ) (h2 : φ < Real.pi)
+    (hp : x < p) (ha : x < a) (hb : x < b) :
+    contL x φ (fun z => (z - p)⁻¹ * (z - a)⁻¹ * (z - b)⁻¹) = 0 := by
+  have np := not_lt.2 hp.le
+  have na := not_lt.2 ha.le
+  have nb := not_lt.2 hb.le
+  by_cases hab : a = b
+  · subst hab
+    by_cases hpa : p = a
+    · subst hpa
+      exact contL_S3 p x φ h1 h2 (by linarith)
+    · have hf : (fun z : ℂ => (z - p)⁻¹ * (z - a)⁻¹ * (z - a)⁻¹)
+          = fun z : ℂ => (z - a)⁻¹ * (z - a)⁻¹ * (z - p)⁻¹ := by funext z; ring
+      rw [hf, contL_S21 a p x φ h1 h2 (Ne.symm hpa) (by linarith) (by linarith)]
+      simp [np, na]
+  · by_cases hpa : p = a
+    · subst hpa
+      rw [contL_S21 p b x φ h1 h2 hab (by linarith) (by linarith)]
+      simp [np, nb]
+    · by_cases hpb : p = b
+      · subst hpb
+        have hf : (fun z : ℂ => (z - p)⁻¹ * (z - a)⁻¹ * (z - p)⁻¹)
+            = fun z : ℂ => (z - p)⁻¹ * (z - p)⁻¹ * (z - a)⁻¹ := by funext z; ring
+        rw [hf, contL_S21 p a x φ h1 h2 hpa (by linarith) (by linarith)]
+        simp [np, na]
+      · rw [contL_S111 p a b x φ h1 h2 hpa hpb hab (by linarith) (by linarith) (by linarith)]
+        simp [np, na, nb]
+
 end CatalanLambda.Decay
