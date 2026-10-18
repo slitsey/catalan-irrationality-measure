@@ -152,4 +152,100 @@ theorem entry_T (N0 a b : ℕ) :
   rw [hA, hU, hL, eU, eL, contour_identity N0 a b, contL]
   ring
 
+lemma im_rayPt (x θ r : ℝ) : (rayPt x θ r).im = r * Real.sin θ := by
+  simp [rayPt, Complex.exp_ofReal_mul_I_im, Complex.exp_ofReal_mul_I_re]
+
+/-- No point of the combined space is a natural-number node. -/
+lemma ptT_ne (N0 : ℕ) (z : XT N0) (n : ℕ) : ptT N0 z ≠ (n : ℂ) := by
+  rcases z with ⟨m, s⟩ | r | r
+  · cases s
+    · simp only [ptT, Sum.elim_inl, Bool.false_eq_true, ite_false]
+      intro h
+      have h' : (-(((m : ℕ) : ℝ) + 3 / 4)) = (n : ℝ) := by exact_mod_cast h
+      have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg _
+      have : (0 : ℝ) ≤ ((m : ℕ) : ℝ) := Nat.cast_nonneg _
+      linarith
+    · simp only [ptT, Sum.elim_inl, ite_true]
+      intro h
+      have h' : (-(((m : ℕ) : ℝ) + 1)) = (n : ℝ) := by exact_mod_cast h
+      have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg _
+      have : (0 : ℝ) ≤ ((m : ℕ) : ℝ) := Nat.cast_nonneg _
+      linarith
+  · simp only [ptT, Sum.elim_inr, Sum.elim_inl]
+    intro h
+    have := congrArg Complex.im h
+    rw [im_rayPt] at this
+    simp only [Complex.natCast_im] at this
+    have hr : 0 < r.1 := r.2
+    have := mul_eq_zero.1 this
+    rcases this with h1 | h1
+    · linarith
+    · linarith [sin_phiC_ge]
+  · simp only [ptT, Sum.elim_inr]
+    intro h
+    have := congrArg Complex.im h
+    rw [im_rayPt] at this
+    simp only [Complex.natCast_im] at this
+    have hr : 0 < r.1 := r.2
+    have := mul_eq_zero.1 this
+    rcases this with h1 | h1
+    · linarith
+    · rw [Real.sin_neg] at h1; linarith [sin_phiC_ge]
+
+/-- The determinant `det[(x_l - s_i)⁻¹]` is the Cauchy determinant. -/
+lemma det_inv_eq_cauchy {k : ℕ} (s : Fin k → ℕ) (hs : Function.Injective s) (x : Fin k → ℂ)
+    (hx : ∀ l i, x l ≠ (s i : ℂ)) :
+    (Matrix.of fun i l => (x l - (s i : ℂ))⁻¹).det
+      = (∏ l, ∏ l' ∈ Finset.Ioi l, ((x l' - x l) * ((s l : ℂ) - s l'))) / ∏ l, ∏ i, (x l - s i) := by
+  have hinj : Function.Injective (fun i => (s i : ℂ)) :=
+    fun i j h => hs (Nat.cast_injective (R := ℂ) h)
+  have : (Matrix.of fun i l => (x l - (s i : ℂ))⁻¹)
+      = Matrix.transpose (Matrix.of fun l i => 1 / (x l - (fun i => (s i : ℂ)) i)) := by
+    ext i l; simp [one_div]
+  rw [this, Matrix.det_transpose, cauchy_det x (fun i => (s i : ℂ)) hinj hx]
+
+/-- **Absolute-value Andréief bound for every principal submatrix of `16 T`.**
+For any injective node family `s : Fin k → ℕ`, `|det (16 T[S])|` is bounded by
+`(1/k!) ∫_{X^k} ∏_l |w(z_l)| · |Cauchy det(pt z, s)|² d(μ^{⊗k})`. -/
+theorem tent_andreief_bound (N0 k : ℕ) (s : Fin k → ℕ) (hs : Function.Injective s) :
+    ‖(Matrix.of fun i j : Fin k => ((16 * Tent (s i) (s j) : ℝ) : ℂ)).det‖
+      ≤ (1 / (k.factorial : ℝ)) * ∫ z : Fin k → XT N0,
+          (∏ l, ‖wT N0 (z l)‖) *
+            ‖(∏ l, ∏ l' ∈ Finset.Ioi l,
+                ((ptT N0 (z l') - ptT N0 (z l)) * ((s l : ℂ) - s l')))
+              / ∏ l, ∏ i, (ptT N0 (z l) - s i)‖ ^ 2 ∂(Measure.pi fun _ => muT N0) := by
+  have h := norm_det_le_andreief (muT N0) (wT N0) (fun (i : Fin k) z => (ptT N0 z - (s i : ℂ))⁻¹)
+    (fun (i : Fin k) z => (ptT N0 z - (s i : ℂ))⁻¹) (fun i j => integrable_entry N0 (s i) (s j))
+  have hM : (Matrix.of fun i j : Fin k => ∫ z, wT N0 z * (ptT N0 z - (s i : ℂ))⁻¹
+        * (ptT N0 z - (s j : ℂ))⁻¹ ∂(muT N0))
+      = Matrix.of fun i j : Fin k => ((16 * Tent (s i) (s j) : ℝ) : ℂ) := by
+    ext i j; exact entry_T N0 (s i) (s j)
+  rw [hM] at h
+  refine h.trans (le_of_eq ?_)
+  congr 1
+  refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
+  simp only
+  rw [det_inv_eq_cauchy s hs (fun l => ptT N0 (z l)) (fun l i => ptT_ne N0 (z l) (s i))]
+  ring
+
+/-- Norms of the weight: `1` on atoms, `|E|/(2π)` on the rays. -/
+lemma norm_wT_atom (N0 : ℕ) (p : Fin N0 × Bool) : ‖wT N0 (Sum.inl p)‖ = 1 := by
+  rcases p with ⟨m, b⟩
+  cases b <;> simp [wT]
+
+lemma norm_wT_up (N0 : ℕ) (r : RayP) :
+    ‖wT N0 (Sum.inr (Sum.inl r))‖ = ‖EC (rayPt (xstar N0) phiC r.1)‖ / (2 * Real.pi) := by
+  simp only [wT, Sum.elim_inr, Sum.elim_inl, wUp, norm_neg, norm_mul, norm_inv,
+    norm_exp_ofReal_mul_I]
+  have : ‖(2 : ℂ)‖ * ‖(Real.pi : ℂ)‖ * ‖I‖ = 2 * Real.pi := by
+    rw [show ‖(2:ℂ)‖ = 2 by simp, Complex.norm_real, Real.norm_of_nonneg Real.pi_pos.le, Complex.norm_I, mul_one]
+  rw [this]; field_simp
+
+lemma norm_wT_low (N0 : ℕ) (r : RayP) :
+    ‖wT N0 (Sum.inr (Sum.inr r))‖ = ‖EC (rayPt (xstar N0) (-phiC) r.1)‖ / (2 * Real.pi) := by
+  simp only [wT, Sum.elim_inr, wLow, norm_mul, norm_inv, norm_exp_ofReal_mul_I]
+  have : ‖(2 : ℂ)‖ * ‖(Real.pi : ℂ)‖ * ‖I‖ = 2 * Real.pi := by
+    rw [show ‖(2:ℂ)‖ = 2 by simp, Complex.norm_real, Real.norm_of_nonneg Real.pi_pos.le, Complex.norm_I, mul_one]
+  rw [this]; field_simp
+
 end CatalanLambda.Decay
