@@ -1,16 +1,15 @@
 module
 
-public import CatalanFrames.LambdaMirror.Frame
-public import CatalanLambda.Mirror.Integrality
-public import CatalanLambda.Mirror.GrowthFinal
+public import CatalanFrames.Lambda.PolyEval
+public import CatalanFrames.LambdaMirror.ContentData
 
 /-!
-# Mirror content: `HasContent (ofFrame mirFrame) (313/105)` from the legacy mirror integrality
+# Mirror content: `HasContent (ofFrame mirFrame) (313/105)` from the shared engine
 -/
 
 @[expose] public section
 
-open CatalanCore
+open CatalanCore CatalanCore.Arith
 
 namespace CatalanFrames.LambdaMirror
 
@@ -20,14 +19,17 @@ theorem evalQ_eq (h : ℕ) (r : ℚ) :
   rw [← Frame.P_eq_eval, P_eq]
 
 theorem hasContent : HasContent (PolyFamily.ofFrame mirFrame) (313 / 105) := by
-  refine ⟨CatalanLambda.Mirror.Dden, CatalanLambda.Mirror.Dden_pos, ?_, ?_⟩
-  · intro (n : ℕ) _ p q hq
-    obtain ⟨z, hz⟩ := CatalanLambda.Mirror.integrality n p q hq
-    refine ⟨z, ?_⟩
-    show (q : ℚ) ^ n * (CatalanLambda.Mirror.Dden n : ℚ) * (PolyFamily.ofFrame mirFrame).evalQ n _ = z
-    rw [evalQ_eq]; exact hz
-  · intro ε hε
-    obtain ⟨N, hN⟩ := Filter.eventually_atTop.1 (CatalanLambda.Mirror.log_Dden_le_eventually hε)
-    exact ⟨N, fun (n : ℕ) _ hn => hN n hn⟩
+  have : NeZero mirGD.M := inferInstanceAs (NeZero 4)
+  have hunit : ∀ i, IsUnit (mirGD.res i) := by
+    intro i; fin_cases i
+    · exact isUnit_one
+    · exact (by decide : IsUnit (3 : ZMod 4))
+  have e : mirGD.Lam = 313 / 105 := by
+    have : mirGD.Lam = 2 * ((Nat.totient 4 : ℕ) : ℝ)⁻¹ * ∑ i : Fin 2, Icont (![4, 4 / 3] i) := rfl
+    rw [this, Fin.sum_univ_two]
+    have : Nat.totient 4 = 2 := by decide
+    norm_num [Icont, this]
+  have := hasContent_of_classes mirGD hunit
+  rwa [e] at this
 
 end CatalanFrames.LambdaMirror

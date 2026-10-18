@@ -1,16 +1,15 @@
 module
 
 public import CatalanFrames.Lambda.PolyEval
-public import CatalanLambda.Integrality
-public import CatalanLambda.GrowthFinal
+public import CatalanFrames.Lambda.ContentData
 
 /-!
-# λ content: `HasContent (ofFrame lamFrame) (313/105)` from the legacy integrality and growth
+# λ content: `HasContent (ofFrame lamFrame) (313/105)` from the shared engine
 -/
 
 @[expose] public section
 
-open CatalanCore
+open CatalanCore CatalanCore.Arith
 
 namespace CatalanFrames.Lambda
 
@@ -20,14 +19,17 @@ theorem evalQ_eq (h : ℕ) (r : ℚ) :
   rw [← Frame.P_eq_eval, P_eq]
 
 theorem hasContent : HasContent (PolyFamily.ofFrame lamFrame) (313 / 105) := by
-  refine ⟨CatalanLambda.Dden, CatalanLambda.Dden_pos, ?_, ?_⟩
-  · intro (n : ℕ) _ p q hq
-    obtain ⟨z, hz⟩ := CatalanLambda.integrality n p q hq
-    refine ⟨z, ?_⟩
-    show (q : ℚ) ^ n * (CatalanLambda.Dden n : ℚ) * (PolyFamily.ofFrame lamFrame).evalQ n _ = z
-    rw [evalQ_eq]; exact hz
-  · intro ε hε
-    obtain ⟨N, hN⟩ := Filter.eventually_atTop.1 (CatalanLambda.log_Dden_le_eventually hε)
-    exact ⟨N, fun (n : ℕ) _ hn => hN n hn⟩
+  have : NeZero lamGD.M := inferInstanceAs (NeZero 4)
+  have hunit : ∀ i, IsUnit (lamGD.res i) := by
+    intro i; fin_cases i
+    · exact (by decide : IsUnit (3 : ZMod 4))
+    · exact isUnit_one
+  have e : lamGD.Lam = 313 / 105 := by
+    have : lamGD.Lam = 2 * ((Nat.totient 4 : ℕ) : ℝ)⁻¹ * ∑ i : Fin 2, Icont (![4, 4 / 3] i) := rfl
+    rw [this, Fin.sum_univ_two]
+    have : Nat.totient 4 = 2 := by decide
+    norm_num [Icont, this]
+  have := hasContent_of_classes lamGD hunit
+  rwa [e] at this
 
 end CatalanFrames.Lambda
