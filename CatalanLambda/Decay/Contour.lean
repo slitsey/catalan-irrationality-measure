@@ -242,4 +242,67 @@ theorem rayI_E_hasSum (N0 a b : ℕ) {θ : ℝ} (hs : Real.sin θ ≠ 0) :
   · refine Eventually.of_forall fun r => ?_
     exact ((summable_eterm _).hasSum.mul_right _).mul_right _
 
+
+/-- The contour integral of `E v_a v_b` equals minus `2πi` times the tail of the atom series. -/
+theorem contL_E_eq (N0 a b : ℕ) :
+    contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹))
+      = -(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ) := by
+  have hpi := Real.pi_pos
+  have hsφ : Real.sin phiC ≠ 0 := by
+    apply ne_of_gt; apply Real.sin_pos_of_pos_of_lt_pi <;> linarith [phiC_gt, phiC_lt]
+  have hsφ' : Real.sin (-phiC) ≠ 0 := by rw [Real.sin_neg]; exact neg_ne_zero.2 hsφ
+  have hU := rayI_E_hasSum N0 a b hsφ
+  have hL := rayI_E_hasSum N0 a b hsφ'
+  have hC := hL.sub hU
+  let i : ℕ → ℤ := fun m' => -(((m' + N0 : ℕ) : ℤ) + 1)
+  have hi : Function.Injective i := by
+    intro m1 m2 h
+    simp only [i] at h
+    omega
+  have hzero : ∀ n : ℤ, n ∉ Set.range i →
+      contL (xstar N0) phiC (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)) = 0 := by
+    intro n hn
+    apply contL_eterm_east
+    by_contra h
+    push_neg at h
+    apply hn
+    refine ⟨(-n - 1 - N0).toNat, ?_⟩
+    simp only [i]
+    omega
+  have hreal : HasSum (fun m' : ℕ => atomTerm a b (m' + N0)) (∑' m : ℕ, atomTerm a b (m + N0)) :=
+    ((summable_nat_add_iff N0).2 (summable_atomTerm a b)).hasSum
+  have hcomp : HasSum (fun m' : ℕ => -(2 * Real.pi * I) * ((atomTerm a b (m' + N0) : ℝ) : ℂ))
+      (-(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ)) :=
+    (Complex.hasSum_ofReal.2 hreal).mul_left _
+  have hT : HasSum (fun n : ℤ => contL (xstar N0) phiC
+      (fun z => eterm z n * ((z - a)⁻¹ * (z - b)⁻¹)))
+      (-(2 * Real.pi * I) * ((∑' m : ℕ, atomTerm a b (m + N0) : ℝ) : ℂ)) := by
+    rw [← hi.hasSum_iff hzero]
+    refine hcomp.congr_fun ?_
+    intro m'
+    exact contL_eterm_west N0 a b (m' + N0) (Nat.le_add_left _ _)
+  exact hC.unique hT
+
+/-- **The contour identity.**  With `x* = -N0 - 3/8`, `φ = 3π/5`, `Γ` the two rays `x* + r e^{±iφ}`
+traversed downward (`contL`: lower ray outbound minus upper ray outbound),
+`16 T_{ab} = - ∑_{m<N0} (u_{m+3/4}(a)u_{m+3/4}(b) - u_{m+1}(a)u_{m+1}(b)) + (1/2πi) ∫_Γ E v_a v_b dz`. -/
+theorem contour_identity (N0 a b : ℕ) :
+    ((16 * Tent a b : ℝ) : ℂ)
+      = -((∑ m ∈ Finset.range N0, atomTerm a b m : ℝ) : ℂ)
+        + (2 * Real.pi * I)⁻¹ *
+          contL (xstar N0) phiC (fun z => EC z * ((z - a)⁻¹ * (z - b)⁻¹)) := by
+  rw [contL_E_eq]
+  have h2 : (2 * Real.pi * I : ℂ) ≠ 0 := by
+    have := Real.pi_pos
+    simp [Real.pi_ne_zero]
+  have hs := (summable_atomTerm a b).sum_add_tsum_nat_add N0
+  have hT := T_eq_atoms a b
+  rw [← hs] at hT
+  have : ((16 * Tent a b : ℝ) : ℂ) = ((-(∑ m ∈ Finset.range N0, atomTerm a b m
+      + ∑' m : ℕ, atomTerm a b (m + N0)) : ℝ) : ℂ) := by rw [hT]
+  rw [this]
+  push_cast
+  field_simp
+  ring
+
 end CatalanLambda.Decay
