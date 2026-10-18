@@ -6,5 +6,6 @@ public import CatalanLambda.Measure.Irrational
 public import CatalanLambda.Measure.Measure
 public import CatalanLambda.Measure.MeasureOne
 public import CatalanLambda.Final
+public import CatalanLambda.Mirror.FinalG
 
 @[expose] public section
