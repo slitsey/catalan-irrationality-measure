@@ -105,7 +105,7 @@ theorem kdet_T_down_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤
         rw [Nat.cast_sub (by omega)]; unfold yDown; push_cast; ring
       rw [e]; exact h.ne (by omega) (by omega)
 
-theorem kdet_T_up_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : K ≤ σ)
+theorem kdet_T_up_ne (h : CharGt F N) (K σ : ℕ) (hK : 1 ≤ K) (hσ : 1 ≤ σ)
     (hN : σ + 2 * K ≤ N + 1) : kdet (Tmat F K σ) (cvec F K ((σ : F) + 1)) ≠ 0 := by
   have v0 : cvec F K ((σ : F) + 1) = cvec F K (yUp F σ 0) := by simp [yUp]
   rw [v0]
