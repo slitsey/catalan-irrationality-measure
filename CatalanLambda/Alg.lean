@@ -1,4 +1,8 @@
-import CatalanLambda.Cauchy
+module
+
+public import CatalanLambda.Cauchy
+
+@[expose] public section
 
 open Finset Matrix
 

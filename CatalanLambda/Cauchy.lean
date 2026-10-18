@@ -1,9 +1,13 @@
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Algebra.Polynomial.BigOperators
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Algebra.Polynomial.BigOperators
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 open Finset Matrix Polynomial
 

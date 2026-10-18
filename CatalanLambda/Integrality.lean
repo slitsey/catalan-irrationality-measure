@@ -1,9 +1,13 @@
-import CatalanLambda.Defs
-import CatalanLambda.Local
-import Mathlib.Algebra.IsPrimePow
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Log
-import Mathlib.Data.Nat.Prime.Pow
+module
+
+public import CatalanLambda.Defs
+public import CatalanLambda.Local
+public import Mathlib.Algebra.IsPrimePow
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Data.Nat.Prime.Pow
+
+@[expose] public section
 
 /-!
 # Integrality of `q^h · D_h · P_h(p/q)` (AQ steps 2-3, integer formulation)

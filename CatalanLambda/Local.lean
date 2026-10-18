@@ -1,8 +1,12 @@
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 open Finset Matrix
 

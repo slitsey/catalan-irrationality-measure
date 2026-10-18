@@ -1,7 +1,11 @@
-import CatalanLambda.Cert.SegA
-import CatalanLambda.Cert.SegB
-import CatalanLambda.Cert.LineM
-import CatalanLambda.Cert.Bridge
+module
+
+public import CatalanLambda.Cert.SegA
+public import CatalanLambda.Cert.SegB
+public import CatalanLambda.Cert.LineM
+public import CatalanLambda.Cert.Bridge
+
+@[expose] public section
 
 /-!
 # Glue for the real-axis cells: global indexing, chain/cover checks, the sum `S_cert`

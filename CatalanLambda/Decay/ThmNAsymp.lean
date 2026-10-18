@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.ThmNWindow
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import CatalanLambda.Decay.ThmNWindow
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: `E(h) = O(h log h)`, hence `o(h²)`, and the liminf form of the window corollary

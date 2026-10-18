@@ -1,6 +1,10 @@
-import CatalanLambda.Cauchy
-import CatalanLambda.Local
-import CatalanLambda.Defs
+module
+
+public import CatalanLambda.Cauchy
+public import CatalanLambda.Local
+public import CatalanLambda.Defs
+
+@[expose] public section
 
 open Finset Matrix
 

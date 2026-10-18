@@ -1,5 +1,9 @@
-import CatalanLambda.Growth
-import CatalanLambda.PNTAP
+module
+
+public import CatalanLambda.Growth
+public import CatalanLambda.PNTAP
+
+@[expose] public section
 
 /-!
 # (2a-ii): `log D_h ≤ (313/105 + ε) h²` eventually, using the PNT in progressions mod 4.

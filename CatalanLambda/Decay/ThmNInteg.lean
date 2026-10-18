@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.ThmNLemmaA
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import CatalanLambda.Decay.AndreiefTentR
+module
+
+public import CatalanLambda.Decay.ThmNLemmaA
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import CatalanLambda.Decay.AndreiefTentR
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: the combined space, the weights, and the integration step

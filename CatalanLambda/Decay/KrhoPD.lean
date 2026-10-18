@@ -1,7 +1,11 @@
-import Mathlib.Analysis.SpecialFunctions.FrullaniIntegral
-import Mathlib.MeasureTheory.Integral.ExpDecay
-import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.FrullaniIntegral
+public import Mathlib.MeasureTheory.Integral.ExpDecay
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.Complex.Basic
+
+@[expose] public section
 
 /-!
 # Positive definiteness of `k_ρ(z,w) = -½ log(|z-w|² + ρ²)` on mean-zero weights

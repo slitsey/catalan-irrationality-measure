@@ -1,7 +1,11 @@
-import CatalanLambda.Decay.ThmNAsymp
-import CatalanLambda.Decay.LambdaCatalan
-import CatalanLambda.GrowthFinal
-import CatalanLambda.Main
+module
+
+public import CatalanLambda.Decay.ThmNAsymp
+public import CatalanLambda.Decay.LambdaCatalan
+public import CatalanLambda.GrowthFinal
+public import CatalanLambda.Main
+
+@[expose] public section
 
 /-!
 # Separation core: a nonvanishing `P_h(p/q)` very close to `λ` forces `θ h ≤ log q`.

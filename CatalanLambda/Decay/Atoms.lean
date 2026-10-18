@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.Lowner
+module
+
+public import CatalanLambda.Decay.Lowner
+
+@[expose] public section
 
 /-!
 # Atom form of `T = λ I + M0` (3a-ii, first step)

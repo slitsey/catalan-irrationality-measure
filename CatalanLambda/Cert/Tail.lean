@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.Symm
+module
+
+public import CatalanLambda.Cert.Symm
+
+@[expose] public section
 
 /-!
 # The tail bound: `g ≥ m′` on the ray for `u ≥ 3/2`, `|δ| ≤ 2^-30`

@@ -51,7 +51,7 @@ globs = ["CatalanArchive.+"]
 [[lean_lib]]
 name = "CatalanLambda"
 roots = ["CatalanLambda"]
-globs = ["CatalanLambda.+"]
+globs = ["CatalanLambda", "CatalanLambda.+"]
 
 [[lean_lib]]
 name = "ChallengeLambda"

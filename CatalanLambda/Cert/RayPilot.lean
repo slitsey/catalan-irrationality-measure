@@ -1,6 +1,10 @@
-import CatalanLambda.Cert.RayBox
-import CatalanLambda.Cert.SigmaData
-import CatalanLambda.Cert.RayPilotData
+module
+
+public import CatalanLambda.Cert.RayBox
+public import CatalanLambda.Cert.SigmaData
+public import CatalanLambda.Cert.RayPilotData
+
+@[expose] public section
 
 /-!
 # Pilot: 500 ray boxes of the K=300 certificate, `g ≥ m′` with `m′ = 1.97179`
@@ -55,6 +59,5 @@ theorem ray_pilot : ∀ c < 5, ∀ j < 100, ∀ x y : ℝ,
   simp only [boxSide, decide_eq_true_eq] at hs
   exact box_sound sigmaPts pilotMp a b1 c' d hs.1 hs.2.1 hs.2.2 hk x y h1 h2 h3 h4
 
-#print axioms ray_pilot
 
 end CatalanLambda.Cert

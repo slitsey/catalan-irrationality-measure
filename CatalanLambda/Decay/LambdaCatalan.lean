@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.Lowner
-import Mathlib.NumberTheory.ZetaValues
+module
+
+public import CatalanLambda.Decay.Lowner
+public import Mathlib.NumberTheory.ZetaValues
+
+@[expose] public section
 
 /-!
 # `λ = G/2 - 5π²/96`

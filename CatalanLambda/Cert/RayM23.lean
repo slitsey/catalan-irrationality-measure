@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RayTaylor
+module
+
+public import CatalanLambda.Cert.RayTaylor
+
+@[expose] public section
 
 /-! Generated (gen_allray.py): ray macros 736..767 (M=32, 32 per module); Taylor far-field. -/
 namespace CatalanLambda.Cert

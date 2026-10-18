@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.Bridge
+module
+
+public import CatalanLambda.Cert.Bridge
+
+@[expose] public section
 
 /-! Generated (gen_I.py): I_rho(sigma) upper bound; 300 rows in 10 chunks of 30. -/
 namespace CatalanLambda.Cert

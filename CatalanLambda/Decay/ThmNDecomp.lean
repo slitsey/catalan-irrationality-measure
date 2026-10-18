@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNEnergy
+module
+
+public import CatalanLambda.Decay.ThmNEnergy
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 3d: completing the node set (identities (a), (b) of BN §1.2)

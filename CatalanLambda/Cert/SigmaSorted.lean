@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RayBox
+module
+
+public import CatalanLambda.Cert.RayBox
+
+@[expose] public section
 
 /-! Generated (gensigma.py): sigma300 sorted by (X,Y); X,Y scaled 2^40, masses n/2^32. -/
 namespace CatalanLambda.Cert

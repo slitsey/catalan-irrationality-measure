@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNRiemann
+module
+
+public import CatalanLambda.Decay.ThmNRiemann
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: the closed form of `U^τ` off the real axis

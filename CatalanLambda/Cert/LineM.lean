@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RealCells
+module
+
+public import CatalanLambda.Cert.RealCells
+
+@[expose] public section
 
 /-! Generated (gen_real.py): LineM, 512 cells in 16 macros of 32. -/
 namespace CatalanLambda.Cert

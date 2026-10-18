@@ -1,5 +1,9 @@
-import Mathlib.NumberTheory.LSeries.PrimesInAP
-import PrimeNumberTheoremAnd.Catalan.Wiener
+module
+
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import PrimeNumberTheoremAnd.Catalan.Wiener
+
+@[expose] public section
 
 /-!
 # Prime number theorem in arithmetic progressions (Wiener-Ikehara)

@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RayTaylor
+module
+
+public import CatalanLambda.Cert.RayTaylor
+
+@[expose] public section
 
 /-!
 # Real-axis cells (segment cells on `[-r0,0]` and line cells on `[-1/64,1]`)

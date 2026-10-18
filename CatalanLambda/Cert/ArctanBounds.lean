@@ -1,10 +1,14 @@
-import Mathlib.Analysis.SpecialFunctions.Complex.Arctan
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Data.Rat.Cast.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import CatalanLambda.Cert.Tables
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arctan
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Data.Rat.Cast.Order
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Linarith
+public import CatalanLambda.Cert.Tables
+
+@[expose] public section
 
 /-!
 # Verified lower bound for `Real.arctan` on `[0, ∞)`

@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.ThmNCert
-import CatalanLambda.Decay.ThmNUtauForm
-import CatalanLambda.Cert.SegLine
+module
+
+public import CatalanLambda.Decay.ThmNCert
+public import CatalanLambda.Decay.ThmNUtauForm
+public import CatalanLambda.Cert.SegLine
+
+@[expose] public section
 
 /-!
 # Bridge between the list-based `Cert` functions and the `Fin 300`-based `Decay` functions

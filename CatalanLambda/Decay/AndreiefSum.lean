@@ -1,7 +1,11 @@
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+public import Mathlib.Analysis.Complex.Basic
+
+@[expose] public section
 
 /-!
 # Sum measures on `α ⊕ β`

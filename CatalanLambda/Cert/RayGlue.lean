@@ -1,31 +1,35 @@
-import CatalanLambda.Cert.RayM0
-import CatalanLambda.Cert.RayM1
-import CatalanLambda.Cert.RayM2
-import CatalanLambda.Cert.RayM3
-import CatalanLambda.Cert.RayM4
-import CatalanLambda.Cert.RayM5
-import CatalanLambda.Cert.RayM6
-import CatalanLambda.Cert.RayM7
-import CatalanLambda.Cert.RayM8
-import CatalanLambda.Cert.RayM9
-import CatalanLambda.Cert.RayM10
-import CatalanLambda.Cert.RayM11
-import CatalanLambda.Cert.RayM12
-import CatalanLambda.Cert.RayM13
-import CatalanLambda.Cert.RayM14
-import CatalanLambda.Cert.RayM15
-import CatalanLambda.Cert.RayM16
-import CatalanLambda.Cert.RayM17
-import CatalanLambda.Cert.RayM18
-import CatalanLambda.Cert.RayM19
-import CatalanLambda.Cert.RayM20
-import CatalanLambda.Cert.RayM21
-import CatalanLambda.Cert.RayM22
-import CatalanLambda.Cert.RayM23
-import CatalanLambda.Cert.RayM24
-import CatalanLambda.Cert.RayM25
-import CatalanLambda.Cert.RayM26
-import CatalanLambda.Cert.Bridge
+module
+
+public import CatalanLambda.Cert.RayM0
+public import CatalanLambda.Cert.RayM1
+public import CatalanLambda.Cert.RayM2
+public import CatalanLambda.Cert.RayM3
+public import CatalanLambda.Cert.RayM4
+public import CatalanLambda.Cert.RayM5
+public import CatalanLambda.Cert.RayM6
+public import CatalanLambda.Cert.RayM7
+public import CatalanLambda.Cert.RayM8
+public import CatalanLambda.Cert.RayM9
+public import CatalanLambda.Cert.RayM10
+public import CatalanLambda.Cert.RayM11
+public import CatalanLambda.Cert.RayM12
+public import CatalanLambda.Cert.RayM13
+public import CatalanLambda.Cert.RayM14
+public import CatalanLambda.Cert.RayM15
+public import CatalanLambda.Cert.RayM16
+public import CatalanLambda.Cert.RayM17
+public import CatalanLambda.Cert.RayM18
+public import CatalanLambda.Cert.RayM19
+public import CatalanLambda.Cert.RayM20
+public import CatalanLambda.Cert.RayM21
+public import CatalanLambda.Cert.RayM22
+public import CatalanLambda.Cert.RayM23
+public import CatalanLambda.Cert.RayM24
+public import CatalanLambda.Cert.RayM25
+public import CatalanLambda.Cert.RayM26
+public import CatalanLambda.Cert.Bridge
+
+@[expose] public section
 
 /-!
 # Glue for the ray cells: global indexing of the 27 modules (27648 = 864 macros x 32 cells),

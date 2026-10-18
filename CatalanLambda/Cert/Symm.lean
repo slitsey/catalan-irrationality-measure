@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.ConjData
+module
+
+public import CatalanLambda.Cert.ConjData
+
+@[expose] public section
 
 /-!
 # Symmetry of the sigma data (`g_conj`) and total mass (`hm`)

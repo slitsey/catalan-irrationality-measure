@@ -1,5 +1,9 @@
-import CatalanLambda.Measure.Sep
-import Mathlib.NumberTheory.Real.Irrational
+module
+
+public import CatalanLambda.Measure.Sep
+public import Mathlib.NumberTheory.Real.Irrational
+
+@[expose] public section
 
 /-!
 # Irrationality of `λ = G/2 - 5π²/96` from `CertFacts` with `D_cert > 313/105`.

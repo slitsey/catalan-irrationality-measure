@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.KrhoPD
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+module
+
+public import CatalanLambda.Decay.KrhoPD
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 1: logarithmic energies and the Cauchy determinant

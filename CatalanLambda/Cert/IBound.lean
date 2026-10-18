@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.IBoundData
+module
+
+public import CatalanLambda.Cert.IBoundData
+
+@[expose] public section
 
 /-!
 # `I_ρ(σ) ≤ IBOUND` from the scaled-integer lower log bounds (`logLoS`)

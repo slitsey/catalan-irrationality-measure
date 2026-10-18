@@ -1,4 +1,8 @@
-import CatalanLambda.Assembly
+module
+
+public import CatalanLambda.Assembly
+
+@[expose] public section
 
 namespace CatalanLambda
 

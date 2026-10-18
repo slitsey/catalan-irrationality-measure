@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.SegLine
+module
+
+public import CatalanLambda.Cert.SegLine
+
+@[expose] public section
 
 /-!
 # Real-axis macros: blocks of `M` consecutive cells `[xlo,xhi]/2^40` on the real line.

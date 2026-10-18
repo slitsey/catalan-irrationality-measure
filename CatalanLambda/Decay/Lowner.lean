@@ -1,9 +1,13 @@
-import CatalanLambda.Defs
-import Mathlib.Analysis.Calculus.SmoothSeries
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import CatalanLambda.Defs
+public import Mathlib.Analysis.Calculus.SmoothSeries
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.Complex.Basic
+
+@[expose] public section
 
 /-!
 # Löwner form of `λ I + M0`

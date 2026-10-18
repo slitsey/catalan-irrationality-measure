@@ -1,9 +1,13 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Rat.Cast.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.FieldSimp
-import CatalanLambda.Cert.Tables
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Data.Rat.Cast.Order
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.FieldSimp
+public import CatalanLambda.Cert.Tables
+
+@[expose] public section
 
 /-!
 # Verified rational (scaled integer) bounds for `Real.log`

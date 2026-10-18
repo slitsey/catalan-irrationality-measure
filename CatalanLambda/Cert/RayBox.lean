@@ -1,6 +1,10 @@
-import CatalanLambda.Cert.LogBounds
-import CatalanLambda.Cert.ArctanBounds
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import CatalanLambda.Cert.LogBounds
+public import CatalanLambda.Cert.ArctanBounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+@[expose] public section
 
 /-!
 # Reduction of "`g ≥ m′` on a ray box" to a computation over `ℤ`/`ℚ`

@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RayBox
+module
+
+public import CatalanLambda.Cert.RayBox
+
+@[expose] public section
 
 /-!
 # Far-field first-order (tangent) model for the sigma part

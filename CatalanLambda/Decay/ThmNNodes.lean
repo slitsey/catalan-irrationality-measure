@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.ThmNLog
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Stirling
+module
+
+public import CatalanLambda.Decay.ThmNLog
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Analysis.SpecialFunctions.Stirling
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 3a: the potential `U^τ` of Lebesgue measure on `[0,1]` and the node sums [R3]

@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.Bridge
+module
+
+public import CatalanLambda.Cert.Bridge
+
+@[expose] public section
 
 /-! Generated (gen_conj.py): conjugation involution on the sorted sigma list. -/
 namespace CatalanLambda.Cert

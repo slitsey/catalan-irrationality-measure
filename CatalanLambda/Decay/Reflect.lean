@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.Lowner
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Cotangent
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import CatalanLambda.Decay.Lowner
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Cotangent
+public import Mathlib.Analysis.Real.Pi.Bounds
+
+@[expose] public section
 
 /-!
 # Reflection split `F = F̃ + E`

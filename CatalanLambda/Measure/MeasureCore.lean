@@ -1,6 +1,10 @@
-import CatalanLambda.Measure.Sep
-import CatalanLambda.Measure.Prime
-import CatalanLambda.Measure.Irrational
+module
+
+public import CatalanLambda.Measure.Sep
+public import CatalanLambda.Measure.Prime
+public import CatalanLambda.Measure.Irrational
+
+@[expose] public section
 
 /-!
 # The irrationality measure of `λ`: the generic deduction (BN §4)

@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNInteg
+module
+
+public import CatalanLambda.Decay.ThmNInteg
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ (node-removal bound for every principal minor of `T`)

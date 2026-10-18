@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.RayFTC
-import CatalanLambda.Decay.Atoms
-import CatalanLambda.Decay.Reflect
+module
+
+public import CatalanLambda.Decay.RayFTC
+public import CatalanLambda.Decay.Atoms
+public import CatalanLambda.Decay.Reflect
+
+@[expose] public section
 
 /-!
 # The contour identity

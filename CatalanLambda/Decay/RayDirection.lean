@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.RayBound
+module
+
+public import CatalanLambda.Decay.RayBound
+
+@[expose] public section
 
 /-!
 # The rational ray direction `(-1, 3)`

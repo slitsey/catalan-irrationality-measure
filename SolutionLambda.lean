@@ -1,4 +1,8 @@
-import CatalanLambda.Final
+module
+
+public import CatalanLambda.Final
+
+@[expose] public section
 
 /-!
 # Proofs of the statements of `ChallengeLambda.lean`

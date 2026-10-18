@@ -1,8 +1,12 @@
-import CatalanLambda.Cert.Final
-import CatalanLambda.Measure.Irrational
-import CatalanLambda.Measure.Measure
-import CatalanLambda.Measure.MeasureOne
-import OAI.NumberTheory.Catalan.Estimates.Contract
+module
+
+public import CatalanLambda.Cert.Final
+public import CatalanLambda.Measure.Irrational
+public import CatalanLambda.Measure.Measure
+public import CatalanLambda.Measure.MeasureOne
+public import OAI.NumberTheory.Catalan.Estimates.Contract
+
+@[expose] public section
 
 /-!
 # Unconditional results for `λ = G/2 - 5π²/96`
@@ -106,10 +110,3 @@ theorem lambda_measure_78_catalan :
 
 end CatalanLambda
 
-namespace CatalanLambda
-#print axioms lambda_irrational_final
-#print axioms lambda_measure_final
-#print axioms lambda_measure_78
-#print axioms lambda_measure_78_catalan
-#print axioms catalan_sub_irrational
-end CatalanLambda

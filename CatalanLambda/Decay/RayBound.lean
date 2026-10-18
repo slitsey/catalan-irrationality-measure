@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.Contour
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import CatalanLambda.Decay.Contour
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+@[expose] public section
 
 /-!
 # Exponential decay of `E` along the rays `x* + r e^{±iφ}`

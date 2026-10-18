@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.ThmNCert
-import CatalanLambda.Decay.RayDirection
+module
+
+public import CatalanLambda.Decay.ThmNCert
+public import CatalanLambda.Decay.RayDirection
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: Lemma B_ρ (finite-cell version)

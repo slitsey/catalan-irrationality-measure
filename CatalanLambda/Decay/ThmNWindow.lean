@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.ThmNFinal
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathlib.Data.Nat.Choose.Sum
+module
+
+public import CatalanLambda.Decay.ThmNFinal
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Mathlib.Data.Nat.Choose.Sum
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: the window corollary

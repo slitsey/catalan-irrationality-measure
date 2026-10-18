@@ -1,6 +1,10 @@
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+@[expose] public section
 
 /-!
 # Ray integrals of rational functions with real poles

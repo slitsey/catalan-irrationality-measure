@@ -1,4 +1,8 @@
-import CatalanLambda.Cert.RealCells
+module
+
+public import CatalanLambda.Cert.RealCells
+
+@[expose] public section
 
 /-! Generated (gen_real.py): SegA, 1408 cells in 44 macros of 32. -/
 namespace CatalanLambda.Cert

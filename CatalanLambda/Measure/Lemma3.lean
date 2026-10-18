@@ -1,5 +1,9 @@
-import CatalanLambda.Assembly
-import CatalanLambda.Measure.Irrational
+module
+
+public import CatalanLambda.Assembly
+public import CatalanLambda.Measure.Irrational
+
+@[expose] public section
 
 /-!
 # Lemma 3 (primes dividing the denominator)

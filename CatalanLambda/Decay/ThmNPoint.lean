@@ -1,6 +1,10 @@
-import CatalanLambda.Decay.ThmNDecomp
-import CatalanLambda.Decay.ThmNRiemann
-import CatalanLambda.Decay.ThmNLogFact
+module
+
+public import CatalanLambda.Decay.ThmNDecomp
+public import CatalanLambda.Decay.ThmNRiemann
+public import CatalanLambda.Decay.ThmNLogFact
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 4: the pointwise energy bound (Lemma A_ρ, energy part)

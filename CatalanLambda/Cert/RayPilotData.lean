@@ -1,3 +1,7 @@
+module
+
+@[expose] public section
+
 /-! Generated: 500 ray boxes (stride 53 of the 26977 cells of cert_K300_data.json), 4 signed ints per box biased by 2^62 in 64-bit slots. -/
 namespace CatalanLambda.Cert
 

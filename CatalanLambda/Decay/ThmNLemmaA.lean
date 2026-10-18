@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNLemmaB
+module
+
+public import CatalanLambda.Decay.ThmNLemmaB
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: Lemma A_ρ (pointwise energy bound for a configuration)

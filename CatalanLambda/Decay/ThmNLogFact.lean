@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.ThmNNodes
-import Mathlib.Analysis.SumIntegralComparisons
+module
+
+public import CatalanLambda.Decay.ThmNNodes
+public import Mathlib.Analysis.SumIntegralComparisons
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 3b: [R2], the energy of the uniform grid `{b/h}`

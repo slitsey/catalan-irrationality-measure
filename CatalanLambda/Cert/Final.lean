@@ -1,7 +1,11 @@
-import CatalanLambda.Cert.RayGlue
-import CatalanLambda.Cert.SegLineGlue
-import CatalanLambda.Cert.IBound
-import CatalanLambda.Cert.Tail
+module
+
+public import CatalanLambda.Cert.RayGlue
+public import CatalanLambda.Cert.SegLineGlue
+public import CatalanLambda.Cert.IBound
+public import CatalanLambda.Cert.Tail
+
+@[expose] public section
 
 /-!
 # The numerical certificate as `CertFacts` (BT §5)
@@ -303,6 +307,5 @@ noncomputable def certFacts : Decay.CertFacts 300 (1 / 1024 : ℝ) (1 / 1000 : �
     push_cast
     norm_num
 
-#print axioms certFacts
 
 end CatalanLambda.Cert

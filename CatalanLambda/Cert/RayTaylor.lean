@@ -1,5 +1,9 @@
-import CatalanLambda.Cert.SigTaylor
-import CatalanLambda.Cert.SigmaSorted
+module
+
+public import CatalanLambda.Cert.SigTaylor
+public import CatalanLambda.Cert.SigmaSorted
+
+@[expose] public section
 
 /-!
 # Ray macros: the Taylor far-field check for blocks of `M` consecutive ray cells

@@ -1,5 +1,9 @@
-import CatalanLambda.Measure.Measure
-import CatalanLambda.Measure.Lemma3
+module
+
+public import CatalanLambda.Measure.Measure
+public import CatalanLambda.Measure.Lemma3
+
+@[expose] public section
 
 /-!
 # Irrationality measure of `λ` with Lemma 3: `μ(λ) ≤ c (4/(3η) + 1)`

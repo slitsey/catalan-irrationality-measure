@@ -1,7 +1,11 @@
-import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.Algebra.Polynomial.BigOperators
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Algebra.Polynomial.Eval.Defs
+module
+
+public import Mathlib.LinearAlgebra.Vandermonde
+public import Mathlib.Algebra.Polynomial.BigOperators
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+
+@[expose] public section
 
 /-!
 # The Cauchy determinant over a field

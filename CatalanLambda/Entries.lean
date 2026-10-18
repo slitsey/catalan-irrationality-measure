@@ -1,4 +1,8 @@
-import CatalanLambda.Mod
+module
+
+public import CatalanLambda.Mod
+
+@[expose] public section
 
 open Finset Matrix
 

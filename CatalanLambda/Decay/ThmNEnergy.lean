@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNLog
+module
+
+public import CatalanLambda.Decay.ThmNLog
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 2: the `k_ρ` energy of the free points together with the removed nodes

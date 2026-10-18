@@ -1,5 +1,9 @@
-import CatalanLambda.Decay.ThmNNodes
-import Mathlib.Analysis.SumIntegralComparisons
+module
+
+public import CatalanLambda.Decay.ThmNNodes
+public import Mathlib.Analysis.SumIntegralComparisons
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ, stage 3c: [R1], Riemann sum against `U^τ` for points left of the origin

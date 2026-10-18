@@ -1,5 +1,9 @@
-import CatalanLambda.Entries
-import CatalanLambda.Alg
+module
+
+public import CatalanLambda.Entries
+public import CatalanLambda.Alg
+
+@[expose] public section
 
 open Finset Matrix
 

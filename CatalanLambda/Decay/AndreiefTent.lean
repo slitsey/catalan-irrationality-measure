@@ -1,8 +1,12 @@
-import CatalanLambda.Decay.Contour
-import CatalanLambda.Decay.RayBound
-import CatalanLambda.Decay.AndreiefGeneric
-import CatalanLambda.Decay.CauchyDetFull
-import CatalanLambda.Decay.AndreiefSum
+module
+
+public import CatalanLambda.Decay.Contour
+public import CatalanLambda.Decay.RayBound
+public import CatalanLambda.Decay.AndreiefGeneric
+public import CatalanLambda.Decay.CauchyDetFull
+public import CatalanLambda.Decay.AndreiefSum
+
+@[expose] public section
 
 /-!
 # Absolute-value Andréief bound for principal submatrices of `16 T`

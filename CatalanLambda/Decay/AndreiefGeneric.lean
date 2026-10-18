@@ -1,8 +1,12 @@
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Vandermonde
+public import Mathlib.Analysis.Complex.Basic
+
+@[expose] public section
 
 /-!
 # The Andréief identity and the absolute-value Andréief bound

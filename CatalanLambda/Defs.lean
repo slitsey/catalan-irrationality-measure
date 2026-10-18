@@ -1,12 +1,16 @@
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Linarith
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+module
+
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Linarith
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+
+@[expose] public section
 
 open Finset Matrix
 

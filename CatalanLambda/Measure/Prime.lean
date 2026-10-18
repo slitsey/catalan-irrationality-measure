@@ -1,6 +1,10 @@
-import CatalanLambda.GrowthFinal
-import CatalanLambda.PNTAP
-import Mathlib.NumberTheory.Chebyshev
+module
+
+public import CatalanLambda.GrowthFinal
+public import CatalanLambda.PNTAP
+public import Mathlib.NumberTheory.Chebyshev
+
+@[expose] public section
 
 /-!
 # Primes `≡ 3 (mod 4)` in a window `(aL, bL]` avoiding a given modulus

@@ -1,4 +1,8 @@
-import CatalanLambda.Decay.ThmNPoint
+module
+
+public import CatalanLambda.Decay.ThmNPoint
+
+@[expose] public section
 
 /-!
 # Theorem N_ρ: the numerical certificate facts as hypotheses (`CertFacts`)
