@@ -6,7 +6,7 @@ public import CatalanCore.Measure.Exponent
 public import CatalanCore.Measure.Irrational
 
 /-!
-# WP6 public entry point (re-export; no declarations, no `sorry`)
+# WP6 public entry point (re-export; no declarations, proofs complete)
 
 Imports every WP6 module.  Public API (all in `CatalanCore.Measure` unless noted):
 `PrimeRule.HasWindow` (in `CatalanCore`), `sep_core`, `measure_of_family_real`,
