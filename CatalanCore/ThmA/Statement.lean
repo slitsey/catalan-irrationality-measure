@@ -3,6 +3,7 @@ module
 public import CatalanCore.ThmA.Defs
 public import CatalanCore.ThmA.CC
 public import CatalanCore.ThmA.NoCommonRoot
+public import CatalanCore.ThmA.UnitOfLt
 public import CatalanCore.Linalg.Cauchy
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.FieldTheory.Finite.Basic
@@ -51,10 +52,10 @@ def Fcl (K s : ℕ) : ℚ := (-1) ^ (K / 2) * kappaPlus K * AK K s / (BK K * CK 
 theorem closed_form (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s) : uK ℚ K s = Fcl K s := by
   sorry
 
-/-- **Unit-ratio lemma** (STATEMENT ONLY). -/
+/-- **Unit-ratio lemma** (proved in `CatalanCore.ThmA.UnitOfLt`). -/
 theorem unit_of_lt (l : ℕ) [Fact l.Prime] (K s : ℕ) (hK : 1 ≤ K) (hs : K - 1 ≤ s)
-    (hlt : s + K < l) : uK (ZMod l) K s ≠ 0 := by
-  sorry
+    (hlt : s + K < l) : uK (ZMod l) K s ≠ 0 :=
+  unit_of_lt_proof (l := l) K s hK hs hlt
 
 /-- **Cauchy determinant, two-family form** (proved in `CatalanCore.Linalg.Cauchy`). -/
 theorem cauchy_det {F : Type*} [Field F] {n : ℕ} (x y : Fin n → F)
