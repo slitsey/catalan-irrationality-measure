@@ -65,4 +65,16 @@ theorem kdet_tri_ev_ne_zero (up d : ℕ → F) (hup : ∀ j, j + 1 < n → up j 
     · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j - 1, by simp, rfl⟩)
     · exact Submodule.zero_mem _
 
+/-- Explicit form of `u(T, e₀)` for a tridiagonal matrix. -/
+theorem kdet_tri_ev_eq (up d : ℕ → F) :
+    kdet (tri n up d) (ev n 0) = ∏ k : Fin n, ∏ j ∈ Finset.range (k : ℕ), up j := by
+  rw [kdet_chain (tri n up d) (fun j => ev n j) up]
+  · rw [colMat_ev, Matrix.det_one, mul_one]
+  · intro j hj
+    rw [tri_mulVec_ev up d j (by omega)]
+    refine Submodule.add_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, by simp, rfl⟩)) ?_
+    split_ifs with h
+    · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j - 1, by simp, rfl⟩)
+    · exact Submodule.zero_mem _
+
 end CatalanCore

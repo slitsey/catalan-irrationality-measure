@@ -3,6 +3,7 @@ module
 public import CatalanCore.ThmA.SStep
 public import CatalanCore.ThmA.ChainY
 public import CatalanCore.Linalg.KrylovBorder
+public import CatalanCore.Linalg.Cauchy
 
 /-!
 # The K-step (nonvanishing form)
@@ -100,5 +101,22 @@ theorem uK_pred_ne (h : CharGt F N) (m : ℕ) (hm : 1 ≤ m) (hN : 3 * (m + 1) �
   rcases mul_eq_zero.1 e3.symm with h1 | h1
   · exact hu h1
   · exact hYc h1
+
+/-- Explicit form of `det [e₀ | C]` (a Cauchy matrix). -/
+lemma border_det_eq (m : ℕ) :
+    (border (Cmat F (m + 1) m) (ev (m + 1) 0)).det =
+      (Matrix.of fun a b : Fin m => 1 / ((((a : ℕ) : F) + 1) + (((b : ℕ) : F) + 1))).det := by
+  rw [Matrix.det_succ_column_zero, Finset.sum_eq_single 0]
+  · simp only [border, ev, Matrix.of_apply, Fin.cases_zero, Fin.val_zero, ite_true, one_mul,
+      pow_zero, Fin.succAbove_zero]
+    congr 1
+    ext a b
+    simp [Cmat, border]
+    ring_nf
+  · intro i _ hi
+    have : (i : ℕ) ≠ 0 := fun h0 => hi (Fin.ext h0)
+    simp [border, ev, this]
+    intro h0; exact absurd h0 hi
+  · simp
 
 end CatalanCore.ThmA
