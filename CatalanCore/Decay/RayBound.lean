@@ -23,7 +23,7 @@ Proof: by `norm_EC_le` it is enough that `‖sin π(z+μ_i)‖ ≥ κ e^{π|Im z
 The hypothesis `-cos φ ≤ 4 δ0 sin φ` holds for the legacy `φ = 3π/5` and for all three frames
 (`cot_phiC`); P6's rays `x* + u(-1 ± 3i)` have `-cos φ / sin φ = 1/3`.
 
-At the end: three `example`s instantiate everything at `lamFrame`, `mirrorFrame`, `p6Frame`.
+This file is frame-generic; instances are in `CatalanFrames/{Lambda,P6,LambdaMirror}/Contour.lean`.
 -/
 
 open Complex
@@ -195,7 +195,7 @@ theorem Ev_ray_bound (hC : Fr.ContourOK) {φ : ℝ} (h1 : Real.pi / 2 < φ) (h2 
 
 end Frame
 
-/-! ### The three frames -/
+/-! ### Frame-independent helpers (concrete frames live in `CatalanFrames.*.Contour`) -/
 
 namespace Decay
 
@@ -231,84 +231,6 @@ lemma gap_aux (m xs δ : ℚ) (k : ℤ) (h1 : δ ≤ m - xs + k) (h2 : m - xs + 
       have : n ≤ k - 1 := by omega
       exact_mod_cast this
     exact le_trans (by linarith) (neg_le_abs _)
-
-/-- λ: `μ = ![3/4, 1]`, `w = ![-1, 1]`, contour `x* = -N0 - 3/8`. -/
-def lamFrame : Frame where
-  d := 2
-  μ := ![3 / 4, 1]
-  w := ![-1, 1]
-  norm := 16
-  xs := 3 / 8
-  δ0 := 3 / 8
-  n0off := 0
-  hμ := by intro i; fin_cases i <;> norm_num
-  hμinj := by intro i j h; fin_cases i <;> fin_cases j <;> simp_all <;> norm_num
-  hw := by simp [Fin.sum_univ_two]
-  hnorm := by norm_num
-
-/-- The mirror frame λ': `μ = ![1/4, 1]`, contour `x* = -N0 - 5/8`
-(legacy `x* = -N0' + 3/8` with `N0 = N0' - 1`). -/
-def mirrorFrame : Frame where
-  d := 2
-  μ := ![1 / 4, 1]
-  w := ![-1, 1]
-  norm := 16
-  xs := 5 / 8
-  δ0 := 3 / 8
-  n0off := 1
-  hμ := by intro i; fin_cases i <;> norm_num
-  hμinj := by intro i j h; fin_cases i <;> fin_cases j <;> simp_all <;> norm_num
-  hw := by simp [Fin.sum_univ_two]
-  hnorm := by norm_num
-
-/-- P6: `μ = ![1, 1/3, 1/2]`, `w = ![1, 2, -3]`, contour `x* = -N0 - 3/4`, pole distance `1/4`. -/
-def p6Frame : Frame where
-  d := 3
-  μ := ![1, 1 / 3, 1 / 2]
-  w := ![1, 2, -3]
-  norm := 36
-  xs := 3 / 4
-  δ0 := 1 / 4
-  n0off := 1
-  hμ := by intro i; fin_cases i <;> norm_num
-  hμinj := by intro i j h; fin_cases i <;> fin_cases j <;> simp_all <;> norm_num
-  hw := by simp [Fin.sum_univ_three]
-  hnorm := by norm_num
-
-theorem lam_contourOK : lamFrame.ContourOK where
-  xs_pos := by norm_num [lamFrame]
-  gap := by
-    refine ⟨by norm_num [lamFrame], fun i n => ?_⟩
-    fin_cases i
-    · exact gap_aux (3 / 4) (3 / 8) (3 / 8) 0 (by norm_num) (by norm_num) n
-    · exact gap_aux 1 (3 / 8) (3 / 8) 0 (by norm_num) (by norm_num) n
-
-theorem mirror_contourOK : mirrorFrame.ContourOK where
-  xs_pos := by norm_num [mirrorFrame]
-  gap := by
-    refine ⟨by norm_num [mirrorFrame], fun i n => ?_⟩
-    fin_cases i
-    · exact gap_aux (1 / 4) (5 / 8) (3 / 8) 1 (by norm_num) (by norm_num) n
-    · exact gap_aux 1 (5 / 8) (3 / 8) 0 (by norm_num) (by norm_num) n
-
-theorem p6_contourOK : p6Frame.ContourOK where
-  xs_pos := by norm_num [p6Frame]
-  gap := by
-    refine ⟨by norm_num [p6Frame], fun i n => ?_⟩
-    fin_cases i
-    · exact gap_aux 1 (3 / 4) (1 / 4) 0 (by norm_num) (by norm_num) n
-    · exact gap_aux (1 / 3) (3 / 4) (1 / 4) 1 (by norm_num) (by norm_num) n
-    · exact gap_aux (1 / 2) (3 / 4) (1 / 4) 1 (by norm_num) (by norm_num) n
-
-/-- Three instances of `E_bound`. -/
-example := Frame.E_bound lam_contourOK phiC_gt phiC_lt (cot_phiC' (by norm_num [lamFrame]))
-example := Frame.E_bound mirror_contourOK phiC_gt phiC_lt (cot_phiC' (by norm_num [mirrorFrame]))
-example := Frame.E_bound p6_contourOK phiC_gt phiC_lt (cot_phiC' (by norm_num [p6Frame]))
-
-/-- Three instances of the contour identity. -/
-example (N0 a b : ℕ) := Frame.contour_identity lam_contourOK phiC_gt phiC_lt N0 a b
-example (N0 a b : ℕ) := Frame.contour_identity mirror_contourOK phiC_gt phiC_lt N0 a b
-example (N0 a b : ℕ) := Frame.contour_identity p6_contourOK phiC_gt phiC_lt N0 a b
 
 end Decay
 end CatalanCore

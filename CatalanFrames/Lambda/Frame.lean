@@ -23,7 +23,7 @@ def lamFrame : Frame where
   μ := ![3 / 4, 1]
   w := ![-1, 1]
   norm := 16
-  xs := 5 / 8
+  xs := 3 / 8
   δ0 := 3 / 8
   n0off := 0
   hμ := by intro i; fin_cases i <;> norm_num
