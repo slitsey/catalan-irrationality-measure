@@ -5,6 +5,7 @@ Scanner functions follow PalomarSubmission/scripts/source_requirements.py.
 """
 import os
 import re
+import sys
 from pathlib import Path
 
 COMMENT_MARKER = re.compile(r"/-|-/")
@@ -78,9 +79,84 @@ def lean_source_files(root: Path) -> list[Path]:
     return files
 
 
+# Modular-architecture libraries (design FU).  Besides the checks above (which already walk the
+# whole tree), these roots are scanned for forbidden tokens and checked against the lakefile.
+NEW_ROOTS = ("CatalanCore", "CatalanFrames", "CatalanParity")
+# `sorry` in the new libraries is a warning while work packages are in flight (stubs such as
+# CatalanCore/ThmA/Statement.lean), fatal with `--strict` (cut-over / snapshots), and always fatal
+# in the frozen contract file.  `native_decide` is always fatal.
+SORRY_ALWAYS_FATAL = {"CatalanCore/Frame/Spec.lean"}
+STRICT = "--strict" in sys.argv
+FORBIDDEN_TOKENS = ("native_decide", "sorry")
+
+
+def strip_comments_and_strings(text: str) -> str:
+    """Remove nested block comments, line comments and string literals (newlines are kept)."""
+    out = []
+    index = 0
+    depth = 0
+    while index < len(text):
+        if text.startswith("/-", index):
+            depth += 1
+            index += 2
+        elif depth and text.startswith("-/", index):
+            depth -= 1
+            index += 2
+        elif depth:
+            out.append("\n" if text[index] == "\n" else " ")
+            index += 1
+        elif text.startswith("--", index):
+            end = text.find("\n", index)
+            index = len(text) if end < 0 else end
+        elif text[index] == '"':
+            index += 1
+            while index < len(text) and text[index] != '"':
+                index += 2 if text[index] == "\\" else 1
+            index += 1
+        else:
+            out.append(text[index])
+            index += 1
+    return "".join(out)
+
+
+def check_lakefile(root: Path) -> bool:
+    """New libraries must be declared and must not be default targets."""
+    path = root / "lakefile.toml"
+    if not path.is_file():
+        return False
+    text = path.read_text(encoding="utf-8")
+    ok = True
+    default = re.search(r"defaultTargets\s*=\s*\[(.*?)\]", text, re.S)
+    defaults = re.findall(r'"([^"]+)"', default.group(1)) if default else []
+    for name in NEW_ROOTS:
+        if not re.search(rf'name\s*=\s*"{name}"', text):
+            print(f"lakefile.toml: library {name} is not declared")
+            ok = False
+        if name in defaults:
+            print(f"lakefile.toml: {name} must not be a default target")
+            ok = False
+    return ok
+
+
+def check_new_tokens(relative: Path, text: str) -> bool:
+    """Forbid native_decide and unlisted sorry in the new libraries."""
+    if relative.parts[0] not in NEW_ROOTS:
+        return True
+    code = strip_comments_and_strings(text)
+    ok = True
+    for token in FORBIDDEN_TOKENS:
+        if re.search(rf"\b{token}\b", code):
+            if token == "sorry" and not STRICT and relative.as_posix() not in SORRY_ALWAYS_FATAL:
+                print(f"{relative}: warning: contains `sorry` (fatal with --strict)")
+                continue
+            print(f"{relative}: contains forbidden `{token}`")
+            ok = False
+    return ok
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    failed = False
+    failed = not check_lakefile(root)
     for path in lean_source_files(root):
         relative = path.relative_to(root)
         if path.is_symlink():
@@ -95,6 +171,8 @@ def main() -> int:
             continue
         if path.name != "lakefile.lean" and not has_module_header(text):
             print(f"{relative}: must use the module header keyword")
+            failed = True
+        if not check_new_tokens(relative, text):
             failed = True
         if physical_lines(text) > 10_000:
             print(f"{relative}: exceeds 10,000 lines; split into smaller modules")

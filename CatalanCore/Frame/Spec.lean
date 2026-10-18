@@ -2,6 +2,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Algebra.Polynomial.Eval.Defs
 public import Mathlib.Algebra.Polynomial.AlgebraMap
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -59,8 +60,8 @@ noncomputable def hurwitzTail2 (μ : ℚ) : ℝ := ∑' n : ℕ, 1 / ((n : ℝ) 
 /-- A Loewner frame.  `F(z) = ∑ i, w i • ψ(z + μ i)` with shifts in `(0, 1]` and integer weights
 of total sum zero.  The Loewner-type matrix is `T = (1/norm) • L_F` on nodes `0, 1, …`.
 Examples:
-* lambda  : `μ = ![3/4, 1]`, `w = ![1, -1]`, `norm = 16`, `xs = 5/8`, `δ0 = 3/8`, `n0off = 0`;
-* lambda' : `μ = ![1/4, 1]`, `w = ![1, -1]`, `norm = 16` (`T̄ = -(λ' I + N0)`; sign handled by an
+* lambda  : `μ = ![3/4, 1]`, `w = ![-1, 1]`, `norm = 16`, `xs = 5/8`, `δ0 = 3/8`, `n0off = 0`;
+* lambda' : `μ = ![1/4, 1]`, `w = ![-1, 1]`, `norm = 16` (`T̄ = -(λ' I + N0)`; sign handled by an
   instance lemma, not a field);
 * P6      : `μ = ![1, 1/3, 1/2]`, `w = ![1, 2, -3]`, `norm = 36`, `xs = 3/4`, `δ0 = 1/4`,
   `n0off = 1`. -/

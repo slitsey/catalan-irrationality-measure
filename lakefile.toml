@@ -60,3 +60,21 @@ roots = ["ChallengeLambda"]
 [[lean_lib]]
 name = "SolutionLambda"
 roots = ["SolutionLambda"]
+
+# Modular architecture (design FU).  None of these is a default target.
+# CatalanCore: frame-generic mathematics; CatalanFrames: per-constant instances;
+# CatalanParity: temporary old-vs-new parity checks (deleted at cut-over).
+[[lean_lib]]
+name = "CatalanCore"
+roots = ["CatalanCore"]
+globs = ["CatalanCore.+"]
+
+[[lean_lib]]
+name = "CatalanFrames"
+roots = ["CatalanFrames"]
+globs = ["CatalanFrames.+"]
+
+[[lean_lib]]
+name = "CatalanParity"
+roots = ["CatalanParity"]
+globs = ["CatalanParity.+"]
