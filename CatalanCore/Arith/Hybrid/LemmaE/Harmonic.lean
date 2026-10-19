@@ -164,4 +164,117 @@ theorem schur_diag (hp : 5 ≤ p) {K u : ℕ} (hK : K ≤ p - 1) (hu : u < K) :
   rw [tail_sum p (fun x => (x⁻¹) ^ 2) hu (by omega), H2_refl p hp (by omega : u ≤ p - 1)]
   ring
 
+/-! ### Partial sums of `1/(k(4k-1))` and `1/(16k²) - 1/(4k-1)²` modulo `p` -/
+
+/-- Block of consecutive terms: `∑_{j<n} f(K-1-j) = G_{K-1} - G_{K-1-n}` for `n ≤ K-1`. -/
+lemma sum_range_Kminus (f : ZMod p → ZMod p) {K n : ℕ} (hn : n ≤ K - 1) :
+    ∑ j ∈ range n, f ((((K - 1 - j : ℕ)) : ZMod p)) + 0 = Gs p f (K - 1) - Gs p f (K - 1 - n) := by
+  have e2 := Finset.sum_range_add (fun x : ℕ => f ((x + 1 : ℕ) : ZMod p)) (K - 1 - n) n
+  rw [show K - 1 - n + n = K - 1 by omega] at e2
+  have e3 := Finset.sum_range_reflect (fun j : ℕ => f (((K - 1 - n + j + 1 : ℕ)) : ZMod p)) n
+  unfold Gs
+  rw [e2, add_zero]
+  have : ∑ j ∈ range n, f ((((K - 1 - j : ℕ)) : ZMod p)) =
+      ∑ j ∈ range n, f (((K - 1 - n + (n - 1 - j) + 1 : ℕ)) : ZMod p) := by
+    refine Finset.sum_congr rfl fun j hj => ?_
+    have := Finset.mem_range.mp hj
+    congr 2
+    omega
+  rw [this, e3]
+  ring
+
+variable {p}
+
+/-- `4K ≡ 1`. -/
+lemma four_K (K : ℕ) (hK : ((4 * K - 1 : ℕ) : ZMod p) = 0) (hK1 : 1 ≤ K) :
+    4 * (K : ZMod p) = 1 := by
+  have : (4 * K - 1 : ℕ) + 1 = 4 * K := by omega
+  have h2 : (((4 * K - 1 : ℕ) + 1 : ℕ) : ZMod p) = 1 := by push_cast; rw [hK]; simp
+  rw [this] at h2
+  push_cast at h2
+  exact h2
+
+lemma term_mod (hp : 3 ≤ p) {K k : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hk1 : 1 ≤ k) (hkK : k < K)
+    (hKp : K < p) :
+    (((k : ℕ) : ZMod p) * (((4 * k - 1 : ℕ)) : ZMod p))⁻¹ =
+      -(((K - k : ℕ)) : ZMod p)⁻¹ - ((k : ℕ) : ZMod p)⁻¹ := by
+  have hk0 : ((k : ℕ) : ZMod p) ≠ 0 := by
+    intro h; rw [ZMod.natCast_eq_zero_iff] at h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  have hKk : (((K - k : ℕ)) : ZMod p) ≠ 0 := by
+    intro h; rw [ZMod.natCast_eq_zero_iff] at h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  have e1 : (((4 * k - 1 : ℕ)) : ZMod p) = 4 * (k : ZMod p) - 1 := by
+    rw [Nat.cast_sub (by omega)]; push_cast; ring
+  have e2 : (((K - k : ℕ)) : ZMod p) = (K : ZMod p) - k := by
+    rw [Nat.cast_sub hkK.le]
+  rw [e2] at hKk
+  have e1' : (((4 * k - 1 : ℕ)) : ZMod p) = -4 * ((K : ZMod p) - k) := by
+    rw [e1]; linear_combination hK4
+  have h4 : (4 : ZMod p) ≠ 0 := by intro h; rw [h] at hK4; simp at hK4
+  rw [e1', e2]
+  field_simp
+  linear_combination hK4
+
+lemma psi_term_mod (hp : 3 ≤ p) {K k : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hk1 : 1 ≤ k) (hkK : k < K)
+    (hKp : K < p) :
+    16 * ((16 * ((k : ℕ) : ZMod p) ^ 2)⁻¹ - ((((4 * k - 1 : ℕ)) : ZMod p) ^ 2)⁻¹) =
+      (((k : ℕ) : ZMod p)⁻¹) ^ 2 - ((((K - k : ℕ)) : ZMod p)⁻¹) ^ 2 := by
+  have hk0 : ((k : ℕ) : ZMod p) ≠ 0 := by
+    intro h; rw [ZMod.natCast_eq_zero_iff] at h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  have hKk : (((K - k : ℕ)) : ZMod p) ≠ 0 := by
+    intro h; rw [ZMod.natCast_eq_zero_iff] at h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  have e1 : (((4 * k - 1 : ℕ)) : ZMod p) = 4 * (k : ZMod p) - 1 := by
+    rw [Nat.cast_sub (by omega)]; push_cast; ring
+  have e2 : (((K - k : ℕ)) : ZMod p) = (K : ZMod p) - k := by
+    rw [Nat.cast_sub hkK.le]
+  rw [e2] at hKk ⊢
+  have e1' : (((4 * k - 1 : ℕ)) : ZMod p) = -4 * ((K : ZMod p) - k) := by
+    rw [e1]; linear_combination hK4
+  have h4 : (4 : ZMod p) ≠ 0 := by intro h; rw [h] at hK4; simp at hK4
+  have h16 : (16 : ZMod p) ≠ 0 := by
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero h4 h4
+  rw [e1']
+  field_simp
+  ring
+
+/-- `∑_{k≤n} 1/(k(4k-1)) ≡ -(φ(n))` with `φ(n) = H_n + H_{K-1} - H_{K-1-n}`. -/
+theorem Fz_eq (hp : 3 ≤ p) {K n : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p)
+    (hn : n ≤ K - 1) :
+    ∑ j ∈ range n, ((((j + 1 : ℕ)) : ZMod p) * (((4 * (j + 1) - 1 : ℕ)) : ZMod p))⁻¹ =
+      -(Gs p (fun x => x⁻¹) (K - 1) - Gs p (fun x => x⁻¹) (K - 1 - n)) -
+        Gs p (fun x => x⁻¹) n := by
+  have h1 : ∀ j ∈ range n, ((((j + 1 : ℕ)) : ZMod p) * (((4 * (j + 1) - 1 : ℕ)) : ZMod p))⁻¹ =
+      -((((K - 1 - j : ℕ)) : ZMod p))⁻¹ - ((((j + 1 : ℕ)) : ZMod p))⁻¹ := by
+    intro j hj
+    have := Finset.mem_range.mp hj
+    have := term_mod hp hK4 (k := j + 1) (by omega) (by omega) hKp
+    rw [this, show K - (j + 1) = K - 1 - j by omega]
+  rw [Finset.sum_congr rfl h1, Finset.sum_sub_distrib, Finset.sum_neg_distrib]
+  have := sum_range_Kminus p (fun x => x⁻¹) hn
+  rw [add_zero] at this
+  rw [this]
+  rfl
+
+/-- `16 ∑_{k≤n} (1/(16k²) - 1/(4k-1)²) ≡ H2_n - H2_{K-1} + H2_{K-1-n}`. -/
+theorem Psi_eq (hp : 3 ≤ p) {K n : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p)
+    (hn : n ≤ K - 1) :
+    16 * ∑ j ∈ range n, ((16 * (((j + 1 : ℕ)) : ZMod p) ^ 2)⁻¹ -
+        ((((4 * (j + 1) - 1 : ℕ)) : ZMod p) ^ 2)⁻¹) =
+      Gs p (fun x => (x⁻¹) ^ 2) n - Gs p (fun x => (x⁻¹) ^ 2) (K - 1) +
+        Gs p (fun x => (x⁻¹) ^ 2) (K - 1 - n) := by
+  rw [Finset.mul_sum]
+  have h1 : ∀ j ∈ range n, 16 * ((16 * (((j + 1 : ℕ)) : ZMod p) ^ 2)⁻¹ -
+        ((((4 * (j + 1) - 1 : ℕ)) : ZMod p) ^ 2)⁻¹) =
+      ((((j + 1 : ℕ)) : ZMod p)⁻¹) ^ 2 - (((((K - 1 - j : ℕ)) : ZMod p))⁻¹) ^ 2 := by
+    intro j hj
+    have := Finset.mem_range.mp hj
+    have := psi_term_mod hp hK4 (k := j + 1) (by omega) (by omega) hKp
+    rw [this, show K - (j + 1) = K - 1 - j by omega]
+  rw [Finset.sum_congr rfl h1, Finset.sum_sub_distrib]
+  have := sum_range_Kminus p (fun x => (x⁻¹) ^ 2) hn
+  rw [add_zero] at this
+  rw [this]
+  unfold Gs
+  ring
+
 end CatalanCore.Arith.Hybrid.LemmaE
