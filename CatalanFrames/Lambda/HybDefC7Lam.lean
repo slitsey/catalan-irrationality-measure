@@ -19,10 +19,10 @@ open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
 namespace CatalanFrames.Lambda
 
 /-- The dual value of the D2 potentials of C7. -/
-lemma wC7_dual_eq {p r m k : ℕ} (S : CSetup7 1 p r m k) :
+lemma wC7_dual_eq {o p r m k : ℕ} (S : CSetup7 o p r m k) :
     ∑ a : Fin r ⊕ Fin m, wC7 p r k (Frame.hybRow r m a) +
       ∑ b : Fin r ⊕ Fin m, wC7 p r k (Frame.hybCol r m b) = 2 * r + 2 * m - (p + k - r) := by
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hLlo := S.hLlo
   have hLhi := S.hLhi
   have hrp := S.hrp

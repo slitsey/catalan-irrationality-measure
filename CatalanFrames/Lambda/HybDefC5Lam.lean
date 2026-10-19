@@ -36,10 +36,10 @@ lemma sum_range_two (n q : ℕ) :
     split_ifs <;> omega
 
 /-- The dual value of the D2 potentials. -/
-lemma wC_dual_eq {p r m k : ℕ} (S : CSetup 1 p r m k) :
+lemma wC_dual_eq {o p r m k : ℕ} (S : CSetup o p r m k) :
     ∑ a : Fin r ⊕ Fin m, wC p r k (Frame.hybRow r m a) +
       ∑ b : Fin r ⊕ Fin m, wC p r k (Frame.hybCol r m b) = 2 * r + 2 * m - (p + k - r) := by
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hLlo := S.hLlo
   have hLhi := S.hLhi
   have hrp := S.hrp
