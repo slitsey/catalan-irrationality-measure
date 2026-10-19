@@ -3,7 +3,7 @@ module
 public import CatalanFrames.P6.Content
 public import CatalanFrames.P6.NV.Final
 public import CatalanFrames.P6.Const
-public import CatalanCore.Cert.Sigma300.Glue
+public import CatalanCore.Cert.SigmaP6.Glue
 public import CatalanCore.NT.Rules
 public import CatalanCore.Measure.Statements
 
@@ -14,7 +14,7 @@ Assembles `hasContent` (`Λ = 67/24`), the decay input, `hasNV` (`g₁ = g₂ = 
 window of `rule` into `Fam.MeasureLB` at the exact rational exponent `measureExp …`.
 
 **Swapping the decay row.**  The decay input is isolated in the three declarations `decD`, `decC`
-and `p6_decay`.  Replacing row A by row D means changing exactly those three lines; everything
+and `p6_decay`.  (Row D is now installed; row A was `Sigma300.p6_decay_rowA`, D = 30002/10000, c = 68726/10000.)  Everything
 below (`p6_measure`, `p6_measure_exp`, the Final statements) is stated in terms of them.
 -/
 
@@ -24,15 +24,15 @@ open CatalanCore
 
 namespace CatalanFrames.P6
 
-/-- decay exponent `D` of the certificate in use (row A: `3.0002`). -/
-def decD : ℚ := 30002 / 10000
+/-- decay exponent `D` of the certificate in use (row D: `3.0408`; contour radius `r0 = 1/10`). -/
+def decD : ℚ := 30408 / 10000
 
-/-- decay rate `c` of the certificate in use (row A: `6.8726`). -/
-def decC : ℚ := 68726 / 10000
+/-- decay rate `c` of the certificate in use (row D: `6.6510`). -/
+def decC : ℚ := 66510 / 10000
 
-/-- THE decay input.  Row D swap: replace this proof (and `decD`, `decC`). -/
+/-- THE decay input: row D, P6's own sigma (K = 699, rho = 1/2048, r0 = 1/10, density 3). -/
 theorem p6_decay : HasDecay (PolyFamily.ofFrame p6Frame) (decD : ℝ) (decC : ℝ) :=
-  CatalanCore.Cert.Sigma300.p6_decay_rowA
+  CatalanCore.Cert.SigmaP6.p6_decay_rowD
 
 /-- content exponent `Λ`. -/
 def contLam : ℚ := 67 / 24

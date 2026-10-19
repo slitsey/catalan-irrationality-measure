@@ -8,7 +8,7 @@ public import CatalanCore.Measure.Scaling
 
 `p6Frame.const = chi3L2 / 4`, so `chi3L2 = 4 * const + 0` and the measure bound transfers by
 `MeasureLBAt.affine` (same exponent).  Everything depends on the decay row only through
-`P6.p6Exp` (see `Instance.lean`); the round exponent `37` is a one-line change if the row changes.
+`P6.p6Exp` (see `Instance.lean`); the round exponent `31` is a one-line change if the row changes.
 -/
 
 @[expose] public section
@@ -39,19 +39,19 @@ theorem chi3_irrationalityMeasure {e : ℝ} (he : 0 < e) :
   obtain ⟨q₀, H⟩ := chi3_measureLBAt e he
   exact ⟨q₀, fun p q hc hq => H p q hq ((isCoprime_iff_natCoprime p q).2 hc)⟩
 
-/-- the exact exponent is `142297183/3910000 ≈ 36.393` (row A). -/
-theorem p6Exp_eq : p6Exp = 142297183 / 3910000 := by
+/-- the exact exponent is `224384787/7474000 ≈ 30.022` (row D). -/
+theorem p6Exp_eq : p6Exp = 224384787 / 7474000 := by
   norm_num [p6Exp, measureExp, decC, decD, contLam, rule_s]
 
-theorem chi3_lt_37 : (p6Exp : ℝ) < 37 := by
-  have : p6Exp < 37 := by rw [p6Exp_eq]; norm_num
+theorem chi3_lt_31 : (p6Exp : ℝ) < 31 := by
+  have : p6Exp < 31 := by rw [p6Exp_eq]; norm_num
   exact_mod_cast this
 
-/-- **Round exponent 37.**  (Row swap: change `37` to the new round exponent.) -/
-theorem chi3_irrationalityMeasure_37 :
+/-- **Round exponent 31.**  (Row D swap done: was 37 for row A.) -/
+theorem chi3_irrationalityMeasure_31 :
     ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), Nat.Coprime p.natAbs q → q₀ ≤ q →
-      (q : ℝ) ^ (-(37 : ℝ)) < |chi3L2 - (p : ℝ) / q| := by
-  obtain ⟨q₀, H⟩ := chi3_measureLBAt.round chi3_lt_37
+      (q : ℝ) ^ (-(31 : ℝ)) < |chi3L2 - (p : ℝ) / q| := by
+  obtain ⟨q₀, H⟩ := chi3_measureLBAt.round chi3_lt_31
   refine ⟨q₀, fun p q hc hq => ?_⟩
   have := H p q hq ((isCoprime_iff_natCoprime p q).2 hc)
   simpa [chi3L2_eq] using this

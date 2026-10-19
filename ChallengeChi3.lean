@@ -15,8 +15,8 @@ The statements say:
 
 * `L(2, χ₋₃)` is irrational;
 * for every `e > 0` and all large `q`, every `p` coprime to `q` satisfies
-  `|L(2, χ₋₃) - p/q| > q^(-(M + e))` with `M = 142297183/3910000 ≈ 36.393`;
-* the round-exponent corollary `|L(2, χ₋₃) - p/q| > q^(-37)` for all large `q`.
+  `|L(2, χ₋₃) - p/q| > q^(-(M + e))` with `M = 224384787/7474000 ≈ 30.022`;
+* the round-exponent corollary `|L(2, χ₋₃) - p/q| > q^(-31)` for all large `q`.
 
 Reference: S. Litsey, *Irrationality of L(2, χ₋₃)* (2026), building on OpenAI,
 *Catalan's constant is irrational* (2026).
@@ -30,19 +30,19 @@ theorem chi3_irrational :
   sorry
 
 /-- **Irrationality measure of `L(2, χ₋₃)`**, with the explicit exponent
-`M = 142297183/3910000 ≈ 36.393`. -/
+`M = 224384787/7474000 ≈ 30.022`. -/
 theorem chi3_irrationalityMeasure {e : ℝ} (he : 0 < e) :
     ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), Nat.Coprime p.natAbs q → q₀ ≤ q →
-      (q : ℝ) ^ (-(((142297183 / 3910000 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((224384787 / 7474000 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| := by
   sorry
 
 /-- **Round exponent.** For all sufficiently large `q` and every `p` coprime to `q`,
-`q ^ (-37) < |L(2, χ₋₃) - p/q|`. -/
-theorem chi3_irrationalityMeasure_37 :
+`q ^ (-31) < |L(2, χ₋₃) - p/q|`. -/
+theorem chi3_irrationalityMeasure_31 :
     ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), Nat.Coprime p.natAbs q → q₀ ≤ q →
-      (q : ℝ) ^ (-(37 : ℝ)) <
+      (q : ℝ) ^ (-(31 : ℝ)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| := by
   sorry

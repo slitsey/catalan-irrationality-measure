@@ -4,7 +4,7 @@
   "theorem_names": [
     "CatalanChi3Challenge.chi3_irrational",
     "CatalanChi3Challenge.chi3_irrationalityMeasure",
-    "CatalanChi3Challenge.chi3_irrationalityMeasure_37"
+    "CatalanChi3Challenge.chi3_irrationalityMeasure_31"
   ],
   "definition_names": [],
   "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
