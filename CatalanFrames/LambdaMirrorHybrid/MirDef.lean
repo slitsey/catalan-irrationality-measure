@@ -28,7 +28,7 @@ open Classical CatalanCore CatalanCore.Arith.Hybrid
 namespace CatalanFrames.LambdaMirrorHybrid
 
 /-- Theorem B (all primes `r < p < r + m`), mirror. -/
-theorem mirN_defHypT_B {I : HybInst mirNFrame} (r m : ℕ) (T : ℕ → ℕ)
+theorem mirN_defHypT_B {I : HybInst mirNFrame} (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
     (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup 3 p r m j k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
@@ -38,7 +38,7 @@ theorem mirN_defHypT_B {I : HybInst mirNFrame} (r m : ℕ) (T : ℕ → ℕ)
   defHypT_B I mirNData r m T W hW hSet hT hTd
 
 /-- Theorem C5 (`4k = p + 3`, `p ≡ 1 (4)`), mirror. -/
-theorem mirN_defHypT_C5 {I : HybInst mirNFrame} (r m : ℕ) (T : ℕ → ℕ)
+theorem mirN_defHypT_C5 {I : HybInst mirNFrame} (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup 3 p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup 3 p r m k →
@@ -47,7 +47,7 @@ theorem mirN_defHypT_C5 {I : HybInst mirNFrame} (r m : ℕ) (T : ℕ → ℕ)
   defHypT_C5 I mirNData r m T W hSet hT hTd
 
 /-- Theorem C7 (`4k = 3p + 3`, `p ≡ 3 (4)`), mirror. -/
-theorem mirN_defHypT_C7 {I : HybInst mirNFrame} (r m : ℕ) (T : ℕ → ℕ)
+theorem mirN_defHypT_C7 {I : HybInst mirNFrame} (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup7 3 p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup7 3 p r m k →
@@ -72,7 +72,7 @@ theorem mirN_gleAt_E1class {p r m k1 : ℕ} [Fact p.Prime] (S : ESetup3 3 p r m 
 
 /-- GK (low band), mirror: deficit `m` on `LowCleanO 3`.  The exceptional primes are `37, 73, 350972849`
 (class `p ≡ 1 mod 4`) and `8663` (class `p ≡ 3 mod 4`); `139` and `1009` do not occur. -/
-theorem mirN_defHypT_GK {I : HybInst mirNFrame} (r m : ℕ) (hm : 0 < m)
+theorem mirN_defHypT_GK {I : HybInst mirNFrame} (r m : ℕ) [I.DiagOK r m] (hm : 0 < m)
     (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → LowCleanO 3 r m p → 2 * r + m ≤ T p) :
     DefHypT I r m T (fun p => if LowCleanO 3 r m p then m else 0) :=
