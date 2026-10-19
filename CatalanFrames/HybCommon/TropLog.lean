@@ -13,7 +13,6 @@ higher levels, level-1 class sums) for any weights, independent of the frame.
 -/
 
 open Finset Filter Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
-  CatalanFrames.Lambda
 
 namespace CatalanFrames.HybCommon
 

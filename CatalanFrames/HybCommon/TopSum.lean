@@ -1,7 +1,8 @@
 module
 
 public import CatalanFrames.HybCommon.Final
-public import CatalanFrames.Lambda.HybTopSum
+public import CatalanFrames.HybCommon.Pieces
+public import CatalanFrames.HybCommon.Num
 public import CatalanCore.Arith.Hybrid.BorderSum
 public import CatalanCore.Rect.PairBridgeTop
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
@@ -18,7 +19,6 @@ whose levels satisfy `Bnd ≤ 4(r+2m)+6`, `Elev = 4N²+N` and whose normalisatio
 -/
 
 open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanCore.Rect
-  CatalanFrames.Lambda
 
 namespace CatalanFrames.HybCommon
 
@@ -74,7 +74,7 @@ theorem topC_sum_G (I : HybInst Fr)
     (hBpos : ∀ r m, 0 < Bnd I r m) {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in Filter.atTop,
     ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
       (topC I r (r / 8) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 := by
-  have hl := lam_log_le_eventually (e := ε / 252) (by positivity)
+  have hl := eventually_log_le (e := ε / 252) (by positivity)
   have hbig : ∀ᶠ r : ℕ in atTop, 16 / ε ≤ (r : ℝ) ^ 2 := by
     have : Tendsto (fun r : ℕ => (r : ℝ) ^ 2) atTop atTop :=
       (tendsto_pow_atTop (by norm_num : 2 ≠ 0)).comp tendsto_natCast_atTop_atTop

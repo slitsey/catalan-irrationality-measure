@@ -1,7 +1,6 @@
 module
 
 public import CatalanFrames.HybCommon.Sums2
-public import CatalanFrames.LambdaHybrid.Assembly
 public import CatalanFrames.HybCommon.Num
 
 @[expose] public section
@@ -16,7 +15,6 @@ families with `log DhybT ≤ (Λ + ε) r²`.
 -/
 
 open Finset Filter Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
-  CatalanFrames.LambdaHybrid
 
 namespace CatalanFrames.HybCommon
 
@@ -64,7 +62,7 @@ theorem both_eps_G (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 �
       exact_mod_cast (by omega : r < 8 * (r / 8) + 8)
     linarith
   have hL0 : 0 ≤ Real.log r := Real.log_nonneg (by exact_mod_cast (by omega : 1 ≤ r))
-  have key := lam_num (Λ := Λ + 1 / 448 + (ε - 11 / 10 * ε₁)) (ε := ε₁) (r := (r : ℝ))
+  have key := num5 (Λ := Λ + 1 / 448 + (ε - 11 / 10 * ε₁)) (ε := ε₁) (r := (r : ℝ))
     (L := Real.log r) (m := ((r / 8 : ℕ) : ℝ))
     (lg := Real.log (DhybT I r (r / 8) (TfunG o I r) (dAll5 o r)) +
       (1 / 448 - ε₁ / 10) * (r : ℝ) ^ 2)

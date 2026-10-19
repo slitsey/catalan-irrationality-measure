@@ -1,6 +1,12 @@
 module
 
-public import CatalanFrames.Lambda.HybDefC7Lam
+public import CatalanFrames.HybCommon.Pieces
+public import CatalanCore.Arith.Hybrid.DefBFinal
+public import CatalanCore.Arith.Hybrid.DefC5Fam
+public import CatalanCore.Arith.Hybrid.DefC7Fam
+public import CatalanCore.Arith.Hybrid.LemmaE.Class3M
+public import CatalanCore.Arith.Hybrid.LemmaE.GleE4
+public import CatalanCore.Arith.Hybrid.LemmaE.Bridge
 public import CatalanCore.Arith.Hybrid.LemmaE.Class1U
 public import CatalanCore.Arith.Hybrid.DefGKFam
 
@@ -255,7 +261,7 @@ theorem defHypT_allG (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 
         simp only [defG, if_neg n1, if_pos h]
       have S := csetup7_of_G ho hr h
       have hg := gleAt_C7_lam S hL
-      rw [CatalanFrames.Lambda.wC7_dual_eq S] at hg
+      rw [wC7_dual_eq S] at hg
       have hd := eNG_C7 h
       have hS' := S.hLhi; have hS'' := S.hLlo
       rw [e]
@@ -267,7 +273,7 @@ theorem defHypT_allG (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 
         simp only [defG, if_neg n1, if_neg n2, if_pos h]
       have S := csetup5_of_G ho hr h
       have hg := gleAt_C5_lam S hL
-      rw [CatalanFrames.Lambda.wC_dual_eq S] at hg
+      rw [wC_dual_eq S] at hg
       have hd := eNG_C5 h
       have hS' := S.hLhi; have hS'' := S.hLlo
       rw [e]

@@ -4,8 +4,7 @@ public import CatalanFrames.HybCommon.DefBoth
 public import CatalanCore.Arith.Hybrid.LemmaE.Summation
 public import CatalanCore.Arith.Hybrid.DefSumLin
 public import CatalanCore.Arith.Hybrid.DefSum
-public import CatalanFrames.Lambda.HybDefE3
-public import CatalanFrames.Lambda.HybDefSum2
+public import CatalanFrames.HybCommon.Pieces
 
 @[expose] public section
 
@@ -125,7 +124,7 @@ theorem sum_E3 (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε
       simp only [hExc, Finset.mem_union, Finset.mem_Icc, Finset.mem_singleton, not_or] at hnot
       exact ⟨hnot.1.1, hnot.1.2, hnot.2⟩
     refine ⟨hp, h4, by omega, by omega, ?_⟩
-    exact CatalanFrames.Lambda.not_dvd_6255 hp (by omega) hnot'.2.2
+    exact not_dvd_6255 hp (by omega) hnot'.2.2
   have := hr I (r / 8) (cleanE3G o r) Exc hcl
   have hlog : 0 ≤ Real.log r := Real.log_nonneg (by exact_mod_cast (by omega : 1 ≤ r))
   have hc6 : (Exc.card : ℝ) ≤ 6 := by exact_mod_cast hcard

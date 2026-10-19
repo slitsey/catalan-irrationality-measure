@@ -1,6 +1,10 @@
 module
 
 public import CatalanFrames.HybCommon.EN
+public import CatalanCore.Arith.Hybrid.DefSum
+public import CatalanCore.Arith.Hybrid.BorderB
+public import CatalanCore.Arith.Hybrid.BorderC5
+public import CatalanCore.Arith.Hybrid.BorderE
 public import CatalanCore.Arith.Hybrid.BorderC7
 public import CatalanCore.Arith.Hybrid.BorderDef
 public import CatalanCore.Arith.Hybrid.DefGKBorder
@@ -137,7 +141,7 @@ theorem defBoth_C5 (hL : LamData Fr o) (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) :
       fun b => wC p r ((p + o) / 4) (Frame.hybCol r (r / 8) b), ?_, ?_⟩
     · have e : dC5 o r p = p + (p + o) / 4 - r - r / 8 := by simp [dC5, hW]
       rw [e]; exact gleAt_C5_lam_wit S hL
-    · rw [CatalanFrames.Lambda.wC_dual_eq S]
+    · rw [wC_dual_eq S]
       exact (eNG_C5 hW).trans (TfunG_ge_eNG (I := I) p)
   · intro p hp hb hW
     have S := csetup5_of_G ho hr hW
@@ -156,7 +160,7 @@ theorem defBoth_C7 (hL : LamData Fr o) (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) :
       fun b => wC7 p r ((3 * p + o) / 4) (Frame.hybCol r (r / 8) b), ?_, ?_⟩
     · have e : dC7 o r p = p + (3 * p + o) / 4 - r - r / 8 := by simp [dC7, hW]
       rw [e]; exact gleAt_C7_lam_wit S hL
-    · rw [CatalanFrames.Lambda.wC7_dual_eq S]
+    · rw [wC7_dual_eq S]
       exact (eNG_C7 hW).trans (TfunG_ge_eNG (I := I) p)
   · intro p hp hb hW
     have S := csetup7_of_G ho hr hW

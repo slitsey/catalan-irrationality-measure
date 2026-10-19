@@ -95,7 +95,7 @@ theorem mir_content_trop8 {ε : ℝ} (hε : 0 < ε) :
   filter_upwards [h1, h3, hx, eventually_ge_atTop 4] with r hr1 hr3 hrx hr0
   have hmain := mir_log_Dhyb_le r hr0
   have hex := hrx (r / 8) (Nat.div_le_self r 8)
-  have hc := lam_const8
+  have hc := const8
   have e : (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε / 4) +
       (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l1x) / 2 + ε / 4) =
       (r : ℝ) ^ 2 * (24994314577 / 6665218560 + ε / 2) := by

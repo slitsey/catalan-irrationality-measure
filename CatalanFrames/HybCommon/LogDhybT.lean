@@ -2,8 +2,7 @@ module
 
 public import CatalanFrames.HybCommon.TropLog
 public import CatalanFrames.HybCommon.TropT
-public import CatalanFrames.Lambda.HybContent8
-public import CatalanFrames.Lambda.HybContent
+public import CatalanFrames.HybCommon.Pieces
 
 @[expose] public section
 
@@ -17,7 +16,6 @@ For any block-valued hybrid instance `I` with `TropFacts I o` (offset `o ∈ {1,
 -/
 
 open Finset Filter Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
-  CatalanFrames.Lambda
 
 namespace CatalanFrames.HybCommon
 
@@ -395,7 +393,7 @@ theorem logDhybT_le_G (T : TropFacts I o) (B : BadInfo I) {ε : ℝ} (hε : 0 < 
       have e3 : cJ3 3 = (3 : ZMod 4) := by decide
       rw [e1, e3]; exact this
   have hex := hrx (r / 8) (Nat.div_le_self r 8)
-  have hc := lam_const8
+  have hc := const8
   have e : (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε / 4) +
       (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l1x) / 2 + ε / 4) =
       (r : ℝ) ^ 2 * (24994314577 / 6665218560 + ε / 2) := by

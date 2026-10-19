@@ -1,6 +1,8 @@
 module
 
-public import CatalanFrames.Lambda.HybContent8
+public import CatalanFrames.HybCommon.Pieces
+public import CatalanCore.Arith.Hybrid.D1Exact
+public import CatalanCore.Arith.Hybrid.Values
 
 @[expose] public section
 

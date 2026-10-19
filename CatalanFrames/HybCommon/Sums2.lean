@@ -9,7 +9,7 @@ public import CatalanFrames.HybCommon.Sums
 -/
 
 open Finset Filter Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
-  CatalanCore.NT CatalanFrames.Lambda
+  CatalanCore.NT
 
 namespace CatalanFrames.HybCommon
 

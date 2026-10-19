@@ -1,7 +1,7 @@
 module
 
 public import CatalanFrames.HybCommon.DefAll
-public import CatalanFrames.Lambda.HybContentT
+public import CatalanFrames.HybCommon.Pieces
 
 @[expose] public section
 
@@ -39,7 +39,7 @@ lemma dualBG_eq (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) (hW : WBG r p) :
       unfold uPot; rw [if_pos c.2]
     simp only [this]
     rw [Fin.sum_univ_eq_sum_range (fun i : ℕ => if kBG o p ≤ i then 1 else 0) r]
-    exact CatalanFrames.Lambda.sum_range_le_ind r (kBG o p)
+    exact sum_range_le_ind r (kBG o p)
   have hcol : ∑ c : Fin r, uPot p r (kBG o p) (Frame.hybCol r (r / 8) (Sum.inl c)) =
       r - kBG o p := hrow
   have hzr : ∑ i : Fin (r / 8), uPot p r (kBG o p) (Frame.hybRow r (r / 8) (Sum.inr i)) =
@@ -54,7 +54,7 @@ lemma dualBG_eq (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) (hW : WBG r p) :
       · rw [if_neg h, if_neg (by omega)]
     simp only [this]
     rw [Finset.sum_add_distrib, Fin.sum_univ_eq_sum_range (fun i : ℕ =>
-      if (p - r + 1) / 2 ≤ i then 1 else 0) (r / 8), CatalanFrames.Lambda.sum_range_le_ind]
+      if (p - r + 1) / 2 ≤ i then 1 else 0) (r / 8), sum_range_le_ind]
     simp
   have hzc : ∑ i : Fin (r / 8), uPot p r (kBG o p) (Frame.hybCol r (r / 8) (Sum.inr i)) =
       (r / 8) + ((r / 8) - (p - r) / 2) := by
@@ -68,7 +68,7 @@ lemma dualBG_eq (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) (hW : WBG r p) :
       · rw [if_neg h, if_neg (by omega)]
     simp only [this]
     rw [Finset.sum_add_distrib, Fin.sum_univ_eq_sum_range (fun i : ℕ =>
-      if (p - r) / 2 ≤ i then 1 else 0) (r / 8), CatalanFrames.Lambda.sum_range_le_ind]
+      if (p - r) / 2 ≤ i then 1 else 0) (r / 8), sum_range_le_ind]
     simp
   rw [hrow, hcol, hzr, hzc]
   omega

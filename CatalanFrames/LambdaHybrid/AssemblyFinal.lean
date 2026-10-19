@@ -1,7 +1,6 @@
 module
 
-public import CatalanFrames.Lambda.HybTopAll3
-public import CatalanFrames.Lambda.HybTopAll4
+public import CatalanFrames.Lambda.HybContent
 public import CatalanFrames.LambdaHybrid.AssemblyDecayAll
 
 @[expose] public section
