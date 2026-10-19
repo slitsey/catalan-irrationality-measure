@@ -81,6 +81,21 @@ theorem adj_cng {M M' : Matrix n n ℚ[X]} (h : ∀ i j, Int1 p (M i j))
       exact Cng.refl _
     · simpa [Matrix.updateRow_ne hk] using hc k l
 
+
+/-- Adjugate entries of integral matrices are integral. -/
+theorem adj_int1 {M : Matrix n n ℚ[X]} (h : ∀ i j, Int1 p (M i j)) (i j : n) :
+    Int1 p (M.adjugate i j) := by
+  rw [Matrix.adjugate_apply]
+  apply det_int1
+  intro k l
+  by_cases hk : k = j
+  · subst hk
+    simp only [Matrix.updateRow_self]
+    by_cases hl : i = l
+    · subst hl; simp [Int1.one]
+    · simp [hl, Int1.zero]
+  · simpa [Matrix.updateRow_ne hk] using h k l
+
 end Det
 
 end CatalanCore.Arith.Hybrid.LemmaE
