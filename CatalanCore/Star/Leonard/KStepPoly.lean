@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Star.Leonard.CCExist
+public import Mathlib.Tactic.FieldSimp
 
 /-!
 # K-step relations (K4a/K4b) in polynomial form (package H5)
@@ -172,5 +173,126 @@ theorem MainB_natDegree_le [CharZero F] (K m : ℕ) (S θ y : F) (hK : (K : F) =
     exact key
   have := natDegree_le_of_RF (k := 2) (by omega) hR (phi2_eq_zero_iff.1 hz)
   omega
+
+
+/-! ### Two simple roots -/
+
+lemma two_div (f1 f2 : F[X]) (z1 z2 : F) (h1 : f1.eval z1 = 0) (h2 : f2.eval z2 = 0) :
+    ∃ N : F[X], f1 * (X - C z2) - f2 * (X - C z1) = (X - C z1) * (X - C z2) * N := by
+  obtain ⟨G1, e1⟩ := Polynomial.dvd_iff_isRoot.2 (show IsRoot f1 z1 from h1)
+  obtain ⟨G2, e2⟩ := Polynomial.dvd_iff_isRoot.2 (show IsRoot f2 z2 from h2)
+  refine ⟨G1 - G2, ?_⟩
+  rw [e1, e2]; ring
+
+lemma natDegree_two (z1 z2 : F) : ((X - C z1) * (X - C z2)).natDegree = 2 := by
+  rw [natDegree_mul (X_sub_C_ne_zero z1) (X_sub_C_ne_zero z2)]
+  simp
+
+lemma natDegree_N_lt {z1 z2 : F} {N : F[X]} {m : ℕ} (hm : 1 ≤ m)
+    (h : ((X - C z1) * (X - C z2) * N).natDegree ≤ m + 1) : N.natDegree < m := by
+  by_cases hN0 : N = 0
+  · subst hN0; simp; omega
+  · have hUne : ((X - C z1) * (X - C z2)) ≠ 0 :=
+      mul_ne_zero (X_sub_C_ne_zero z1) (X_sub_C_ne_zero z2)
+    rw [natDegree_mul hUne hN0, natDegree_two] at h
+    omega
+
+section K4poly
+
+variable [CharZero F] (K m : ℕ) (hm : 1 ≤ m) (S θ y c0 : F) (hK : (K : F) = S + m + 1)
+
+/-- `pK1 = (K-1-a)(z+S+2m+1)`. -/
+noncomputable def pK1 : F[X] := lin (-1) ((K : F) - 1 + θ) * lin 1 (S + 2 * m + 1)
+
+/-- `A`-coefficient: `Φ(-y)/P(-y)`. -/
+noncomputable def coefA : F :=
+  -c0 * (((PPf (S - 1) m).eval (-y)) * (pK1 K m S θ).eval (-y)) / (PPf S m).eval (-y)
+
+/-- `B`-coefficient of `K4a`: `-c₀ p₂(-y-1)`. -/
+noncomputable def coefB : F := -c0 * ((lin 1 (1 - θ) * lin 1 1).eval (-y - 1))
+
+lemma natDegree_tail (m : ℕ) (S a b p q : F) :
+    (PPf S m * (C a * lin 1 p + C b * lin 1 q)).natDegree ≤ m + 1 := by
+  have h1 : (C a * lin 1 p).natDegree ≤ 1 := (natDegree_C_mul_le _ _).trans (natDegree_lin_le _ _)
+  have h2 : (C b * lin 1 q).natDegree ≤ 1 := (natDegree_C_mul_le _ _).trans (natDegree_lin_le _ _)
+  have h3 := (natDegree_add_le (C a * lin 1 p) (C b * lin 1 q)).trans (max_le h1 h2)
+  have h4 := natDegree_PPf_le S m
+  exact (natDegree_mul_le).trans (by omega)
+
+include hm hK in
+theorem K4a_poly (hP : (PPf S m).eval (-y) ≠ 0) :
+    ∃ N : F[X], N.natDegree < m ∧
+      C (-c0) * MainA K m S θ y - PPf S m * (C (coefA K m S θ y c0) * lin 1 (y + 1)
+        + C (coefB θ y c0) * lin 1 y) = (lin 1 y * lin 1 (y + 1)) * N := by
+  have e1 : lin 1 y = X - C (-y) := lin_one y
+  have e2 : lin 1 (y + 1) = X - C (-y - 1) := by rw [lin_one]; congr 2; ring
+  have hA : coefA K m S θ y c0 * (PPf S m).eval (-y) =
+      -c0 * (((PPf (S - 1) m).eval (-y)) * (pK1 K m S θ).eval (-y)) := by
+    unfold coefA; field_simp
+  obtain ⟨N, hN⟩ := two_div
+    (C (-c0) * (PPf (S - 1) m * pK1 K m S θ) - C (coefA K m S θ y c0) * PPf S m)
+    (C c0 * (lin 1 (1 - θ) * lin 1 1 * PPf S m) + C (coefB θ y c0) * PPf S m) (-y) (-y - 1)
+    (by
+      simp only [eval_sub, eval_mul, eval_C]
+      linear_combination (-1 : F) * hA)
+    (by
+      unfold coefB
+      simp only [eval_add, eval_mul, eval_C]
+      ring)
+  have heq : C (-c0) * MainA K m S θ y - PPf S m * (C (coefA K m S θ y c0) * lin 1 (y + 1)
+        + C (coefB θ y c0) * lin 1 y) = (lin 1 y * lin 1 (y + 1)) * N := by
+    rw [e1, e2, ← hN]
+    unfold MainA A3a B3a pK1
+    rw [e1, e2]
+    simp only [map_neg]
+    ring
+  refine ⟨N, ?_, heq⟩
+  have hdeg : ((lin 1 y * lin 1 (y + 1)) * N).natDegree ≤ m + 1 := by
+    rw [← heq]
+    exact (natDegree_sub_le _ _).trans (max_le ((natDegree_C_mul_le _ _).trans
+      (MainA_natDegree_le K m S θ y hK)) (natDegree_tail m S _ _ _ _))
+  rw [e1, e2] at hdeg
+  exact natDegree_N_lt hm hdeg
+
+
+/-- `B`-coefficient of `K4b`: `-c₀ p₂'(1-y)`, `p₂' = (z-θ) z`. -/
+noncomputable def coefB' (θ y c0 : F) : F := -c0 * ((lin 1 (-θ) * lin 1 0).eval (1 - y))
+
+include hm hK in
+theorem K4b_poly (hP : (PPf S m).eval (-y) ≠ 0) :
+    ∃ N : F[X], N.natDegree < m ∧
+      C (-c0) * MainB K m S θ y - PPf S m * (C (coefA K m S θ y c0) * lin 1 (y - 1)
+        + C (coefB' θ y c0) * lin 1 y) = (lin 1 y * lin 1 (y - 1)) * N := by
+  have e1 : lin 1 y = X - C (-y) := lin_one y
+  have e2 : lin 1 (y - 1) = X - C (1 - y) := by rw [lin_one]; congr 2; ring
+  have hA : coefA K m S θ y c0 * (PPf S m).eval (-y) =
+      -c0 * (((PPf (S - 1) m).eval (-y)) * (pK1 K m S θ).eval (-y)) := by
+    unfold coefA; field_simp
+  obtain ⟨N, hN⟩ := two_div
+    (C (-c0) * (PPf (S - 1) m * pK1 K m S θ) - C (coefA K m S θ y c0) * PPf S m)
+    (C c0 * (lin 1 (-θ) * lin 1 0 * PPf S m) + C (coefB' θ y c0) * PPf S m) (-y) (1 - y)
+    (by
+      simp only [eval_sub, eval_mul, eval_C]
+      linear_combination (-1 : F) * hA)
+    (by
+      unfold coefB'
+      simp only [eval_add, eval_mul, eval_C]
+      ring)
+  have heq : C (-c0) * MainB K m S θ y - PPf S m * (C (coefA K m S θ y c0) * lin 1 (y - 1)
+        + C (coefB' θ y c0) * lin 1 y) = (lin 1 y * lin 1 (y - 1)) * N := by
+    rw [e1, e2, ← hN]
+    unfold MainB A3b B3b pK1
+    rw [e1, e2]
+    simp only [map_neg]
+    ring
+  refine ⟨N, ?_, heq⟩
+  have hdeg : ((lin 1 y * lin 1 (y - 1)) * N).natDegree ≤ m + 1 := by
+    rw [← heq]
+    exact (natDegree_sub_le _ _).trans (max_le ((natDegree_C_mul_le _ _).trans
+      (MainB_natDegree_le K m S θ y hK)) (natDegree_tail m S _ _ _ _))
+  rw [e1, e2] at hdeg
+  exact natDegree_N_lt hm hdeg
+
+end K4poly
 
 end CatalanCore.Star.Leonard
