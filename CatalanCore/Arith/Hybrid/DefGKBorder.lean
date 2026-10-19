@@ -141,4 +141,20 @@ theorem defHypTop_GK_o {Fr : Frame} (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o
   unfold topC
   omega
 
+open Classical in
+/-- **GK as a `DefHypTop` family** (λ): deficit `m` on `LowClean`, against any `T ≥ 2r + m`
+(bordered twin of `defHypT_GK`). -/
+theorem defHypTop_GK {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr 1) (r m : ℕ) (hm : 0 < m)
+    (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
+    (hTd : ∀ p : ℕ, p.Prime → LowClean r m p → 2 * r + m ≤ T p) :
+    DefHypTop I r m T (fun p => if LowClean r m p then m else 0) := by
+  have h := defHypTop_GK_o I (Or.inl rfl) hL r m hm T hT
+    (fun p hp hW => hTd p hp ((lowClean_iff r m p).2 hW))
+  have e : (fun p => if LowClean r m p then m else 0) =
+      (fun p => if LowCleanO 1 r m p then m else 0) := by
+    funext p
+    simp only [lowClean_iff]
+  rw [e]
+  exact h
+
 end CatalanCore.Arith.Hybrid

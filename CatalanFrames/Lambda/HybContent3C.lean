@@ -58,13 +58,15 @@ lemma defs_le_delta3 {r : ℕ} (hr : 16 ≤ r) {δ : ℕ → ℕ}
       simp [defC7, defGK3, defGK1, cleanDef, c7, g3, g1]
       exact this
 
-theorem lam_content_deficit3 {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ r : ℕ in atTop, ∃ δ : ℕ → ℕ, DefHypT lamInst r (r / 8) (Tfun3 r) δ ∧
-      (∀ p, cleanE1 r p → δ p = r / 8) ∧ (∀ p, cleanE3 r p → δ p = r / 8) ∧
-      (∀ p, WB r p → δ p = r / 8 - (p - r)) ∧
-      (∀ p, WC5 r p → δ p = p + (p + 1) / 4 - r - r / 8) ∧
-      (∀ p, WC7 r p → δ p = p + (3 * p + 1) / 4 - r - r / 8) ∧
-      (∀ p, LowClean r (r / 8) p → δ p = r / 8) ∧
+/-- The content bound with the seven deficits, for *every* deficit family `δ` with the prescribed
+values on the windows (generic in `δ`, so that the bordered family `DefBoth` can use it). -/
+theorem lam_content_deficit3_gen {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT lamInst r (r / 8) (Tfun3 r) δ →
+      (∀ p, cleanE1 r p → δ p = r / 8) → (∀ p, cleanE3 r p → δ p = r / 8) →
+      (∀ p, WB r p → δ p = r / 8 - (p - r)) →
+      (∀ p, WC5 r p → δ p = p + (p + 1) / 4 - r - r / 8) →
+      (∀ p, WC7 r p → δ p = p + (3 * p + 1) / 4 - r - r / 8) →
+      (∀ p, LowClean r (r / 8) p → δ p = r / 8) →
       Real.log (DhybT lamInst r (r / 8) (Tfun3 r) δ) ≤
         (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
         ((r / 8 : ℕ) : ℝ) * (((1 / 7 : ℝ) - ε) * r - 4 * Real.log r) -
@@ -85,8 +87,7 @@ theorem lam_content_deficit3 {ε : ℝ} (hε : 0 < ε) :
   have hG1 := lam_GK1_deficit_sum hε
   filter_upwards [h3, h1, hx, hE1, hE3, hBs, hCs, h7s, hG3, hG1, eventually_ge_atTop 16] with r hr3
     hr1 hrx hD1 hD3 hDB hDC hD7 hDG3 hDG1 hr16
-  obtain ⟨δ, hδ, hδ1, hδ3, hδB, hδC, hδ7, hδG⟩ := lam_defHypT_all3 hr16
-  refine ⟨δ, hδ, hδ1, hδ3, hδB, hδC, hδ7, hδG, ?_⟩
+  intro δ hδ hδ1 hδ3 hδB hδC hδ7 hδG
   have hmain := lam_log_DhybT_le3 hr16 hδ
   have hex := hrx (r / 8) (Nat.div_le_self r 8)
   have hc := lam_const8
@@ -123,5 +124,23 @@ theorem lam_content_deficit3 {ε : ℝ} (hε : 0 < ε) :
   simp only [Fin.sum_univ_succ] at key
   simp at key
   nlinarith [hmain, hr3, hr1, hrx, e, hD1, hD3, key]
+
+theorem lam_content_deficit3 {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∃ δ : ℕ → ℕ, DefHypT lamInst r (r / 8) (Tfun3 r) δ ∧
+      (∀ p, cleanE1 r p → δ p = r / 8) ∧ (∀ p, cleanE3 r p → δ p = r / 8) ∧
+      (∀ p, WB r p → δ p = r / 8 - (p - r)) ∧
+      (∀ p, WC5 r p → δ p = p + (p + 1) / 4 - r - r / 8) ∧
+      (∀ p, WC7 r p → δ p = p + (3 * p + 1) / 4 - r - r / 8) ∧
+      (∀ p, LowClean r (r / 8) p → δ p = r / 8) ∧
+      Real.log (DhybT lamInst r (r / 8) (Tfun3 r) δ) ≤
+        (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
+        ((r / 8 : ℕ) : ℝ) * (((1 / 7 : ℝ) - ε) * r - 4 * Real.log r) -
+        ((r / 8 : ℕ) : ℝ) * (((7 / 80 : ℝ) - ε) * r - 6 * Real.log r) -
+        (1 / 128 - ε) * (r : ℝ) ^ 2 - (1 / 320 - ε) * (r : ℝ) ^ 2 - (1 / 448 - ε) * (r : ℝ) ^ 2 -
+        ((r / 8 : ℕ) : ℝ) * (((1 / 72 : ℝ) - ε) * r - 2 * Real.log r) -
+        ((r / 8 : ℕ) : ℝ) * (((1 / 44 : ℝ) - ε) * r - 2 * Real.log r) := by
+  filter_upwards [lam_content_deficit3_gen hε, eventually_ge_atTop 16] with r hg hr16
+  obtain ⟨δ, hδ, hδ1, hδ3, hδB, hδC, hδ7, hδG⟩ := lam_defHypT_all3 hr16
+  exact ⟨δ, hδ, hδ1, hδ3, hδB, hδC, hδ7, hδG, hg δ hδ hδ1 hδ3 hδB hδC hδ7 hδG⟩
 
 end CatalanFrames.Lambda

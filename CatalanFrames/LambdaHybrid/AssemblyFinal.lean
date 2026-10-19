@@ -1,6 +1,7 @@
 module
 
 public import CatalanFrames.Lambda.HybTopAll3
+public import CatalanFrames.Lambda.HybTopAll4
 public import CatalanFrames.LambdaHybrid.AssemblyDecayAll
 
 @[expose] public section
@@ -11,11 +12,9 @@ public import CatalanFrames.LambdaHybrid.AssemblyDecayAll
 `lam_hyb_measure_of_both`: the decay of both members is proved (`lam_hyb_decay_member1`,
 `lam_mem2_decay`, `D = 3.9028`, `c = 7.6444`); the only input is a `DefBoth` content family
 (simultaneous member-1/member-2 deficit family) at a constant `Λ`.
-`lam_hyb_measure_final` instantiates it with `Λ₂ = 3.708 ≥ 3.70799745…` (deficits E, B, C5, C7;
-GK not bordered).  Exponent `c/(D - Λ₂) = 39.2423… ≤ 39.25`.
-
-**Swapping in a GK-bordered result** (`Λ₁ = 3.7034204`, exponent 38.34) is a one-line change:
-replace `lam_both_eps3` by the GK version of the same `DefBoth` family and change `Λ`, `E`.
+`lam_hyb_measure_final` instantiates it with `Λ₁ = 3.70343 ≥ 3.7034204…` (deficits E, B, C5, C7, GK,
+all bordered).  Exponent `c/(D - Λ₁) = 38.3419… ≤ 38.35`.  `lam_hyb_measure_final_nogk` is the earlier
+GK-free form (`Λ₂ = 3.708`, exponent `39.2423…`).
 -/
 
 open Filter CatalanCore CatalanCore.Rect CatalanCore.Arith.Hybrid CatalanFrames.Lambda
@@ -50,8 +49,17 @@ theorem lam_hyb_measure_of_both {Λ E : ℚ}
       (by norm_num) hη2 hE)
 
 /-- **λ hybrid measure theorem (final, no `Mem2*`/decay hypotheses)**:
-`μ(G - 5π²/48) ≤ 39.25` (true exponent `39.2423…`). -/
+`μ(G - 5π²/48) ≤ 38.35` (true exponent `38.3419…`), all seven deficits (E, B, C5, C7, GK) bordered:
+content constant `Λ₁ = 3.7034204… ≤ 3.70343`. -/
 theorem lam_hyb_measure_final :
+    Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
+      - 5 * Real.pi ^ 2 / 48) (((3835 / 100 : ℚ)) : ℝ) :=
+  lam_hyb_measure_of_both (Λ := 370343 / 100000) (E := 3835 / 100)
+    (lam_both_eps4 (by push_cast; norm_num)) (by norm_num) (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num)
+
+/-- The previous form (GK not bordered): `μ(G - 5π²/48) ≤ 39.25`. -/
+theorem lam_hyb_measure_final_nogk :
     Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
       - 5 * Real.pi ^ 2 / 48) (((3925 / 100 : ℚ)) : ℝ) :=
   lam_hyb_measure_of_both (Λ := 3708 / 1000) (E := 3925 / 100)
@@ -59,5 +67,6 @@ theorem lam_hyb_measure_final :
     (by norm_num) (by norm_num)
 
 #print axioms lam_hyb_measure_final
+#print axioms lam_hyb_measure_final_nogk
 
 end CatalanFrames.LambdaHybrid
