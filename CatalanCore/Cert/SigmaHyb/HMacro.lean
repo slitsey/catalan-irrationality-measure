@@ -46,7 +46,7 @@ def hMacroOK (L : List Pt) (M P j : ℕ) : Bool :=
     let ylo := slot P (a + 2)
     let yhi := slot P (a + 3)
     let gam := slot P (a + 4)
-    decide (xhi < 0 ∧ xlo ≤ xhi ∧ 0 ≤ ylo) &&
+    decide (xhi < 2 ^ 40 ∧ xlo ≤ xhi ∧ 0 ≤ ylo) &&
       decide ((gam : ℚ) / 2 ^ 32 ≤
         sigTL x0 y0 fd xlo xhi ylo yhi (sigSum xlo xhi ylo yhi mid) - UexUp xlo xhi ylo yhi))
 

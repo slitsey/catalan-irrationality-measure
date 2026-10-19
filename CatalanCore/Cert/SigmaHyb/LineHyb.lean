@@ -3,13 +3,15 @@ module
 public import CatalanCore.Cert.SigmaHyb.LH0
 public import CatalanCore.Cert.SigmaHyb.LH1
 public import CatalanCore.Cert.SigmaHyb.LH2
+public import CatalanCore.Cert.SigmaHyb.LH3
+public import CatalanCore.Cert.SigmaHyb.LH4
 public import CatalanCore.Cert.SigmaHyb.HBridge
 public import CatalanLambda.Cert.Final
 
 @[expose] public section
 
 /-!
-# Hybrid line cells on `[0, 1]` (384 cells, `g_h ≥ -16093/10000`)
+# Hybrid line cells on `[0, 1]` (640 cells, `g_h ≥ -16093/10000`)
 -/
 
 open Real
@@ -24,36 +26,38 @@ def LP : ℕ → ℕ
   | 0 => LH0P
   | 1 => LH1P
   | 2 => LH2P
+  | 3 => LH3P
+  | 4 => LH4P
   | _ => 0
 
-theorem lAll : ∀ m < 3, ∀ j < 8, lMacroOK hybS (-16093 / 10000 : ℚ) 16 (LP m) j = true := by
+theorem lAll : ∀ m < 5, ∀ j < 8, lMacroOK hybS (-16075 / 10000 : ℚ) 16 (LP m) j = true := by
   intro m hm
   interval_cases m
-  exacts [LH0_ok, LH1_ok, LH2_ok]
+  exacts [LH0_ok, LH1_ok, LH2_ok, LH3_ok, LH4_ok]
 
 def lineCellH (i : ℕ) : ℤ × ℤ × ℤ := realCell 16 (LP (i / 128)) ((i % 128) / 16) (i % 16)
 
-theorem lineH_sound (i : ℕ) (hi : i < 384) (x : ℝ) (h1 : ((lineCellH i).1 : ℝ) / 2 ^ 40 ≤ x)
+theorem lineH_sound (i : ℕ) (hi : i < 640) (x : ℝ) (h1 : ((lineCellH i).1 : ℝ) / 2 ^ 40 ≤ x)
     (h2 : x ≤ ((lineCellH i).2.1 : ℝ) / 2 ^ 40) :
-    (((-16093 / 10000 : ℚ)) : ℝ) ≤ gfun hybS x 0 - UexR x 0 :=
-  lMacro_sound hybS (-16093 / 10000 : ℚ) 16 (LP (i / 128)) ((i % 128) / 16)
+    (((-16075 / 10000 : ℚ)) : ℝ) ≤ gfun hybS x 0 - UexR x 0 :=
+  lMacro_sound hybS (-16075 / 10000 : ℚ) 16 (LP (i / 128)) ((i % 128) / 16)
     (lAll (i / 128) (by omega) ((i % 128) / 16) (by omega)) (i % 16) (by omega) x h1 h2
 
 def lineGeomH (i : ℕ) : Bool :=
   decide (0 ≤ (lineCellH i).1 ∧ (lineCellH i).1 ≤ (lineCellH i).2.1 ∧ (lineCellH i).2.1 ≤ 2 ^ 40)
 
 def lineChainH (i : ℕ) : Bool :=
-  decide (384 ≤ i + 1 ∨ (lineCellH (i + 1)).1 ≤ (lineCellH i).2.1)
+  decide (640 ≤ i + 1 ∨ (lineCellH (i + 1)).1 ≤ (lineCellH i).2.1)
 
-theorem lineH_geom : (List.range 384).all lineGeomH = true := by decide +kernel
-theorem lineH_chain : (List.range 384).all lineChainH = true := by decide +kernel
-theorem lineH_ends : (lineCellH 0).1 ≤ 0 ∧ 2 ^ 40 ≤ (lineCellH 383).2.1 := by decide +kernel
+theorem lineH_geom : (List.range 640).all lineGeomH = true := by decide +kernel
+theorem lineH_chain : (List.range 640).all lineChainH = true := by decide +kernel
+theorem lineH_ends : (lineCellH 0).1 ≤ 0 ∧ 2 ^ 40 ≤ (lineCellH 639).2.1 := by decide +kernel
 
-def lineCellsH : List (ℚ × ℚ) := (List.range 384).map (fun i =>
+def lineCellsH : List (ℚ × ℚ) := (List.range 640).map (fun i =>
   (((lineCellH i).1 : ℚ) / 2 ^ 40, ((lineCellH i).2.1 : ℚ) / 2 ^ 40))
 
 theorem line_ok_H : ∀ p ∈ lineCellsH, ∀ x : ℝ, (p.1 : ℝ) ≤ x → x ≤ (p.2 : ℝ) →
-    (((-16093 / 10000 : ℚ)) : ℝ) ≤ gHyb ⟨x, 0⟩ := by
+    (((-16075 / 10000 : ℚ)) : ℝ) ≤ gHyb ⟨x, 0⟩ := by
   intro p hp x h1 h2
   simp only [lineCellsH, List.mem_map, List.mem_range] at hp
   obtain ⟨i, hi, rfl⟩ := hp
@@ -76,15 +80,15 @@ theorem line_ok_H : ∀ p ∈ lineCellsH, ∀ x : ℝ, (p.1 : ℝ) ≤ x → x �
 
 theorem line_cover_H : ∀ x : ℝ, 0 ≤ x → x ≤ 1 → ∃ p ∈ lineCellsH, (p.1 : ℝ) ≤ x ∧ x ≤ (p.2 : ℝ) := by
   intro x hx1 hx2
-  have hc := cover_chain 384 (fun i => ((lineCellH i).1 : ℝ) / 2 ^ 40)
+  have hc := cover_chain 640 (fun i => ((lineCellH i).1 : ℝ) / 2 ^ 40)
     (fun i => ((lineCellH i).2.1 : ℝ) / 2 ^ 40) 0 1 (by norm_num)
     (by
       have h : ((lineCellH 0).1 : ℝ) ≤ 0 := by exact_mod_cast lineH_ends.1
       show ((lineCellH 0).1 : ℝ) / 2 ^ 40 ≤ 0
       exact div_nonpos_of_nonpos_of_nonneg h (by positivity))
     (by
-      have h : (2 : ℝ) ^ 40 ≤ ((lineCellH 383).2.1 : ℝ) := by exact_mod_cast lineH_ends.2
-      show (1 : ℝ) ≤ ((lineCellH (384 - 1)).2.1 : ℝ) / 2 ^ 40
+      have h : (2 : ℝ) ^ 40 ≤ ((lineCellH 639).2.1 : ℝ) := by exact_mod_cast lineH_ends.2
+      show (1 : ℝ) ≤ ((lineCellH (640 - 1)).2.1 : ℝ) / 2 ^ 40
       rw [le_div_iff₀ (by positivity)]
       linarith)
     (by

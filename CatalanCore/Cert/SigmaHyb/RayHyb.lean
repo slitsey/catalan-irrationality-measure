@@ -82,9 +82,23 @@ def refOK (t : ℕ) : Bool :=
       -21 * 2 ^ 40 - 50 * b0 + 153600 ≤ 150 * (aBox J).2.1)
 
 def refChunk (m : ℕ) : Bool :=
-  (List.range 5100).all (fun i => decide (NR ≤ 5100 * m + i) || refOK (5100 * m + i))
+  (List.range 2600).all (fun i => decide (NR ≤ 2600 * m + i) || refOK (2600 * m + i))
 
-theorem ref_check : ∀ m < 5, refChunk m = true := by decide +kernel
+theorem refc_0 : refChunk 0 = true := by decide +kernel
+theorem refc_1 : refChunk 1 = true := by decide +kernel
+theorem refc_2 : refChunk 2 = true := by decide +kernel
+theorem refc_3 : refChunk 3 = true := by decide +kernel
+theorem refc_4 : refChunk 4 = true := by decide +kernel
+theorem refc_5 : refChunk 5 = true := by decide +kernel
+theorem refc_6 : refChunk 6 = true := by decide +kernel
+theorem refc_7 : refChunk 7 = true := by decide +kernel
+theorem refc_8 : refChunk 8 = true := by decide +kernel
+theorem refc_9 : refChunk 9 = true := by decide +kernel
+
+theorem ref_check : ∀ m < 10, refChunk m = true := by
+  intro m hm
+  interval_cases m
+  exacts [refc_0, refc_1, refc_2, refc_3, refc_4, refc_5, refc_6, refc_7, refc_8, refc_9]
 
 def gamOK (J : ℕ) : Bool :=
   decide ((197179 / 100000 : ℚ) + (aGam J : ℚ) / 2 ^ 32 ≥ 22147 / 10000)

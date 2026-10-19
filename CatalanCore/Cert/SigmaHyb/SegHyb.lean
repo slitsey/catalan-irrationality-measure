@@ -137,7 +137,7 @@ lemma segtermH (i : Fin 2816) :
     rw [min_eq_left hm]
     push_cast
     field_simp
-    ring
+    rw [hg]; push_cast; ring
   · rw [if_neg (by simpa [hg] using h)]
     have hr : (22147 : ℝ) * 2 ^ 32 < (g : ℝ) * 10000 := by exact_mod_cast not_le.mp h
     have hm : 0 ≤ ((g : ℝ) / 2 ^ 32 - 22147 / 10000) := by

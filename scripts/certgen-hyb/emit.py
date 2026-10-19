@@ -12,6 +12,9 @@ def pack(slots):
 def z(v): return "(%d : ℤ)" % v if v < 0 else str(v)
 
 def write(name, txt):
+    import os
+    only = os.environ.get('ONLY')
+    if only and not name.startswith(only): return
     open(LEAN + name + '.lean', 'w', encoding='utf-8', newline='\n').write(txt)
 
 def emit_data():
@@ -109,7 +112,7 @@ def main():
         x0, y0, i0, i1 = mac
         macros.append((x0, y0, i0, i1))
         cells.append([(c[0], c[1], 0) for c in L['cells'][mi * M:(mi + 1) * M]])
-    namesL = family('LH', 'l', 'hybS', M, macros, cells, '(-16093 / 10000 : ℚ)')
+    namesL = family('LH', 'l', 'hybS', M, macros, cells, '(-16075 / 10000 : ℚ)')
     info['L'] = dict(M=M, n=len(L['cells']), names=namesL)
     json.dump(info, open(OUTD + 'emit_info.json', 'w'))
     print(json.dumps(info))

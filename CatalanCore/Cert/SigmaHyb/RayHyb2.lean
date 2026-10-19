@@ -24,9 +24,9 @@ lemma NR_eq : NR = 25115 := rfl
 
 theorem refOK_true (t : ℕ) (ht : t < NR) : refOK t = true := by
   have hlt : t < 25115 := by rw [NR_eq] at ht; exact ht
-  have h := ref_check (t / 5100) (by omega)
-  have h2 := List.all_eq_true.mp h (t % 5100) (List.mem_range.mpr (by omega))
-  have e : 5100 * (t / 5100) + t % 5100 = t := by omega
+  have h := ref_check (t / 2600) (by omega)
+  have h2 := List.all_eq_true.mp h (t % 2600) (List.mem_range.mpr (by omega))
+  have e : 2600 * (t / 2600) + t % 2600 = t := by omega
   rw [e] at h2
   simp only [Bool.or_eq_true, decide_eq_true_eq] at h2
   rcases h2 with h2 | h2
@@ -84,10 +84,10 @@ theorem rayA_ok (t : ℕ) (ht : t < NR) (x y : ℝ)
   have hJ' : J < 1024 := by omega
   have hc3 : (150 : ℝ) * (aBox J).1 ≤ -21 * 1099511627776 - 50 * b1 - 153600 := by
     have := (show ((150 * (aBox J).1 : ℤ) : ℝ) ≤ ((-21 * 2 ^ 40 - 50 * b1 - 153600 : ℤ) : ℝ) from by exact_mod_cast hC3)
-    push_cast at this; rw [hZ] at this; linarith
+    push_cast at this; linarith
   have hc4 : (-21 : ℝ) * 1099511627776 - 50 * b0 + 153600 ≤ 150 * (aBox J).2.1 := by
     have := (show ((-21 * 2 ^ 40 - 50 * b0 + 153600 : ℤ) : ℝ) ≤ ((150 * (aBox J).2.1 : ℤ) : ℝ) from by exact_mod_cast hC4)
-    push_cast at this; rw [hZ] at this; linarith
+    push_cast at this; linarith
   have hc1 : ((aBox J).2.2.1 : ℝ) ≤ b0 := by exact_mod_cast hC1
   have hc2 : (b1 : ℝ) ≤ ((aBox J).2.2.2 : ℝ) := by exact_mod_cast hC2
   have hh := aSound J hJ' x y
@@ -113,27 +113,29 @@ theorem rayB_ok (k : ℕ) (hk : k < 228) (x y : ℝ)
     (22147 / 10000 : ℝ) ≤ gHyb ⟨x, y⟩ := by
   have hok := List.all_eq_true.mp b_check k (List.mem_range.mpr hk)
   simp only [bOK, decide_eq_true_eq] at hok
+  have hsound := bSound k (by omega) x y
+  generalize bBox k = b at hok hsound hx1 hx2 hy1 hy2
+  obtain ⟨xlo, xhi, ylo, yhi⟩ := b
+  simp only at hok hsound hx1 hx2 hy1 hy2
   obtain ⟨hb0, hb01, hxh, hc3, hc4⟩ := hok
-  set b0 := (bBox k).2.2.1 with hb0def
-  set b1 := (bBox k).2.2.2 with hb1def
   have hZ : (2 : ℝ) ^ 40 = 1099511627776 := by norm_num
   have hW : (2 : ℝ) ^ 30 = 1073741824 := by norm_num
   rw [hZ] at hx1 hx2 hy1 hy2
   rw [hW] at hx1 hx2
-  have hb0r : (0 : ℝ) ≤ b0 := by exact_mod_cast hb0
+  have hb0r : (0 : ℝ) ≤ ylo := by exact_mod_cast hb0
   have hxneg : x < 0 := by
-    have : (0 : ℝ) ≤ (b0 : ℝ) / (3 * 1099511627776) := by positivity
+    have : (0 : ℝ) ≤ (ylo : ℝ) / (3 * 1099511627776) := by positivity
     linarith
   have hy0 : 0 ≤ y := by
-    have : (0 : ℝ) ≤ (b0 : ℝ) / (3 * 1099511627776) := by positivity
+    have : (0 : ℝ) ≤ (ylo : ℝ) / (3 * 1099511627776) := by positivity
     linarith
-  have hc3r : (150 : ℝ) * (bBox k).1 ≤ -21 * 1099511627776 - 50 * b1 - 153600 := by
-    have := (show ((150 * (bBox k).1 : ℤ) : ℝ) ≤ ((-21 * 2 ^ 40 - 50 * b1 - 153600 : ℤ) : ℝ) from by exact_mod_cast hc3)
-    push_cast at this; rw [hZ] at this; linarith
-  have hc4r : (-21 : ℝ) * 1099511627776 - 50 * b0 + 153600 ≤ 150 * (bBox k).2.1 := by
-    have := (show ((-21 * 2 ^ 40 - 50 * b0 + 153600 : ℤ) : ℝ) ≤ ((150 * (bBox k).2.1 : ℤ) : ℝ) from by exact_mod_cast hc4)
-    push_cast at this; rw [hZ] at this; linarith
-  have hh := bSound k (by omega) x y
+  have hc3r : (150 : ℝ) * xlo ≤ -21 * 1099511627776 - 50 * yhi - 153600 := by
+    have := (show ((150 * xlo : ℤ) : ℝ) ≤ ((-21 * 2 ^ 40 - 50 * yhi - 153600 : ℤ) : ℝ) from by exact_mod_cast hc3)
+    push_cast at this; linarith
+  have hc4r : (-21 : ℝ) * 1099511627776 - 50 * ylo + 153600 ≤ 150 * xhi := by
+    have := (show ((-21 * 2 ^ 40 - 50 * ylo + 153600 : ℤ) : ℝ) ≤ ((150 * xhi : ℤ) : ℝ) from by exact_mod_cast hc4)
+    push_cast at this; linarith
+  have hh := hsound
     (by rw [hZ, div_le_iff₀ (by norm_num)]; linarith)
     (by rw [hZ, le_div_iff₀ (by norm_num)]; linarith)
     (by rw [hZ, div_le_iff₀ (by norm_num)]; linarith)
@@ -158,9 +160,9 @@ theorem ray_box_ok_H : ∀ p ∈ rayBoxesH, ∀ x y : ℝ,
   · push_cast at hx1 hx2 hy1 hy2 ⊢
     exact rayB_ok k hk x y hx1 hx2 hy1 hy2
 
-def aF (i : ℕ) : ℝ :=
+noncomputable def aF (i : ℕ) : ℝ :=
   if i < NR then (refY i : ℝ) / (3 * 2 ^ 40) else (((bBox (i - NR)).2.2.1 : ℤ) : ℝ) / (3 * 2 ^ 40)
-def bF (i : ℕ) : ℝ :=
+noncomputable def bF (i : ℕ) : ℝ :=
   if i < NR then (refY (i + 1) : ℝ) / (3 * 2 ^ 40) else (((bBox (i - NR)).2.2.2 : ℤ) : ℝ) / (3 * 2 ^ 40)
 
 theorem ray_cover_H : ∀ u : ℝ, 0 ≤ u → u ≤ ((3 / 2 : ℚ) : ℝ) →

@@ -80,7 +80,7 @@ theorem box_sound_H (pts : List Pt) (Ls mp : ℚ) (xlo xhi ylo yhi : ℤ)
   linarith
 
 theorem hbox_sound (pts : List Pt) (Ls thr : ℚ) (xlo xhi ylo yhi : ℤ)
-    (hxhi : xhi < 0) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
+    (hxhi : xhi < 2 ^ 40) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
     (hchk : thr ≤ Ls - UexUp xlo xhi ylo yhi) (x y : ℝ)
     (hx1 : (xlo : ℝ) / 2 ^ 40 ≤ x) (hx2 : x ≤ (xhi : ℝ) / 2 ^ 40)
     (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40)
