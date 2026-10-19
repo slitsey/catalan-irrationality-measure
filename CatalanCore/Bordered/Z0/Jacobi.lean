@@ -161,4 +161,62 @@ theorem exists_real_eigenbasis_tri (M : Matrix (Fin n) (Fin n) ℝ) (d : Fin n �
       field_simp [hdne i]
     rw [← Matrix.mul_assoc, hMD, Matrix.mul_assoc, hSU, Matrix.mul_assoc]
 
+/-- A tridiagonal matrix with positive off-diagonal products is symmetrisable by a positive
+diagonal. -/
+theorem exists_symmetriser (M : Matrix (Fin n) (Fin n) ℝ)
+    (hupper : ∀ i j : Fin n, i.val + 2 ≤ j.val → M i j = 0)
+    (hlower : ∀ i j : Fin n, i.val + 2 ≤ j.val → M j i = 0)
+    (hprod : ∀ i j : Fin n, j.val = i.val + 1 → 0 < M i j * M j i) :
+    ∃ d : Fin n → ℝ, (∀ i, 0 < d i) ∧ ∀ i j, M i j * d j ^ 2 = M j i * d i ^ 2 := by
+  let f : ℕ → ℝ := fun i =>
+    if h : i + 1 < n then M ⟨i + 1, h⟩ ⟨i, by omega⟩ / M ⟨i, by omega⟩ ⟨i + 1, h⟩ else 1
+  have hf : ∀ i, 0 < f i := by
+    intro i
+    by_cases h : i + 1 < n
+    · simp only [f, dif_pos h]
+      have hp := hprod ⟨i, by omega⟩ ⟨i + 1, h⟩ rfl
+      exact div_pos_iff.2 (mul_pos_iff.1 (by rwa [mul_comm] at hp))
+    · simp [f, h]
+  let w : ℕ → ℝ := fun j => ∏ i ∈ Finset.range j, f i
+  have hw : ∀ j, 0 < w j := fun j => Finset.prod_pos fun i _ => hf i
+  have hws : ∀ j, w (j + 1) = w j * f j := fun j => Finset.prod_range_succ _ _
+  refine ⟨fun i => Real.sqrt (w i.val), fun i => Real.sqrt_pos.2 (hw _), ?_⟩
+  have hsq : ∀ i : Fin n, Real.sqrt (w i.val) ^ 2 = w i.val := fun i =>
+    Real.sq_sqrt (hw _).le
+  intro i j
+  simp only [hsq]
+  have key : ∀ i j : Fin n, j.val = i.val + 1 → M i j * w j.val = M j i * w i.val := by
+    intro i j hij
+    have hu : M i j ≠ 0 := fun h0 => by have := hprod i j hij; rw [h0] at this; simp at this
+    have hfi : f i.val = M j i / M i j := by
+      have hh : i.val + 1 < n := by omega
+      simp only [f, dif_pos hh]
+      have e : j = ⟨i.val + 1, hh⟩ := Fin.ext hij
+      subst e; rfl
+    rw [hij, hws, hfi]
+    field_simp
+  rcases lt_trichotomy i.val j.val with h | h | h
+  · by_cases h1 : j.val = i.val + 1
+    · exact key i j h1
+    · rw [hupper i j (by omega), hlower i j (by omega)]; simp
+  · have : i = j := Fin.ext h
+    subst this; rfl
+  · by_cases h1 : i.val = j.val + 1
+    · exact (key j i h1).symm
+    · rw [hupper j i (by omega), hlower j i (by omega)]; simp
+
+/-- **Z0.12 (irreducible block).** A real tridiagonal matrix with positive off-diagonal products
+has a real eigenbasis with simple spectrum. -/
+theorem exists_real_eigenbasis (M : Matrix (Fin n) (Fin n) ℝ)
+    (hupper : ∀ i j : Fin n, i.val + 2 ≤ j.val → M i j = 0)
+    (hlower : ∀ i j : Fin n, i.val + 2 ≤ j.val → M j i = 0)
+    (hprod : ∀ i j : Fin n, j.val = i.val + 1 → 0 < M i j * M j i) :
+    ∃ (P : Matrix (Fin n) (Fin n) ℝ) (η : Fin n → ℝ),
+      IsUnit P.det ∧ Function.Injective η ∧ P⁻¹ * M * P = diagonal η := by
+  obtain ⟨d, hd, hsym⟩ := exists_symmetriser M hupper hlower hprod
+  obtain ⟨P, η, hP, hη, hMP⟩ := exists_real_eigenbasis_tri M d hd hsym hupper
+    (fun i j h h0 => by have := hprod i j h; rw [h0] at this; simp at this)
+  refine ⟨P, η, hP, hη, ?_⟩
+  rw [Matrix.mul_assoc, hMP, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hP, Matrix.one_mul]
+
 end CatalanCore.Bordered
