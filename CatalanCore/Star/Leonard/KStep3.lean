@@ -231,4 +231,109 @@ theorem Xm_projB
 
 end K3
 
+lemma coefA_top (K m S : ℕ) (hm : 1 ≤ m) (θ c0 : F) (y : F) (hy : y = (S : F) + 1) :
+    coefA K m (S : F) θ y c0 = 0 := by
+  unfold coefA
+  have : (PPf ((S : F) - 1) m).eval (-y) = 0 := by
+    unfold PPf
+    rw [eval_prod]
+    refine Finset.prod_eq_zero (Finset.mem_range.2 (by omega : 0 < m)) ?_
+    rw [eval_lin, hy]; push_cast; ring
+  rw [this]; simp
+
+lemma coefB'_eq_coefB (θ y c0 : F) : coefB' θ y c0 = coefB θ (y - 1) c0 := by
+  unfold coefB' coefB
+  simp only [eval_mul, eval_lin]
+  ring
+
+lemma coefB_zero (θ c0 : F) : coefB θ 0 c0 = 0 := by
+  unfold coefB
+  simp only [eval_mul, eval_lin]
+  ring
+
+lemma WXt_projB [CharZero F] (m n S : ℕ) (θ : F)
+    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det)
+    (x : Fin (m + n) → F) :
+    (Wb (m + n) θ (bX m (S : ℤ)))ᵀ *ᵥ (projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) *ᵥ x) = 0 := by
+  have hMr : ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))) *
+      ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ)))⁻¹ = 1 :=
+    Matrix.mul_nonsing_inv _ hΔ
+  unfold projB
+  rw [Matrix.mulVec_mulVec, Matrix.mul_sub, Matrix.mul_one]
+  have : (Wb (m + n) θ (bX m (S : ℤ)))ᵀ * (Wb (m + n) θ (bY m (S : ℤ)) *
+      ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ)))⁻¹ *
+      (Wb (m + n) θ (bX m (S : ℤ)))ᵀ) = (Wb (m + n) θ (bX m (S : ℤ)))ᵀ := by
+    calc _ = ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))) *
+          ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ)))⁻¹ *
+          (Wb (m + n) θ (bX m (S : ℤ)))ᵀ := by simp only [Matrix.mul_assoc]
+      _ = _ := by rw [hMr, Matrix.one_mul]
+  rw [this, sub_self, Matrix.zero_mulVec]
+
+section K4
+
+variable [CharZero F] (m n' : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ)
+
+include hm hθ in
+/-- **(K4)** the defect of `X N_S - N'_{S+1} X` lies in `range WY'` on `ker WX^T`. -/
+theorem Xm_N_mem (x : Fin (m + n' + 1) → F)
+    (hx : (Wb (m + n' + 1) θ (bX m (n' : ℤ)))ᵀ *ᵥ x = 0) :
+    Xm (m + n') m n' θ *ᵥ (Nsum (fun y : ℕ => wcol (m + n' + 1) θ (y : ℤ)) n' *ᵥ x) -
+        Nsum (fun y : ℕ => wcol (m + n') θ (y : ℤ)) (n' + 1) *ᵥ (Xm (m + n') m n' θ *ᵥ x) ∈
+      LinearMap.range (Matrix.mulVecLin (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))) := by
+  refine telescopeX' (Xm (m + n') m n' θ) (fun y : ℕ => wcol (m + n' + 1) θ (y : ℤ))
+    (fun y : ℕ => wcol (m + n') θ (y : ℤ))
+    (fun y : ℕ => coefA (m + n' + 1) m (n' : F) θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ))
+    (fun y : ℕ => coefB θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ))
+    (LinearMap.range (Matrix.mulVecLin (Wb (m + n' + 1) θ (bX m (n' : ℤ)))))
+    (LinearMap.range (Matrix.mulVecLin (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))))
+    x ?_ ?_ n' ?_ ?_ ?_
+  · rintro w ⟨z, rfl⟩
+    change (Wb (m + n' + 1) θ (bX m (n' : ℤ)) *ᵥ z) ⬝ᵥ x = 0
+    rw [dotProduct_comm, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hx, zero_dotProduct]
+  · simp [coefB_zero]
+  · exact coefA_top _ m n' hm θ _ _ (by push_cast; ring)
+  · intro y h1 h2
+    obtain ⟨ℰ, h⟩ := K4a_col_gen (m + n' + 1) m n' hm θ hθ (by omega) (y : ℤ)
+      (fun j hj => by omega)
+    have e : wcol (m + n') θ (((y + 1 : ℕ)) : ℤ) = wcol (m + n') θ ((y : ℤ) + 1) := by
+      push_cast; rfl
+    have h2' : Xm (m + n') m n' θ *ᵥ wcol (m + n' + 1) θ (y : ℤ) =
+        coefA (m + n' + 1) m (n' : F) θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) •
+          wcol (m + n') θ (y : ℤ) +
+        coefB θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) • wcol (m + n') θ ((y : ℤ) + 1) +
+        ∑ j ∈ Finset.range m, ℰ j • wcol (m + n') θ ((n' + 2 * j + 2 : ℕ) : ℤ) := h
+    show Xm (m + n') m n' θ *ᵥ wcol (m + n' + 1) θ (y : ℤ) -
+        coefA (m + n' + 1) m (n' : F) θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) •
+          wcol (m + n') θ (y : ℤ) -
+        coefB θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) • wcol (m + n') θ (((y + 1 : ℕ)) : ℤ)
+        ∈ _
+    rw [e, h2']
+    have : ∀ (A B C : Fin (m + n') → F), A + B + C - A - B = C := fun A B C => by abel
+    rw [this]
+    exact sumY_mem (m + n') m n' θ ℰ
+  · intro y h1 h2
+    obtain ⟨ℱ, h⟩ := K4b_col_gen (m + n' + 1) m n' hm θ hθ (by omega) (y : ℤ)
+      (fun j hj => by omega)
+    have e : wcol (m + n' + 1) θ (((y - 1 : ℕ)) : ℤ) = wcol (m + n' + 1) θ ((y : ℤ) - 1) := by
+      rw [Nat.cast_sub h1]; push_cast; rfl
+    have hb : coefB θ ((((y - 1 : ℕ) : ℤ)) : F) (cK (m + n' + 1) m n' θ) =
+        coefB' θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) := by
+      rw [coefB'_eq_coefB]; congr 1; rw [Nat.cast_sub h1]; push_cast; ring
+    have h2' : (Xm (m + n') m n' θ)ᵀ *ᵥ wcol (m + n') θ (y : ℤ) =
+        coefA (m + n' + 1) m (n' : F) θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) •
+          wcol (m + n' + 1) θ (y : ℤ) +
+        coefB' θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) • wcol (m + n' + 1) θ ((y : ℤ) - 1) +
+        ∑ j ∈ Finset.range m, ℱ j • wcol (m + n' + 1) θ ((n' + 2 * j + 2 : ℕ) : ℤ) := h
+    show (Xm (m + n') m n' θ)ᵀ *ᵥ wcol (m + n') θ (y : ℤ) -
+        coefA (m + n' + 1) m (n' : F) θ (((y : ℕ) : ℤ) : F) (cK (m + n' + 1) m n' θ) •
+          wcol (m + n' + 1) θ (y : ℤ) -
+        coefB θ ((((y - 1 : ℕ) : ℤ)) : F) (cK (m + n' + 1) m n' θ) •
+          wcol (m + n' + 1) θ (((y - 1 : ℕ)) : ℤ) ∈ _
+    rw [e, hb, h2']
+    have : ∀ (A B C : Fin (m + n' + 1) → F), A + B + C - A - B = C := fun A B C => by abel
+    rw [this]
+    exact sumX_mem (m + n' + 1) m n' θ ℱ
+
+end K4
+
 end CatalanCore.Star.Leonard
