@@ -171,6 +171,37 @@ theorem Mn_off_red (hp : 5 ≤ p) {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : 
   rw [mul_comm]
   linear_combination hr
 
+lemma cast_sub_ne_zero {c u : ℕ} (huc : u < c) (hcp : c < p) : ((c : ZMod p) - u) ≠ 0 := by
+  have : (((c - u : ℕ)) : ZMod p) ≠ 0 := by
+    rw [Ne, ZMod.natCast_eq_zero_iff]
+    intro h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  rwa [Nat.cast_sub huc.le] at this
+
+/-- **Scalar Schur complement, off-diagonal entries (λ, DQ Lemma 3.1).**
+For `u < w < K ≤ p`: `16 · red Mn_{uw} = ∑_{c=K}^{p-1} 1/((c-u)(c-w))`, i.e. the Schur complement
+`Mn_UU - (1/16) ∑ ...` vanishes off the diagonal. -/
+theorem lam_UU_off (hp : 5 ≤ p) {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p) {u w : ℕ}
+    (huw : u < w) (hw : w ≤ K - 1) :
+    16 * red p (lamFrame.Mn u w) =
+      ∑ c ∈ Ico K p, ((((c : ℕ) : ZMod p) - u)⁻¹ * (((c : ℕ) : ZMod p) - w)⁻¹) := by
+  obtain ⟨_, h1⟩ := Mn_off_red hp hK4 hKp huw hw
+  have h2 := schur_offdiag p (by omega) (K := K) (u := u) (w := w) (by omega) (by omega)
+    (by omega)
+  have hwu : ((w : ZMod p) - u) ≠ 0 := cast_sub_ne_zero huw (by omega)
+  have hterm : ∀ c ∈ Ico K p, ((((c : ℕ) : ZMod p) - w)⁻¹ - (((c : ℕ) : ZMod p) - u)⁻¹) =
+      ((w : ZMod p) - u) * ((((c : ℕ) : ZMod p) - u)⁻¹ * (((c : ℕ) : ZMod p) - w)⁻¹) := by
+    intro c hc
+    have hc' := Finset.mem_Ico.mp hc
+    have a1 : ((c : ZMod p) - u) ≠ 0 := cast_sub_ne_zero (by omega) hc'.2
+    have a2 : ((c : ZMod p) - w) ≠ 0 := cast_sub_ne_zero (by omega) hc'.2
+    field_simp
+    ring
+  rw [Finset.sum_congr rfl hterm, ← Finset.mul_sum] at h2
+  unfold phiH at h1
+  apply mul_left_cancel₀ hwu
+  rw [← mul_assoc, mul_comm ((w : ZMod p) - u) 16]
+  linear_combination h1 - h2
+
 end ModP
 
 end CatalanFrames.Lambda
