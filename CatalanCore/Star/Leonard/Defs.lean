@@ -247,4 +247,44 @@ lemma sigma_border (K m S : ℕ) (θ : F) (j : ℕ) (hj : j < m) :
     refine Finset.prod_eq_zero (i := j) (by simp; omega) (by ring)
   simp [sigma, this]
 
+
+/-! ### Clearing the odd product: `Q̂ = ∏_{t∈Y}(θ+a+t)` -/
+
+/-- `Q̂(a) = ∏_{i=1}^m (θ+S+2i-1+a) = ∏_{t∈Y}(θ+a+t)`. -/
+def Qhat (m S : ℕ) (θ a : F) : F := ∏ i ∈ range m, (θ + S + (2 * ((i : F) + 1) - 1) + a)
+
+lemma Qhat_eq (m S : ℕ) (θ a : F) (hm : 1 ≤ m) :
+    Qhat m S θ a = (θ + S + 1 + a) * Qo m S θ a := by
+  obtain ⟨m', rfl⟩ : ∃ m', m = m' + 1 := ⟨m - 1, by omega⟩
+  simp only [Qhat, Qo, Nat.add_sub_cancel]
+  rw [Finset.prod_range_succ']
+  push_cast
+  have : ∏ i ∈ range m', (θ + S + (2 * ((i : F) + 1 + 1) - 1) + a) =
+      ∏ i ∈ range m', (θ + S + 2 * ((i : F) + 1) + 1 + a) :=
+    Finset.prod_congr rfl fun i _ => by ring
+  rw [this]; ring
+
+/-- `Q̂ · σ(a) = p(a) · A₁ · P(a)`. -/
+lemma sigma_mul_Qhat (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hQ : Qo m S θ a ≠ 0) :
+    sigma K m S θ a * Qhat m S θ a = pp K θ a * (θ + S + 1 + a) * Pe m S θ a := by
+  rw [Qhat_eq m S θ a hm]; unfold sigma; field_simp
+
+/-- `Q̂ · τ(a-1) = p(a-1) · A₀ · P(a)`. -/
+lemma tau_pred_mul_Qhat (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hP : Pe m S θ (a - 1) ≠ 0) :
+    tau K m S θ (a - 1) * Qhat m S θ a = pp K θ (a - 1) * (θ + S + a) * Pe m S θ a := by
+  obtain ⟨m', rfl⟩ : ∃ m', m = m' + 1 := ⟨m - 1, by omega⟩
+  have e1 : Pe (m' + 1) S θ (a - 1) = Qhat (m' + 1) S θ a := by
+    unfold Pe Qhat
+    exact Finset.prod_congr rfl fun i _ => by ring
+  have e2 : Qf (m' + 1) S θ (a - 1) = (θ + S + a) * Pe (m' + 1) S θ a := by
+    unfold Qf Pe
+    rw [Finset.prod_range_succ' (fun i : ℕ => θ + S + 2 * (i : F) + 1 + (a - 1))]
+    rw [mul_comm]; congr 1
+    · simp
+    · exact Finset.prod_congr rfl fun i _ => by push_cast; ring
+  unfold tau
+  rw [e2]
+  rw [e1] at hP ⊢
+  field_simp
+
 end CatalanCore.Star.Leonard
