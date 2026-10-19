@@ -180,6 +180,54 @@ theorem sum_res_sq_eq_zero (x : ι → F) (hx : Function.Injective x)
   simp only [hP] at this
   field_simp
 
+/-- **Z0.10 (simple poles).** `∑ₐ G(xₐ) / ∏_{b≠a}(xₐ - x_b) = 0` for `deg G + 2 ≤ N`. -/
+theorem sum_res_eq_zero (x : ι → F) (hx : Function.Injective x)
+    (G : F[X]) (hG : G.natDegree + 2 ≤ Fintype.card ι) :
+    ∑ a, G.eval (x a) * (∏ b ∈ univ.erase a, (x a - x b))⁻¹ = 0 := by
+  set N := Fintype.card ι with hNdef
+  set q : ι → F[X] := fun a => ∏ b ∈ univ.erase a, (X - C (x b)) with hq
+  set P : ι → F := fun a => ∏ b ∈ univ.erase a, (x a - x b) with hP
+  have hqmon : ∀ a, (q a).Monic := fun a => monic_prod_of_monic _ _ (fun b _ => monic_X_sub_C _)
+  have hqdeg : ∀ a, (q a).natDegree = N - 1 := by
+    intro a
+    rw [hq]; simp only
+    rw [natDegree_prod_of_monic _ _ (fun b _ => monic_X_sub_C _)]
+    simp [Finset.card_erase_of_mem, hNdef]
+  have hPne : ∀ a, P a ≠ 0 := by
+    intro a
+    rw [hP]; simp only
+    refine Finset.prod_ne_zero_iff.2 fun b hb => sub_ne_zero.2 fun hab => ?_
+    exact (Finset.mem_erase.1 hb).1 (hx hab).symm
+  have hqev : ∀ a, (q a).eval (x a) = P a := by
+    intro a; simp [hq, hP, eval_prod]
+  have hqvan : ∀ a c, a ≠ c → (q a).eval (x c) = 0 := by
+    intro a c hac
+    simp only [hq, eval_prod, eval_sub, eval_X, eval_C]
+    exact Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hac.symm, mem_univ c⟩) (sub_self _)
+  set E : F[X] := G - ∑ a, C (G.eval (x a) / P a) * q a with hE
+  have hEv : ∀ c, E.eval (x c) = 0 := by
+    intro c
+    rw [hE, eval_sub, eval_finsetSum, Finset.sum_eq_single c]
+    · simp [hqev, hPne c]
+    · intro b _ hbc; rw [eval_mul, hqvan b c hbc, mul_zero]
+    · intro h'; exact absurd (mem_univ c) h'
+  have hN2 : 2 ≤ N := by omega
+  have hEdeg : E.natDegree < N := by
+    have h1 : (∑ a, C (G.eval (x a) / P a) * q a).natDegree ≤ N - 1 := by
+      refine natDegree_sum_le_of_forall_le _ _ fun a _ => ?_
+      refine (natDegree_C_mul_le _ _).trans ?_
+      rw [hqdeg]
+    have h2 := natDegree_sub_le G (∑ a, C (G.eval (x a) / P a) * q a)
+    rw [hE]; omega
+  have hE0 : E = 0 := eq_zero_of_natDegree_lt_card_of_eval_eq_zero E hx hEv hEdeg
+  have h1 : E.coeff (N - 1) = 0 := by rw [hE0]; simp
+  rw [hE, coeff_sub, finset_sum_coeff, coeff_eq_zero_of_natDegree_lt (by omega)] at h1
+  have hc : ∀ a, (C (G.eval (x a) / P a) * q a).coeff (N - 1) = G.eval (x a) / P a := by
+    intro a
+    rw [coeff_C_mul, ← hqdeg a, (hqmon a).coeff_natDegree, mul_one]
+  simp only [hc] at h1
+  simpa [div_eq_mul_inv] using h1
+
 end Node
 
 end CatalanCore.Bordered
