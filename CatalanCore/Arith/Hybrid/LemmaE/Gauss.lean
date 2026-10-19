@@ -116,4 +116,23 @@ lemma gn_pow (f : ℚ[X]) (n : ℕ) : gn p (f ^ n) = gn p f ^ n := by
   | zero => rw [pow_zero, pow_zero, gn_one]
   | succ k ih => rw [pow_succ, pow_succ, gn_mul, ih]
 
+/-- Discreteness of the Gauss norm: `gn f < 1` forces `gn f ≤ 1/p`. -/
+lemma gn_le_inv_of_lt_one {f : ℚ[X]} (h : gn p f < 1) : gn p f ≤ (p : ℝ)⁻¹ := by
+  obtain ⟨i, hi⟩ := Polynomial.exists_eq_gaussNorm (Rat.AbsoluteValue.padic p) 1 f
+  have e : gn p f = (padicNorm p (f.coeff i) : ℝ) := by simpa [gn] using hi
+  rw [e] at h ⊢
+  by_cases h0 : f.coeff i = 0
+  · rw [h0]; simp
+  · obtain ⟨z, hz⟩ := padicNorm.values_discrete (p := p) h0
+    rw [hz] at h ⊢
+    have hp1 : (1 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
+    push_cast at h ⊢
+    have hz1 : 1 ≤ z := by
+      by_contra hneg
+      push_neg at hneg
+      have : (1 : ℝ) ≤ (p : ℝ) ^ (-z) := one_le_zpow₀ hp1.le (by omega)
+      linarith
+    calc (p : ℝ) ^ (-z) ≤ (p : ℝ) ^ (-1 : ℤ) := zpow_le_zpow_right₀ hp1.le (by omega)
+      _ = (p : ℝ)⁻¹ := zpow_neg_one _
+
 end CatalanCore.Arith.Hybrid
