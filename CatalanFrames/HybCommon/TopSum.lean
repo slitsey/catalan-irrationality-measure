@@ -1,6 +1,7 @@
 module
 
 public import CatalanFrames.HybCommon.Final
+public import CatalanFrames.Lambda.HybTopSum
 public import CatalanCore.Arith.Hybrid.BorderSum
 public import CatalanCore.Rect.PairBridgeTop
 public import Mathlib.Analysis.SpecialFunctions.Log.Base

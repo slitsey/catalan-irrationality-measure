@@ -147,4 +147,92 @@ theorem sum_E3 (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε
   rw [e2]
   nlinarith [hlog, hc6]
 
+lemma dGKa_eq (o r p : ℕ) : dGKa o r p = cleanDef (r / 8) (LCa o r) p := by
+  unfold dGKa cleanDef; rfl
+
+lemma dGKb_eq (o r p : ℕ) : dGKb o r p = cleanDef (r / 8) (LCb o r) p := by
+  unfold dGKb cleanDef; rfl
+
+theorem sum_GKa (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ((r / 8 : ℕ) : ℝ) * (((1 / 72 : ℝ) - ε) * r - 2 * Real.log r) ≤
+      ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (dGKa o r p : ℝ) * Real.log p := by
+  have hs : (0 : ℝ) < ((5 : ℕ) : ℝ) / ((12 : ℕ) : ℝ) := by norm_num
+  have hst : ((5 : ℕ) : ℝ) / ((12 : ℕ) : ℝ) ≤ ((4 : ℕ) : ℝ) / ((9 : ℕ) : ℝ) := by norm_num
+  have ht : ((4 : ℕ) : ℝ) / ((9 : ℕ) : ℝ) ≤ 1 := by norm_num
+  have h := cleanSum_ge (M := 4) (isUnit_o' ho) hs hst ht hε
+  filter_upwards [h, eventually_ge_atTop 1000000000] with r hr hr64
+  set Exc : Finset ℕ := {4 * r / 9} with hExc
+  have hcard : Exc.card ≤ 2 := by simp [hExc]
+  have hcl : ∀ p, ⌊((5 : ℕ) : ℝ) / ((12 : ℕ) : ℝ) * r⌋₊ < p →
+      p ≤ ⌊((4 : ℕ) : ℝ) / ((9 : ℕ) : ℝ) * r⌋₊ → p.Prime → (p : ZMod 4) = ((4 - o : ℕ) : ZMod 4) →
+      p ∉ Exc → LCa o r p := by
+    intro p h1 h2 hp hc hnot
+    rw [floor_frac] at h1 h2
+    have h4 := cls_mod' ho hc
+    have hnot' : p ≠ 4 * r / 9 := by
+      simpa [hExc] using hnot
+    have h9 : 9 * p + 3 ≤ 4 * r := by omega
+    have hm8 : 8 * (r / 8) ≤ r := by omega
+    refine ⟨by omega, h4, ?_, by rcases ho with rfl | rfl <;> omega, by omega⟩
+    rcases ho with rfl | rfl <;> simp [ExcJ1] <;> omega
+  have := hr I (r / 8) (LCa o r) Exc hcl
+  have hlog : 0 ≤ Real.log r := Real.log_nonneg (by exact_mod_cast (by omega : 1 ≤ r))
+  have hc2 : (Exc.card : ℝ) ≤ 2 := by exact_mod_cast hcard
+  have hm0 : (0 : ℝ) ≤ ((r / 8 : ℕ) : ℝ) := Nat.cast_nonneg _
+  have e : ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (dGKa o r p : ℝ) * Real.log p =
+      ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
+        (cleanDef (r / 8) (LCa o r) p : ℝ) * Real.log p :=
+    Finset.sum_congr rfl fun p _ => by rw [dGKa_eq]
+  rw [e]
+  refine le_trans ?_ this
+  have hφ : ((Nat.totient 4 : ℕ) : ℝ) = 2 := by
+    rw [show Nat.totient 4 = 2 by decide]; norm_num
+  rw [hφ]
+  apply mul_le_mul_of_nonneg_left _ hm0
+  have e2 : (((4 : ℕ) : ℝ) / ((9 : ℕ) : ℝ) - ((5 : ℕ) : ℝ) / ((12 : ℕ) : ℝ)) / 2 = 1 / 72 := by
+    norm_num
+  rw [e2]
+  nlinarith [hlog, hc2]
+
+theorem sum_GKb (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ((r / 8 : ℕ) : ℝ) * (((1 / 44 : ℝ) - ε) * r - 2 * Real.log r) ≤
+      ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (dGKb o r p : ℝ) * Real.log p := by
+  have hs : (0 : ℝ) < ((5 : ℕ) : ℝ) / ((11 : ℕ) : ℝ) := by norm_num
+  have hst : ((5 : ℕ) : ℝ) / ((11 : ℕ) : ℝ) ≤ ((1 : ℕ) : ℝ) / ((2 : ℕ) : ℝ) := by norm_num
+  have ht : ((1 : ℕ) : ℝ) / ((2 : ℕ) : ℝ) ≤ 1 := by norm_num
+  have h := cleanSum_ge (M := 4) (isUnit_o ho) hs hst ht hε
+  filter_upwards [h, eventually_ge_atTop 1000000000] with r hr hr64
+  set Exc : Finset ℕ := {r / 2} with hExc
+  have hcard : Exc.card ≤ 2 := by simp [hExc]
+  have hcl : ∀ p, ⌊((5 : ℕ) : ℝ) / ((11 : ℕ) : ℝ) * r⌋₊ < p →
+      p ≤ ⌊((1 : ℕ) : ℝ) / ((2 : ℕ) : ℝ) * r⌋₊ → p.Prime → (p : ZMod 4) = ((o : ℕ) : ZMod 4) →
+      p ∉ Exc → LCb o r p := by
+    intro p h1 h2 hp hc hnot
+    rw [floor_frac] at h1 h2
+    have h4 := cls_mod ho hc
+    have hnot' : p ≠ r / 2 := by
+      simpa [hExc] using hnot
+    have h2' : 2 * p + 2 ≤ r := by omega
+    have hm8 : 8 * (r / 8) ≤ r := by omega
+    refine ⟨by omega, h4, ?_, by omega, by rcases ho with rfl | rfl <;> omega⟩
+    rcases ho with rfl | rfl <;> simp [ExcJ3] <;> omega
+  have := hr I (r / 8) (LCb o r) Exc hcl
+  have hlog : 0 ≤ Real.log r := Real.log_nonneg (by exact_mod_cast (by omega : 1 ≤ r))
+  have hc2 : (Exc.card : ℝ) ≤ 2 := by exact_mod_cast hcard
+  have hm0 : (0 : ℝ) ≤ ((r / 8 : ℕ) : ℝ) := Nat.cast_nonneg _
+  have e : ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (dGKb o r p : ℝ) * Real.log p =
+      ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
+        (cleanDef (r / 8) (LCb o r) p : ℝ) * Real.log p :=
+    Finset.sum_congr rfl fun p _ => by rw [dGKb_eq]
+  rw [e]
+  refine le_trans ?_ this
+  have hφ : ((Nat.totient 4 : ℕ) : ℝ) = 2 := by
+    rw [show Nat.totient 4 = 2 by decide]; norm_num
+  rw [hφ]
+  apply mul_le_mul_of_nonneg_left _ hm0
+  have e2 : (((1 : ℕ) : ℝ) / ((2 : ℕ) : ℝ) - ((5 : ℕ) : ℝ) / ((11 : ℕ) : ℝ)) / 2 = 1 / 44 := by
+    norm_num
+  rw [e2]
+  nlinarith [hlog, hc2]
+
 end CatalanFrames.HybCommon

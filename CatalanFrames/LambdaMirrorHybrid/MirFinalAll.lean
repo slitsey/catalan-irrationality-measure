@@ -69,20 +69,22 @@ theorem mir_topC_sum {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in atTop,
   topC_sum_G mirNInst mir_cOf_le (fun r m => (mir_Bnd r m).le) (fun r m => rfl)
     (fun r m => by rw [mir_Bnd]; omega) hε
 
-/-- The `ε`-form of the content bound with the five bordered deficits, mirror. -/
-theorem mir_both_eps {Λ : ℝ} (hΛ : 24729491161 / 6665218560 - 1 / 448 ≤ Λ) :
+/-- The `ε`-form of the content bound with all seven bordered deficits, mirror. -/
+theorem mir_both_eps {Λ : ℝ} (hΛ : 24729491161 / 6665218560 - 1 / 448 - 1 / 576 - 1 / 352 ≤ Λ) :
     ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefBothG mirNInst r T δ ∧
       Real.log (DhybT mirNInst r (r / 8) T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2 :=
-  both_eps_G mirNInst mirNData (Or.inr rfl) (fun ε hε => mir_logDhybT_le hε) hΛ
+  both_eps_G7 mirNInst mirNData (Or.inr rfl) (fun ε hε => mir_logDhybT_le hε) hΛ
 
-/-- **`Mem2Content` for the mirror** at `Λ₂ = 24729491161/6665218560 - 1/448`. -/
-theorem mir_mem2Content {Λ : ℝ} (hΛ : 24729491161 / 6665218560 - 1 / 448 ≤ Λ) :
+/-- **`Mem2Content` for the mirror** at `Λ₁ = 24729491161/6665218560 - 1/448 - 1/576 - 1/352`. -/
+theorem mir_mem2Content {Λ : ℝ}
+    (hΛ : 24729491161 / 6665218560 - 1 / 448 - 1 / 576 - 1 / 352 ≤ Λ) :
     Mem2Content mirFrame Λ :=
   Mem2Content.of_neg (Fr₁ := mirNFrame) (Fr₂ := mirFrame) (fun a b => mir_Mn_neg a b)
     (mem2Content_of_both_G mirNInst le_rfl (fun ε hε => mir_topC_sum hε) (mir_both_eps hΛ))
 
 /-- **Mirror content of the pair family** (both members). -/
-theorem mir_hasContent {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (hΛ : 24729491161 / 6665218560 - 1 / 448 ≤ Λ) :
+theorem mir_hasContent {Λ : ℝ} (hΛ0 : 0 ≤ Λ)
+    (hΛ : 24729491161 / 6665218560 - 1 / 448 - 1 / 576 - 1 / 352 ≤ Λ) :
     HasContent (hybPairFam mirFrame 8) Λ := by
   obtain ⟨T, δ, hdef, hlog⟩ := contentFam_of_eps mirInst Λ (by
     intro ε hε
@@ -91,16 +93,16 @@ theorem mir_hasContent {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (hΛ : 24729491161 / 6665218
       (mir_Bnd_eq r (r / 8)) hd.1, hl⟩)
   exact hasContent_hybPair mirInst hΛ0 T δ hdef hlog (mir_mem2Content hΛ)
 
-/-- **The mirror hybrid measure theorem**: `μ(G + 5π²/48) ≤ 39.25`. -/
+/-- **The mirror hybrid measure theorem**: `μ(G + 5π²/48) ≤ 38.35`. -/
 theorem mir_hyb_measure_final :
     Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
-      + 5 * Real.pi ^ 2 / 48) (((3925 / 100 : ℚ)) : ℝ) :=
-  mir_hyb_measure_G (Λ := 3708 / 1000) (D := 39028 / 10000) (C := 76444 / 10000)
-    (E := 3925 / 100)
-    (mir_hasContent (by norm_num) (by norm_num)) mir_hybrid_decay mir_mem2_decay
+      + 5 * Real.pi ^ 2 / 48) (((3835 / 100 : ℚ)) : ℝ) :=
+  mir_hyb_measure_G (Λ := 370343 / 100000) (D := 39028 / 10000) (C := 76444 / 10000)
+    (E := 3835 / 100)
+    (mir_hasContent (by norm_num) (by push_cast; norm_num)) mir_hybrid_decay mir_mem2_decay
     (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
 
+-- final theorem
 #print axioms mir_hyb_measure_final
 
 end CatalanFrames.LambdaMirrorHybrid
-

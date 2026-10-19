@@ -160,7 +160,7 @@ theorem sum_C7 (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε
   set mm : ℝ := ((r / 8 : ℕ) : ℝ) with hmm
   have e : ∀ j ∈ Finset.Icc 1 (r / 8 - 1),
       ((((4 * r + 8 * (r / 8) - o - 1) / 7 : ℕ) : ℝ) - (((4 * (r + r / 8 + j) - o) / 7 : ℕ) : ℝ)) / 2
-        - ε / 4 * r ≥ ((4 * mm - 7) / 14 - ε / 4 * r) - (2 / 7) * (j : ℝ) := by
+        - ε / 4 * r ≥ ((4 * mm - 9) / 14 - ε / 4 * r) - (2 / 7) * (j : ℝ) := by
     intro j hj
     simp only [Finset.mem_Icc] at hj
     have h1 : 4 * r + 8 * (r / 8) ≤ 7 * ((4 * r + 8 * (r / 8) - o - 1) / 7) + 10 := by omega
@@ -187,8 +187,8 @@ theorem sum_C7 (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3) {ε : ℝ} (hε
     linarith
   have hr0 : (64 : ℝ) ≤ r := by exact_mod_cast hr64
   have ha : (r : ℝ) / 8 - 2 ≤ mm - 1 := by linarith
-  have hb : (r : ℝ) / 4 - 9 ≤ 2 * mm - 7 := by linarith
-  have hab : ((r : ℝ) / 8 - 2) * ((r : ℝ) / 4 - 9) ≤ (mm - 1) * (2 * mm - 7) :=
+  have hb : (r : ℝ) / 4 - 11 ≤ 2 * mm - 9 := by linarith
+  have hab : ((r : ℝ) / 8 - 2) * ((r : ℝ) / 4 - 11) ≤ (mm - 1) * (2 * mm - 9) :=
     mul_le_mul ha hb (by linarith) (by linarith)
   have hεm : ε * r * (mm - 1) ≤ ε * r * ((r : ℝ) / 8) :=
     mul_le_mul_of_nonneg_left (by linarith) (by positivity)

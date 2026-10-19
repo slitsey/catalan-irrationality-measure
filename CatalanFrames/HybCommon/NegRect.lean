@@ -25,7 +25,7 @@ lemma fullPolyG_neg (hM : ∀ a b, Fr₂.Mn a b = -Fr₁.Mn a b) (G : Geometry) 
     refine Matrix.ext fun a b => ?_
     rcases a with c | c <;> rcases b with c' | c' <;>
     simp [hM₁, hM₂, FullN, Blk, blkA, blkB, blkC, blkD, hM, Matrix.fromBlocks, Matrix.one_apply,
-      Polynomial.add_comp] <;> split_ifs <;> simp
+      Polynomial.add_comp] <;> split_ifs <;> simp <;> ring
   have h2 : (M₁.map (fun f => f.comp (-(Polynomial.X : ℚ[X])))).det =
       M₁.det.comp (-(Polynomial.X : ℚ[X])) := by
     have := RingHom.map_det (Polynomial.compRingHom (-(Polynomial.X : ℚ[X]))) M₁
