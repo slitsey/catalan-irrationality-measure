@@ -73,24 +73,21 @@ lemma pow_div_mem {p : ℕ} [Fact p.Prime] {n j : ℕ} (hn : 0 < n) (hj : n.fact
   have := div_mem_locRing (p := p) hn (W := p ^ j) (pow_dvd_pow p hj)
   simpa using this
 
-section Constructor
-
-variable {Fr : Frame} (cd : CatalanCore.Arith.ContentData Fr) (Ebd : ℕ → ℕ)
-  (hle : ∀ k N, k ≤ N → cd.Phi k ≤ Ebd N)
-
-include hle in
-lemma sing_off_val (p : ℕ) [hp : Fact p.Prime] (E N lo hi : ℕ) (hE1 : Ebd N < p ^ (E + 1))
-    (hE2 : N < p ^ (E + 1)) (hlo : lo < hi) (hhi : hi ≤ N) :
-    (p : ℚ) ^ (levels (blk cd.Phi) p E lo hi) *
+/-- **Generic `off_val` from the level-jump count**: the divisibility half `W2` of the weight is
+handled once; only `p^{W1} ∑ Δ ∈ ℤ_(p)` (with `W1` the number of levels at which the level jumps) is
+instance data.  Shared by `ofSing` and `ofExact`. -/
+lemma off_val_of_jump {Fr : Frame} (lev : ℕ → ℕ → ℕ) (p : ℕ) [hp : Fact p.Prime] (E lo hi : ℕ)
+    (hlo : lo < hi) (hdN : hi - lo < p ^ (E + 1))
+    (hS : (p : ℚ) ^ ((Icc 1 E).filter (fun e => lev (p ^ e) lo ≠ lev (p ^ e) hi)).card *
+      ∑ k ∈ Ioc lo hi, Fr.Delta k ∈ LocRing p) :
+    (p : ℚ) ^ (levels lev p E lo hi) *
       ((1 / ((hi : ℚ) - lo)) * ∑ k ∈ Ioc lo hi, Fr.Delta k) ∈ LocRing p := by
-  have hp' := hp.out
-  set W1 := ((Icc 1 E).filter (fun e => blk cd.Phi (p ^ e) lo ≠ blk cd.Phi (p ^ e) hi)).card
-    with hW1
+  set W1 := ((Icc 1 E).filter (fun e => lev (p ^ e) lo ≠ lev (p ^ e) hi)).card with hW1
   set W2 := ((Icc 1 E).filter (fun e => (p ^ e : ℕ) ∣ hi - lo)).card with hW2
-  have hlev : levels (blk cd.Phi) p E lo hi = W1 + W2 := by
+  have hlev : levels lev p E lo hi = W1 + W2 := by
     unfold levels wt
     rw [Finset.sum_congr rfl (g := fun e =>
-      (if blk cd.Phi (p ^ e) lo ≠ blk cd.Phi (p ^ e) hi then 1 else 0) +
+      (if lev (p ^ e) lo ≠ lev (p ^ e) hi then 1 else 0) +
       (if (p ^ e : ℕ) ∣ hi - lo then 1 else 0))]
     · rw [Finset.sum_add_distrib, Finset.sum_boole, Finset.sum_boole]
       simp [hW1, hW2]
@@ -102,27 +99,8 @@ lemma sing_off_val (p : ℕ) [hp : Fact p.Prime] (E N lo hi : ℕ) (hE1 : Ebd N 
         rw [this]; exact Int.natCast_dvd_natCast
       simp only [this]
   have hdpos : 0 < hi - lo := by omega
-  have hdN : hi - lo < p ^ (E + 1) := by omega
   have hd : (p : ℚ) ^ W2 / ((hi - lo : ℕ) : ℚ) ∈ LocRing p :=
     pow_div_mem hdpos (fact_le_count hp.out hdpos hdN _ (fun e _ h => h))
-  have hS : (p : ℚ) ^ W1 * ∑ k ∈ Ioc lo hi, Fr.Delta k ∈ LocRing p := by
-    rw [Finset.mul_sum]
-    apply (LocRing p).sum_mem
-    intro k hk
-    have hk' := Finset.mem_Ioc.mp hk
-    have hk1 : 0 < k := by omega
-    have hn : 0 < cd.Phi k := cd.Phi_pos k hk1
-    have hnE : cd.Phi k < p ^ (E + 1) := lt_of_le_of_lt (hle k N (by omega)) hE1
-    have hfl : (cd.Phi k).factorization p ≤ W1 :=
-      fact_le_count hp.out hn hnE _ (fun e _ hdv => by
-        exact ne_of_lt (blk_lt hk (show Sing cd.Phi (p ^ e) k from hdv)))
-    have := pow_div_mem (p := p) hn hfl
-    obtain ⟨z, hz⟩ := cd.delta_int k hk1
-    have hPq : (cd.Phi k : ℚ) ≠ 0 := by exact_mod_cast hn.ne'
-    have e : (p : ℚ) ^ W1 * Fr.Delta k = (z : ℚ) * ((p : ℚ) ^ W1 / (cd.Phi k : ℚ)) := by
-      rw [← hz]; field_simp
-    rw [e]
-    exact (LocRing p).mul_mem (int_mem_locRing _) this
   rw [hlev]
   have e : (p : ℚ) ^ (W1 + W2) * ((1 / ((hi : ℚ) - lo)) * ∑ k ∈ Ioc lo hi, Fr.Delta k)
       = ((p : ℚ) ^ W2 / ((hi - lo : ℕ) : ℚ)) * ((p : ℚ) ^ W1 * ∑ k ∈ Ioc lo hi, Fr.Delta k) := by
@@ -131,19 +109,61 @@ lemma sing_off_val (p : ℕ) [hp : Fact p.Prime] (E N lo hi : ℕ) (hE1 : Ebd N 
   rw [e]
   exact (LocRing p).mul_mem hd hS
 
+/-- **Generic `diag_val` from the positive-level count**: the diagonal weight is `2 [lev > 0]` per
+level, so only `p^{2 W'} ∑ D_k ∈ ℤ_(p)` is instance data. -/
+lemma diag_val_of_pos {Fr : Frame} (lev : ℕ → ℕ → ℕ) (p : ℕ) [Fact p.Prime] (E a : ℕ)
+    (hS : (p : ℚ) ^ (2 * ((Icc 1 E).filter (fun e => 0 < lev (p ^ e) a)).card) *
+      ∑ k ∈ Icc 1 a, Fr.Dsq k ∈ LocRing p) :
+    (p : ℚ) ^ (levels lev p E a a) * ∑ k ∈ Icc 1 a, Fr.Dsq k ∈ LocRing p := by
+  have hlev : levels lev p E a a = 2 * ((Icc 1 E).filter (fun e => 0 < lev (p ^ e) a)).card := by
+    unfold levels wt
+    rw [Finset.sum_congr rfl (g := fun e => 2 * (if 0 < lev (p ^ e) a then 1 else 0))]
+    · rw [← Finset.mul_sum, Finset.sum_boole]; simp
+    · intro e _
+      rw [if_pos rfl]; split_ifs <;> simp
+  rw [hlev]
+  exact hS
+
+section Constructor
+
+variable {Fr : Frame} (cd : CatalanCore.Arith.ContentData Fr) (Ebd : ℕ → ℕ)
+  (hle : ∀ k N, k ≤ N → cd.Phi k ≤ Ebd N)
+
+include hle in
+lemma sing_off_val (p : ℕ) [hp : Fact p.Prime] (E N lo hi : ℕ) (hE1 : Ebd N < p ^ (E + 1))
+    (hE2 : N < p ^ (E + 1)) (hlo : lo < hi) (hhi : hi ≤ N) :
+    (p : ℚ) ^ (levels (blk cd.Phi) p E lo hi) *
+      ((1 / ((hi : ℚ) - lo)) * ∑ k ∈ Ioc lo hi, Fr.Delta k) ∈ LocRing p := by
+  have hp' := hp.out
+  refine off_val_of_jump _ p E lo hi hlo (by omega) ?_
+  set W1 := ((Icc 1 E).filter (fun e => blk cd.Phi (p ^ e) lo ≠ blk cd.Phi (p ^ e) hi)).card
+    with hW1
+  rw [Finset.mul_sum]
+  apply (LocRing p).sum_mem
+  intro k hk
+  have hk' := Finset.mem_Ioc.mp hk
+  have hk1 : 0 < k := by omega
+  have hn : 0 < cd.Phi k := cd.Phi_pos k hk1
+  have hnE : cd.Phi k < p ^ (E + 1) := lt_of_le_of_lt (hle k N (by omega)) hE1
+  have hfl : (cd.Phi k).factorization p ≤ W1 :=
+    fact_le_count hp.out hn hnE _ (fun e _ hdv => by
+      exact ne_of_lt (blk_lt hk (show Sing cd.Phi (p ^ e) k from hdv)))
+  have := pow_div_mem (p := p) hn hfl
+  obtain ⟨z, hz⟩ := cd.delta_int k hk1
+  have hPq : (cd.Phi k : ℚ) ≠ 0 := by exact_mod_cast hn.ne'
+  have e : (p : ℚ) ^ W1 * Fr.Delta k = (z : ℚ) * ((p : ℚ) ^ W1 / (cd.Phi k : ℚ)) := by
+    rw [← hz]; field_simp
+  rw [e]
+  exact (LocRing p).mul_mem (int_mem_locRing _) this
+
 include hle in
 lemma sing_diag_val (p : ℕ) [hp : Fact p.Prime] (E N a : ℕ) (hE1 : Ebd N < p ^ (E + 1))
     (ha : a ≤ N) :
     (p : ℚ) ^ (levels (blk cd.Phi) p E a a) * ∑ k ∈ Icc 1 a, Fr.Dsq k ∈ LocRing p := by
   have hp' := hp.out
+  refine diag_val_of_pos _ p E a ?_
   set W' := ((Icc 1 E).filter (fun e => 0 < blk cd.Phi (p ^ e) a)).card with hW'
-  have hlev : levels (blk cd.Phi) p E a a = 2 * W' := by
-    unfold levels wt
-    rw [Finset.sum_congr rfl (g := fun e => 2 * (if 0 < blk cd.Phi (p ^ e) a then 1 else 0))]
-    · rw [← Finset.mul_sum, Finset.sum_boole]; simp [hW']
-    · intro e _
-      rw [if_pos rfl]; split_ifs <;> simp
-  rw [hlev, Finset.mul_sum]
+  rw [Finset.mul_sum]
   apply (LocRing p).sum_mem
   intro k hk
   have hk' := Finset.mem_Icc.mp hk
