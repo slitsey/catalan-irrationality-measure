@@ -28,7 +28,7 @@ lemma memXY (r m n : ℕ) :
     · exact Or.inl ⟨i, by omega, by omega⟩
     · exact Or.inr ⟨i, by omega, by omega⟩
 
-lemma hab_after (ℓ K m s' : ℕ) (hlK : ℓ + 1 = 4 * K) (hs : s' + 1 + m = K) :
+lemma hab_after (ℓ K m s' : ℕ) (h2K : 2 * K ≤ ℓ) (hs : s' + 1 + m = K) :
     ∀ n, (∃ i : Fin (s' + 1), ℓ - 1 - (i : ℕ) = n) ↔
       n ∈ absS K ℓ (after (ℓ - K - m) m).C (after (ℓ - K - m) m).X' (after (ℓ - K - m) m).Y' := by
   intro n
@@ -50,7 +50,7 @@ lemma hab_after (ℓ K m s' : ℕ) (hlK : ℓ + 1 = 4 * K) (hs : s' + 1 + m = K)
         rcases hxy.2 h with h | h <;> contradiction
       simp only; omega⟩
 
-lemma hab_afterTop (ℓ K m s' : ℕ) (hlK : ℓ + 1 = 4 * K) (hs : s' + 1 + m = K) :
+lemma hab_afterTop (ℓ K m s' : ℕ) (h2K : 2 * K ≤ ℓ) (hs : s' + 1 + m = K) :
     ∀ n, (∃ i : Fin s', ℓ - 1 - (i : ℕ) = n) ↔
       n ∈ absS K ℓ (afterTop (ℓ - K - m) m).C (afterTop (ℓ - K - m) m).X'
         (afterTop (ℓ - K - m) m).Y' := by
