@@ -64,16 +64,22 @@ end CatalanCore
 namespace CatalanCore.NT
 
 open Chebyshev in
-/-- **Prime window.**  For `a > 0` and `a + weight · φ(m) < b`, every large `q` has a prime
-`l ≡ r (mod m)` in `(a log q, b log q]` that is not bad for `q`. -/
-theorem exists_prime_window (R : PrimeRule) [NeZero R.m] (hB : R.BadBound) {a b : ℝ}
-    (ha : 0 < a) (hab : a + R.weight * (Nat.totient R.m : ℝ) < b) :
-    ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∃ l : ℕ, l.Prime ∧ (l : ZMod R.m) = R.r ∧
+/-- **Prime window in a union of classes** (G3).  `S` is a nonempty set of unit classes mod `R.m`
+(for instance one class with some sub-classes removed to dodge a bad residue).  For `a > 0` and
+`a + weight · φ(m) / |S| < b`, every large `q` has a prime `l` with `(l : ZMod m) ∈ S` in
+`(a log q, b log q]` that is not bad for `q`.  The single-class `exists_prime_window` is the case
+`S = {R.r}`. -/
+theorem exists_prime_window_set (R : PrimeRule) [NeZero R.m] (hB : R.BadBound)
+    (S : Finset (ZMod R.m)) (hS : ∀ c ∈ S, IsUnit c) (hne : S.Nonempty) {a b : ℝ}
+    (ha : 0 < a) (hab : a + R.weight * (Nat.totient R.m : ℝ) / (S.card : ℝ) < b) :
+    ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∃ l : ℕ, l.Prime ∧ (l : ZMod R.m) ∈ S ∧
       a * Real.log q < l ∧ (l : ℝ) ≤ b * Real.log q ∧ ¬ R.Bad l q := by
   set w : ℝ := (R.weight : ℝ) with hwdef
   set φ : ℝ := (Nat.totient R.m : ℝ) with hφdef
+  set n : ℝ := (S.card : ℝ) with hndef
   have hφ : 0 < φ := by
     rw [hφdef]; exact_mod_cast Nat.totient_pos.mpr (Nat.pos_of_ne_zero (NeZero.ne R.m))
+  have hn : 0 < n := by rw [hndef]; exact_mod_cast hne.card_pos
   -- the weight is nonnegative (empty bad set at `q = 2`)
   have hw0 : 0 ≤ w := by
     by_contra hneg
@@ -81,17 +87,23 @@ theorem exists_prime_window (R : PrimeRule) [NeZero R.m] (hB : R.BadBound) {a b 
     have h : (1 : ℝ) ≤ (2 : ℝ) ^ w := by simpa using hB 2 (by norm_num) ∅ (by simp)
     have : (2 : ℝ) ^ w < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) hneg
     linarith
-  have hwφ : w * φ < b - a := by linarith
-  have hab' : a ≤ b := by nlinarith [mul_nonneg hw0 hφ.le]
-  set δ : ℝ := (b - a) / φ - w with hδdef
+  have hwφ : w * φ < (b - a) * n := by
+    have : w * φ / n < b - a := by linarith
+    rwa [div_lt_iff₀ hn] at this
+  have hab' : a ≤ b := by
+    have : 0 ≤ w * φ := mul_nonneg hw0 hφ.le
+    by_contra h
+    push Not at h
+    nlinarith
+  set δ : ℝ := (b - a) * n / φ - w with hδdef
   have hδ : 0 < δ := by
     rw [hδdef, sub_pos, lt_div_iff₀ hφ]; linarith
   have hb : 0 < b := by linarith
-  set ε : ℝ := δ / (2 * (a + b)) with hεdef
+  set ε : ℝ := δ / (2 * n * (a + b)) with hεdef
   have hε : 0 < ε := by rw [hεdef]; positivity
-  have hr := R.hr
   obtain ⟨X₀, hX₀⟩ := Filter.eventually_atTop.mp
-    ((thetaClass_lower hr hε).and (thetaClass_upper hr hε))
+    ((Filter.eventually_all_finset S).2 fun c hc ↦
+      (thetaClass_lower (hS c hc) hε).and (thetaClass_upper (hS c hc) hε))
   refine ⟨⌈Real.exp (max (X₀ / a) 1)⌉₊, fun q hq ↦ ?_⟩
   have hqR : Real.exp (max (X₀ / a) 1) ≤ q := (Nat.ceil_le.mp hq)
   have hL : max (X₀ / a) 1 ≤ Real.log q := by
@@ -110,39 +122,77 @@ theorem exists_prime_window (R : PrimeRule) [NeZero R.m] (hB : R.BadBound) {a b 
     have := le_trans (le_max_left _ _) hL
     rwa [div_le_iff₀ ha, mul_comm] at this
   have hbL : X₀ ≤ b * L := le_trans haL (mul_le_mul_of_nonneg_right hab' hL0.le)
-  obtain ⟨hlo, -⟩ := hX₀ (b * L) hbL
-  obtain ⟨-, hup⟩ := hX₀ (a * L) haL
   by_contra hcon
   push Not at hcon
   have haL0 : 0 ≤ a * L := by positivity
-  set S : Finset ℕ := (Finset.Ioc ⌊a * L⌋₊ ⌊b * L⌋₊).filter
-    (fun n : ℕ ↦ n.Prime ∧ (n : ZMod R.m) = R.r) with hS
-  have hSbad : ∀ l ∈ S, l.Prime ∧ R.Bad l q := by
+  set F : Finset ℕ := (Finset.Ioc ⌊a * L⌋₊ ⌊b * L⌋₊).filter
+    (fun m : ℕ ↦ m.Prime ∧ (m : ZMod R.m) ∈ S) with hF
+  have hSbad : ∀ l ∈ F, l.Prime ∧ R.Bad l q := by
     intro l hl
-    rw [hS, Finset.mem_filter, Finset.mem_Ioc] at hl
+    rw [hF, Finset.mem_filter, Finset.mem_Ioc] at hl
     obtain ⟨⟨h1, h2⟩, hp, hlr⟩ := hl
     have h1' : a * L < l := (Nat.floor_lt haL0).mp h1
     have h2' : (l : ℝ) ≤ b * L := (Nat.le_floor_iff (by positivity)).mp h2
     refine ⟨hp, ?_⟩
     by_contra hnb
     exact absurd (hcon l hp hlr h1' h2') (by simpa using hnb)
-  have hprod := hB q hq0 S hSbad
-  have hprodpos : (0 : ℝ) < ((∏ l ∈ S, l : ℕ) : ℝ) := by
+  have hprod := hB q hq0 F hSbad
+  have hprodpos : (0 : ℝ) < ((∏ l ∈ F, l : ℕ) : ℝ) := by
     rw [Nat.cast_prod]
     refine Finset.prod_pos fun l hl ↦ ?_
     exact_mod_cast (hSbad l hl).1.pos
   have hlog := Real.log_le_log hprodpos hprod
   rw [Real.log_rpow (by exact_mod_cast hq0), Nat.cast_prod,
     Real.log_prod (fun l hl ↦ by exact_mod_cast (hSbad l hl).1.ne_zero)] at hlog
-  have hsub : thetaClass R.m R.r (b * L) - thetaClass R.m R.r (a * L) = ∑ l ∈ S, Real.log l :=
-    thetaClassN_sub R.m R.r (Nat.floor_le_floor (mul_le_mul_of_nonneg_right hab' hL0.le))
-  have e1 : ε * (a + b) = δ / 2 := by
+  -- the window sum is the sum of the class increments
+  have hle : ⌊a * L⌋₊ ≤ ⌊b * L⌋₊ := Nat.floor_le_floor (mul_le_mul_of_nonneg_right hab' hL0.le)
+  have hsub : ∑ c ∈ S, (thetaClass R.m c (b * L) - thetaClass R.m c (a * L)) =
+      ∑ l ∈ F, Real.log l := by
+    rw [hF, ← Finset.sum_fiberwise_of_maps_to (s := (Finset.Ioc ⌊a * L⌋₊ ⌊b * L⌋₊).filter
+      (fun m : ℕ ↦ m.Prime ∧ (m : ZMod R.m) ∈ S)) (t := S) (g := fun m : ℕ ↦ (m : ZMod R.m))
+      (fun m hm ↦ (Finset.mem_filter.1 hm).2.2)]
+    refine Finset.sum_congr rfl fun c hc ↦ ?_
+    have := thetaClassN_sub R.m c hle
+    unfold thetaClass
+    rw [this]
+    refine Finset.sum_congr ?_ fun _ _ ↦ rfl
+    ext m
+    simp only [Finset.mem_filter, Finset.mem_Ioc]
+    constructor
+    · rintro ⟨h1, h2, h3⟩; exact ⟨⟨h1, h2, h3 ▸ hc⟩, h3⟩
+    · rintro ⟨⟨h1, h2, h3⟩, h4⟩; exact ⟨h1, h2, h4⟩
+  have hlow : ∀ c ∈ S, (φ⁻¹ - ε) * (b * L) ≤ thetaClass R.m c (b * L) := fun c hc ↦
+    (hX₀ (b * L) hbL c hc).1
+  have hup : ∀ c ∈ S, thetaClass R.m c (a * L) ≤ (φ⁻¹ + ε) * (a * L) := fun c hc ↦
+    (hX₀ (a * L) haL c hc).2
+  have hsum : n * ((φ⁻¹ - ε) * (b * L) - (φ⁻¹ + ε) * (a * L)) ≤
+      ∑ c ∈ S, (thetaClass R.m c (b * L) - thetaClass R.m c (a * L)) := by
+    have : ∑ _c ∈ S, ((φ⁻¹ - ε) * (b * L) - (φ⁻¹ + ε) * (a * L)) ≤
+        ∑ c ∈ S, (thetaClass R.m c (b * L) - thetaClass R.m c (a * L)) :=
+      Finset.sum_le_sum fun c hc ↦ sub_le_sub (hlow c hc) (hup c hc)
+    rw [Finset.sum_const, nsmul_eq_mul] at this
+    exact this
+  have e1 : n * ε * (a + b) = δ / 2 := by
     rw [hεdef]; have : 0 < a + b := by linarith
     field_simp
-  have e4 : δ * L = φ⁻¹ * (b - a) * L - w * L := by rw [hδdef]; ring
-  have e3 : ε * (a + b) * L = δ / 2 * L := by rw [e1]
+  have e4 : δ * L = φ⁻¹ * (b - a) * n * L - w * L := by
+    rw [hδdef]; field_simp
   have hδL : 0 < δ * L := mul_pos hδ hL0
+  have e5 : n * ((φ⁻¹ - ε) * (b * L) - (φ⁻¹ + ε) * (a * L)) =
+      φ⁻¹ * (b - a) * n * L - n * ε * (a + b) * L := by ring
+  rw [e1] at e5
   nlinarith
+
+/-- **Prime window.**  For `a > 0` and `a + weight · φ(m) < b`, every large `q` has a prime
+`l ≡ r (mod m)` in `(a log q, b log q]` that is not bad for `q`.  The case `S = {R.r}` of
+`exists_prime_window_set`. -/
+theorem exists_prime_window (R : PrimeRule) [NeZero R.m] (hB : R.BadBound) {a b : ℝ}
+    (ha : 0 < a) (hab : a + R.weight * (Nat.totient R.m : ℝ) < b) :
+    ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∃ l : ℕ, l.Prime ∧ (l : ZMod R.m) = R.r ∧
+      a * Real.log q < l ∧ (l : ℝ) ≤ b * Real.log q ∧ ¬ R.Bad l q := by
+  obtain ⟨q₀, H⟩ := exists_prime_window_set R hB {R.r} (by simpa using R.hr) (by simp) ha
+    (by simpa using hab)
+  exact ⟨q₀, fun q hq ↦ by simpa using H q hq⟩
 
 end CatalanCore.NT
 

@@ -23,6 +23,28 @@ def PrimeRule.HasWindow (R : PrimeRule) : Prop :=
     ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∃ l : ℕ, l.Prime ∧ (l : ZMod R.m) = R.r ∧
       a * Real.log q < l ∧ (l : ℝ) ≤ b * Real.log q ∧ ¬ R.Bad l q
 
+
+/-- **Generic prime window** (G3): class predicate `Cls` (a residue class, a union of classes, or a
+class with some sub-classes removed), badness `Bad`, window length `s`.  `PrimeRule.HasWindow` is
+the instance `Cls l := (l : ZMod R.m) = R.r`. -/
+def HasWindowC (Cls : ℕ → Prop) (Bad : ℕ → ℕ → Prop) (s : ℝ) : Prop :=
+  ∀ a b : ℝ, 0 < a → a + s < b →
+    ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∃ l : ℕ, l.Prime ∧ Cls l ∧
+      a * Real.log q < l ∧ (l : ℝ) ≤ b * Real.log q ∧ ¬ Bad l q
+
+/-- **Generic NV interface** (G3): `HasNV` with the prime class `Cls` and badness `Bad` abstracted. -/
+def HasNVC (Fam : PolyFamily) (Cls : ℕ → Prop) (Bad : ℕ → ℕ → Prop) (g₁ g₂ : ℝ) : Prop :=
+  ∃ (C : ℝ) (l₀ : ℕ), ∀ l : ℕ, l.Prime → l₀ ≤ l → Cls l →
+    ∀ (p q : ℤ), 0 < q → IsCoprime p q → ¬ Bad l q.natAbs →
+      ∃ n, Fam.Adm n ∧ g₁ * l - C ≤ (Fam.deg n : ℝ) ∧ (Fam.deg n : ℝ) ≤ g₂ * l + C ∧
+        Fam.evalQ n (p / q) ≠ 0
+
+theorem PrimeRule.hasWindowC (R : PrimeRule) (h : R.HasWindow) :
+    HasWindowC (fun l => (l : ZMod R.m) = R.r) R.Bad (R.s : ℝ) := h
+
+theorem HasNV.toC {Fam : PolyFamily} {R : PrimeRule} {g₁ g₂ : ℝ} (h : HasNV Fam R g₁ g₂) :
+    HasNVC Fam (fun l => (l : ZMod R.m) = R.r) R.Bad g₁ g₂ := h
+
 namespace Measure
 
 lemma evalR_cast (Fam : PolyFamily) (n : Fam.ι) (x : ℚ) :

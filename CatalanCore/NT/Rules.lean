@@ -111,4 +111,50 @@ theorem PrimeRule.ofSqDvd_hasWindow (m : ℕ) (r : ZMod m) (hr : IsUnit r) [NeZe
     (PrimeRule.ofSqDvd m r hr).HasWindow :=
   PrimeRule.hasWindow _ (PrimeRule.ofSqDvd_badBound m r hr)
 
+
+/-! ### Window in a union of classes, and the mod 60 selection (G3)
+
+`PrimeRule.hasWindowSet` is the generic window for a set `S` of unit classes: length
+`weight · φ(m) / |S|`.  `S60` is the set of classes mod 60 that are `1 (mod 6)`, coprime to 10 and
+different from `43`; restricting the prime to `S60` costs `s = (1/2)(16/7) = 8/7` for the rule
+`ℓ² ∥ q`, instead of `s = 1` for the class `1 (mod 6)` alone.  It dodges `ℓ ≡ 43 (mod 60)`, the
+only residue of `ℓ = 6t + 1` for which the pinned pair `(r, m)`, `r + 2m = 3t`,
+`r ≤ 8m ≤ r + 8` does not exist (`t ≡ 7 (mod 10)`). -/
+
+theorem PrimeRule.hasWindowSet (R : PrimeRule) [NeZero R.m] (hB : R.BadBound)
+    (S : Finset (ZMod R.m)) (hS : ∀ c ∈ S, IsUnit c) (hne : S.Nonempty)
+    {s : ℝ} (hs : (R.weight : ℝ) * (Nat.totient R.m : ℝ) / (S.card : ℝ) ≤ s) :
+    HasWindowC (fun l => (l : ZMod R.m) ∈ S) R.Bad s := by
+  intro a b ha hab
+  exact NT.exists_prime_window_set R hB S hS hne ha (by linarith)
+
+/-- Classes mod 60 that are `1 (mod 6)`, units, and not `43`. -/
+def S60 : Finset (ZMod 60) := {1, 7, 13, 19, 31, 37, 49}
+
+theorem S60_isUnit : ∀ c ∈ S60, IsUnit c := by
+  intro c hc
+  have : ∀ c ∈ S60, ∃ d : ZMod 60, c * d = 1 := by decide
+  obtain ⟨d, hd⟩ := this c hc
+  exact IsUnit.of_mul_eq_one d hd
+
+theorem S60_nonempty : S60.Nonempty := ⟨1, by decide⟩
+
+theorem S60_card : S60.card = 7 := by decide
+
+theorem mem_S60 {l : ℕ} (h : (l : ZMod 60) ∈ S60) : l % 6 = 1 ∧ l % 60 ≠ 43 := by
+  have key : ∀ k : Fin 60, ((k : ℕ) : ZMod 60) ∈ S60 → (k : ℕ) % 6 = 1 ∧ (k : ℕ) ≠ 43 := by decide
+  have hk : l % 60 < 60 := Nat.mod_lt _ (by norm_num)
+  have h' : ((l % 60 : ℕ) : ZMod 60) ∈ S60 := by rwa [ZMod.natCast_mod]
+  obtain ⟨h1, h2⟩ := key ⟨l % 60, hk⟩ h'
+  have h1' : (l % 60) % 6 = 1 := h1
+  exact ⟨by omega, h2⟩
+
+/-- The mod 60 window for the rule `ℓ² ∥ q` (weight `1/2`): length `8/7`. -/
+theorem window_mod60_sq :
+    HasWindowC (fun l => (l : ZMod 60) ∈ S60) (PrimeRule.ofSqDvd 60 1 isUnit_one).Bad (8 / 7) := by
+  refine PrimeRule.hasWindowSet (PrimeRule.ofSqDvd 60 1 isUnit_one)
+    (PrimeRule.ofSqDvd_badBound _ _ _) S60 S60_isUnit S60_nonempty ?_
+  simp [PrimeRule.ofSqDvd, S60_card, show Nat.totient 60 = 16 by decide]
+  norm_num
+
 end CatalanCore

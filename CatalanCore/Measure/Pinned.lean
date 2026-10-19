@@ -16,24 +16,28 @@ Same proof as `measure_of_family_real`, with target `N = k log q`.
 
 namespace CatalanCore
 
-def HasNVPin (Fam : PolyFamily) (R : PrimeRule) (α β : ℝ) : Prop :=
-  ∃ (C : ℝ) (N₁ : ℝ), ∀ l : ℕ, l.Prime → (l : ZMod R.m) = R.r →
+/-- Generic pinned NV (G3): class predicate `Cls` and badness `Bad` abstracted. -/
+def HasNVPinC (Fam : PolyFamily) (Cls : ℕ → Prop) (Bad : ℕ → ℕ → Prop) (α β : ℝ) : Prop :=
+  ∃ (C : ℝ) (N₁ : ℝ), ∀ l : ℕ, l.Prime → Cls l →
     ∀ N : ℝ, N₁ ≤ N → α * N ≤ l → (l : ℝ) ≤ β * N →
-    ∀ (p q : ℤ), 0 < q → IsCoprime p q → ¬ R.Bad l q.natAbs →
+    ∀ (p q : ℤ), 0 < q → IsCoprime p q → ¬ Bad l q.natAbs →
       ∃ n, Fam.Adm n ∧ N ≤ (Fam.deg n : ℝ) ∧ (Fam.deg n : ℝ) ≤ N + C ∧
         Fam.evalQ n (p / q) ≠ 0
+
+def HasNVPin (Fam : PolyFamily) (R : PrimeRule) (α β : ℝ) : Prop :=
+  HasNVPinC Fam (fun l => (l : ZMod R.m) = R.r) R.Bad α β
 
 namespace Measure
 
 open Real
 
-theorem measure_of_family_pin_real (Fam : PolyFamily) {Λ D c α β : ℝ}
+theorem measure_of_family_pin_realC (Fam : PolyFamily) {Λ D c α β s : ℝ}
     (hΛ : HasContent Fam Λ) (hD : HasDecay Fam D c) (hη : Λ < D) (hc : 0 < c)
-    (R : PrimeRule) (hα : 0 < α) (hαβ : α < β) (hsη : (R.s : ℝ) * (D - Λ) < β - α)
-    (hNV : HasNVPin Fam R α β) (hwin : R.HasWindow) {e : ℝ} (he : 0 < e) :
+    {Cls : ℕ → Prop} {Bad : ℕ → ℕ → Prop} (hα : 0 < α) (hαβ : α < β)
+    (hsη : s * (D - Λ) < β - α)
+    (hNV : HasNVPinC Fam Cls Bad α β) (hwin : HasWindowC Cls Bad s) {e : ℝ} (he : 0 < e) :
     ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(c / (D - Λ) + e)) < |Fam.const - (p : ℝ) / q| := by
-  set s : ℝ := (R.s : ℝ) with hsdef
   set η : ℝ := D - Λ with hηdef
   have hη0 : 0 < η := by rw [hηdef]; linarith
   have hβα : 0 < β - α := by linarith
@@ -119,14 +123,23 @@ theorem measure_of_family_pin_real (Fam : PolyFamily) {Λ D c α β : ℝ}
   have h9 := mul_pos hδ0 hLpos
   linarith
 
-theorem measure_of_family_pin_le (Fam : PolyFamily) {c Λ D α β E' : ℚ}
+theorem measure_of_family_pin_real (Fam : PolyFamily) {Λ D c α β : ℝ}
+    (hΛ : HasContent Fam Λ) (hD : HasDecay Fam D c) (hη : Λ < D) (hc : 0 < c)
+    (R : PrimeRule) (hα : 0 < α) (hαβ : α < β) (hsη : (R.s : ℝ) * (D - Λ) < β - α)
+    (hNV : HasNVPin Fam R α β) (hwin : R.HasWindow) {e : ℝ} (he : 0 < e) :
+    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(c / (D - Λ) + e)) < |Fam.const - (p : ℝ) / q| :=
+  measure_of_family_pin_realC Fam hΛ hD hη hc hα hαβ hsη hNV (PrimeRule.hasWindowC R hwin) he
+
+theorem measure_of_family_pin_leC (Fam : PolyFamily) {c Λ D α β s E' : ℚ}
     (hΛ : HasContent Fam (Λ : ℝ)) (hD : HasDecay Fam (D : ℝ) (c : ℝ)) (hη : Λ < D) (hc : 0 < c)
-    (R : PrimeRule) (hα : 0 < α) (hαβ : α < β) (hsη : R.s * (D - Λ) < β - α)
-    (hNV : HasNVPin Fam R (α : ℝ) (β : ℝ)) (hwin : R.HasWindow) (hE : c / (D - Λ) ≤ E') :
-    Fam.MeasureLB (E' : ℝ) := by
+    {Cls : ℕ → Prop} {Bad : ℕ → ℕ → Prop} (hα : 0 < α) (hαβ : α < β) (hsη : s * (D - Λ) < β - α)
+    (hNV : HasNVPinC Fam Cls Bad (α : ℝ) (β : ℝ)) (hwin : HasWindowC Cls Bad (s : ℝ))
+    (hE : c / (D - Λ) ≤ E') : Fam.MeasureLB (E' : ℝ) := by
   intro e he
-  obtain ⟨q₀, H⟩ := measure_of_family_pin_real Fam hΛ hD (by exact_mod_cast hη)
-    (by exact_mod_cast hc) R (by exact_mod_cast hα) (by exact_mod_cast hαβ) (by exact_mod_cast hsη) hNV hwin he
+  obtain ⟨q₀, H⟩ := measure_of_family_pin_realC Fam hΛ hD (by exact_mod_cast hη)
+    (by exact_mod_cast hc) (by exact_mod_cast hα) (by exact_mod_cast hαβ) (by exact_mod_cast hsη)
+    hNV hwin he
   refine ⟨max q₀ 1, fun p q hq hcop => ?_⟩
   have hq1 : (1 : ℝ) ≤ q := by exact_mod_cast le_trans (le_max_right _ _) hq
   have h := H p q (le_trans (le_max_left _ _) hq) hcop
@@ -135,6 +148,13 @@ theorem measure_of_family_pin_le (Fam : PolyFamily) {c Λ D α β E' : ℚ}
   have : ((c / (D - Λ) : ℚ) : ℝ) ≤ (E' : ℝ) := by exact_mod_cast hE
   push_cast at this
   linarith
+
+theorem measure_of_family_pin_le (Fam : PolyFamily) {c Λ D α β E' : ℚ}
+    (hΛ : HasContent Fam (Λ : ℝ)) (hD : HasDecay Fam (D : ℝ) (c : ℝ)) (hη : Λ < D) (hc : 0 < c)
+    (R : PrimeRule) (hα : 0 < α) (hαβ : α < β) (hsη : R.s * (D - Λ) < β - α)
+    (hNV : HasNVPin Fam R (α : ℝ) (β : ℝ)) (hwin : R.HasWindow) (hE : c / (D - Λ) ≤ E') :
+    Fam.MeasureLB (E' : ℝ) :=
+  measure_of_family_pin_leC Fam hΛ hD hη hc hα hαβ hsη hNV (PrimeRule.hasWindowC R hwin) hE
 
 end Measure
 end CatalanCore

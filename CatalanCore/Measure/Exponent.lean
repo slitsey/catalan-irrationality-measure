@@ -29,20 +29,35 @@ end PolyFamily
 
 namespace Measure
 
+theorem measure_of_familyC (Fam : PolyFamily) {c Λ D g₁ g₂ s : ℚ}
+    (hΛ : HasContent Fam (Λ : ℝ)) (hD : HasDecay Fam (D : ℝ) (c : ℝ)) (hη : Λ < D) (hc : 0 < c)
+    {Cls : ℕ → Prop} {Bad : ℕ → ℕ → Prop} (hs : 0 < s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
+    (hNV : HasNVC Fam Cls Bad (g₁ : ℝ) (g₂ : ℝ)) (hwin : HasWindowC Cls Bad (s : ℝ)) :
+    Fam.MeasureLB ((measureExp c Λ D g₁ g₂ s : ℚ) : ℝ) := by
+  intro e he
+  obtain ⟨q₀, H⟩ := measure_of_family_realC Fam hΛ hD (by exact_mod_cast hη) (by exact_mod_cast hc)
+    (by exact_mod_cast hs) ⟨by exact_mod_cast hg.1, by exact_mod_cast hg.2⟩ hNV hwin he
+  refine ⟨q₀, fun p q hq hcop => ?_⟩
+  have := H p q hq hcop
+  have hcast : ((measureExp c Λ D g₁ g₂ s : ℚ) : ℝ) =
+      (c : ℝ) * ((g₂ : ℝ) / ((g₁ : ℝ) * ((D : ℝ) - (Λ : ℝ))) + (g₂ : ℝ) * (s : ℝ)) := by
+    unfold measureExp; push_cast; ring
+  rw [hcast]; exact this
+
 theorem measure_of_family (Fam : PolyFamily) {c Λ D g₁ g₂ : ℚ}
     (hΛ : HasContent Fam (Λ : ℝ)) (hD : HasDecay Fam (D : ℝ) (c : ℝ)) (hη : Λ < D) (hc : 0 < c)
     (R : PrimeRule) (hs : 0 < R.s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
     (hNV : HasNV Fam R (g₁ : ℝ) (g₂ : ℝ)) (hwin : R.HasWindow) :
-    Fam.MeasureLB ((measureExp c Λ D g₁ g₂ R.s : ℚ) : ℝ) := by
-  intro e he
-  obtain ⟨q₀, H⟩ := measure_of_family_real Fam hΛ hD (by exact_mod_cast hη) (by exact_mod_cast hc)
-    R hs ⟨by exact_mod_cast hg.1, by exact_mod_cast hg.2⟩ hNV hwin he
-  refine ⟨q₀, fun p q hq hcop => ?_⟩
-  have := H p q hq hcop
-  have hcast : ((measureExp c Λ D g₁ g₂ R.s : ℚ) : ℝ) =
-      (c : ℝ) * ((g₂ : ℝ) / ((g₁ : ℝ) * ((D : ℝ) - (Λ : ℝ))) + (g₂ : ℝ) * (R.s : ℝ)) := by
-    unfold measureExp; push_cast; ring
-  rw [hcast]; exact this
+    Fam.MeasureLB ((measureExp c Λ D g₁ g₂ R.s : ℚ) : ℝ) :=
+  measure_of_familyC Fam hΛ hD hη hc hs hg hNV.toC (PrimeRule.hasWindowC R hwin)
+
+/-- Rounding helper, generic prime class (G3). -/
+theorem measure_of_family_leC (Fam : PolyFamily) {c Λ D g₁ g₂ s E' : ℚ}
+    (hΛ : HasContent Fam (Λ : ℝ)) (hD : HasDecay Fam (D : ℝ) (c : ℝ)) (hη : Λ < D) (hc : 0 < c)
+    {Cls : ℕ → Prop} {Bad : ℕ → ℕ → Prop} (hs : 0 < s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
+    (hNV : HasNVC Fam Cls Bad (g₁ : ℝ) (g₂ : ℝ)) (hwin : HasWindowC Cls Bad (s : ℝ))
+    (hE : measureExp c Λ D g₁ g₂ s ≤ E') : Fam.MeasureLB (E' : ℝ) :=
+  PolyFamily.MeasureLB.mono (by exact_mod_cast hE) (measure_of_familyC Fam hΛ hD hη hc hs hg hNV hwin)
 
 /-- Rounding helper: any rational `E' ≥ measureExp …` is also a valid exponent. -/
 theorem measure_of_family_le (Fam : PolyFamily) {c Λ D g₁ g₂ E' : ℚ}

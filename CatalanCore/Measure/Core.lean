@@ -17,16 +17,14 @@ namespace CatalanCore.Measure
 
 open Real
 
-theorem measure_of_family_real (Fam : PolyFamily) {Λ D c g₁ g₂ : ℝ}
+theorem measure_of_family_realC (Fam : PolyFamily) {Λ D c g₁ g₂ s : ℝ}
     (hΛ : HasContent Fam Λ) (hD : HasDecay Fam D c) (hη : Λ < D) (hc : 0 < c)
-    (R : PrimeRule) (hs : (0 : ℚ) < R.s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
-    (hNV : HasNV Fam R g₁ g₂) (hwin : R.HasWindow) {e : ℝ} (he : 0 < e) :
+    {Cls : ℕ → Prop} {Bad : ℕ → ℕ → Prop} (hs : 0 < s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
+    (hNV : HasNVC Fam Cls Bad g₁ g₂) (hwin : HasWindowC Cls Bad s) {e : ℝ} (he : 0 < e) :
     ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(c * (g₂ / (g₁ * (D - Λ)) + g₂ * (R.s : ℝ)) + e)) < |Fam.const - (p : ℝ) / q| := by
+      (q : ℝ) ^ (-(c * (g₂ / (g₁ * (D - Λ)) + g₂ * s) + e)) < |Fam.const - (p : ℝ) / q| := by
   obtain ⟨hg1, hg12⟩ := hg
   have hg2 : 0 < g₂ := lt_of_lt_of_le hg1 hg12
-  have hs0 : (0 : ℝ) < (R.s : ℝ) := by exact_mod_cast hs
-  set s : ℝ := (R.s : ℝ) with hsdef
   set η : ℝ := D - Λ with hηdef
   have hη0 : 0 < η := by rw [hηdef]; linarith
   set M : ℝ := c * (g₂ / (g₁ * η) + g₂ * s) with hM
@@ -114,5 +112,14 @@ theorem measure_of_family_real (Fam : PolyFamily) {Λ D c g₁ g₂ : ℝ}
   have : θ * (g₁ * (a * L)) = (1 + δ / 2) * L := by rw [← mul_assoc, ← hθa]; ring
   rw [mul_sub] at hfin
   linarith
+
+theorem measure_of_family_real (Fam : PolyFamily) {Λ D c g₁ g₂ : ℝ}
+    (hΛ : HasContent Fam Λ) (hD : HasDecay Fam D c) (hη : Λ < D) (hc : 0 < c)
+    (R : PrimeRule) (hs : (0 : ℚ) < R.s) (hg : 0 < g₁ ∧ g₁ ≤ g₂)
+    (hNV : HasNV Fam R g₁ g₂) (hwin : R.HasWindow) {e : ℝ} (he : 0 < e) :
+    ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(c * (g₂ / (g₁ * (D - Λ)) + g₂ * (R.s : ℝ)) + e)) < |Fam.const - (p : ℝ) / q| :=
+  measure_of_family_realC Fam hΛ hD hη hc (by exact_mod_cast hs) hg hNV.toC
+    (PrimeRule.hasWindowC R hwin) he
 
 end CatalanCore.Measure
