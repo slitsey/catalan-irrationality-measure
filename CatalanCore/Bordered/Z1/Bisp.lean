@@ -38,17 +38,20 @@ lemma lag_eq (s : ℕ) (x : ℚ) {j : ℕ} (hj : j < s) (h : x + ((j + 1 : ℕ) 
     lag s x j = Pn s x / (x + ((j + 1 : ℕ) : ℚ)) := by
   rw [eq_div_iff h]; exact lag_mul s x hj
 
+lemma Pn_succ (s : ℕ) (x : ℚ) : Pn (s + 1) x = Pn s x * (x + s + 1) := by
+  unfold Pn; rw [prod_range_succ]; push_cast; ring
+
 lemma Pn_shift (s : ℕ) (x : ℚ) : Pn s (x + 1) * (x + 1) = Pn s x * (x + s + 1) := by
-  have h1 : Pn s x * (x + s + 1) = ∏ i ∈ range (s + 1), (x + ((i + 1 : ℕ) : ℚ)) := by
-    rw [prod_range_succ]; push_cast; unfold Pn; ring
-  have h2 : ∏ i ∈ range (s + 1), (x + ((i + 1 : ℕ) : ℚ)) =
-      (∏ i ∈ range s, (x + ((i + 1 + 1 : ℕ) : ℚ))) * (x + ((0 + 1 : ℕ) : ℚ)) :=
-    prod_range_succ' (fun i => x + ((i + 1 : ℕ) : ℚ)) s
-  rw [h1, h2]
-  unfold Pn
-  congr 1
-  · apply prod_congr rfl; intro i _; push_cast; ring
-  · push_cast; ring
+  induction s with
+  | zero => simp [Pn]
+  | succ s ih =>
+    rw [Pn_succ, Pn_succ]
+    push_cast
+    linear_combination (x + s + 2) * ih
+
+lemma lag_eq' (s : ℕ) (y : ℚ) {j : ℕ} (hj : j < s) (d : ℚ) (hd : d = y + ((j + 1 : ℕ) : ℚ))
+    (h : d ≠ 0) : lag s y j = Pn s y / d := by
+  subst hd; exact lag_eq s y hj h
 
 /-- Pointwise form of `Lag X = L̃ Lag`, after substituting `lag = P/(x+j+1)`, `x = θ + a`. -/
 lemma pointwise (s m : ℕ) (θ a jj P : ℚ) (hx : 0 < θ + a) (hj : 0 ≤ jj) :
@@ -141,11 +144,11 @@ theorem Lag_mul_Xmat (s m : ℕ) (θ : ℚ) (hθ : 0 < θ) :
   set P := Pn s (θ + ((a : ℕ) : ℚ)) with hP
   have hjs : (j : ℕ) < s := j.2
   have g0 : lag s (θ + ((a : ℕ) : ℚ)) j = P / (θ + a + (j : ℚ) + 1) := by
-    rw [lag_eq s _ hjs (by push_cast; linarith)]; push_cast; ring_nf
+    exact lag_eq' s _ hjs _ (by push_cast; ring) (by linarith)
   have hA : rq s m θ (((j : ℕ) : ℚ) + 1) * lag s (θ + ((a : ℕ) : ℚ)) (j + 1) =
       rq s m θ (((j : ℕ) : ℚ) + 1) * (P / (θ + a + ((j : ℚ) + 1) + 1)) := by
     by_cases h : (j : ℕ) + 1 < s
-    · rw [lag_eq s _ h (by push_cast; linarith)]; push_cast; ring_nf
+    · rw [lag_eq' s _ h (θ + a + ((j : ℚ) + 1) + 1) (by push_cast; ring) (by linarith)]
     · have : (s : ℚ) = ((j : ℕ) : ℚ) + 1 := by
         have : (j : ℕ) + 1 = s := by omega
         exact_mod_cast this.symm
@@ -155,30 +158,29 @@ theorem Lag_mul_Xmat (s m : ℕ) (θ : ℚ) (hθ : 0 < θ) :
     by_cases h : (j : ℕ) = 0
     · simp [lq, h]
     · have hj1 : (j : ℕ) - 1 < s := by omega
-      rw [lag_eq s _ hj1 (by rw [Nat.sub_add_cancel (by omega)]; linarith)]
-      rw [Nat.sub_add_cancel (by omega), natCast_pred _ (by omega)]
-      ring_nf
+      rw [lag_eq' s _ hj1 (θ + a + ((j : ℚ) - 1) + 1)
+        (by rw [Nat.sub_add_cancel (by omega)]; ring) (by linarith)]
   have g1 : lag s (θ + (((a : ℕ) + 1 : ℕ) : ℚ)) j =
       P * (θ + a + s + 1) / (θ + a + 1) / (θ + a + 1 + (j : ℚ) + 1) := by
     have e : θ + (((a : ℕ) + 1 : ℕ) : ℚ) = (θ + a) + 1 := by push_cast; ring
-    rw [e, lag_eq s _ hjs (by push_cast; linarith)]
+    rw [e, lag_eq' s _ hjs (θ + a + 1 + (j : ℚ) + 1) (by push_cast; ring) (by linarith)]
     have := Pn_shift s (θ + ((a : ℕ) : ℚ))
     have h1 : Pn s (θ + a + 1) = P * (θ + a + s + 1) / (θ + a + 1) := by
       rw [eq_div_iff (by linarith)]; exact this
-    rw [h1]; push_cast; ring_nf
+    rw [h1]
   have hD : ((θ + a) * (a : ℚ) ^ 2 * (θ + a + s)) * lag s (θ + (((a : ℕ) - 1 : ℕ) : ℚ)) j =
       ((θ + a) * (a : ℚ) ^ 2 * (θ + a + s)) * (P * (θ + a) / (θ + a + s) / (θ + a - 1 + (j : ℚ) + 1)) := by
     by_cases h : (a : ℕ) = 0
     · simp [h]
     · have e : θ + (((a : ℕ) - 1 : ℕ) : ℚ) = (θ + a) - 1 := by rw [natCast_pred _ (by omega)]; ring
-      rw [e, lag_eq s _ hjs (by push_cast; linarith)]
+      rw [e, lag_eq' s _ hjs (θ + a - 1 + (j : ℚ) + 1) (by push_cast; ring) (by linarith)]
       have := Pn_shift s (θ + a - 1)
       have h1 : Pn s (θ + a - 1) = P * (θ + a) / (θ + a + s) := by
         rw [eq_div_iff (by linarith)]
         have e2 : θ + a - 1 + 1 = θ + a := by ring
         rw [e2] at this
         linear_combination (-1 : ℚ) * this
-      rw [h1]; push_cast; ring_nf
+      rw [h1]
   have key := pointwise s m θ (a : ℚ) (j : ℚ) P hx hj0
   rw [g0, hA, hB, g1, hD]
   exact key

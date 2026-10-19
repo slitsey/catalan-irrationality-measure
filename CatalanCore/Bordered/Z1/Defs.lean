@@ -121,10 +121,10 @@ def Xp (s m : ℕ) (θ : R) : Matrix (Fin s) (Fin s) R :=
     (fun k => -(((k : R) + 1) * ((k : R) + 1 + θ) * ((s : R) + 2 * m - k - 1)
         * (((s + m : ℕ) : R) + θ + k + 1)) * qc (1 / pj s m k))
 
-/-- `u(X′, e_s)`-type Krylov polynomial `k_B`. -/
 /-- Last unit vector `e_s`. -/
 def es (R : Type*) [CommRing R] (s : ℕ) : Fin s → R := fun i => if (i : ℕ) = s - 1 then 1 else 0
 
+/-- The Krylov determinant `k_B = u(T, e_s)`. -/
 def kB (s m : ℕ) (θ : R) : R := kdet (Tmat s m θ) (es R s)
 
 end Defs
