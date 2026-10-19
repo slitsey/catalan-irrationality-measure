@@ -48,7 +48,7 @@ lemma mul {e f : ℤ} {x y : LS} (hx : OrdGe e x) (hy : OrdGe f y) : OrdGe (e + 
   intro d hd
   rw [HahnSeries.coeff_mul]
   refine Finset.sum_eq_zero fun ij hij => ?_
-  rw [mem_antidiagonal] at hij
+  rw [Finset.mem_addAntidiagonal] at hij
   obtain ⟨-, -, hs⟩ := hij
   by_cases h1 : ij.1 < e
   · simp [hx _ h1]
