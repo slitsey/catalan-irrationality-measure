@@ -31,6 +31,11 @@ lemma GoodF0.congr {B : ℕ} {f g : ℚ → ℚ} (hf : GoodF0 ℓ B f)
   obtain ⟨C, hC, e, he⟩ := hf
   exact ⟨C, hC, e, fun θ h0 hg => by rw [← h θ h0 hg, he θ h0 hg]⟩
 
+lemma GoodF.congr {B : ℕ} {f g : ℚ → ℚ} (hf : GoodF ℓ B f)
+    (h : ∀ θ : ℚ, 0 < θ → Gen θ → f θ = g θ) : GoodF ℓ B g := by
+  obtain ⟨C, hC, e, he⟩ := hf
+  exact ⟨C, hC, e, fun θ h0 hg => by rw [← h θ h0 hg, he θ h0 hg]⟩
+
 lemma GoodF0.mono {B B' : ℕ} (h : B ≤ B') {f : ℚ → ℚ} (hf : GoodF0 ℓ B f) : GoodF0 ℓ B' f := by
   obtain ⟨C, hC, e, he⟩ := hf
   refine ⟨C, hC, fun c => if c < B then e c else 0, fun θ h0 hg => ?_⟩
