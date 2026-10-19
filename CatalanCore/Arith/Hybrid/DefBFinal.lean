@@ -204,4 +204,26 @@ theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
 
 end
 
+open Classical in
+/-- **Theorem B as a `DefHypT` family.**  `W` is a set of primes (the window `r < p < r + m` minus
+an exceptional set on which `BSetup` fails); `T p` is any exponent bound that dominates both
+`tropExp` and the dual value `∑u + ∑v` of the D4 potentials at the prime `p` (with its singular
+block start `k`).  The deficit is `δ p = r + m - p` on `W`, `0` elsewhere. -/
+theorem defHypT_B {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (T : ℕ → ℕ)
+    (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
+    (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup p r m j k)
+    (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
+    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ j k, BSetup p r m j k →
+      ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤ T p) :
+    DefHypT I r m T (fun p => if W p then m - (p - r) else 0) := by
+  refine defHypT_of_local I r m T _ hT W (fun p hp => by simp [hp]) ?_
+  intro p hp hb hWp
+  obtain ⟨j, k, S⟩ := hSet p hp hWp
+  haveI : Fact p.Prime := ⟨hp⟩
+  have hd := hTd p hp hWp j k S
+  have h1 := uPot_sum_ge (p := p) (r := r) (m := m) (k := k) S.hrp
+  have hg := gleAt_B_lam hL S (hW p hWp)
+  simp only [if_pos hWp]
+  refine ⟨by omega, fun [Fact p.Prime] => hg.mono (by omega)⟩
+
 end CatalanCore.Arith.Hybrid
