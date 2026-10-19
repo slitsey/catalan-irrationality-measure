@@ -8,7 +8,7 @@ public import CatalanCore.Arith.Hybrid.DefC7Entries
 /-!
 # GK, class `p ≡ 3 (mod 4)`: the singular set `{k, p, p+k, 2p, 2p+k}` (`4k = p+1`)
 
-`GKS3 p r m k` : `13 ≤ p`, `4k = p+1`, `2p + k < r`, `r + 2m ≤ 3p`, `0 < m`.
+`GKS3 o p r m k` : `13 ≤ p`, `4k = p+1`, `2p + k < r`, `r + 2m ≤ 3p`, `0 < m`.
 `sgData3`: the `SgData` of the singular set with the residues of `p Δ_t` and `p² D_t`.
 -/
 
@@ -18,15 +18,15 @@ namespace CatalanCore.Arith.Hybrid
 
 section Inst3
 
-variable {p : ℕ} [Fact p.Prime]
+variable {o p : ℕ} [Fact p.Prime]
 
 /-- `p² D_t` at a singular `4t = jp + 1`, `p ∤ j`, `p ∤ t` (no `t < p` needed). -/
-lemma good_Dsq_gen7 {Fr : Frame} (hL : LamData Fr 1) {j k : ℕ} (hk : 4 * k = j * p + 1)
+lemma good_Dsq_gen7 {Fr : Frame} (hL : LamData Fr o) {j k : ℕ} (hk : 4 * k = j * p + o ∧ 0 < o ∧ o ≤ 3)
     (hj0 : 0 < j) (hjz : ((j : ℕ) : ZMod p) ≠ 0) (hk0 : 0 < k) (hkz : ((k : ℕ) : ZMod p) ≠ 0) :
     Good p ((p : ℚ) ^ 2 * Fr.Dsq k) (-(16 * (((j : ℕ) : ZMod p)⁻¹) ^ 2)) := by
-  rw [hL.dsq_eq_one k hk0]
-  have hkQ : 4 * (k : ℚ) - 1 = (j : ℚ) * p := by
-    have : (4 * k : ℚ) = j * p + 1 := by exact_mod_cast hk
+  rw [hL.dsq_eq k hk0]
+  have hkQ : 4 * (k : ℚ) - (o : ℚ) = (j : ℚ) * p := by
+    have : (4 * k : ℚ) = j * p + o := by exact_mod_cast hk.1
     linarith
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hjQ : (j : ℚ) ≠ 0 := by exact_mod_cast hj0.ne'
@@ -50,48 +50,49 @@ lemma two_ne_zmod (hp5 : 5 ≤ p) : (2 : ZMod p) ≠ 0 := by
     have := Nat.le_of_dvd (by norm_num) hd; omega
   simpa using this
 
-lemma good_Delta_2p {Fr : Frame} (hL : LamData Fr 1) (hp5 : 5 ≤ p) :
+lemma good_Delta_2p {Fr : Frame} (hL : LamData Fr o) (hp5 : 5 ≤ p) :
     Good p ((p : ℚ) * Fr.Delta (2 * p)) (2 : ZMod p)⁻¹ := by
   have hp1 : 1 ≤ 2 * p := by have := (Fact.out : p.Prime).pos; omega
-  rw [hL.delta_eq_one (2 * p) hp1]
+  rw [hL.delta_eq (2 * p) hp1]
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
-  have h4 : (4 * ((2 * p : ℕ) : ℚ) - 1) ≠ 0 := by
+  have h4 : (4 * ((2 * p : ℕ) : ℚ) - (o : ℚ)) ≠ 0 := by
     have : (5 : ℚ) ≤ p := by exact_mod_cast hp5
+    have : (o : ℚ) ≤ 3 := by exact_mod_cast hL.o_le
     push_cast; linarith
-  have hz : (4 * (((2 * p : ℕ)) : ZMod p) - 1) ≠ 0 := by
+  have hz : (4 * (((2 * p : ℕ)) : ZMod p) - (o : ZMod p)) ≠ 0 := by
     have : (((2 * p : ℕ)) : ZMod p) = 0 := by
       rw [Nat.cast_mul, ZMod.natCast_self, mul_zero]
-    rw [this]; simp
+    rw [this]; simpa using o_ne_zmod p hL.o_pos hL.o_le hp5
   have h2 := two_ne_zmod hp5
   have g1 : Good p ((p : ℚ) * (1 / ((2 * p : ℕ) : ℚ))) (2 : ZMod p)⁻¹ := by
     have := ((Good.one (ℓ := p)).div (Good.ofNat (ℓ := p) 2) h2)
     refine (this.congr' ?_).congr (by simp)
     push_cast; field_simp
-  have g2 : Good p ((p : ℚ) * (4 / (4 * ((2 * p : ℕ) : ℚ) - 1))) 0 :=
+  have g2 : Good p ((p : ℚ) * (4 / (4 * ((2 * p : ℕ) : ℚ) - (o : ℚ)))) 0 :=
     ((Good.ofNat (ℓ := p) 4).div (((Good.ofNat (ℓ := p) 4).mul (Good.natCast (ℓ := p) (2 * p))).sub
-      Good.one) hz).ell_mul
+      (Good.natCast (ℓ := p) o)) hz).ell_mul
   have := g1.sub g2
   refine this.congr' ?_ |>.congr (by simp)
   push_cast
   ring
 
-lemma good_Dsq_2p {Fr : Frame} (hL : LamData Fr 1) (hp5 : 5 ≤ p) :
+lemma good_Dsq_2p {Fr : Frame} (hL : LamData Fr o) (hp5 : 5 ≤ p) :
     Good p ((p : ℚ) ^ 2 * Fr.Dsq (2 * p)) (4 : ZMod p)⁻¹ := by
   have hp1 : 1 ≤ 2 * p := by have := (Fact.out : p.Prime).pos; omega
-  rw [hL.dsq_eq_one (2 * p) hp1]
+  rw [hL.dsq_eq (2 * p) hp1]
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
-  have hz : (4 * (((2 * p : ℕ)) : ZMod p) - 1) ≠ 0 := by
+  have hz : (4 * (((2 * p : ℕ)) : ZMod p) - (o : ZMod p)) ≠ 0 := by
     have : (((2 * p : ℕ)) : ZMod p) = 0 := by
       rw [Nat.cast_mul, ZMod.natCast_self, mul_zero]
-    rw [this]; simp
+    rw [this]; simpa using o_ne_zmod p hL.o_pos hL.o_le hp5
   have h4 := four_ne_zmod p hp5
   have g1 : Good p ((p : ℚ) ^ 2 * (1 / ((2 * p : ℕ) : ℚ) ^ 2)) (4 : ZMod p)⁻¹ := by
     have := ((Good.one (ℓ := p)).div (Good.ofNat (ℓ := p) 4) h4)
     refine (this.congr' ?_).congr (by simp)
     push_cast; field_simp; norm_num
-  have g2 : Good p ((p : ℚ) ^ 2 * (16 / (4 * ((2 * p : ℕ) : ℚ) - 1) ^ 2)) 0 :=
+  have g2 : Good p ((p : ℚ) ^ 2 * (16 / (4 * ((2 * p : ℕ) : ℚ) - (o : ℚ)) ^ 2)) 0 :=
     ((((Good.ofNat (ℓ := p) 16).div ((((Good.ofNat (ℓ := p) 4).mul
-      (Good.natCast (ℓ := p) (2 * p))).sub Good.one).pow' 2) (pow_ne_zero 2 hz)).ell_mul).ell_mul).congr'
+      (Good.natCast (ℓ := p) (2 * p))).sub (Good.natCast (ℓ := p) o)).pow' 2) (pow_ne_zero 2 hz)).ell_mul).ell_mul).congr'
       (by ring)
   have := g1.sub g2
   refine this.congr' ?_ |>.congr (by simp)
@@ -113,18 +114,21 @@ noncomputable def resD3 (p k : ℕ) (t : ℕ) : ZMod p :=
   else if t = 2 * p then (4 : ZMod p)⁻¹ else -(16 * ((9 : ZMod p)⁻¹) ^ 2)
 
 /-- Hypotheses of the class-3 GK setting. -/
-structure GKS3 (p r m k : ℕ) : Prop where
+structure GKS3 (o p r m k : ℕ) : Prop where
   p13 : 13 ≤ p
-  hk : 4 * k = p + 1
+  hk : 4 * k = p + o ∧ 0 < o ∧ o ≤ 3
   hr : 2 * p + k < r
   hN : r + 2 * m ≤ 3 * p
   hm : 0 < m
   h139 : p ≠ 139
+  h37 : p ≠ 37
+  h73 : p ≠ 73
+  hbig : p ≠ 350972849
 
-lemma GKS3.kp {r m k : ℕ} (S : GKS3 p r m k) : k < p := by have := S.p13; have := S.hk; omega
-lemma GKS3.k0 {r m k : ℕ} (S : GKS3 p r m k) : 0 < k := by have := S.hk; omega
+lemma GKS3.kp {r m k : ℕ} (S : GKS3 o p r m k) : k < p := by have := S.p13; have := S.hk; omega
+lemma GKS3.k0 {r m k : ℕ} (S : GKS3 o p r m k) : 0 < k := by have := S.hk; omega
 
-lemma reg3 {r m k : ℕ} (S : GKS3 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 3 * p)
+lemma reg3 {r m k : ℕ} (S : GKS3 o p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 3 * p)
     (hn : t ∉ Sg3 p k) : Reg p k t := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
@@ -155,8 +159,8 @@ lemma reg3 {r m k : ℕ} (S : GKS3 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 3
           omega
         exact hn (by simp [Sg3]; omega)
 
-theorem sgData3 {Fr : Frame} (hL : LamData Fr 1) {r m k : ℕ} (S : GKS3 p r m k) :
-    SgData Fr p (r + 2 * m) k (Sg3 p k) (res3 p k) (resD3 p k) := by
+theorem sgData3 {Fr : Frame} (hL : LamData Fr o) {r m k : ℕ} (S : GKS3 o p r m k) :
+    SgData Fr o p (r + 2 * m) k (Sg3 p k) (res3 p k) (resD3 p k) := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
   have hk0 := S.k0
@@ -225,7 +229,7 @@ theorem sgData3 {Fr : Frame} (hL : LamData Fr 1) {r m k : ℕ} (S : GKS3 p r m k
       simp [resD3, np, nk, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e1.symm, e2.symm, e3.symm, e4.symm, e5.symm, e6.symm]
   · intro t h1 ht hn
     exact reg3 S h1 (by have := S.hN; omega) hn
-  · exact hk4_of (j := 1) (o := 1) (by rw [one_mul]; exact S.hk)
+  · exact hk4_of (j := 1) (o := o) (by rw [one_mul]; exact S.hk.1)
 
 end Inst3
 

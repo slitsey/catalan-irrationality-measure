@@ -20,7 +20,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Hprim
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame}
 
 lemma int1_C_of_good {x : ℚ} {y : ZMod p} (h : Good p x y) : Int1 p (C x) := by
   unfold Int1
@@ -56,9 +56,9 @@ lemma Atil_entry {r m : ℕ} (c c' : Fin r) :
 
 variable {r m : ℕ}
 
-theorem Atil_int (hL : LamData Fr 1) (S : GKS3 p r m k) (c c' : Fin r) :
+theorem Atil_int (hL : LamData Fr o) (S : GKS3 o p r m k) (c c' : Fin r) :
     Int1 p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ c c') := by
-  have hN := S.hN
+  have hN := S.hN; have hkk := S.hk
   have hc := c.2; have hc' := c'.2
   have g := good_Qz3 hL S (A := (c : ℕ)) (B := (c' : ℕ)) (by omega) (by omega)
     (fun _ => hc)
@@ -78,10 +78,10 @@ lemma good_Qq3 (h13 : 13 ≤ p) (z : ℤ) :
   have := (Good.intCast (ℓ := p) z).div (Good.ofNat (ℓ := p) 129600) (n129600 h13)
   simpa [div_eq_mul_inv] using this
 
-theorem Atil_cng (hL : LamData Fr 1) (S : GKS3 p r m k) (c c' : Fin r) :
+theorem Atil_cng (hL : LamData Fr o) (S : GKS3 o p r m k) (c c' : Fin r) :
     Cng p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ c c')
       (Mq3 p k r c c') := by
-  have hN := S.hN
+  have hN := S.hN; have hkk := S.hk
   have h13 := S.p13
   have hc := c.2; have hc' := c'.2
   have g := good_Qz3 hL S (A := (c : ℕ)) (B := (c' : ℕ)) (by omega) (by omega)
@@ -108,7 +108,7 @@ theorem Atil_cng (hL : LamData Fr 1) (S : GKS3 p r m k) (c c' : Fin r) :
 lemma Mq3_int (h13 : 13 ≤ p) (c c' : Fin r) : Int1 p (Mq3 p k r c c') :=
   int1_C_of_good (good_Qq3 h13 _)
 
-theorem Mq3_det (S : GKS3 p r m k) : gn p (Mq3 p k r).det = 1 := by
+theorem Mq3_det (S : GKS3 o p r m k) : gn p (Mq3 p k r).det = 1 := by
   have h13 := S.p13
   set Z : Matrix (Fin r) (Fin r) ℤ := Matrix.of fun c c' => Qz3 p k (c : ℕ) (c' : ℕ) with hZ
   set Q0 : Matrix (Fin r) (Fin r) ℚ := Matrix.of fun c c' : Fin r =>
@@ -155,7 +155,7 @@ theorem Mq3_det (S : GKS3 p r m k) : gn p (Mq3 p k r).det = 1 := by
     rw [padicNorm.mul, hn2, hn1]; norm_num
   rw [hn]; norm_num
 
-theorem Atil_prim (hL : LamData Fr 1) (S : GKS3 p r m k) :
+theorem Atil_prim (hL : LamData Fr o) (S : GKS3 o p r m k) :
     gn p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁).det = 1 :=
   prim_det_Atil p (fun _ : Fin r => 1) _ (Mq3 p k r) (Atil_int hL S)
     (Mq3_int S.p13) (Atil_cng hL S) (Mq3_det S)

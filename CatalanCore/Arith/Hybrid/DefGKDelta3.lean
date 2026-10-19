@@ -18,7 +18,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Delta3
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 lemma cast_sub_p_gk {X : ℕ} (h : p ≤ X) : ((X - p : ℕ) : ZMod p) = (X : ZMod p) := by
   rw [Nat.cast_sub h, ZMod.natCast_self, sub_zero]
@@ -36,7 +36,7 @@ lemma sum_avec_disj (u w : ℕ) (hne : u ≠ w) (h1 : u < w + p) (h2 : w < u + p
   Finset.sum_eq_zero fun c _ => avec_disj u w hne h1 h2 c
 
 /-- The `p`-level residue of one term, in terms of `δ = w - u`. -/
-theorem t_val (hL : LamData Fr 1) (S : GKS3 p r m k) {A B : ℕ} (hA : A < r + 2 * m)
+theorem t_val (hL : LamData Fr o) (S : GKS3 o p r m k) {A B : ℕ} (hA : A < r + 2 * m)
     (hB : B < r + 2 * m) (δ : ZMod p) (hδ : (B : ZMod p) - A = δ) (hδ0 : δ ≠ 0) (La Lb : ℤ)
     (hLa : Lz3 p k A = La) (hLb : Lz3 p k B = Lb) :
     Good p ((p : ℚ) * Fr.Mn A B) ((16 * δ)⁻¹ * (((Lb : ℤ) : ZMod p) - (La : ZMod p)) * 90⁻¹) := by
@@ -69,19 +69,19 @@ noncomputable def X0 (Fr : Frame) (p u w : ℕ) : ℚ :=
     + (a1q * (a1q * Fr.Mn (u - 2 * p) (w - 2 * p) + a2q * Fr.Mn (u - p) (w - 2 * p))
       + a2q * (a1q * Fr.Mn (u - 2 * p) (w - p) + a2q * Fr.Mn (u - p) (w - p)))
 
-lemma zone_delta_ne (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
+lemma zone_delta_ne (S : GKS3 o p r m k) {u w : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
     (hw1 : r ≤ w) (hw2 : w < r + 2 * m) (hne : u ≠ w) : ((w : ZMod p) - u) ≠ 0 := by
-  have h13 := S.p13; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   rcases lt_or_gt_of_ne hne with h | h
   · exact sub_ne3 h (by omega) (by omega) (by omega)
   · intro h0
     have := sub_ne3 (p := p) h (by omega) (by omega) (by omega)
     apply this; linear_combination -h0
 
-theorem delta_good (hL : LamData Fr 1) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤ u)
+theorem delta_good (hL : LamData Fr o) (S : GKS3 o p r m k) {u w : ℕ} (hu1 : r ≤ u)
     (hu2 : u < r + 2 * m) (hw1 : r ≤ w) (hw2 : w < r + 2 * m) (hne : u ≠ w) :
     Good p ((p : ℚ) * X0 Fr p u w) 0 := by
-  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   have hp139 := S.h139
   have hδ0 := zone_delta_ne S hu1 hu2 hw1 hw2 hne
   set δ : ZMod p := (w : ZMod p) - u with hδ
@@ -120,12 +120,12 @@ theorem delta_good (hL : LamData Fr 1) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r �
   push_cast
   ring
 
-theorem hDelta_bound (hL : LamData Fr 1) (S : GKS3 p r m k) (i j : Fin m) :
+theorem hDelta_bound (hL : LamData Fr o) (S : GKS3 o p r m k) (i j : Fin m) :
     Int1 p (((Matrix.of (fullEntry Fr r m)).toBlocks₂₂ - alphaM Fr p r m *
         (Matrix.of (fullEntry Fr r m)).toBlocks₁₂ -
       (Matrix.of (fullEntry Fr r m)).toBlocks₂₁ * betaM Fr p r m +
       alphaM Fr p r m * (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ * betaM Fr p r m) i j) := by
-  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   have hi := i.2; have hj := j.2
   have hp0 : 0 < p := by omega
   set u := r + 2 * (i : ℕ) with hu

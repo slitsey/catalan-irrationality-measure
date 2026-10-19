@@ -17,7 +17,7 @@ open CatalanCore.Arith.Hybrid
 
 section Fin1
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- Row partners (zone rows `r + 2i`). -/
 noncomputable def alphaM (Fr : Frame) (p r m : ℕ) : Matrix (Fin m) (Fin r) ℚ[X] :=
@@ -58,7 +58,7 @@ lemma entL' (c : Fin r) (j : Fin m) :
     Finset.mem_univ, if_true, ← C_mul, ← map_sum, map_sub, zero_add]
   ring
 
-theorem hL_bound (hL : LamData Fr 1) (S : GKS1 p r m k) (i : Fin m) (c : Fin r) :
+theorem hL_bound (hL : LamData Fr o) (S : GKS1 o p r m k) (i : Fin m) (c : Fin r) :
     gn p (((Matrix.of (fullEntry Fr r m)).toBlocks₂₁ - alphaM Fr p r m *
         (Matrix.of (fullEntry Fr r m)).toBlocks₁₁) i c) ≤ p := by
   have h13 := S.p13
@@ -70,7 +70,7 @@ theorem hL_bound (hL : LamData Fr 1) (S : GKS1 p r m k) (i : Fin m) (c : Fin r) 
     have : (1 : ℝ) ≤ p := by exact_mod_cast (by omega : 1 ≤ p)
     exact this
 
-theorem hL'_bound (hL : LamData Fr 1) (S : GKS1 p r m k) (c : Fin r) (j : Fin m) :
+theorem hL'_bound (hL : LamData Fr o) (S : GKS1 o p r m k) (c : Fin r) (j : Fin m) :
     gn p (((Matrix.of (fullEntry Fr r m)).toBlocks₁₂ - (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ *
         betaM Fr p r m) c j) ≤ p := by
   have h13 := S.p13

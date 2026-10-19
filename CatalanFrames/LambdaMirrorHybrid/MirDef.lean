@@ -9,6 +9,7 @@ public import CatalanCore.Arith.Hybrid.LemmaE.Class3M
 public import CatalanCore.Arith.Hybrid.BorderB
 public import CatalanCore.Arith.Hybrid.BorderC5
 public import CatalanCore.Arith.Hybrid.BorderC7
+public import CatalanCore.Arith.Hybrid.DefGKFam
 
 @[expose] public section
 
@@ -68,5 +69,13 @@ theorem mirN_gleAt_E1class {p r m k1 : ℕ} [Fact p.Prime] (S : ESetup3 3 p r m 
   have := gleAt_E3 S mirNData h6255
   rw [wrc_sum S] at this
   exact this
+
+/-- GK (low band), mirror: deficit `m` on `LowCleanO 3`.  The exceptional primes are `37, 73, 350972849`
+(class `p ≡ 1 mod 4`) and `8663` (class `p ≡ 3 mod 4`); `139` and `1009` do not occur. -/
+theorem mirN_defHypT_GK {I : HybInst mirNFrame} (r m : ℕ) (hm : 0 < m)
+    (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
+    (hTd : ∀ p : ℕ, p.Prime → LowCleanO 3 r m p → 2 * r + m ≤ T p) :
+    DefHypT I r m T (fun p => if LowCleanO 3 r m p then m else 0) :=
+  defHypT_GK_o I (Or.inr rfl) mirNData r m hm T hT hTd
 
 end CatalanFrames.LambdaMirrorHybrid

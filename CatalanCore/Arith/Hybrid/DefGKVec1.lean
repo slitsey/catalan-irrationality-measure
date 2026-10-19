@@ -22,7 +22,7 @@ open CatalanCore.Arith.Hybrid
 
 section Vec3
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- The two partner coefficients (the solution of `ā Q_Z = ρ`, `Z` of type `(B0, B2)`). -/
 noncomputable def a1q : ℚ := 137 / 84
@@ -77,11 +77,11 @@ lemma sum_avec (u : ℕ) (hu : 2 * p ≤ u) (hur : u - p < r) (hp0 : 0 < p) (f :
   · intro h; exact absurd (Finset.mem_univ _) h
 
 /-- The Qz1 values at the zone class `u - 2p, u - p, u`. -/
-lemma zone_vals {r m : ℕ} (S : GKS1 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m) :
+lemma zone_vals {r m : ℕ} (S : GKS1 o p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m) :
     Qz1 p k (u - 2 * p) (u - 2 * p) = 0 ∧ Qz1 p k (u - p) (u - p) = 2744 ∧
     Qz1 p k (u - 2 * p) (u - p) = -1176 ∧ Qz1 p k (u - 2 * p) u = -714 ∧
     Qz1 p k (u - p) u = -252 := by
-  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   have hp0 : 0 < p := by omega
   obtain ⟨v00, v11, v22, v01, v02, v12⟩ := chain1_vals (k := k) (u - 2 * p) hp0 0 (-28)
     (-34) 0 (-1372) (-1507) (Lz_B0 h13 hk (by omega)) (Lz_B2 h13 hk (by omega) (by omega))
@@ -92,16 +92,16 @@ lemma zone_vals {r m : ℕ} (S : GKS1 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : 
   refine ⟨by rw [v00]; norm_num, by rw [v11]; norm_num, by rw [v01]; norm_num,
     by rw [v02]; norm_num, by rw [v12]; norm_num⟩
 
-lemma Qz_zero_c1 {r m : ℕ} (S : GKS1 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
+lemma Qz_zero_c1 {r m : ℕ} (S : GKS1 o p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
     (c : ℕ) (hc : c < r) (h1 : c ≠ u - 2 * p) (h2 : c ≠ u - p) :
     Qz1 p k u c = 0 ∧ Qz1 p k (u - 2 * p) c = 0 ∧ Qz1 p k (u - p) c = 0 := by
-  have h13 := S.p13; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   refine ⟨?_, ?_, ?_⟩ <;> apply Qz1_zero <;> omega
 
-theorem lbnd (hL : LamData Fr 1) (S : GKS1 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
+theorem lbnd (hL : LamData Fr o) (S : GKS1 o p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
     (c : Fin r) :
     gn p (C (Fr.Mn u (c : ℕ) - ∑ c' : Fin r, avec p r u c' * Fr.Mn (c' : ℕ) (c : ℕ))) ≤ p := by
-  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN
+  have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN; have hkk := S.hk
   have hp139 := S.h1009
   have hp0 : 0 < p := by omega
   have hc := c.2

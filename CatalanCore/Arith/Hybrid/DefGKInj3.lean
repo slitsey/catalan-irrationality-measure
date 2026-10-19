@@ -20,7 +20,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Inj3
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ}
 
 /-- The `r × r` integer-scaled reduction. -/
 def Qm3 (p k r : ℕ) : Matrix (Fin r) (Fin r) (ZMod p) :=
@@ -133,14 +133,14 @@ lemma int_ne_zero_of_ndvd {N : ℕ} (hN : ¬ p ∣ N) : ((N : ℤ) : ZMod p) ≠
   intro h
   exact hN (by exact_mod_cast h)
 
-lemma nz_I (h13 : 13 ≤ p) (hk : 4 * k = p + 1) :
+lemma nz_I (h13 : 13 ≤ p) (h37 : p ≠ 37) (h73 : p ≠ 73) :
     ((-96890994517500 : ℤ) : ZMod p) ≠ 0 := by
   have hp := (Fact.out : p.Prime)
   have : ((96890994517500 : ℕ) : ZMod p) ≠ 0 := by
     have := int_ne_zero_of_ndvd (p := p) (N := 2 ^ 2 * 3 ^ 15 * 5 ^ 4 * 37 * 73) ?_
     · norm_num at this ⊢; exact this
-    · exact ndvd_mul hp (ndvd_mul hp (ndvd_smooth hp h13 2 15 4) (by norm_num) (by rintro rfl; omega))
-        (by norm_num) (by rintro rfl; omega)
+    · exact ndvd_mul hp (ndvd_mul hp (ndvd_smooth hp h13 2 15 4) (by norm_num) h37)
+        (by norm_num) h73
   intro h
   apply this
   have : ((-96890994517500 : ℤ) : ZMod p) = -((96890994517500 : ℕ) : ZMod p) := by push_cast; ring
@@ -150,11 +150,11 @@ lemma nz_I (h13 : 13 ≤ p) (hk : 4 * k = p + 1) :
 set_option maxRecDepth 200000 in
 lemma prime_350972849 : Nat.Prime 350972849 := by norm_num
 
-lemma nz_II (h13 : 13 ≤ p) (hk : 4 * k = p + 1) :
+lemma nz_II (h13 : 13 ≤ p) (hbig : p ≠ 350972849) :
     ((2072459576060100 : ℤ) : ZMod p) ≠ 0 := by
   have hp := (Fact.out : p.Prime)
   have h1 := int_ne_zero_of_ndvd (p := p) (N := 2 ^ 2 * 3 ^ 10 * 5 ^ 2 * 350972849)
-    (ndvd_mul hp (ndvd_smooth hp h13 2 10 2) prime_350972849 (by rintro rfl; omega))
+    (ndvd_mul hp (ndvd_smooth hp h13 2 10 2) prime_350972849 hbig)
   norm_num at h1 ⊢; exact h1
 
 lemma nz_III (h13 : 13 ≤ p) (h139 : p ≠ 139) :
@@ -167,13 +167,13 @@ lemma nz_III (h13 : 13 ≤ p) (h139 : p ≠ 139) :
 
 variable {r m : ℕ}
 
-theorem Qm3_inj (S : GKS3 p r m k) (v : Fin r → ZMod p) (hv : Qm3 p k r *ᵥ v = 0) : v = 0 := by
+theorem Qm3_inj (S : GKS3 o p r m k) (v : Fin r → ZMod p) (hv : Qm3 p k r *ᵥ v = 0) : v = 0 := by
   classical
   have h13 := S.p13
   have hk := S.hk
   have hkp := S.kp
   have hr := S.hr
-  have hN := S.hN
+  have hN := S.hN; have hkk := S.hk
   have hm := S.hm
   have hr3 : r ≤ 3 * p := by omega
   have hp0 : 0 < p := by omega
@@ -207,7 +207,7 @@ theorem Qm3_inj (S : GKS3 p r m k) (v : Fin r → ZMod p) (hv : Qm3 p k r *ᵥ v
       rw [v00, v01, v02] at eA
       rw [v11, v01, v12] at eB
       rw [v22, v02, v12] at eC
-      exact solve3_sym _ _ _ _ _ _ (-96890994517500) _ _ _ (by norm_num) (nz_I h13 hk) eA eB eC
+      exact solve3_sym _ _ _ _ _ _ (-96890994517500) _ _ _ (by norm_num) (nz_I h13 S.h37 S.h73) eA eB eC
     · by_cases h2 : a + 2 * p < r
       · have eC := loc a ha (a + 2 * p) (Or.inr (Or.inr rfl)) h2
         obtain ⟨v00, v11, v22, v01, v02, v12⟩ := chain_vals (k := k) a hp0 (-360) (-342) (-337)
@@ -220,7 +220,7 @@ theorem Qm3_inj (S : GKS3 p r m k) (v : Fin r → ZMod p) (hv : Qm3 p k r *ᵥ v
         rw [v00, v01, v02] at eA
         rw [v11, v01, v12] at eB
         rw [v22, v02, v12] at eC
-        exact solve3_sym _ _ _ _ _ _ 2072459576060100 _ _ _ (by norm_num) (nz_II h13 hk) eA eB eC
+        exact solve3_sym _ _ _ _ _ _ 2072459576060100 _ _ _ (by norm_num) (nz_II h13 S.hbig) eA eB eC
       · have hz : w (a + 2 * p) = 0 := hw _ (by omega)
         obtain ⟨v00, v11, v22, v01, v02, v12⟩ := chain_vals (k := k) a hp0 (-360) (-342)
           (Lz3 p k (a + 2 * p)) (-129600) (-126684) (Pz3 p k (a + 2 * p))

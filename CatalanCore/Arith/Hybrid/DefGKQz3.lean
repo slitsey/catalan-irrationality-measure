@@ -14,9 +14,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section Qz3
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ}
 
-lemma Pv_eq_Pz {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
+lemma Pv_eq_Pz {r m : ℕ} (S : GKS3 o p r m k) (n : ℕ) :
     Lv (Sg3 p k) (resD3 p k) n = (Pz3 p k n : ZMod p) * 8100⁻¹ := by
   have h13 := S.p13
   have hkp := S.kp; have hk0 := S.k0
@@ -82,12 +82,12 @@ lemma sub_ne3 {A B : ℕ} (hAB : A < B) (hB : B < 3 * p) (h1 : B - A ≠ p) (h2 
 
 variable {Fr : Frame}
 
-theorem good_Qz3_lt (hL : LamData Fr 1) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ} (hAB : A < B)
+theorem good_Qz3_lt (hL : LamData Fr o) {r m : ℕ} (S : GKS3 o p r m k) {A B : ℕ} (hAB : A < B)
     (hB : B < r + 2 * m) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz3 p k A B : ZMod p) * 129600⁻¹) := by
   have h13 := S.p13
   have hp5 : 5 ≤ p := by omega
-  have hN := S.hN
+  have hN := S.hN; have hkk := S.hk
   have D := sgData3 hL S
   have n129600' := n129600 (p := p) h13
   have n90' := n90 (p := p) h13
@@ -117,7 +117,7 @@ theorem good_Qz3_lt (hL : LamData Fr 1) {r m : ℕ} (S : GKS3 p r m k) {A B : �
     rw [if_pos hAB, if_neg h1, if_neg h2]
     simp
 
-theorem good_Qz3 (hL : LamData Fr 1) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ}
+theorem good_Qz3 (hL : LamData Fr o) {r m : ℕ} (S : GKS3 o p r m k) {A B : ℕ}
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) (hd : A = B → A < r) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz3 p k A B : ZMod p) * 129600⁻¹) := by
   have h13 := S.p13

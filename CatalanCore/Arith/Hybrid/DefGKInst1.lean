@@ -8,7 +8,7 @@ public import CatalanCore.Arith.Hybrid.DefGKInst3
 /-!
 # GK, class `p ≡ 1 (mod 4)`: the singular set `{K, p, p+K, 2p}` (`4K = 3p+1`)
 
-`GKS1 p r m k` : `13 ≤ p`, `4k = 3p+1`, `2p < r`, `4(r + 2m) ≤ 11p+1`, `0 < m`, `p ≠ 1009`.
+`GKS1 o p r m k` : `13 ≤ p`, `4k = 3p+1`, `2p < r`, `4(r + 2m) ≤ 11p+1`, `0 < m`, `p ≠ 1009`.
 `sgData1`: the `SgData` of the singular set with the residues of `p Δ_t` and `p² D_t`.
 -/
 
@@ -20,7 +20,7 @@ open CatalanCore.Arith.Hybrid
 
 section Inst1
 
-variable {p : ℕ} [Fact p.Prime]
+variable {o p : ℕ} [Fact p.Prime]
 
 /-! ### The data -/
 
@@ -38,18 +38,19 @@ noncomputable def resD1 (p k : ℕ) (t : ℕ) : ZMod p :=
   else if t = p + k then -(16 * ((7 : ZMod p)⁻¹) ^ 2) else (4 : ZMod p)⁻¹
 
 /-- Hypotheses of the class-1 GK setting. -/
-structure GKS1 (p r m k : ℕ) : Prop where
+structure GKS1 (o p r m k : ℕ) : Prop where
   p13 : 13 ≤ p
-  hk : 4 * k = 3 * p + 1
+  hk : 4 * k = 3 * p + o ∧ 0 < o ∧ o ≤ 3
   hr : 2 * p < r
-  hN : 4 * (r + 2 * m) ≤ 11 * p + 1
+  hN : 4 * (r + 2 * m) ≤ 11 * p + o
   hm : 0 < m
   h1009 : p ≠ 1009
+  h8663 : p ≠ 8663
 
-lemma GKS1.kp {r m k : ℕ} (S : GKS1 p r m k) : k < p := by have := S.p13; have := S.hk; omega
-lemma GKS1.k0 {r m k : ℕ} (S : GKS1 p r m k) : 0 < k := by have := S.hk; omega
+lemma GKS1.kp {r m k : ℕ} (S : GKS1 o p r m k) : k < p := by have := S.p13; have := S.hk; omega
+lemma GKS1.k0 {r m k : ℕ} (S : GKS1 o p r m k) : 0 < k := by have := S.hk; omega
 
-lemma reg1 {r m k : ℕ} (S : GKS1 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2 * p + k)
+lemma reg1 {r m k : ℕ} (S : GKS1 o p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2 * p + k)
     (hn : t ∉ Sg1 p k) : Reg p k t := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
@@ -80,8 +81,8 @@ lemma reg1 {r m k : ℕ} (S : GKS1 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2
           omega
         omega
 
-theorem sgData1 {Fr : Frame} (hL : LamData Fr 1) {r m k : ℕ} (S : GKS1 p r m k) :
-    SgData Fr p (r + 2 * m) k (Sg1 p k) (res1 p k) (resD1 p k) := by
+theorem sgData1 {Fr : Frame} (hL : LamData Fr o) {r m k : ℕ} (S : GKS1 o p r m k) :
+    SgData Fr o p (r + 2 * m) k (Sg1 p k) (res1 p k) (resD1 p k) := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
   have hk0 := S.k0
@@ -145,7 +146,7 @@ theorem sgData1 {Fr : Frame} (hL : LamData Fr 1) {r m k : ℕ} (S : GKS1 p r m k
         e6.symm]
   · intro t h1 ht hn
     exact reg1 S h1 (by have := S.hN; omega) hn
-  · exact hk4_of (j := 3) (o := 1) S.hk
+  · exact hk4_of (j := 3) (o := o) S.hk.1
 
 end Inst1
 

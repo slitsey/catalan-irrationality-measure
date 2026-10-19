@@ -22,7 +22,7 @@ open CatalanCore.Arith.Hybrid
 
 section Lz1
 
-variable {p : ℕ} [Fact p.Prime]
+variable {o p : ℕ} [Fact p.Prime]
 
 /-- `84 · Lv`. -/
 def Lz1 (p k n : ℕ) : ℤ :=
@@ -36,7 +36,7 @@ def Pz1 (p k n : ℕ) : ℤ :=
 
 section Blocks
 
-variable {k : ℕ} (h13 : 13 ≤ p) (hk : 4 * k = 3 * p + 1) {n : ℕ}
+variable {k : ℕ} (h13 : 13 ≤ p) (hk : 4 * k = 3 * p + o ∧ 0 < o ∧ o ≤ 3) {n : ℕ}
 include h13 hk
 
 lemma Lz_B0 (h : n < k) : Lz1 p k n = 0 := by unfold Lz1; split_ifs <;> omega
@@ -125,7 +125,7 @@ lemma n28 (h13 : 13 ≤ p) : (28 : ZMod p) ≠ 0 := by
 
 variable {k : ℕ}
 
-lemma Lv_Sg1 {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
+lemma Lv_Sg1 {r m : ℕ} (S : GKS1 o p r m k) (n : ℕ) :
     Lv (Sg1 p k) (res1 p k) n =
       (if k ≤ n then res1 p k k else 0) + (if p ≤ n then res1 p k p else 0) +
         (if p + k ≤ n then res1 p k (p + k) else 0) + (if 2 * p ≤ n then res1 p k (2 * p) else 0) := by
@@ -135,7 +135,7 @@ lemma Lv_Sg1 {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
     Finset.sum_insert (by simp; omega), Finset.sum_singleton]
   ring
 
-lemma Pv_Sg1 {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
+lemma Pv_Sg1 {r m : ℕ} (S : GKS1 o p r m k) (n : ℕ) :
     Lv (Sg1 p k) (resD1 p k) n =
       (if k ≤ n then resD1 p k k else 0) + (if p ≤ n then resD1 p k p else 0) +
         (if p + k ≤ n then resD1 p k (p + k) else 0) +
@@ -146,7 +146,7 @@ lemma Pv_Sg1 {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
     Finset.sum_insert (by simp; omega), Finset.sum_singleton]
   ring
 
-lemma Lv_eq_Lz {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
+lemma Lv_eq_Lz {r m : ℕ} (S : GKS1 o p r m k) (n : ℕ) :
     Lv (Sg1 p k) (res1 p k) n = (Lz1 p k n : ZMod p) * 84⁻¹ := by
   have h13 := S.p13
   have hkp := S.kp; have hk0 := S.k0

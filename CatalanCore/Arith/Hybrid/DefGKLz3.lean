@@ -23,7 +23,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Lz3
 
-variable {p : ℕ} [Fact p.Prime]
+variable {o p : ℕ} [Fact p.Prime]
 
 /-- `90 · Lv`. -/
 def Lz3 (p k n : ℕ) : ℤ :=
@@ -38,7 +38,7 @@ def Pz3 (p k n : ℕ) : ℤ :=
 
 section Blocks
 
-variable {k : ℕ} (h13 : 13 ≤ p) (hk : 4 * k = p + 1) {n : ℕ}
+variable {k : ℕ} (h13 : 13 ≤ p) (hk : 4 * k = p + o ∧ 0 < o ∧ o ≤ 3) {n : ℕ}
 include h13 hk
 
 lemma Lz_B0 (h : n < k) : Lz3 p k n = 0 := by unfold Lz3; split_ifs <;> omega
@@ -157,7 +157,7 @@ lemma ite_cast_mul (c : Prop) [Decidable c] (x : ZMod p) (z : ℤ) (c0 : ZMod p)
 
 variable {k : ℕ}
 
-lemma Lv_Sg3 {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
+lemma Lv_Sg3 {r m : ℕ} (S : GKS3 o p r m k) (n : ℕ) :
     Lv (Sg3 p k) (res3 p k) n =
       (if k ≤ n then res3 p k k else 0) + (if p ≤ n then res3 p k p else 0) +
         (if p + k ≤ n then res3 p k (p + k) else 0) + (if 2 * p ≤ n then res3 p k (2 * p) else 0) +
@@ -168,7 +168,7 @@ lemma Lv_Sg3 {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
     Finset.sum_insert (by simp; omega), Finset.sum_insert (by simp; omega), Finset.sum_singleton]
   ring
 
-lemma Pv_Sg3 {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
+lemma Pv_Sg3 {r m : ℕ} (S : GKS3 o p r m k) (n : ℕ) :
     Lv (Sg3 p k) (resD3 p k) n =
       (if k ≤ n then resD3 p k k else 0) + (if p ≤ n then resD3 p k p else 0) +
         (if p + k ≤ n then resD3 p k (p + k) else 0) + (if 2 * p ≤ n then resD3 p k (2 * p) else 0) +
@@ -179,7 +179,7 @@ lemma Pv_Sg3 {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
     Finset.sum_insert (by simp; omega), Finset.sum_insert (by simp; omega), Finset.sum_singleton]
   ring
 
-lemma Lv_eq_Lz {r m : ℕ} (S : GKS3 p r m k) (n : ℕ) :
+lemma Lv_eq_Lz {r m : ℕ} (S : GKS3 o p r m k) (n : ℕ) :
     Lv (Sg3 p k) (res3 p k) n = (Lz3 p k n : ZMod p) * 90⁻¹ := by
   have h13 := S.p13
   have hkp := S.kp; have hk0 := S.k0

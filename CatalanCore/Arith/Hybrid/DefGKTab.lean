@@ -23,7 +23,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Gen
 
-variable {p : ℕ} [Fact p.Prime]
+variable {o p : ℕ} [Fact p.Prime]
 
 /-- Cumulative residue of the singular indices `≤ n`. -/
 def Lv (Sg : Finset ℕ) (res : ℕ → ZMod p) (n : ℕ) : ZMod p :=
@@ -79,19 +79,19 @@ lemma Mn_good2PP {Fr : Frame} {o : ℕ} (hL : LamData Fr o) (hp5 : 5 ≤ p) {k :
   ring
 
 /-- The data of a singular set below `Nb`. -/
-structure SgData (Fr : Frame) (p Nb k : ℕ) [Fact p.Prime] (Sg : Finset ℕ) (res resD : ℕ → ZMod p) :
+structure SgData (Fr : Frame) (o p Nb k : ℕ) [Fact p.Prime] (Sg : Finset ℕ) (res resD : ℕ → ZMod p) :
     Prop where
   pos : ∀ t ∈ Sg, 1 ≤ t
   sing : ∀ t ∈ Sg, Good p ((p : ℚ) * Fr.Delta t) (res t)
   singD : ∀ t ∈ Sg, Good p ((p : ℚ) ^ 2 * Fr.Dsq t) (resD t)
   reg : ∀ t, 1 ≤ t → t < Nb → t ∉ Sg → Reg p k t
-  hk4 : (4 : ZMod p) * (k : ZMod p) = ((1 : ℕ) : ZMod p)
+  hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p)
 
 variable {Fr : Frame} {Nb k : ℕ} {Sg : Finset ℕ} {res resD : ℕ → ZMod p}
 
 section Tabs
 
-variable (hL : LamData Fr 1) (hp5 : 5 ≤ p) (D : SgData Fr p Nb k Sg res resD)
+variable (hL : LamData Fr o) (hp5 : 5 ≤ p) (D : SgData Fr o p Nb k Sg res resD)
 include hL hp5 D
 
 private lemma tab_aux {A B : ℕ} (hAB : A < B) (hB : B < Nb) :

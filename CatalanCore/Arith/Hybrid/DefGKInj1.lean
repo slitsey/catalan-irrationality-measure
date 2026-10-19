@@ -21,7 +21,7 @@ open CatalanCore.Arith.Hybrid
 
 section Inj1
 
-variable {p : ℕ} [Fact p.Prime] {k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {k : ℕ}
 
 /-- The `r × r` integer-scaled reduction. -/
 def Qm1 (p k r : ℕ) : Matrix (Fin r) (Fin r) (ZMod p) :=
@@ -93,11 +93,11 @@ lemma int_neg_ne {N : ℕ} (h : ¬ p ∣ N) : (((-(N : ℤ)) : ℤ) : ZMod p) �
   rw [h2] at h0
   exact neg_eq_zero.1 h0
 
-lemma nz1_I (h13 : 13 ≤ p) (hk : 4 * k = 3 * p + 1) :
+lemma nz1_I (h13 : 13 ≤ p) (h8663 : p ≠ 8663) :
     ((-5990360544 : ℤ) : ZMod p) ≠ 0 := by
   have hp := (Fact.out : p.Prime)
   have h1 := int_neg_ne (p := p) (N := 2 ^ 5 * 3 ^ 2 * 7 ^ 4 * 8663)
-    (ndvd_mul hp (ndvd_smooth7 hp h13 5 2 4) (by norm_num) (by rintro rfl; omega))
+    (ndvd_mul hp (ndvd_smooth7 hp h13 5 2 4) (by norm_num) h8663)
   norm_num at h1 ⊢; exact h1
 
 lemma nz1_II (h13 : 13 ≤ p) : ((-1382976 : ℤ) : ZMod p) ≠ 0 := by
@@ -113,13 +113,13 @@ lemma nz1_III (h13 : 13 ≤ p) (h1009 : p ≠ 1009) : ((22149568 : ℤ) : ZMod p
 
 variable {r m : ℕ}
 
-theorem Qm1_inj (S : GKS1 p r m k) (v : Fin r → ZMod p) (hv : Qm1 p k r *ᵥ v = 0) : v = 0 := by
+theorem Qm1_inj (S : GKS1 o p r m k) (v : Fin r → ZMod p) (hv : Qm1 p k r *ᵥ v = 0) : v = 0 := by
   classical
   have h13 := S.p13
   have hk := S.hk
   have hkp := S.kp
   have hr := S.hr
-  have hN := S.hN
+  have hN := S.hN; have hkk := S.hk
   have hm := S.hm
   have hr3 : r ≤ 3 * p := by omega
   have hp0 : 0 < p := by omega
@@ -154,7 +154,7 @@ theorem Qm1_inj (S : GKS1 p r m k) (v : Fin r → ZMod p) (hv : Qm1 p k r *ᵥ v
       rw [v00, v01, v02] at eA
       rw [v11, v01, v12] at eB
       rw [v22, v02, v12] at eC
-      exact solve3_sym _ _ _ _ _ _ (-5990360544) _ _ _ (by norm_num) (nz1_I h13 hk) eA eB eC
+      exact solve3_sym _ _ _ _ _ _ (-5990360544) _ _ _ (by norm_num) (nz1_I h13 S.h8663) eA eB eC
     · have hz : w (a + 2 * p) = 0 := hw _ (by omega)
       by_cases h1 : a < k
       · -- type (B0, B2)
