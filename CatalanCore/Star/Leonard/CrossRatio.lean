@@ -25,15 +25,13 @@ noncomputable def Atil (m n S : ℕ) (θ : F) : Matrix (Fin (m + n)) (Fin (m + n
     Nsum (fun y : ℕ => wcol (m + n) θ (y : ℤ)) S *
     projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ))
 
-theorem cross_ratio_Atil [CharZero F] (m n S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ)
-    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det)
-    (v0 : Fin (m + n) → F)
-    (hcyc : bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v0 ≠ 0)
-    (v v' : Fin (m + n) → F) :
-    bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Atil m n S θ) v *
-        bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v' =
-      bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Atil m n S θ) v' *
-        bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v := by
+/-- The bordered-commutation hypotheses for `(Ã, T~)`. -/
+theorem Atil_hyps [CharZero F] (m n S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ)
+    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det) :
+    (∀ x ∈ CatalanCore.Wsp (Wb (m + n) θ (bY m (S : ℤ))),
+        Atil m n S θ *ᵥ x ∈ CatalanCore.Wsp (Wb (m + n) θ (bY m (S : ℤ)))) ∧
+    (∀ x, (Atil m n S θ * Ttil (m + n) m S θ - Ttil (m + n) m S θ * Atil m n S θ) *ᵥ x ∈
+        CatalanCore.Wsp (Wb (m + n) θ (bY m (S : ℤ)))) := by
   set WX := Wb (m + n) θ (bX m (S : ℤ)) with hWX
   set WY := Wb (m + n) θ (bY m (S : ℤ)) with hWY
   set T := Ttil (m + n) m S θ with hT
@@ -57,8 +55,7 @@ theorem cross_ratio_Atil [CharZero F] (m n S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ
     rw [Matrix.mulVec_mulVec, hPW, Matrix.zero_mulVec]
   have hker : ∀ x, WXᵀ *ᵥ (P *ᵥ x) = 0 := by
     intro x; rw [Matrix.mulVec_mulVec, hXP, Matrix.zero_mulVec]
-  refine bkdet_cross_ratio (T := T) (N := Atil m n S θ) ?_ (Ttil_preserves_WY m n S hm θ hθ) ?_
-    hcyc v v'
+  refine ⟨?_, ?_⟩
   · intro x hx
     have : Atil m n S θ *ᵥ x = 0 := by
       unfold Atil
@@ -83,5 +80,17 @@ theorem cross_ratio_Atil [CharZero F] (m n S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ
       rw [e1, e2]
     rw [h1, hPw _ (comm_N_mem m n S hm θ hθ (P *ᵥ x) (hker x))]
     exact Submodule.zero_mem _
+
+theorem cross_ratio_Atil [CharZero F] (m n S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ)
+    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det)
+    (v0 : Fin (m + n) → F)
+    (hcyc : bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v0 ≠ 0)
+    (v v' : Fin (m + n) → F) :
+    bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Atil m n S θ) v *
+        bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v' =
+      bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Atil m n S θ) v' *
+        bkdet (Wb (m + n) θ (bY m (S : ℤ))) (Ttil (m + n) m S θ) v := by
+  obtain ⟨h1, h2⟩ := Atil_hyps m n S hm θ hθ hΔ
+  exact bkdet_cross_ratio h1 (Ttil_preserves_WY m n S hm θ hθ) h2 hcyc v v'
 
 end CatalanCore.Star.Leonard
