@@ -157,4 +157,110 @@ theorem Ttil_col_all [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : G
   push_cast at key ⊢
   linear_combination key + hs
 
+
+section Res2'
+
+variable [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (n : ℤ) (hn : n ≤ (S : ℤ))
+
+include hm hn in
+lemma res2_r' : (bP2 K m (S : F) θ).eval (-(n : F) - 1) / (Qh2 m (S : F)).eval (-(n : F) - 1) =
+    -tau K m S θ (-θ - n - 1) := by
+  have hQ3 : (Qh2 m (S : F)).eval (((-n - 1 : ℤ)) : F) ≠ 0 :=
+    Qh2_eval_int_ne m S (-n - 1) (fun j _ => by omega)
+  push_cast at hQ3
+  set a3 : F := -(n : F) - 1 - θ with ha3
+  have e : -(n : F) - 1 = θ + a3 := by rw [ha3]; ring
+  rw [e] at hQ3 ⊢
+  rw [eval_Qh2] at hQ3
+  have key := tau_mul_Pe K m S θ a3 hm hQ3
+  have e2 : a3 = -θ - n - 1 := by rw [ha3]; ring
+  rw [eval_bP2, eval_Qh2, div_eq_iff hQ3, ← e2]
+  linear_combination key
+
+end Res2'
+
+/-- **(RC), all `n ≤ S`.** -/
+theorem TtilT_col_all [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (n : ℕ)
+    (hn : n ≤ S) :
+    ∃ κ : ℕ → F, (Ttil K m S θ)ᵀ *ᵥ wcol K θ (n : ℤ) =
+      (-sigma K m S θ (-θ - (n : ℤ))) • wcol K θ ((n : ℤ) - 1)
+        + (Dz K m (S : F) θ (gg K m S) (cc0 K m θ (gg K m S))).eval (-((n : ℤ) : F)) •
+            wcol K θ (n : ℤ)
+        + (-tau K m S θ (-θ - (n : ℤ) - 1)) • wcol K θ ((n : ℤ) + 1)
+        + ∑ j ∈ Finset.range m, κ j • wcol K θ ((S + 2 * j + 2 : ℕ) : ℤ) := by
+  set y : F := ((n : ℤ) : F) with hy
+  have hQ1 : (Qh2 m (S : F)).eval (1 - y) ≠ 0 := by
+    have := Qh2_eval_int_ne (F := F) m S (1 - (n : ℤ)) (fun j _ => by omega)
+    push_cast at this ⊢; rw [hy]; push_cast; exact this
+  have hQ3 : (Qh2 m (S : F)).eval (-y - 1) ≠ 0 := by
+    have := Qh2_eval_int_ne (F := F) m S (-(n : ℤ) - 1) (fun j _ => by omega)
+    push_cast at this ⊢; rw [hy]; push_cast; exact this
+  obtain ⟨N, hNd, heq⟩ := RC_polyY K m hm (S : F) θ y hQ1 hQ3
+  have hQQ : Qh m ((S : F) + 1) = Qh2 m (S : F) := by simp [Qh, Qh2]
+  obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
+  rw [hQQ] at hκ
+  have hl := res2_l' K m S hm θ (n : ℤ) (by omega)
+  have hr := res2_r' K m S hm θ (n : ℤ) (by omega)
+  refine ⟨κ, ?_⟩
+  funext a
+  have hrow := TtilT_row K m S θ y a
+  have hGa : GenAt θ ((a : ℕ) : F) := genAt_nat hθ a
+  have hGa1 : GenAt θ (((a : ℕ) : F) - 1) := genAt_nat_sub_one hθ a
+  have hPz : Pe m S θ ((a : ℕ) : F) ≠ 0 := Pe_ne_zero m S hGa
+  have hQz : (Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)) ≠ 0 := by rw [eval_Qh2]; exact hPz
+  have hA : (aP2 K m (S : F) θ).eval (θ + ((a : ℕ) : F)) =
+      -sigma K m S θ (((a : ℕ) : F) - 1) * (Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)) := by
+    rw [eval_aP2, eval_Qh2]
+    have key := sigma_pred_mul_Pe K m S θ ((a : ℕ) : F) hm (Qo_ne_zero m S hGa1)
+    linear_combination key
+  have hB : (bP2 K m (S : F) θ).eval (θ + ((a : ℕ) : F)) =
+      -tau K m S θ ((a : ℕ) : F) * (Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)) := by
+    rw [eval_bP2, eval_Qh2]
+    have key := tau_mul_Pe K m S θ ((a : ℕ) : F) hm hPz
+    linear_combination key
+  have hK : (K : F) - ((a : ℕ) : F) ≠ 0 := natsub_ne (by have := a.2; omega)
+  have hDt : (Dt2 K m (S : F) θ (gg K m S) (cc0 K m θ (gg K m S))).eval (θ + ((a : ℕ) : F)) =
+      Dd K m S θ ((a : ℕ) : F) * (Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)) := by
+    unfold Dt2 Qh2
+    rw [eval_mul, eval_Dz, ← Dd_eq K m S θ ((a : ℕ) : F) hm hGa1 hK]
+  simp only [gg, cc0] at hDt
+  have hE := congrArg (Polynomial.eval (θ + ((a : ℕ) : F))) heq
+  rw [Hz2_eq] at hE
+  simp only [eval_sub, eval_add, eval_mul, eval_C, eval_lin] at hE
+  rw [hA, hB, hDt, hl, hr] at hE
+  have hSum := hκ (θ + ((a : ℕ) : F)) hQz
+  have hSum' : ∑ i ∈ Finset.range m, κ i / (θ + ((a : ℕ) : F) + (S + 2 * (i : F) + 2)) =
+      N.eval (θ + ((a : ℕ) : F)) / (Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)) := by
+    rw [hSum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    unfold vY; ring_nf
+  have hum : θ + ((a : ℕ) : F) + y - 1 ≠ 0 := by
+    have := hθ (((a : ℕ) : ℤ) + n - 1); rw [hy]; push_cast at this ⊢
+    intro h0; apply this; linear_combination h0
+  have hu : θ + ((a : ℕ) : F) + y ≠ 0 := by
+    have := hθ (((a : ℕ) : ℤ) + n); rw [hy]; push_cast at this ⊢
+    intro h0; apply this; linear_combination h0
+  have hup : θ + ((a : ℕ) : F) + y + 1 ≠ 0 := by
+    have := hθ (((a : ℕ) : ℤ) + n + 1); rw [hy]; push_cast at this ⊢
+    intro h0; apply this; linear_combination h0
+  have key := cc_alg (θ + ((a : ℕ) : F) + y - 1) (θ + ((a : ℕ) : F) + y)
+    (θ + ((a : ℕ) : F) + y + 1) ((Qh2 m (S : F)).eval (θ + ((a : ℕ) : F)))
+    (N.eval (θ + ((a : ℕ) : F))) (sigma K m S θ (((a : ℕ) : F) - 1)) (Dd K m S θ ((a : ℕ) : F))
+    (tau K m S θ ((a : ℕ) : F)) (-sigma K m S θ (-θ - (n : ℤ)))
+    ((Dz K m (S : F) θ (gg K m S) (cc0 K m θ (gg K m S))).eval (-y))
+    (-tau K m S θ (-θ - (n : ℤ) - 1)) hum hu hup hQz
+    (by simp only [gg, cc0]; linear_combination hE)
+  have hw : wcol K θ (n : ℤ) = fun b : Fin K => 1 / (θ + ((b : ℕ) : F) + y) := by
+    funext b; simp [wcol, hy]
+  rw [hw, hrow]
+  simp only [wcol, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_apply]
+  push_cast
+  rw [← hSum'] at key
+  have hs : ∑ x ∈ Finset.range m, κ x / (θ + ((a : ℕ) : F) + ((S : F) + 2 * (x : F) + 2)) =
+      ∑ x ∈ Finset.range m, κ x * (1 / (θ + ((a : ℕ) : F) + ((S : F) + 2 * (x : F) + 2))) := by
+    exact Finset.sum_congr rfl fun x _ => div_eq_mul_one_div _ _
+  rw [hy] at key ⊢
+  push_cast at key ⊢
+  linear_combination key + hs
+
 end CatalanCore.Star.Leonard
