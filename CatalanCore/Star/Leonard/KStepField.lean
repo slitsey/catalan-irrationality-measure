@@ -32,14 +32,17 @@ lemma Dfac_sigma (K m S : ℕ) (θ a : F) (hP : Pe m S θ a ≠ 0) (hQ : Qo m S 
   field_simp
 
 lemma Dfac_mu_Pe (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hP : Pe m S θ a ≠ 0)
-    (hQ0 : Qo m S θ 0 ≠ 0) (h1 : θ + S + 1 + a ≠ 0) (hQ : Qo m S θ a ≠ 0) :
+    (hQ0 : Qo m S θ 0 ≠ 0) (hQ : Qo m S θ a ≠ 0) :
     Dfac K m S θ a * mu K m S θ a * Pe m S θ a =
       -(cK K m S θ * (((K : F) - 1 - a) * (θ + S + 2 * m + 1 + a) * Qhat m S θ a)) := by
   by_cases hK : (K : F) - 1 - a = 0
   · unfold Dfac mu; rw [hK]; simp
-  · rw [Qhat_eq m S θ a hm]
-    unfold Dfac mu cK
-    field_simp
+  · by_cases h1 : θ + S + 1 + a = 0
+    · rw [Qhat_eq m S θ a hm, h1]
+      unfold Dfac mu; rw [h1]; simp
+    · rw [Qhat_eq m S θ a hm]
+      unfold Dfac mu cK
+      field_simp
 
 /-- Abstract clearing of denominators for the `K`-step relations. -/
 lemma kstep_alg (u up P Nv Fa Fb Aa Bb : F) (hu : u ≠ 0) (hup : up ≠ 0) (hP : P ≠ 0)
@@ -67,7 +70,7 @@ lemma eval_PPf_pred (m S : ℕ) (θ a : F) : (PPf ((S : F) - 1) m).eval (θ + a)
 section K4field
 
 variable [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-  (n : ℤ) (hn : n + 1 ≤ (S : ℤ))
+  (n : ℤ) (hn : n ≤ (S : ℤ) + 1)
 
 include hm hθ hKS hn in
 /-- Identification of the `A` coefficient with `(Dμ)(-θ-n)`. -/
@@ -78,10 +81,7 @@ lemma coefA_eq : coefA K m (S : F) θ (n : F) (cK K m S θ) =
   have hPe : Pe m S θ a2 ≠ 0 := Pe_ne_zero_int m S θ _ (-n) hc (fun i _ => by omega)
   have hQo : Qo m S θ a2 ≠ 0 := Qo_ne_zero_int m S θ _ (-n) hc (fun i _ => by omega)
   have hQ0 : Qo m S θ 0 ≠ 0 := by simpa using Qo_ne_zero m S (genAt_nat hθ 0)
-  have h1 : θ + S + 1 + a2 ≠ 0 := by
-    have : θ + (S : F) + 1 + a2 = (((S : ℤ) - n + 1 : ℤ) : F) := by rw [ha2]; push_cast; ring
-    rw [this]; exact cast_ne_zero_of_pos (by omega)
-  have key := Dfac_mu_Pe K m S θ a2 hm hPe hQ0 h1 hQo
+  have key := Dfac_mu_Pe K m S θ a2 hm hPe hQ0 hQo
   have e : (-(n : F)) = θ + a2 := by rw [ha2]; ring
   unfold coefA
   rw [e, eval_PPf_S K m S θ a2, eval_PPf_pred, eval_pK1]
@@ -89,7 +89,7 @@ lemma coefA_eq : coefA K m (S : F) θ (n : F) (cK K m S θ) =
   linear_combination (-1 : F) * key
 
 include hm hθ hKS hn in
-lemma coefB_eq : coefB θ (n : F) (cK K m S θ) =
+lemma coefB_eq (hn' : n ≤ (S : ℤ)) : coefB θ (n : F) (cK K m S θ) =
     -(Dfac K m S θ (-θ - n - 1) * sigma K m S θ (-θ - n - 1)) := by
   set a3 : F := -θ - n - 1 with ha3
   have hc : θ + a3 = ((-n - 1 : ℤ) : F) := by rw [ha3]; push_cast; ring
@@ -129,7 +129,7 @@ end K4field
 `(X c_y)_i = 𝒜(y) c'_y(i) + ℬ(y) c'_{y+1}(i) + Σ_{x∈X} ℰ_x(y) c'_x(i)`, with
 `𝒜(y) = (Dμ)(-θ-y)`, `ℬ(y) = -(Dσ)(-θ-y-1)`. -/
 theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    (n : ℤ) (hn : n ≤ (S : ℤ)) :
     ∃ ℰ : ℕ → F, ∀ i : ℕ, i + 1 < K →
       Dfac K m S θ i * mu K m S θ i / (θ + i + n)
         - Dfac K m S θ i * sigma K m S θ i / (θ + i + 1 + n) =
@@ -145,7 +145,7 @@ theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
   obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
   rw [hQQ] at hκ
   refine ⟨κ, fun i hi => ?_⟩
-  rw [← coefA_eq K m S hm θ hθ hKS n hn, ← coefB_eq K m S hm θ hθ hKS n hn]
+  rw [← coefA_eq K m S hm θ hθ hKS n (by omega), ← coefB_eq K m S hm θ hθ hKS n (by omega) hn]
   have hGa : GenAt θ (i : F) := genAt_nat hθ i
   have hPz : Pe m S θ i ≠ 0 := Pe_ne_zero m S hGa
   have hQoi : Qo m S θ i ≠ 0 := Qo_ne_zero m S hGa
@@ -156,7 +156,7 @@ theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
     have := natsub_ne (F := F) (a := K - 1) (b := i) (by omega)
     rw [Nat.cast_sub (by omega)] at this
     push_cast at this; exact this
-  have hFa := Dfac_mu_Pe K m S θ (i : F) hm hPz hQ0 h1 hQoi
+  have hFa := Dfac_mu_Pe K m S θ (i : F) hm hPz hQ0 hQoi
   have hFb := Dfac_sigma K m S θ (i : F) hPz hQoi hQ0 hKi
   have hE := congrArg (Polynomial.eval (θ + (i : F))) heq
   simp only [eval_sub, eval_add, eval_mul, eval_C, eval_lin, MainA, A3a, B3a, pK1, eval_PPf_S,
@@ -184,7 +184,7 @@ theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
 `(Xᵀ c'_y)_j = D_j μ_j c_y(j) - D_{j-1}σ_{j-1} c_y(j-1) = 𝒜(y) c_y(j) + ℬ'(y) c_{y-1}(j)
 + Σ_{x∈X} ℱ_x(y) c_x(j)` with `ℬ'(y) = -(Dσ)(-θ-y)`. -/
 theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    (n : ℤ) (hn : n ≤ (S : ℤ) + 1) :
     ∃ ℱ : ℕ → F, ∀ j : ℕ, j < K →
       Dfac K m S θ j * mu K m S θ j / (θ + j + n)
         - Dfac K m S θ ((j : F) - 1) * sigma K m S θ ((j : F) - 1) / (θ + j - 1 + n) =
@@ -211,7 +211,7 @@ theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
   have hKj : (K : F) - 1 - ((j : F) - 1) ≠ 0 := by
     have := natsub_ne (F := F) (a := K) (b := j) (by omega)
     intro h0; apply this; linear_combination h0
-  have hFa := Dfac_mu_Pe K m S θ (j : F) hm hPz hQ0 h1 hQoj
+  have hFa := Dfac_mu_Pe K m S θ (j : F) hm hPz hQ0 hQoj
   have hFb := Dfac_sigma K m S θ ((j : F) - 1) (Pe_ne_zero m S hGa1) (Qo_ne_zero m S hGa1) hQ0 hKj
   have hE := congrArg (Polynomial.eval (θ + (j : F))) heq
   simp only [eval_sub, eval_add, eval_mul, eval_C, eval_lin, MainB, A3b, B3b, eval_PPf_pred] at hE

@@ -112,7 +112,7 @@ lemma Xmat_row (K m S : ℕ) (θ : F) (y : F) (i : Fin (K - 1)) :
 
 /-- **(K4a) as a vector identity.** -/
 theorem K4a_col [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    (n : ℤ) (hn : n ≤ (S : ℤ)) :
     ∃ ℰ : ℕ → F, Xmat K m S θ *ᵥ wcol K θ n =
       (Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n)) • wcol (K - 1) θ n
         + (-(Dfac K m S θ (-θ - n - 1) * sigma K m S θ (-θ - n - 1))) • wcol (K - 1) θ (n + 1)
@@ -133,7 +133,7 @@ theorem K4a_col [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ
 
 /-- **(K4b) as a vector identity.** -/
 theorem K4b_col [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    (n : ℤ) (hn : n ≤ (S : ℤ) + 1) :
     ∃ ℱ : ℕ → F, (Xmat K m S θ)ᵀ *ᵥ wcol (K - 1) θ n =
       (Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n)) • wcol K θ n
         + (-(Dfac K m S θ (-θ - n) * sigma K m S θ (-θ - n))) • wcol K θ (n - 1)
