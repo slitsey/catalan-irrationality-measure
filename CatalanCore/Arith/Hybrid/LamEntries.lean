@@ -291,4 +291,80 @@ lemma Mn_diag_goodP2 {A : ℕ} (S0 : Finset ℕ) (hS0 : S0 ⊆ Icc 1 A)
 
 end Entry
 
+/-! ### Theorem B: the label-level table -/
+
+section TableB
+
+variable {p : ℕ} [Fact p.Prime] {Fr : Frame}
+
+/-- The D4 potential of a label (`r < p`, singular block starts at `k`). -/
+def uPot (p r k : ℕ) (A : ℕ) : ℕ :=
+  if A < r then (if k ≤ A then 1 else 0) else 1 + (if p ≤ A then 1 else 0)
+
+/-- The residue `p^{u A + u B} Mn A B mod p` for `A < B`. -/
+noncomputable def TB (p j k : ℕ) [Fact p.Prime] (A B : ℕ) : ZMod p :=
+  if B < k then (16 * ((B : ZMod p) - A))⁻¹ *
+      ∑ t ∈ Ioc A B, (((t : ℕ) : ZMod p)⁻¹ - 4 * (4 * ((t : ℕ) : ZMod p) - 1)⁻¹)
+  else if A < k then
+    (if B < p then (16 * ((B : ZMod p) - A))⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹))
+     else if B - A = p then (16 : ZMod p)⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹) + 1) else 0)
+  else 0
+
+/-- The diagonal residue (`A < r`). -/
+noncomputable def TD (p j k : ℕ) [Fact p.Prime] (A : ℕ) : ZMod p :=
+  if A < k then -(1 / 16 : ZMod p) * ∑ t ∈ Icc 1 A,
+      ((((t : ℕ) : ZMod p)⁻¹) ^ 2 - 16 * ((4 * ((t : ℕ) : ZMod p) - 1)⁻¹) ^ 2)
+  else (((j : ℕ) : ZMod p)⁻¹) ^ 2
+
+lemma natCast_ne_zero_of_lt {x : ℕ} (h0 : 0 < x) (hx : x < p) : ((x : ℕ) : ZMod p) ≠ 0 := by
+  rw [Ne, ZMod.natCast_eq_zero_iff]
+  intro hd; exact absurd (Nat.le_of_dvd h0 hd) (by omega)
+
+lemma sub_ne_zero_of_lt {A B : ℕ} (hAB : A < B) (hB : B - A < p) : ((B : ZMod p) - A) ≠ 0 := by
+  rw [← Nat.cast_sub hAB.le]; exact natCast_ne_zero_of_lt (by omega) hB
+
+lemma sub_ne_zero_of_ne {A B : ℕ} (hAB : A < B) (hB : B - A < 2 * p) (hne : B - A ≠ p) :
+    ((B : ZMod p) - A) ≠ 0 := by
+  rw [← Nat.cast_sub hAB.le, Ne, ZMod.natCast_eq_zero_iff]
+  rintro ⟨c, hc⟩
+  have hp0 := (Fact.out : p.Prime).pos
+  rcases c with _ | _ | c
+  · omega
+  · omega
+  · have : p * (c + 1 + 1) ≥ p * 2 := Nat.mul_le_mul_left p (by omega)
+    omega
+
+/-- Regular indices below `2p`. -/
+lemma reg_of {j k : ℕ} (hk : 4 * k = j * p + 1) (hp5 : 5 ≤ p) (hkp : k < p) {t : ℕ} (h1 : 1 ≤ t)
+    (ht2 : t < 2 * p) (htk : t < k + p) (hnk : t ≠ k) (hnp : t ≠ p) : Reg p t := by
+  have hp0 := (Fact.out : p.Prime).pos
+  refine ⟨?_, ?_⟩
+  · rw [Ne, ZMod.natCast_eq_zero_iff]
+    rintro ⟨c, hc⟩
+    rcases c with _ | _ | c
+    · omega
+    · omega
+    · have : p * (c + 1 + 1) ≥ p * 2 := Nat.mul_le_mul_left p (by omega)
+      omega
+  · intro h0
+    have h4k : (4 : ZMod p) * (k : ZMod p) = 1 := by
+      have : ((4 * k : ℕ) : ZMod p) = ((j * p + 1 : ℕ) : ZMod p) := by rw [hk]
+      push_cast at this
+      simpa [ZMod.natCast_self] using this
+    have h4 : (4 : ZMod p) ≠ 0 := four_ne_zmod p hp5
+    have : (t : ZMod p) = (k : ZMod p) := by
+      have : (4 : ZMod p) * ((t : ZMod p) - k) = 0 := by linear_combination h0 - h4k
+      rcases mul_eq_zero.1 this with h | h
+      · exact absurd h h4
+      · exact sub_eq_zero.1 h
+    rw [ZMod.natCast_eq_natCast_iff'] at this
+    by_cases htp : t < p
+    · rw [Nat.mod_eq_of_lt htp, Nat.mod_eq_of_lt hkp] at this; exact hnk this
+    · have : t % p = t - p := by
+        rw [Nat.mod_eq_sub_mod (by omega), Nat.mod_eq_of_lt (by omega)]
+      rw [Nat.mod_eq_of_lt hkp] at *
+      omega
+
+end TableB
+
 end CatalanCore.Arith.Hybrid
