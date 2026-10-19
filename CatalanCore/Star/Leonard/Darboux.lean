@@ -152,4 +152,46 @@ theorem K4b_col [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ
     exact Finset.sum_congr rfl fun x _ => div_eq_mul_one_div _ _
   linear_combination h + hs
 
+/-- **(K4a) as a vector identity, general `y` (polynomial coefficients).** -/
+theorem K4a_col_gen [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : ∀ j : ℕ, j < m → (S : ℤ) + 2 * j + 2 ≠ n) :
+    ∃ ℰ : ℕ → F, Xmat K m S θ *ᵥ wcol K θ n =
+      coefA K m (S : F) θ (n : F) (cK K m S θ) • wcol (K - 1) θ n
+        + coefB θ (n : F) (cK K m S θ) • wcol (K - 1) θ (n + 1)
+        + ∑ j ∈ Finset.range m, ℰ j • wcol (K - 1) θ ((S + 2 * j + 2 : ℕ) : ℤ) := by
+  obtain ⟨ℰ, hℰ⟩ := K4a_gen K m S hm θ hθ hKS n hn
+  refine ⟨ℰ, ?_⟩
+  funext i
+  have h := hℰ i (by have := i.2; omega)
+  have hrow := Xmat_row K m S θ (n : F) i
+  have hw : wcol K θ n = fun b : Fin K => 1 / (θ + ((b : ℕ) : F) + (n : F)) := rfl
+  rw [hw, hrow]
+  simp only [wcol, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_apply]
+  push_cast
+  have hs : ∑ x ∈ Finset.range m, ℰ x / (θ + ((i : ℕ) : F) + ((S : F) + 2 * (x : F) + 2)) =
+      ∑ x ∈ Finset.range m, ℰ x * (1 / (θ + ((i : ℕ) : F) + ((S : F) + 2 * (x : F) + 2))) := by
+    exact Finset.sum_congr rfl fun x _ => div_eq_mul_one_div _ _
+  linear_combination h + hs
+
+/-- **(K4b) as a vector identity, general `y` (polynomial coefficients).** -/
+theorem K4b_col_gen [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : ∀ j : ℕ, j < m → (S : ℤ) + 2 * j + 2 ≠ n) :
+    ∃ ℱ : ℕ → F, (Xmat K m S θ)ᵀ *ᵥ wcol (K - 1) θ n =
+      coefA K m (S : F) θ (n : F) (cK K m S θ) • wcol K θ n
+        + coefB' θ (n : F) (cK K m S θ) • wcol K θ (n - 1)
+        + ∑ j ∈ Finset.range m, ℱ j • wcol K θ ((S + 2 * j + 2 : ℕ) : ℤ) := by
+  obtain ⟨ℱ, hℱ⟩ := K4b_gen K m S hm θ hθ hKS n hn
+  refine ⟨ℱ, ?_⟩
+  funext j
+  have h := hℱ j j.2
+  have hrow := XmatT_row K m S θ (n : F) j
+  have hw : wcol (K - 1) θ n = fun b : Fin (K - 1) => 1 / (θ + ((b : ℕ) : F) + (n : F)) := rfl
+  rw [hw, hrow]
+  simp only [wcol, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_apply]
+  push_cast
+  have hs : ∑ x ∈ Finset.range m, ℱ x / (θ + ((j : ℕ) : F) + ((S : F) + 2 * (x : F) + 2)) =
+      ∑ x ∈ Finset.range m, ℱ x * (1 / (θ + ((j : ℕ) : F) + ((S : F) + 2 * (x : F) + 2))) := by
+    exact Finset.sum_congr rfl fun x _ => div_eq_mul_one_div _ _
+  linear_combination h + hs
+
 end CatalanCore.Star.Leonard

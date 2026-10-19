@@ -67,6 +67,18 @@ lemma eval_PPf_S (K m S : ℕ) (θ a : F) : (PPf (S : F) m).eval (θ + a) = Pe m
 lemma eval_PPf_pred (m S : ℕ) (θ a : F) : (PPf ((S : F) - 1) m).eval (θ + a) = Qhat m S θ a :=
   eval_Qh S m θ a
 
+lemma Qh2_eval_ne_of_ne [CharZero F] (m S : ℕ) (c : ℤ)
+    (h : ∀ j < m, c + S + 2 * ((j : ℤ) + 1) ≠ 0) : (Qh2 m (S : F)).eval (c : F) ≠ 0 := by
+  unfold Qh2 PPf
+  rw [eval_prod]
+  refine Finset.prod_ne_zero_iff.2 fun j hj => ?_
+  have hj' := h j (Finset.mem_range.1 hj)
+  rw [eval_lin]
+  have : (1 : F) * (c : F) + ((S : F) + 2 * ((j : F) + 1)) = ((c + S + 2 * ((j : ℤ) + 1) : ℤ) : F) := by
+    push_cast; ring
+  rw [this]
+  exact_mod_cast hj'
+
 section K4field
 
 variable [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
@@ -128,24 +140,23 @@ end K4field
 /-- **(K4a).**  Column relation of the Darboux map, at `g = 0` (`K = S+m+1`), symbolic `m`:
 `(X c_y)_i = 𝒜(y) c'_y(i) + ℬ(y) c'_{y+1}(i) + Σ_{x∈X} ℰ_x(y) c'_x(i)`, with
 `𝒜(y) = (Dμ)(-θ-y)`, `ℬ(y) = -(Dσ)(-θ-y-1)`. -/
-theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n ≤ (S : ℤ)) :
+theorem K4a_gen [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : ∀ j : ℕ, j < m → (S : ℤ) + 2 * j + 2 ≠ n) :
     ∃ ℰ : ℕ → F, ∀ i : ℕ, i + 1 < K →
       Dfac K m S θ i * mu K m S θ i / (θ + i + n)
         - Dfac K m S θ i * sigma K m S θ i / (θ + i + 1 + n) =
-      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + i + n)
-        + -(Dfac K m S θ (-θ - n - 1) * sigma K m S θ (-θ - n - 1)) / (θ + i + 1 + n)
+      coefA K m (S : F) θ (n : F) (cK K m S θ) / (θ + i + n)
+        + coefB θ (n : F) (cK K m S θ) / (θ + i + 1 + n)
         + ∑ j ∈ Finset.range m, ℰ j / (θ + i + (S + 2 * (j : F) + 2)) := by
   have hKF : (K : F) = (S : F) + m + 1 := by rw [hKS]; push_cast; ring
   have hP : (PPf (S : F) m).eval (-(n : F)) ≠ 0 := by
-    have := Qh2_eval_int_ne (F := F) m S (-n) (fun j _ => by omega)
+    have := Qh2_eval_ne_of_ne (F := F) m S (-n) (fun j hj => by have := hn j hj; omega)
     push_cast at this; exact this
   obtain ⟨N, hNd, heq⟩ := K4a_poly K m hm (S : F) θ (n : F) (cK K m S θ) hKF hP
   have hQQ : Qh m ((S : F) + 1) = Qh2 m (S : F) := by simp [Qh, Qh2]
   obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
   rw [hQQ] at hκ
   refine ⟨κ, fun i hi => ?_⟩
-  rw [← coefA_eq K m S hm θ hθ hKS n (by omega), ← coefB_eq K m S hm θ hθ hKS n (by omega) hn]
   have hGa : GenAt θ (i : F) := genAt_nat hθ i
   have hPz : Pe m S θ i ≠ 0 := Pe_ne_zero m S hGa
   have hQoi : Qo m S θ i ≠ 0 := Qo_ne_zero m S hGa
@@ -180,27 +191,40 @@ theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
   linear_combination hE + (θ + (i : F) + 1 + n) * hFa - (Pe m S θ i * (θ + (i : F) + n)) * hFb
 
 
+
+/-- **(K4a).** -/
+theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : n ≤ (S : ℤ)) :
+    ∃ ℰ : ℕ → F, ∀ i : ℕ, i + 1 < K →
+      Dfac K m S θ i * mu K m S θ i / (θ + i + n)
+        - Dfac K m S θ i * sigma K m S θ i / (θ + i + 1 + n) =
+      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + i + n)
+        + -(Dfac K m S θ (-θ - n - 1) * sigma K m S θ (-θ - n - 1)) / (θ + i + 1 + n)
+        + ∑ j ∈ Finset.range m, ℰ j / (θ + i + (S + 2 * (j : F) + 2)) := by
+  obtain ⟨ℰ, h⟩ := K4a_gen K m S hm θ hθ hKS n (fun j _ => by omega)
+  refine ⟨ℰ, fun i hi => ?_⟩
+  rw [h i hi, coefA_eq K m S hm θ hθ hKS n (by omega), coefB_eq K m S hm θ hθ hKS n (by omega) hn]
+
 /-- **(K4b).**  Row relation of the Darboux map at `g = 0`, symbolic `m`:
 `(Xᵀ c'_y)_j = D_j μ_j c_y(j) - D_{j-1}σ_{j-1} c_y(j-1) = 𝒜(y) c_y(j) + ℬ'(y) c_{y-1}(j)
 + Σ_{x∈X} ℱ_x(y) c_x(j)` with `ℬ'(y) = -(Dσ)(-θ-y)`. -/
-theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
-    (n : ℤ) (hn : n ≤ (S : ℤ) + 1) :
+theorem K4b_gen [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : ∀ j : ℕ, j < m → (S : ℤ) + 2 * j + 2 ≠ n) :
     ∃ ℱ : ℕ → F, ∀ j : ℕ, j < K →
       Dfac K m S θ j * mu K m S θ j / (θ + j + n)
         - Dfac K m S θ ((j : F) - 1) * sigma K m S θ ((j : F) - 1) / (θ + j - 1 + n) =
-      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + j + n)
-        + -(Dfac K m S θ (-θ - n) * sigma K m S θ (-θ - n)) / (θ + j + n - 1)
+      coefA K m (S : F) θ (n : F) (cK K m S θ) / (θ + j + n)
+        + coefB' θ (n : F) (cK K m S θ) / (θ + j + n - 1)
         + ∑ i ∈ Finset.range m, ℱ i / (θ + j + (S + 2 * (i : F) + 2)) := by
   have hKF : (K : F) = (S : F) + m + 1 := by rw [hKS]; push_cast; ring
   have hP : (PPf (S : F) m).eval (-(n : F)) ≠ 0 := by
-    have := Qh2_eval_int_ne (F := F) m S (-n) (fun j _ => by omega)
+    have := Qh2_eval_ne_of_ne (F := F) m S (-n) (fun j hj => by have := hn j hj; omega)
     push_cast at this; exact this
   obtain ⟨N, hNd, heq⟩ := K4b_poly K m hm (S : F) θ (n : F) (cK K m S θ) hKF hP
   have hQQ : Qh m ((S : F) + 1) = Qh2 m (S : F) := by simp [Qh, Qh2]
   obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
   rw [hQQ] at hκ
   refine ⟨κ, fun j hj => ?_⟩
-  rw [← coefA_eq K m S hm θ hθ hKS n hn, ← coefB'_eq K m S hm θ hθ hKS n hn]
   have hGa : GenAt θ (j : F) := genAt_nat hθ j
   have hGa1 : GenAt θ ((j : F) - 1) := genAt_nat_sub_one hθ j
   have hPz : Pe m S θ j ≠ 0 := Pe_ne_zero m S hGa
@@ -234,5 +258,19 @@ theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
   rw [eval_PPf_S K m S θ j] at hE hQz ⊢
   refine kstep_alg _ _ _ _ _ _ _ _ hu hum hQz ?_
   linear_combination hE + (θ + (j : F) + n - 1) * hFa - (Pe m S θ j * (θ + (j : F) + n)) * hFb
+
+
+/-- **(K4b).** -/
+theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : n ≤ (S : ℤ) + 1) :
+    ∃ ℱ : ℕ → F, ∀ j : ℕ, j < K →
+      Dfac K m S θ j * mu K m S θ j / (θ + j + n)
+        - Dfac K m S θ ((j : F) - 1) * sigma K m S θ ((j : F) - 1) / (θ + j - 1 + n) =
+      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + j + n)
+        + -(Dfac K m S θ (-θ - n) * sigma K m S θ (-θ - n)) / (θ + j + n - 1)
+        + ∑ i ∈ Finset.range m, ℱ i / (θ + j + (S + 2 * (i : F) + 2)) := by
+  obtain ⟨ℱ, h⟩ := K4b_gen K m S hm θ hθ hKS n (fun j _ => by omega)
+  refine ⟨ℱ, fun j hj => ?_⟩
+  rw [h j hj, coefA_eq K m S hm θ hθ hKS n (by omega), coefB'_eq K m S hm θ hθ hKS n hn]
 
 end CatalanCore.Star.Leonard
