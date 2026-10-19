@@ -65,24 +65,6 @@ noncomputable def certHyb : CatalanCore.Cert.CertCoreG (300 + 180) (1 / 1024 : �
   I_ok := I_ok_H
   ccert_ge := by norm_num
 
-theorem log54_le : Real.log (5 / 4) ≤ 2231435514 / 10 ^ 10 := by
-  have h := (log_atanh_bounds (x := (1 / 9 : ℝ)) (by norm_num) (by norm_num) 8).2
-  have e : Real.log (1 + 1 / 9) - Real.log (1 - 1 / 9) = Real.log (5 / 4) := by
-    rw [← Real.log_div (by norm_num) (by norm_num)]; norm_num
-  rw [e] at h
-  refine h.trans ?_
-  simp only [atS, atT]
-  norm_num
-
-theorem Inu_le : ((17024457 / 10 ^ 7 : ℚ) : ℝ) ≤ CatalanCore.Decay.Jfun (((1 / 8 : ℚ)) : ℝ) := by
-  have e : (((1 / 8 : ℚ)) : ℝ) = 1 / 8 := by push_cast; norm_num
-  rw [e, Jfun_eighth]
-  have h1 := Real.log_two_lt_d9
-  have h2 := log54_le
-  push_cast
-  norm_num at h1 ⊢
-  linarith
-
 theorem cH_norm (k : Fin (300 + 180)) : ‖cH k‖ ≤ 1 := by
   obtain ⟨a, b, c, d⟩ := pos_all k
   have h := Complex.norm_le_abs_re_add_abs_im (cH k)
