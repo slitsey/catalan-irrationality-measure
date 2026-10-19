@@ -118,4 +118,107 @@ lemma Nsum_eq_Rm_mul :
 
 end Setup
 
+section KS
+
+variable [CharZero F] (m n' : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ)
+
+include hm hθ in
+/-- **K-step identity** (`g = 0`): with `v = Π c₀`, `E = Π R`, `D₁ = det [W | v | E]`,
+`u(Ã₁, v) · u(T~', w) = D₁ · u(Ã₂, w) · u_y(T^, z)`, where `z = Cᵀ v`. -/
+theorem KS_transfer
+    (hΔ : IsUnit ((Wb (m + (n' + 1)) θ (bX m (n' : ℤ)))ᵀ *
+      Wb (m + (n' + 1)) θ (bY m (n' : ℤ))).det)
+    (hΔ' : IsUnit ((Wb (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)))ᵀ *
+      Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))).det)
+    (w : Fin (m + n') → F)
+    (hw : CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))
+      (Ttil (m + n') m (n' + 1) θ) w ≠ 0)
+    (hD2 : (CatalanCore.bmat (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))
+      (Xm (m + n') m n' θ * (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *
+        Rm m (n' + 1) n' θ))).det ≠ 0) :
+    CatalanCore.bkdet (Wb (m + (n' + 1)) θ (bY m (n' : ℤ))) (Atil m (n' + 1) n' θ)
+        (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ wcol (m + (n' + 1)) θ 0) *
+      CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))) (Ttil (m + n') m (n' + 1) θ) w =
+    (CatalanCore.bmat (Wb (m + (n' + 1)) θ (bY m (n' : ℤ)))
+        (Matrix.of fun i j => Fin.cases
+          ((projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ wcol (m + (n' + 1)) θ 0) i)
+          (fun j' => (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *
+            Rm m (n' + 1) n' θ) i j') j)).det *
+      CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))) (Atil m n' (n' + 1) θ) w *
+      kdet (That m (n' + 1) n' θ) (zvec m (n' + 1) n' θ 0) := by
+  set Pj := projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) with hPj
+  set Rm1 := Rm m (n' + 1) n' θ with hRm
+  set E := Pj * Rm1 with hE
+  set C := Pjᵀ * Rm1 with hC
+  set W := Wb (m + (n' + 1)) θ (bY m (n' : ℤ)) with hW
+  set W' := Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)) with hW'
+  set v := Pj *ᵥ wcol (m + (n' + 1)) θ 0 with hv
+  have hidem := projB_idem m (n' + 1) n' θ hΔ
+  have hA1 : Atil m (n' + 1) n' θ = E * Cᵀ := by
+    unfold Atil
+    rw [Nsum_eq_Rm_mul]
+    simp only [hE, hC, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
+    rfl
+  -- L5
+  have h1 := CatalanCore.bkdet_mul_transpose W E C v
+  rw [← hA1] at h1
+  -- the intertwiners
+  have hXA : Xm (m + n') m n' θ * Atil m (n' + 1) n' θ = Atil m n' (n' + 1) θ * Xm (m + n') m n' θ :=
+    CatalanCore.mul_eq_of_mulVec _ _ fun x => by
+      rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
+      exact Xm_Atil m n' hm θ hθ hΔ hΔ' x
+  have hXT : Xm (m + n') m n' θ * Ttil (m + (n' + 1)) m n' θ =
+      (Ttil (m + n') m (n' + 1) θ + betaD (m + n') m n' θ • (1 : Matrix (Fin (m + n')) (Fin (m + n')) F)) *
+        Xm (m + n') m n' θ :=
+    CatalanCore.mul_eq_of_mulVec _ _ fun x => by
+      simp only [← Matrix.mulVec_mulVec]
+      rw [Matrix.add_mulVec]
+      have hx := Xm_Ttil (m + n') m n' hm θ hθ (by omega) x
+      have hb : (betaD (m + n') m n' θ • (1 : Matrix (Fin (m + n')) (Fin (m + n')) F)) *ᵥ
+          (Xm (m + n') m n' θ *ᵥ x) = betaD (m + n') m n' θ • (Xm (m + n') m n' θ *ᵥ x) := by
+        simp [Matrix.smul_mulVec]
+      rw [hb]
+      exact hx
+  set Φ := Xm (m + n') m n' θ * E with hΦ
+  set Ahat := Cᵀ * E with hAhat
+  have hΦA : Atil m n' (n' + 1) θ * Φ = Φ * Ahat := by
+    calc Atil m n' (n' + 1) θ * Φ = (Atil m n' (n' + 1) θ * Xm (m + n') m n' θ) * E := by
+          rw [hΦ, Matrix.mul_assoc]
+      _ = (Xm (m + n') m n' θ * Atil m (n' + 1) n' θ) * E := by rw [hXA]
+      _ = Xm (m + n') m n' θ * (E * Cᵀ * E) := by rw [hA1, Matrix.mul_assoc]
+      _ = Φ * Ahat := by rw [hΦ, hAhat]; simp only [Matrix.mul_assoc]
+  have hΦT : (Ttil (m + n') m (n' + 1) θ + betaD (m + n') m n' θ • (1 : Matrix (Fin (m + n')) (Fin (m + n')) F)) * Φ =
+      Φ * That m (n' + 1) n' θ := by
+    calc _ = (Ttil (m + n') m (n' + 1) θ + betaD (m + n') m n' θ •
+          (1 : Matrix (Fin (m + n')) (Fin (m + n')) F)) * Xm (m + n') m n' θ * E := by
+          rw [hΦ, Matrix.mul_assoc]
+      _ = Xm (m + n') m n' θ * Ttil (m + (n' + 1)) m n' θ * E := by rw [hXT]
+      _ = Xm (m + n') m n' θ * (Ttil (m + (n' + 1)) m n' θ * E) := by rw [Matrix.mul_assoc]
+      _ = Xm (m + n') m n' θ * (E * That m (n' + 1) n' θ) := by
+          rw [hE, hRm, Ttil_E m (n' + 1) n' hm θ hθ hΔ]
+      _ = Φ * That m (n' + 1) n' θ := by rw [hΦ]; exact (Matrix.mul_assoc _ _ _).symm
+  set z := Cᵀ *ᵥ v with hz
+  have h2 := CatalanCore.bkdet_transfer W' Φ (Atil m n' (n' + 1) θ) Ahat hΦA z
+  have h3 := CatalanCore.bkdet_transfer W' Φ _ (That m (n' + 1) n' θ) hΦT z
+  rw [CatalanCore.bkdet_add_smul_one] at h3
+  -- cross ratio at I2
+  obtain ⟨hA2, hc2⟩ := Atil_hyps m n' (n' + 1) hm θ hθ hΔ'
+  have hT2 := Ttil_preserves_WY m n' (n' + 1) hm θ hθ
+  have hcross := CatalanCore.bkdet_cross_ratio hA2 hT2 hc2 hw (Φ *ᵥ z) w
+  rw [h2, h3] at hcross
+  have hD2' : (CatalanCore.bmat W' Φ).det ≠ 0 := hD2
+  have hfin : CatalanCore.kdet Ahat z * CatalanCore.bkdet W' (Ttil (m + n') m (n' + 1) θ) w =
+      CatalanCore.bkdet W' (Atil m n' (n' + 1) θ) w * CatalanCore.kdet (That m (n' + 1) n' θ) z := by
+    apply mul_left_cancel₀ hD2'
+    linear_combination hcross
+  have hz0 : z = zvec m (n' + 1) n' θ 0 := by
+    have e0 : wcol (m + (n' + 1)) θ (-((0 : ℕ) : ℤ)) = wcol (m + (n' + 1)) θ 0 := by simp
+    unfold zvec
+    rw [e0, hz, hv, hC, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mulVec_mulVec,
+      Matrix.mul_assoc, hidem]
+  rw [h1, hz0.symm, mul_assoc, hfin]
+  ring
+
+end KS
+
 end CatalanCore.Star.Leonard
