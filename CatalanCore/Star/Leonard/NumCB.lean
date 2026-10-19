@@ -150,4 +150,82 @@ lemma sum_subsets_erase {N : ℕ} {M : Type*} [AddCommMonoid M]
     ⟨hinj, by simp [Fintype.card_subtype, Finset.card_univ]⟩
   exact (Fintype.sum_equiv (Equiv.ofBijective e hbij) _ _ (fun a => rfl)).symm
 
+lemma colsOf_erase {N : ℕ} (a : Fin (N + 1)) (i : Fin N) :
+    (CatalanCore.colsOf (⟨Finset.univ.erase a, by simp⟩ :
+      {P : Finset (Fin (N + 1)) // P.card = N}) i) = a.succAbove i := by
+  have h := Finset.orderEmbOfFin_unique (s := Finset.univ.erase a) (k := N) (by simp)
+    (f := a.succAbove) (fun x => Finset.mem_erase.2 ⟨Fin.succAbove_ne a x, Finset.mem_univ _⟩)
+    (Fin.strictMono_succAbove a)
+  exact (congrFun h i).symm
+
+/-- **`Num` in closed form** (Cauchy-Binet over the omitted node + Lemma N). -/
+theorem Num_closed [CharZero F] {N : ℕ} (hN : 1 ≤ N) (xs ys : Fin N → F) (x0 : F)
+    (hx : ∀ (a : Fin (N + 1)) (i : Fin N), ((a : ℕ) : F) + xs i ≠ 0)
+    (hy : ∀ (a : Fin (N + 1)) (i : Fin N), ((a : ℕ) : F) + ys i ≠ 0)
+    (hrho : ∀ b : ℕ, ∏ j, (((b : F) + xs j) * ((b : F) + ys j)) =
+      ∏ i ∈ Finset.range (2 * N), (x0 + (b : F) + (i : F))) :
+    ((Cm (N + 1) xs)ᵀ * Cm (N + 1) ys).det =
+      Vprod xs * Vprod ys * Vprod (fun i : Fin (N + 1) => ((i : ℕ) : F)) ^ 2 *
+        (∏ b : Fin (N + 1), (∏ i ∈ Finset.range (2 * N), (x0 + ((b : ℕ) : F) + (i : F)))⁻¹) *
+        ((((2 * N).choose N : ℕ) : F) * (∏ i ∈ Finset.range N, (x0 + (N : F) + (i : F))) ^ 2 /
+          ((N.factorial : ℕ) : F) ^ 2) := by
+  rw [delta_CB xs ys hx hy, sum_subsets_erase]
+  set pc : ℕ → F := fun b => ∏ i ∈ Finset.range (2 * N), (x0 + (b : F) + (i : F)) with hpc
+  have hpc_ne : ∀ b : Fin (N + 1), pc b ≠ 0 := by
+    intro b
+    rw [hpc]; simp only
+    rw [← hrho]
+    exact Finset.prod_ne_zero_iff.2 fun j _ => mul_ne_zero (hx b j) (hy b j)
+  have hrho' : ∀ b : ℕ, rho xs ys b = (pc b)⁻¹ := fun b => by
+    unfold rho; rw [hrho b]
+  -- each term
+  have hterm : ∀ a : Fin (N + 1),
+      Vprod (fun i => (((CatalanCore.colsOf (⟨Finset.univ.erase a, by simp⟩ :
+          {P : Finset (Fin (N + 1)) // P.card = N}) i : Fin (N + 1)) : ℕ) : F)) ^ 2 *
+        ∏ i : Fin N, rho xs ys ((CatalanCore.colsOf (⟨Finset.univ.erase a, by simp⟩ :
+          {P : Finset (Fin (N + 1)) // P.card = N}) i : Fin (N + 1)) : ℕ) =
+      Vprod (fun i : Fin (N + 1) => ((i : ℕ) : F)) ^ 2 * (∏ b : Fin (N + 1), (pc b)⁻¹) *
+        (((N.choose a : ℕ) : F) ^ 2 * pc a / ((N.factorial : ℕ) : F) ^ 2) := by
+    intro a
+    simp only [colsOf_erase]
+    set v : Fin (N + 1) → F := fun i => ((i : ℕ) : F) with hv
+    have hfac : ((((a : ℕ).factorial * (N - (a : ℕ)).factorial : ℕ)) : F) ≠ 0 := by
+      exact_mod_cast (Nat.mul_pos (Nat.factorial_pos _) (Nat.factorial_pos _)).ne'
+    have hNfac : ((N.factorial : ℕ) : F) ≠ 0 := by
+      exact_mod_cast (Nat.factorial_pos N).ne'
+    have h1 := Vprod_sq_succAbove v a
+    have h2 := prod_succAbove_sq (F := F) N a
+    have hV : Vprod (fun i : Fin N => (((a.succAbove i : Fin (N + 1)) : ℕ) : F)) ^ 2 =
+        Vprod v ^ 2 / ((((a : ℕ).factorial * (N - (a : ℕ)).factorial : ℕ)) : F) ^ 2 := by
+      rw [eq_div_iff (pow_ne_zero 2 hfac), h1, ← h2]
+    have hP : ∏ i : Fin N, rho xs ys ((a.succAbove i : Fin (N + 1)) : ℕ) =
+        (∏ b : Fin (N + 1), (pc b)⁻¹) * pc a := by
+      have := Fin.prod_univ_succAbove (fun b : Fin (N + 1) => (pc (b : ℕ))⁻¹) a
+      simp only [hrho'] 
+      rw [this]
+      field_simp [hpc_ne a]
+    have hC : ((N.choose a : ℕ) : F) * ((a : ℕ).factorial : ℕ) * (((N - (a : ℕ)).factorial : ℕ) : F) =
+        ((N.factorial : ℕ) : F) := by
+      exact_mod_cast Nat.choose_mul_factorial_mul_factorial (Nat.lt_succ_iff.1 a.2)
+    rw [hV, hP]
+    have hfa : (((a : ℕ).factorial : ℕ) : F) ≠ 0 := by exact_mod_cast (Nat.factorial_pos _).ne'
+    have hfb : (((N - (a : ℕ)).factorial : ℕ) : F) ≠ 0 := by exact_mod_cast (Nat.factorial_pos _).ne'
+    have hCne : ((N.choose a : ℕ) : F) ≠ 0 := by
+      exact_mod_cast (Nat.choose_pos (Nat.lt_succ_iff.1 a.2)).ne'
+    rw [← hC]
+    push_cast
+    field_simp
+  simp only [hterm]
+  rw [← Finset.mul_sum]
+  have hs : ∑ a : Fin (N + 1), (((N.choose a : ℕ) : F) ^ 2 * pc a / ((N.factorial : ℕ) : F) ^ 2) =
+      ((((2 * N).choose N : ℕ) : F) * (∏ i ∈ Finset.range N, (x0 + (N : F) + (i : F))) ^ 2 /
+        ((N.factorial : ℕ) : F) ^ 2) := by
+    simp only [div_eq_mul_inv]
+    rw [← Finset.sum_mul, Fin.sum_univ_eq_sum_range (fun a : ℕ => ((N.choose a : ℕ) : F) ^ 2 * pc a)
+      (N + 1)]
+    congr 1
+    exact lemmaN N hN x0
+  rw [hs]
+  ring
+
 end CatalanCore.Star.Leonard
