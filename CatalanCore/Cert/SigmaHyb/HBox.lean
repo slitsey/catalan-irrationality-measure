@@ -36,7 +36,7 @@ lemma log2_le : Real.log 2 ≤ (L2UP : ℝ) := by
 def UexUp (xlo xhi ylo yhi : ℤ) : ℚ :=
   (1 / 8) * UbUp (4 * xlo - 2 ^ 42) (4 * xhi - 2 ^ 42) (4 * ylo) (4 * yhi) + L2UP / 4
 
-theorem uexR_le (xlo xhi ylo yhi : ℤ) (hxhi : xhi < 0) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
+theorem uexR_le (xlo xhi ylo yhi : ℤ) (hxhi : xhi < 2 ^ 40) (hxlohi : xlo ≤ xhi) (hylo : 0 ≤ ylo)
     (x y : ℝ) (hx1 : (xlo : ℝ) / 2 ^ 40 ≤ x) (hx2 : x ≤ (xhi : ℝ) / 2 ^ 40)
     (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40) :
     UexR x y ≤ ((UexUp xlo xhi ylo yhi : ℚ) : ℝ) := by
@@ -74,7 +74,7 @@ theorem box_sound_H (pts : List Pt) (Ls mp : ℚ) (xlo xhi ylo yhi : ℤ)
     (mp : ℝ) ≤ gHR pts x y := by
   have h1 := box_sound_g pts Ls (mp + UexUp xlo xhi ylo yhi) xlo xhi ylo yhi hxhi hxlohi hylo
     (by unfold boxLBH at hchk; linarith) x y hx1 hx2 hy1 hy2 hS
-  have h2 := uexR_le xlo xhi ylo yhi hxhi hxlohi hylo x y hx1 hx2 hy1 hy2
+  have h2 := uexR_le xlo xhi ylo yhi (by omega) hxlohi hylo x y hx1 hx2 hy1 hy2
   unfold gHR
   push_cast at h1
   linarith
@@ -86,7 +86,7 @@ theorem hbox_sound (pts : List Pt) (Ls thr : ℚ) (xlo xhi ylo yhi : ℤ)
     (hy1 : (ylo : ℝ) / 2 ^ 40 ≤ y) (hy2 : y ≤ (yhi : ℝ) / 2 ^ 40)
     (hS : (Ls : ℝ) ≤ Usig pts x y) :
     (thr : ℝ) ≤ Usig pts x y - UexR x y := by
-  have h2 := uexR_le xlo xhi ylo yhi hxhi hxlohi hylo x y hx1 hx2 hy1 hy2
+  have h2 := uexR_le xlo xhi ylo yhi (by omega) hxlohi hylo x y hx1 hx2 hy1 hy2
   have hc : (thr : ℝ) ≤ (Ls : ℝ) - (UexUp xlo xhi ylo yhi : ℝ) := by exact_mod_cast hchk
   linarith
 
