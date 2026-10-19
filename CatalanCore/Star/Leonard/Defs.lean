@@ -113,6 +113,14 @@ lemma Qo_ne_zero (m S : ℕ) {θ a : F} (h : GenAt θ a) : Qo m S θ a ≠ 0 := 
 
 /-! ### The quartic diagonal -/
 
+lemma sigma_tau_div_mu' (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hP : Pe m S θ a ≠ 0)
+    (hQ : Qo m S θ a ≠ 0) (h1 : θ + S + 1 + a ≠ 0) (h2 : θ + S + 2 * m + 1 + a ≠ 0)
+    (hK : (K : F) - 1 - a ≠ 0) :
+    sigma K m S θ a * tau K m S θ a / mu K m S θ a = -(((a + 1) * (a + 1 + θ)) ^ 2) := by
+  rw [sigma_mul_tau K m S θ a hm hP hQ]
+  unfold mu pp
+  field_simp
+
 lemma sigma_tau_div_mu (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (h : GenAt θ a)
     (hK : (K : F) - 1 - a ≠ 0) :
     sigma K m S θ a * tau K m S θ a / mu K m S θ a = -(((a + 1) * (a + 1 + θ)) ^ 2) := by
@@ -120,9 +128,17 @@ lemma sigma_tau_div_mu (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (h : GenAt θ a)
     have := h (S + 1); push_cast at this; intro h0; apply this; linear_combination h0
   have h2 : θ + S + 2 * m + 1 + a ≠ 0 := by
     have := h (S + 2 * m + 1); push_cast at this; intro h0; apply this; linear_combination h0
-  rw [sigma_mul_tau K m S θ a hm (Pe_ne_zero m S h) (Qo_ne_zero m S h)]
-  unfold mu pp
-  field_simp
+  exact sigma_tau_div_mu' K m S θ a hm (Pe_ne_zero m S h) (Qo_ne_zero m S h) h1 h2 hK
+
+/-- The diagonal is a quartic polynomial. -/
+lemma Dd_eq' (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hP : Pe m S θ (a - 1) ≠ 0)
+    (hQ : Qo m S θ (a - 1) ≠ 0) (h1 : θ + S + 1 + (a - 1) ≠ 0)
+    (h2 : θ + S + 2 * m + 1 + (a - 1) ≠ 0) (hK : (K : F) - a ≠ 0) :
+    Dd K m S θ a = mu K m S θ a - (a * (a + θ)) ^ 2 + gg K m S * (gg K m S + 1) * a ^ 2
+      + gg K m S * cc0 K m θ (gg K m S) * a := by
+  unfold Dd
+  rw [sigma_tau_div_mu' K m S θ (a - 1) hm hP hQ h1 h2 (by intro h0; apply hK; linear_combination h0)]
+  ring
 
 /-- The diagonal is a quartic polynomial. -/
 lemma Dd_eq (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (h : GenAt θ (a - 1)) (hK : (K : F) - a ≠ 0) :
@@ -268,6 +284,10 @@ lemma Qhat_eq (m S : ℕ) (θ a : F) (hm : 1 ≤ m) :
 lemma sigma_mul_Qhat (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hQ : Qo m S θ a ≠ 0) :
     sigma K m S θ a * Qhat m S θ a = pp K θ a * (θ + S + 1 + a) * Pe m S θ a := by
   rw [Qhat_eq m S θ a hm]; unfold sigma; field_simp
+
+lemma Pe_pred_eq_Qhat (m S : ℕ) (θ a : F) : Pe m S θ (a - 1) = Qhat m S θ a := by
+  unfold Pe Qhat
+  exact Finset.prod_congr rfl fun i _ => by ring
 
 /-- `Q̂ · τ(a-1) = p(a-1) · A₀ · P(a)`. -/
 lemma tau_pred_mul_Qhat (K m S : ℕ) (θ a : F) (hm : 1 ≤ m) (hP : Pe m S θ (a - 1) ≠ 0) :
