@@ -109,7 +109,7 @@ lemma dsum_good_p2 {Fr : Frame} (hL : LamData Fr) (hp5 : 5 ≤ p) (s S0 : Finset
 
 section Singular
 
-variable {Fr : Frame} (hL : LamData Fr) (hp5 : 5 ≤ p) {j k : ℕ} (hk : 4 * k = j * p + 1)
+variable {Fr : Frame} (hL : LamData Fr) (_hp5 : 5 ≤ p) {j k : ℕ} (hk : 4 * k = j * p + 1)
   (hj0 : 0 < j) (hjp : j < p) (hk0 : 0 < k) (hkp : k < p)
 
 include hL hk hj0 hjp hk0 hkp
@@ -178,5 +178,117 @@ lemma good_Delta_p {Fr : Frame} (hL : LamData Fr) (hp5 : 5 ≤ p) :
   field_simp
 
 end Prime
+
+/-! ### The entries `Mn` -/
+
+lemma Mn_lt {Fr : Frame} (hL : LamData Fr) {A B : ℕ} (h : A < B) :
+    Fr.Mn A B = 1 / (16 * ((B : ℚ) - A)) * ∑ t ∈ Ioc A B, Fr.Delta t := by
+  unfold Frame.Mn
+  rw [if_neg h.ne, hL.norm_eq, min_eq_left h.le, max_eq_right h.le]
+  have : ((B : ℚ) - A) ≠ 0 := by
+    have : (A : ℚ) < B := by exact_mod_cast h
+    linarith
+  field_simp
+
+lemma Mn_symm {Fr : Frame} (A B : ℕ) : Fr.Mn A B = Fr.Mn B A := by
+  by_cases h : A = B
+  · rw [h]
+  · unfold Frame.Mn
+    rw [if_neg h, if_neg (Ne.symm h), max_comm, min_comm]
+
+lemma Mn_diag {Fr : Frame} (hL : LamData Fr) (A : ℕ) :
+    Fr.Mn A A = -(1 / 16) * ∑ t ∈ Icc 1 A, Fr.Dsq t := by
+  unfold Frame.Mn
+  rw [if_pos rfl, hL.norm_eq]
+
+section Entry
+
+variable {p : ℕ} [Fact p.Prime] {Fr : Frame} (hL : LamData Fr) (hp5 : 5 ≤ p)
+
+include hL hp5
+
+/-- Entry with all `t ∈ (A, B]` regular. -/
+lemma Mn_good0 {A B : ℕ} (h : A < B) (h1 : ∀ t ∈ Ioc A B, 1 ≤ t)
+    (hr : ∀ t ∈ Ioc A B, Reg p t) (hd : ((B : ZMod p) - A) ≠ 0) :
+    Good p (Fr.Mn A B) ((16 * ((B : ZMod p) - A))⁻¹ *
+      ∑ t ∈ Ioc A B, (((t : ℕ) : ZMod p)⁻¹ - 4 * (4 * ((t : ℕ) : ZMod p) - 1)⁻¹)) := by
+  rw [Mn_lt hL h]
+  have h16 : (16 : ZMod p) * ((B : ZMod p) - A) ≠ 0 := by
+    have : (16 : ZMod p) ≠ 0 := by
+      have : (16 : ZMod p) = 4 * 4 := by norm_num
+      rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+    exact mul_ne_zero this hd
+  have g1 : Good p (1 / (16 * ((B : ℚ) - A))) ((16 * ((B : ZMod p) - A))⁻¹) :=
+    ((Good.one (ℓ := p)).div ((Good.ofNat (ℓ := p) 16).mul
+      ((Good.natCast (ℓ := p) B).sub (Good.natCast A))) h16).congr (by simp)
+  exact g1.mul (sum_good_0 hL hp5 _ h1 hr)
+
+/-- `p ·` entry, with a set `S0` of singular indices in `(A, B]`. -/
+lemma Mn_goodP {A B : ℕ} (h : A < B) (S0 : Finset ℕ) (hS0 : S0 ⊆ Ioc A B)
+    (h1 : ∀ t ∈ Ioc A B \ S0, 1 ≤ t) (res : ℕ → ZMod p)
+    (hsing : ∀ t ∈ S0, Good p ((p : ℚ) * Fr.Delta t) (res t))
+    (hr : ∀ t ∈ Ioc A B \ S0, Reg p t) (hd : ((B : ZMod p) - A) ≠ 0) :
+    Good p ((p : ℚ) * Fr.Mn A B) ((16 * ((B : ZMod p) - A))⁻¹ * ∑ t ∈ S0, res t) := by
+  rw [Mn_lt hL h]
+  have h16 : (16 : ZMod p) * ((B : ZMod p) - A) ≠ 0 := by
+    have : (16 : ZMod p) ≠ 0 := by
+      have : (16 : ZMod p) = 4 * 4 := by norm_num
+      rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+    exact mul_ne_zero this hd
+  have g1 : Good p (1 / (16 * ((B : ℚ) - A))) ((16 * ((B : ZMod p) - A))⁻¹) :=
+    ((Good.one (ℓ := p)).div ((Good.ofNat (ℓ := p) 16).mul
+      ((Good.natCast (ℓ := p) B).sub (Good.natCast A))) h16).congr (by simp)
+  have := g1.mul (sum_good_p hL hp5 (Ioc A B) S0 hS0 h1 res hsing hr)
+  exact this.congr' (by ring)
+
+/-- `p² ·` entry with `B - A = p`. -/
+lemma Mn_goodPP {A B : ℕ} (h : A < B) (hBA : B - A = p) (S0 : Finset ℕ) (hS0 : S0 ⊆ Ioc A B)
+    (h1 : ∀ t ∈ Ioc A B \ S0, 1 ≤ t) (res : ℕ → ZMod p)
+    (hsing : ∀ t ∈ S0, Good p ((p : ℚ) * Fr.Delta t) (res t))
+    (hr : ∀ t ∈ Ioc A B \ S0, Reg p t) :
+    Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((16 : ZMod p)⁻¹ * ∑ t ∈ S0, res t) := by
+  rw [Mn_lt hL h]
+  have h16 : (16 : ZMod p) ≠ 0 := by
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+  have hBQ : (B : ℚ) - A = p := by
+    have : B = A + p := by omega
+    rw [this]; push_cast; ring
+  have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have g1 : Good p (1 / (16 : ℚ)) ((16 : ZMod p)⁻¹) :=
+    ((Good.one (ℓ := p)).div (Good.ofNat (ℓ := p) 16) h16).congr (by simp)
+  have := g1.mul (sum_good_p hL hp5 (Ioc A B) S0 hS0 h1 res hsing hr)
+  refine this.congr' ?_
+  rw [hBQ]
+  field_simp
+
+/-- Diagonal entry with all indices regular. -/
+lemma Mn_diag_good0 {A : ℕ} (hr : ∀ t ∈ Icc 1 A, Reg p t) :
+    Good p (Fr.Mn A A) (-(1 / 16) * ∑ t ∈ Icc 1 A,
+      ((((t : ℕ) : ZMod p)⁻¹) ^ 2 - 16 * ((4 * ((t : ℕ) : ZMod p) - 1)⁻¹) ^ 2)) := by
+  rw [Mn_diag hL]
+  have h16 : (16 : ZMod p) ≠ 0 := by
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+  have g1 : Good p (-(1 / 16 : ℚ)) (-(1 / 16)) :=
+    Good.neg ((Good.one (ℓ := p)).div (Good.ofNat (ℓ := p) 16) h16)
+  exact g1.mul (dsum_good_0 hL hp5 _ (fun t ht => (Finset.mem_Icc.1 ht).1) hr)
+
+/-- `p² ·` diagonal entry with singular set `S0`. -/
+lemma Mn_diag_goodP2 {A : ℕ} (S0 : Finset ℕ) (hS0 : S0 ⊆ Icc 1 A)
+    (res : ℕ → ZMod p) (hsing : ∀ t ∈ S0, Good p ((p : ℚ) ^ 2 * Fr.Dsq t) (res t))
+    (hr : ∀ t ∈ Icc 1 A \ S0, Reg p t) :
+    Good p ((p : ℚ) ^ 2 * Fr.Mn A A) (-(1 / 16) * ∑ t ∈ S0, res t) := by
+  rw [Mn_diag hL]
+  have h16 : (16 : ZMod p) ≠ 0 := by
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+  have g1 : Good p (-(1 / 16 : ℚ)) (-(1 / 16)) :=
+    Good.neg ((Good.one (ℓ := p)).div (Good.ofNat (ℓ := p) 16) h16)
+  have := g1.mul (dsum_good_p2 hL hp5 (Icc 1 A) S0 hS0
+    (fun t ht => (Finset.mem_Icc.1 (Finset.mem_sdiff.1 ht).1).1) res hsing hr)
+  exact this.congr' (by ring)
+
+end Entry
 
 end CatalanCore.Arith.Hybrid
