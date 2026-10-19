@@ -270,7 +270,7 @@ def Wn (r m p : ℕ) : ℕ :=
 
 /-- **`Wn` bounds the level-1 tropical exponent** at every prime. -/
 theorem p6_trop_le_Wn {r m p : ℕ} (hp : p.Prime) (hr : 16 ≤ r) (h8 : r ≤ 8 * m)
-    (h8' : 8 * m ≤ r + 8) : tropVal (HW (p6Inst r m).lev p r m) ≤ Wn r m p := by
+    (h8' : 8 * m ≤ r + 9) : tropVal (HW (p6Inst r m).lev p r m) ≤ Wn r m p := by
   unfold Wn
   by_cases h1 : p % 6 = 1
   · have hp2 : p % 2 = 1 := by omega

@@ -38,4 +38,30 @@ theorem pinned_pair_exists (ℓ : ℕ) (h6 : ℓ % 6 = 1) (h60 : ℓ % 60 ≠ 43
   refine ⟨(ℓ - 1) / 6, 3 * ((ℓ - 1) / 6) - 2 * ((3 * ((ℓ - 1) / 6) + 9) / 10),
     (3 * ((ℓ - 1) / 6) + 9) / 10, by omega, by omega, by omega, by omega, by omega, by omega⟩
 
+/-! ### The widened window `r ≤ 8 m ≤ r + 9` (P6GAP): no hole
+
+With slack `W` in place of `8` the condition is `3 t ≤ 10 m ≤ 3 t + W`.  Every residue of `3 t`
+mod 10 is fine iff `W ≥ 9` (the bad residue `3 t ≡ 1` needs `10 m = 3 t + 9`), so `9` is the
+smallest uniform widening of the upper end. -/
+
+/-- every `t` has a member in the widened window iff `W ≥ 9`. -/
+theorem pair_window_wide_iff (W : ℕ) :
+    (∀ t : ℕ, ∃ m : ℕ, 3 * t ≤ 10 * m ∧ 10 * m ≤ 3 * t + W) ↔ 9 ≤ W := by
+  constructor
+  · intro h
+    obtain ⟨m, h1, h2⟩ := h 7
+    omega
+  · intro h t
+    exact ⟨(3 * t + 9) / 10, by omega, by omega⟩
+
+/-- **No hole**: for `ℓ ≡ 1 (mod 6)`, `ℓ ≥ 61`, a member of `r + 2 m = 3 t`, `r ≤ 8 m ≤ r + 9`
+with `1 ≤ m`, `2 m + 1 ≤ t` always exists (including `ℓ ≡ 43 (mod 60)`). -/
+theorem pinned_pair_exists_wide (ℓ : ℕ) (h6 : ℓ % 6 = 1) (hl : 61 ≤ ℓ) :
+    ∃ t r m : ℕ, ℓ = 6 * t + 1 ∧ r + 2 * m = 3 * t ∧ r ≤ 8 * m ∧ 8 * m ≤ r + 9 ∧
+      1 ≤ m ∧ 2 * m + 1 ≤ t ∧ 5 * r ≤ 2 * ℓ ∧ 2 * ℓ ≤ 5 * r + 11 := by
+  refine ⟨(ℓ - 1) / 6, 3 * ((ℓ - 1) / 6) - 2 * ((3 * ((ℓ - 1) / 6) + 9) / 10),
+    (3 * ((ℓ - 1) / 6) + 9) / 10, by omega, by omega, by omega, by omega, by omega, by omega,
+    by omega, by omega⟩
+
+
 end CatalanCore.Rect

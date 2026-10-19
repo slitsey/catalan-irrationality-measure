@@ -90,15 +90,34 @@ theorem p6_hybrid_decay :
     CatalanCore.Cert.SigmaHyb.Inu_le D_le
   rwa [certP6H_ccert] at this
 
-/-- **The P6 second-member decay** on every admissible relation inside `α r ≤ m ≤ α r + 1`. -/
+/-- **The P6 first-member decay** on every relation inside `α r ≤ m ≤ α r + a` (P6GAP). -/
+theorem p6_mem1_decay_slack {a : ℝ} (ha : 0 ≤ a) {A : ℕ → ℕ → Prop}
+    (hA : ∀ r m, A r m → ((1 / 8 : ℚ) : ℝ) * r ≤ m ∧ (m : ℝ) ≤ ((1 / 8 : ℚ) : ℝ) * r + a) :
+    CatalanCore.Rect.Mem1DecayA CatalanFrames.P6.p6Frame A (((37251 / 10000 : ℚ)) : ℝ)
+      (((66510 / 10000 : ℚ)) : ℝ) := by
+  have := CatalanCore.mem1DecayA_of_certG_rect_slack (Fr := CatalanFrames.P6.p6Frame)
+    CatalanCore.Cert.Sigma300.p6_decayOK certP6H (α := 1 / 8) (by norm_num) hg_P6
+    (fun k => wtH_nonneg k) (Rc := 4) (by norm_num) cH_norm
+    CatalanCore.Cert.SigmaHyb.Inu_le D_le ha hA
+  rwa [certP6H_ccert] at this
+
+/-- **The P6 second-member decay** on every relation inside `α r ≤ m ≤ α r + a` (P6GAP). -/
+theorem p6_mem2_decay_slack {a : ℝ} (ha : 0 ≤ a) {A : ℕ → ℕ → Prop}
+    (hA : ∀ r m, A r m → ((1 / 8 : ℚ) : ℝ) * r ≤ m ∧ (m : ℝ) ≤ ((1 / 8 : ℚ) : ℝ) * r + a) :
+    CatalanCore.Rect.Mem2DecayA CatalanFrames.P6.p6Frame A (((37251 / 10000 : ℚ)) : ℝ)
+      (((66510 / 10000 : ℚ)) : ℝ) := by
+  have := CatalanCore.mem2DecayA_of_certG_rect_slack (Fr := CatalanFrames.P6.p6Frame)
+    CatalanCore.Cert.Sigma300.p6_decayOK certP6H (α := 1 / 8) (by norm_num) hg_P6
+    (fun k => wtH_nonneg k) (Rc := 4) (by norm_num) cH_norm
+    CatalanCore.Cert.SigmaHyb.Inu_le D_le (by rw [certP6H_ccert]; norm_num) ha hA
+  rwa [certP6H_ccert] at this
+
+/-- **The P6 second-member decay** on every admissible relation inside `α r ≤ m ≤ α r + 1`
+(the window-`1` case of `p6_mem2_decay_slack`). -/
 theorem p6_mem2_decay_of {A : ℕ → ℕ → Prop}
     (hA : ∀ r m, A r m → ((1 / 8 : ℚ) : ℝ) * r ≤ m ∧ (m : ℝ) ≤ ((1 / 8 : ℚ) : ℝ) * r + 1) :
     CatalanCore.Rect.Mem2DecayA CatalanFrames.P6.p6Frame A (((37251 / 10000 : ℚ)) : ℝ)
-      (((66510 / 10000 : ℚ)) : ℝ) := by
-  have := CatalanCore.mem2DecayA_of_certG_rect_win (Fr := CatalanFrames.P6.p6Frame)
-    CatalanCore.Cert.Sigma300.p6_decayOK certP6H (α := 1 / 8) (by norm_num) hg_P6
-    (fun k => wtH_nonneg k) (Rc := 4) (by norm_num) cH_norm
-    CatalanCore.Cert.SigmaHyb.Inu_le D_le (by rw [certP6H_ccert]; norm_num) hA
-  rwa [certP6H_ccert] at this
+      (((66510 / 10000 : ℚ)) : ℝ) :=
+  p6_mem2_decay_slack zero_le_one hA
 
 end CatalanCore.Cert.SigmaP6H

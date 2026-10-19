@@ -43,7 +43,7 @@ macro "wn_omega" : tactic =>
 
 section Class1
 
-variable {r m : ℕ} (hm1 : r ≤ 8 * m) (hm2 : 8 * m ≤ r + 8) (hr : 100 ≤ r)
+variable {r m : ℕ} (hm1 : r ≤ 8 * m) (hm2 : 8 * m ≤ r + 9) (hr : 100 ≤ r)
 include hm1 hm2 hr
 
 lemma c1_1 : Covers (1 : ZMod 6) (fun p => (Wn r m p : ℝ)) r (mkPiece 1 8 1 4 19 (-8) 40 8) :=
@@ -77,7 +77,7 @@ end Class1
 
 section Class5
 
-variable {r m : ℕ} (hm1 : r ≤ 8 * m) (hm2 : 8 * m ≤ r + 8) (hr : 100 ≤ r)
+variable {r m : ℕ} (hm1 : r ≤ 8 * m) (hm2 : 8 * m ≤ r + 9) (hr : 100 ≤ r)
 include hm1 hm2 hr
 
 lemma c5_1 : Covers (5 : ZMod 6) (fun p => (Wn r m p : ℝ)) r (mkPiece 1 8 1 4 19 (-8) 40 8) :=
@@ -145,22 +145,22 @@ lemma Wn_prefix {r m p : ℕ} (h : p ≤ r / 8) (hc : p % 6 = 1 ∨ p % 6 = 5) :
   unfold Wn Hb; split_ifs <;> omega
 
 lemma prefix_real {r m p : ℕ} {ε : ℝ} (h : p ≤ r / 8) (hc : p % 6 = 1 ∨ p % 6 = 5)
-    (hm2 : 8 * m ≤ r + 8) (hrε : 2 ≤ ε * r) : (Wn r m p : ℝ) ≤ (9 / 4 + ε) * r := by
+    (hm2 : 8 * m ≤ r + 9) (hrε : 3 ≤ ε * r) : (Wn r m p : ℝ) ≤ (9 / 4 + ε) * r := by
   have h1 : (Wn r m p : ℝ) ≤ ((2 * r + 2 * m : ℕ) : ℝ) := by exact_mod_cast Wn_prefix h hc
-  have h2 : (8 * m : ℝ) ≤ r + 8 := by exact_mod_cast hm2
+  have h2 : (8 * m : ℝ) ≤ r + 9 := by exact_mod_cast hm2
   push_cast at h1
   nlinarith
 
-theorem class1_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 8) {ε : ℝ}
+theorem class1_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 9) {ε : ℝ}
     (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, clsSum 6 1 (fun p => (Wn r (mf r) p : ℝ)) 0 (4 * r) ≤
       (r : ℝ) ^ 2 * ((1949 / 512 + ε / 8) / 2 + ε / 4) := by
   have h := class_total (M := 6) (c := 1) isUnit_one (α0 := 9 / 4 + ε) (t1 := 1 / 8)
     (by positivity) (by norm_num) lp1 lp1_chain (ε := ε / 4) (by positivity)
-  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2 / ε⌉₊] with r hr hr100 hrε
-  have hε2 : 2 ≤ ε * r := by
-    have := Nat.le_ceil (2 / ε)
-    have h2 : (2 / ε) ≤ (r : ℝ) := this.trans (by exact_mod_cast hrε)
+  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈3 / ε⌉₊] with r hr hr100 hrε
+  have hε2 : 3 ≤ ε * r := by
+    have := Nat.le_ceil (3 / ε)
+    have h2 : (3 / ε) ≤ (r : ℝ) := this.trans (by exact_mod_cast hrε)
     rwa [div_le_iff₀ hε, mul_comm] at h2
   obtain ⟨hm1, hm2⟩ := hadm r
   have := hr (fun p => (Wn r (mf r) p : ℝ)) (by
@@ -180,16 +180,16 @@ theorem class1_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 *
   rw [e, e2] at this
   simpa using this
 
-theorem class5_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 8) {ε : ℝ}
+theorem class5_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 9) {ε : ℝ}
     (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, clsSum 6 5 (fun p => (Wn r (mf r) p : ℝ)) 0 (3 * r) ≤
       (r : ℝ) ^ 2 * ((1123 / 384 + ε / 8) / 2 + ε / 4) := by
   have h := class_total (M := 6) (c := 5) (by decide) (α0 := 9 / 4 + ε) (t1 := 1 / 8)
     (by positivity) (by norm_num) lp5 lp5_chain (ε := ε / 4) (by positivity)
-  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2 / ε⌉₊] with r hr hr100 hrε
-  have hε2 : 2 ≤ ε * r := by
-    have := Nat.le_ceil (2 / ε)
-    have h2 : (2 / ε) ≤ (r : ℝ) := this.trans (by exact_mod_cast hrε)
+  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈3 / ε⌉₊] with r hr hr100 hrε
+  have hε2 : 3 ≤ ε * r := by
+    have := Nat.le_ceil (3 / ε)
+    have h2 : (3 / ε) ≤ (r : ℝ) := this.trans (by exact_mod_cast hrε)
     rwa [div_le_iff₀ hε, mul_comm] at h2
   obtain ⟨hm1, hm2⟩ := hadm r
   have := hr (fun p => (Wn r (mf r) p : ℝ)) (by
@@ -214,18 +214,18 @@ theorem class5_total_p6 (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 *
 /-- the class cutoffs -/
 def Rp6 (r : ℕ) (c : ZMod 6) : ℕ := if c = 1 then 4 * r else 3 * r
 
-lemma Wn_tail1 {r m p : ℕ} (hp : p % 6 = 1) (h : 4 * r < p) (h8 : r ≤ 8 * m) (h8' : 8 * m ≤ r + 8)
+lemma Wn_tail1 {r m p : ℕ} (hp : p % 6 = 1) (h : 4 * r < p) (h8 : r ≤ 8 * m) (h8' : 8 * m ≤ r + 9)
     (hr : 100 ≤ r) : Wn r m p = 0 := by
   have hk := kq6_cases p
   unfold Wn Sv; split_ifs <;> omega
 
-lemma Wn_tail5 {r m p : ℕ} (hp : p % 6 = 5) (h : 3 * r < p) (h8 : r ≤ 8 * m) (h8' : 8 * m ≤ r + 8)
+lemma Wn_tail5 {r m p : ℕ} (hp : p % 6 = 5) (h : 3 * r < p) (h8 : r ≤ 8 * m) (h8' : 8 * m ≤ r + 9)
     (hr : 100 ≤ r) : Wn r m p = 0 := by
   have hk := kq6_cases p
   unfold Wn Sv; split_ifs <;> omega
 
 /-- **The piece summation**: `∑_{c ∈ {1,5}} clsSum ≤ (10339/3072 + ε) r²`. -/
-theorem p6_hsum (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 8) :
+theorem p6_hsum (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 9) :
     ∀ ε > 0, ∀ᶠ r : ℕ in atTop,
       ∑ c ∈ ({1, 5} : Finset (ZMod 6)), clsSum 6 c (fun p => (Wn r (mf r) p : ℝ)) 0 (Rp6 r c) ≤
         (10339 / 3072 + ε) * (r : ℝ) ^ 2 := by
@@ -237,8 +237,8 @@ theorem p6_hsum (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r �
   have hr2 : 0 ≤ (r : ℝ) ^ 2 := by positivity
   nlinarith
 
-/-- **P6 content statement, member 1, `Λ = 10339/3072`**, for any admissible `m` (`r ≤ 8m ≤ r + 8`). -/
-theorem p6_content (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 8) : P6ContentStmt mf := by
+/-- **P6 content statement, member 1, `Λ = 10339/3072`**, for any `m` with `r ≤ 8m ≤ r + 9`. -/
+theorem p6_content (mf : ℕ → ℕ) (hadm : ∀ r, r ≤ 8 * mf r ∧ 8 * mf r ≤ r + 9) : P6ContentStmt mf := by
   refine p6_content_of_pieces mf ?_ Rp6 (fun r p => (Wn r (mf r) p : ℝ)) (fun r p => Nat.cast_nonneg _)
     ?_ ?_ (p6_hsum mf hadm)
   · filter_upwards [eventually_ge_atTop 2] with r hr
