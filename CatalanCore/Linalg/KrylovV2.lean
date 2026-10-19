@@ -69,4 +69,36 @@ theorem bkdet_mul_transpose {m n' : ℕ} (W : Matrix (Fin (m + (n' + 1))) (Fin m
   rw [bkdet, h]
   simpa [det_diagOne, kdet, mul_comm] using this
 
+
+/-! ### The abstract diagonal step (H4, formal part) -/
+
+section DS
+
+variable {m n : ℕ} {W : Matrix (Fin (m + n)) (Fin m) F}
+  {A T A' T' : Matrix (Fin (m + n)) (Fin (m + n)) F}
+
+/-- **Diagonal step, abstract form.**  If `A' = A + v₀ φᵀ` (rank-one update along the start vector
+`v₀` of `A'`), `(A, T)` and `(A', T')` are pairs of bordered-commuting operators with cyclic
+vectors `v₀, vS`, then
+`u(A, v_S) · u(T, v₀) · u(T', v_S) = u(A', v_S) · u(T, v_S) · u(T', v₀)`. -/
+theorem bkdet_ds (hA : ∀ x ∈ Wsp W, A *ᵥ x ∈ Wsp W) (hT : ∀ x ∈ Wsp W, T *ᵥ x ∈ Wsp W)
+    (hc : ∀ x, (A * T - T * A) *ᵥ x ∈ Wsp W)
+    (hA' : ∀ x ∈ Wsp W, A' *ᵥ x ∈ Wsp W) (hT' : ∀ x ∈ Wsp W, T' *ᵥ x ∈ Wsp W)
+    (hc' : ∀ x, (A' * T' - T' * A') *ᵥ x ∈ Wsp W)
+    (v0 vS c : Fin (m + n) → F) (hAA : A' = A + Matrix.vecMulVec v0 c)
+    (hcyc : bkdet W T v0 ≠ 0) (hcyc' : bkdet W T' v0 ≠ 0) :
+    bkdet W A vS * bkdet W T v0 * bkdet W T' vS =
+      bkdet W A' vS * bkdet W T vS * bkdet W T' v0 := by
+  have h1 := bkdet_cross_ratio hA hT hc hcyc vS v0
+  have h2 := bkdet_cross_ratio hA' hT' hc' hcyc' vS v0
+  have h3 : bkdet W A' v0 = bkdet W A v0 := by
+    rw [hAA]; exact bkdet_add_vecMulVec hA c v0
+  calc bkdet W A vS * bkdet W T v0 * bkdet W T' vS
+      = (bkdet W A v0 * bkdet W T vS) * bkdet W T' vS := by rw [h1]
+    _ = bkdet W A' v0 * bkdet W T' vS * bkdet W T vS := by rw [← h3]; ring
+    _ = (bkdet W A' vS * bkdet W T' v0) * bkdet W T vS := by rw [h2]
+    _ = bkdet W A' vS * bkdet W T vS * bkdet W T' v0 := by ring
+
+end DS
+
 end CatalanCore
