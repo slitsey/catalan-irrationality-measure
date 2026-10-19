@@ -31,10 +31,10 @@ lemma mir_tail3 (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hm : p % 4 = 3) (ht :
   have := XG_D6 mirN_tropFacts r p hp h5 (by omega) (by omega)
   omega
 
-lemma mir_g_sum_eq (r B : ℕ) :
+lemma mir_g_sum_eq (w : ℕ → ℝ) (B : ℕ) :
     ∑ p ∈ (Finset.range (B + 1)).filter Nat.Prime,
-        (if p = 2 then (0 : ℝ) else WG mirNInst r p * Real.log p) =
-      clsSum 4 (1 : ZMod 4) (WG mirNInst r) 0 B + clsSum 4 (3 : ZMod 4) (WG mirNInst r) 0 B := by
+        (if p = 2 then (0 : ℝ) else w p * Real.log p) =
+      clsSum 4 (1 : ZMod 4) w 0 B + clsSum 4 (3 : ZMod 4) w 0 B := by
   have hset : (Finset.range (B + 1)).filter Nat.Prime = (Finset.Ioc 0 B).filter Nat.Prime := by
     ext p
     simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ioc]
@@ -60,24 +60,28 @@ lemma log3_le : Real.log 3 ≤ 2 * Real.log 2 := by
   exact Real.log_le_log (by norm_num) (by norm_num)
 
 /-- **Level-1 plus negligible terms (mirror).** -/
-theorem mir_log_Dhyb_le (r : ℕ) (hr : 4 ≤ r) :
-    Real.log (Dhyb mirNInst r (r / 8)) ≤ 3 * extraBound r (r / 8) +
-      clsSum 4 (1 : ZMod 4) (WG mirNInst r) 0 (5 * r) +
-      clsSum 4 (3 : ZMod 4) (WG mirNInst r) 0 (5 * r / 3) := by
+theorem mir_sum_le (r : ℕ) (hr : 4 ≤ r) (T : ℕ → ℕ) (w : ℕ → ℝ) (hw0 : ∀ p, 0 ≤ w p)
+    (hT : ∀ p, p.Prime → (T p : ℝ) ≤ (if p = 2 then mirEx2 r else 0) +
+      (if p = 3 then mirEx3 r else 0) + ((2 * (r + r / 8) * cntM r (r / 8) p : ℕ) : ℝ) +
+      (if p = 2 ∨ p = 3 then 0 else w p))
+    (ht1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 1 → 5 * r < p → w p = 0)
+    (ht3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 3 → 5 * r / 3 < p → w p = 0) :
+    ∑ p ∈ (Finset.range (4 * (r + 2 * (r / 8)) + 6)).filter Nat.Prime, (T p : ℝ) * Real.log p ≤
+      3 * extraBound r (r / 8) + clsSum 4 (1 : ZMod 4) w 0 (5 * r) +
+      clsSum 4 (3 : ZMod 4) w 0 (5 * r / 3) := by
   set m := r / 8 with hm
-  rw [log_Dhyb, mir_Bnd]
   set P := (Finset.range (4 * (r + 2 * m) + 6)).filter Nat.Prime with hP
   set P5 := (Finset.range (4 * (r + 2 * m) + 5)).filter Nat.Prime with hP5
   have hlogpos : ∀ p ∈ P, 0 ≤ Real.log p := fun p hp =>
     Real.log_nonneg (by exact_mod_cast (Finset.mem_filter.mp hp).2.one_lt.le)
-  have hpt : ∀ p ∈ P, (tropExp mirNInst r m p : ℝ) * Real.log p ≤
+  have hpt : ∀ p ∈ P, (T p : ℝ) * Real.log p ≤
       (((if p = 2 then mirEx2 r else 0) + ((2 * (r + r / 8) * cntM r m p : ℕ) : ℝ)) * Real.log p) +
         ((if p = 3 then mirEx3 r * Real.log 3 else 0) +
-          (if p = 2 ∨ p = 3 then 0 else WG mirNInst r p * Real.log p)) := by
+          (if p = 2 ∨ p = 3 then 0 else w p * Real.log p)) := by
     intro p hp
     have hpp := (Finset.mem_filter.mp hp).2
     have hlog : 0 ≤ Real.log p := Real.log_nonneg (by exact_mod_cast hpp.one_lt.le)
-    have h := tropExp_mir_le r p (by omega) hpp
+    have h := hT p hpp
     have e3 : (if p = 3 then mirEx3 r else 0) * Real.log p =
         if p = 3 then mirEx3 r * Real.log 3 else 0 := by
       split_ifs with h3
@@ -183,16 +187,16 @@ theorem mir_log_Dhyb_le (r : ℕ) (hr : 4 ≤ r) :
       _ = 2 * (mirEx2 r * Real.log 2) := by ring
       _ ≤ 2 * extraBound r m := by linarith
   -- the level-1 sums
-  have hg : ∑ p ∈ P, (if p = 2 ∨ p = 3 then 0 else WG mirNInst r p * Real.log p) ≤
-      clsSum 4 (1 : ZMod 4) (WG mirNInst r) 0 (5 * r) +
-        clsSum 4 (3 : ZMod 4) (WG mirNInst r) 0 (5 * r / 3) := by
-    have hle : ∑ p ∈ P, (if p = 2 ∨ p = 3 then 0 else WG mirNInst r p * Real.log p) ≤
-        ∑ p ∈ P, (if p = 2 then (0 : ℝ) else WG mirNInst r p * Real.log p) := by
+  have hg : ∑ p ∈ P, (if p = 2 ∨ p = 3 then 0 else w p * Real.log p) ≤
+      clsSum 4 (1 : ZMod 4) w 0 (5 * r) +
+        clsSum 4 (3 : ZMod 4) w 0 (5 * r / 3) := by
+    have hle : ∑ p ∈ P, (if p = 2 ∨ p = 3 then 0 else w p * Real.log p) ≤
+        ∑ p ∈ P, (if p = 2 then (0 : ℝ) else w p * Real.log p) := by
       apply Finset.sum_le_sum
       intro p hp
       have hpp := (Finset.mem_filter.mp hp).2
       have hlog : 0 ≤ Real.log p := Real.log_nonneg (by exact_mod_cast hpp.one_lt.le)
-      have hW := mirW_nonneg r p
+      have hW := hw0 p
       by_cases h2 : p = 2
       · simp [h2]
       · by_cases h3 : p = 3
@@ -200,20 +204,29 @@ theorem mir_log_Dhyb_le (r : ℕ) (hr : 4 ≤ r) :
         · simp [h2, h3]
     refine hle.trans ?_
     have hPe : P = (Finset.range (4 * (r + 2 * m) + 5 + 1)).filter Nat.Prime := rfl
-    rw [hPe, mir_g_sum_eq r (4 * (r + 2 * m) + 5)]
-    have t1 := clsSum_le_of_tail (M := 4) (1 : ZMod 4) (WG mirNInst r) (mirW_nonneg r)
+    rw [hPe, mir_g_sum_eq w (4 * (r + 2 * m) + 5)]
+    have t1 := clsSum_le_of_tail (M := 4) (1 : ZMod 4) w hw0
       (B := 4 * (r + 2 * m) + 5) (B' := 5 * r) (by
         intro p hp1 hpp hpc
         have h1 := cls4_mod1 hpc
-        have : XG mirNInst r p = 0 := mir_tail1 r p hpp (by omega) h1 hp1
-        simp [WG, this])
-    have t3 := clsSum_le_of_tail (M := 4) (3 : ZMod 4) (WG mirNInst r) (mirW_nonneg r)
+        exact ht1 p hpp (by omega) h1 hp1)
+    have t3 := clsSum_le_of_tail (M := 4) (3 : ZMod 4) w hw0
       (B := 4 * (r + 2 * m) + 5) (B' := 5 * r / 3) (by
         intro p hp1 hpp hpc
         have h3 := cls4_mod3 hpc
-        have : XG mirNInst r p = 0 := mir_tail3 r p hpp (by omega) h3 hp1
-        simp [WG, this])
+        exact ht3 p hpp (by omega) h3 hp1)
     linarith
   linarith
+
+/-- **Level-1 plus negligible terms (mirror).** -/
+theorem mir_log_Dhyb_le (r : ℕ) (hr : 4 ≤ r) :
+    Real.log (Dhyb mirNInst r (r / 8)) ≤ 3 * extraBound r (r / 8) +
+      clsSum 4 (1 : ZMod 4) (WG mirNInst r) 0 (5 * r) +
+      clsSum 4 (3 : ZMod 4) (WG mirNInst r) 0 (5 * r / 3) := by
+  rw [log_Dhyb, mir_Bnd]
+  exact mir_sum_le r hr (tropExp mirNInst r (r / 8)) (WG mirNInst r) (mirW_nonneg r)
+    (fun p hp => tropExp_mir_le r p (by omega) hp)
+    (fun p hp h5 hm ht => by rw [WG, mir_tail1 r p hp h5 hm ht]; simp)
+    (fun p hp h5 hm ht => by rw [WG, mir_tail3 r p hp h5 hm ht]; simp)
 
 end CatalanFrames.LambdaMirrorHybrid
