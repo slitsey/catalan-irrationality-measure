@@ -27,7 +27,7 @@ theorem card_eq_one_eq (M B F : Matrix (Fin n) (Fin n) L) (μ : Fin n → L)
       by_cases hab : a = b
       · subst hab; simp
       · simp [hab]
-    rw [this, Matrix.mul_sub, Matrix.mul_one, Matrix.mul_sub, Matrix.mul_one]
+    rw [this, Matrix.mul_sub, Matrix.mul_one, Matrix.mul_sub]
   have hBF : IsUnit (B * F).det := by rw [Matrix.det_mul]; exact hB.mul hF
   have h2 : (M - B).rank = (diagonal (fun i => μ i - 1)).rank := by
     rw [← rank_mul_eq_left_of_isUnit_det F _ hF, h1, rank_mul_eq_right_of_isUnit_det _ _ hBF]

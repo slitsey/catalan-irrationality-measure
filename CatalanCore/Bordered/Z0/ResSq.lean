@@ -170,7 +170,7 @@ theorem sum_res_sq_eq_zero (x : ι → F) (hx : Function.Injective x)
     ring
   have hsum : ∑ a, α a = 0 := by
     have h1 : E.coeff (2 * N - 1) = 0 := by rw [hE0]; simp
-    rw [hE, coeff_sub, finset_sum_coeff, coeff_eq_zero_of_natDegree_lt (by omega)] at h1
+    rw [hE, coeff_sub, finsetSum_coeff, coeff_eq_zero_of_natDegree_lt (by omega)] at h1
     simp only [hcoef] at h1
     simpa using h1
   rw [← hsum]
@@ -221,7 +221,7 @@ theorem sum_res_eq_zero (x : ι → F) (hx : Function.Injective x)
     rw [hE]; omega
   have hE0 : E = 0 := eq_zero_of_natDegree_lt_card_of_eval_eq_zero E hx hEv hEdeg
   have h1 : E.coeff (N - 1) = 0 := by rw [hE0]; simp
-  rw [hE, coeff_sub, finset_sum_coeff, coeff_eq_zero_of_natDegree_lt (by omega)] at h1
+  rw [hE, coeff_sub, finsetSum_coeff, coeff_eq_zero_of_natDegree_lt (by omega)] at h1
   have hc : ∀ a, (C (G.eval (x a) / P a) * q a).coeff (N - 1) = G.eval (x a) / P a := by
     intro a
     rw [coeff_C_mul, ← hqdeg a, (hqmon a).coeff_natDegree, mul_one]
