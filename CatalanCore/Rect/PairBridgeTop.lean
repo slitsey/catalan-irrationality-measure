@@ -110,3 +110,17 @@ theorem mem2Content_of_top (I : HybInst Fr) {Λ : ℝ}
     exact hlog
 
 end CatalanCore.Rect
+
+namespace CatalanCore.Arith.Hybrid
+
+/-- Replace the deficit by `δ₂` on the set `S` (bordered twin of `DefHypT.glue`). -/
+lemma DefHypTop.glue {Fr : Frame} {I : HybInst Fr} {r m : ℕ} {T δ₁ δ₂ : ℕ → ℕ}
+    (S : ℕ → Prop) [DecidablePred S]
+    (h1 : DefHypTop I r m T δ₁) (h2 : DefHypTop I r m T δ₂) :
+    DefHypTop I r m T (fun p => if S p then δ₂ p else δ₁ p) := by
+  intro p hp hb _
+  by_cases hS : S p
+  · simpa only [if_pos hS] using h2 p hp hb
+  · simpa only [if_neg hS] using h1 p hp hb
+
+end CatalanCore.Arith.Hybrid
