@@ -59,6 +59,34 @@ theorem defAt_B {B0 B1 X Y D : Type} [Fintype B0] [Fintype B1] [Fintype X] [Fint
     ((BbarB A0 V π Gx Gy).submatrix e e') hred (m - Fintype.card D) hk ?_
   rw [Matrix.rank_submatrix _ e e']
   omega
+theorem gleAt_B {B0 B1 X Y D : Type} [Fintype B0] [Fintype B1] [Fintype X] [Fintype Y]
+    [Fintype D] [DecidableEq B0] [DecidableEq B1] [DecidableEq X] [DecidableEq Y]
+    [DecidableEq D]
+    (hB0 : Fintype.card B1 + Fintype.card B0 = r) (_hX : Fintype.card X = m)
+    (hY : Fintype.card Y = m) (hdm : Fintype.card D ≤ m)
+    (e : Fin r ⊕ Fin m ≃ (B0 ⊕ X) ⊕ B1) (e' : Fin r ⊕ Fin m ≃ (B0 ⊕ Y) ⊕ B1)
+    (u v : Fin r ⊕ Fin m → ℕ)
+    (A0 : Matrix B0 B0 (RatFunc (ZMod p))) (V : Matrix B0 B1 (RatFunc (ZMod p)))
+    (π s0 κ lam σ : RatFunc (ZMod p)) (hπ : π ≠ 0) (hs0 : s0 ≠ 0) (E : Matrix B0 D (RatFunc (ZMod p)))
+    (hS : A0 - π⁻¹ • (V * Vᵀ) = s0 • (1 : Matrix B0 B0 _) - κ • (E * Eᵀ))
+    (Gx : Matrix X B0 (RatFunc (ZMod p))) (Gy : Matrix B0 Y (RatFunc (ZMod p)))
+    (lowX : X → Prop) (lowY : Y → Prop) [DecidablePred lowX] [DecidablePred lowY]
+    (iX : X → D) (iY : Y → D) (cX : X → B0) (cY : Y → B0)
+    (hGx : ∀ x w, Gx x w = if lowX x then -lam * E w (iX x) else (if w = cX x then σ else 0))
+    (hGy : ∀ w y, Gy w y = if lowY y then -lam * E w (iY y) else (if w = cY y then σ else 0))
+    (hdisj : ∀ x y, lowX x → lowY y → iX x ≠ iY y)
+    (hc : ∀ x y, ¬ lowX x → ¬ lowY y → cX x ≠ cY y)
+    (hred : ∀ a b, ∃ g : (LocRing p)[X],
+      toQ p g = C ((p : ℚ) ^ (u a + v b)) * fullEntry Fr r m a b ∧
+        phiP p g = BbarB A0 V π Gx Gy (e a) (e' b)) :
+    GLE p (∑ a, u a + ∑ b, v b - (m - Fintype.card D)) (Fr.fullPoly r m) := by
+  have hrank := rank_BbarB_le A0 V π s0 κ lam σ hπ hs0 E hS Gx Gy lowX lowY iX iY cX cY hGx hGy
+    hdisj hc
+  refine gle_full_of_rank p Fr r m u v ((BbarB A0 V π Gx Gy).submatrix e e') hred
+    (m - Fintype.card D) ?_
+  rw [Matrix.rank_submatrix _ e e']
+  omega
+
 end B
 
 section C5

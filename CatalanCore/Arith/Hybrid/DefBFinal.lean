@@ -83,17 +83,13 @@ lemma zone_shape (S : BSetup p r m j k) {d : ℕ} (hd : d = p - r) (hd0 : 0 < d)
         omega
       rw [if_neg this, if_neg hw, rfC_zero]
 
-/-- **Theorem B at a prime** `r < p < r + m` (λ-like frame): deficit `m - (p - r) = r + m - p`,
-relative to tropically optimal weights `uPot` (hypothesis `hopt`). -/
-theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
-    (S : BSetup p r m j k) (hpm : p < r + m)
-    (hopt : ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤
-      tropExp I r m p)
-    (hk' : m - (p - r) ≤ ∑ a, uPot p r k (Frame.hybRow r m a) +
-      ∑ b, uPot p r k (Frame.hybCol r m b)) :
-    m - (p - r) ≤ tropExp I r m p ∧
-      GLE p (tropExp I r m p - (m - (p - r))) (Fr.fullPoly r m) := by
-  classical
+/-- **Theorem B at a prime `r < p < r + m`, in dual form** (λ-like frame): with `τ' = ∑u + ∑v` the
+value of the D4 potentials, `p^{τ' - (r + m - p)} · det Full(X)` is `ℤ_(p)`-integral.  No
+primal optimality is needed. -/
+theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
+    (S : BSetup p r m j k) (hpm : p < r + m) :
+    GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
+      (m - (p - r))) (Fr.fullPoly r m) := by
   have hrp := S.hrp
   have hp5 := S.p5
   have hk0 := S.hk0
@@ -148,11 +144,11 @@ theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
     by_cases h : r + 2 * (y : ℕ) + 1 < p
     · exact Or.inl h
     · exact Or.inr (cXf_val _ (by omega) (by omega))
-  have key := defAt_B I r m p (B0 := Blk0 r k) (B1 := Blk1 r k) (X := Fin m) (Y := Fin m)
+  have key := gleAt_B (Fr := Fr) r m p (B0 := Blk0 r k) (B1 := Blk1 r k) (X := Fin m) (Y := Fin m)
     (D := Fin d) (by have := card_blk r k; omega) (Fintype.card_fin m) (Fintype.card_fin m)
     (by simpa using hdm) (eB r m k) (eB r m k)
     (fun a => uPot p r k (Frame.hybRow r m a)) (fun b => uPot p r k (Frame.hybCol r m b))
-    hopt (by rw [Fintype.card_fin, hd]; exact hk') (A0L p r j k) (VL p r j k) (piL p j) (s0L p k) (κL p)
+    (A0L p r j k) (VL p r j k) (piL p j) (s0L p k) (κL p)
     (rfC p (-(4 * ((j : ℕ) : ZMod p))⁻¹))
     (rfC p ((16 : ZMod p)⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹) + 1))) hpi hs0 (EL p r k d)
     (hS_L p r j k hp5 hk4 hjz hrd hkr) (GxL p r m j k) (GyL p r m j k)
@@ -181,6 +177,19 @@ theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
   · intro a b
     obtain ⟨g, h1, h2⟩ := hred_B hL S a b
     exact ⟨g, h1, h2.trans (BT_eq p r m j k hkr a b).symm⟩
+
+
+/-- **Theorem B at a prime `r < p < r + m`** in the `tropExp` form of `DefHyp`, assuming the D4
+weights are tropically optimal (`hopt`). -/
+theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
+    (S : BSetup p r m j k) (hpm : p < r + m)
+    (hopt : ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤
+      tropExp I r m p)
+    (hk' : m - (p - r) ≤ ∑ a, uPot p r k (Frame.hybRow r m a) +
+      ∑ b, uPot p r k (Frame.hybCol r m b)) :
+    m - (p - r) ≤ tropExp I r m p ∧
+      GLE p (tropExp I r m p - (m - (p - r))) (Fr.fullPoly r m) :=
+  ⟨hk'.trans hopt, (gleAt_B_lam hL S hpm).mono (by omega)⟩
 
 end
 
