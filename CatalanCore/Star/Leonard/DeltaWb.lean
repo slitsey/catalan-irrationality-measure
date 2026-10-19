@@ -32,12 +32,12 @@ lemma Wb_bY_eq_Cm (K m S : ℕ) (θ : F) :
   congr 1
   push_cast; ring
 
-lemma Gen_add_nat {θ : F} (h : Gen θ) (S : ℕ) : Gen (θ + (S : F)) := fun z => by
-  have := h ((S : ℤ) + z)
+lemma Gen_add_nat {θ : F} (h : GenP θ) (S : ℕ) : GenP (θ + (S : F)) := fun z hz => by
+  have := h ((S : ℤ) + z) (by omega)
   intro h0; apply this; push_cast; linear_combination h0
 
 /-- **Prop hDelta, reduced to `det E`.** -/
-theorem Delta_eq_E (K m S : ℕ) (θ : F) (hθ : Gen θ) :
+theorem Delta_eq_E (K m S : ℕ) (θ : F) (hθ : GenP θ) :
     ((Wb K θ (bX m (S : ℤ)))ᵀ * Wb K θ (bY m (S : ℤ))).det =
       Vprod (xsθ (θ + (S : F)) m) * Vprod (ysθ (θ + (S : F)) m) *
         (Matrix.of fun (p q : Fin m) => ∑ a : Fin K,

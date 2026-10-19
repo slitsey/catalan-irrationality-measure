@@ -23,6 +23,11 @@ namespace CatalanCore.Star.Leonard
 
 variable {F : Type*} [Field F]
 
+/-- `θ + z ≠ 0` for every positive integer `z` (weaker than `Gen`; holds at `θ = 0`). -/
+def GenP (θ : F) : Prop := ∀ z : ℤ, 1 ≤ z → θ + (z : F) ≠ 0
+
+lemma Gen.genP {θ : F} (h : Gen θ) : GenP θ := fun z _ => h z
+
 /-- coefficient matrix of monic polynomials `φ_p` (`p < m`): `L p k = coeff k` -/
 noncomputable def coefMat {m : ℕ} (φ : Fin m → F[X]) : Matrix (Fin m) (Fin m) F :=
   Matrix.of fun p k => (φ p).coeff k
@@ -180,11 +185,11 @@ lemma rho_eq_inv (θ : F) (m a : ℕ) :
     Finset.prod_congr rfl fun j _ => by ring, prod_pairs]
 
 /-- **Step (3b).**  `ρ(a) φ_p(a) ψ_q(a) = 1/(a+θ+p+1)_{2m-p-q}`. -/
-lemma entry_eq (θ : F) (hθ : Gen θ) (m p q : ℕ) (hp : p < m) (hq : q < m) (a : ℕ) :
+lemma entry_eq (θ : F) (hθ : GenP θ) (m p q : ℕ) (hp : p < m) (hq : q < m) (a : ℕ) :
     rho (xsθ θ m) (ysθ θ m) a * (phiPoly θ p).eval (a : F) * (psiPoly θ m q).eval (a : F) =
       (pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q))⁻¹ := by
-  have hg : ∀ z : ℤ, (a : F) + θ + (z : F) ≠ 0 := fun z h => by
-    have := hθ ((a : ℤ) + z); push_cast at this; apply this; linear_combination h
+  have hg : ∀ z : ℤ, 1 ≤ z → (a : F) + θ + (z : F) ≠ 0 := fun z hz h => by
+    have := hθ ((a : ℤ) + z) (by omega); push_cast at this; apply this; linear_combination h
   rw [rho_eq_inv]
   have hsplit : ∏ i ∈ Finset.range (2 * m), ((a : F) + θ + 1 + (i : F)) =
       (phiPoly θ p).eval (a : F) * pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q) *
@@ -212,34 +217,34 @@ lemma entry_eq (θ : F) (hθ : Gen θ) (m p q : ℕ) (hp : p < m) (hq : q < m) (
     simp only [phiPoly, Polynomial.eval_prod, Polynomial.eval_add, Polynomial.eval_X,
       Polynomial.eval_C]
     refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
-    have := hg (1 + (i : ℤ)); push_cast at this
+    have := hg (1 + (i : ℤ)) (by omega); push_cast at this
     intro h; apply this; linear_combination h
   have hP3 : (psiPoly θ m q).eval (a : F) ≠ 0 := by
     simp only [psiPoly, Polynomial.eval_prod, Polynomial.eval_add, Polynomial.eval_X,
       Polynomial.eval_C]
     refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
-    have := hg (((2 * m - q : ℕ) : ℤ) + 1 + (i : ℤ)); push_cast at this
+    have := hg (((2 * m - q : ℕ) : ℤ) + 1 + (i : ℤ)) (by omega); push_cast at this
     intro h; apply this; linear_combination h
   have hMid : pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q) ≠ 0 := by
     refine pochr_ne_zero _ _ fun i _ => ?_
-    have := hg ((p : ℤ) + 1 + (i : ℤ)); push_cast at this
+    have := hg ((p : ℤ) + 1 + (i : ℤ)) (by omega); push_cast at this
     intro h; apply this; linear_combination h
   field_simp
 
 /-- **Prop hDelta, steps (1)–(3):** `Δ = V(x) V(y) · det[∑_{a<K} 1/(a+θ+p+1)_{2m-p-q}]_{p,q<m}`. -/
-theorem delta_E (θ : F) (hθ : Gen θ) (K m : ℕ) :
+theorem delta_E (θ : F) (hθ : GenP θ) (K m : ℕ) :
     ((Cm K (xsθ θ m))ᵀ * Cm K (ysθ θ m)).det =
       Vprod (xsθ θ m) * Vprod (ysθ θ m) *
         (Matrix.of fun (p q : Fin m) => ∑ a : Fin K,
           (pochr (((a : ℕ) : F) + θ + ((p : ℕ) : F) + 1) (2 * m - (p : ℕ) - (q : ℕ)))⁻¹).det := by
-  have hg : ∀ (a : ℕ) (z : ℤ), (a : F) + θ + (z : F) ≠ 0 := fun a z h => by
-    have := hθ ((a : ℤ) + z); push_cast at this; apply this; linear_combination h
+  have hg : ∀ (a : ℕ) (z : ℤ), 1 ≤ z → (a : F) + θ + (z : F) ≠ 0 := fun a z hz h => by
+    have := hθ ((a : ℤ) + z) (by omega); push_cast at this; apply this; linear_combination h
   rw [delta_eq_hankel (xsθ θ m) (ysθ θ m)
     (fun a i => by
-      have := hg (a : ℕ) (2 + 2 * ((i : ℕ) : ℤ)); push_cast at this
+      have := hg (a : ℕ) (2 + 2 * ((i : ℕ) : ℤ)) (by omega); push_cast at this
       intro h; apply this; simp only [xsθ] at h; linear_combination h)
     (fun a i => by
-      have := hg (a : ℕ) (1 + 2 * ((i : ℕ) : ℤ)); push_cast at this
+      have := hg (a : ℕ) (1 + 2 * ((i : ℕ) : ℤ)) (by omega); push_cast at this
       intro h; apply this; simp only [ysθ] at h; linear_combination h)]
   congr 1
   rw [← hankel_basis_change (fun a : Fin K => rho (xsθ θ m) (ysθ θ m) (a : ℕ))

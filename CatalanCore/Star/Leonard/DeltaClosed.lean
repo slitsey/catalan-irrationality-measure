@@ -22,9 +22,9 @@ noncomputable def Emat (θ : F) (K m : ℕ) : Matrix (Fin m) (Fin m) F :=
   Matrix.of fun (p q : Fin m) => ∑ a : Fin K,
     (pochr (((a : ℕ) : F) + θ + ((p : ℕ) : F) + 1) (2 * m - (p : ℕ) - (q : ℕ)))⁻¹
 
-lemma pochr_one_ne (θ : F) (hθ : Gen θ) (L : ℕ) : pochr (θ + 1) L ≠ 0 :=
+lemma pochr_one_ne (θ : F) (hθ : GenP θ) (L : ℕ) : pochr (θ + 1) L ≠ 0 :=
   pochr_ne_zero _ _ fun i _ => by
-    have := hθ (1 + i); push_cast at this
+    have := hθ (1 + i) (by omega); push_cast at this
     intro h; apply this; linear_combination h
 
 lemma alg_aux {P' P'' Q Q'' : F} (h1 : P' ≠ 0) (h2 : Q ≠ 0) (h3 : Q'' ≠ 0) :
@@ -32,7 +32,7 @@ lemma alg_aux {P' P'' Q Q'' : F} (h1 : P' ≠ 0) (h2 : Q ≠ 0) (h3 : Q'' ≠ 0)
   field_simp
 
 /-- the entry of the reversed matrix -/
-lemma E'_entry (θ : F) (hθ : Gen θ) (K m p q : ℕ) (hp : p < m) (hq : q < m) :
+lemma E'_entry (θ : F) (hθ : GenP θ) (K m p q : ℕ) (hp : p < m) (hq : q < m) :
     ∑ a ∈ range K, (pochr ((a : F) + (θ + (m : F)) - (p : F)) (p + q + 2))⁻¹ =
       pochr (θ + 1) (m - 1 - p) * (pochr (θ + 1) (m + q + K))⁻¹ *
         dd (fun z => pochr z K) (insert (uN (θ + (m : F)) p) {vN (θ + (m : F)) q}) := by
@@ -53,7 +53,7 @@ lemma E'_entry (θ : F) (hθ : Gen θ) (K m p q : ℕ) (hp : p < m) (hq : q < m)
   -- telescoping
   have hnz : ∀ i : ℕ, i < K + (p + q + 1) + 1 → c + (i : F) ≠ 0 := by
     intro i _
-    have := hθ ((m : ℤ) - p + i); push_cast at this
+    have := hθ ((m : ℤ) - p + i) (by omega); push_cast at this
     intro h; apply this
     rw [← hcx] at h; linear_combination h
   have tele := tele_sum c (p + q + 1) K hnz
@@ -98,7 +98,7 @@ lemma E'_entry (θ : F) (hθ : Gen θ) (K m p q : ℕ) (hp : p < m) (hq : q < m)
   ring
 
 /-- `det E` as a product of Pochhammer factors times `det (dd-matrix)`. -/
-theorem det_E_MD (θ : F) (hθ : Gen θ) (K m : ℕ) :
+theorem det_E_MD (θ : F) (hθ : GenP θ) (K m : ℕ) :
     (Emat θ K m).det = (∏ p : Fin m, pochr (θ + 1) (m - 1 - (p : ℕ))) *
       (∏ q : Fin m, (pochr (θ + 1) (m + (q : ℕ) + K))⁻¹) * (MD (θ + (m : F)) K m).det := by
   rw [← Matrix.det_submatrix_equiv_self (Fin.revPerm : Equiv.Perm (Fin m)) (Emat θ K m)]
@@ -124,7 +124,7 @@ theorem det_E_MD (θ : F) (hθ : Gen θ) (K m : ℕ) :
   ring
 
 /-- **Step (4) done:** `det E` in terms of the binomial Hankel determinant `det [C(K,i+j+1)]`. -/
-theorem det_E_HB (θ : F) (hθ : Gen θ) (K m : ℕ) :
+theorem det_E_HB (θ : F) (hθ : GenP θ) (K m : ℕ) :
     (Emat θ K m).det = (∏ p : Fin m, pochr (θ + 1) (m - 1 - (p : ℕ))) *
       (∏ q : Fin m, (pochr (θ + 1) (m + (q : ℕ) + K))⁻¹) *
       ((∏ p : Fin m, ((-1 : F) ^ (p : ℕ) * ((p : ℕ).factorial : F))) *
@@ -134,7 +134,7 @@ theorem det_E_HB (θ : F) (hθ : Gen θ) (K m : ℕ) :
   rw [det_E_MD θ hθ K m, det_MD, det_DM]
   intro j
   exact pochr_ne_zero _ _ fun i _ => by
-    have := hθ ((m : ℤ) + 1 + i); push_cast at this
+    have := hθ ((m : ℤ) + 1 + i) (by omega); push_cast at this
     intro h; apply this; linear_combination h
 
 end CatalanCore.Star.Leonard

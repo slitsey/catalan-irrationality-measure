@@ -26,7 +26,7 @@ noncomputable def Dpair (θ : F) (K m : ℕ) : F :=
 noncomputable def Hunif (F : Type*) [Field F] (K m : ℕ) : F :=
   (Matrix.of fun (p q : Fin m) => ∑ a : Fin K, ((a : ℕ) : F) ^ ((p : ℕ) + (q : ℕ))).det
 
-theorem det_E_Hunif (θ : F) (hθ : Gen θ) (K m : ℕ) :
+theorem det_E_Hunif (θ : F) (hθ : GenP θ) (K m : ℕ) :
     (Emat θ K m).det = Hunif F K m *
       ((∏ p : Fin m, pochr (θ + 1) (m - 1 - (p : ℕ))) *
         (∏ q : Fin m, (pochr (θ + 1) (m + (q : ℕ) + K))⁻¹) *
@@ -35,7 +35,7 @@ theorem det_E_Hunif (θ : F) (hθ : Gen θ) (K m : ℕ) :
   rw [det_E_HB θ hθ K m, Hunif, Hunif_eq]
   ring
 
-theorem Rpoch_eq (θ : F) (hθ : Gen θ) (K m : ℕ) (hmK : m ≤ K) :
+theorem Rpoch_eq (θ : F) (hθ : GenP θ) (K m : ℕ) (hmK : m ≤ K) :
     (∏ p : Fin m, pochr (θ + 1) (m - 1 - (p : ℕ))) *
         (∏ q : Fin m, (pochr (θ + 1) (m + (q : ℕ) + K))⁻¹) *
         ((∏ i : Fin m, pochr (θ + (m : F) + 1) (K - 1 - (i : ℕ))) *
@@ -91,7 +91,7 @@ theorem Rpoch_eq (θ : F) (hθ : Gen θ) (K m : ℕ) (hmK : m ≤ K) :
   field_simp
 
 /-- **Prop hDelta (closed form).** -/
-theorem Delta_closed (K m S : ℕ) (θ : F) (hθ : Gen θ) (hmK : m ≤ K) :
+theorem Delta_closed (K m S : ℕ) (θ : F) (hθ : GenP θ) (hmK : m ≤ K) :
     ((Wb K θ (bX m (S : ℤ)))ᵀ * Wb K θ (bY m (S : ℤ))).det =
       Vprod (xsθ (θ + (S : F)) m) * Vprod (ysθ (θ + (S : F)) m) *
         (Hunif F K m / Dpair (θ + (S : F)) K m) := by
