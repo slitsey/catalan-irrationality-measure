@@ -91,6 +91,56 @@ lemma rank_fromBlocks_schur_le (A : Matrix l m K) (B : Matrix l q K) (C : Matrix
   refine (rank_mul_le_right _ _).trans ?_
   exact rank_fromBlocks_diag_le _ _
 
+/-- Schur complement bound with an invertible top-left block. -/
+lemma rank_fromBlocks_schur₁₁_le (A : Matrix l l K) (B : Matrix l n K) (C : Matrix q l K)
+    (D : Matrix q n K) [Invertible A] :
+    (fromBlocks A B C D).rank ≤ (D - C * ⅟A * B).rank + Fintype.card l := by
+  have h : (fromBlocks A B C D).submatrix Sum.swap Sum.swap = fromBlocks D C B A :=
+    fromBlocks_submatrix_sum_swap_sum_swap A B C D
+  have h1 : (fromBlocks A B C D).rank = (fromBlocks D C B A).rank := by
+    rw [← h]; exact (rank_submatrix (fromBlocks A B C D) (Equiv.sumComm q l) (Equiv.sumComm n l)).symm
+  rw [h1]
+  exact rank_fromBlocks_schur_le D C B A
+
 end Blocks
+
+section ZeroBlock
+
+variable {K : Type*} [Field K] {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+
+/-- **Frobenius–König (rank form).**  If `Z` vanishes on `LX × LY`, then
+`rank Z ≤ (|m| - |LX|) + (|n| - |LY|)`. -/
+lemma rank_le_of_zero_block (Z : Matrix m n K) (LX : Finset m) (LY : Finset n)
+    (h : ∀ x ∈ LX, ∀ y ∈ LY, Z x y = 0) :
+    Z.rank ≤ (Fintype.card m - LX.card) + (Fintype.card n - LY.card) := by
+  classical
+  let Z1 : Matrix m n K := Matrix.of fun x y => if x ∈ LX then Z x y else 0
+  let Z2 : Matrix m n K := Matrix.of fun x y => if x ∈ LX then 0 else Z x y
+  have hZ : Z = Z1 + Z2 := by
+    ext x y; by_cases hx : x ∈ LX <;> simp [Z1, Z2, hx]
+  have h2 : Z2.rank ≤ Fintype.card m - LX.card := by
+    have := rank_le_card_of_support_subset Z2 LXᶜ (by
+      intro x hx
+      by_contra hxn
+      apply hx
+      have hxn : x ∈ LX := by simpa using hxn
+      ext y; simp [Matrix.row, Z2, hxn])
+    simpa [Finset.card_compl] using this
+  have h1 : Z1.rank ≤ Fintype.card n - LY.card := by
+    rw [← Matrix.rank_transpose]
+    have := rank_le_card_of_support_subset Z1ᵀ LYᶜ (by
+      intro y hy
+      by_contra hyn
+      apply hy
+      have hyn : y ∈ LY := by simpa using hyn
+      ext x
+      by_cases hx : x ∈ LX
+      · simp [Matrix.row, Z1, hx, h x hx y hyn]
+      · simp [Matrix.row, Z1, hx])
+    simpa [Finset.card_compl] using this
+  rw [hZ]
+  exact (rank_add_le' _ _).trans (by omega)
+
+end ZeroBlock
 
 end CatalanCore.Linalg
