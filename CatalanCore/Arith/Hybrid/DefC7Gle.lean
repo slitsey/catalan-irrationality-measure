@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.DefC7Final
+public import CatalanCore.Arith.Hybrid.RankWit
 
 @[expose] public section
 
@@ -31,9 +32,9 @@ lemma card_low7 (S : CSetup7 p r m k) :
 
 include S in
 /-- **Theorem C7 (j = 3, p ≡ 1 mod 4) at a prime `p < r`, in dual form** (λ-like frame). -/
-theorem gleAt_C7_lam {Fr : Frame} (hL : LamData Fr) :
-    GLE p (∑ a, wC7 p r k (Frame.hybRow r m a) + ∑ b, wC7 p r k (Frame.hybCol r m b) -
-      (p + k - r - m)) (Fr.fullPoly r m) := by
+theorem gleAt_C7_lam_wit {Fr : Frame} (hL : LamData Fr) :
+    HasRankWit Fr p r m (fun a => wC7 p r k (Frame.hybRow r m a))
+      (fun b => wC7 p r k (Frame.hybCol r m b)) (p + k - r - m) := by
   classical
   haveI : Invertible (Mp57 p r k) := invMp57 S
   have hm0 := S.m0
@@ -123,10 +124,16 @@ theorem gleAt_C7_lam {Fr : Frame} (hL : LamData Fr) :
       (eU7 p r k m) (eU7 p r k m) := by
     ext a b
     rw [Matrix.submatrix_apply, BTc7_eq]
-  refine gle_full_of_rank p Fr r m (fun a => wC7 p r k (Frame.hybRow r m a))
-    (fun b => wC7 p r k (Frame.hybCol r m b)) (BTc7 p r k m) (hred_C7 hL S) (p + k - r - m) ?_
+  refine ⟨BTc7 p r k m, hred_C7 hL S, ?_⟩
   rw [hBT, Matrix.rank_submatrix]
   omega
+
+include S in
+/-- **Theorem C7 (j = 3, p ≡ 1 mod 4) at a prime `p < r`, in dual form** (λ-like frame). -/
+theorem gleAt_C7_lam {Fr : Frame} (hL : LamData Fr) :
+    GLE p (∑ a, wC7 p r k (Frame.hybRow r m a) + ∑ b, wC7 p r k (Frame.hybCol r m b) -
+      (p + k - r - m)) (Fr.fullPoly r m) :=
+  (gleAt_C7_lam_wit S hL).gle
 
 end Gle7
 

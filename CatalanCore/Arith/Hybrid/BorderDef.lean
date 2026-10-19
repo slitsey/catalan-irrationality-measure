@@ -191,3 +191,21 @@ theorem HasRankWit.border {Fr : Frame} (I : HybInst Fr) {p : ℕ} [Fact p.Prime]
   exact gle_fullTop_of_rank' I r m p u v Bbar hB k hrk
 
 end CatalanCore.Arith.Hybrid
+
+namespace CatalanCore.Arith.Hybrid
+
+/-- **Generic bordered deficit family from rank witnesses**: if at every prime of a set `W` there are
+scalings `(u, v)` with total `≤ T p` and a rank witness of corank `δ p`, then `δ` is a `DefHypTop`
+family (`δ = 0` off `W`).  The one skeleton behind all rank-route bordered families. -/
+theorem defHypTop_of_wit {Fr : Frame} (I : HybInst Fr) (r m : ℕ) (T δ : ℕ → ℕ)
+    (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p) (W : ℕ → Prop)
+    (hδ : ∀ p, ¬ W p → δ p = 0)
+    (hW : ∀ p : ℕ, p.Prime → W p → ∀ [Fact p.Prime], ∃ u v : Fin r ⊕ Fin m → ℕ,
+      HasRankWit Fr p r m u v (δ p) ∧ ∑ a, u a + ∑ b, v b ≤ T p) :
+    DefHypTop I r m T δ := by
+  refine defHypTop_of_local T δ hT W hδ ?_
+  intro p hp hb hWp _
+  obtain ⟨u, v, hw, hle⟩ := hW p hp hWp
+  exact (hw.border I).mono (by omega)
+
+end CatalanCore.Arith.Hybrid
