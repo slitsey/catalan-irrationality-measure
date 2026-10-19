@@ -22,7 +22,7 @@ def emit_data():
            "def lamS : List Pt := [\n" + lit(LAM) + "]\n\nset_option maxHeartbeats 4000000 in\ndef hybS : List Pt := [\n" + lit(HYB) + "]\n\nend CatalanCore.Cert.SigmaHyb\n")
     write('Data', txt)
 
-def family(fam, kind, listname, M, macros, cellsbymacro, extra):
+def family(fam, kind, listname, M, macros, cellsbymacro, extra, chunk=4):
     """macros: list of (x0,y0,i0,i1); cellsbymacro: list of list of cell tuples (5 slots for h/g, 3 for l)."""
     nmac = len(macros)
     nmod = (nmac + MPM - 1) // MPM
@@ -40,10 +40,16 @@ def family(fam, kind, listname, M, macros, cellsbymacro, extra):
                'l': lambda j: "lMacroOK %s %s %d %sP (%s)" % (listname, extra, M, name, j)}[kind]
         txt = ["module\n\npublic import CatalanCore.Cert.SigmaHyb.Data\npublic import CatalanCore.Cert.SigmaHyb.HMacro\n\n@[expose] public section\n\n"
                "/-! Generated (scripts/certgen-hyb/emit.py): family %s, module %d (%d macros of %d cells). -/\nnamespace CatalanCore.Cert.SigmaHyb\n\nopen CatalanLambda.Cert\n\nset_option maxRecDepth 100000\n\ndef %sP : Nat := %d\n\n" % (fam, m, MPM, M, name, pack(slots))]
-        for k in range(MPM // 4):
-            txt.append("theorem %s_c%d : (List.range 4).all (fun j => %s) = true := by decide +kernel\n" % (name, k, chk("%d + j" % (4 * k))))
-        txt.append("\ntheorem %s_ok : ∀ j < %d, %s = true := by\n  have h := chunks_all (fun j => %s) %d (by\n    intro k hk\n    interval_cases k\n    exacts [%s])\n  exact h\n" % (
-            name, MPM, chk('j'), chk('j'), MPM // 4, ", ".join("%s_c%d" % (name, k) for k in range(MPM // 4))))
+        if chunk == 4:
+            for k in range(MPM // 4):
+                txt.append("theorem %s_c%d : (List.range 4).all (fun j => %s) = true := by decide +kernel\n" % (name, k, chk("%d + j" % (4 * k))))
+            txt.append("\ntheorem %s_ok : ∀ j < %d, %s = true := by\n  have h := chunks_all (fun j => %s) %d (by\n    intro k hk\n    interval_cases k\n    exacts [%s])\n  exact h\n" % (
+                name, MPM, chk('j'), chk('j'), MPM // 4, ", ".join("%s_c%d" % (name, k) for k in range(MPM // 4))))
+        else:
+            for k in range(MPM):
+                txt.append("theorem %s_c%d : %s = true := by decide +kernel\n" % (name, k, chk(str(k))))
+            txt.append("\ntheorem %s_ok : ∀ j < %d, %s = true := by\n  intro j hj\n  interval_cases j\n  exacts [%s]\n" % (
+                name, MPM, chk('j'), ", ".join("%s_c%d" % (name, k) for k in range(MPM))))
         txt.append("\nend CatalanCore.Cert.SigmaHyb\n")
         write(name, "".join(txt))
     return names
@@ -81,7 +87,7 @@ def main():
             idx = min(mi * M + k, len(B['boxes']) - 1)
             b = B['boxes'][idx]; row.append((b[0], b[1], b[2], b[3], 0))
         cells.append(row)
-    namesB = family('GB', 'g', 'hybS', M, macros, cells, '(22147 / 10000 : ℚ)')
+    namesB = family("GB", "g", "hybS", M, macros, cells, "(22147 / 10000 : ℚ)", 1)
     info['B'] = dict(M=M, n=len(B['boxes']), names=namesB)
     # ---- S
     S = json.load(open(OUTD + 'S.json'))

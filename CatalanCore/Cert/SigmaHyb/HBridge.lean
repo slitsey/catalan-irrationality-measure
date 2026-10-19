@@ -74,6 +74,10 @@ noncomputable abbrev cH : Fin (300 + 180) → ℂ := Fin.append cS cL
 noncomputable abbrev mH : Fin (300 + 180) → ℝ := Fin.append mS mL
 noncomputable abbrev wtH : Fin (300 + 180) → ℝ := fun k => mH k / (1 + (1 / 8 : ℝ))
 
+noncomputable abbrev gHyb : ℂ → ℝ :=
+  CatalanCore.Cert.gAlpha (1 / 1024 : ℝ) (1 / 1000 : ℝ) cH wtH (1 / 8 : ℝ)
+    (CatalanCore.Decay.Unu (1 / 8 : ℝ))
+
 theorem Usig_bridge_lam (x y : ℝ) :
     CatalanLambda.Decay.Usig (1 / 1024 : ℝ) cL mL ⟨x, y⟩ = Usig lamS x y :=
   Usig_bridge_gen lamS 180 lamS_len x y
