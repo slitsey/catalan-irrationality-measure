@@ -50,4 +50,27 @@ theorem telescopeX (X : Matrix (Fin K2) (Fin K1) F) (c : ℕ → Fin K1 → F) (
     rw [key]
     exact Submodule.add_mem _ ih' (Submodule.smul_mem _ _ hc)
 
+
+/-- The defect with `N'_{s+1}`: needs also the row relation at `y = s+1` and `a_{s+1} = 0`. -/
+theorem telescopeX' (X : Matrix (Fin K2) (Fin K1) F) (c : ℕ → Fin K1 → F) (c' : ℕ → Fin K2 → F)
+    (a b : ℕ → F) (W1 : Submodule F (Fin K1 → F)) (W2 : Submodule F (Fin K2 → F))
+    (x : Fin K1 → F) (hx : ∀ w ∈ W1, w ⬝ᵥ x = 0) (hb0 : b 0 = 0) (s : ℕ) (ha : a (s + 1) = 0)
+    (hcol : ∀ y, 1 ≤ y → y ≤ s → X *ᵥ c y - a y • c' y - b y • c' (y + 1) ∈ W2)
+    (hrow : ∀ y, 1 ≤ y → y ≤ s + 1 → Xᵀ *ᵥ c' y - a y • c y - b (y - 1) • c (y - 1) ∈ W1) :
+    X *ᵥ (Nsum c s *ᵥ x) - Nsum c' (s + 1) *ᵥ (X *ᵥ x) ∈ W2 := by
+  have h := telescopeX X c c' a b W1 W2 x hx hb0 s hcol (fun y h1 h2 => hrow y h1 (by omega))
+  have hr := hrow (s + 1) (by omega) le_rfl
+  simp only [Nat.add_sub_cancel] at hr
+  have hxr := hx _ hr
+  have hxr' : (Xᵀ *ᵥ c' (s + 1)) ⬝ᵥ x = a (s + 1) * (c (s + 1) ⬝ᵥ x) + b s * (c s ⬝ᵥ x) := by
+    simp only [sub_dotProduct, smul_dotProduct, smul_eq_mul] at hxr
+    linear_combination hxr
+  have e1 : c' (s + 1) ⬝ᵥ (X *ᵥ x) = (Xᵀ *ᵥ c' (s + 1)) ⬝ᵥ x := by
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose]
+  have : X *ᵥ (Nsum c s *ᵥ x) - Nsum c' (s + 1) *ᵥ (X *ᵥ x) =
+      X *ᵥ (Nsum c s *ᵥ x) - Nsum c' s *ᵥ (X *ᵥ x) - (b s * (c s ⬝ᵥ x)) • c' (s + 1) := by
+    rw [Nsum_mulVec_succ, e1, hxr', ha]
+    module
+  rw [this]; exact h
+
 end CatalanCore
