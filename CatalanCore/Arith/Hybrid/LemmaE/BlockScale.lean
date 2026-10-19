@@ -84,4 +84,15 @@ theorem tcore_scaled {κ : Type} [Fintype κ] [DecidableEq κ]
     (AN_eq p d _) (2 * ∑ i, d i) ?_ b hT
   rw [← det_Atil]
 
+theorem NA_eq (d : ι → ℕ) (A : Matrix ι ι ℚ[X]) :
+    Nmat p d A * A = (Atil p d A).det • (1 : Matrix ι ι ℚ[X]) := by
+  have hu := scl_unit p d
+  have h1 : (Atil p d A).adjugate * (Atil p d A) = (Atil p d A).det • 1 :=
+    Matrix.adjugate_mul _
+  have h2 : (Nmat p d A * A) * scl p d = ((Atil p d A).det • 1) * scl p d := by
+    have : (Nmat p d A * A) * scl p d = scl p d * ((Atil p d A).adjugate * Atil p d A) := by
+      simp only [Atil, Nmat, Matrix.mul_assoc]
+    rw [this, h1, Matrix.mul_smul, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_one]
+  exact (hu.mul_left_inj).mp h2
+
 end CatalanCore.Arith.Hybrid.LemmaE
