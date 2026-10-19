@@ -510,6 +510,41 @@ theorem good_TB {A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m) :
           (sub_ne_zero_of_lt hAB (by omega))
         exact good_pow_mul_zero this (by omega)
 
+/-- The diagonal entries of `C`. -/
+theorem good_TD {A : ℕ} (hA : A < r) :
+    Good p ((p : ℚ) ^ (uPot p r k A + uPot p r k A) * Fr.Mn A A) (TD p j k A) := by
+  have hp5 := S.p5
+  have hkr := S.hkr
+  have hrp := S.hrp
+  have hkp := S.hkp
+  have hpp : 0 < p := (Fact.out : p.Prime).pos
+  by_cases hAk : A < k
+  · have hw : uPot p r k A + uPot p r k A = 0 := by unfold uPot; split_ifs <;> omega
+    rw [hw, pow_zero, one_mul]
+    unfold TD; rw [if_pos hAk]
+    exact Mn_diag_good0 hL hp5 (fun t ht => by
+      obtain ⟨h1, h2⟩ := Finset.mem_Icc.1 ht
+      exact S.reg h1 (by omega) (by omega) (by omega))
+  · have hw : uPot p r k A + uPot p r k A = 2 := by unfold uPot; split_ifs <;> omega
+    rw [hw]
+    unfold TD; rw [if_neg hAk]
+    have h16 : (16 : ZMod p) ≠ 0 := by
+      have : (16 : ZMod p) = 4 * 4 := by norm_num
+      rw [this]; exact mul_ne_zero (four_ne_zmod p hp5) (four_ne_zmod p hp5)
+    have := Mn_diag_goodP2 hL hp5 (A := A) {k} (by intro t ht; rw [Finset.mem_singleton.1 ht]; simp; have := S.hk0; omega)
+      (fun _ => -(16 * (((j : ℕ) : ZMod p)⁻¹) ^ 2))
+      (fun t ht => by
+        rw [Finset.mem_singleton.1 ht]
+        exact good_Dsq_k hL S.hk S.hj0 S.hjp S.hk0 S.hkp)
+      (fun t ht => by
+        obtain ⟨h1, h2⟩ := Finset.mem_sdiff.1 ht
+        have h1' := Finset.mem_Icc.1 h1
+        have h2' : t ≠ k := fun e => h2 (by simp [e])
+        exact S.reg h1'.1 (by omega) h2' (by omega))
+    refine this.congr ?_
+    rw [Finset.sum_singleton]
+    field_simp
+
 end TableThm
 
 end TableB
