@@ -36,6 +36,21 @@ lemma GoodF.congr {B : ℕ} {f g : ℚ → ℚ} (hf : GoodF ℓ B f)
   obtain ⟨C, hC, e, he⟩ := hf
   exact ⟨C, hC, e, fun θ h0 hg => by rw [← h θ h0 hg, he θ h0 hg]⟩
 
+lemma GoodF.prod {ι : Type*} {B : ℕ} (s : Finset ι) (f : ι → ℚ → ℚ)
+    (h : ∀ i ∈ s, GoodF ℓ B (f i)) : GoodF ℓ B (fun θ => ∏ i ∈ s, f i θ) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simpa using (GoodF.const (B := B) (LU.one : LU ℓ 1))
+  | insert a s ha ih =>
+    have h1 := h a (Finset.mem_insert_self a s)
+    have h2 := ih (fun i hi => h i (Finset.mem_insert_of_mem hi))
+    simpa [Finset.prod_insert ha] using h1.mul h2
+
+lemma GoodF.lin1 {B : ℕ} (c : ℕ) (hc : c < B) :
+    GoodF ℓ B (fun θ => θ + ((c + 1 : ℕ) : ℚ)) := by
+  have := GoodF.lin (ℓ := ℓ) c hc 1
+  simpa using this
+
 lemma GoodF0.mono {B B' : ℕ} (h : B ≤ B') {f : ℚ → ℚ} (hf : GoodF0 ℓ B f) : GoodF0 ℓ B' f := by
   obtain ⟨C, hC, e, he⟩ := hf
   refine ⟨C, hC, fun c => if c < B then e c else 0, fun θ h0 hg => ?_⟩
