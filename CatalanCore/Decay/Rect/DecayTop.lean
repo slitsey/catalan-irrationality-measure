@@ -23,32 +23,30 @@ namespace CatalanCore
 
 open Decay
 
-theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+theorem decay_top_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
     (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
     {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
     (hcc : (0 : ℝ) ≤ F.ccert) :
-    ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m : ℕ, N₀ ≤ r → (m : ℝ) = α * r → ∀ t : ℝ,
+    ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m : ℕ, N₀ ≤ r → (α : ℝ) * r ≤ m → (m : ℝ) ≤ α * r + 1 → ∀ t : ℝ,
       |t| ≤ Real.exp (-(F.ccert : ℝ) * (r : ℝ)) →
       |Polynomial.aeval (Fr.const + t) ((Rect.afterTop r m).fullPolyG Fr)|
         ≤ Real.exp (-((D : ℝ) - δ) * (r : ℝ) ^ 2) := by
   classical
   obtain ⟨e, m0, κ, B0, he0, he1, hm0, hm0xs, hm0μ, hκdef, hB0, hcore⟩ :=
-    decay_core hFr F hα hg hw0 hRc hc hInu hD
+    decay_coreW (w := 2) hFr F hα (by norm_num) hg hw0 hRc hc hInu hD
   intro δ hδ
   obtain ⟨N, hN⟩ := hcore (δ / 2) (half_pos hδ)
   refine ⟨max N ⌈2 / δ⌉₊, ?_⟩
-  rintro r m hr hmα t ht
+  rintro r m hr hmα hmα' t ht
   have hrN : N ≤ r := le_trans (le_max_left _ _) hr
   have hr3 : ⌈2 / δ⌉₊ ≤ r := le_trans (le_max_right _ _) hr
-  have hαr : (α : ℝ) * r ≤ m := hmα.ge
-  have hαr' : (m : ℝ) ≤ α * r + 1 := by
-    have : (0 : ℝ) ≤ 1 := by norm_num
-    linarith [hmα.le]
+  have hαr : (α : ℝ) * r ≤ m := hmα
+  have hαr' : (m : ℝ) ≤ α * r + 2 := by linarith
   obtain ⟨hrpos, hR, ⟨T0, hEn, hb0⟩, h1⟩ := hN r m hrN hαr hαr'
-  obtain ⟨T1, hEn1, hb1⟩ := h1 (by linarith [hmα.le])
+  obtain ⟨T1, hEn1, hb1⟩ := h1 (by linarith)
   have ht' : |t| ≤ Real.exp (-(F.ccert : ℝ) * (r : ℝ)) := ht
   have hwin := window_rect_top hFr he0 he1 hm0 hm0xs hm0μ hR hcc hEn hEn1 ht'
   rw [← hB0, ← hκdef] at hwin
@@ -71,10 +69,39 @@ theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt 
   · rw [max_eq_left hm]
     nlinarith [hb0, hslack]
 
+/-- `decay_top_of_certG_rect_win` for `m = α r` exactly. -/
+theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
+    (hcc : (0 : ℝ) ≤ F.ccert) :
+    ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m : ℕ, N₀ ≤ r → (m : ℝ) = α * r → ∀ t : ℝ,
+      |t| ≤ Real.exp (-(F.ccert : ℝ) * (r : ℝ)) →
+      |Polynomial.aeval (Fr.const + t) ((Rect.afterTop r m).fullPolyG Fr)|
+        ≤ Real.exp (-((D : ℝ) - δ) * (r : ℝ) ^ 2) := by
+  intro δ hδ
+  obtain ⟨N, hN⟩ := decay_top_of_certG_rect_win hFr F hα hg hw0 hRc hc hInu hD hcc δ hδ
+  exact ⟨N, fun r m hr hm t ht => hN r m hr hm.ge (by rw [hm]; linarith) t ht⟩
+
+/-- **The second-member decay on an admissible relation `A`, window `α r ≤ m ≤ α r + 1`**
+(P6): `decay_top_of_certG_rect_win` stated as `Mem2DecayA`. -/
+theorem mem2DecayA_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
+    (hcc : (0 : ℝ) ≤ F.ccert) {A : ℕ → ℕ → Prop}
+    (hA : ∀ r m, A r m → (α : ℝ) * r ≤ m ∧ (m : ℝ) ≤ α * r + 1) :
+    Rect.Mem2DecayA Fr A (D : ℝ) (F.ccert : ℝ) := by
+  intro δ hδ
+  obtain ⟨N, hN⟩ := decay_top_of_certG_rect_win hFr F hα hg hw0 hRc hc hInu hD hcc δ hδ
+  exact ⟨N, fun r m hAr hr t ht => hN r m hr (hA r m hAr).1 (hA r m hAr).2 t ht⟩
+
 /-- **The second-member decay on an admissible relation `A`** (G3): `decay_top_of_certG_rect`
-for every `(r, m)` with `A r m` and `m = α r` exactly, stated as `Mem2DecayA`.  (The proof covers
-`m = α r` only: for `α r < m ≤ α r + 1` the second pattern `(r, m + 1)` leaves the window of
-`decay_core`.) -/
+for every `(r, m)` with `A r m` and `m = α r` exactly, stated as `Mem2DecayA`. -/
 theorem mem2DecayA_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
     (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s

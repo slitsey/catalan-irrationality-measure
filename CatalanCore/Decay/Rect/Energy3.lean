@@ -33,12 +33,12 @@ lemma AS_eq_range (r m : ℕ) (xn : ℕ → ℕ) :
         (fun a => ∑ b ∈ range (r + m), elog (nodeC r (xn a)) (nodeC r (xn b)))
 
 set_option maxHeartbeats 4000000 in
-theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ}
+theorem energy_rectW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ}
     {Fr : Frame} (hFr : Fr.DecayOK) (F : Cert.CertCoreG K ρ ε c wt)
-    {α : ℝ} (hα : 0 < α)
+    {α : ℝ} (hα : 0 < α) {w : ℝ} (hw : 1 ≤ w)
     (hg : ∀ s : ℂ, F.g s = (1 + α) * Usig ρ c wt s - Unu α s + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
-    {r m : ℕ} (hr : 0 < r) (hm : 0 < m) (hαr : α * r ≤ m) (hαr' : (m : ℝ) ≤ α * r + 1)
+    {r m : ℕ} (hr : 0 < r) (hm : 0 < m) (hαr : α * r ≤ m) (hαr' : (m : ℝ) ≤ α * r + w)
     {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * r⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * r)
     {m0 : ℝ} (hm0 : 0 < m0)
@@ -46,7 +46,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
     (s : Fin k → Fin (r + m)) (hs : Function.Injective s)
     (hkeep : ∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b)
-    {e : ℝ} (he0 : 0 < e) (heε : e < ε) (hrbig : 2 ≤ Real.pi * (ε - e) * r)
+    {e : ℝ} (he0 : 0 < e) (heε : e < ε) (hrbig : 2 * w ≤ Real.pi * (ε - e) * r)
     (q : Fin k → ℝ) {Cl : ℝ} (hCl : 0 ≤ Cl)
     (hq : ∀ l, Real.log (q l) ≤ (1 - e) * (Cl - 2 * Real.pi * |(z l).im|)) :
     ∑ l, Real.log (q l)
@@ -55,7 +55,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       ≤ -(2 * r * ((r : ℝ) + m) * F.mprime + 2 * r ^ 2 * (Fr.d * F.Sbase)
             - ((r : ℝ) + m) ^ 2 * F.Ibound + Alow r m)
         + r * (((r : ℝ) + m) - k) * F.ccert
-        + RerrR (Fr.d * ∑ i, max ((F.mprime : ℝ) - F.segG i) 0)
+        + RerrRW w (Fr.d * ∑ i, max ((F.mprime : ℝ) - F.segG i) 0)
             ((F.r0 : ℝ) + Fr.xs + Rc + ρ + 1) ρ m0 Cl α r m := by
   classical
   have hr' : (0 : ℝ) < r := by exact_mod_cast hr
@@ -73,12 +73,12 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
   have hk0 : (0 : ℝ) ≤ k := Nat.cast_nonneg k
   obtain ⟨δ', hδ'⟩ : ∃ δ', δ' = (m : ℝ) - α * r := ⟨_, rfl⟩
   have hδ0 : 0 ≤ δ' := by rw [hδ']; linarith
-  have hδ1 : δ' ≤ 1 := by rw [hδ']; linarith
+  have hδ1 : δ' ≤ w := by rw [hδ']; linarith
   have hL0 : 0 < 2 * α := by linarith
   have hL : 2 * α ≤ 2 * m / r := by rw [le_div_iff₀ hr']; nlinarith
-  have hL2 : 2 * (m : ℝ) / r ≤ 2 * α + 2 / r := by
+  have hL2 : 2 * (m : ℝ) / r ≤ 2 * α + 2 * w / r := by
     rw [div_le_iff₀ hr']
-    have e1 : (2 * α + 2 / (r : ℝ)) * r = 2 * α * r + 2 := by field_simp
+    have e1 : (2 * α + 2 * w / (r : ℝ)) * r = 2 * α * r + 2 * w := by field_simp
     rw [e1]; linarith
   have hA0 : 0 ≤ (F.r0 : ℝ) + Fr.xs + Rc + ρ + 1 := by positivity
   set A0 : ℝ := (F.r0 : ℝ) + Fr.xs + Rc + ρ + 1 with hA0def
@@ -226,7 +226,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     linarith
   -- node-sum bounds, removed nodes
   have hRX1 : ∀ b : Fin (r + m), ∑ b', rmask s b * elog (τX b) (τX b')
-      ≤ rmask s b * ((r : ℝ) * Unu α (τX b) + (Real.log (1 + 2 * m) + |Real.log (2 * α)|)) := by
+      ≤ rmask s b * ((r : ℝ) * Unu α (τX b) + (Real.log (1 + 2 * m) + w * |Real.log (2 * α)|)) := by
     intro b
     rw [← Finset.mul_sum]
     by_cases hb : rmask s b = 0
@@ -236,11 +236,11 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       have hb2 : rmask s b = 1 := (hmsk01 b).resolve_left hb
       rw [hb2, one_mul, one_mul]
       have ee : τX b = nodeC r (b : ℕ) := by simp only [hτX, xnode_lt r hb1]
-      have h1 := sumR_X_le hb1 hr hm hL0 hL hL2
+      have h1 := sumR_X_leW hb1 hr hm hL0 hL hL2
       rw [ee]
       exact h1
   have hRY1 : ∀ b : Fin (r + m), ∑ b', rmask s b * elog (τY b) (τY b')
-      ≤ rmask s b * ((r : ℝ) * Unu α (τX b) + (Real.log (1 + 2 * m) + |Real.log (2 * α)|)) := by
+      ≤ rmask s b * ((r : ℝ) * Unu α (τX b) + (Real.log (1 + 2 * m) + w * |Real.log (2 * α)|)) := by
     intro b
     rw [← Finset.mul_sum]
     by_cases hb : rmask s b = 0
@@ -251,7 +251,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       rw [hb2, one_mul, one_mul]
       have ee : τX b = nodeC r (b : ℕ) := by simp only [hτX, xnode_lt r hb1]
       have ee' : τY b = nodeC r (b : ℕ) := by simp only [hτY, ynode_lt r hb1]
-      have h1 := sumR_Y_le hb1 hr hm hL0 hL hL2
+      have h1 := sumR_Y_leW hb1 hr hm hL0 hL hL2
       rw [ee, ee']
       exact h1
   have hmulsum : ∀ (f : Fin (r + m) → ℝ) (C1 C2 : ℝ),
@@ -261,13 +261,13 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     exact Finset.sum_congr rfl (fun b _ => by ring)
   have hRX : RS (rmask s) τX
       ≤ r * ∑ b, rmask s b * Unu α (τX b)
-        + (Real.log (1 + 2 * m) + |Real.log (2 * α)|) * (((r : ℝ) + m) - k) := by
+        + (Real.log (1 + 2 * m) + w * |Real.log (2 * α)|) * (((r : ℝ) + m) - k) := by
     unfold RS
     refine (Finset.sum_le_sum (fun b _ => hRX1 b)).trans (le_of_eq ?_)
     rw [hmulsum (fun b => Unu α (τX b)) (r : ℝ) _, hmsum']
   have hRY : RS (rmask s) τY
       ≤ r * ∑ b, rmask s b * Unu α (τX b)
-        + (Real.log (1 + 2 * m) + |Real.log (2 * α)|) * (((r : ℝ) + m) - k) := by
+        + (Real.log (1 + 2 * m) + w * |Real.log (2 * α)|) * (((r : ℝ) + m) - k) := by
     unfold RS
     refine (Finset.sum_le_sum (fun b _ => hRY1 b)).trans (le_of_eq ?_)
     rw [hmulsum (fun b => Unu α (τX b)) (r : ℝ) _, hmsum']
@@ -284,8 +284,8 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
   have hT : (N0 : ℝ) + Fr.n0off ≤ (F.r0 : ℝ) * r := by
     have h1 := Nat.floor_le (show (0 : ℝ) ≤ F.r0 * r by positivity)
     rw [← hN0] at h1; push_cast at h1; exact h1
-  have hfree : ∀ l, 2 * r * F.g (σ l) - 2 * (1 - ε) * Real.pi * |(z l).im| - 2 * A0
-        - (4 / r) * |(z l).im|
+  have hfree : ∀ l, 2 * r * F.g (σ l) - 2 * (1 - ε) * Real.pi * |(z l).im| - 2 * w * A0
+        - (4 * w / r) * |(z l).im|
       ≤ 2 * ((r : ℝ) + m) * Usig ρ c wt (σ l) - 2 * r * Unu α (σ l) := by
     intro l
     have hnorm : ‖σ l‖ ≤ (F.r0 : ℝ) + Fr.xs + (2 / r) * |(z l).im| := by
@@ -301,10 +301,10 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     have hYl : -(A0 + (2 / r) * |(z l).im|) ≤ Usig ρ c wt (σ l) := by
       have h1 := Usig_ge hρ c wt hw0 F.hm hc (σ l)
       rw [hA0def]; linarith
-    refine pt_ineq (α := α) (ε := ε) (U := Unu α (σ l)) hr' hδ0 hδ1 hδ' (abs_nonneg _) hA0 hYl ?_
+    refine pt_ineqW (α := α) (w := w) (ε := ε) (U := Unu α (σ l)) hr' hδ0 hδ1 hδ' (abs_nonneg _) hA0 hYl ?_
     rw [hg (σ l), hσim, abs_div, abs_of_pos hr']
     ring
-  have hline : ∀ b : Fin (r + m), rmask s b * (2 * r * F.gmin - 2 * A0)
+  have hline : ∀ b : Fin (r + m), rmask s b * (2 * r * F.gmin - 2 * w * A0)
       ≤ rmask s b * (2 * ((r : ℝ) + m) * Usig ρ c wt (τX b) - 2 * r * Unu α (τX b)) := by
     intro b
     by_cases hb : rmask s b = 0
@@ -336,19 +336,19 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
         rw [hg (τX b)]
         have h0 : (τX b).im = 0 := by rw [ee, nodeC_im]
         rw [h0]; simp
-      have hpt := pt_ineq (α := α) (ε := ε) (U := Unu α (τX b)) hr' hδ0 hδ1 hδ' (abs_nonneg _) hA0
+      have hpt := pt_ineqW (α := α) (w := w) (ε := ε) (U := Unu α (τX b)) hr' hδ0 hδ1 hδ' (abs_nonneg _) hA0
         hYl hgτ
       simp only [abs_zero, mul_zero, sub_zero] at hpt
       nlinarith [hpt, hgm, mul_le_mul_of_nonneg_left hgm (by positivity : (0 : ℝ) ≤ 2 * r)]
   -- sums
   have hfreeSum : 2 * r * (∑ l, F.g (σ l)) - 2 * (1 - ε) * Real.pi * (∑ l, |(z l).im|)
-        - k * (2 * A0) - (4 / r) * (∑ l, |(z l).im|)
+        - k * (2 * w * A0) - (4 * w / r) * (∑ l, |(z l).im|)
       ≤ 2 * ((r : ℝ) + m) * (∑ l, Usig ρ c wt (σ l)) - 2 * r * (∑ l, Unu α (σ l)) := by
     have h1 := Finset.sum_le_sum (fun l (_ : l ∈ (Finset.univ : Finset (Fin k))) => hfree l)
     simp only [Finset.sum_sub_distrib, ← Finset.mul_sum, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul] at h1
     linarith
-  have hlineSum : (((r : ℝ) + m) - k) * (2 * r * F.gmin - 2 * A0)
+  have hlineSum : (((r : ℝ) + m) - k) * (2 * r * F.gmin - 2 * w * A0)
       ≤ 2 * ((r : ℝ) + m) * (∑ b, rmask s b * Usig ρ c wt (τX b))
         - 2 * r * (∑ b, rmask s b * Unu α (τX b)) := by
     have h1 := Finset.sum_le_sum (fun b (_ : b ∈ (Finset.univ : Finset (Fin (r + m)))) => hline b)
@@ -376,7 +376,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
   rw [hPXs] at hPX hPY
   -- scalar facts
   have hSI : 0 ≤ ∑ l, |(z l).im| := Finset.sum_nonneg (fun l _ => abs_nonneg _)
-  have h4r : (4 / (r : ℝ)) * (∑ l, |(z l).im|)
+  have h4r : (4 * w / (r : ℝ)) * (∑ l, |(z l).im|)
       ≤ 2 * Real.pi * (ε - e) * (∑ l, |(z l).im|) := by
     apply mul_le_mul_of_nonneg_right _ hSI
     rw [div_le_iff₀ hr']
@@ -399,9 +399,9 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       have : (0 : ℝ) ≤ 2 * m / r := by positivity
       linarith)
     linarith
-  have hE2nn : 0 ≤ Real.log (1 + 2 * (m : ℝ)) + |Real.log (2 * α)| := by
+  have hE2nn : 0 ≤ Real.log (1 + 2 * (m : ℝ)) + w * |Real.log (2 * α)| := by
     have a1 : 0 ≤ Real.log (1 + 2 * (m : ℝ)) := Real.log_nonneg (by linarith)
-    have := abs_nonneg (Real.log (2 * α))
+    have := mul_nonneg (by linarith : (0 : ℝ) ≤ w) (abs_nonneg (Real.log (2 * α)))
     linarith
   have hkE1 := mul_le_mul_of_nonneg_right hkN' hE1nn
   have hkE2 := mul_le_mul_of_nonneg_right (by linarith : (((r : ℝ) + m) - k) ≤ (r : ℝ) + m) hE2nn
@@ -415,10 +415,40 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     linarith
   have hLY : Real.log (‖cexpr z colC‖ ^ 2) = -(Esc σ (fun i => τY (s i)) + 2 * k * Real.log r) := by
     linarith
-  unfold RerrR
+  unfold RerrRW
   rw [hLX, hLY]
   rw [hDX, hDY, ← hBeq]
   linarith [hBX, hPX, hPY, hRX, hRY, hAX, hAY, hfreeSum, hlineSum, hlogq, hSG', hIb, hcc', hkE1,
     hkE2, hkCl, hNlog, hklogr, h4r, hSI]
+
+namespace CatalanCore.Decay
+
+/-- The window-`1` case of `energy_rectW`. -/
+theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ}
+    {Fr : Frame} (hFr : Fr.DecayOK) (F : Cert.CertCoreG K ρ ε c wt)
+    {α : ℝ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + α) * Usig ρ c wt s - Unu α s + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {r m : ℕ} (hr : 0 < r) (hm : 0 < m) (hαr : α * r ≤ m) (hαr' : (m : ℝ) ≤ α * r + 1)
+    {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * r⌋₊)
+    (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * r)
+    {m0 : ℝ} (hm0 : 0 < m0)
+    {k : ℕ} (z : Fin k → ℂ) (hzi : Function.Injective z)
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
+    (s : Fin k → Fin (r + m)) (hs : Function.Injective s)
+    (hkeep : ∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b)
+    {e : ℝ} (he0 : 0 < e) (heε : e < ε) (hrbig : 2 ≤ Real.pi * (ε - e) * r)
+    (q : Fin k → ℝ) {Cl : ℝ} (hCl : 0 ≤ Cl)
+    (hq : ∀ l, Real.log (q l) ≤ (1 - e) * (Cl - 2 * Real.pi * |(z l).im|)) :
+    ∑ l, Real.log (q l)
+      + (1 / 2) * (Real.log (‖cexpr z (fun i => ((xnode r (s i) : ℕ) : ℂ))‖ ^ 2)
+          + Real.log (‖cexpr z (fun i => ((ynode r (s i) : ℕ) : ℂ))‖ ^ 2))
+      ≤ -(2 * r * ((r : ℝ) + m) * F.mprime + 2 * r ^ 2 * (Fr.d * F.Sbase)
+            - ((r : ℝ) + m) ^ 2 * F.Ibound + Alow r m)
+        + r * (((r : ℝ) + m) - k) * F.ccert
+        + RerrR (Fr.d * ∑ i, max ((F.mprime : ℝ) - F.segG i) 0)
+            ((F.r0 : ℝ) + Fr.xs + Rc + ρ + 1) ρ m0 Cl α r m :=
+  energy_rectW hFr F hα (w := 1) le_rfl hg hw0 hRc hc hr hm hαr hαr' hN0 hW hm0 z hzi hz hre s hs
+    hkeep he0 heε (by simpa using hrbig) q hCl hq
 
 end CatalanCore.Decay

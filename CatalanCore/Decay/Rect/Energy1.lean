@@ -182,32 +182,48 @@ theorem sumS_Y_le {r m : ℕ} {σ : ℂ} (hσ : σ.re < 0) (hr : 0 < r) (hm : 0 
   have hC := sumY_le_sumX (σ := σ) (by linarith) hr m
   linarith
 
-theorem sumR_X_le {r m b : ℕ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
-    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+theorem sumR_X_leW {r m b : ℕ} {w : ℝ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
+    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 * w / r) :
     ∑ b' : Fin (r + m), elog (nodeC r b) (nodeC r (xnode r b'))
       ≤ (r : ℝ) * (Utau (nodeC r b) + Uex L (nodeC r b))
-        + (Real.log (1 + 2 * m) + |Real.log L|) := by
+        + (Real.log (1 + 2 * m) + w * |Real.log L|) := by
   rw [CatalanCore.Decay.fin_sum_range (fun b' => elog (nodeC r b) (nodeC r (xnode r b'))),
     sum_range_xnode r m (fun p => elog (nodeC r b) (nodeC r p))]
   have hA := node_sum_le hr b hb
-  have hB := sumX_node_le hr hm hb hL0 hL hL2
+  have hB := sumX_node_leW hr hm hb hL0 hL hL2
   linarith
 
-theorem sumR_Y_le {r m b : ℕ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
-    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+theorem sumR_Y_leW {r m b : ℕ} {w : ℝ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
+    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 * w / r) :
     ∑ b' : Fin (r + m), elog (nodeC r b) (nodeC r (ynode r b'))
       ≤ (r : ℝ) * (Utau (nodeC r b) + Uex L (nodeC r b))
-        + (Real.log (1 + 2 * m) + |Real.log L|) := by
+        + (Real.log (1 + 2 * m) + w * |Real.log L|) := by
   have hr' : (0 : ℝ) < r := by exact_mod_cast hr
   rw [CatalanCore.Decay.fin_sum_range (fun b' => elog (nodeC r b) (nodeC r (ynode r b'))),
     sum_range_ynode r m (fun p => elog (nodeC r b) (nodeC r p))]
   have hA := node_sum_le hr b hb
-  have hB := sumX_node_le hr hm hb hL0 hL hL2
+  have hB := sumX_node_leW hr hm hb hL0 hL hL2
   have hσ1 : (nodeC r b).re < 1 := by
     have : (nodeC r b).re = (b : ℝ) / r := by simp [nodeC]
     rw [this, div_lt_one hr']; exact_mod_cast hb
   have hC := sumY_le_sumX (σ := nodeC r b) hσ1 hr m
   linarith
+
+/-- The window-`1` case of `sumR_X_leW`. -/
+theorem sumR_X_le {r m b : ℕ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
+    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+    ∑ b' : Fin (r + m), elog (nodeC r b) (nodeC r (xnode r b'))
+      ≤ (r : ℝ) * (Utau (nodeC r b) + Uex L (nodeC r b))
+        + (Real.log (1 + 2 * m) + |Real.log L|) := by
+  simpa using sumR_X_leW (w := 1) hb hr hm hL0 hL (by simpa using hL2)
+
+/-- The window-`1` case of `sumR_Y_leW`. -/
+theorem sumR_Y_le {r m b : ℕ} (hb : b < r) (hr : 0 < r) (hm : 0 < m) {L : ℝ} (hL0 : 0 < L)
+    (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+    ∑ b' : Fin (r + m), elog (nodeC r b) (nodeC r (ynode r b'))
+      ≤ (r : ℝ) * (Utau (nodeC r b) + Uex L (nodeC r b))
+        + (Real.log (1 + 2 * m) + |Real.log L|) := by
+  simpa using sumR_Y_leW (w := 1) hb hr hm hL0 hL (by simpa using hL2)
 
 end Bounds
 

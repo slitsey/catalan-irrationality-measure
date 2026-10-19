@@ -255,11 +255,12 @@ theorem sumX_free_le {σ : ℂ} (hσ : σ.re < 0) {r m : ℕ} (hr : 0 < r) (hm :
     mul_nonpos_of_nonneg_of_nonpos (by positivity) hneg
   linarith
 
-/-- [R3] for a common node `b/r`, `b < r`: `O(log r)` error. -/
-theorem sumX_node_le {r m b : ℕ} (hr : 0 < r) (hm : 0 < m) (hb : b < r)
-    {L : ℝ} (hL0 : 0 < L) (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+/-- [R3] for a common node `b/r`, `b < r`: `O(log r)` error; window parameter `w`
+(`2m/r ≤ L + 2w/r`, i.e. `m ≤ α r + w`). -/
+theorem sumX_node_leW {r m b : ℕ} {w : ℝ} (hr : 0 < r) (hm : 0 < m) (hb : b < r)
+    {L : ℝ} (hL0 : 0 < L) (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 * w / r) :
     ∑ i ∈ range m, elog (nodeC r b) (nodeC r (r + 2 * i))
-      ≤ (r : ℝ) * Uex L (nodeC r b) + Real.log (1 + 2 * m) + |Real.log L| := by
+      ≤ (r : ℝ) * Uex L (nodeC r b) + Real.log (1 + 2 * m) + w * |Real.log L| := by
   have hr' : (0 : ℝ) < r := by exact_mod_cast hr
   have hbr : (b : ℝ) + 1 ≤ r := by exact_mod_cast hb
   set σ : ℂ := nodeC r b with hσdef
@@ -334,16 +335,24 @@ theorem sumX_node_le {r m b : ℕ} (hr : 0 < r) (hm : 0 < m) (hb : b < r)
       exact mul_le_mul_of_nonneg_left h1r (by positivity)
     nlinarith
   rw [hsplit, mul_add] at h0
-  have hfac : (r : ℝ) / 2 * ((L' - L) * |Real.log L|) ≤ |Real.log L| := by
-    have h1 : (L' - L) ≤ 2 / r := by linarith
-    have h2 : (r : ℝ) / 2 * (L' - L) ≤ 1 := by
-      calc (r : ℝ) / 2 * (L' - L) ≤ (r : ℝ) / 2 * (2 / r) :=
+  have hfac : (r : ℝ) / 2 * ((L' - L) * |Real.log L|) ≤ w * |Real.log L| := by
+    have h1 : (L' - L) ≤ 2 * w / r := by linarith
+    have h2 : (r : ℝ) / 2 * (L' - L) ≤ w := by
+      calc (r : ℝ) / 2 * (L' - L) ≤ (r : ℝ) / 2 * (2 * w / r) :=
             mul_le_mul_of_nonneg_left h1 (by positivity)
-        _ = 1 := by field_simp
+        _ = w := by field_simp
     nlinarith [abs_nonneg (Real.log L)]
   have hUex : (r : ℝ) / 2 * (∫ u in (1 : ℝ)..1 + L, elog σ (u : ℂ)) = r * Uex L σ := by
     unfold Uex; ring
   have hmul := mul_le_mul_of_nonneg_left hpos (by positivity : (0 : ℝ) ≤ (r : ℝ) / 2)
   linarith
+
+/-- The window-`1` case of `sumX_node_leW`. -/
+theorem sumX_node_le {r m b : ℕ} (hr : 0 < r) (hm : 0 < m) (hb : b < r)
+    {L : ℝ} (hL0 : 0 < L) (hL : L ≤ 2 * m / r) (hL2 : 2 * (m : ℝ) / r ≤ L + 2 / r) :
+    ∑ i ∈ range m, elog (nodeC r b) (nodeC r (r + 2 * i))
+      ≤ (r : ℝ) * Uex L (nodeC r b) + Real.log (1 + 2 * m) + |Real.log L| := by
+  have := sumX_node_leW (w := 1) hr hm hb hL0 hL (by simpa using hL2)
+  simpa using this
 
 end CatalanCore.Decay

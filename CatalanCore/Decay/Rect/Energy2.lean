@@ -70,21 +70,30 @@ lemma Bexp_congr {k N : ℕ} (σ : Fin k → ℂ) (τ τ' : Fin N → ℂ) (msk 
       · rw [h b hb, h b' hb']
   simp only [h1, h2]
 
-/-- Pointwise comparison used for free points and for removed nodes. -/
+/-- Pointwise comparison used for free points and for removed nodes (window `δ' ≤ w`). -/
+lemma pt_ineqW {r m : ℕ} {α ε A0 Y U I g δ' w : ℝ} (hr' : 0 < (r : ℝ)) (hδ0 : 0 ≤ δ')
+    (hδ1 : δ' ≤ w) (hδdef : δ' = m - α * r) (hI : 0 ≤ I) (hA0 : 0 ≤ A0)
+    (hY : -(A0 + (2 / r) * I) ≤ Y) (hg : g = (1 + α) * Y - U + ((1 - ε) * Real.pi / r) * I) :
+    2 * r * g - 2 * (1 - ε) * Real.pi * I - 2 * w * A0 - (4 * w / r) * I
+      ≤ 2 * ((r : ℝ) + m) * Y - 2 * r * U := by
+  have hX0 : 0 ≤ A0 + (2 / r) * I := by positivity
+  have h1 : 0 ≤ δ' * (Y + (A0 + (2 / r) * I)) := mul_nonneg hδ0 (by linarith)
+  have h2 : δ' * (A0 + (2 / r) * I) ≤ w * (A0 + (2 / r) * I) :=
+    mul_le_mul_of_nonneg_right hδ1 hX0
+  have hm : (m : ℝ) = δ' + α * r := by linarith
+  have e : 2 * (r : ℝ) * g = 2 * r * (1 + α) * Y - 2 * r * U + 2 * (1 - ε) * Real.pi * I := by
+    rw [hg]; field_simp
+  have e2 : (4 * w / (r : ℝ)) * I = 2 * (w * ((2 / r) * I)) := by ring
+  rw [e, hm, e2]
+  nlinarith [h1, h2]
+
+/-- The window-`1` case of `pt_ineqW`. -/
 lemma pt_ineq {r m : ℕ} {α ε A0 Y U I g δ' : ℝ} (hr' : 0 < (r : ℝ)) (hδ0 : 0 ≤ δ')
     (hδ1 : δ' ≤ 1) (hδdef : δ' = m - α * r) (hI : 0 ≤ I) (hA0 : 0 ≤ A0)
     (hY : -(A0 + (2 / r) * I) ≤ Y) (hg : g = (1 + α) * Y - U + ((1 - ε) * Real.pi / r) * I) :
     2 * r * g - 2 * (1 - ε) * Real.pi * I - 2 * A0 - (4 / r) * I
       ≤ 2 * ((r : ℝ) + m) * Y - 2 * r * U := by
-  have hX0 : 0 ≤ A0 + (2 / r) * I := by positivity
-  have h1 : 0 ≤ δ' * (Y + (A0 + (2 / r) * I)) := mul_nonneg hδ0 (by linarith)
-  have h2 : δ' * (A0 + (2 / r) * I) ≤ A0 + (2 / r) * I := by nlinarith
-  have hm : (m : ℝ) = δ' + α * r := by linarith
-  have e : 2 * (r : ℝ) * g = 2 * r * (1 + α) * Y - 2 * r * U + 2 * (1 - ε) * Real.pi * I := by
-    rw [hg]; field_simp
-  have e2 : (4 / (r : ℝ)) * I = 2 * ((2 / r) * I) := by ring
-  rw [e, hm, e2]
-  nlinarith [h1, h2]
+  simpa using pt_ineqW (w := 1) hr' hδ0 hδ1 hδdef hI hA0 hY hg
 
 /-- Cross sums of an energy configuration. -/
 noncomputable def PS {k N : ℕ} (σ : Fin k → ℂ) (τ : Fin N → ℂ) : ℝ := ∑ l, ∑ b, elog (σ l) (τ b)
@@ -102,11 +111,23 @@ theorem Esc_decomp' {k N : ℕ} (σ : Fin k → ℂ) (τ : Fin N → ℂ) (s : F
 /-- The node potential `U^τ + U^ex_{2α}` of the hybrid node measure `Leb[0,1] + ½ Leb[1, 1+2α]`. -/
 noncomputable def Unu (α : ℝ) (σ : ℂ) : ℝ := Utau σ + Uex (2 * α) σ
 
-/-- The explicit error term of the rectangular Lemma A. -/
-noncomputable def RerrR (Γd A0 ρ m0 Cl α : ℝ) (r m : ℕ) : ℝ :=
-  2 * r * Γd + 2 * ((r : ℝ) + m) * A0 + m * Real.log (r + 2 * m)
+/-- The explicit error term of the rectangular Lemma A, window `w` (`m ≤ α r + w`). -/
+noncomputable def RerrRW (w Γd A0 ρ m0 Cl α : ℝ) (r m : ℕ) : ℝ :=
+  2 * r * Γd + 2 * ((r : ℝ) + m) * (w * A0) + m * Real.log (r + 2 * m)
     + 2 * ((r : ℝ) + m) * (Real.log (1 + r / m0) + Real.log (1 + 2 * m / r))
-    + 2 * ((r : ℝ) + m) * (Real.log (1 + 2 * m) + |Real.log (2 * α)|)
+    + 2 * ((r : ℝ) + m) * (Real.log (1 + 2 * m) + w * |Real.log (2 * α)|)
     + ((r : ℝ) + m) * |Real.log ρ| + ((r : ℝ) + m) * Cl
+
+/-- The explicit error term of the rectangular Lemma A (window `1`). -/
+noncomputable def RerrR (Γd A0 ρ m0 Cl α : ℝ) (r m : ℕ) : ℝ :=
+  RerrRW 1 Γd A0 ρ m0 Cl α r m
+
+theorem RerrR_eq (Γd A0 ρ m0 Cl α : ℝ) (r m : ℕ) :
+    RerrR Γd A0 ρ m0 Cl α r m
+      = 2 * r * Γd + 2 * ((r : ℝ) + m) * A0 + m * Real.log (r + 2 * m)
+        + 2 * ((r : ℝ) + m) * (Real.log (1 + r / m0) + Real.log (1 + 2 * m / r))
+        + 2 * ((r : ℝ) + m) * (Real.log (1 + 2 * m) + |Real.log (2 * α)|)
+        + ((r : ℝ) + m) * |Real.log ρ| + ((r : ℝ) + m) * Cl := by
+  unfold RerrR RerrRW; simp only [one_mul]
 
 end CatalanCore.Decay

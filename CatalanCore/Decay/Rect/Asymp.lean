@@ -82,8 +82,8 @@ lemma err_small (c1 c2 δ : ℝ) (hδ : 0 < δ) :
 
 set_option maxHeartbeats 4000000 in
 /-- Lower bound for `Alow` in terms of `Jfun α`. -/
-theorem Alow_ge {α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
-    ∃ (r1 : ℕ) (C3 C4 : ℝ), ∀ r m : ℕ, r1 ≤ r → α * r ≤ m → (m : ℝ) ≤ α * r + 1 →
+theorem Alow_geW {α w : ℝ} (hα : 0 < α) (hw : 1 ≤ w) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ (r1 : ℕ) (C3 C4 : ℝ), ∀ r m : ℕ, r1 ≤ r → α * r ≤ m → (m : ℝ) ≤ α * r + w →
       (r : ℝ) ^ 2 * (Jfun α - δ) - (C3 * r + C4 * r * Real.log r) ≤ Alow r m := by
   obtain ⟨η, hη, hηg⟩ := Metric.continuousAt_iff.1 (gJ_cont hα) (δ / 2) (by positivity)
   set c0 : ℝ := Utau (((3 + 2 * α : ℝ)) : ℂ) with hc0
@@ -93,30 +93,31 @@ theorem Alow_ge {α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
   have hLxnn : 0 ≤ Lx := by
     have : 0 ≤ Real.log (2 * α + 2) := Real.log_nonneg (by linarith)
     positivity
-  refine ⟨⌈1 / η⌉₊ + 1, 2 * |c0| + (4 + 2 * (α + 1) * Lα1 + 3 * (α + 1) + (α + 1) * Lx + 2 * (α + 1)),
+  refine ⟨⌈w / min η 1⌉₊ + 1, 2 * w * |c0| + (4 + 2 * (α + 1) * Lα1 + 3 * (α + 1) + (α + 1) * Lx + 2 * (α + 1)),
     (2 + 2 * (α + 1) + 2 * (α + 1)), ?_⟩
   intro r m hr hαr hαr'
   have hr1 : (1 : ℝ) ≤ r := by
     have : 1 ≤ r := by omega
     exact_mod_cast this
   have hr' : (0 : ℝ) < r := by linarith
-  have hrη : 1 / (r : ℝ) < η := by
-    have h1 : (⌈1 / η⌉₊ : ℝ) ≤ r := by exact_mod_cast (by omega : ⌈1 / η⌉₊ ≤ r)
-    have h2 : 1 / η ≤ ⌈1 / η⌉₊ := Nat.le_ceil _
-    have h3 : 1 / η < r := by
-      have : (⌈1 / η⌉₊ : ℝ) + 1 ≤ r := by exact_mod_cast hr
+  have hη1 : 0 < min η 1 := lt_min hη one_pos
+  have hrη' : w / (r : ℝ) < min η 1 := by
+    have h2 : w / min η 1 ≤ ⌈w / min η 1⌉₊ := Nat.le_ceil _
+    have h3 : w / min η 1 < r := by
+      have : (⌈w / min η 1⌉₊ : ℝ) + 1 ≤ r := by exact_mod_cast hr
       linarith
     rw [div_lt_iff₀ hr']
-    rw [div_lt_iff₀ hη] at h3
+    rw [div_lt_iff₀ hη1] at h3
     linarith
+  have hrη : w / (r : ℝ) < η := hrη'.trans_le (min_le_left _ _)
   set x : ℝ := (m : ℝ) / r with hx
   have hxα : α ≤ x := by rw [hx, le_div_iff₀ hr']; exact hαr
-  have hxα' : x ≤ α + 1 / r := by
+  have hxα' : x ≤ α + w / r := by
     rw [hx, div_le_iff₀ hr']
-    have : (α + 1 / (r : ℝ)) * r = α * r + 1 := by field_simp
+    have : (α + w / (r : ℝ)) * r = α * r + w := by field_simp
     rw [this]; exact hαr'
   have hx1 : x ≤ α + 1 := by
-    have : 1 / (r : ℝ) ≤ 1 := by rw [div_le_one hr']; exact hr1
+    have : w / (r : ℝ) ≤ 1 := (hrη'.trans_le (min_le_right _ _)).le
     linarith
   have hxm : (m : ℝ) = x * r := by rw [hx]; field_simp
   -- continuity of gJ
@@ -128,9 +129,9 @@ theorem Alow_ge {α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
     linarith
   -- integral
   have hI := Iu_ge hα hxα hx1
-  have hIx : Iu α - 2 * (1 / r) * |c0| ≤ Iu x := by
-    have h1 : 2 * (x - α) * c0 ≥ -(2 * (1 / (r : ℝ)) * |c0|) := by
-      have h2 : 2 * (x - α) * |c0| ≤ 2 * (1 / (r : ℝ)) * |c0| := by
+  have hIx : Iu α - 2 * (w / r) * |c0| ≤ Iu x := by
+    have h1 : 2 * (x - α) * c0 ≥ -(2 * (w / (r : ℝ)) * |c0|) := by
+      have h2 : 2 * (x - α) * |c0| ≤ 2 * (w / (r : ℝ)) * |c0| := by
         apply mul_le_mul_of_nonneg_right _ (abs_nonneg _); linarith
       have h3 : -(2 * (x - α) * |c0|) ≤ 2 * (x - α) * c0 := by
         have := neg_abs_le c0
@@ -188,11 +189,17 @@ theorem Alow_ge {α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
   rw [hAl]
   have hF1 := mul_le_mul_of_nonneg_left hg (sq_nonneg (r : ℝ))
   have hF2 := mul_le_mul_of_nonneg_left hIx (sq_nonneg (r : ℝ))
-  have hF2' : (r : ℝ) ^ 2 * (Iu α - 2 * (1 / r) * |c0|) = (r : ℝ) ^ 2 * Iu α - 2 * r * |c0| := by
+  have hF2' : (r : ℝ) ^ 2 * (Iu α - 2 * (w / r) * |c0|) = (r : ℝ) ^ 2 * Iu α - 2 * w * r * |c0| := by
     field_simp
   have hδr : 0 ≤ δ * (r : ℝ) ^ 2 := mul_nonneg hδ.le (sq_nonneg _)
   have hJ : Jfun α = gJ α + Iu α := rfl
   rw [hJ]
   nlinarith [hF1, hF2, hF2', hδr, hmlogm, hmlog2x, hmlogr, hmMx, hlogr, hr1]
+
+/-- The window-`1` case of `Alow_geW`. -/
+theorem Alow_ge {α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ (r1 : ℕ) (C3 C4 : ℝ), ∀ r m : ℕ, r1 ≤ r → α * r ≤ m → (m : ℝ) ≤ α * r + 1 →
+      (r : ℝ) ^ 2 * (Jfun α - δ) - (C3 * r + C4 * r * Real.log r) ≤ Alow r m :=
+  Alow_geW (w := 1) hα le_rfl hδ
 
 end CatalanCore.Decay
