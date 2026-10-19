@@ -134,7 +134,7 @@ theorem u_down_S_ne (hS : n ≤ S) :
       (by intro i j hi hj h; omega) (by intro i j hi hj; omega))
   have hjk := Finset.mem_range.1 hj
   have hk := k.2
-  refine neg_ne_zero.2 (tau_ne_zero m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
+  refine neg_ne_zero.2 (tau_ne_zero_chain m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
 
 end Main
 
@@ -178,7 +178,7 @@ theorem u_down_0_ne (hS : n ≤ S) (hn : 1 ≤ n) :
   refine mul_ne_zero (Finset.prod_ne_zero_iff.2 fun k _ => Finset.prod_ne_zero_iff.2
     fun j hj => ?_) (cauFac_chain_ne_zero hθ m n S (fun j => (0 : ℤ) - (j : ℤ))
       (by intro i j hi hj h; omega) (by intro i j hi hj; omega))
-  refine neg_ne_zero.2 (tau_ne_zero m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
+  refine neg_ne_zero.2 (tau_ne_zero_chain m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
 
 /-- `u(T~, Π c_1)`: the upward chain `c_1, c_2, …` (leading coefficient `r(y) = -σ(-θ-y-1)`). -/
 theorem u_up_1 (hS : n ≤ S) :
@@ -207,7 +207,7 @@ theorem u_up_1_ne (hS : n ≤ S) :
       (by intro i j hi hj h; omega) (by intro i j hi hj; omega))
   have hjk := Finset.mem_range.1 hj
   have hk := k.2
-  refine neg_ne_zero.2 (sigma_ne_zero m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
+  refine neg_ne_zero.2 (sigma_ne_zero_chain m n S θ hθ _ (by omega) ?_ ?_) <;> intro i hi <;> omega
 
 end Main2
 

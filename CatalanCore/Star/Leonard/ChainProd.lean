@@ -155,7 +155,7 @@ lemma pp_ne_zero' [CharZero F] (K : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (h0 :
     exact h0 (Int.cast_eq_zero.1 this)
   · intro h; apply hθ ((K : ℤ) + y); push_cast; linear_combination h
 
-lemma tau_ne_zero [CharZero F] (m n S : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (h1 : y ≠ 1)
+lemma tau_ne_zero_chain [CharZero F] (m n S : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (h1 : y ≠ 1)
     (hQ : ∀ i : ℕ, i ≤ m → (S : ℤ) + 2 * i + 1 - y ≠ 0)
     (hP : ∀ i : ℕ, i < m → (S : ℤ) + 2 * (i + 1) - y ≠ 0) :
     tau (m + n) m S θ (-θ - (y : F)) ≠ 0 := by
@@ -172,7 +172,7 @@ lemma tau_ne_zero [CharZero F] (m n S : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (
     have h2 : (((S : ℤ) + 2 * (i + 1) - y : ℤ) : F) = 0 := by push_cast; linear_combination h
     exact_mod_cast h2
 
-lemma sigma_ne_zero [CharZero F] (m n S : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (h0 : y ≠ 0)
+lemma sigma_ne_zero_chain [CharZero F] (m n S : ℕ) (θ : F) (hθ : Gen θ) (y : ℤ) (h0 : y ≠ 0)
     (hP : ∀ i : ℕ, i < m → (S : ℤ) + 2 * i + 1 - y ≠ 0)
     (hQ : ∀ i : ℕ, i + 1 < m → (S : ℤ) + 2 * i + 2 - y ≠ 0) :
     sigma (m + n) m S θ (-θ - (y : F) - 1) ≠ 0 := by
