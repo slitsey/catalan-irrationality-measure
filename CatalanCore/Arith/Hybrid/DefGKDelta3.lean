@@ -20,7 +20,7 @@ section Delta3
 
 variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
-lemma cast_sub_p {X : ℕ} (h : p ≤ X) : ((X - p : ℕ) : ZMod p) = (X : ZMod p) := by
+lemma cast_sub_p_gk {X : ℕ} (h : p ≤ X) : ((X - p : ℕ) : ZMod p) = (X : ZMod p) := by
   rw [Nat.cast_sub h, ZMod.natCast_self, sub_zero]
 
 lemma cast_sub_2p {X : ℕ} (h : 2 * p ≤ X) : ((X - 2 * p : ℕ) : ZMod p) = (X : ZMod p) := by
@@ -86,9 +86,9 @@ theorem delta_good (hL : LamData Fr) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤
   have hδ0 := zone_delta_ne S hu1 hu2 hw1 hw2 hne
   set δ : ZMod p := (w : ZMod p) - u with hδ
   have cu1 := cast_sub_2p (p := p) (X := u) (by omega)
-  have cu2 := cast_sub_p (p := p) (X := u) (by omega)
+  have cu2 := cast_sub_p_gk (p := p) (X := u) (by omega)
   have cw1 := cast_sub_2p (p := p) (X := w) (by omega)
-  have cw2 := cast_sub_p (p := p) (X := w) (by omega)
+  have cw2 := cast_sub_p_gk (p := p) (X := w) (by omega)
   have Lu := Lz_B5 (p := p) (k := k) (n := u) h13 hk (by omega)
   have Lw := Lz_B5 (p := p) (k := k) (n := w) h13 hk (by omega)
   have L1 := Lz_B1 (p := p) (k := k) (n := u - 2 * p) h13 hk (by omega) (by omega)
