@@ -202,6 +202,106 @@ theorem lam_UU_off (hp : 5 ≤ p) {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : 
   rw [← mul_assoc, mul_comm ((w : ZMod p) - u) 16]
   linear_combination h1 - h2
 
+/-- `U(n) = ∑_{k ≤ n} (1/(16k²) - 1/(4k-1)²)`. -/
+noncomputable def Uq (n : ℕ) : ℚ :=
+  ∑ j ∈ range n, ((16 * ((j + 1 : ℕ) : ℚ) ^ 2)⁻¹ - ((4 * ((j + 1 : ℕ) : ℚ) - 1) ^ 2)⁻¹)
+
+lemma Mn_diag (a : ℕ) : lamFrame.Mn a a = -Uq a := by
+  unfold Frame.Mn
+  rw [if_pos rfl]
+  have hn : lamFrame.norm = 16 := rfl
+  rw [hn, Uq]
+  have : Finset.Icc 1 a = Finset.Ico 1 (a + 1) := by ext x; simp
+  rw [this, Finset.sum_Ico_eq_sum_range, neg_mul, ← Finset.sum_neg_distrib, Finset.mul_sum]
+  simp only [add_tsub_cancel_right]
+  rw [← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [show 1 + j = j + 1 by ring, Dsq_eq (j + 1) (by omega)]
+  have h1 : (((j + 1 : ℕ) : ℚ)) ≠ 0 := by positivity
+  have h2 : (4 * ((j + 1 : ℕ) : ℚ) - 1) ≠ 0 := by
+    have : (1 : ℚ) ≤ ((j + 1 : ℕ) : ℚ) := by exact_mod_cast Nat.succ_pos j
+    intro h; linarith
+  field_simp
+
+lemma term_red2 {K k : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hk1 : 1 ≤ k) (hkK : k < K) (hKp : K < p)
+    (hp : 5 ≤ p) :
+    ((16 * ((k : ℕ) : ℚ) ^ 2)⁻¹ - ((4 * ((k : ℕ) : ℚ) - 1) ^ 2)⁻¹) ∈ LocRing p ∧
+      red p ((16 * ((k : ℕ) : ℚ) ^ 2)⁻¹ - ((4 * ((k : ℕ) : ℚ) - 1) ^ 2)⁻¹) =
+        (16 * ((k : ℕ) : ZMod p) ^ 2)⁻¹ - ((((4 * k - 1 : ℕ)) : ZMod p) ^ 2)⁻¹ := by
+  have h4 : (4 : ZMod p) ≠ 0 := by intro h; rw [h] at hK4; simp at hK4
+  have hk0 : ((k : ℕ) : ZMod p) ≠ 0 := by
+    intro h; rw [ZMod.natCast_eq_zero_iff] at h; exact absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  have hKk : ((K : ZMod p) - k) ≠ 0 := cast_sub_ne_zero hkK hKp
+  have e1 : (((4 * k - 1 : ℕ)) : ZMod p) = -4 * ((K : ZMod p) - k) := by
+    rw [Nat.cast_sub (by omega)]; push_cast; linear_combination hK4
+  have h16 : (16 : ZMod p) ≠ 0 := by
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero h4 h4
+  have n1 : ¬ p ∣ 16 * k ^ 2 := by
+    rw [← ZMod.natCast_eq_zero_iff]; push_cast
+    exact mul_ne_zero h16 (pow_ne_zero 2 hk0)
+  have n2 : ¬ p ∣ (4 * k - 1) ^ 2 := by
+    rw [← ZMod.natCast_eq_zero_iff]; push_cast [Nat.cast_pow]
+    rw [e1]
+    exact pow_ne_zero 2 (mul_ne_zero (neg_ne_zero.mpr h4) hKk)
+  have c1 : (16 * ((k : ℕ) : ℚ) ^ 2) = ((16 * k ^ 2 : ℕ) : ℚ) := by push_cast; ring
+  have c2 : (4 * ((k : ℕ) : ℚ) - 1) ^ 2 = (((4 * k - 1) ^ 2 : ℕ) : ℚ) := by
+    rw [Nat.cast_pow, Nat.cast_sub (by omega)]; push_cast; ring
+  rw [c1, c2]
+  obtain ⟨a1, a2⟩ := red_inv_nat (p := p) n1
+  obtain ⟨b1, b2⟩ := red_inv_nat (p := p) n2
+  refine ⟨(LocRing p).sub_mem a1 b1, ?_⟩
+  rw [red_sub a1 b1, a2, b2]
+  push_cast [Nat.cast_pow]
+  rfl
+
+lemma Uq_red {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p) (hp : 5 ≤ p) :
+    ∀ n, n ≤ K - 1 → Uq n ∈ LocRing p ∧ red p (Uq n) =
+      ∑ j ∈ range n, ((16 * (((j + 1 : ℕ)) : ZMod p) ^ 2)⁻¹ -
+        ((((4 * (j + 1) - 1 : ℕ)) : ZMod p) ^ 2)⁻¹) := by
+  intro n
+  induction n with
+  | zero => intro _; simp [Uq, red, (LocRing p).zero_mem]
+  | succ n ih =>
+    intro hn
+    obtain ⟨h1, h2⟩ := ih (by omega)
+    obtain ⟨t1, t2⟩ := term_red2 (p := p) hK4 (k := n + 1) (by omega) (by omega) hKp hp
+    have e : Uq (n + 1) = Uq n + ((16 * ((n + 1 : ℕ) : ℚ) ^ 2)⁻¹ -
+        ((4 * ((n + 1 : ℕ) : ℚ) - 1) ^ 2)⁻¹) := by
+      unfold Uq; rw [Finset.sum_range_succ]
+    rw [e, Finset.sum_range_succ]
+    exact ⟨(LocRing p).add_mem h1 t1, by rw [red_add h1 t1, h2, t2]⟩
+
+/-- **Diagonal entries of `Mn` modulo `p`.** -/
+theorem Mn_diag_red (hp : 5 ≤ p) {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p) {a : ℕ}
+    (ha : a ≤ K - 1) :
+    lamFrame.Mn a a ∈ LocRing p ∧
+      16 * red p (lamFrame.Mn a a) =
+        -(Gs p (fun x => (x⁻¹) ^ 2) a - Gs p (fun x => (x⁻¹) ^ 2) (K - 1) +
+          Gs p (fun x => (x⁻¹) ^ 2) (K - 1 - a)) := by
+  obtain ⟨u1, u2⟩ := Uq_red hK4 hKp hp a ha
+  rw [Mn_diag]
+  refine ⟨(LocRing p).neg_mem u1, ?_⟩
+  rw [red_neg, u2, ← Psi_eq (p := p) (by omega) hK4 hKp ha]
+  ring
+
+/-- **Scalar Schur complement, diagonal entries.**
+`16 · red Mn_{uu} = ∑_{c=K}^{p-1} 1/(c-u)² + H2_{K-1}`: independent of `u` after subtracting the
+Cauchy part. -/
+theorem lam_UU_diag (hp : 5 ≤ p) {K : ℕ} (hK4 : 4 * (K : ZMod p) = 1) (hKp : K < p) {u : ℕ}
+    (hu : u ≤ K - 1) :
+    16 * red p (lamFrame.Mn u u) =
+      ∑ c ∈ Ico K p, ((((c : ℕ) : ZMod p) - u)⁻¹) ^ 2 + Gs p (fun x => (x⁻¹) ^ 2) (K - 1) := by
+  obtain ⟨_, h1⟩ := Mn_diag_red hp hK4 hKp hu
+  have hK1 : 1 ≤ K := by
+    by_contra h
+    have : K = 0 := by omega
+    subst this
+    simp at hK4
+  have h2 := schur_diag p hp (K := K) (u := u) (by omega) (by omega)
+  rw [h1]
+  linear_combination -h2
+
 end ModP
 
 end CatalanFrames.Lambda
