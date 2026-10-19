@@ -179,17 +179,28 @@ theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
     exact ⟨g, h1, h2.trans (BT_eq p r m j k hkr a b).symm⟩
 
 
+/-- The numeric side condition: the D4 potentials have total value `≥ m`. -/
+lemma uPot_sum_ge (hrp : r < p) :
+    m ≤ ∑ a : Fin r ⊕ Fin m, uPot p r k (Frame.hybRow r m a) := by
+  rw [Fintype.sum_sum_type]
+  have : ∑ i : Fin m, uPot p r k (Frame.hybRow r m (Sum.inr i)) ≥ ∑ i : Fin m, 1 := by
+    refine Finset.sum_le_sum fun i _ => ?_
+    have h : Frame.hybRow r m (Sum.inr i) = r + 2 * (i : ℕ) := rfl
+    rw [h]; unfold uPot; split_ifs <;> omega
+  simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one] at this
+  omega
+
 /-- **Theorem B at a prime `r < p < r + m`** in the `tropExp` form of `DefHyp`, assuming the D4
 weights are tropically optimal (`hopt`). -/
 theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
     (S : BSetup p r m j k) (hpm : p < r + m)
     (hopt : ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤
-      tropExp I r m p)
-    (hk' : m - (p - r) ≤ ∑ a, uPot p r k (Frame.hybRow r m a) +
-      ∑ b, uPot p r k (Frame.hybCol r m b)) :
+      tropExp I r m p) :
     m - (p - r) ≤ tropExp I r m p ∧
-      GLE p (tropExp I r m p - (m - (p - r))) (Fr.fullPoly r m) :=
-  ⟨hk'.trans hopt, (gleAt_B_lam hL S hpm).mono (by omega)⟩
+      GLE p (tropExp I r m p - (m - (p - r))) (Fr.fullPoly r m) := by
+  have h1 := uPot_sum_ge (p := p) (r := r) (m := m) (k := k) S.hrp
+  refine ⟨?_, (gleAt_B_lam hL S hpm).mono (by omega)⟩
+  omega
 
 end
 
