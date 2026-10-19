@@ -69,22 +69,14 @@ lemma topC_sum_aux_G {Lc cm : ℕ} (I : HybInst Fr) (B : BadInfo I Lc cm) (r m :
     mul_le_mul_of_nonneg_right hcard (by linarith)
   linarith
 
-/-- **The border cost is negligible**, generic in the numerology and in the hybrid size `m = mf r`
-(any `mf r ≤ r`). -/
-theorem topC_sum_G {Lc cm : ℕ} (I : HybInst Fr) (B : BadInfo I Lc cm) (mf : ℕ → ℕ)
-    (hm : ∀ r, mf r ≤ r) {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in Filter.atTop,
-    ∑ p ∈ (Finset.range (Bnd I r (mf r))).filter Nat.Prime,
-      (topC I r (mf r) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 := by
-  have hl := eventually_log_le (e := ε / 572) (by positivity)
-  have hbig : ∀ᶠ r : ℕ in atTop, 48 / ε ≤ (r : ℝ) ^ 2 := by
-    have : Tendsto (fun r : ℕ => (r : ℝ) ^ 2) atTop atTop :=
-      (tendsto_pow_atTop (by norm_num : 2 ≠ 0)).comp tendsto_natCast_atTop_atTop
-    exact this.eventually_ge_atTop _
-  filter_upwards [hl, hbig, eventually_ge_atTop 18] with r hr hr2 hr18
-  refine (topC_sum_aux_G I B r (mf r)).trans ?_
-  have hBd := Bnd_le_G B r (mf r)
-  have hmr := hm r
-  set m := mf r with hmdef
+/-- Pointwise core of `topC_sum_G`: for one `(r, m)` with `m ≤ r` and `r` large. -/
+lemma topC_sum_core {Lc cm : ℕ} {I : HybInst Fr} (B : BadInfo I Lc cm) {ε : ℝ} (hε : 0 < ε)
+    (r m : ℕ) (hmr : m ≤ r) (hr : Real.log r ≤ ε / 572 * r) (hr2 : 48 / ε ≤ (r : ℝ) ^ 2)
+    (hr18 : 18 ≤ r) :
+    ∑ p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime,
+      (topC I r m p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 := by
+  refine (topC_sum_aux_G I B r m).trans ?_
+  have hBd := Bnd_le_G B r m
   have hN : r + 2 * m ≤ 3 * r := by omega
   have hrR : (18 : ℝ) ≤ r := by exact_mod_cast hr18
   have hBr : Bnd I r m ≤ 13 * r := by
@@ -141,6 +133,28 @@ theorem topC_sum_G {Lc cm : ℕ} (I : HybInst Fr) (B : BadInfo I Lc cm) (mf : �
     nlinarith
   linarith
 
+/-- **The border cost is negligible for an instance family**: eventually in `r`, uniformly in
+`m ≤ r`, with a numerology `BadInfo (I r m) Lc cm` for every member. -/
+theorem topC_sum_fam {Lc cm : ℕ} (I : ℕ → ℕ → HybInst Fr) (B : ∀ r m, BadInfo (I r m) Lc cm)
+    {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in Filter.atTop, ∀ m, m ≤ r →
+    ∑ p ∈ (Finset.range (Bnd (I r m) r m)).filter Nat.Prime,
+      (topC (I r m) r m p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 := by
+  have hl := eventually_log_le (e := ε / 572) (by positivity)
+  have hbig : ∀ᶠ r : ℕ in atTop, 48 / ε ≤ (r : ℝ) ^ 2 := by
+    have : Tendsto (fun r : ℕ => (r : ℝ) ^ 2) atTop atTop :=
+      (tendsto_pow_atTop (by norm_num : 2 ≠ 0)).comp tendsto_natCast_atTop_atTop
+    exact this.eventually_ge_atTop _
+  filter_upwards [hl, hbig, eventually_ge_atTop 18] with r hr hr2 hr18 m hmr
+  exact topC_sum_core (B r m) hε r m hmr hr hr2 hr18
+
+/-- **The border cost is negligible**, generic in the numerology and in the hybrid size `m = mf r`
+(any `mf r ≤ r`). -/
+theorem topC_sum_G {Lc cm : ℕ} (I : HybInst Fr) (B : BadInfo I Lc cm) (mf : ℕ → ℕ)
+    (hm : ∀ r, mf r ≤ r) {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in Filter.atTop,
+    ∑ p ∈ (Finset.range (Bnd I r (mf r))).filter Nat.Prime,
+      (topC I r (mf r) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 :=
+  (topC_sum_fam (fun _ _ => I) (fun _ _ => B) hε).mono fun r h => h (mf r) (hm r)
+
 /-- The border cost is negligible for any `HybParams`. -/
 theorem HybParams.topC_sum {I : HybInst Fr} (P : HybParams I) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in Filter.atTop,
@@ -164,5 +178,34 @@ theorem mem2Content_of_both_G (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ0 Λ :
   refine ⟨T, δ, hδ.2, ?_⟩
   rw [log_DhybTop I r (r / 8) hδ.1]
   nlinarith [hlog, hS, mul_le_mul_of_nonneg_right hΛ (sq_nonneg (r : ℝ))]
+
+end CatalanFrames.HybCommon
+
+namespace CatalanFrames.HybCommon
+
+/-- **Second member from the first member's content, for an instance family** (`δ = 0`, no deficit
+families): if `log Dhyb (I r m) ≤ (Λ + ε) r²` eventually, uniformly over the admissible `m` (`A r m → m ≤ r`),
+then `Mem2ContentA Fr A Λ` (`A r m → m ≤ r` eventually); the bordering costs only `topC`, which is `O(r log r)` (`topC_sum_fam`). -/
+theorem mem2ContentA_of_member1 {Fr : Frame} {Lc cm : ℕ} (I : ℕ → ℕ → HybInst Fr)
+    [∀ r m, (I r m).DiagOK r m] (B : ∀ r m, BadInfo (I r m) Lc cm) {Λ : ℝ} (A : ℕ → ℕ → Prop)
+    (hA : ∀ᶠ r : ℕ in atTop, ∀ m, A r m → m ≤ r)
+    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m →
+      Real.log (Dhyb (I r m) r m) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    Mem2ContentA Fr A Λ := by
+  refine mem2ContentF_of_top I A ?_
+  intro ε hε
+  filter_upwards [h (ε / 2) (by positivity), topC_sum_fam I B (ε := ε / 2) (by positivity), hA]
+    with r h1 h2 h3 m hm
+  have hT : DefHypT (I r m) r m (tropExp (I r m) r m) (fun _ => 0) :=
+    defHypT_of_local (I := I r m) (r := r) (m := m) _ _ (fun p _ _ => le_rfl) (fun _ => False)
+      (fun _ _ => rfl) (fun p _ _ hS => absurd hS id)
+  refine ⟨tropExp (I r m) r m, fun _ => 0,
+    defHypTop_of_local (I := I r m) (r := r) (m := m) _ _ (fun p _ _ => le_rfl) (fun _ => False)
+      (fun _ _ => rfl) (fun p _ _ hS => absurd hS id), ?_⟩
+  rw [log_DhybTop (I r m) r m hT, log_DhybT (I r m) r m hT, ← log_Dhyb]
+  have := h1 m hm
+  have := h2 m (h3 m hm)
+  simp only [Nat.cast_zero, zero_mul, Finset.sum_const_zero, sub_zero]
+  nlinarith
 
 end CatalanFrames.HybCommon
