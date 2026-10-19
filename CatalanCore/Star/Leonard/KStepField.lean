@@ -179,4 +179,60 @@ theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
   refine kstep_alg _ _ _ _ _ _ _ _ hu hup hQz ?_
   linear_combination hE + (θ + (i : F) + 1 + n) * hFa - (Pe m S θ i * (θ + (i : F) + n)) * hFb
 
+
+/-- **(K4b).**  Row relation of the Darboux map at `g = 0`, symbolic `m`:
+`(Xᵀ c'_y)_j = D_j μ_j c_y(j) - D_{j-1}σ_{j-1} c_y(j-1) = 𝒜(y) c_y(j) + ℬ'(y) c_{y-1}(j)
++ Σ_{x∈X} ℱ_x(y) c_x(j)` with `ℬ'(y) = -(Dσ)(-θ-y)`. -/
+theorem K4b_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    ∃ ℱ : ℕ → F, ∀ j : ℕ, j < K →
+      Dfac K m S θ j * mu K m S θ j / (θ + j + n)
+        - Dfac K m S θ ((j : F) - 1) * sigma K m S θ ((j : F) - 1) / (θ + j - 1 + n) =
+      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + j + n)
+        + -(Dfac K m S θ (-θ - n) * sigma K m S θ (-θ - n)) / (θ + j + n - 1)
+        + ∑ i ∈ Finset.range m, ℱ i / (θ + j + (S + 2 * (i : F) + 2)) := by
+  have hKF : (K : F) = (S : F) + m + 1 := by rw [hKS]; push_cast; ring
+  have hP : (PPf (S : F) m).eval (-(n : F)) ≠ 0 := by
+    have := Qh2_eval_int_ne (F := F) m S (-n) (fun j _ => by omega)
+    push_cast at this; exact this
+  obtain ⟨N, hNd, heq⟩ := K4b_poly K m hm (S : F) θ (n : F) (cK K m S θ) hKF hP
+  have hQQ : Qh m ((S : F) + 1) = Qh2 m (S : F) := by simp [Qh, Qh2]
+  obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
+  rw [hQQ] at hκ
+  refine ⟨κ, fun j hj => ?_⟩
+  rw [← coefA_eq K m S hm θ hθ hKS n hn, ← coefB'_eq K m S hm θ hθ hKS n hn]
+  have hGa : GenAt θ (j : F) := genAt_nat hθ j
+  have hGa1 : GenAt θ ((j : F) - 1) := genAt_nat_sub_one hθ j
+  have hPz : Pe m S θ j ≠ 0 := Pe_ne_zero m S hGa
+  have hQoj : Qo m S θ j ≠ 0 := Qo_ne_zero m S hGa
+  have hQ0 : Qo m S θ 0 ≠ 0 := by simpa using Qo_ne_zero m S (genAt_nat hθ 0)
+  have h1 : θ + (S : F) + 1 + j ≠ 0 := by
+    have := hGa (S + 1); push_cast at this; intro h0; apply this; linear_combination h0
+  have hKj : (K : F) - 1 - ((j : F) - 1) ≠ 0 := by
+    have := natsub_ne (F := F) (a := K) (b := j) (by omega)
+    intro h0; apply this; linear_combination h0
+  have hFa := Dfac_mu_Pe K m S θ (j : F) hm hPz hQ0 h1 hQoj
+  have hFb := Dfac_sigma K m S θ ((j : F) - 1) (Pe_ne_zero m S hGa1) (Qo_ne_zero m S hGa1) hQ0 hKj
+  have hE := congrArg (Polynomial.eval (θ + (j : F))) heq
+  simp only [eval_sub, eval_add, eval_mul, eval_C, eval_lin, MainB, A3b, B3b, eval_PPf_pred] at hE
+  have hQz : (PPf (S : F) m).eval (θ + (j : F)) ≠ 0 := by rw [eval_PPf_S K m S θ j]; exact hPz
+  have hSum := hκ (θ + (j : F)) (by simpa [Qh2] using hQz)
+  have hSum' : ∑ i ∈ Finset.range m, κ i / (θ + j + (S + 2 * (i : F) + 2)) =
+      N.eval (θ + (j : F)) / (PPf (S : F) m).eval (θ + (j : F)) := by
+    rw [show (PPf (S : F) m) = Qh2 m (S : F) from rfl, hSum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    unfold vY; ring_nf
+  rw [hSum']
+  have hu : θ + (j : F) + n ≠ 0 := by
+    have := hθ ((j : ℤ) + n); push_cast at this
+    intro h0; apply this; linear_combination h0
+  have hum : θ + (j : F) + n - 1 ≠ 0 := by
+    have := hθ ((j : ℤ) + n - 1); push_cast at this
+    intro h0; apply this; linear_combination h0
+  have e : θ + (j : F) - 1 + n = θ + j + n - 1 := by ring
+  rw [e]
+  rw [eval_PPf_S K m S θ j] at hE hQz ⊢
+  refine kstep_alg _ _ _ _ _ _ _ _ hu hum hQz ?_
+  linear_combination hE + (θ + (j : F) + n - 1) * hFa - (Pe m S θ j * (θ + (j : F) + n)) * hFb
+
 end CatalanCore.Star.Leonard
