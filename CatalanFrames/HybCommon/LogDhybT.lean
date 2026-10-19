@@ -1,6 +1,6 @@
 module
 
-public import CatalanFrames.HybCommon.TropLog
+public import CatalanFrames.HybCommon.Numer
 public import CatalanFrames.HybCommon.TropT
 public import CatalanFrames.HybCommon.Pieces
 
@@ -9,8 +9,8 @@ public import CatalanFrames.HybCommon.Pieces
 /-!
 # The content bound `log DhybT ≤ (Λ8 + ε) r² - ∑ δ log p`, generic in the instance
 
-For any block-valued hybrid instance `I` with `TropFacts I o` (offset `o ∈ {1, 3}`) and `BadInfo I`
-(`L = 4`, `Ebd N = 4 N²`, bad primes inside `{2, 3}`, `cOf 2 = 4`, `cOf 3 = 0`):
+For any block-valued hybrid instance `I` with `TropFacts I o` (offset `o ∈ {1, 3}`, modulus `4`) and
+the numerology `BadInfo I Lc cm` (`Numer.lean`; the bad-prime, `L`, `Ebd`, `cOf` layer is generic):
 `logDhybT_le_G` for the deficit-valid family `TfunG o I r`.  Both λ (`o = 1`) and the mirror
 (`o = 3`) are instances; the piece tables `l3x`, `l1x` are shared and only the residue classes swap.
 -/
@@ -21,131 +21,14 @@ namespace CatalanFrames.HybCommon
 
 variable {Fr : Frame}
 
-/-- The numerology of the bad primes. -/
-structure BadInfo (I : HybInst Fr) : Prop where
-  L4 : I.cd.L = 4
-  Ebd4 : ∀ N, I.Ebd N = 4 * N * N
-  bad_sub : I.cd.bad ⊆ {2, 3}
-  c2 : cOf I 2 = 4
-  c3 : cOf I 3 = 0
-
-/-- Level-count for non-bad primes. -/
-noncomputable def cntG (I : HybInst Fr) (r m p : ℕ) : ℕ :=
-  ((Finset.Icc 2 (Elev I r m)).filter (fun e => p ^ e ≤ 4 * (r + 2 * m))).card
-
-lemma cntG_le (I : HybInst Fr) (r m p : ℕ) (hp : p.Prime) :
-    cntG I r m p ≤ Nat.log 2 (4 * (r + 2 * m)) := by
-  unfold cntG
-  calc _ ≤ (Finset.Icc 2 (Nat.log 2 (4 * (r + 2 * m)))).card := by
-        apply Finset.card_le_card
-        intro e he
-        obtain ⟨he1, he2⟩ := Finset.mem_filter.mp he
-        have h2 := Finset.mem_Icc.mp he1
-        refine Finset.mem_Icc.mpr ⟨h2.1, ?_⟩
-        apply Nat.le_log_of_pow_le (by norm_num)
-        exact (Nat.pow_le_pow_left hp.two_le e).trans he2
-    _ ≤ _ := by simp
-
-lemma cntG_zero (I : HybInst Fr) (r m p : ℕ) (hp : p.Prime) (h : 4 * (r + 2 * m) < p ^ 2) :
-    cntG I r m p = 0 := by
-  unfold cntG
-  rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-  intro e he hle
-  have h2 := (Finset.mem_Icc.mp he).1
-  have : p ^ 2 ≤ p ^ e := Nat.pow_le_pow_right hp.pos h2
-  omega
-
-lemma cnt_bad_G (I : HybInst Fr) (b r m : ℕ) (hb : 2 ≤ b) :
-    ((Finset.Icc 1 (Elev I r m)).filter
-      (fun e => b ^ e ≤ 4 * (r + 2 * m) * (r + 2 * m) + (r + 2 * m))).card ≤
-      Nat.log 2 (4 * (r + 2 * m) * (r + 2 * m) + (r + 2 * m)) := by
-  calc _ ≤ (Finset.Icc 1 (Nat.log 2 (4 * (r + 2 * m) * (r + 2 * m) + (r + 2 * m)))).card := by
-        apply Finset.card_le_card
-        intro e he
-        obtain ⟨he1, he2⟩ := Finset.mem_filter.mp he
-        have h2 := Finset.mem_Icc.mp he1
-        refine Finset.mem_Icc.mpr ⟨h2.1, ?_⟩
-        apply Nat.le_log_of_pow_le (by norm_num)
-        exact (Nat.pow_le_pow_left hb e).trans he2
-    _ ≤ _ := by simp
-
-lemma Bnd_le_G {I : HybInst Fr} (B : BadInfo I) (r m : ℕ) : Bnd I r m ≤ 4 * (r + 2 * m) + 6 := by
-  have : I.cd.bad.sup id ≤ 3 := by
-    apply Finset.sup_le
-    intro b hb
-    have := B.bad_sub hb
-    simp only [Finset.mem_insert, Finset.mem_singleton] at this
-    rcases this with rfl | rfl <;> simp
-  unfold Bnd
-  rw [B.L4]
-  omega
-
-/-- The per-prime bound for the tropical exponent: the bad primes `2` and (optionally) `3`, and the
-higher levels, go to the extra terms. -/
-theorem tropExp_leG {I : HybInst Fr} (B : BadInfo I) (r p : ℕ) (hr : 1 ≤ r) (hp : p.Prime) :
-    (tropExp I r (r / 8) p : ℝ) ≤ (if p = 2 then ex2G r else 0) +
-      (if (p ∈ I.cd.bad ∧ p ≠ 2) then ex3G r else 0) +
-      ((2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) +
-      (if p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2) then 0 else WG I r p) := by
-  have hn2 : (0 : ℝ) ≤ ((2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) := Nat.cast_nonneg _
-  have hE2 : 0 ≤ ex2G r := by unfold ex2G; positivity
-  have hE3 : 0 ≤ ex3G r := by unfold ex3G; positivity
-  by_cases h2 : p = 2
-  · subst h2
-    have hb := tropExp_le_bad I r (r / 8) 2
-    rw [B.c2] at hb
-    simp only [B.Ebd4] at hb
-    have hcB := cnt_bad_G I 2 r (r / 8) (le_refl 2)
-    have h1 : tropExp I r (r / 8) 2 ≤
-        4 * (r + r / 8) + 2 * (r + r / 8) *
-          Nat.log 2 (4 * (r + 2 * (r / 8)) * (r + 2 * (r / 8)) + (r + 2 * (r / 8))) := by
-      refine hb.trans ?_
-      have := Nat.mul_le_mul_left (2 * (r + r / 8)) hcB
-      omega
-    have h1' : (tropExp I r (r / 8) 2 : ℝ) ≤
-        4 * (r + r / 8 : ℕ) + 2 * (r + r / 8 : ℕ) *
-          (Nat.log 2 (4 * (r + 2 * (r / 8)) * (r + 2 * (r / 8)) + (r + 2 * (r / 8))) : ℕ) := by
-      exact_mod_cast h1
-    have hx : ¬ ((2 : ℕ) ∈ I.cd.bad ∧ (2 : ℕ) ≠ 2) := fun h => h.2 rfl
-    rw [if_pos rfl, if_neg hx, if_pos (Or.inl rfl)]
-    unfold ex2G
-    push_cast at h1' hn2 ⊢
-    nlinarith
-  by_cases hX : p ∈ I.cd.bad ∧ p ≠ 2
-  · have h3 : p = 3 := by
-      have := B.bad_sub hX.1
-      simp only [Finset.mem_insert, Finset.mem_singleton] at this
-      omega
-    subst h3
-    have hb := tropExp_le_bad I r (r / 8) 3
-    rw [B.c3] at hb
-    simp only [B.Ebd4] at hb
-    have hcB := cnt_bad_G I 3 r (r / 8) (by norm_num)
-    have h1 : tropExp I r (r / 8) 3 ≤
-        2 * (r + r / 8) *
-          Nat.log 2 (4 * (r + 2 * (r / 8)) * (r + 2 * (r / 8)) + (r + 2 * (r / 8))) := by
-      refine hb.trans ?_
-      have := Nat.mul_le_mul_left (2 * (r + r / 8)) hcB
-      omega
-    have h1' : (tropExp I r (r / 8) 3 : ℝ) ≤
-        2 * (r + r / 8 : ℕ) *
-          (Nat.log 2 (4 * (r + 2 * (r / 8)) * (r + 2 * (r / 8)) + (r + 2 * (r / 8))) : ℕ) := by
-      exact_mod_cast h1
-    rw [if_neg (by norm_num : ¬ ((3 : ℕ) = 2)), if_pos hX, if_pos (Or.inr hX)]
-    unfold ex3G
-    push_cast at h1' hn2 ⊢
-    linarith
-  · have hb0 : p ∉ I.cd.bad := fun h => hX ⟨h, h2⟩
-    have hb := tropExp_le I r (r / 8) p hr hp hb0
-    rw [cOf_eq_zero I hp hb0, zero_mul, zero_add, B.L4] at hb
-    rw [if_neg h2, if_neg hX, if_neg (not_or.mpr ⟨h2, hX⟩)]
-    have hb' : (tropExp I r (r / 8) p : ℝ) ≤
-        ((tropVal (HW I.lev p r (r / 8)) +
-          2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) := by
-      exact_mod_cast hb
-    push_cast at hb' ⊢
-    have e : (tropVal (HW I.lev p r (r / 8)) : ℝ) = WG I r p := rfl
-    linarith
+/-- Modulus `4`: with `2` a bad prime, every good prime lies in the classes `{1, 3}`. -/
+lemma cls_mod4 {I : HybInst Fr} {Lc cm : ℕ} (B : BadInfo I Lc cm) :
+    ∀ p, p.Prime → p ∉ I.cd.bad → (p : ZMod 4) ∈ ({1, 3} : Finset (ZMod 4)) := by
+  intro p hp hpb
+  have h2 : p ≠ 2 := fun h => hpb (h ▸ B.two_mem)
+  rcases prime_class4 hp h2 with ⟨h3', _⟩ | ⟨h1', _⟩
+  · simp [h3']
+  · simp [h1']
 
 section Totals
 
@@ -197,44 +80,27 @@ lemma WTG_prefix (T : TropFacts I o) (r p : ℕ) (hr : 16 ≤ r) : WTG I o r p �
   linarith
 
 /-- The extended exponent `TfunG` against the per-prime bound. -/
-theorem TfunG_leG (T : TropFacts I o) (B : BadInfo I) (r p : ℕ) (hr : 16 ≤ r) (hp : p.Prime) :
-    (TfunG o I r p : ℝ) ≤ (if p = 2 then ex2G r else 0) +
-      (if (p ∈ I.cd.bad ∧ p ≠ 2) then ex3G r else 0) +
+theorem TfunG_leG {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) (r p : ℕ) (hr : 16 ≤ r)
+    (hp : p.Prime) :
+    (TfunG o I r p : ℝ) ≤ (if p ∈ I.cd.bad then exBad cm r (r / 8) else 0) +
       ((2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) +
-      (if p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2) then 0 else WTG I o r p) := by
-  have h := tropExp_leG B r p (by omega) hp
-  have hE2 : 0 ≤ ex2G r := by unfold ex2G; positivity
-  have hE3 : 0 ≤ ex3G r := by unfold ex3G; positivity
+      (if p ∈ I.cd.bad then 0 else WTG I o r p) := by
+  have h := tropExp_leG B r (r / 8) p (by omega) hp
+  have hE : 0 ≤ exBad cm r (r / 8) := by unfold exBad; positivity
   have hn : (0 : ℝ) ≤ ((2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) := Nat.cast_nonneg _
-  have hW : 0 ≤ WTG I o r p := WTG_nonneg _ _ _ _
   have hWG : WG I r p ≤ WTG I o r p := le_max_left _ _
   have heN : (eNG o r p : ℝ) ≤ WTG I o r p := le_max_right _ _
-  have hex : 0 ≤ (if p = 2 then ex2G r else 0) := by split_ifs <;> [exact hE2; exact le_rfl]
-  have hex3 : 0 ≤ (if (p ∈ I.cd.bad ∧ p ≠ 2) then ex3G r else 0) := by
-    split_ifs <;> [exact hE3; exact le_rfl]
   have hT : (TfunG o I r p : ℝ) = max (tropExp I r (r / 8) p : ℝ) (eNG o r p : ℝ) := by
     unfold TfunG; rw [Nat.cast_max]
   rw [hT]
-  have hif : (if p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2) then (0 : ℝ) else WG I r p) ≤
-      (if p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2) then 0 else WTG I o r p) := by
-    by_cases hw : p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2)
-    · simp [hw]
-    · simp [hw, hWG]
-  have hifnn : 0 ≤ (if p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2) then (0 : ℝ) else WTG I o r p) := by
-    split_ifs <;> [exact le_rfl; exact hW]
-  refine max_le (h.trans (by linarith)) ?_
-  by_cases hw : p = 2 ∨ (p ∈ I.cd.bad ∧ p ≠ 2)
-  · have hp3 : p ≤ 3 := by
-      rcases hw with h2 | ⟨hb, _⟩
-      · omega
-      · have := B.bad_sub hb
-        simp only [Finset.mem_insert, Finset.mem_singleton] at this
-        omega
-    have h0 : eNG o r p = 0 := eNG_small T.ho hr hp3
+  by_cases hb : p ∈ I.cd.bad
+  · have h0 : eNG o r p = 0 := eNG_small T.ho hr (B.bad_le p hb)
     rw [h0, Nat.cast_zero]
-    linarith
-  · rw [if_neg hw] at hifnn ⊢
-    linarith
+    simp only [hb, if_true] at h ⊢
+    exact max_le h (by linarith)
+  · simp only [hb, if_false] at h ⊢
+    have e : (tropVal (HW I.lev p r (r / 8)) : ℝ) = WG I r p := rfl
+    exact max_le (by linarith) (by linarith)
 
 lemma XG_tail1 (T : TropFacts I o) (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hm : p % 4 = 4 - o)
     (ht : 5 * r < p) : XG I r p = 0 := by
@@ -337,61 +203,71 @@ theorem class3_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
   simpa [tot4] using this
 
 /-- **The content bound for the glued deficit family (before the deficit sums).** -/
-theorem logDhybT_le_G (T : TropFacts I o) (B : BadInfo I) {ε : ℝ} (hε : 0 < ε) :
+theorem logDhybT_le_G {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
       Real.log (DhybT I r (r / 8) (TfunG o I r) δ) ≤
         (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
         ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (δ p : ℝ) * Real.log p := by
   have h1 := class1_totalG T (ε := ε / 4) (by positivity)
   have h3 := class3_totalG T (ε := ε / 4) (by positivity)
-  have hx := extra_small (ε / 6) (by positivity)
+  have hx := B.extra_small (ε / 2) (by positivity)
   filter_upwards [h1, h3, hx, eventually_ge_atTop 400] with r hr1 hr3 hrx hr0 δ hδ
   have hr16 : 16 ≤ r := by omega
   rw [log_DhybT I r (r / 8) hδ]
-  have hsub : (Finset.range (Bnd I r (r / 8))).filter Nat.Prime ⊆
-      (Finset.range (4 * (r + 2 * (r / 8)) + 6)).filter Nat.Prime :=
-    Finset.filter_subset_filter _ (Finset.range_mono (Bnd_le_G B r (r / 8)))
-  have hTsum := Finset.sum_le_sum_of_subset_of_nonneg hsub
-    (f := fun p => (TfunG o I r p : ℝ) * Real.log p) (fun p hp _ =>
-      mul_nonneg (Nat.cast_nonneg _)
-        (Real.log_nonneg (by exact_mod_cast (Finset.mem_filter.mp hp).2.one_lt.le)))
-  have hbound : ∀ {R1 R3 : ℕ}, 3 ≤ R3 →
-      (∀ p, p.Prime → 5 ≤ p → p % 4 = 1 → R1 < p → WTG I o r p = 0) →
-      (∀ p, p.Prime → 5 ≤ p → p % 4 = 3 → R3 < p → WTG I o r p = 0) →
-      ∑ p ∈ (Finset.range (4 * (r + 2 * (r / 8)) + 6)).filter Nat.Prime,
-          (TfunG o I r p : ℝ) * Real.log p ≤
-        3 * extraBound r (r / 8) + clsSum 4 (1 : ZMod 4) (WTG I o r) 0 R1 +
-          clsSum 4 (3 : ZMod 4) (WTG I o r) 0 R3 := fun {R1 R3} hR3 ht1 ht3 =>
-    sum_le_G r (by omega) (TfunG o I r) (WTG I o r) (WTG_nonneg _ _ _) (cntG I r (r / 8))
-      (fun p hp => cntG_le I r (r / 8) p hp) (fun p hp h => cntG_zero I r (r / 8) p hp h)
-      (fun p => p ∈ I.cd.bad ∧ p ≠ 2)
-      (fun p hp => by
-        have := B.bad_sub hp.1
-        simp only [Finset.mem_insert, Finset.mem_singleton] at this
-        omega)
-      (fun p hp => by have h := TfunG_leG T B r p hr16 hp; convert h) R1 R3 hR3 ht1 ht3
-  have hmain : ∑ p ∈ (Finset.range (4 * (r + 2 * (r / 8)) + 6)).filter Nat.Prime,
-      (TfunG o I r p : ℝ) * Real.log p ≤ 3 * extraBound r (r / 8) +
+  have hne : cJ1 o ≠ cJ3 o := by rcases T.ho with rfl | rfl <;> decide
+  have w1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 4 - o → 5 * r < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
+    have hz := XG_tail1 T r p hp h5 hm ht
+    have he := eNG_tail T.ho hr16 (r := r) (p := p) (by omega)
+    simp [WTG, WG, hz, he]
+  have w3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = o → 5 * r / 3 < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
+    have hz := XG_tail3 T r p hp h5 hm ht
+    have he := eNG_tail T.ho hr16 (r := r) (p := p) ht
+    simp [WTG, WG, hz, he]
+  have hsumT := sum_Bnd_le_gen B ({cJ1 o, cJ3 o} : Finset (ZMod 4))
+    (fun c => if c = cJ1 o then 5 * r else 5 * r / 3) r (r / 8) (TfunG o I r) (WTG I o r)
+    (WTG_nonneg _ _ _) (cntG I r (r / 8))
+    (fun p hp => (cntG_le I r (r / 8) p hp).trans (by rw [B.L_eq]))
+    (fun p hp h => cntG_zero I r (r / 8) p hp (by rw [B.L_eq]; exact h))
+    (fun p hp => TfunG_leG T B r p hr16 hp)
+    (fun p hp hpb => by
+      have h2 : p ≠ 2 := fun h => hpb (h ▸ B.two_mem)
+      rcases prime_class4 hp h2 with ⟨h3', _⟩ | ⟨h1', _⟩
+      · rcases T.ho with rfl | rfl
+        · simp [cJ1, cJ3, h3']
+        · simp [cJ1, cJ3, h3']
+      · rcases T.ho with rfl | rfl
+        · simp [cJ1, cJ3, h1']
+        · simp [cJ1, cJ3, h1'])
+    (fun c hc b hb hbc => by
+      have hb3 := B.bad_le b hb
+      have hb2 := (I.cd.bad_prime b hb).two_le
+      have hcc : c = cJ1 o ∨ c = cJ3 o := by simpa using hc
+      have hb23 : b = 2 ∨ b = 3 := by omega
+      rcases hb23 with rfl | rfl
+      · exfalso
+        rcases hcc with rfl | rfl
+        · exact two_ne_cJ1 T.ho (by simpa using hbc)
+        · exact two_ne_cJ3 T.ho (by simpa using hbc)
+      · show 3 ≤ (if c = cJ1 o then 5 * r else 5 * r / 3)
+        split_ifs <;> omega)
+    (fun c hc p hp hpb hpc hlt => by
+      have hcc : c = cJ1 o ∨ c = cJ3 o := by simpa using hc
+      have hRc : 3 ≤ (if c = cJ1 o then 5 * r else 5 * r / 3) := by
+        split_ifs <;> omega
+      have h5 : 5 ≤ p := by
+        have := hp.two_le
+        have h4 : p ≠ 4 := fun h => by norm_num [h] at hp
+        omega
+      rcases hcc with rfl | rfl
+      · rw [if_pos rfl] at hlt
+        exact w1 p hp h5 (mod_j1 T hpc) hlt
+      · rw [if_neg (Ne.symm hne)] at hlt
+        exact w3 p hp h5 (mod_j3 T hpc) hlt)
+  have hmain : ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
+      (TfunG o I r p : ℝ) * Real.log p ≤ extraG Lc Ecub cm (badLog I) r (r / 8) +
         clsSum 4 (cJ1 o) (WTG I o r) 0 (5 * r) + clsSum 4 (cJ3 o) (WTG I o r) 0 (5 * r / 3) := by
-    have w1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 4 - o → 5 * r < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
-      have hz := XG_tail1 T r p hp h5 hm ht
-      have he := eNG_tail T.ho hr16 (r := r) (p := p) (by omega)
-      simp [WTG, WG, hz, he]
-    have w3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = o → 5 * r / 3 < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
-      have hz := XG_tail3 T r p hp h5 hm ht
-      have he := eNG_tail T.ho hr16 (r := r) (p := p) ht
-      simp [WTG, WG, hz, he]
-    rcases T.ho with rfl | rfl
-    · have := hbound (R1 := 5 * r / 3) (R3 := 5 * r) (by omega)
-        (fun p hp h5 hm ht => w3 p hp h5 hm ht) (fun p hp h5 hm ht => w1 p hp h5 hm ht)
-      have e1 : cJ1 1 = (3 : ZMod 4) := by decide
-      have e3 : cJ3 1 = (1 : ZMod 4) := by decide
-      rw [e1, e3]; linarith
-    · have := hbound (R1 := 5 * r) (R3 := 5 * r / 3) (by omega)
-        (fun p hp h5 hm ht => w1 p hp h5 hm ht) (fun p hp h5 hm ht => w3 p hp h5 hm ht)
-      have e1 : cJ1 3 = (1 : ZMod 4) := by decide
-      have e3 : cJ3 3 = (3 : ZMod 4) := by decide
-      rw [e1, e3]; exact this
+    rw [Finset.sum_pair hne, if_pos rfl, if_neg (Ne.symm hne)] at hsumT
+    linarith
   have hex := hrx (r / 8) (Nat.div_le_self r 8)
   have hc := const8
   have e : (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε / 4) +
@@ -400,7 +276,7 @@ theorem logDhybT_le_G (T : TropFacts I o) (B : BadInfo I) {ε : ℝ} (hε : 0 < 
     rw [← mul_add]
     congr 1
     linarith
-  nlinarith [hmain, hr3, hr1, hex, e, hTsum]
+  nlinarith [hmain, hr3, hr1, hex, e]
 
 end Totals
 

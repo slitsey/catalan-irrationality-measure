@@ -1,6 +1,7 @@
 module
 
 public import CatalanFrames.HybCommon.Pieces
+public import CatalanFrames.HybCommon.Numer
 public import CatalanCore.Arith.Hybrid.D1Exact
 public import CatalanCore.Arith.Hybrid.Values
 
@@ -23,14 +24,14 @@ namespace CatalanFrames.HybCommon
 
 variable {Fr : Frame}
 
-/-- The facts about a hybrid instance used by the tropical piece tables. -/
-structure TropFacts (I : HybInst Fr) (o : ℕ) : Prop where
+/-- The facts about a hybrid instance used by the tropical piece tables: level facts with the
+initial-segment zero set `c < kq q` and good primes `≥ 5`, together with the modulus-`4` class
+dictionary (offset `o`). -/
+structure TropFacts (I : HybInst Fr) (o : ℕ) : Prop
+    extends LevelFacts I (fun p => 5 ≤ p) (fun q c => c < I.cd.kq q) where
   ho : o = 1 ∨ o = 3
   kq3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = o → I.cd.kq p = (3 * p + o) / 4
   kq1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 4 - o → I.cd.kq p = (p + o) / 4
-  good : ∀ p, p.Prime → 5 ≤ p → IsPrimePow p ∧ ∀ q ∈ I.cd.bad, ¬ q ∣ p
-  zero_iff : ∀ q c, IsPrimePow q → (∀ p ∈ I.cd.bad, ¬ p ∣ q) → (I.lev q c = 0 ↔ c < I.cd.kq q)
-  high : ∀ q c, 1 ≤ q → q ≤ c → 0 < I.lev q c
 
 /-- The level-1 tropical value of the hybrid at `(r, ⌊r/8⌋)` and the prime `p`. -/
 noncomputable def XG (I : HybInst Fr) (r p : ℕ) : ℕ := tropVal (HW I.lev p r (r / 8))

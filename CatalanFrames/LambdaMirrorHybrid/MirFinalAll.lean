@@ -46,20 +46,11 @@ theorem mir_mem2_decay :
 #print axioms mir_hybrid_decay
 #print axioms mir_mem2_decay
 
-lemma mir_cOf_le (p : ℕ) (hp : p.Prime) :
-    (cOf mirNInst p : ℝ) * Real.log p ≤ if p = 2 then 4 * Real.log 2 else 0 := by
-  by_cases h2 : p = 2
-  · subst h2; simp [mir_cOf2]
-  · by_cases h3 : p = 3
-    · subst h3; simp [mir_cOf3]
-    · simp [h2, mir_cOf_good hp h2 h3]
-
 /-- The border cost is negligible for the mirror instance. -/
 theorem mir_topC_sum {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in atTop,
     ∑ p ∈ (Finset.range (Bnd mirNInst r (r / 8))).filter Nat.Prime,
       (topC mirNInst r (r / 8) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 :=
-  topC_sum_G mirNInst mir_cOf_le (fun r m => (mir_Bnd r m).le) (fun r m => rfl)
-    (fun r m => by rw [mir_Bnd]; omega) hε
+  topC_sum_G mirNInst mirBad (fun r => r / 8) (fun r => Nat.div_le_self r 8) hε
 
 /-- The `ε`-form of the content bound with all seven bordered deficits, mirror. -/
 theorem mir_both_eps {Λ : ℝ} (hΛ : 24729491161 / 6665218560 - 1 / 448 - 1 / 576 - 1 / 352 ≤ Λ) :

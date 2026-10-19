@@ -58,22 +58,6 @@ lemma cleanE3_iff {r p : ℕ} (hr : 16 ≤ r) : cleanE3 r p ↔ cleanE3G 1 r p :
   · rintro ⟨hp, h4, h8, h5, hn⟩
     exact ⟨hp, by omega, h8, h5, fun h => hn (by rw [h]; norm_num)⟩
 
-/-- `Bnd` for λ. -/
-lemma lam_Bnd (r m : ℕ) : Bnd lamInst r m = 4 * (r + 2 * m) + 5 := by
-  show lamCD.L * (r + 2 * m) + 3 + lamCD.bad.sup id = _
-  have : lamCD.bad.sup id = 2 := by
-    show ({2} : Finset ℕ).sup id = 2
-    simp
-  rw [this]
-  show 4 * (r + 2 * m) + 3 + 2 = _
-  ring
-
-lemma lam_cOf_le (p : ℕ) (hp : p.Prime) :
-    (cOf lamInst p : ℝ) * Real.log p ≤ if p = 2 then 4 * Real.log 2 else 0 := by
-  by_cases h2 : p = 2
-  · subst h2; simp [lam_cOf2]
-  · simp [h2, cOf_eq_zero lamInst hp (by simpa [lamInst, HybInst.ofSing, lamCD] using h2)]
-
 /-- **The λ hybrid content theorem (tropical), exact D1 truncated at `K = 8`.** -/
 theorem lam_content_trop8 {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, Real.log (Dhyb lamInst r (r / 8)) ≤
@@ -145,8 +129,7 @@ theorem lam_content_deficit3 {ε : ℝ} (hε : 0 < ε) :
 theorem lam_topC_sum {ε : ℝ} (hε : 0 < ε) : ∀ᶠ r : ℕ in Filter.atTop,
     ∑ p ∈ (Finset.range (Bnd lamInst r (r / 8))).filter Nat.Prime,
       (topC lamInst r (r / 8) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2 :=
-  topC_sum_G lamInst lam_cOf_le (fun r m => by rw [lam_Bnd]; omega) (fun r m => rfl)
-    (fun r m => by rw [lam_Bnd]; omega) hε
+  topC_sum_G lamInst lam_badInfo (fun r => r / 8) (fun r => Nat.div_le_self r 8) hε
 
 end CatalanFrames.Lambda
 

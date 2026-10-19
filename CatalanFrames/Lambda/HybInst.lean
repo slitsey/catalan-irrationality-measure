@@ -96,12 +96,36 @@ lemma lam_cOf2 : cOf lamInst 2 = 4 := by
 lemma lam_cOf3 : cOf lamInst 3 = 0 :=
   cOf_eq_zero lamInst Nat.prime_three (by simp [lamInst, HybInst.ofSing, lamCD])
 
-/-- **The bad-prime numerology of λ**: `BadInfo lamInst`. -/
-theorem lam_badInfo : BadInfo lamInst where
-  L4 := rfl
-  Ebd4 := fun _ => rfl
-  bad_sub := fun p hp => by simp_all [lamInst, HybInst.ofSing, lamCD]
-  c2 := lam_cOf2
-  c3 := lam_cOf3
+lemma lam_cOf_le (p : ℕ) : cOf lamInst p ≤ 4 := by
+  show (16 : ℕ).factorization p ≤ 4
+  rw [show (16 : ℕ) = 2 ^ 4 by norm_num, Nat.Prime.factorization_pow Nat.prime_two]
+  by_cases h : p = 2
+  · subst h; simp
+  · simp [Finsupp.single_apply, Ne.symm h]
+
+/-- **The bad-prime numerology of λ**: `BadInfo lamInst 4 4`. -/
+theorem lam_badInfo : BadInfo lamInst 4 4 where
+  L_eq := rfl
+  Lc_le := le_rfl
+  cm_le := le_rfl
+  Ebd_le := fun N => cubic_Ebd N
+  two_mem := by simp [lamInst, HybInst.ofSing, lamCD]
+  bad_le := fun b hb => by simp [lamInst, HybInst.ofSing, lamCD] at hb; omega
+  cOf_le := lam_cOf_le
+
+/-- **The numerology parameters of λ** (`HybParams`): `L = 4`, `cOf ≤ 4`, modulus `4`, classes `{1, 3}`,
+`m = r / 8`, zero set `c < kq q`. -/
+noncomputable def lamParams : HybParams lamInst where
+  Lc := 4
+  cm := 4
+  bad := lam_badInfo
+  M := 4
+  Cs := {1, 3}
+  cls := cls_mod4 lam_badInfo
+  mf := fun r => r / 8
+  mf_le := fun r => Nat.div_le_self r 8
+  Gd := fun p => 5 ≤ p
+  Z := fun q c => c < lamInst.cd.kq q
+  levels := lam_tropFacts.toLevelFacts
 
 end CatalanFrames.Lambda

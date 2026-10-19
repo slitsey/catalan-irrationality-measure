@@ -1,7 +1,7 @@
 module
 
 public import CatalanFrames.LambdaMirrorHybrid.MirFinal
-public import CatalanFrames.HybCommon.TropLog
+public import CatalanFrames.HybCommon.Numer
 
 @[expose] public section
 
@@ -32,28 +32,47 @@ lemma mir_tail3 (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hm : p % 4 = 3) (ht :
   have := XG_D6 mirN_tropFacts r p hp h5 (by omega) (by omega)
   omega
 
-/-- **Level-1 plus negligible terms (mirror)**: the generic `sum_le_G` with `X = (· = 3)`. -/
-theorem mir_sum_le (r : ℕ) (hr : 4 ≤ r) (T : ℕ → ℕ) (w : ℕ → ℝ) (hw0 : ∀ p, 0 ≤ w p)
-    (hT : ∀ p, p.Prime → (T p : ℝ) ≤ (if p = 2 then mirEx2 r else 0) +
-      (if p = 3 then mirEx3 r else 0) + ((2 * (r + r / 8) * cntM r (r / 8) p : ℕ) : ℝ) +
-      (if p = 2 ∨ p = 3 then 0 else w p))
-    (ht1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 1 → 5 * r < p → w p = 0)
-    (ht3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 3 → 5 * r / 3 < p → w p = 0) :
-    ∑ p ∈ (Finset.range (4 * (r + 2 * (r / 8)) + 6)).filter Nat.Prime, (T p : ℝ) * Real.log p ≤
-      3 * extraBound r (r / 8) + clsSum 4 (1 : ZMod 4) w 0 (5 * r) +
-      clsSum 4 (3 : ZMod 4) w 0 (5 * r / 3) :=
-  sum_le_G r hr T w hw0 (cntM r (r / 8)) (fun p hp => cntM_le r (r / 8) p hp) (fun p hp h => cntM_zero r (r / 8) p hp h)
-    (· = 3) (fun _ h => h) (fun p hp => by have h := hT p hp; simp only [mirEx2, mirEx3, ex2G, ex3G] at h ⊢; convert h) (5 * r) (5 * r / 3) (by omega) ht1 ht3
-
-/-- **Level-1 plus negligible terms (mirror).** -/
+/-- **Level-1 plus negligible terms (mirror)**: an instance of `log_Dhyb_le_gen`
+(`M = 4`, classes `{1, 3}`, tails `5r` and `5r/3`). -/
 theorem mir_log_Dhyb_le (r : ℕ) (hr : 4 ≤ r) :
     Real.log (Dhyb mirNInst r (r / 8)) ≤ 3 * extraBound r (r / 8) +
       clsSum 4 (1 : ZMod 4) (WG mirNInst r) 0 (5 * r) +
       clsSum 4 (3 : ZMod 4) (WG mirNInst r) 0 (5 * r / 3) := by
-  rw [log_Dhyb, mir_Bnd]
-  exact mir_sum_le r hr (tropExp mirNInst r (r / 8)) (WG mirNInst r) (mirW_nonneg r)
-    (fun p hp => tropExp_mir_le r p (by omega) hp)
-    (fun p hp h5 hm ht => by rw [WG, mir_tail1 r p hp h5 hm ht]; simp)
-    (fun p hp h5 hm ht => by rw [WG, mir_tail3 r p hp h5 hm ht]; simp)
+  have hR3 : 3 ≤ (if (3 : ZMod 4) = 1 then 5 * r else 5 * r / 3) := by
+    rw [if_neg (by decide)]; omega
+  have h := log_Dhyb_le_gen mirBad ({1, 3} : Finset (ZMod 4))
+    (fun c => if c = 1 then 5 * r else 5 * r / 3) r (r / 8) (by omega) (WG mirNInst r)
+    (mirW_nonneg r) (fun p _ => le_rfl)
+    (fun p hp hpb => by
+      have h2 : p ≠ 2 := fun h => hpb (by simp [h, mirNInst, mirInst, HybInst.neg, HybInst.ofSing,
+        ContentData.neg, mirCD])
+      rcases prime_class4 hp h2 with ⟨h3', _⟩ | ⟨h1', _⟩
+      · simp [h3']
+      · simp [h1'])
+    (fun c hc b hb hbc => by
+      have hb' : b = 2 ∨ b = 3 := by
+        simpa [mirNInst, mirInst, HybInst.neg, HybInst.ofSing, ContentData.neg, mirCD] using hb
+      have hcc : c = 1 ∨ c = 3 := by simpa using hc
+      rcases hb' with rfl | rfl <;> rcases hcc with rfl | rfl <;>
+        first | (exfalso; revert hbc; decide) | exact hR3)
+    (fun c hc p hp hpb hpc hlt => by
+      have hcc : c = 1 ∨ c = 3 := by simpa using hc
+      have h5 : 5 ≤ p := by
+        have h2 : p ≠ 2 := fun h => hpb (by simp [h, mirNInst, mirInst, HybInst.neg,
+          HybInst.ofSing, ContentData.neg, mirCD])
+        have h3 : p ≠ 3 := fun h => hpb (by simp [h, mirNInst, mirInst, HybInst.neg,
+          HybInst.ofSing, ContentData.neg, mirCD])
+        have := hp.two_le
+        have h4 : p ≠ 4 := fun h => by subst h; exact absurd hp (by decide)
+        omega
+      rcases hcc with rfl | rfl
+      · rw [if_pos rfl] at hlt
+        rw [WG, mir_tail1 r p hp h5 (cls4_mod1 hpc) hlt]; simp
+      · rw [if_neg (by decide)] at hlt
+        rw [WG, mir_tail3 r p hp h5 (cls4_mod3 hpc) hlt]; simp)
+  rw [Finset.sum_pair (by decide)] at h
+  simp only [if_true, show ¬ ((3 : ZMod 4) = 1) by decide, if_false] at h
+  have := mirBad.extraG_le r (r / 8)
+  linarith
 
 end CatalanFrames.LambdaMirrorHybrid

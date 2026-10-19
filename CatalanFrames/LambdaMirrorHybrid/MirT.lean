@@ -17,13 +17,19 @@ open Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames
 
 namespace CatalanFrames.LambdaMirrorHybrid
 
-lemma mirBad : BadInfo mirNInst where
-  L4 := rfl
-  Ebd4 := fun _ => rfl
-  bad_sub := fun p hp => by simpa [mirNInst, mirInst, HybInst.neg, HybInst.ofSing,
-    ContentData.neg, mirCD] using hp
-  c2 := mir_cOf2
-  c3 := mir_cOf3
+/-- **The numerology parameters of the mirror** (`HybParams`): as λ, with offset `3`. -/
+noncomputable def mirParams : HybParams mirNInst where
+  Lc := 4
+  cm := 4
+  bad := mirBad
+  M := 4
+  Cs := {1, 3}
+  cls := cls_mod4 mirBad
+  mf := fun r => r / 8
+  mf_le := fun r => Nat.div_le_self r 8
+  Gd := fun p => 5 ≤ p
+  Z := fun q c => c < mirNInst.cd.kq q
+  levels := mirN_tropFacts.toLevelFacts
 
 /-- **The content bound for the glued deficit family, mirror (before the deficit sums).** -/
 theorem mir_logDhybT_le {ε : ℝ} (hε : 0 < ε) :
