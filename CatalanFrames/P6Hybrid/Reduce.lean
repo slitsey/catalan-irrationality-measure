@@ -9,13 +9,13 @@ public import CatalanFrames.P6Hybrid.Level
 
 `p6_log_Dhyb_le` is `log_Dhyb_le_gen (p6_badInfo r m)` with modulus `6`, classes `{1, 5}`: no
 `LevelFacts` or `HybParams` (the exact level has no `high` property).  `p6_content_of_pieces` reduces
-`P6ContentStmt` (HH's `Λ = 10339/3072`, member 1) to the SINGLE open statement
+`P6ContentStmt` (HH's `Λ = 10339/3072`, member 1) to the per-prime weights and the piece sums (`Pieces.lean`)
 
   `∀ ε > 0, ∀ᶠ r, ∑_{c ∈ {1,5}} clsSum 6 c (w r) 0 (R r c) ≤ (10339/3072 + ε) r²`
 
 for per-prime weights `w r ≥ tropVal (HW (p6Inst r (mf r)).lev p r (mf r))` that vanish above `R r c`
 (the Z-regime dual count with `p6_lev_zero_low`, `p6_lev_zero_win`, the H-dual `val_D1x`, and the piece
-sums).  That summation is NOT proved here.
+sums); these are discharged in `Pieces.lean` (`p6_content`).
 -/
 
 open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames.HybCommon
@@ -60,20 +60,22 @@ def P6ContentStmt (mf : ℕ → ℕ) : Prop :=
     Real.log (Dhyb (p6Inst r (mf r)) r (mf r)) ≤ (10339 / 3072 + ε) * (r : ℝ) ^ 2
 
 /-- **Reduction**: the content statement follows from per-prime weights and the piece summation. -/
-theorem p6_content_of_pieces (mf : ℕ → ℕ) (hmf : ∀ r, mf r ≤ r) (R : ℕ → ZMod 6 → ℕ)
-    (w : ℕ → ℕ → ℝ) (hw0 : ∀ r p, 0 ≤ w r p)
-    (hw : ∀ r p, p.Prime → (tropVal (HW (p6Inst r (mf r)).lev p r (mf r)) : ℝ) ≤ w r p)
-    (ht : ∀ r, ∀ c ∈ ({1, 5} : Finset (ZMod 6)), ∀ p, p.Prime → p ∉ ({2, 3} : Finset ℕ) →
-      (p : ZMod 6) = c → R r c < p → w r p = 0)
+theorem p6_content_of_pieces (mf : ℕ → ℕ) (hmf : ∀ᶠ r : ℕ in atTop, mf r ≤ r)
+    (R : ℕ → ZMod 6 → ℕ) (w : ℕ → ℕ → ℝ) (hw0 : ∀ r p, 0 ≤ w r p)
+    (hw : ∀ᶠ r : ℕ in atTop, ∀ p, p.Prime →
+      (tropVal (HW (p6Inst r (mf r)).lev p r (mf r)) : ℝ) ≤ w r p)
+    (ht : ∀ᶠ r : ℕ in atTop, ∀ c ∈ ({1, 5} : Finset (ZMod 6)), ∀ p, p.Prime →
+      p ∉ ({2, 3} : Finset ℕ) → (p : ZMod 6) = c → R r c < p → w r p = 0)
     (hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop,
       ∑ c ∈ ({1, 5} : Finset (ZMod 6)), clsSum 6 c (w r) 0 (R r c) ≤
         (10339 / 3072 + ε) * (r : ℝ) ^ 2) : P6ContentStmt mf := by
   intro ε hε
   have hx := (p6_badInfo 0 0).extra_small (ε / 2) (by positivity)
-  filter_upwards [hsum (ε / 2) (by positivity), hx, eventually_ge_atTop 1] with r h1 h2 hr
-  have h3 := p6_log_Dhyb_le (R r) r (mf r) hr (w r) (hw0 r) (hw r) (ht r)
+  filter_upwards [hsum (ε / 2) (by positivity), hx, eventually_ge_atTop 1, hmf, hw, ht]
+    with r h1 h2 hr hmr hwr htr
+  have h3 := p6_log_Dhyb_le (R r) r (mf r) hr (w r) (hw0 r) hwr htr
   have h4 : extraG 3 Ecub 2 (badLog (p6Inst r (mf r))) r (mf r) ≤ ε / 2 * (r : ℝ) ^ 2 :=
-    h2 (mf r) (hmf r)
+    h2 (mf r) hmr
   linarith
 
 end CatalanFrames.P6Hybrid
