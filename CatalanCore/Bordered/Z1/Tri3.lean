@@ -29,6 +29,24 @@ lemma tri3_apply (sup d sub : ℕ → R) (i j : Fin n) :
   simp only [tri3, Matrix.of_apply]
   split_ifs <;> first | (exfalso; omega) | rfl | simp
 
+lemma tri3_diag (sup d sub : ℕ → R) (i : Fin n) : tri3 n sup d sub i i = d i := by
+  simp [tri3]
+
+lemma tri3_super (sup d sub : ℕ → R) {i j : Fin n} (h : (j : ℕ) = i + 1) :
+    tri3 n sup d sub i j = sup i := by
+  have : (j : ℕ) ≠ i := by omega
+  simp [tri3, this, h]
+
+lemma tri3_sub (sup d sub : ℕ → R) {i j : Fin n} (h : (i : ℕ) = j + 1) :
+    tri3 n sup d sub i j = sub j := by
+  have h1 : (j : ℕ) ≠ i := by omega
+  have h2 : (j : ℕ) ≠ i + 1 := by omega
+  rw [tri3, Matrix.of_apply, if_neg h1, if_neg h2, if_pos h]
+
+lemma tri3_zero (sup d sub : ℕ → R) {i j : Fin n} (h1 : (j : ℕ) ≠ i) (h2 : (j : ℕ) ≠ i + 1)
+    (h3 : (i : ℕ) ≠ j + 1) : tri3 n sup d sub i j = 0 := by
+  simp [tri3, h1, h2, h3]
+
 lemma tri3_transpose (sup d sub : ℕ → R) : (tri3 n sup d sub)ᵀ = tri3 n sub d sup := by
   ext i j
   simp only [Matrix.transpose_apply, tri3_apply]
