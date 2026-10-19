@@ -148,13 +148,13 @@ lemma LU_cnum_add {m n : ℕ} (a : Fin m → ℤ) (b : Fin n → ℤ) (L : ℕ) 
 lemma bY_inj (m : ℕ) (S : ℤ) : Function.Injective (bY m S) := by
   intro i j h; simp only [bY] at h; exact Fin.ext (by omega)
 
-lemma bY_bounds (m : ℕ) (S : ℤ) (i : Fin m) : S + 1 ≤ bY m S i ∧ bY m S i ≤ S + 2 * (m : ℤ) := by
+lemma bY_bounds (m : ℕ) (S : ℤ) (i : Fin m) : S + 1 ≤ bY m S i ∧ bY m S i ≤ S + 2 * (m : ℤ) - 1 := by
   have := i.2; simp only [bY]; omega
 
 /-- the diagonal-step constant is an `ℓ`-unit -/
-theorem dsK_LU (m n S : ℕ) (hm : 1 ≤ m) (hn : 1 ≤ n) (hS : n ≤ S) (hl : S + n + 2 * m + 3 ≤ ℓ) :
+theorem dsK_LU (m n S : ℕ) (hm : 1 ≤ m) (hn : 1 ≤ n) (hS : n ≤ S) (hl : S + n + 2 * m + 1 ≤ ℓ) :
     LU ℓ (dsK m n S) := by
-  set L := S + n + 2 * m + 2 with hLdef
+  set L := S + n + 2 * m with hLdef
   have hL : L < ℓ := by omega
   unfold dsK
   have c1 : LU ℓ (dnC m S (m + n) n 0) := by
@@ -231,7 +231,7 @@ lemma gen_add_one {θ : ℚ} (h : Gen θ) : Gen (θ + 1) := by
 
 /-- one descending diagonal step preserves the good form -/
 theorem uu_good_succ (m n S B : ℕ) (hm : 1 ≤ m) (hn : 1 ≤ n) (hS : n ≤ S)
-    (hl : S + n + 2 * m + 3 ≤ ℓ) (h : GoodF ℓ B (uu m n S)) :
+    (hl : S + n + 2 * m + 1 ≤ ℓ) (h : GoodF ℓ B (uu m n S)) :
     GoodF ℓ (max (B + 1) (m + n)) (uu m n (S + 1)) := by
   have h1 := h.shift1
   have h2 : GoodF ℓ (m + n) (fun θ => dsK m n S * Tp1 (m + n) (θ + 1) n) :=
