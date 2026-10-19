@@ -139,6 +139,94 @@ lemma BT_eq (hkr : k ≤ r) (a b : Fin r ⊕ Fin m) :
       (show k ≤ r + 2 * (i' : ℕ) + 1 by omega) (by omega)
     simp [BbarB, BT, Frame.hybRow, Frame.hybCol, hz, rfC_zero]
 
+lemma lift_good {w : ℕ} {x : ℚ} {y : ZMod p} (h : Good p ((p : ℚ) ^ w * x) y) :
+    ∃ g : (LocRing p)[X], toQ p g = C ((p : ℚ) ^ w) * C x ∧ phiP p g = rfC p y := by
+  obtain ⟨g, h1, h2⟩ := exists_lift_const p w x h.1
+  refine ⟨g, h1, ?_⟩
+  rw [h2]
+  congr 1
+  exact h.2
+
 end Mat
+
+section Hred
+
+variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+
+lemma hybRow_lt (a : Fin r ⊕ Fin m) : Frame.hybRow r m a < r + 2 * m := by
+  rcases a with c | i
+  · have := c.2; simp [Frame.hybRow] <;> omega
+  · have := i.2; simp [Frame.hybRow] <;> omega
+
+lemma hybCol_lt (a : Fin r ⊕ Fin m) : Frame.hybCol r m a < r + 2 * m := by
+  rcases a with c | i
+  · have := c.2; simp [Frame.hybCol] <;> omega
+  · have := i.2; simp [Frame.hybCol] <;> omega
+
+/-- Off-diagonal labels. -/
+lemma lift_offdiag (hL : LamData Fr) (S : BSetup p r m j k) {A B : ℕ} (hAB : A ≠ B)
+    (hA : A < r + 2 * m) (hB : B < r + 2 * m) :
+    ∃ g : (LocRing p)[X], toQ p g =
+      C ((p : ℚ) ^ (uPot p r k A + uPot p r k B)) * C (Fr.Mn A B) ∧
+      phiP p g = rfC p (Tfull p j k A B) := by
+  rcases lt_or_gt_of_ne hAB with h | h
+  · have := good_TB hL S h hB
+    have e : Tfull p j k A B = TB p j k A B := by unfold Tfull; rw [if_pos h]
+    rw [e]; exact lift_good p this
+  · have := good_TB hL S h hA
+    have e : Tfull p j k A B = TB p j k B A := by
+      unfold Tfull; rw [if_neg (by omega), if_pos h]
+    rw [e, add_comm (uPot p r k A), Mn_symm]; exact lift_good p this
+
+/-- **The entries of `Full(X)` reduce to the table `BT`.** -/
+theorem hred_B (hL : LamData Fr) (S : BSetup p r m j k) (a b : Fin r ⊕ Fin m) :
+    ∃ g : (LocRing p)[X], toQ p g =
+      C ((p : ℚ) ^ (uPot p r k (Frame.hybRow r m a) + uPot p r k (Frame.hybCol r m b))) *
+        fullEntry Fr r m a b ∧ phiP p g = BT p r m j k a b := by
+  have hA := hybRow_lt (r := r) (m := m) a
+  have hB := hybCol_lt (r := r) (m := m) b
+  rcases a with c | i <;> rcases b with c' | i'
+  · by_cases hcc : c = c'
+    · subst hcc
+      have hcr := c.2
+      have hgood := good_TD hL S (A := (c : ℕ)) hcr
+      obtain ⟨g, h1, h2⟩ := exists_lift_diag p (uPot p r k c + uPot p r k c) (Fr.Mn c c) hgood.1
+      refine ⟨g, ?_, ?_⟩
+      · rw [h1]; simp [fullEntry, Frame.hybRow, Frame.hybCol]
+      · rw [h2]
+        have e1 : redQ p ⟨_, hgood.1⟩ = TD p j k c := hgood.2
+        rw [e1]
+        have e2 : Tfull p j k c c = TD p j k c := by
+          unfold Tfull; rw [if_neg (lt_irrefl _), if_neg (lt_irrefl _)]
+        have e3 : uPot p r k (c : ℕ) = 0 ↔ (c : ℕ) < k := by
+          by_cases hck : (c : ℕ) < k
+          · have h' : ¬ k ≤ (c : ℕ) := by omega
+            simp [uPot, hcr, h', hck]
+          · have h' : k ≤ (c : ℕ) := by omega
+            simp [uPot, hcr, h', hck]
+        rw [add_comm]
+        simp [BT, Frame.hybRow, Frame.hybCol, e2, e3]
+    · have hne : (c : ℕ) ≠ c' := fun h => hcc (Fin.ext h)
+      obtain ⟨g, h1, h2⟩ := lift_offdiag hL S hne (by have := c.2; omega) (by have := c'.2; omega)
+      refine ⟨g, ?_, ?_⟩
+      · rw [h1]; simp [fullEntry, hcc, Frame.hybRow, Frame.hybCol]
+      · rw [h2]; simp [BT, hcc, Frame.hybRow, Frame.hybCol]
+  · obtain ⟨g, h1, h2⟩ := lift_offdiag hL S (A := c) (B := r + 2 * (i' : ℕ) + 1) (by have := c.2; omega)
+      (by have := c.2; omega) hB
+    refine ⟨g, ?_, ?_⟩
+    · rw [h1]; simp [fullEntry, Frame.hybRow, Frame.hybCol]
+    · rw [h2]; simp [BT, Frame.hybRow, Frame.hybCol]
+  · obtain ⟨g, h1, h2⟩ := lift_offdiag hL S (A := r + 2 * (i : ℕ)) (B := c') (by have := c'.2; omega)
+      hA (by have := c'.2; omega)
+    refine ⟨g, ?_, ?_⟩
+    · rw [h1]; simp [fullEntry, Frame.hybRow, Frame.hybCol]
+    · rw [h2]; simp [BT, Frame.hybRow, Frame.hybCol]
+  · obtain ⟨g, h1, h2⟩ := lift_offdiag hL S (A := r + 2 * (i : ℕ)) (B := r + 2 * (i' : ℕ) + 1)
+      (by omega) hA hB
+    refine ⟨g, ?_, ?_⟩
+    · rw [h1]; simp [fullEntry, Frame.hybRow, Frame.hybCol]
+    · rw [h2]; simp [BT, Frame.hybRow, Frame.hybCol]
+
+end Hred
 
 end CatalanCore.Arith.Hybrid
