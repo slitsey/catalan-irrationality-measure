@@ -199,6 +199,22 @@ noncomputable def HybInst.ofSing : HybInst Fr where
   lev_large := fun p e N a hp hb he hbig ha => sing_lev_large cd p e N a hp hb he hbig ha
   lev_Ebd := fun q N a hbig ha => sing_lev_Ebd cd Ebd hle q N a hbig ha
 
+/--  iff the first singular index has been reached. -/
+theorem blk_pos_iff (hatt : ∀ q, IsPrimePow q → (∀ p ∈ cd.bad, ¬ p ∣ q) →
+      0 < cd.kq q ∧ q ∣ cd.Phi (cd.kq q))
+    {q c : ℕ} (hq : IsPrimePow q) (hb : ∀ p ∈ cd.bad, ¬ p ∣ q) :
+    0 < blk cd.Phi q c ↔ cd.kq q ≤ c := by
+  constructor
+  · intro h
+    unfold blk at h
+    obtain ⟨k, hk⟩ := Finset.card_pos.mp h
+    obtain ⟨hk1, hk2⟩ := Finset.mem_filter.mp hk
+    have := Finset.mem_Icc.mp hk1
+    exact (cd.kq_le q k hq hb (by omega) hk2).1.trans this.2
+  · intro h
+    obtain ⟨h1, h2⟩ := hatt q hq hb
+    exact blk_pos_of (k := cd.kq q) (Finset.mem_Icc.mpr ⟨h1, h⟩) h2
+
 end Constructor
 
 end CatalanCore.Arith.Hybrid
