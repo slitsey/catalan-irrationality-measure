@@ -120,4 +120,78 @@ theorem prefix_sum {c : ZMod M} (hc : IsUnit c) {s0 α0 C0 : ℝ} (hs0 : 0 < s0)
   refine hcell.trans (mul_le_mul_of_nonneg_left ?_ hK)
   exact hr
 
+
+/-- **The class total**: constant prefix `α0` on `(0, t1]`, then a chain of linear pieces. -/
+theorem class_total {c : ZMod M} (hc : IsUnit c) {α0 t1 : ℝ} (hα0 : 0 ≤ α0) (ht1 : 0 < t1)
+    (l : List Piece) (hl : Chain t1 l) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∀ w : ℕ → ℝ,
+      (∀ p, p ≤ ⌊t1 * r⌋₊ → p.Prime → (p : ZMod M) = c → w p ≤ α0 * r) →
+      (∀ P ∈ l, Covers c w r P) →
+      clsSum M c w 0 ⌊lastEnd t1 l * r⌋₊ ≤
+        (r : ℝ) ^ 2 * ((α0 * t1 + listInt l) / (M.totient : ℝ) + ε) := by
+  have hφ : (0 : ℝ) < (M.totient : ℝ) :=
+    by exact_mod_cast Nat.totient_pos.mpr (Nat.pos_of_ne_zero (NeZero.ne M))
+  set φ : ℝ := (M.totient : ℝ) with hφdef
+  have hφi : 0 < φ⁻¹ := inv_pos.mpr hφ
+  set δ : ℝ := ε / (4 * (α0 + 1) * (φ⁻¹ + 1)) with hδ
+  have hδpos : 0 < δ := by positivity
+  set s0 : ℝ := min t1 δ with hs0
+  have hs0pos : 0 < s0 := lt_min ht1 hδpos
+  have hs0t : s0 ≤ t1 := min_le_left _ _
+  have hs0δ : s0 ≤ δ := min_le_right _ _
+  set P0 : Piece := ⟨s0, t1, α0, 0, 0⟩ with hP0
+  have hch : Chain s0 (P0 :: l) := by
+    refine ⟨rfl, hs0pos, hs0t, le_refl _, ?_, ?_, hl⟩
+    · simp [hP0]; exact hα0
+    · simp [hP0]; exact hα0
+  have hε4 : 0 < ε / 4 := by positivity
+  have hch_sum := chain_sum hc (P0 :: l) s0 hch (ε := ε / 2) (by positivity)
+  have hpre := prefix_sum hc hs0pos hα0 (le_refl (0 : ℝ)) (ε1 := 1) one_pos
+  filter_upwards [hch_sum, hpre] with r hr1 hr2 w hw1 hw2
+  have hP0c : Covers c w r P0 := by
+    intro p hp1 hp2 hpp hpc
+    have : p ≤ ⌊t1 * r⌋₊ := hp2
+    have := hw1 p this hpp hpc
+    simp only [hP0]
+    linarith
+  have hall : ∀ P ∈ P0 :: l, Covers c w r P := by
+    intro P hP
+    rcases List.mem_cons.mp hP with rfl | hP
+    · exact hP0c
+    · exact hw2 P hP
+  have hA := hr1 w hall
+  have hB := hr2 w (fun p hp hpp hpc =>
+    (hw1 p (le_trans hp (Nat.floor_le_floor (mul_le_mul_of_nonneg_right hs0t
+      (Nat.cast_nonneg r)))) hpp hpc).trans (by linarith))
+  have hend : lastEnd s0 (P0 :: l) = lastEnd t1 l := by simp [lastEnd, hP0]
+  rw [hend] at hA
+  have hle1 : ⌊s0 * r⌋₊ ≤ ⌊lastEnd t1 l * r⌋₊ := by
+    apply Nat.floor_le_floor
+    exact mul_le_mul_of_nonneg_right (hs0t.trans (lastEnd_ge l t1 hl)) (Nat.cast_nonneg r)
+  rw [← clsSum_add c w (Nat.zero_le _) hle1]
+  have hint : listInt (P0 :: l) = α0 * (t1 - s0) + listInt l := by
+    simp [listInt, Piece.int, hP0]
+  rw [hint] at hA
+  have hr0 : (0 : ℝ) ≤ r := Nat.cast_nonneg r
+  have hpre_bound : (α0 * r + 0) * ((φ⁻¹ + 1) * (s0 * r)) ≤ (r : ℝ) ^ 2 * (ε / 4) := by
+    have e : (α0 * r + 0) * ((φ⁻¹ + 1) * (s0 * r)) = (r : ℝ) ^ 2 * (α0 * (φ⁻¹ + 1) * s0) := by ring
+    rw [e]
+    apply mul_le_mul_of_nonneg_left _ (by positivity)
+    have : α0 * (φ⁻¹ + 1) * s0 ≤ α0 * (φ⁻¹ + 1) * δ :=
+      mul_le_mul_of_nonneg_left hs0δ (by positivity)
+    refine this.trans ?_
+    rw [hδ]
+    have : α0 * (φ⁻¹ + 1) * (ε / (4 * (α0 + 1) * (φ⁻¹ + 1))) = ε / 4 * (α0 / (α0 + 1)) := by
+      field_simp
+    rw [this]
+    have : α0 / (α0 + 1) ≤ 1 := by rw [div_le_one (by linarith)]; linarith
+    nlinarith
+  have hfin : (r : ℝ) ^ 2 * ((α0 * (t1 - s0) + listInt l) / φ + ε / 2) ≤
+      (r : ℝ) ^ 2 * ((α0 * t1 + listInt l) / φ + ε / 2) := by
+    apply mul_le_mul_of_nonneg_left _ (by positivity)
+    have : α0 * (t1 - s0) ≤ α0 * t1 := by nlinarith
+    gcongr
+  have hrε : 0 ≤ (r : ℝ) ^ 2 * ε := by positivity
+  nlinarith [hA, hB, hpre_bound, hfin, hrε]
+
 end CatalanCore.Arith.Hybrid
