@@ -221,4 +221,91 @@ theorem KS_transfer
 
 end KS
 
+/-! ### The bordering determinant is a Cauchy determinant -/
+
+section D1
+
+variable [CharZero F] (m n' : ℕ) (θ : F) (hθ : Gen θ)
+
+include hθ in
+/-- `det [W | Π c₀ | Π R] = det [W | c₀ | R]`, a Cauchy determinant. -/
+theorem D1_eq
+    (hΔ : IsUnit ((Wb (m + (n' + 1)) θ (bX m (n' : ℤ)))ᵀ * Wb (m + (n' + 1)) θ (bY m (n' : ℤ))).det) :
+    (CatalanCore.bmat (Wb (m + (n' + 1)) θ (bY m (n' : ℤ)))
+        (Matrix.of fun i j => Fin.cases
+          ((projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ wcol (m + (n' + 1)) θ 0) i)
+          (fun j' => (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *
+            Rm m (n' + 1) n' θ) i j') j)).det =
+      cauFac θ (Fin.addCases (fun i : Fin m => ((bY m (n' : ℤ) i : ℤ) : F))
+        (fun j : Fin (n' + 1) => (((j : ℕ) : ℤ) : F))) := by
+  obtain ⟨-, hPc⟩ := projB_props m (n' + 1) n' θ hΔ
+  set Pj := projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) with hPj
+  choose a ha using fun j : Fin (n' + 1) => hPc (wcol (m + (n' + 1)) θ (((j : ℕ) : ℤ)))
+  have hcols : (Matrix.of fun i j => Fin.cases ((Pj *ᵥ wcol (m + (n' + 1)) θ 0) i)
+        (fun j' => (Pj * Rm m (n' + 1) n' θ) i j') j) =
+      (Matrix.of fun i (j : Fin (n' + 1)) =>
+        (Pj *ᵥ wcol (m + (n' + 1)) θ (((j : ℕ) : ℤ))) i) := by
+    ext i j
+    induction j using Fin.cases with
+    | zero => simp
+    | succ j' =>
+      simp only [Matrix.of_apply, Fin.cases_succ]
+      rw [Em_apply]
+      simp
+  rw [hcols]
+  have hE : (Matrix.of fun i (j : Fin (n' + 1)) =>
+        (Pj *ᵥ wcol (m + (n' + 1)) θ (((j : ℕ) : ℤ))) i) =
+      (Matrix.of fun i (j : Fin (n' + 1)) => wcol (m + (n' + 1)) θ (((j : ℕ) : ℤ)) i) *
+          (1 : Matrix (Fin (n' + 1)) (Fin (n' + 1)) F) +
+        Wb (m + (n' + 1)) θ (bY m (n' : ℤ)) *
+          (Matrix.of fun r (j : Fin (n' + 1)) => -(a j r)) := by
+    ext i j
+    have := congrFun (ha j) i
+    simp only [Matrix.of_apply, Matrix.mul_one, Matrix.add_apply, Matrix.mul_apply]
+    rw [this]
+    simp [Matrix.mulVec, dotProduct, sub_eq_add_neg, mul_neg, Finset.sum_neg_distrib]
+  rw [hE, CatalanCore.det_bmat_comb, Matrix.det_one, one_mul]
+  have hne : ∀ (a : Fin (m + (n' + 1))) (j : Fin (m + (n' + 1))),
+      θ + ((a : ℕ) : F) + Fin.addCases (fun i : Fin m => ((bY m (n' : ℤ) i : ℤ) : F))
+        (fun j : Fin (n' + 1) => (((j : ℕ) : ℤ) : F)) j ≠ 0 := by
+    intro a j
+    refine Fin.addCases (fun i => ?_) (fun j => ?_) j
+    · simp only [Fin.addCases_left]; exact gen_add hθ a _
+    · simp only [Fin.addCases_right]; exact gen_add hθ a _
+  exact CatalanCore.bmat_cauchy_det θ _ _ hne
+
+theorem D1_ne [CharZero F] {θ : F} (hθ : Gen θ) (m n' : ℕ)
+    (hΔ : IsUnit ((Wb (m + (n' + 1)) θ (bX m (n' : ℤ)))ᵀ * Wb (m + (n' + 1)) θ (bY m (n' : ℤ))).det) :
+    cauFac θ (Fin.addCases (fun i : Fin m => ((bY m (n' : ℤ) i : ℤ) : F))
+        (fun j : Fin (n' + 1) => (((j : ℕ) : ℤ) : F))) ≠ 0 := by
+  have := cauFac_chain_ne_zero hθ m (n' + 1) n' (fun j => (j : ℤ))
+    (by intro i j hi hj h; omega) (by intro i j hi hj; omega)
+  exact this
+
+end D1
+
+/-- **K-step formula (H5 deliverable).**  All factors explicit; `G = det[z_0, …, z_{n'-1}]`. -/
+theorem KS_formula [CharZero F] (m n' : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hn' : 1 ≤ n')
+    (hΔ : IsUnit ((Wb (m + (n' + 1)) θ (bX m (n' : ℤ)))ᵀ *
+      Wb (m + (n' + 1)) θ (bY m (n' : ℤ))).det)
+    (hΔ' : IsUnit ((Wb (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)))ᵀ *
+      Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))).det)
+    (w : Fin (m + n') → F)
+    (hw : CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))
+      (Ttil (m + n') m (n' + 1) θ) w ≠ 0)
+    (hD2 : (CatalanCore.bmat (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ)))
+      (Xm (m + n') m n' θ * (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *
+        Rm m (n' + 1) n' θ))).det ≠ 0) :
+    CatalanCore.bkdet (Wb (m + (n' + 1)) θ (bY m (n' : ℤ))) (Atil m (n' + 1) n' θ)
+        (projB (m + (n' + 1)) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ wcol (m + (n' + 1)) θ 0) *
+      CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))) (Ttil (m + n') m (n' + 1) θ) w =
+    cauFac θ (Fin.addCases (fun i : Fin m => ((bY m (n' : ℤ) i : ℤ) : F))
+        (fun j : Fin (n' + 1) => (((j : ℕ) : ℤ) : F))) *
+      CatalanCore.bkdet (Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))) (Atil m n' (n' + 1) θ) w *
+      ((∏ k : Fin n', ∏ j ∈ Finset.range k,
+          (-tau (m + (n' + 1)) m n' θ (-θ - (((-(j : ℤ)) : ℤ) : F)))) *
+        (colMat fun j => zvec m (n' + 1) n' θ j).det) := by
+  rw [KS_transfer m n' hm θ hθ hΔ hΔ' w hw hD2, D1_eq m n' θ hθ hΔ,
+    kdet_That m (n' + 1) n' hm θ hθ hΔ hn']
+
 end CatalanCore.Star.Leonard
