@@ -83,26 +83,34 @@ theorem lam_E3_deficit_sum {ε : ℝ} (hε : 0 < ε) :
   rw [e2]
   nlinarith [hlog, hc6]
 
+open Classical in
+/-- The dual excess of the three windows. -/
+noncomputable def eN (r p : ℕ) : ℕ :=
+  max (max (if cleanE1 r p then dualE1 r (r / 8) p else 0)
+      (if cleanE3 r p then 2 * r + r / 8 else 0))
+    (if WB r p then dualB r (r / 8) p else 0)
+
+/-- The exponent bound. -/
+noncomputable def Tfun (r p : ℕ) : ℕ := max (tropExp lamInst r (r / 8) p) (eN r p)
+
 /-- **B, E (class 1) and E (class 3) as a single `DefHypT` family.** -/
 theorem lam_defHypT_all {r : ℕ} (hr : 16 ≤ r) :
-    ∃ T δ : ℕ → ℕ, DefHypT lamInst r (r / 8) T δ ∧
+    ∃ δ : ℕ → ℕ, DefHypT lamInst r (r / 8) (Tfun r) δ ∧
       (∀ p, cleanE1 r p → δ p = r / 8) ∧ (∀ p, cleanE3 r p → δ p = r / 8) ∧
       (∀ p, WB r p → δ p = r / 8 - (p - r)) := by
   classical
-  set T : ℕ → ℕ := fun p => max (tropExp lamInst r (r / 8) p)
-    (max (max (if cleanE1 r p then dualE1 r (r / 8) p else 0)
-      (if cleanE3 r p then 2 * r + r / 8 else 0))
-      (if WB r p then dualB r (r / 8) p else 0)) with hT
+  set T : ℕ → ℕ := Tfun r with hT
+  have hTdef : ∀ p, T p = max (tropExp lamInst r (r / 8) p) (eN r p) := fun p => rfl
   have hT1 : ∀ p, p.Prime → p < Bnd lamInst r (r / 8) → tropExp lamInst r (r / 8) p ≤ T p :=
     fun p _ _ => le_max_left _ _
   have hE1 := defHypT_E1 r T hT1 (fun p hc => by
-    simp only [hT]
+    simp only [hT, Tfun, eN]
     refine le_trans ?_ (le_max_right _ _)
     refine le_trans ?_ (le_max_left _ _)
     refine le_trans ?_ (le_max_left _ _)
     rw [if_pos hc])
   have hE3 := defHypT_E3 hr T hT1 (fun p hc => by
-    simp only [hT]
+    simp only [hT, Tfun, eN]
     refine le_trans ?_ (le_max_right _ _)
     refine le_trans ?_ (le_max_left _ _)
     refine le_trans ?_ (le_max_right _ _)
@@ -111,7 +119,7 @@ theorem lam_defHypT_all {r : ℕ} (hr : 16 ≤ r) :
     (fun p hp hW => ⟨_, _, bsetup_of hr hW.1 hW.2.1 hW.2.2⟩) hT1
     (fun p hp hW j k S => by
       rw [bsetup_k hW.1 S]
-      simp only [hT]
+      simp only [hT, Tfun, eN]
       refine le_trans ?_ (le_max_right _ _)
       refine le_trans ?_ (le_max_right _ _)
       rw [if_pos hW]
@@ -123,7 +131,7 @@ theorem lam_defHypT_all {r : ℕ} (hr : 16 ≤ r) :
       have : ¬ cleanE3 r p := fun h => by have := hc.2.1; have := h.2.1; omega
       simp [defE3, this]
     · left; simp [defE1, hc]
-  refine ⟨T, _, defHypT_add (defHypT_add hE1 hE3 (fun p _ _ => d13 p)) hB ?_, ?_, ?_, ?_⟩
+  refine ⟨_, defHypT_add (defHypT_add hE1 hE3 (fun p _ _ => d13 p)) hB ?_, ?_, ?_, ?_⟩
   · intro p hp hb
     by_cases hc : cleanE1 r p ∨ cleanE3 r p
     · right
