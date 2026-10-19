@@ -98,4 +98,33 @@ theorem tri3_sum (sup d sub : ℕ → R) (a : Fin n) (g : ℕ → R) (gm lo : R)
   · rw [dif_neg h, h1 (by have := a.2; omega)]
     simp
 
+lemma tri3_guard (sup d sub : ℕ → R) :
+    tri3 n sup d sub = tri3 n (fun i => if i + 1 < n then sup i else 0) d
+      (fun i => if i + 1 < n then sub i else 0) := by
+  ext i j
+  simp only [tri3_apply]
+  have hi := i.2
+  have hj := j.2
+  split_ifs <;> first | rfl | (exfalso; omega) | skip
+
+/-- Row of a tridiagonal matrix applied to an `ℕ`-indexed vector, with explicit boundary guards. -/
+theorem tri3_row (sup d sub : ℕ → R) (g : ℕ → R) (k : Fin n) :
+    (tri3 n sup d sub *ᵥ (fun j : Fin n => g j)) k =
+      d k * g k + (if (k : ℕ) + 1 < n then sup k * g (k + 1) else 0)
+        + (if 0 < (k : ℕ) then sub ((k : ℕ) - 1) * g ((k : ℕ) - 1) else 0) := by
+  have h := tri3_sum (n := n) (fun i => if i + 1 < n then sup i else 0) d sub k g
+    (g ((k : ℕ) - 1)) (if 0 < (k : ℕ) then sub ((k : ℕ) - 1) else 0)
+    (fun h => by simp [h]) (fun h => by simp [h])
+    (fun h => by simp [h])
+  rw [Matrix.mulVec, dotProduct]
+  have e : tri3 n sup d sub = tri3 n (fun i => if i + 1 < n then sup i else 0) d sub := by
+    ext i j
+    simp only [tri3_apply]
+    have hi := i.2
+    have hj := j.2
+    split_ifs <;> first | rfl | (exfalso; omega) | skip
+  rw [e]
+  rw [h]
+  by_cases h1 : (k : ℕ) + 1 < n <;> by_cases h2 : 0 < (k : ℕ) <;> simp [h1, h2]
+
 end CatalanCore.Bordered.Z1

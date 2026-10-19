@@ -19,7 +19,7 @@ open Finset Matrix
 namespace CatalanCore.Bordered.Z1
 
 /-- **The bispectral identity** (FT §1), `K = s + m`, `z = x + y`. -/
-theorem bispectral (s m : ℕ) (θ x y : ℚ) (h0 : x + y ≠ 0) (h1 : x + y + 1 ≠ 0) (h2 : x + y - 1 ≠ 0) :
+theorem bispectral {F : Type*} [Field F] (s m : ℕ) (θ x y : F) (h0 : x + y ≠ 0) (h1 : x + y + 1 ≠ 0) (h2 : x + y - 1 ≠ 0) :
     Fq s m θ x / (x + y + 1) + Dq s m θ x / (x + y) + Gq θ x / (x + y - 1) =
       rq s m θ y / (x + y + 1) + Dq s m θ (-y) / (x + y) + lq θ y / (x + y - 1) := by
   simp only [Fq, Gq, rq, lq, Dq, Nat.cast_add]
