@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Bordered.Z1.ChainDvd
+public import CatalanCore.Bordered.Z1.Bisp
 
 /-!
 # Z1.3 / Z1.4: divisibility of `u(X′, e_s)`, vanishing patterns at `θ = -c`.
@@ -102,5 +103,26 @@ theorem Lam2_neg_eq_zero_iff (s m k c : ℕ) (hk : k < s) :
     · exact absurd h (one_div_ne_zero (mul_ne_zero h1 h2))
     · exact h
   · exact Or.inr
+
+/-- **Z1.1a**: at `θ > 0`, `A` is the Cauchy Gram `C_GᵀΩC_G`, `Ω_a = ρ_a (x_a+1)_s²`. -/
+theorem Amat_cauchy (s m : ℕ) (θ : ℚ) (hθ : 0 < θ) (i j : Fin s) :
+    Amat s m θ i j = ∑ a : Fin (s + m),
+      (rho s m θ a * Pn s (θ + ((a : ℕ) : ℚ)) ^ 2) /
+        ((θ + ((a : ℕ) : ℚ) + (((i : ℕ) : ℚ) + 1)) * (θ + ((a : ℕ) : ℚ) + (((j : ℕ) : ℚ) + 1))) := by
+  rw [Amat, Matrix.mul_apply]
+  refine Finset.sum_congr rfl fun a _ => ?_
+  rw [Matrix.mul_diagonal, Matrix.transpose_apply]
+  have ha : (0 : ℚ) ≤ ((a : ℕ) : ℚ) := Nat.cast_nonneg _
+  have hi : (0 : ℚ) ≤ ((i : ℕ) : ℚ) := Nat.cast_nonneg _
+  have hj : (0 : ℚ) ≤ ((j : ℕ) : ℚ) := Nat.cast_nonneg _
+  have gi : lag s (θ + ((a : ℕ) : ℚ)) i = Pn s (θ + ((a : ℕ) : ℚ)) / (θ + ((a : ℕ) : ℚ) + (((i : ℕ) : ℚ) + 1)) :=
+    lag_eq' s _ i.2 _ (by push_cast; ring) (by linarith)
+  have gj : lag s (θ + ((a : ℕ) : ℚ)) j = Pn s (θ + ((a : ℕ) : ℚ)) / (θ + ((a : ℕ) : ℚ) + (((j : ℕ) : ℚ) + 1)) :=
+    lag_eq' s _ j.2 _ (by push_cast; ring) (by linarith)
+  show lag s (θ + ((a : ℕ) : ℚ)) i * rho s m θ a * lag s (θ + ((a : ℕ) : ℚ)) j = _
+  rw [gi, gj]
+  have n1 : θ + ((a : ℕ) : ℚ) + (((i : ℕ) : ℚ) + 1) ≠ 0 := by linarith
+  have n2 : θ + ((a : ℕ) : ℚ) + (((j : ℕ) : ℚ) + 1) ≠ 0 := by linarith
+  field_simp
 
 end CatalanCore.Bordered.Z1
