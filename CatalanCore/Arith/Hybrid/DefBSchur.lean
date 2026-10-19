@@ -108,6 +108,17 @@ theorem schur_Z (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
     rw [e]
     linear_combination this
 
+/-- **Theorem C5, scalar Schur complement of the `B1` block** (`d = 0`, `r := p`): for `u, w < k`,
+`T_{uw} - π⁻¹ ∑_{c=k}^{p-1} T_{uc} T_{wc} = [u = w] H^{(2)}_{k-1}/16`.  This is DQ Lemma 3.1
+with the sum over the whole of `[k, p)`. -/
+theorem schur_Z_C5 (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
+    (hj : ((j : ℕ) : ZMod p) ≠ 0) (hkp : k ≤ p) {u w : ℕ} (hu : u < k) (hw : w < k) :
+    Tfull p j k u w - ((((j : ℕ) : ZMod p)⁻¹) ^ 2)⁻¹ *
+        ∑ c ∈ Ico k p, Tfull p j k u c * Tfull p j k w c =
+      (if u = w then hm2 p (k - 1) / 16 else 0) := by
+  have := schur_Z (j := j) hp5 hk4 hj (r := p) (d := 0) (by omega) hkp hu hw
+  simpa using this
+
 end
 
 /-! ### The matrix identity over `𝔽_p(X)` -/
