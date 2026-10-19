@@ -93,9 +93,9 @@ lemma det_colMat_rev (s : ℕ) :
     have hk := k.2
     by_cases h : (i : ℕ) = s - 1 - k
     · have : Fin.rev k = i := Fin.ext (by simp [Fin.val_rev]; omega)
-      simp [h, this]
+      simp [h]; rw [← this, Fin.rev_rev]
     · have : Fin.rev k ≠ i := fun e => h (by rw [← e]; simp [Fin.val_rev]; omega)
-      simp [h, this]
+      simp [h]; intro e; apply this; rw [← e, Fin.rev_rev]
   rw [h, Matrix.det_permutation]
   rcases Int.units_eq_one_or (Equiv.Perm.sign (Fin.revPerm : Equiv.Perm (Fin s))) with h | h <;>
     simp [h]
@@ -120,7 +120,7 @@ theorem kdet_Xp_chain (s m : ℕ) (θ : K) :
   have := kdet_eq_of_chain (Xp s m θ) (fun j => ev (F := K) s (s - 1 - j))
     (fun j => Xup s m θ (s - 1 - (j + 1))) (fun j => Xdiag s m θ (s - 1 - j))
     (fun j => if j = 0 then 0 else Xlow s m θ (s - 1 - j)) hT (by simp)
-  have e : (fun j => ev (F := K) s (s - 1 - j)) 0 = es K s := by
+  have e : ev (F := K) s (s - 1 - 0) = es K s := by
     funext i; simp [es, ev]
   rw [e] at this
   exact this
@@ -137,10 +137,18 @@ theorem kdet_Xp_poly (s m : ℕ) :
   have h1 := kdet_map (f : ℚ[X] →+* RatFunc ℚ) (Xp s m (X : ℚ[X])) (es ℚ[X] s)
   have h2 : (Xp s m (X : ℚ[X])).map (f : ℚ[X] →+* RatFunc ℚ) = Xp s m (f X) := Xp_map f s m X
   have h3 : ((f : ℚ[X] →+* RatFunc ℚ) ∘ es ℚ[X] s) = es (RatFunc ℚ) s := by
-    funext i; simp [es]; split_ifs <;> simp
-  rw [h2, h3, kdet_Xp_chain, nested_prod] at h1
-  sorry
-
-end CatalanCore.Bordered.Z1
+    funext i; simp [es]
+  have hF := Fin.prod_univ_eq_prod_range
+    (fun k : ℕ => ∏ j ∈ range k, Xup s m (f X) (s - 1 - (j + 1))) s
+  rw [h2, h3, kdet_Xp_chain, hF, nested_prod] at h1
+  rcases det_colMat_rev (K := RatFunc ℚ) s with hd | hd
+  · refine ⟨1, Or.inl rfl, hinj ?_⟩
+    refine h1.trans ?_
+    rw [hd]
+    simp [map_prod, map_pow, Xup_map]
+  · refine ⟨-1, Or.inr rfl, hinj ?_⟩
+    refine h1.trans ?_
+    rw [hd]
+    simp [map_prod, map_pow, Xup_map]
 
 end CatalanCore.Bordered.Z1
