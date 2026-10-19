@@ -154,4 +154,176 @@ theorem trop_D45 (q r m : ℕ) (hq : r < q) (hN : r + 2 * m < 2 * q) :
   exact pot45_feasible (N := r + 2 * m) hq hN (by omega) (Frame_hybRow_lt r m a)
     (Frame_hybCol_lt r m b)
 
+/-! ### D1 (trivial form): `u = v = 1` -/
+
+theorem trop_D1 (q r m : ℕ) : (tropVal (HW q r m) : ℚ) ≤ 2 * ((r : ℚ) + m) := by
+  have := trop_HW_le q r m (fun _ => 1) (fun _ => 1) (by
+    intro a b
+    have := wt_le_two q (Frame.hybRow r m a) (Frame.hybCol r m b)
+    have : (HW q r m a b : ℚ) ≤ 2 := by unfold HW; exact_mod_cast this
+    linarith)
+  refine this.trans (le_of_eq ?_)
+  unfold potVal
+  simp
+  ring
+
+/-! ### D6: `q ≥ N` and `C` inside block 0 -/
+
+/-- Potential of D6. -/
+def pot6 (q r : ℕ) (A : ℕ) : ℚ := if r ≤ A ∧ 0 < blk q A then 1 else 0
+
+theorem trop_D6 (q r m : ℕ) (hq : r + 2 * m ≤ q) (hC : ∀ c < r, blk q c = 0) :
+    (tropVal (HW q r m) : ℚ) ≤ potVal (pot6 q r) (pot6 q r) r m := by
+  apply trop_HW_le
+  intro a b
+  have hA := Frame_hybRow_lt r m a
+  have hB := Frame_hybCol_lt r m b
+  unfold HW
+  set A := Frame.hybRow r m a
+  set B := Frame.hybCol r m b
+  have h0 : ∀ X, 0 ≤ pot6 q r X := fun X => by unfold pot6; split_ifs <;> norm_num
+  by_cases hAB : A = B
+  · rw [hAB, wt_diag]
+    by_cases hBr : B < r
+    · rw [hC B hBr]; simp; linarith [h0 B]
+    · -- zone labels of a row and a column never coincide
+      exfalso
+      rcases a with c | i <;> rcases b with c' | j <;>
+        simp [A, B, Frame.hybRow, Frame.hybCol] at hAB hBr <;> omega
+  · by_cases hc : (q : ℤ) ∣ (A : ℤ) - B
+    · have := cong_large' hAB hc
+      have := max_lt hA hB
+      omega
+    · have h1 := wt_le_one_of_noncong hAB hc
+      by_cases hbl : blk q A = blk q B
+      · rw [wt_eq_zero_of_blk hAB hc hbl]; simp; linarith [h0 A, h0 B]
+      · have hpos : (r ≤ A ∧ 0 < blk q A) ∨ (r ≤ B ∧ 0 < blk q B) := by
+          by_contra hn
+          push_neg at hn
+          have hA0 : blk q A = 0 := by
+            by_cases h : A < r
+            · exact hC A h
+            · have := hn.1 (by omega); omega
+          have hB0 : blk q B = 0 := by
+            by_cases h : B < r
+            · exact hC B h
+            · have := hn.2 (by omega); omega
+          exact hbl (by rw [hA0, hB0])
+        have : (wt q A B : ℚ) ≤ 1 := by exact_mod_cast h1
+        rcases hpos with h | h
+        · have : pot6 q r A = 1 := by unfold pot6; rw [if_pos h]
+          linarith [h0 B]
+        · have : pot6 q r B = 1 := by unfold pot6; rw [if_pos h]
+          linarith [h0 A]
+
+/-! ### D2: `2m < q ≤ r` -/
+
+lemma blk_pos_of_ge {q L : ℕ} (hq : 1 ≤ q) (h : q ≤ L) : 0 < blk q L :=
+  blk_pos_of (k := q) (Finset.mem_Icc.mpr ⟨hq, h⟩) (dvd_mul_right _ _)
+
+/-- Potential of D2: `C`: `0` on the unpaired low set `U = {blk = 0, r ≤ c + q}`, else `1`;
+zone: `1 + [x - q ∈ block 0]` (low nodes get 2). -/
+def pot2 (q r : ℕ) (A : ℕ) : ℚ :=
+  if A < r then (if blk q A = 0 ∧ r ≤ A + q then 0 else 1)
+  else (1 + if blk q (A - q) = 0 then 1 else 0)
+
+lemma pot2_nonneg (q r A : ℕ) : 0 ≤ pot2 q r A := by
+  unfold pot2; split_ifs <;> norm_num
+
+lemma pot2_zone_ge (q r X : ℕ) (hX : r ≤ X) : 1 ≤ pot2 q r X := by
+  unfold pot2; rw [if_neg (by omega)]; split_ifs <;> norm_num
+
+lemma pot2_zero_or (q r X : ℕ) : pot2 q r X = 0 ∨ 1 ≤ pot2 q r X := by
+  unfold pot2; split_ifs <;> norm_num
+
+lemma pot2_cong {q r m S L : ℕ} (hq1 : 1 ≤ q) (hm : 2 * m < q) (hqr : q ≤ r) (hSL : S < L)
+    (hL : L < r + 2 * m) (hd : (q : ℤ) ∣ (L : ℤ) - S) : 2 ≤ pot2 q r S + pot2 q r L := by
+  have hqLS : q ≤ L - S := by
+    have := Int.le_of_dvd (by omega) hd; omega
+  by_cases hLr : L < r
+  · have h1 : pot2 q r L = 1 := by
+      unfold pot2; rw [if_pos hLr]
+      have := blk_pos_of_ge hq1 (show q ≤ L by omega)
+      rw [if_neg (by omega)]
+    have h2 : pot2 q r S = 1 := by
+      unfold pot2; rw [if_pos (by omega)]
+      rw [if_neg (by omega)]
+    rw [h1, h2]; norm_num
+  · have hSr : S < r := by omega
+    by_cases hS : blk q S = 0 ∧ r ≤ S + q
+    · have h2 : pot2 q r S = 0 := by unfold pot2; rw [if_pos hSr, if_pos hS]
+      obtain ⟨t, ht⟩ := hd
+      have ht1 : t = 1 := by
+        have hq0 : (0 : ℤ) < q := by exact_mod_cast hq1
+        have ht0 : 0 < t := by
+          by_contra hh
+          have : (t : ℤ) ≤ 0 := by omega
+          nlinarith [ht, hq0, show (S : ℤ) < L by exact_mod_cast hSL]
+        by_contra hne
+        have : 2 ≤ t := by omega
+        have : (q : ℤ) * 2 ≤ q * t := by nlinarith
+        have := hS.2
+        omega
+      subst ht1
+      have hLq : L - q = S := by omega
+      have h1 : pot2 q r L = 2 := by
+        unfold pot2; rw [if_neg hLr, hLq, if_pos hS.1]; norm_num
+      rw [h1, h2]; norm_num
+    · have h2 : pot2 q r S = 1 := by unfold pot2; rw [if_pos hSr, if_neg hS]
+      have := pot2_zone_ge q r L (by omega)
+      rw [h2]; linarith
+
+lemma pot2_feasible {q r m A B : ℕ} (hq1 : 1 ≤ q) (hm : 2 * m < q) (hqr : q ≤ r)
+    (hA : A < r + 2 * m) (hB : B < r + 2 * m):
+    (wt q A B : ℚ) ≤ pot2 q r A + pot2 q r B := by
+  have h0A := pot2_nonneg q r A
+  have h0B := pot2_nonneg q r B
+  by_cases hAB : A = B
+  · subst hAB
+    rw [wt_diag]
+    by_cases hbl : 0 < blk q A
+    · rw [if_pos hbl]
+      by_cases hAr : A < r
+      · have : pot2 q r A = 1 := by unfold pot2; rw [if_pos hAr, if_neg (by omega)]
+        rw [this]; norm_num
+      · have : 1 ≤ pot2 q r A := by unfold pot2; rw [if_neg hAr]; split_ifs <;> norm_num
+        push_cast; linarith
+    · rw [if_neg hbl]; push_cast; linarith
+  · by_cases hc : (q : ℤ) ∣ (A : ℤ) - B
+    · have h2 : (wt q A B : ℚ) ≤ 2 := by
+        have := wt_le_two q A B; exact_mod_cast this
+      rcases lt_or_gt_of_ne hAB with h | h
+      · have hd : (q : ℤ) ∣ (B : ℤ) - A := by rw [← dvd_neg]; simpa using hc
+        have := pot2_cong (r := r) (m := m) hq1 hm hqr h hB hd
+        linarith
+      · have := pot2_cong (r := r) (m := m) hq1 hm hqr h hA hc
+        linarith
+    · have h1 := wt_le_one_of_noncong hAB hc
+      have h1' : (wt q A B : ℚ) ≤ 1 := by exact_mod_cast h1
+      have p1 : ∀ X, X < r → pot2 q r X = 0 → blk q X = 0 := by
+        intro X hX hp
+        by_contra hb
+        unfold pot2 at hp; rw [if_pos hX, if_neg (by omega)] at hp; norm_num at hp
+      have p2 := pot2_zone_ge q r
+      by_cases hz : pot2 q r A = 0 ∧ pot2 q r B = 0
+      · have hAr : A < r := by
+          by_contra hh; have := p2 A (by omega); linarith [hz.1]
+        have hBr : B < r := by
+          by_contra hh; have := p2 B (by omega); linarith [hz.2]
+        have := wt_eq_zero_of_blk hAB hc (by rw [p1 A hAr hz.1, p1 B hBr hz.2])
+        rw [this]; simp; linarith
+      · have : 1 ≤ pot2 q r A + pot2 q r B := by
+          rcases pot2_zero_or q r A with ha | ha <;> rcases pot2_zero_or q r B with hb | hb
+          · exact absurd ⟨ha, hb⟩ hz
+          · linarith
+          · linarith
+          · linarith
+        linarith
+
+theorem trop_D2 (q r m : ℕ) (hq1 : 1 ≤ q) (hm : 2 * m < q) (hqr : q ≤ r) :
+    (tropVal (HW q r m) : ℚ) ≤ potVal (pot2 q r) (pot2 q r) r m := by
+  apply trop_HW_le
+  intro a b
+  exact pot2_feasible hq1 hm hqr (Frame_hybRow_lt r m a) (Frame_hybCol_lt r m b)
+
 end CatalanCore.Arith.Hybrid
