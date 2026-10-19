@@ -1,6 +1,7 @@
 module
 
 public import CatalanFrames.Lambda.HybDefE3
+public import CatalanFrames.Lambda.HybLemmaE2
 public import CatalanCore.Arith.Hybrid.BorderE
 
 @[expose] public section
@@ -20,22 +21,8 @@ namespace CatalanFrames.Lambda
 theorem gleAt_E_lam_top {p r m k : ℕ} [Fact p.Prime] (S : ESetup p r m 3 k) :
     GLE p (2 * ((r - p) + (r - k)) + 4 * m - m + topC lamInst r m p)
       ((afterTop r m).fullPolyG lamFrame) := by
-  have hp5 := S.p5
-  have h3 : ((3 : ℕ) : ZMod p) ≠ 0 := by
-    rw [Ne, ZMod.natCast_eq_zero_iff]
-    intro hd
-    have := Nat.le_of_dvd (by norm_num) hd
-    omega
-  have h3' : ((3 : ℕ) : ZMod p) * ((3 : ℕ) : ZMod p)⁻¹ = 1 := mul_inv_cancel₀ h3
-  have he : -(4 * ((3 : ℕ) : ZMod p)⁻¹) + 1 ≠ 0 := by
-    intro h
-    have h4 : (-(4 * ((3 : ℕ) : ZMod p)⁻¹) + 1) * ((3 : ℕ) : ZMod p) = 0 := by rw [h]; ring
-    have h5 : (-(4 * ((3 : ℕ) : ZMod p)⁻¹) + 1) * ((3 : ℕ) : ZMod p) = -1 := by
-      linear_combination (-4) * h3'
-    rw [h5] at h4
-    exact one_ne_zero (neg_eq_zero.1 h4)
-  have := gleAt_E_top lamInst lamData S (Gs p (fun x => (x⁻¹) ^ 2) (k - 1)) h3 he (lam_hUU S)
-  rw [wE_sum S.hrk (by have := S.hkp; have := S.hpr; omega)] at this
+  have := (gleAt_E_lam_wit S).border lamInst
+  rw [wE_sum_lam S] at this
   exact this
 
 theorem gle_E1_top {r p : ℕ} (hc : cleanE1 r p) [Fact p.Prime] :

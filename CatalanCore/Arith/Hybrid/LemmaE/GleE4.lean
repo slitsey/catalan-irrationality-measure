@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.LemmaE.GleE3
+public import CatalanCore.Arith.Hybrid.RankWit
 
 @[expose] public section
 
@@ -21,17 +22,25 @@ section Main
 variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- **Lemma E at a prime `p < r` of class 1, in dual form.** -/
+theorem gleAt_E_wit (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
+    (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
+    (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
+      TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +
+        ∑ c ∈ Ico k p, ((c : ZMod p) - a)⁻¹ * ((c : ZMod p) - b)⁻¹)) :
+    HasRankWit Fr p r m (fun a => wE p r k (Frame.hybRow r m a))
+      (fun b => wE p r k (Frame.hybCol r m b)) m := by
+  have hrank := rank_BE_le S sU hj he hUU
+  refine ⟨BE p j r m k, fun a b => hred_E hL S a b, ?_⟩
+  omega
+
 theorem gleAt_E (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
     (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +
         ∑ c ∈ Ico k p, ((c : ZMod p) - a)⁻¹ * ((c : ZMod p) - b)⁻¹)) :
     GLE p (∑ a, wE p r k (Frame.hybRow r m a) + ∑ b, wE p r k (Frame.hybCol r m b) - m)
-      (Fr.fullPoly r m) := by
-  have hrank := rank_BE_le S sU hj he hUU
-  refine gle_full_of_rank p Fr r m (fun a => wE p r k (Frame.hybRow r m a))
-    (fun b => wE p r k (Frame.hybCol r m b)) (BE p j r m k) (fun a b => hred_E hL S a b) m ?_
-  omega
+      (Fr.fullPoly r m) :=
+  (gleAt_E_wit hL S sU hj he hUU).gle
 
 lemma sum_wE_C (hrk : r - p ≤ k) (hkr : k ≤ r) :
     ∑ c : Fin r, wE p r k (c : ℕ) = (r - p) + (r - k) := by

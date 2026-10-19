@@ -86,10 +86,10 @@ lemma zone_shape (S : BSetup p r m j k) {d : ℕ} (hd : d = p - r) (hd0 : 0 < d)
 /-- **Theorem B at a prime `r < p < r + m`, in dual form** (λ-like frame): with `τ' = ∑u + ∑v` the
 value of the D4 potentials, `p^{τ' - (r + m - p)} · det Full(X)` is `ℤ_(p)`-integral.  No
 primal optimality is needed. -/
-theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
+theorem gleAt_B_lam_wit {Fr : Frame} (hL : LamData Fr)
     (S : BSetup p r m j k) (hpm : p < r + m) :
-    GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
-      (m - (p - r))) (Fr.fullPoly r m) := by
+    HasRankWit Fr p r m (fun a => uPot p r k (Frame.hybRow r m a))
+      (fun b => uPot p r k (Frame.hybCol r m b)) (m - (p - r)) := by
   have hrp := S.hrp
   have hp5 := S.p5
   have hk0 := S.hk0
@@ -178,6 +178,12 @@ theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
     obtain ⟨g, h1, h2⟩ := hred_B hL S a b
     exact ⟨g, h1, h2.trans (BT_eq p r m j k hkr a b).symm⟩
 
+
+theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
+    (S : BSetup p r m j k) (hpm : p < r + m) :
+    GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
+      (m - (p - r))) (Fr.fullPoly r m) :=
+  (gleAt_B_lam_wit hL S hpm).gle
 
 /-- The numeric side condition: the D4 potentials have total value `≥ m`. -/
 lemma uPot_sum_ge (hrp : r < p) :

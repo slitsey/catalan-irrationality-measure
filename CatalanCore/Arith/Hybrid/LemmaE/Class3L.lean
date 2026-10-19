@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.LemmaE.Class3K
+public import CatalanCore.Arith.Hybrid.RankWit
 
 @[expose] public section
 
@@ -103,14 +104,18 @@ lemma rank_BE3_le (h6255 : ¬ p ∣ 6255) : (BE3 p r m (sd3 S)).rank ≤ r := by
   omega
 
 /-- **Lemma E at a class-3 prime, dual form.** -/
+theorem gleAt_E3_wit (hL : LamData Fr) (h6255 : ¬ p ∣ 6255) :
+    HasRankWit Fr p r m (fun a => wr p r m (Frame.hybRow r m a))
+      (fun b => wc p r m (Frame.hybCol r m b)) m := by
+  have hrank := rank_BE3_le S h6255
+  refine ⟨BE3 p r m (sd3 S), fun a b => hred_E3 hL S a b, ?_⟩
+  omega
+
+/-- **Lemma E at a class-3 prime, dual form.** -/
 theorem gleAt_E3 (hL : LamData Fr) (h6255 : ¬ p ∣ 6255) :
     GLE p (∑ a, wr p r m (Frame.hybRow r m a) + ∑ b, wc p r m (Frame.hybCol r m b) - m)
-      (Fr.fullPoly r m) := by
-  have hrank := rank_BE3_le S h6255
-  refine gle_full_of_rank p Fr r m (fun a => wr p r m (Frame.hybRow r m a))
-    (fun b => wc p r m (Frame.hybCol r m b)) (BE3 p r m (sd3 S))
-    (fun a b => hred_E3 hL S a b) m ?_
-  omega
+      (Fr.fullPoly r m) :=
+  (gleAt_E3_wit S hL h6255).gle
 
 end
 

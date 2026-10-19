@@ -91,8 +91,9 @@ theorem lam_hUU (S : ESetup p r m 3 k) :
     exact Finset.sum_congr rfl fun c _ => by rw [mul_comm]
 
 /-- **Lemma E for λ at a class-1 prime** (dual form). -/
-theorem gleAt_E_lam (S : ESetup p r m 3 k) :
-    GLE p (2 * ((r - p) + (r - k)) + 4 * m - m) (lamFrame.fullPoly r m) := by
+theorem gleAt_E_lam_wit (S : ESetup p r m 3 k) :
+    HasRankWit lamFrame p r m (fun a => wE p r k (Frame.hybRow r m a))
+      (fun b => wE p r k (Frame.hybCol r m b)) m := by
   have hp5 := S.p5
   have h3 : ((3 : ℕ) : ZMod p) ≠ 0 := by
     rw [Ne, ZMod.natCast_eq_zero_iff]
@@ -107,8 +108,18 @@ theorem gleAt_E_lam (S : ESetup p r m 3 k) :
       linear_combination (-4) * h3'
     rw [h5] at h4
     exact one_ne_zero (neg_eq_zero.1 h4)
-  have := gleAt_E lamData S (Gs p (fun x => (x⁻¹) ^ 2) (k - 1)) h3 he (lam_hUU S)
-  rw [wE_sum S.hrk (by have := S.hkp; have := S.hpr; omega)] at this
+  exact gleAt_E_wit lamData S (Gs p (fun x => (x⁻¹) ^ 2) (k - 1)) h3 he (lam_hUU S)
+
+theorem wE_sum_lam (S : ESetup p r m 3 k) :
+    ∑ a : Fin r ⊕ Fin m, wE p r k (Frame.hybRow r m a) +
+      ∑ b : Fin r ⊕ Fin m, wE p r k (Frame.hybCol r m b) = 2 * ((r - p) + (r - k)) + 4 * m :=
+  wE_sum S.hrk (by have := S.hkp; have := S.hpr; omega)
+
+/-- **Lemma E for λ at a class-1 prime** (dual form). -/
+theorem gleAt_E_lam (S : ESetup p r m 3 k) :
+    GLE p (2 * ((r - p) + (r - k)) + 4 * m - m) (lamFrame.fullPoly r m) := by
+  have := (gleAt_E_lam_wit S).gle
+  rw [wE_sum_lam S] at this
   exact this
 
 end

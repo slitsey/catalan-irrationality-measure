@@ -3,6 +3,7 @@ module
 public import CatalanCore.Arith.Hybrid.DefB
 public import CatalanCore.Arith.Hybrid.DefC5
 public import CatalanCore.Arith.Hybrid.DefRank
+public import CatalanCore.Arith.Hybrid.RankWit
 
 @[expose] public section
 
@@ -79,11 +80,10 @@ theorem gleAt_B {B0 B1 X Y D : Type} [Fintype B0] [Fintype B1] [Fintype X] [Fint
     (hred : ∀ a b, ∃ g : (LocRing p)[X],
       toQ p g = C ((p : ℚ) ^ (u a + v b)) * fullEntry Fr r m a b ∧
         phiP p g = BbarB A0 V π Gx Gy (e a) (e' b)) :
-    GLE p (∑ a, u a + ∑ b, v b - (m - Fintype.card D)) (Fr.fullPoly r m) := by
+    HasRankWit Fr p r m u v (m - Fintype.card D) := by
   have hrank := rank_BbarB_le A0 V π s0 κ lam σ hπ hs0 E hS Gx Gy lowX lowY iX iY cX cY hGx hGy
     hdisj hc
-  refine gle_full_of_rank p Fr r m u v ((BbarB A0 V π Gx Gy).submatrix e e') hred
-    (m - Fintype.card D) ?_
+  refine ⟨(BbarB A0 V π Gx Gy).submatrix e e', hred, ?_⟩
   rw [Matrix.rank_submatrix _ e e']
   omega
 

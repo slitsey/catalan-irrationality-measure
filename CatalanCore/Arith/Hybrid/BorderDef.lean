@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.DefRank
+public import CatalanCore.Arith.Hybrid.RankWit
 public import CatalanCore.Rect.BorderFull
 
 @[expose] public section
@@ -175,5 +176,18 @@ theorem defHypTop_of_local (T δ : ℕ → ℕ)
     simpa using (fullTop_gle I r m p).mono (by have := hT p hp hb; omega)
 
 end DefTop
+
+end CatalanCore.Arith.Hybrid
+
+namespace CatalanCore.Arith.Hybrid
+
+/-- **The generic bordering lemma**: a rank witness for `Full(X)` of `Frame.fullPoly r m` gives the
+bordered statement for `det Full(afterTop r m)` at the cost `topC`.  This is the single place where
+member 2 inherits the rank-route deficits. -/
+theorem HasRankWit.border {Fr : Frame} (I : HybInst Fr) {p : ℕ} [Fact p.Prime] {r m : ℕ}
+    {u v : Fin r ⊕ Fin m → ℕ} {k : ℕ} (h : HasRankWit Fr p r m u v k) :
+    GLE p (∑ a, u a + ∑ b, v b - k + topC I r m p) ((afterTop r m).fullPolyG Fr) := by
+  obtain ⟨Bbar, hB, hrk⟩ := h
+  exact gle_fullTop_of_rank' I r m p u v Bbar hB k hrk
 
 end CatalanCore.Arith.Hybrid

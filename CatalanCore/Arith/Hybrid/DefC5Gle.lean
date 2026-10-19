@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.DefC5Final
+public import CatalanCore.Arith.Hybrid.RankWit
 
 @[expose] public section
 
@@ -31,9 +32,9 @@ lemma card_low (S : CSetup p r m k) :
 
 include S in
 /-- **Theorem C5 at a prime `p < r`, in dual form** (λ-like frame). -/
-theorem gleAt_C5_lam {Fr : Frame} (hL : LamData Fr) :
-    GLE p (∑ a, wC p r k (Frame.hybRow r m a) + ∑ b, wC p r k (Frame.hybCol r m b) -
-      (p + k - r - m)) (Fr.fullPoly r m) := by
+theorem gleAt_C5_lam_wit {Fr : Frame} (hL : LamData Fr) :
+    HasRankWit Fr p r m (fun a => wC p r k (Frame.hybRow r m a))
+      (fun b => wC p r k (Frame.hybCol r m b)) (p + k - r - m) := by
   classical
   haveI : Invertible (Mp5 p r k) := invMp5 S
   have hm0 := S.m0
@@ -123,10 +124,16 @@ theorem gleAt_C5_lam {Fr : Frame} (hL : LamData Fr) :
       (eU p r k m) (eU p r k m) := by
     ext a b
     rw [Matrix.submatrix_apply, BTc_eq]
-  refine gle_full_of_rank p Fr r m (fun a => wC p r k (Frame.hybRow r m a))
-    (fun b => wC p r k (Frame.hybCol r m b)) (BTc p r k m) (hred_C hL S) (p + k - r - m) ?_
+  refine ⟨BTc p r k m, hred_C hL S, ?_⟩
   rw [hBT, Matrix.rank_submatrix]
   omega
+
+include S in
+/-- **Theorem C5 at a prime `p < r`, in dual form** (λ-like frame). -/
+theorem gleAt_C5_lam {Fr : Frame} (hL : LamData Fr) :
+    GLE p (∑ a, wC p r k (Frame.hybRow r m a) + ∑ b, wC p r k (Frame.hybCol r m b) -
+      (p + k - r - m)) (Fr.fullPoly r m) :=
+  (gleAt_C5_lam_wit S hL).gle
 
 end Gle
 
