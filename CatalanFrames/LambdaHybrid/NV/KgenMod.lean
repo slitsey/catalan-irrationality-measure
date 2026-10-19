@@ -190,4 +190,50 @@ theorem kgenR'_ne_zero_of_LU {ℓ : ℕ} [Fact ℓ.Prime] (K m r s' : ℕ) (hmK 
       wLast_eq K m r s' hr]
     exact hne
 
+/-- The mirror statement for `k_L'` (roles of `X` and `Y` exchanged). -/
+theorem kgenL'_ne_zero_of_LU {ℓ : ℕ} [Fact ℓ.Prime] (K m r s' : ℕ) (hmK : m < K) (hrK : K ≤ r)
+    (hr : r + 2 * m + (s' + 1) = ℓ)
+    (hLU : CatalanCore.ThmA.LU ℓ
+      (kgenL K m (0 : ℚ) (Finset.Icc 1 (((s' + 1 : ℕ) : ℤ) - 1)) (s' + 1))) :
+    ∃ U : Matrix (Fin K) (Fin (K - m)) (ZMod ℓ), SpansKer (WY ℓ K (after r m)) U ∧
+      kgenL' (N2 ℓ K s') (wLast ℓ K s') (WX ℓ K (after r m)) (WY ℓ K (after r m)) U ≠ 0 := by
+  have hK1 : 1 ≤ K := by omega
+  have hKl : K < ℓ := by omega
+  have hΔq0 := CatalanCore.Star.Leonard.Delta_LU (ℓ := ℓ) K m (s' + 1) hmK.le hK1 (by omega)
+  have hΔq : CatalanCore.ThmA.LU ℓ ((Wb K (0 : ℚ) (bY m ((s' + 1 : ℕ) : ℤ)))ᵀ *
+      Wb K (0 : ℚ) (bX m ((s' + 1 : ℕ) : ℤ))).det := by
+    rw [← Matrix.det_transpose, Matrix.transpose_mul, Matrix.transpose_transpose]; exact hΔq0
+  have hbx : ∀ i : Fin m, 1 ≤ bX m ((s' + 1 : ℕ) : ℤ) i ∧ bX m ((s' + 1 : ℕ) : ℤ) i + K ≤ ℓ := by
+    intro i; have := i.2; simp only [bX]; omega
+  have hby : ∀ i : Fin m, 1 ≤ bY m ((s' + 1 : ℕ) : ℤ) i ∧ bY m ((s' + 1 : ℕ) : ℤ) i + K ≤ ℓ := by
+    intro i; have := i.2; simp only [bY]; omega
+  have hgood := CatalanCore.Star.Leonard.good_kgenCore (ℓ := ℓ) (K := K) (m := m)
+    (Finset.Icc 1 (((s' + 1 : ℕ) : ℤ) - 1)) ((s' + 1 : ℕ) : ℤ) (bY m ((s' + 1 : ℕ) : ℤ))
+    (bX m ((s' + 1 : ℕ) : ℤ)) hKl (fun j hj => by have := Finset.mem_Icc.1 hj; omega)
+    (by omega) hby hbx hΔq
+  have hne : kgenCore K m (0 : ZMod ℓ) (Finset.Icc 1 (((s' + 1 : ℕ) : ℤ) - 1))
+      ((s' + 1 : ℕ) : ℤ) (bY m ((s' + 1 : ℕ) : ℤ)) (bX m ((s' + 1 : ℕ) : ℤ)) ≠ 0 :=
+    CatalanCore.Star.Leonard.ne_zero_of_LU_good hLU hgood
+  have hdist : ∀ a b : Fin K, ((a : ℕ) : ZMod ℓ) = ((b : ℕ) : ZMod ℓ) → a = b := by
+    intro a b h
+    by_contra hab
+    exact CatalanCore.natCast_ne_natCast (by have := a.2; omega) (by have := b.2; omega)
+      (fun h' => hab (Fin.ext h')) h
+  have hGZ := (CatalanCore.Star.Leonard.good_Wb (K := K) _ hby).transpose.mul
+    (CatalanCore.Star.Leonard.good_Wb (K := K) _ hbx)
+  have hΔZ : ((Wb K (0 : ZMod ℓ) (bY m ((s' + 1 : ℕ) : ℤ)))ᵀ *
+      Wb K (0 : ZMod ℓ) (bX m ((s' + 1 : ℕ) : ℤ))).det ≠ 0 :=
+    CatalanCore.Star.Leonard.ne_zero_of_LU_good hΔq hGZ.det
+  refine ⟨ubasis K (K - m) (0 : ZMod ℓ) (bY m ((s' + 1 : ℕ) : ℤ)), ?_, ?_⟩
+  · rw [WY_eq K m r s' hr, spansKer_reindex]
+    intro x hx
+    exact CatalanCore.Star.Leonard.exists_ubasis_of_ker_K K m (K - m) (by omega) 0 hdist _ _
+      (fun i a => CatalanCore.Star.Leonard.zmod_ne_zero_aj a _ (hby i).1 (by
+        have := a.2; have := hby i; omega)) hΔZ x hx
+  · change kgenR' (N2 ℓ K s') (wLast ℓ K s') (WY ℓ K (after r m)) (WX ℓ K (after r m))
+      (ubasis K (K - m) (0 : ZMod ℓ) (bY m ((s' + 1 : ℕ) : ℤ))) ≠ 0
+    rw [WX_eq K m r s' hr, WY_eq K m r s' hr, kgenR'_reindex, N2_eq K m r s' hr,
+      wLast_eq K m r s' hr]
+    exact hne
+
 end CatalanFrames.LambdaHybrid.NV
