@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Star.Leonard.DeltaCB
+public import CatalanCore.Star.Leonard.Defs
 public import Mathlib.Algebra.Polynomial.Eval.Defs
 public import Mathlib.LinearAlgebra.Matrix.Block
 public import Mathlib.Tactic.LinearCombination
@@ -126,5 +127,103 @@ theorem tele_sum (c : F) (L' : ℕ) (K : ℕ) (h : ∀ i : ℕ, i < K + L' + 1 �
     have e : c + ((K + 1 : ℕ) : F) = c + (K : F) + 1 := by push_cast; ring
     rw [e]
     linear_combination (-1 : F) * this
+
+/-! ### Step (3b): the monic bases and the entries -/
+
+/-- `φ_p(a) = (a+θ+1)_p` -/
+noncomputable def phiPoly (θ : F) (p : ℕ) : F[X] := ∏ i ∈ Finset.range p, (X + C (θ + 1 + (i : F)))
+
+/-- `ψ_q(a) = (a+θ+2m-q+1)_q` -/
+noncomputable def psiPoly (θ : F) (m q : ℕ) : F[X] :=
+  ∏ i ∈ Finset.range q, (X + C (θ + ((2 * m - q : ℕ) : F) + 1 + (i : F)))
+
+lemma phiPoly_monic (θ : F) (p : ℕ) : (phiPoly θ p).Monic :=
+  Polynomial.monic_prod_of_monic _ _ fun i _ => Polynomial.monic_X_add_C _
+
+lemma phiPoly_natDegree (θ : F) (p : ℕ) : (phiPoly θ p).natDegree = p := by
+  unfold phiPoly
+  rw [Polynomial.natDegree_prod_of_monic _ _ fun i _ => Polynomial.monic_X_add_C _]
+  simp only [Polynomial.natDegree_X_add_C, Finset.sum_const, Finset.card_range, smul_eq_mul, mul_one]
+
+lemma psiPoly_monic (θ : F) (m q : ℕ) : (psiPoly θ m q).Monic :=
+  Polynomial.monic_prod_of_monic _ _ fun i _ => Polynomial.monic_X_add_C _
+
+lemma psiPoly_natDegree (θ : F) (m q : ℕ) : (psiPoly θ m q).natDegree = q := by
+  unfold psiPoly
+  rw [Polynomial.natDegree_prod_of_monic _ _ fun i _ => Polynomial.monic_X_add_C _]
+  simp only [Polynomial.natDegree_X_add_C, Finset.sum_const, Finset.card_range, smul_eq_mul, mul_one]
+
+lemma prod_pairs (t : F) (m : ℕ) :
+    ∏ i ∈ Finset.range m, ((t + (2 + 2 * (i : F))) * (t + (1 + 2 * (i : F)))) =
+      ∏ i ∈ Finset.range (2 * m), (t + 1 + (i : F)) := by
+  induction m with
+  | zero => simp
+  | succ m ih =>
+    rw [Finset.prod_range_succ, ih, show 2 * (m + 1) = 2 * m + 1 + 1 by ring,
+      Finset.prod_range_succ, Finset.prod_range_succ]
+    push_cast; ring
+
+/-- the shifts `x_j = θ+2+2j`, `y_j = θ+1+2j` -/
+def xsθ (θ : F) (m : ℕ) : Fin m → F := fun j => θ + 2 + 2 * ((j : ℕ) : F)
+def ysθ (θ : F) (m : ℕ) : Fin m → F := fun j => θ + 1 + 2 * ((j : ℕ) : F)
+
+lemma rho_eq_inv (θ : F) (m a : ℕ) :
+    rho (xsθ θ m) (ysθ θ m) a = (∏ i ∈ Finset.range (2 * m), ((a : F) + θ + 1 + (i : F)))⁻¹ := by
+  unfold rho
+  congr 1
+  simp only [xsθ, ysθ]
+  rw [Fin.prod_univ_eq_prod_range (fun j : ℕ => (((a : F) + (θ + 2 + 2 * (j : F))) *
+    ((a : F) + (θ + 1 + 2 * (j : F))))) m]
+  rw [show (∏ j ∈ Finset.range m, (((a : F) + (θ + 2 + 2 * (j : F))) *
+    ((a : F) + (θ + 1 + 2 * (j : F))))) = ∏ j ∈ Finset.range m,
+      ((((a : F) + θ) + (2 + 2 * (j : F))) * (((a : F) + θ) + (1 + 2 * (j : F)))) from
+    Finset.prod_congr rfl fun j _ => by ring, prod_pairs]
+
+/-- **Step (3b).**  `ρ(a) φ_p(a) ψ_q(a) = 1/(a+θ+p+1)_{2m-p-q}`. -/
+lemma entry_eq (θ : F) (hθ : Gen θ) (m p q : ℕ) (hp : p < m) (hq : q < m) (a : ℕ) :
+    rho (xsθ θ m) (ysθ θ m) a * (phiPoly θ p).eval (a : F) * (psiPoly θ m q).eval (a : F) =
+      (pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q))⁻¹ := by
+  have hg : ∀ z : ℤ, (a : F) + θ + (z : F) ≠ 0 := fun z h => by
+    have := hθ ((a : ℤ) + z); push_cast at this; apply this; linear_combination h
+  rw [rho_eq_inv]
+  have hsplit : ∏ i ∈ Finset.range (2 * m), ((a : F) + θ + 1 + (i : F)) =
+      (phiPoly θ p).eval (a : F) * pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q) *
+        (psiPoly θ m q).eval (a : F) := by
+    have h2m : 2 * m = p + ((2 * m - p - q) + q) := by omega
+    conv_lhs => rw [h2m]
+    rw [Finset.prod_range_add, Finset.prod_range_add]
+    have e1 : (phiPoly θ p).eval (a : F) = ∏ i ∈ Finset.range p, ((a : F) + θ + 1 + (i : F)) := by
+      simp [phiPoly, Polynomial.eval_prod]; exact Finset.prod_congr rfl fun i _ => by ring
+    have e2 : pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q) =
+        ∏ i ∈ Finset.range (2 * m - p - q), ((a : F) + θ + 1 + ((p + i : ℕ) : F)) := by
+      unfold pochr
+      exact Finset.prod_congr rfl fun i _ => by push_cast; ring
+    have e3 : (psiPoly θ m q).eval (a : F) =
+        ∏ i ∈ Finset.range q, ((a : F) + θ + 1 + ((p + (2 * m - p - q) + i : ℕ) : F)) := by
+      simp only [psiPoly, Polynomial.eval_prod, Polynomial.eval_add, Polynomial.eval_X,
+        Polynomial.eval_C]
+      refine Finset.prod_congr rfl fun i _ => ?_
+      have : p + (2 * m - p - q) = 2 * m - q := by omega
+      rw [this]; push_cast; ring
+    rw [e1, e2, e3]
+    ring
+  rw [hsplit]
+  have hP1 : (phiPoly θ p).eval (a : F) ≠ 0 := by
+    simp only [phiPoly, Polynomial.eval_prod, Polynomial.eval_add, Polynomial.eval_X,
+      Polynomial.eval_C]
+    refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
+    have := hg (1 + (i : ℤ)); push_cast at this
+    intro h; apply this; linear_combination h
+  have hP3 : (psiPoly θ m q).eval (a : F) ≠ 0 := by
+    simp only [psiPoly, Polynomial.eval_prod, Polynomial.eval_add, Polynomial.eval_X,
+      Polynomial.eval_C]
+    refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
+    have := hg (((2 * m - q : ℕ) : ℤ) + 1 + (i : ℤ)); push_cast at this
+    intro h; apply this; linear_combination h
+  have hMid : pochr ((a : F) + θ + (p : F) + 1) (2 * m - p - q) ≠ 0 := by
+    refine pochr_ne_zero _ _ fun i _ => ?_
+    have := hg ((p : ℤ) + 1 + (i : ℤ)); push_cast at this
+    intro h; apply this; linear_combination h
+  field_simp
 
 end CatalanCore.Star.Leonard
