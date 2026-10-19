@@ -103,9 +103,9 @@ theorem D_le : (39028 / 10000 : ℚ) ≤ certHyb.Dof 2 (1 / 8) (17024457 / 10 ^ 
 
 /-- **The hybrid λ decay certificate**: `D = 3.9028`, `c = 7.648` at `α = 1/8`. -/
 theorem lam_hybrid_decay :
-    HasDecay (CatalanCore.Decay.hybridFamUp CatalanFrames.Lambda.lamFrame (1 / 8 : ℚ))
+    HasDecay (CatalanCore.hybridFamUp CatalanFrames.Lambda.lamFrame (1 / 8 : ℚ))
       (((39028 / 10000 : ℚ)) : ℝ) (((76444 / 10000 : ℚ)) : ℝ) :=
-  CatalanCore.Decay.decay_of_certG_rect (Fr := CatalanFrames.Lambda.lamFrame)
+  CatalanCore.decay_of_certG_rect (Fr := CatalanFrames.Lambda.lamFrame)
     CatalanCore.Cert.Sigma300.lam_decayOK certHyb (α := 1 / 8) (by norm_num) hg_hyb
     (fun k => wtH_nonneg k) (Rc := 1) (by norm_num) cH_norm Inu_le D_le
 
