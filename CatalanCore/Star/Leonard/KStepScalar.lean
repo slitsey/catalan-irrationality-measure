@@ -81,4 +81,25 @@ lemma Dfac_mu_tau_shift [CharZero F] (K' m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ
   field_simp at h1
   linear_combination h1
 
+
+/-- The shift `β` of the Christoffel transform (value of the constant of `darboux_diag_poly`). -/
+noncomputable def betaD (K' m S : ℕ) (θ : F) : F :=
+  (mu (K' + 1) m S θ 0 - ((0 + 1) * (0 + 1 + θ)) ^ 2) -
+    (mu K' m (S + 1) θ 0 - (0 * (0 + θ)) ^ 2 + gg K' m (S + 1) * (gg K' m (S + 1) + 1) * 0 ^ 2
+      + gg K' m (S + 1) * cc0 K' m θ (gg K' m (S + 1)) * 0)
+
+/-- **E2/E3 core (K2c).**  `D'_i + β = μ_i + σ_i τ_i / μ_i` for `i < K'`. -/
+lemma Dd_shift_beta [CharZero F] (K' m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hS : S + m = K')
+    (i : ℕ) (hi : i < K') :
+    Dd K' m (S + 1) θ i + betaD K' m S θ =
+      mu (K' + 1) m S θ i + sigma (K' + 1) m S θ i * tau (K' + 1) m S θ i / mu (K' + 1) m S θ i := by
+  have hK : (K' : F) - i ≠ 0 := natsub_ne (by omega)
+  have hK1 : ((K' + 1 : ℕ) : F) - 1 - i ≠ 0 := by
+    push_cast; intro h0; apply hK; linear_combination h0
+  rw [Dd_eq K' m (S + 1) θ i hm (genAt_nat_sub_one hθ i) hK,
+    sigma_tau_div_mu (K' + 1) m S θ i hm (genAt_nat hθ i) hK1]
+  have := darboux_diag_poly K' m S θ hS (i : F)
+  unfold betaD
+  linear_combination -this
+
 end CatalanCore.Star.Leonard
