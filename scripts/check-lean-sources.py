@@ -82,8 +82,8 @@ def lean_source_files(root: Path) -> list[Path]:
 # Modular-architecture libraries (design FU).  Besides the checks above (which already walk the
 # whole tree), these roots are scanned for forbidden tokens and checked against the lakefile.
 NEW_ROOTS = ("CatalanCore", "CatalanFrames", "CatalanParity")
-# `sorry` in the new libraries is a warning while work packages are in flight (stubs such as
-# CatalanCore/ThmA/Statement.lean), fatal with `--strict` (cut-over / snapshots), and always fatal
+# `sorry` in the new libraries is a warning while work packages are in flight (stubs
+# may appear), fatal with `--strict` (cut-over / snapshots), and always fatal
 # in the frozen contract file.  `native_decide` is always fatal.
 SORRY_ALWAYS_FATAL = {"CatalanCore/Frame/Spec.lean"}
 STRICT = "--strict" in sys.argv

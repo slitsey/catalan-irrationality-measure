@@ -1,7 +1,8 @@
 module
 
 public import CatalanFrames.P6.NV.Reduction
-public import CatalanCore.ThmA.Statement
+public import CatalanCore.ThmA.Defs
+public import CatalanCore.ThmA.UnitOfLt
 public import CatalanCore.Linalg.KrylovEigen
 
 /-!
@@ -111,7 +112,7 @@ theorem nv_integral {r : ℚ} (hr : r ∈ S ℓ) :
   rw [show t - (t - 1) = 1 by omega, Nsig_one hl ht] at e1
   rw [Nsig_zero hl ht] at e0
   have hunit : ThmA.uK (ZMod ℓ) (2 * t + 1) (3 * t) ≠ 0 :=
-    ThmA.unit_of_lt ℓ (2 * t + 1) (3 * t) (by omega) (by omega) (by omega)
+    ThmA.unit_of_lt_proof (l := ℓ) (2 * t + 1) (3 * t) (by omega) (by omega) (by omega)
   have hsym : (ThmA.Nmat (ZMod ℓ) (2 * t + 1) (3 * t))ᵀ = ThmA.Nmat (ZMod ℓ) (2 * t + 1) (3 * t) := by
     simp [ThmA.Nmat, Matrix.transpose_mul]
   have h2 : (-2 : ZMod ℓ) ≠ 0 := neg_ne_zero.2 (two_ne hl (by omega))
