@@ -2,6 +2,7 @@ module
 
 public import CatalanCore.Star.Leonard.CommN
 public import CatalanCore.Star.Leonard.ChainProd
+public import CatalanCore.Star.Leonard.KStep3
 
 /-!
 # The `y`-space operator `T^` (package H5, K-step)
@@ -243,6 +244,62 @@ theorem Ttil_E
       have hz : Pj *ᵥ wcol (m + n) θ ((((j : ℕ) + 1 + 1 : ℕ)) : ℤ) = 0 := by
         rw [hS]; exact hPW _ (wcol_S1_mem m n S θ hm)
       simp only [hj, hj', dif_pos, dif_neg, not_false_eq_true, hl, hz, Pi.zero_apply]
+      ring
+
+
+include hm hθ in
+/-- `T^ Cᵀ = Cᵀ T~` with `Cᵀ = Rᵀ Π`. -/
+theorem That_Ct
+    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det) :
+    That m n S θ * ((Rm m n S θ)ᵀ * projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ))) =
+      ((Rm m n S θ)ᵀ * projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ))) * Ttil (m + n) m S θ := by
+  have hcomm := Ttil_comm_projB m n S hm θ hθ hΔ
+  set Pj := projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) with hPj
+  set T := Ttil (m + n) m S θ with hT
+  have hCt : ∀ (i : Fin S) (b : Fin (m + n)),
+      ((Rm m n S θ)ᵀ * Pj) i b = wcol (m + n) θ ((((i : ℕ) + 1 : ℕ)) : ℤ) ⬝ᵥ (fun a => Pj a b) := by
+    intro i b
+    simp [Matrix.mul_apply, dotProduct, Rm, Matrix.transpose_apply]
+  have hxb : ∀ b : Fin (m + n), (Wb (m + n) θ (bX m (S : ℤ)))ᵀ *ᵥ (fun a => Pj a b) = 0 := by
+    intro b
+    have := WXt_projB m n S θ hΔ (Pi.single b 1)
+    rwa [Matrix.mulVec_single_one] at this
+  ext i b
+  have hR : (((Rm m n S θ)ᵀ * Pj) * T) i b =
+      wcol (m + n) θ ((((i : ℕ) + 1 : ℕ)) : ℤ) ⬝ᵥ (T *ᵥ fun a => Pj a b) := by
+    rw [Matrix.mul_assoc, ← hcomm]
+    simp only [Matrix.mul_apply, dotProduct, Matrix.mulVec, Rm, Matrix.transpose_apply,
+      Matrix.of_apply]
+  rw [hR]
+  have hdual : wcol (m + n) θ ((((i : ℕ) + 1 : ℕ)) : ℤ) ⬝ᵥ (T *ᵥ fun a => Pj a b) =
+      (Tᵀ *ᵥ wcol (m + n) θ ((((i : ℕ) + 1 : ℕ)) : ℤ)) ⬝ᵥ (fun a => Pj a b) := by
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose]
+  rw [hdual, rc_dot m n S hm θ hθ ((i : ℕ) + 1) (by omega) (by have := i.2; omega) _ (hxb b)]
+  unfold That
+  rw [trid_mul_apply]
+  simp only [hCt]
+  have e0 : ((i : ℕ) + 1 - 1) = (i : ℕ) := by omega
+  simp only [e0]
+  by_cases hi : 0 < (i : ℕ)
+  · by_cases hi' : (i : ℕ) + 1 < S
+    · simp only [hi, hi', dif_pos]
+      have e1 : (i : ℕ) - 1 + 1 = (i : ℕ) := by omega
+      simp only [e1]
+      ring
+    · have hS : (i : ℕ) + 1 = S := by omega
+      have hl : lc m n S θ ((i : ℕ) + 1 + 1) = 0 := by rw [hS]; exact lc_top m n S θ hm
+      simp only [hi, hi', dif_pos, dif_neg, not_false_eq_true, hl]
+      have e1 : (i : ℕ) - 1 + 1 = (i : ℕ) := by omega
+      simp only [e1]
+      ring
+  · have hi0 : (i : ℕ) = 0 := by omega
+    have hr : rc m n S θ (i : ℕ) = 0 := by rw [hi0]; exact rc_zero m n S θ hm
+    by_cases hi' : (i : ℕ) + 1 < S
+    · simp only [hi, hi', dif_pos, dif_neg, not_false_eq_true, hr]
+      ring
+    · have hS : (i : ℕ) + 1 = S := by omega
+      have hl : lc m n S θ ((i : ℕ) + 1 + 1) = 0 := by rw [hS]; exact lc_top m n S θ hm
+      simp only [hi, hi', dif_pos, dif_neg, not_false_eq_true, hl, hr]
       ring
 
 end TE
