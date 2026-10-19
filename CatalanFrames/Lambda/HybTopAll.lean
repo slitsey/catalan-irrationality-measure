@@ -211,37 +211,54 @@ namespace CatalanFrames.LambdaHybrid
 
 open CatalanFrames.Lambda
 
-/-- **`Mem2Content` for λ** (bordering of the member-1 deficit families B, E, C5). -/
-theorem lam_mem2Content {Λ : ℝ} (hΛ : 24729491161 / 6665218560 ≤ Λ) :
+/-- **Generic bordering step**: a content bound for a family that is simultaneously a
+member-1 and member-2 deficit family (`DefBoth`) gives `Mem2Content`, because the border cost
+is `O(r log r)` (`lam_topC_sum`).  Any later deficit family (e.g. with GK bordered) plugs in here. -/
+theorem lam_mem2Content_of_both {Λ0 Λ : ℝ} (hΛ : Λ0 ≤ Λ)
+    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefBoth r T δ ∧
+      Real.log (DhybT lamInst r (r / 8) T δ) ≤ (Λ0 + ε) * (r : ℝ) ^ 2) :
     Mem2Content lamFrame Λ := by
   refine mem2Content_of_top lamInst ?_
+  intro ε hε
+  filter_upwards [h (ε / 2) (by positivity), lam_topC_sum (ε := ε / 2) (by positivity)] with r
+    ⟨T, δ, hδ, hlog⟩ hS
+  refine ⟨T, δ, hδ.2, ?_⟩
+  rw [log_DhybTop lamInst r (r / 8) hδ.1]
+  nlinarith [hlog, hS, mul_le_mul_of_nonneg_right hΛ (sq_nonneg (r : ℝ))]
+
+/-- The `ε`-form of the member-1/member-2 content bound for the deficit family `B, E, C5`. -/
+theorem lam_both_eps {Λ : ℝ} (hΛ : 24729491161 / 6665218560 ≤ Λ) :
+    ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefBoth r T δ ∧
+      Real.log (DhybT lamInst r (r / 8) T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
   intro ε hε
   set ε₁ : ℝ := min ε (1 / 100) with hε₁
   have hε₁0 : 0 < ε₁ := lt_min hε (by norm_num)
   have hε₁1 : ε₁ ≤ 1 / 100 := min_le_right _ _
   have hε₁2 : ε₁ ≤ ε := min_le_left _ _
-  set ε₂ : ℝ := ε₁ / 2 with hε₂
-  have hε₂0 : 0 < ε₂ := by positivity
-  have hd := lam_content_deficit2_gen (ε := ε₂ / 10) (by positivity)
-  have hl := eventually_log_le (e := ε₂ / 10) (by positivity)
-  have hs := lam_topC_sum (ε := ε₂) hε₂0
-  have hbig : ∀ᶠ r : ℕ in atTop, 3 ≤ ε₂ * r := by
-    have : Tendsto (fun r : ℕ => ε₂ * (r : ℝ)) atTop atTop :=
-      tendsto_natCast_atTop_atTop.const_mul_atTop hε₂0
+  have hd := lam_content_deficit2_gen (ε := ε₁ / 10) (by positivity)
+  have hl := eventually_log_le (e := ε₁ / 10) (by positivity)
+  have hbig : ∀ᶠ r : ℕ in atTop, 3 ≤ ε₁ * r := by
+    have : Tendsto (fun r : ℕ => ε₁ * (r : ℝ)) atTop atTop :=
+      tendsto_natCast_atTop_atTop.const_mul_atTop hε₁0
     exact this.eventually_ge_atTop 3
-  filter_upwards [hd, hl, hbig, hs, eventually_ge_atTop 16] with r hdr hL hb hS hr16
+  filter_upwards [hd, hl, hbig, eventually_ge_atTop 16] with r hdr hL hb hr16
   obtain ⟨δ, hδ, hδ1, hδ3, hδB, hδC⟩ := lam_defBoth_all2 hr16
-  refine ⟨Tfun2 r, δ, hδ.2, ?_⟩
-  rw [log_DhybTop lamInst r (r / 8) hδ.1]
+  refine ⟨Tfun2 r, δ, hδ, ?_⟩
   have hlog := hdr δ hδ.1 hδ1 hδ3 hδB hδC
   have hm : (r : ℝ) / 8 - 1 ≤ ((r / 8 : ℕ) : ℝ) := by
     have : (r : ℝ) < 8 * ((r / 8 : ℕ) : ℝ) + 8 := by
       exact_mod_cast (by omega : r < 8 * (r / 8) + 8)
     linarith
   have hL0 : 0 ≤ Real.log r := Real.log_nonneg (by exact_mod_cast (by omega : 1 ≤ r))
-  have key := lam_num (Λ := Λ + (ε - 2 * ε₂)) (ε := ε₂) (r := (r : ℝ)) (L := Real.log r)
+  have key := lam_num (Λ := Λ + (ε - ε₁)) (ε := ε₁) (r := (r : ℝ)) (L := Real.log r)
     (m := ((r / 8 : ℕ) : ℝ)) (lg := Real.log (DhybT lamInst r (r / 8) (Tfun2 r) δ))
-    (by linarith) hε₂0 (by linarith) hb hL0 hL hm hlog
-  nlinarith [key, hS]
+    (by linarith) hε₁0 hε₁1 hb hL0 hL hm hlog
+  have : (Λ + (ε - ε₁) + ε₁) = Λ + ε := by ring
+  rwa [this] at key
+
+/-- **`Mem2Content` for λ** (bordering of the member-1 deficit families B, E, C5). -/
+theorem lam_mem2Content {Λ : ℝ} (hΛ : 24729491161 / 6665218560 ≤ Λ) :
+    Mem2Content lamFrame Λ :=
+  lam_mem2Content_of_both le_rfl (lam_both_eps hΛ)
 
 end CatalanFrames.LambdaHybrid

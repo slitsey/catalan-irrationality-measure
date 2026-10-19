@@ -1,0 +1,63 @@
+module
+
+public import CatalanFrames.Lambda.HybTopAll3
+public import CatalanFrames.LambdaHybrid.AssemblyDecayAll
+
+@[expose] public section
+
+/-!
+# λ hybrid measure theorem, unconditional (LAMFINAL)
+
+`lam_hyb_measure_of_both`: the decay of both members is proved (`lam_hyb_decay_member1`,
+`lam_mem2_decay`, `D = 3.9028`, `c = 7.6444`); the only input is a `DefBoth` content family
+(simultaneous member-1/member-2 deficit family) at a constant `Λ`.
+`lam_hyb_measure_final` instantiates it with `Λ₂ = 3.708 ≥ 3.70799745…` (deficits E, B, C5, C7;
+GK not bordered).  Exponent `c/(D - Λ₂) = 39.2423… ≤ 39.25`.
+
+**Swapping in a GK-bordered result** (`Λ₁ = 3.7034204`, exponent 38.34) is a one-line change:
+replace `lam_both_eps3` by the GK version of the same `DefBoth` family and change `Λ`, `E`.
+-/
+
+open Filter CatalanCore CatalanCore.Rect CatalanCore.Arith.Hybrid CatalanFrames.Lambda
+
+namespace CatalanFrames.LambdaHybrid
+
+/-- Transfer a measure bound for the pair family `lamFrame.const` to the form `G - 5π²/48`
+(generic scaling lemma). -/
+theorem lam_pairMeasure_G {E : ℚ} (hE0 : 0 ≤ E) (h : (hybPairFam lamFrame 8).MeasureLB (E : ℝ)) :
+    Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
+      - 5 * Real.pi ^ 2 / 48) (E : ℝ) := by
+  have h' : Measure.MeasureLBAt lamFrame.const (E : ℝ) := h
+  rw [const_eq] at h'
+  have := h'.affine (by exact_mod_cast hE0) 2 0 (by norm_num)
+  convert this using 1
+  push_cast
+  ring
+
+/-- **λ hybrid measure theorem from a `DefBoth` content family at constant `Λ`**; decay of both
+members is built in (`D = 3.9028`, `c = 7.6444`). -/
+theorem lam_hyb_measure_of_both {Λ E : ℚ}
+    (hboth : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefBoth r T δ ∧
+      Real.log (DhybT lamInst r (r / 8) T δ) ≤ ((Λ : ℝ) + ε) * (r : ℝ) ^ 2)
+    (hΛ0 : 0 ≤ Λ) (hη : Λ < 39028 / 10000) (hη2 : 2 * (39028 / 10000 - Λ) < 23 / 10)
+    (hE : (76444 / 10000 : ℚ) / (39028 / 10000 - Λ) ≤ E) (hE0 : 0 ≤ E) :
+    Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
+      - 5 * Real.pi ^ 2 / 48) (E : ℝ) :=
+  lam_pairMeasure_G hE0
+    (lam_hyb_measure_of_content_eps
+      (fun ε hε => (hboth ε hε).mono fun r ⟨T, δ, hδ, hlog⟩ => ⟨T, δ, hδ.1, hlog⟩) hΛ0
+      lam_hyb_decay_member1 (lam_mem2Content_of_both le_rfl hboth) lam_mem2_decay hη
+      (by norm_num) hη2 hE)
+
+/-- **λ hybrid measure theorem (final, no `Mem2*`/decay hypotheses)**:
+`μ(G - 5π²/48) ≤ 39.25` (true exponent `39.2423…`). -/
+theorem lam_hyb_measure_final :
+    Measure.MeasureLBAt ((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2)
+      - 5 * Real.pi ^ 2 / 48) (((3925 / 100 : ℚ)) : ℝ) :=
+  lam_hyb_measure_of_both (Λ := 3708 / 1000) (E := 3925 / 100)
+    (lam_both_eps3 (by push_cast; norm_num)) (by norm_num) (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num)
+
+#print axioms lam_hyb_measure_final
+
+end CatalanFrames.LambdaHybrid
