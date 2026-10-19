@@ -27,12 +27,12 @@ variable {F : Type*} [Field F] {A c m g : Type*}
   [Fintype A] [DecidableEq A] [Fintype c] [DecidableEq c] [Fintype m] [DecidableEq m]
   [Fintype g] [DecidableEq g]
 
-/-- The reduced matrix on `(A ⊕ c) ⊕ m`. -/
-def Zmat (x : F) (Aa : Matrix A A F) (Wc : Matrix A c F) (Wx Wy : Matrix A m F) :
+/-- The reduced matrix on `(A ⊕ c) ⊕ m`, with cross coefficient `t` and high diagonal `d`
+(`t = -1/4`, `d = -1` for λ). -/
+def Zmat (x t d : F) (Aa : Matrix A A F) (Wc : Matrix A c F) (Wx Wy : Matrix A m F) :
     Matrix ((A ⊕ c) ⊕ m) ((A ⊕ c) ⊕ m) F :=
-  fromBlocks (fromBlocks (x • (1 : Matrix A A F) - Aa) ((-(1 / 4 : F)) • Wc)
-      ((-(1 / 4 : F)) • Wcᵀ) (-1))
-    (fromRows ((-(1 / 4 : F)) • Wy) 0) (fromCols ((-(1 / 4 : F)) • Wxᵀ) 0) 0
+  fromBlocks (fromBlocks (x • (1 : Matrix A A F) - Aa) (t • Wc) (t • Wcᵀ) (d • (1 : Matrix c c F)))
+    (fromRows (t • Wy) 0) (fromCols (t • Wxᵀ) 0) 0
 
 /-- Reindexing `(A ⊕ c) ⊕ m ≃ (A ⊕ m) ⊕ c`. -/
 def zEquiv (A c m : Type*) : (A ⊕ c) ⊕ m ≃ (A ⊕ m) ⊕ c where
@@ -47,55 +47,44 @@ def zEquiv (A c m : Type*) : (A ⊕ c) ⊕ m ≃ (A ⊕ m) ⊕ c where
   left_inv := by rintro ((a | j) | i) <;> rfl
   right_inv := by rintro ((a | i) | j) <;> rfl
 
-theorem det_Zmat (h2 : (2 : F) ≠ 0) (x h : F) (Aa : Matrix A A F) (Wc : Matrix A c F)
-    (Wx Wy : Matrix A m F) (G : Matrix A g F)
-    (hA : (16 : F) • Aa = Wc * Wcᵀ + G * Gᵀ + Wx * Wxᵀ + Wy * Wyᵀ + h • 1) :
-    (Zmat x Aa Wc Wx Wy).det =
-      (-1) ^ (Fintype.card c + Fintype.card m) * ((-16 : F) ^ Fintype.card A)⁻¹ *
-        (bordered (h - 16 * x) G Wx Wy).det := by
-  have h16 : (16 : F) ≠ 0 := by
-    have : (16 : F) = 2 * 2 * 2 * 2 := by norm_num
-    rw [this]; exact mul_ne_zero (mul_ne_zero (mul_ne_zero h2 h2) h2) h2
-  have h4 : (4 : F) ≠ 0 := by
-    have : (4 : F) = 2 * 2 := by norm_num
-    rw [this]; exact mul_ne_zero h2 h2
-  have hAa : Aa = (1 / 16 : F) • (Wc * Wcᵀ + G * Gᵀ + Wx * Wxᵀ + Wy * Wyᵀ + h • 1) := by
-    rw [← hA, smul_smul]; simp [h16]
-  -- step 1: reindex
+/-- **Prop 1.3, Schur step, with frame constants.**  `κ` is the harmonic-identity scale
+(`A = κ (W_all W_allᵀ + h)`), `t² = -d κ`. -/
+theorem det_Zmat (x t d κ h : F) (ht : t ≠ 0) (hd : d ≠ 0) (hκ : κ ≠ 0) (htk : t * t = -d * κ)
+    (Aa : Matrix A A F) (Wc : Matrix A c F) (Wx Wy : Matrix A m F) (G : Matrix A g F)
+    (hA : Aa = κ • (Wc * Wcᵀ + G * Gᵀ + Wx * Wxᵀ + Wy * Wyᵀ + h • 1)) :
+    (Zmat x t d Aa Wc Wx Wy).det =
+      d ^ (Fintype.card c + Fintype.card m) * (-κ) ^ Fintype.card A *
+        (bordered (h - x / κ) G Wx Wy).det := by
   rw [← Matrix.det_submatrix_equiv_self (zEquiv A c m).symm]
-  have hZ : (Zmat x Aa Wc Wx Wy).submatrix (zEquiv A c m).symm (zEquiv A c m).symm =
-      fromBlocks (fromBlocks (x • (1 : Matrix A A F) - Aa) ((-(1 / 4 : F)) • Wy)
-        ((-(1 / 4 : F)) • Wxᵀ) 0)
-        (fromRows ((-(1 / 4 : F)) • Wc) 0) (fromCols ((-(1 / 4 : F)) • Wcᵀ) 0) (-1) := by
+  have hZ : (Zmat x t d Aa Wc Wx Wy).submatrix (zEquiv A c m).symm (zEquiv A c m).symm =
+      fromBlocks (fromBlocks (x • (1 : Matrix A A F) - Aa) (t • Wy) (t • Wxᵀ) 0)
+        (fromRows (t • Wc) 0) (fromCols (t • Wcᵀ) 0) (d • (1 : Matrix c c F)) := by
     ext ((a | i) | j) ((b | k) | l) <;> simp [Zmat, zEquiv]
   rw [hZ]
-  have : Invertible (-1 : Matrix c c F) := ⟨-1, by simp, by simp⟩
+  have : Invertible (d • (1 : Matrix c c F)) := ⟨d⁻¹ • 1, by simp [smul_smul, hd], by simp [smul_smul, hd]⟩
   rw [det_fromBlocks₂₂]
-  have hi : ⅟(-1 : Matrix c c F) = -1 := invOf_eq_right_inv (by simp)
+  have hi : ⅟(d • (1 : Matrix c c F)) = d⁻¹ • 1 := invOf_eq_right_inv (by simp [smul_smul, hd])
   rw [hi]
-  have hUV : fromRows ((-(1 / 4 : F)) • Wc) 0 * (-1 : Matrix c c F) *
-      fromCols ((-(1 / 4 : F)) • Wcᵀ) 0 =
-      fromBlocks (-((1 / 16 : F) • (Wc * Wcᵀ))) (0 : Matrix A m F) (0 : Matrix m A F)
-        (0 : Matrix m m F) := by
-    have this : (-(1 / 4 : F)) * (-(1 / 4 : F)) = 1 / 16 := by field_simp; norm_num
-    rw [Matrix.mul_neg, Matrix.mul_one, Matrix.neg_mul, fromRows_mul_fromCols]
-    simp only [Matrix.mul_zero, Matrix.zero_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, this]
-    ext (i | i) (j | j) <;> simp
+  have htd : t * d⁻¹ * t = -κ := by
+    field_simp; linear_combination htk
+  have hUV : fromRows (t • Wc) 0 * (d⁻¹ • (1 : Matrix c c F)) * fromCols (t • Wcᵀ) 0 =
+      fromBlocks ((-κ) • (Wc * Wcᵀ)) (0 : Matrix A m F) (0 : Matrix m A F) (0 : Matrix m m F) := by
+    rw [Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, fromRows_mul_fromCols]
+    simp only [Matrix.mul_zero, Matrix.zero_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    have : d⁻¹ * (t * t) = -κ := by rw [← htd]; ring
+    ext (i | i) (j | j) <;> simp [Matrix.smul_apply, ← mul_assoc, this]
   rw [hUV]
-  set Y : F := h - 16 * x with hY
-  have hS : fromBlocks (x • (1 : Matrix A A F) - Aa) ((-(1 / 4 : F)) • Wy)
-        ((-(1 / 4 : F)) • Wxᵀ) 0 - fromBlocks (-((1 / 16 : F) • (Wc * Wcᵀ))) (0 : Matrix A m F)
-        (0 : Matrix m A F) (0 : Matrix m m F) =
-      fromBlocks (x • (1 : Matrix A A F) - Aa + (1 / 16 : F) • (Wc * Wcᵀ)) ((-(1 / 4 : F)) • Wy)
-        ((-(1 / 4 : F)) • Wxᵀ) 0 := by
+  set Y : F := h - x / κ with hY
+  have hS : fromBlocks (x • (1 : Matrix A A F) - Aa) (t • Wy) (t • Wxᵀ) 0 -
+      fromBlocks ((-κ) • (Wc * Wcᵀ)) (0 : Matrix A m F) (0 : Matrix m A F) (0 : Matrix m m F) =
+      fromBlocks (x • (1 : Matrix A A F) - Aa + κ • (Wc * Wcᵀ)) (t • Wy) (t • Wxᵀ) 0 := by
     ext (i | i) (j | j) <;> simp
-  have hmain : fromBlocks (x • (1 : Matrix A A F) - Aa + (1 / 16 : F) • (Wc * Wcᵀ))
-        ((-(1 / 4 : F)) • Wy) ((-(1 / 4 : F)) • Wxᵀ) 0 =
-      fromBlocks (1 : Matrix A A F) ((1 / 4 : F) • Wx) (0 : Matrix m A F) (1 : Matrix m m F) *
-        (fromBlocks (((-(1 / 16 : F)) • (1 : Matrix A A F))) 0 0 ((-(1 / 4 : F)) • (1 : Matrix m m F))
+  have hmain : fromBlocks (x • (1 : Matrix A A F) - Aa + κ • (Wc * Wcᵀ)) (t • Wy) (t • Wxᵀ) 0 =
+      fromBlocks (1 : Matrix A A F) ((-(κ / t)) • Wx) (0 : Matrix m A F) (1 : Matrix m m F) *
+        (fromBlocks ((-κ) • (1 : Matrix A A F)) 0 0 (t • (1 : Matrix m m F))
           * bordered Y G Wx Wy *
-          fromBlocks (1 : Matrix A A F) 0 0 ((4 : F) • (1 : Matrix m m F))) *
-      fromBlocks (1 : Matrix A A F) 0 ((1 / 4 : F) • Wyᵀ) (1 : Matrix m m F) := by
+          fromBlocks (1 : Matrix A A F) 0 0 ((-(t / κ)) • (1 : Matrix m m F))) *
+      fromBlocks (1 : Matrix A A F) 0 ((-(κ / t)) • Wyᵀ) (1 : Matrix m m F) := by
     simp only [bordered, Matrix.fromBlocks_multiply]
     rw [Matrix.fromBlocks_inj]
     refine ⟨?_, ?_, ?_, ?_⟩
@@ -103,17 +92,15 @@ theorem det_Zmat (h2 : (2 : F) ≠ 0) (x h : F) (Aa : Matrix A A F) (Wc : Matrix
       simp only [Matrix.mul_zero, Matrix.zero_mul, Matrix.mul_one, Matrix.one_mul, Matrix.smul_mul,
         Matrix.mul_smul, smul_smul, Matrix.add_mul, Matrix.mul_add, smul_add,
         Matrix.transpose_smul, smul_zero, add_zero, zero_add, Matrix.mul_zero]
-      try rw [hAa]
+      try rw [hA]
       try simp only [hY]
       try (first | module | (match_scalars <;> (try field_simp) <;> (try ring)))
   rw [hS, hmain, Matrix.det_mul, Matrix.det_mul, Matrix.det_mul, Matrix.det_mul,
     det_fromBlocks_zero₂₁, det_fromBlocks_zero₁₂, det_fromBlocks_zero₁₂, det_fromBlocks_zero₁₂]
-  have e1 : ((-16 : F) ^ Fintype.card A)⁻¹ = (-(1 / 16 : F)) ^ Fintype.card A := by
-    rw [← inv_pow]; congr 1; field_simp
-  rw [e1]
-  simp only [det_smul, det_one, det_neg, Matrix.det_one, one_pow, mul_one, one_mul, pow_add]
-  have e2 : (-(1 / 4 : F)) ^ Fintype.card m * 4 ^ Fintype.card m = (-1) ^ Fintype.card m := by
-    rw [← mul_pow]; congr 1; field_simp
-  linear_combination ((-1 : F) ^ Fintype.card c * (-(1 / 16 : F)) ^ Fintype.card A * (bordered Y G Wx Wy).det) * e2
+  simp only [det_smul, det_one, det_neg, Matrix.det_one, one_pow, mul_one, one_mul]
+  have e2 : t ^ Fintype.card m * (-(t / κ)) ^ Fintype.card m = d ^ Fintype.card m := by
+    rw [← mul_pow]; congr 1; field_simp; linear_combination -htk
+  rw [pow_add]
+  linear_combination (d ^ Fintype.card c * (-κ) ^ Fintype.card A * (bordered Y G Wx Wy).det) * e2
 
 end CatalanFrames.LambdaHybrid.NV

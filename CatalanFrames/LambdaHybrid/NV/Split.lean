@@ -70,24 +70,6 @@ section Ident
 
 variable {ℓ K : ℕ} [Fact ℓ.Prime]
 
-/-- the legacy `G` as a sum over all high nodes of products of Cauchy columns -/
-lemma Gleg_eq_sum (hKl : K ≤ ℓ) (a a' : ℕ) :
-    CatalanLambda.G ℓ K a a' = ∑ n ∈ Ico K ℓ,
-      (1 / ((a : ZMod ℓ) - n)) * (1 / ((a' : ZMod ℓ) - n)) := by
-  rw [Finset.sum_Ico_eq_sum_range, ← Finset.sum_range_reflect]
-  unfold CatalanLambda.G
-  refine Finset.sum_congr rfl fun t ht => ?_
-  have ht' := Finset.mem_range.1 ht
-  have key : ((K + (ℓ - K - 1 - t) : ℕ) : ZMod ℓ) = -1 - t := by
-    have h : (K + (ℓ - K - 1 - t)) + 1 + t = ℓ := by omega
-    have := congrArg (Nat.cast : ℕ → ZMod ℓ) h
-    push_cast at this ⊢
-    rw [ZMod.natCast_self] at this
-    linear_combination this
-  rw [key, one_div_mul_one_div]
-  congr 1
-  ring
-
 lemma xs_family (G : Geometry) : Function.Injective G.xs ∧ ∀ n, (∃ i, G.xs i = n) ↔ n ∈ G.X' := by
   refine ⟨(Finset.orderEmbOfFin G.X' rfl).injective, fun n => ?_⟩
   have := Finset.range_orderEmbOfFin G.X' (rfl : G.X'.card = G.k)
