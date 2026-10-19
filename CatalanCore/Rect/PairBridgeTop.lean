@@ -77,37 +77,61 @@ theorem log_DhybTop {T δ : ℕ → ℕ} (h : DefHypT I r m T δ) :
     positivity
 
 open Classical in
-/-- **`Mem2Content` from bordered deficit families.** -/
+/-- **`Mem2ContentA` from bordered deficit families** (G3): any admissible relation `A`. -/
+theorem mem2ContentA_of_top (I : HybInst Fr) {Λ : ℝ} (A : ℕ → ℕ → Prop)
+    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypTop I r m T δ ∧
+      Real.log (DhybTop I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    Mem2ContentA Fr A Λ := by
+  haveI : Nonempty (ℕ → (ℕ → ℕ) × (ℕ → ℕ)) := ⟨fun _ => (fun _ => 0, fun _ => 0)⟩
+  obtain ⟨f, hf⟩ := exists_diag (β := ℕ → (ℕ → ℕ) × (ℕ → ℕ))
+    (fun ε r b => ∀ m, A r m → DefHypTop I r m (b m).1 (b m).2 ∧
+      Real.log (DhybTop I r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (fun ε ε' r b hε hb m hA =>
+      ⟨(hb m hA).1, (hb m hA).2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
+    (fun ε hε => (h ε hε).mono fun r hr => by
+      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypTop I r m b.1 b.2 ∧
+          Real.log (DhybTop I r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+        intro m
+        by_cases hA : A r m
+        · obtain ⟨T, δ, h1, h2⟩ := hr m hA
+          exact ⟨(T, δ), fun _ => ⟨h1, h2⟩⟩
+        · exact ⟨(fun _ => 0, fun _ => 0), fun h => absurd h hA⟩
+      choose b hb using this
+      exact ⟨b, hb⟩)
+  have hdef0 : ∀ r m, DefHypTop I r m (tropExp I r m) (fun _ => 0) := fun r m =>
+    defHypTop_of_local (I := I) (r := r) (m := m) _ _ (fun p _ _ => le_rfl) (fun _ => False)
+      (fun _ _ => rfl) (fun p _ _ hS => absurd hS id)
+  refine ⟨fun r m => if DefHypTop I r m (f r m).1 (f r m).2 then
+      DhybTop I r m (f r m).1 (f r m).2
+      else DhybTop I r m (tropExp I r m) (fun _ => 0), ?_, ?_, ?_⟩
+  · intro r m
+    dsimp only
+    split_ifs <;> exact DhybTop_pos I r m _ _
+  · intro r m _ i
+    dsimp only
+    split_ifs with hd
+    · exact DhybTop_integral I r m hd i
+    · exact DhybTop_integral I r m (hdef0 r m) i
+  · intro ε hε
+    obtain ⟨R, hR⟩ := eventually_atTop.1 (hf ε hε)
+    refine ⟨R, fun r m hA hr => ?_⟩
+    obtain ⟨hd, hlog⟩ := hR r hr m hA
+    dsimp only
+    rw [if_pos hd]
+    exact hlog
+
+/-- **`Mem2Content` from bordered deficit families** (slope `1/8`, `m = r / 8`). -/
 theorem mem2Content_of_top (I : HybInst Fr) {Λ : ℝ}
     (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefHypTop I r (r / 8) T δ ∧
       Real.log (DhybTop I r (r / 8) T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
     Mem2Content Fr Λ := by
-  haveI : Nonempty ((ℕ → ℕ) × (ℕ → ℕ)) := ⟨(fun _ => 0, fun _ => 0)⟩
-  obtain ⟨f, hf⟩ := exists_diag (β := (ℕ → ℕ) × (ℕ → ℕ))
-    (fun ε r b => DefHypTop I r (r / 8) b.1 b.2 ∧
-      Real.log (DhybTop I r (r / 8) b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
-    (fun ε ε' r b hε hb => ⟨hb.1, hb.2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
-    (fun ε hε => (h ε hε).mono fun r ⟨T, δ, h1, h2⟩ => ⟨(T, δ), h1, h2⟩)
-  have hdef0 : ∀ r, DefHypTop I r (r / 8) (tropExp I r (r / 8)) (fun _ => 0) := fun r =>
-    defHypTop_of_local (I := I) (r := r) (m := r / 8) _ _ (fun p _ _ => le_rfl) (fun _ => False)
-      (fun _ _ => rfl) (fun p _ _ hS => absurd hS id)
-  refine ⟨fun r => if DefHypTop I r (r / 8) (f r).1 (f r).2 then DhybTop I r (r / 8) (f r).1 (f r).2
-      else DhybTop I r (r / 8) (tropExp I r (r / 8)) (fun _ => 0), ?_, ?_, ?_⟩
-  · intro r
-    dsimp only
-    split_ifs <;> exact DhybTop_pos I r (r / 8) _ _
-  · intro r _ i
-    dsimp only
-    split_ifs with hd
-    · exact DhybTop_integral I r (r / 8) hd i
-    · exact DhybTop_integral I r (r / 8) (hdef0 r) i
-  · intro ε hε
-    obtain ⟨R, hR⟩ := eventually_atTop.1 (hf ε hε)
-    refine ⟨R, fun r _ hr => ?_⟩
-    obtain ⟨hd, hlog⟩ := hR r hr
-    dsimp only
-    rw [if_pos hd]
-    exact hlog
+  obtain ⟨D2, h1, h2, h3⟩ := mem2ContentA_of_top I (Λ := Λ) (fun r m => m = r / 8)
+    (fun ε hε => (h ε hε).mono fun r ⟨T, δ, a, b⟩ m hm => ⟨T, δ, by subst hm; exact a,
+      by subst hm; exact b⟩)
+  refine ⟨fun r => D2 r (r / 8), fun r => h1 r _, fun r _ i => h2 r _ rfl i, fun ε hε => ?_⟩
+  obtain ⟨N₀, H⟩ := h3 ε hε
+  exact ⟨N₀, fun r _ hr => H r _ rfl hr⟩
+
 
 end CatalanCore.Rect
 

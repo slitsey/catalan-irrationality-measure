@@ -85,93 +85,150 @@ theorem natDegree_afterTop_le (r m : ℕ) : ((afterTop r m).fullPolyG Fr).natDeg
   have := Geometry.natDegree_fullPolyG_le Fr (afterTop r m)
   rwa [afterTop_card_C] at this
 
-/-- Content of the second member (hypothesis; see the module doc). -/
+/-- Content of the second member for the admissible relation `A` (hypothesis; see the module
+doc): one denominator `D2 r m` per member. -/
+def Mem2ContentA (Fr : Frame) (A : ℕ → ℕ → Prop) (Λ : ℝ) : Prop :=
+  ∃ D2 : ℕ → ℕ → ℕ, (∀ r m, 0 < D2 r m) ∧
+    (∀ r m, A r m → ∀ i, ∃ z : ℤ,
+      (D2 r m : ℚ) * ((afterTop r m).fullPolyG Fr).coeff i = z) ∧
+    (∀ ε > 0, ∃ N₀ : ℕ, ∀ r m, A r m → N₀ ≤ r →
+      Real.log (D2 r m) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+
+/-- Content of the second member, slope `1/8` (the λ, λ′ form; `Mem2ContentA` for `admDiv 8`). -/
 def Mem2Content (Fr : Frame) (Λ : ℝ) : Prop :=
   ∃ D2 : ℕ → ℕ, (∀ r, 0 < D2 r) ∧
     (∀ r, 8 ∣ r → ∀ i, ∃ z : ℤ, (D2 r : ℚ) * ((afterTop r (r / 8)).fullPolyG Fr).coeff i = z) ∧
     (∀ ε > 0, ∃ N₀ : ℕ, ∀ r, 8 ∣ r → N₀ ≤ r → Real.log (D2 r) ≤ (Λ + ε) * (r : ℝ) ^ 2)
 
+theorem Mem2Content.toA {Λ : ℝ} (h : Mem2Content Fr Λ) : Mem2ContentA Fr (admDiv 8) Λ := by
+  obtain ⟨D2, h1, h2, h3⟩ := h
+  refine ⟨fun r _ => D2 r, fun r _ => h1 r, ?_, ?_⟩
+  · rintro r m ⟨h8, rfl⟩ i
+    exact h2 r h8 i
+  · intro ε hε
+    obtain ⟨N₀, H⟩ := h3 ε hε
+    exact ⟨N₀, fun r m ⟨h8, _⟩ hr => H r h8 hr⟩
+
 open Classical in
 /-- The denominators of the pair family: member 1 uses the deficit denominator when its
 hypothesis holds (always for large `r`), else the plain `Dhyb`. -/
-noncomputable def pairDden (I : HybInst Fr) (T δ : ℕ → ℕ → ℕ) (D2 : ℕ → ℕ) :
-    ℕ × Bool → ℕ
-  | (r, false) => if DefHypT I r (r / 8) (T r) (δ r) then DhybT I r (r / 8) (T r) (δ r)
-      else Dhyb I r (r / 8)
-  | (r, true) => D2 r
+noncomputable def pairDdenA (I : HybInst Fr) (T δ : ℕ → ℕ → ℕ → ℕ) (D2 : ℕ → ℕ → ℕ) :
+    (ℕ × ℕ) × Bool → ℕ
+  | ((r, m), false) => if DefHypT I r m (T r m) (δ r m) then DhybT I r m (T r m) (δ r m)
+      else Dhyb I r m
+  | ((r, m), true) => D2 r m
 
-theorem hasContent_hybPair (I : HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (T δ : ℕ → ℕ → ℕ)
-    (hdef : ∀ᶠ r in atTop, DefHypT I r (r / 8) (T r) (δ r))
-    (hlog : ∀ ε > 0, ∀ᶠ r in atTop,
-      Real.log (DhybT I r (r / 8) (T r) (δ r)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
-    (M2 : Mem2Content Fr Λ) : HasContent (hybPairFam Fr 8) Λ := by
+/-- **Content of the pair family for an admissible relation** (G3): member-1 deficit families
+`(T r m, δ r m)` on `A` plus the second-member content. -/
+theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ)
+    (T δ : ℕ → ℕ → ℕ → ℕ)
+    (hdef : ∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m))
+    (hlog : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
+      Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (M2 : Mem2ContentA Fr A Λ) : HasContent (hybPairFamA Fr A) Λ := by
   classical
   obtain ⟨D2, hD2pos, hD2int, hD2log⟩ := M2
-  refine ⟨pairDden I T δ D2, ?_, ?_, ?_⟩
-  · rintro ⟨r, b⟩
+  refine ⟨pairDdenA I T δ D2, ?_, ?_, ?_⟩
+  · rintro ⟨⟨r, m⟩, b⟩
     cases b
-    · simp only [pairDden]
+    · simp only [pairDdenA]
       split_ifs
       · exact Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
-      · exact Dhyb_pos I r (r / 8)
-    · exact hD2pos r
-  · rintro ⟨r, b⟩ h8 p q hq
+      · exact Dhyb_pos I r m
+    · exact hD2pos r m
+  · rintro ⟨⟨r, m⟩, b⟩ hA p q hq
     cases b
-    · have hdeg : (hybPairFam Fr 8).deg (r, false) = r := rfl
-      have hQ : (hybPairFam Fr 8).evalQ (r, false) ((p : ℚ) / q) =
-          (Fr.fullPoly r (r / 8)).eval ((p : ℚ) / q) := by
-        simp [PolyFamily.evalQ, hybPairFam_Q_false]
-      have hint : ∀ i, ∃ z : ℤ, (pairDden I T δ D2 (r, false) : ℚ) *
-          (Fr.fullPoly r (r / 8)).coeff i = z := by
+    · have hdeg : (hybPairFamA Fr A).deg ((r, m), false) = r := rfl
+      have hQ : (hybPairFamA Fr A).evalQ ((r, m), false) ((p : ℚ) / q) =
+          (Fr.fullPoly r m).eval ((p : ℚ) / q) := by
+        simp [PolyFamily.evalQ, hybPairFamA_Q_false]
+      have hint : ∀ i, ∃ z : ℤ, (pairDdenA I T δ D2 ((r, m), false) : ℚ) *
+          (Fr.fullPoly r m).coeff i = z := by
         intro i
-        simp only [pairDden]
+        simp only [pairDdenA]
         split_ifs with h
-        · exact DhybT_integral I r (r / 8) h i
-        · exact Dhyb_integral I r (r / 8) i
+        · exact DhybT_integral I r m h i
+        · exact Dhyb_integral I r m i
       rw [hdeg, hQ]
-      exact int_clear _ r (by simpa [det_full_after] using natDegree_after_le (Fr := Fr) r (r / 8))
+      exact int_clear _ r (by simpa [det_full_after] using natDegree_after_le (Fr := Fr) r m)
         _ hint p q hq
-    · have hdeg : (hybPairFam Fr 8).deg (r, true) = r + 1 := rfl
-      have hQ : (hybPairFam Fr 8).evalQ (r, true) ((p : ℚ) / q) =
-          ((afterTop r (r / 8)).fullPolyG Fr).eval ((p : ℚ) / q) := by
-        simp [PolyFamily.evalQ, hybPairFam]
+    · have hdeg : (hybPairFamA Fr A).deg ((r, m), true) = r + 1 := rfl
+      have hQ : (hybPairFamA Fr A).evalQ ((r, m), true) ((p : ℚ) / q) =
+          ((afterTop r m).fullPolyG Fr).eval ((p : ℚ) / q) := by
+        simp [PolyFamily.evalQ, hybPairFamA]
       rw [hdeg, hQ]
-      exact int_clear _ (r + 1) (natDegree_afterTop_le r (r / 8)) (D2 r) (hD2int r h8) p q hq
+      exact int_clear _ (r + 1) (natDegree_afterTop_le r m) (D2 r m) (hD2int r m hA) p q hq
   · intro ε hε
     obtain ⟨R1, hR1⟩ := eventually_atTop.1 hdef
     obtain ⟨R2, hR2⟩ := eventually_atTop.1 (hlog ε hε)
     obtain ⟨R3, hR3⟩ := hD2log ε hε
     refine ⟨max (max R1 R2) R3 + 1, ?_⟩
-    rintro ⟨r, b⟩ h8 hr
+    rintro ⟨⟨r, m⟩, b⟩ hA hr
     cases b
     · have hr' : max (max R1 R2) R3 + 1 ≤ r := hr
-      have hd : DefHypT I r (r / 8) (T r) (δ r) := hR1 r (by omega)
-      have e : pairDden I T δ D2 (r, false) = DhybT I r (r / 8) (T r) (δ r) := by
-        simp only [pairDden]; exact if_pos hd
+      have hd : DefHypT I r m (T r m) (δ r m) := hR1 r (by omega) m hA
+      have e : pairDdenA I T δ D2 ((r, m), false) = DhybT I r m (T r m) (δ r m) := by
+        simp only [pairDdenA]; exact if_pos hd
       rw [e]
-      exact hR2 r (by omega)
+      exact hR2 r (by omega) m hA
     · have hr' : max (max R1 R2) R3 + 1 ≤ r + 1 := hr
-      have h1 := hR3 r h8 (by omega)
-      show Real.log (D2 r) ≤ (Λ + ε) * (((r + 1 : ℕ) : ℝ)) ^ 2
+      have h1 := hR3 r m hA (by omega)
+      show Real.log (D2 r m) ≤ (Λ + ε) * (((r + 1 : ℕ) : ℝ)) ^ 2
       push_cast
       have : (0 : ℝ) ≤ Λ + ε := by linarith
       nlinarith [sq_nonneg (r : ℝ), (Nat.cast_nonneg r : (0 : ℝ) ≤ r)]
 
-/-- An `ε`-independent deficit family from "for each `ε`, eventually some deficit family". -/
+/-- An `ε`-independent deficit family from "for each `ε`, eventually some deficit family", on an
+admissible relation `A` (G3). -/
+theorem contentFamA_of_eps (I : HybInst Fr) (Λ : ℝ) (A : ℕ → ℕ → Prop)
+    (h : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypT I r m T δ ∧
+      Real.log (DhybT I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    ∃ T δ : ℕ → ℕ → ℕ → ℕ, (∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m)) ∧
+      ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
+        Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+  classical
+  haveI : Nonempty (ℕ → (ℕ → ℕ) × (ℕ → ℕ)) := ⟨fun _ => (fun _ => 0, fun _ => 0)⟩
+  obtain ⟨f, hf⟩ := exists_diag (β := ℕ → (ℕ → ℕ) × (ℕ → ℕ))
+    (fun ε r b => ∀ m, A r m → DefHypT I r m (b m).1 (b m).2 ∧
+      Real.log (DhybT I r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (fun ε ε' r b hε hb m hA =>
+      ⟨(hb m hA).1, (hb m hA).2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
+    (fun ε hε => (h ε hε).mono fun r hr => by
+      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypT I r m b.1 b.2 ∧
+          Real.log (DhybT I r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+        intro m
+        by_cases hA : A r m
+        · obtain ⟨T, δ, h1, h2⟩ := hr m hA
+          exact ⟨(T, δ), fun _ => ⟨h1, h2⟩⟩
+        · exact ⟨(fun _ => 0, fun _ => 0), fun h => absurd h hA⟩
+      choose b hb using this
+      exact ⟨b, hb⟩)
+  refine ⟨fun r m => (f r m).1, fun r m => (f r m).2, ?_,
+    fun ε hε => (hf ε hε).mono fun r hr m hA => (hr m hA).2⟩
+  exact (hf 1 one_pos).mono fun r hr m hA => (hr m hA).1
+
+/-- The slope-`1/8` form (`m = r / 8`) of `contentFamA_of_eps`. -/
 theorem contentFam_of_eps (I : HybInst Fr) (Λ : ℝ)
     (h : ∀ ε > 0, ∀ᶠ r in atTop, ∃ T δ : ℕ → ℕ, DefHypT I r (r / 8) T δ ∧
       Real.log (DhybT I r (r / 8) T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
     ∃ T δ : ℕ → ℕ → ℕ, (∀ᶠ r in atTop, DefHypT I r (r / 8) (T r) (δ r)) ∧
       ∀ ε > 0, ∀ᶠ r in atTop,
         Real.log (DhybT I r (r / 8) (T r) (δ r)) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
-  haveI : Nonempty ((ℕ → ℕ) × (ℕ → ℕ)) := ⟨(fun _ => 0, fun _ => 0)⟩
-  obtain ⟨f, hf⟩ := exists_diag (β := (ℕ → ℕ) × (ℕ → ℕ))
-    (fun ε r b => DefHypT I r (r / 8) b.1 b.2 ∧
-      Real.log (DhybT I r (r / 8) b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
-    (fun ε ε' r b hε hb => ⟨hb.1, hb.2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
-    (fun ε hε => (h ε hε).mono fun r ⟨T, δ, h1, h2⟩ => ⟨(T, δ), h1, h2⟩)
-  refine ⟨fun r => (f r).1, fun r => (f r).2, ?_, fun ε hε => (hf ε hε).mono fun r hr => hr.2⟩
-  exact (hf 1 one_pos).mono fun r hr => hr.1
+  obtain ⟨T, δ, h1, h2⟩ := contentFamA_of_eps I Λ (fun r m => m = r / 8)
+    (fun ε hε => (h ε hε).mono fun r ⟨T, δ, a, b⟩ m hm => ⟨T, δ, by subst hm; exact a,
+      by subst hm; exact b⟩)
+  exact ⟨fun r => T r (r / 8), fun r => δ r (r / 8), h1.mono fun r hr => hr _ rfl,
+    fun ε hε => (h2 ε hε).mono fun r hr => hr _ rfl⟩
+
+/-- The slope-`1/8` form of `hasContent_hybPairA`. -/
+theorem hasContent_hybPair (I : HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (T δ : ℕ → ℕ → ℕ)
+    (hdef : ∀ᶠ r in atTop, DefHypT I r (r / 8) (T r) (δ r))
+    (hlog : ∀ ε > 0, ∀ᶠ r in atTop,
+      Real.log (DhybT I r (r / 8) (T r) (δ r)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (M2 : Mem2Content Fr Λ) : HasContent (hybPairFam Fr 8) Λ :=
+  hasContent_hybPairA I hΛ0 (fun r _ => T r) (fun r _ => δ r)
+    (hdef.mono fun r h m ⟨_, hm⟩ => by subst hm; exact h)
+    (fun ε hε => (hlog ε hε).mono fun r h m ⟨_, hm⟩ => by subst hm; exact h) M2.toA
 
 end Content
 
@@ -181,12 +238,43 @@ section Decay
 
 variable {Fr : Frame}
 
-/-- Decay of the second member (hypothesis; see the module doc): window `exp(-C r)`, bound
+/-- Decay of the first member on the relation `A`: window `exp(-C r)`, bound
 `exp(-(D - δ) r²)`. -/
+def Mem1DecayA (Fr : Frame) (A : ℕ → ℕ → Prop) (D C : ℝ) : Prop :=
+  ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m, A r m → N₀ ≤ r → ∀ t : ℝ, |t| ≤ Real.exp (-C * (r : ℝ)) →
+    |(Fr.fullPoly r m).aeval (Fr.const + t)| ≤ Real.exp (-(D - δ) * (r : ℝ) ^ 2)
+
+/-- Decay of the second member on the relation `A` (hypothesis; see the module doc). -/
+def Mem2DecayA (Fr : Frame) (A : ℕ → ℕ → Prop) (D C : ℝ) : Prop :=
+  ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m, A r m → N₀ ≤ r → ∀ t : ℝ, |t| ≤ Real.exp (-C * (r : ℝ)) →
+    |((afterTop r m).fullPolyG Fr).aeval (Fr.const + t)| ≤
+      Real.exp (-(D - δ) * (r : ℝ) ^ 2)
+
+/-- Decay of the second member, slope `1/8` (`Mem2DecayA` for `admDiv 8`). -/
 def Mem2Decay (Fr : Frame) (D C : ℝ) : Prop :=
   ∀ δ > 0, ∃ N₀ : ℕ, ∀ r, 8 ∣ r → N₀ ≤ r → ∀ t : ℝ, |t| ≤ Real.exp (-C * (r : ℝ)) →
     |((afterTop r (r / 8)).fullPolyG Fr).aeval (Fr.const + t)| ≤
       Real.exp (-(D - δ) * (r : ℝ) ^ 2)
+
+theorem Mem2Decay.toA {D C : ℝ} (h : Mem2Decay Fr D C) : Mem2DecayA Fr (admDiv 8) D C := by
+  intro δ hδ
+  obtain ⟨N, H⟩ := h δ hδ
+  exact ⟨N, fun r m ⟨h8, hm⟩ hr t ht => by subst hm; exact H r h8 hr t ht⟩
+
+/-- Member-1 decay on `A` from the decay of a `hybridFamUp` family whose window contains `A`. -/
+theorem Mem1DecayA.of_up {A : ℕ → ℕ → Prop} {α : ℚ}
+    (hA : ∀ r m, A r m → (hybridFamUp Fr α).Adm (r, m)) {D C : ℝ}
+    (h : HasDecay (hybridFamUp Fr α) D C) : Mem1DecayA Fr A D C := by
+  intro δ hδ
+  obtain ⟨N, H⟩ := h δ hδ
+  refine ⟨N, fun r m hAr hr t ht => ?_⟩
+  have key := H (r, m) (hA r m hAr) (by show N ≤ r; exact hr) t (by exact ht)
+  have e : (hybridFamUp Fr α).evalR (r, m) (Fr.const + t) =
+      (Fr.fullPoly r m).aeval (Fr.const + t) := by
+    simp [PolyFamily.evalR, hybridFamUp, hybridFam_Q]
+  change |(hybridFamUp Fr α).evalR (r, m) (Fr.const + t)| ≤ Real.exp (-(D - δ) * (r : ℝ) ^ 2) at key
+  rw [e] at key
+  exact key
 
 theorem hybridFamUp_adm (r : ℕ) (h8 : 8 ∣ r) :
     (hybridFamUp Fr (1 / 8)).Adm (r, r / 8) := by
@@ -196,22 +284,22 @@ theorem hybridFamUp_adm (r : ℕ) (h8 : 8 ∣ r) :
   push_cast
   constructor <;> linarith
 
-theorem hasDecay_hybPair {D C : ℝ} (hC : 0 ≤ C) (hD1 : HasDecay (hybridFamUp Fr (1 / 8)) D C)
-    (M2 : Mem2Decay Fr D C) : HasDecay (hybPairFam Fr 8) D C := by
+/-- **Decay of the pair family for an admissible relation** (G3): member-1 and member-2 decay. -/
+theorem hasDecay_hybPairA {A : ℕ → ℕ → Prop} {D C : ℝ} (hC : 0 ≤ C)
+    (M1 : Mem1DecayA Fr A D C) (M2 : Mem2DecayA Fr A D C) :
+    HasDecay (hybPairFamA Fr A) D C := by
   intro δ hδ
-  obtain ⟨N1, H1⟩ := hD1 δ hδ
+  obtain ⟨N1, H1⟩ := M1 δ hδ
   obtain ⟨N2, H2⟩ := M2 (δ / 2) (half_pos hδ)
   refine ⟨max (max N1 N2) (⌈6 * |D - δ| / δ⌉₊ + 1) + 1, ?_⟩
-  rintro ⟨r, b⟩ h8 hr t ht
+  rintro ⟨⟨r, m⟩, b⟩ hA hr t ht
   cases b
   · have hr' : max (max N1 N2) (⌈6 * |D - δ| / δ⌉₊ + 1) + 1 ≤ r := hr
-    have key := H1 (r, r / 8) (hybridFamUp_adm r h8) (by
-      show N1 ≤ r
-      omega) t (by exact ht)
-    have e1 : ∀ x : ℝ, (hybPairFam Fr 8).evalR (r, false) x =
-        (hybridFamUp Fr (1 / 8)).evalR (r, r / 8) x := by
+    have key := H1 r m hA (by omega) t (by exact ht)
+    have e1 : ∀ x : ℝ, (hybPairFamA Fr A).evalR ((r, m), false) x =
+        (Fr.fullPoly r m).aeval x := by
       intro x
-      simp [PolyFamily.evalR, hybPairFam_Q_false, hybridFamUp, hybridFam_Q]
+      simp [PolyFamily.evalR, hybPairFamA_Q_false]
     rw [e1]
     exact key
   · have hr' : max (max N1 N2) (⌈6 * |D - δ| / δ⌉₊ + 1) + 1 ≤ r + 1 := hr
@@ -221,21 +309,28 @@ theorem hasDecay_hybPair {D C : ℝ} (hC : 0 ≤ C) (hD1 : HasDecay (hybridFamUp
       show -C * (((r + 1 : ℕ)) : ℝ) ≤ -C * r
       push_cast
       nlinarith
-    have key := H2 r h8 (by omega) t hwin
+    have key := H2 r m hA (by omega) t hwin
     have hbig : 6 * |D - δ| / δ ≤ r := by
       have : (⌈6 * |D - δ| / δ⌉₊ : ℝ) ≤ r := by exact_mod_cast (by omega : ⌈6 * |D - δ| / δ⌉₊ ≤ r)
       exact (Nat.le_ceil _).trans this
     rw [div_le_iff₀ hδ] at hbig
     have hr1 : (1 : ℝ) ≤ r := by exact_mod_cast (by omega : 1 ≤ r)
-    have hA : (D - δ) ≤ |D - δ| := le_abs_self _
+    have hA' : (D - δ) ≤ |D - δ| := le_abs_self _
     have hcmp : (D - δ) * ((r : ℝ) + 1) ^ 2 ≤ (D - δ / 2) * (r : ℝ) ^ 2 := by
       nlinarith [abs_nonneg (D - δ), sq_nonneg (r : ℝ), mul_nonneg (abs_nonneg (D - δ)) hrr]
-    have hfin : |((afterTop r (r / 8)).fullPolyG Fr).aeval (Fr.const + t)| ≤
+    have hfin : |((afterTop r m).fullPolyG Fr).aeval (Fr.const + t)| ≤
         Real.exp (-(D - δ) * (((r + 1 : ℕ)) : ℝ) ^ 2) := by
       refine key.trans (Real.exp_le_exp.2 ?_)
       push_cast
       nlinarith [hcmp]
-    simpa [PolyFamily.evalR, hybPairFam] using hfin
+    simpa [PolyFamily.evalR, hybPairFamA] using hfin
+
+/-- The slope-`1/8` form of `hasDecay_hybPairA`. -/
+theorem hasDecay_hybPair {D C : ℝ} (hC : 0 ≤ C) (hD1 : HasDecay (hybridFamUp Fr (1 / 8)) D C)
+    (M2 : Mem2Decay Fr D C) : HasDecay (hybPairFam Fr 8) D C :=
+  hasDecay_hybPairA hC
+    (Mem1DecayA.of_up (A := admDiv 8) (fun r m ⟨h8, hm⟩ => by subst hm; exact hybridFamUp_adm r h8)
+      hD1) M2.toA
 
 end Decay
 

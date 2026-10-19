@@ -71,6 +71,22 @@ theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt 
   · rw [max_eq_left hm]
     nlinarith [hb0, hslack]
 
+/-- **The second-member decay on an admissible relation `A`** (G3): `decay_top_of_certG_rect`
+for every `(r, m)` with `A r m` and `m = α r` exactly, stated as `Mem2DecayA`.  (The proof covers
+`m = α r` only: for `α r < m ≤ α r + 1` the second pattern `(r, m + 1)` leaves the window of
+`decay_core`.) -/
+theorem mem2DecayA_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
+    (hcc : (0 : ℝ) ≤ F.ccert) {A : ℕ → ℕ → Prop} (hA : ∀ r m, A r m → (m : ℝ) = α * r) :
+    Rect.Mem2DecayA Fr A (D : ℝ) (F.ccert : ℝ) := by
+  intro δ hδ
+  obtain ⟨N, hN⟩ := decay_top_of_certG_rect hFr F hα hg hw0 hRc hc hInu hD hcc δ hδ
+  exact ⟨N, fun r m hAr hr t ht => hN r m hr (hA r m hAr) t ht⟩
+
 /-- **The second-member decay of every `α = 1/8` frame**: `decay_top_of_certG_rect` at `α = 1/8`
 and `m = r/8` (the cast glue, once), stated as `Mem2Decay`. -/
 theorem mem2Decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
@@ -82,13 +98,12 @@ theorem mem2Decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt 
     (hD : D ≤ F.Dof Fr.d (1 / 8) Inu) (hcc : (0 : ℝ) ≤ F.ccert) :
     Rect.Mem2Decay Fr (D : ℝ) (F.ccert : ℝ) := by
   intro δ hδ
-  obtain ⟨N, hN⟩ := decay_top_of_certG_rect hFr F (α := 1 / 8) (by norm_num) hg hw0 hRc hc
-    hInu hD hcc δ hδ
-  refine ⟨N, fun r h8 hr t ht => ?_⟩
-  have hm : ((r / 8 : ℕ) : ℝ) = (((1 / 8 : ℚ)) : ℝ) * r := by
-    obtain ⟨k, rfl⟩ := h8
-    rw [Nat.mul_div_cancel_left _ (by norm_num)]
-    push_cast; ring
-  exact hN r (r / 8) hr hm t ht
+  obtain ⟨N, hN⟩ := mem2DecayA_of_certG_rect hFr F (α := 1 / 8) (by norm_num) hg hw0 hRc hc
+    hInu hD hcc (A := Rect.admDiv 8) (fun r m ⟨h8, hm⟩ => by
+      subst hm
+      obtain ⟨k, rfl⟩ := h8
+      rw [Nat.mul_div_cancel_left _ (by norm_num)]
+      push_cast; ring) δ hδ
+  exact ⟨N, fun r h8 hr t ht => hN r (r / 8) ⟨h8, rfl⟩ hr t ht⟩
 
 end CatalanCore

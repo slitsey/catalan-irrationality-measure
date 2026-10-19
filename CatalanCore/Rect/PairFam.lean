@@ -77,36 +77,47 @@ theorem eval_fullPolyG (x : ℚ) : (G.fullPolyG Fr).eval x = (G.Full Fr x).det :
 
 end Geometry
 
-/-- The two-member hybrid family at slope `1/d`: members `(r, false)` = `after r (r/d)` and
-`(r, true)` = `afterTop r (r/d)`, admissible when `d ∣ r`. -/
-noncomputable def hybPairFam (d : ℕ) : PolyFamily where
+/-- The admissible relation of the slope-`1/d` pair: `d ∣ r` and `m = r / d`. -/
+def admDiv (d r m : ℕ) : Prop := d ∣ r ∧ m = r / d
+
+/-- **The two-member hybrid family for an admissible relation** `A r m` (G3).  The members are
+`((r, m), false) = after r m` (degree `r`) and `((r, m), true) = afterTop r m` (degree `r + 1`),
+for `A r m`.  Content, decay and nonvanishing are stated for the relation `A`, so one family and
+one deduction serve every modulus and every choice of `m` (`m = r/d` for `λ`, `λ′`; a window
+`r + 2m = 3t` pinned to the prime for `L(2, χ₋₃)`). -/
+noncomputable def hybPairFamA (A : ℕ → ℕ → Prop) : PolyFamily where
   const := Fr.const
-  ι := ℕ × Bool
-  deg := fun n => n.1 + (if n.2 then 1 else 0)
-  Adm := fun n => d ∣ n.1
-  Q := fun n => if n.2 then (afterTop n.1 (n.1 / d)).fullPolyG Fr
-    else (after n.1 (n.1 / d)).fullPolyG Fr
+  ι := (ℕ × ℕ) × Bool
+  deg := fun n => n.1.1 + (if n.2 then 1 else 0)
+  Adm := fun n => A n.1.1 n.1.2
+  Q := fun n => if n.2 then (afterTop n.1.1 n.1.2).fullPolyG Fr
+    else (after n.1.1 n.1.2).fullPolyG Fr
 
-theorem hybPairFam_evalQ_false (d r : ℕ) (x : ℚ) :
-    (hybPairFam Fr d).evalQ (r, false) x = (((after r (r / d)).Full Fr x).det) := by
-  simp [hybPairFam, PolyFamily.evalQ, Geometry.eval_fullPolyG]
+/-- The two-member hybrid family at slope `1/d`: `m = r / d`, admissible when `d ∣ r`. -/
+noncomputable abbrev hybPairFam (d : ℕ) : PolyFamily := hybPairFamA Fr (admDiv d)
 
-theorem hybPairFam_evalQ_true (d r : ℕ) (x : ℚ) :
-    (hybPairFam Fr d).evalQ (r, true) x = (((afterTop r (r / d)).Full Fr x).det) := by
-  simp [hybPairFam, PolyFamily.evalQ, Geometry.eval_fullPolyG]
+variable {Fr}
 
-theorem hybPairFam_Q_false (d r : ℕ) :
-    (hybPairFam Fr d).Q (r, false) = Fr.fullPoly r (r / d) := by
-  simp [hybPairFam, det_full_after]
+theorem hybPairFamA_evalQ_false (A : ℕ → ℕ → Prop) (r m : ℕ) (x : ℚ) :
+    (hybPairFamA Fr A).evalQ ((r, m), false) x = (((after r m).Full Fr x).det) := by
+  simp [hybPairFamA, PolyFamily.evalQ, Geometry.eval_fullPolyG]
+
+theorem hybPairFamA_evalQ_true (A : ℕ → ℕ → Prop) (r m : ℕ) (x : ℚ) :
+    (hybPairFamA Fr A).evalQ ((r, m), true) x = (((afterTop r m).Full Fr x).det) := by
+  simp [hybPairFamA, PolyFamily.evalQ, Geometry.eval_fullPolyG]
+
+theorem hybPairFamA_Q_false (A : ℕ → ℕ → Prop) (r m : ℕ) :
+    (hybPairFamA Fr A).Q ((r, m), false) = Fr.fullPoly r m := by
+  simp [hybPairFamA, det_full_after]
 
 /-- Either `after` or `afterTop` is a nonvanishing member, given that they do not both vanish. -/
-theorem hybPairFam_exists_ne (d r : ℕ) (x : ℚ)
-    (h : ¬ (((after r (r / d)).Full Fr x).det = 0 ∧ ((afterTop r (r / d)).Full Fr x).det = 0)) :
-    ∃ b : Bool, (hybPairFam Fr d).evalQ (r, b) x ≠ 0 := by
-  by_cases h1 : ((after r (r / d)).Full Fr x).det = 0
+theorem hybPairFamA_exists_ne (A : ℕ → ℕ → Prop) (r m : ℕ) (x : ℚ)
+    (h : ¬ (((after r m).Full Fr x).det = 0 ∧ ((afterTop r m).Full Fr x).det = 0)) :
+    ∃ b : Bool, (hybPairFamA Fr A).evalQ ((r, m), b) x ≠ 0 := by
+  by_cases h1 : ((after r m).Full Fr x).det = 0
   · refine ⟨true, ?_⟩
-    rw [hybPairFam_evalQ_true]
+    rw [hybPairFamA_evalQ_true]
     intro h2; exact h ⟨h1, h2⟩
-  · exact ⟨false, by rw [hybPairFam_evalQ_false]; exact h1⟩
+  · exact ⟨false, by rw [hybPairFamA_evalQ_false]; exact h1⟩
 
 end CatalanCore.Rect
