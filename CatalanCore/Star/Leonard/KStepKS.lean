@@ -81,4 +81,41 @@ theorem kdet_That
 
 end YChain
 
+section Setup
+
+variable [CharZero F] (m n S : ℕ) (θ : F)
+
+lemma projB_idem
+    (hΔ : IsUnit ((Wb (m + n) θ (bX m (S : ℤ)))ᵀ * Wb (m + n) θ (bY m (S : ℤ))).det) :
+    projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) * projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) =
+      projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) := by
+  obtain ⟨hPW, hPc⟩ := projB_props m n S θ hΔ
+  refine CatalanCore.mul_eq_of_mulVec _ _ fun v => ?_
+  obtain ⟨a, ha⟩ := hPc v
+  have h0 := hPW _ ⟨a, rfl⟩
+  rw [← Matrix.mulVec_mulVec]
+  calc _ = projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) *ᵥ (v - Wb (m + n) θ (bY m (S : ℤ)) *ᵥ a) :=
+        congrArg _ ha
+    _ = _ := by
+      rw [Matrix.mulVec_sub]
+      have h0' : projB (m + n) θ (bX m (S : ℤ)) (bY m (S : ℤ)) *ᵥ
+          (Wb (m + n) θ (bY m (S : ℤ)) *ᵥ a) = 0 := h0
+      rw [h0', sub_zero]
+
+lemma Nsum_apply {K : ℕ} (c : ℕ → Fin K → F) (s : ℕ) (a b : Fin K) :
+    Nsum c s a b = ∑ j : Fin s, c ((j : ℕ) + 1) a * c ((j : ℕ) + 1) b := by
+  induction s with
+  | zero => simp [Nsum]
+  | succ s ih =>
+    rw [Nsum_succ, Matrix.add_apply, ih, Fin.sum_univ_castSucc]
+    simp [Matrix.vecMulVec_apply]
+
+lemma Nsum_eq_Rm_mul :
+    Nsum (fun y : ℕ => wcol (m + n) θ (y : ℤ)) S = Rm m n S θ * (Rm m n S θ)ᵀ := by
+  ext a b
+  rw [Nsum_apply]
+  simp [Matrix.mul_apply, Rm]
+
+end Setup
+
 end CatalanCore.Star.Leonard
