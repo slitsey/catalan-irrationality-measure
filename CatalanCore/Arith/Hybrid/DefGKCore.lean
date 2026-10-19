@@ -69,6 +69,56 @@ lemma matmul_int1 {a b c : Type*} [Fintype b] {M : Matrix a b ℚ[X]} {N : Matri
 
 variable {p}
 
+/-- The inner Schur complement of the vector-partner T-route is integral: every entry of
+`g D - C N B` (`g = det Ã`, `N = D adj(Ã) D`) is `p`-integral.  This is the `T`-hypothesis of
+`tcore_scaled` for `tcore_vec`; it is reused by the bordered route. -/
+theorem tcore_vec_T {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X])
+    (hI : ∀ i j, Int1 p (Atil p (fun _ : ι => 1) Full.toBlocks₁₁ i j))
+    (hprim : gn p (Atil p (fun _ : ι => 1) Full.toBlocks₁₁).det = 1)
+    (α : Matrix κ ι ℚ[X]) (β : Matrix ι κ ℚ[X])
+    (hL : ∀ z c, gn p ((Full.toBlocks₂₁ - α * Full.toBlocks₁₁) z c) ≤ p)
+    (hL' : ∀ c y, gn p ((Full.toBlocks₁₂ - Full.toBlocks₁₁ * β) c y) ≤ p)
+    (hΔ : ∀ z y, Int1 p ((Full.toBlocks₂₂ - α * Full.toBlocks₁₂ - Full.toBlocks₂₁ * β +
+      α * Full.toBlocks₁₁ * β) z y))  (z y : κ) :
+    GLE p 0 (Tscaled (Atil p (fun _ : ι => 1) Full.toBlocks₁₁).det Full.toBlocks₁₁
+        Full.toBlocks₁₂ Full.toBlocks₂₁ Full.toBlocks₂₂
+        (Nmat p (fun _ : ι => 1) Full.toBlocks₁₁) z y) := by
+  classical
+  set A := Full.toBlocks₁₁ with hA
+  set d : ι → ℕ := fun _ => 1
+  set g := (Atil p d A).det with hg
+  have hAN := AN_eq p d A
+  have hNA := NA_eq p d A
+  have key := T_decomp_gen A (Nmat p d A) Full.toBlocks₁₂ Full.toBlocks₂₁ Full.toBlocks₂₂ g
+    hAN hNA α β
+  unfold Tscaled
+  rw [key]
+  rw [(gle_iff_gn p 0 _)]
+  simp only [pow_zero]
+  show Int1 p _
+  rw [Matrix.sub_apply]
+  apply Int1.sub
+  · rw [Matrix.smul_apply, smul_eq_mul]
+    refine Int1.mul ?_ (hΔ z y)
+    show gn p g ≤ 1
+    rw [hg, hprim]
+  · have hadj : ∀ i j, Int1 p ((Atil p d A).adjugate i j) := adj_int1 hI
+    have e : (Full.toBlocks₂₁ - α * A) * Nmat p d A * (Full.toBlocks₁₂ - A * β) =
+        ((Full.toBlocks₂₁ - α * A) * scl p d) * (Atil p d A).adjugate *
+          (scl p d * (Full.toBlocks₁₂ - A * β)) := by
+      simp only [Nmat, Matrix.mul_assoc]
+    rw [e]
+    have h1 : ∀ i j, Int1 p (((Full.toBlocks₂₁ - α * A) * scl p d) i j) := by
+      intro i j
+      simp only [scl, Matrix.mul_diagonal]
+      exact int1_mul_Cp p (hL i j)
+    have h2 : ∀ i j, Int1 p ((scl p d * (Full.toBlocks₁₂ - A * β)) i j) := by
+      intro i j
+      simp only [scl, Matrix.diagonal_mul]
+      exact int1_Cp_mul p (hL' i j)
+    exact matmul_int1 p (fun i j => matmul_int1 p h1 hadj i j) h2 z y
+
 /-- **Vector-partner T-route.** -/
 theorem tcore_vec {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X])
@@ -78,46 +128,11 @@ theorem tcore_vec {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [Dec
     (hL : ∀ z c, gn p ((Full.toBlocks₂₁ - α * Full.toBlocks₁₁) z c) ≤ p)
     (hL' : ∀ c y, gn p ((Full.toBlocks₁₂ - Full.toBlocks₁₁ * β) c y) ≤ p)
     (hΔ : ∀ z y, Int1 p ((Full.toBlocks₂₂ - α * Full.toBlocks₁₂ - Full.toBlocks₂₁ * β +
-      α * Full.toBlocks₁₁ * β) z y)) :
+      α * Full.toBlocks₁₁ * β) z y))  :
     GLE p (2 * Fintype.card ι) Full.det := by
-  classical
-  set A := Full.toBlocks₁₁ with hA
-  have h := tcore_scaled p Full (fun _ : ι => 1) (Atil p (fun _ : ι => 1) A) hI hI
-    (fun i j => Cng.refl _) hprim 0 ?_
-  · simpa using h
-  · intro z y
-    set d : ι → ℕ := fun _ => 1
-    set g := (Atil p d A).det with hg
-    have hAN := AN_eq p d A
-    have hNA := NA_eq p d A
-    have key := T_decomp_gen A (Nmat p d A) Full.toBlocks₁₂ Full.toBlocks₂₁ Full.toBlocks₂₂ g
-      hAN hNA α β
-    unfold Tscaled
-    rw [key]
-    rw [(gle_iff_gn p 0 _)]
-    simp only [pow_zero]
-    show Int1 p _
-    rw [Matrix.sub_apply]
-    apply Int1.sub
-    · rw [Matrix.smul_apply, smul_eq_mul]
-      refine Int1.mul ?_ (hΔ z y)
-      show gn p g ≤ 1
-      rw [hg, hprim]
-    · have hadj : ∀ i j, Int1 p ((Atil p d A).adjugate i j) := adj_int1 hI
-      have e : (Full.toBlocks₂₁ - α * A) * Nmat p d A * (Full.toBlocks₁₂ - A * β) =
-          ((Full.toBlocks₂₁ - α * A) * scl p d) * (Atil p d A).adjugate *
-            (scl p d * (Full.toBlocks₁₂ - A * β)) := by
-        simp only [Nmat, Matrix.mul_assoc]
-      rw [e]
-      have h1 : ∀ i j, Int1 p (((Full.toBlocks₂₁ - α * A) * scl p d) i j) := by
-        intro i j
-        simp only [scl, Matrix.mul_diagonal]
-        exact int1_mul_Cp p (hL i j)
-      have h2 : ∀ i j, Int1 p ((scl p d * (Full.toBlocks₁₂ - A * β)) i j) := by
-        intro i j
-        simp only [scl, Matrix.diagonal_mul]
-        exact int1_Cp_mul p (hL' i j)
-      exact matmul_int1 p (fun i j => matmul_int1 p h1 hadj i j) h2 z y
+  have h := tcore_scaled p Full (fun _ : ι => 1) (Atil p (fun _ : ι => 1) Full.toBlocks₁₁) hI hI
+    (fun i j => Cng.refl _) hprim 0 (tcore_vec_T Full hI hprim α β hL hL' hΔ)
+  simpa using h
 
 end Core
 
