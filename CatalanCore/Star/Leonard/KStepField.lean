@@ -122,6 +122,61 @@ lemma coefB'_eq : coefB' θ (n : F) (cK K m S θ) =
   unfold coefB'
   rw [e, eval_p2', key]; ring
 
+
 end K4field
+
+/-- **(K4a).**  Column relation of the Darboux map, at `g = 0` (`K = S+m+1`), symbolic `m`:
+`(X c_y)_i = 𝒜(y) c'_y(i) + ℬ(y) c'_{y+1}(i) + Σ_{x∈X} ℰ_x(y) c'_x(i)`, with
+`𝒜(y) = (Dμ)(-θ-y)`, `ℬ(y) = -(Dσ)(-θ-y-1)`. -/
+theorem K4a_field [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen θ) (hKS : K = S + m + 1)
+    (n : ℤ) (hn : n + 1 ≤ (S : ℤ)) :
+    ∃ ℰ : ℕ → F, ∀ i : ℕ, i + 1 < K →
+      Dfac K m S θ i * mu K m S θ i / (θ + i + n)
+        - Dfac K m S θ i * sigma K m S θ i / (θ + i + 1 + n) =
+      Dfac K m S θ (-θ - n) * mu K m S θ (-θ - n) / (θ + i + n)
+        + -(Dfac K m S θ (-θ - n - 1) * sigma K m S θ (-θ - n - 1)) / (θ + i + 1 + n)
+        + ∑ j ∈ Finset.range m, ℰ j / (θ + i + (S + 2 * (j : F) + 2)) := by
+  have hKF : (K : F) = (S : F) + m + 1 := by rw [hKS]; push_cast; ring
+  have hP : (PPf (S : F) m).eval (-(n : F)) ≠ 0 := by
+    have := Qh2_eval_int_ne (F := F) m S (-n) (fun j _ => by omega)
+    push_cast at this; exact this
+  obtain ⟨N, hNd, heq⟩ := K4a_poly K m hm (S : F) θ (n : F) (cK K m S θ) hKF hP
+  have hQQ : Qh m ((S : F) + 1) = Qh2 m (S : F) := by simp [Qh, Qh2]
+  obtain ⟨κ, hκ⟩ := partial_frac m ((S : F) + 1) N hNd
+  rw [hQQ] at hκ
+  refine ⟨κ, fun i hi => ?_⟩
+  rw [← coefA_eq K m S hm θ hθ hKS n hn, ← coefB_eq K m S hm θ hθ hKS n hn]
+  have hGa : GenAt θ (i : F) := genAt_nat hθ i
+  have hPz : Pe m S θ i ≠ 0 := Pe_ne_zero m S hGa
+  have hQoi : Qo m S θ i ≠ 0 := Qo_ne_zero m S hGa
+  have hQ0 : Qo m S θ 0 ≠ 0 := by simpa using Qo_ne_zero m S (genAt_nat hθ 0)
+  have h1 : θ + (S : F) + 1 + i ≠ 0 := by
+    have := hGa (S + 1); push_cast at this; intro h0; apply this; linear_combination h0
+  have hKi : (K : F) - 1 - i ≠ 0 := by
+    have := natsub_ne (F := F) (a := K - 1) (b := i) (by omega)
+    rw [Nat.cast_sub (by omega)] at this
+    push_cast at this; exact this
+  have hFa := Dfac_mu_Pe K m S θ (i : F) hm hPz hQ0 h1 hQoi
+  have hFb := Dfac_sigma K m S θ (i : F) hPz hQoi hQ0 hKi
+  have hE := congrArg (Polynomial.eval (θ + (i : F))) heq
+  simp only [eval_sub, eval_add, eval_mul, eval_C, eval_lin, MainA, A3a, B3a, pK1, eval_PPf_S,
+    eval_PPf_pred] at hE
+  have hQz : (PPf (S : F) m).eval (θ + (i : F)) ≠ 0 := by rw [eval_PPf_S K m S θ i]; exact hPz
+  have hSum := hκ (θ + (i : F)) (by simpa [Qh2] using hQz)
+  have hSum' : ∑ j ∈ Finset.range m, κ j / (θ + i + (S + 2 * (j : F) + 2)) =
+      N.eval (θ + (i : F)) / (PPf (S : F) m).eval (θ + (i : F)) := by
+    rw [show (PPf (S : F) m) = Qh2 m (S : F) from rfl, hSum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    unfold vY; ring_nf
+  rw [hSum']
+  have hu : θ + (i : F) + n ≠ 0 := by
+    have := hθ ((i : ℤ) + n); push_cast at this
+    intro h0; apply this; linear_combination h0
+  have hup : θ + (i : F) + 1 + n ≠ 0 := by
+    have := hθ ((i : ℤ) + n + 1); push_cast at this
+    intro h0; apply this; linear_combination h0
+  rw [eval_PPf_S K m S θ i] at hE hQz ⊢
+  refine kstep_alg _ _ _ _ _ _ _ _ hu hup hQz ?_
+  linear_combination hE + (θ + (i : F) + 1 + n) * hFa - (Pe m S θ i * (θ + (i : F) + n)) * hFb
 
 end CatalanCore.Star.Leonard
