@@ -228,4 +228,18 @@ theorem Num_closed [CharZero F] {N : ℕ} (hN : 1 ≤ N) (xs ys : Fin N → F) (
   rw [hs]
   ring
 
+/-- `Num_closed` for a row count `K` with `K = N + 1` (propositionally). -/
+theorem Num_closed' [CharZero F] {K N : ℕ} (hK : K = N + 1) (hN : 1 ≤ N) (xs ys : Fin N → F) (x0 : F)
+    (hx : ∀ (a : Fin K) (i : Fin N), ((a : ℕ) : F) + xs i ≠ 0)
+    (hy : ∀ (a : Fin K) (i : Fin N), ((a : ℕ) : F) + ys i ≠ 0)
+    (hrho : ∀ b : ℕ, ∏ j, (((b : F) + xs j) * ((b : F) + ys j)) =
+      ∏ i ∈ Finset.range (2 * N), (x0 + (b : F) + (i : F))) :
+    ((Cm K xs)ᵀ * Cm K ys).det =
+      Vprod xs * Vprod ys * Vprod (fun i : Fin K => ((i : ℕ) : F)) ^ 2 *
+        (∏ b : Fin K, (∏ i ∈ Finset.range (2 * N), (x0 + ((b : ℕ) : F) + (i : F)))⁻¹) *
+        ((((2 * N).choose N : ℕ) : F) * (∏ i ∈ Finset.range N, (x0 + (N : F) + (i : F))) ^ 2 /
+          ((N.factorial : ℕ) : F) ^ 2) := by
+  subst hK
+  exact Num_closed hN xs ys x0 hx hy hrho
+
 end CatalanCore.Star.Leonard
