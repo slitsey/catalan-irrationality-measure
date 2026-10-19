@@ -194,4 +194,26 @@ theorem class_total {c : ZMod M} (hc : IsUnit c) {α0 t1 : ℝ} (hα0 : 0 ≤ α
   have hrε : 0 ≤ (r : ℝ) ^ 2 * ε := by positivity
   nlinarith [hA, hB, hpre_bound, hfin, hrε]
 
+
+/-- Terms beyond a point where the weight vanishes do not matter. -/
+lemma clsSum_le_of_tail (c : ZMod M) (w : ℕ → ℝ) (hw0 : ∀ p, 0 ≤ w p) {B B' : ℕ}
+    (htail : ∀ p, B' < p → p.Prime → (p : ZMod M) = c → w p = 0) :
+    clsSum M c w 0 B ≤ clsSum M c w 0 B' := by
+  have hnn : ∀ A D : ℕ, 0 ≤ clsSum M c w A D := by
+    intro A D
+    unfold clsSum
+    apply Finset.sum_nonneg
+    intro p hp
+    obtain ⟨-, hp2, -⟩ := by simpa using hp
+    exact mul_nonneg (hw0 p) (Real.log_nonneg (by exact_mod_cast hp2.one_lt.le))
+  rcases le_total B B' with h | h
+  · rw [← clsSum_add c w (Nat.zero_le B) h]
+    linarith [hnn B B']
+  · rw [← clsSum_add c w (Nat.zero_le B') h]
+    have : clsSum M c w B' B ≤ 0 := by
+      have := clsSum_le_cell c w (A := B') (B := B) h (K := 0) (fun p hp1 hp2 hpp hpc =>
+        (htail p hp1 hpp hpc).le)
+      simpa using this
+    linarith
+
 end CatalanCore.Arith.Hybrid
