@@ -365,6 +365,153 @@ lemma reg_of {j k : ℕ} (hk : 4 * k = j * p + 1) (hp5 : 5 ≤ p) (hkp : k < p) 
       rw [Nat.mod_eq_of_lt hkp] at *
       omega
 
+lemma good_pow_mul_zero {x : ℚ} {y : ZMod p} (h : Good p x y) {n : ℕ} (hn : 1 ≤ n) :
+    Good p ((p : ℚ) ^ n * x) 0 := by
+  obtain ⟨n', rfl⟩ : ∃ n', n = n' + 1 := ⟨n - 1, by omega⟩
+  have h1 : Good p ((p : ℚ) ^ n') ((p : ZMod p) ^ n') := (Good.natCast (ℓ := p) p).pow' n'
+  have := h1.mul (h.ell_mul)
+  refine this.congr' (by ring) |>.congr (by simp)
+
+/-- The hypotheses of the Theorem B setting. -/
+structure BSetup (p r m j k : ℕ) : Prop where
+  p5 : 5 ≤ p
+  hk : 4 * k = j * p + 1
+  hj0 : 0 < j
+  hjp : j < p
+  hk0 : 0 < k
+  hkp : k < p
+  hrp : r < p
+  hkr : k ≤ r
+  h2mk : 2 * m < k
+  hmr : 2 * m ≤ r
+
+variable {r m j k : ℕ}
+
+lemma BSetup.reg (S : BSetup p r m j k) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m)
+    (hnk : t ≠ k) (hnp : t ≠ p) : Reg p t :=
+  reg_of S.hk S.p5 S.hkp h1 (by have := S.hrp; have := S.hmr; omega)
+    (by have := S.hrp; have := S.h2mk; omega) hnk hnp
+
+section TableThm
+
+variable (hL : LamData Fr) (S : BSetup p r m j k)
+
+include hL S
+
+/-- **The label-level table of Theorem B.**  For labels `A < B < r + 2m`, the scaled entry
+`p^{u A + u B} Mn A B` is `p`-integral with reduction `TB A B`. -/
+theorem good_TB {A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m) :
+    Good p ((p : ℚ) ^ (uPot p r k A + uPot p r k B) * Fr.Mn A B) (TB p j k A B) := by
+  have hp5 := S.p5
+  have hkr := S.hkr
+  have hrp := S.hrp
+  have hkp := S.hkp
+  have h2mk := S.h2mk
+  have hmr := S.hmr
+  have hpp : 0 < p := (Fact.out : p.Prime).pos
+  by_cases hBk : B < k
+  · -- both below the singular block
+    have hw : uPot p r k A + uPot p r k B = 0 := by unfold uPot; split_ifs <;> omega
+    rw [hw, pow_zero, one_mul]
+    unfold TB; rw [if_pos hBk]
+    exact Mn_good0 hL hp5 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
+      (fun t ht => by
+        obtain ⟨h1, h2⟩ := Finset.mem_Ioc.1 ht
+        exact S.reg (by omega) (by omega) (by omega) (by omega))
+      (sub_ne_zero_of_lt hAB (by omega))
+  by_cases hAk : A < k
+  · by_cases hBp : B < p
+    · -- weight 1, singular index k
+      have hw : uPot p r k A + uPot p r k B = 1 := by unfold uPot; split_ifs <;> omega
+      rw [hw, pow_one]
+      unfold TB; rw [if_neg hBk, if_pos hAk, if_pos hBp]
+      have := Mn_goodP hL hp5 hAB {k} (by intro t ht; rw [Finset.mem_singleton.1 ht]; simp; omega)
+        (fun t ht => by have := Finset.mem_Ioc.1 (Finset.mem_sdiff.1 ht).1; omega)
+        (fun _ => -(4 * ((j : ℕ) : ZMod p)⁻¹))
+        (fun t ht => by
+          rw [Finset.mem_singleton.1 ht]
+          exact good_Delta_k hL S.hk S.hj0 S.hjp S.hk0 S.hkp)
+        (fun t ht => by
+          obtain ⟨h1, h2⟩ := Finset.mem_sdiff.1 ht
+          have h1' := Finset.mem_Ioc.1 h1
+          have h2' : t ≠ k := fun e => h2 (by simp [e])
+          exact S.reg (by omega) (by omega) h2' (by omega))
+        (sub_ne_zero_of_lt hAB (by omega))
+      simpa using this
+    · -- weight 2, singular indices k and p
+      have hw : uPot p r k A + uPot p r k B = 2 := by unfold uPot; split_ifs <;> omega
+      rw [hw]
+      unfold TB; rw [if_neg hBk, if_pos hAk, if_neg hBp]
+      have hkne : k ≠ p := by omega
+      have hsub : ({k, p} : Finset ℕ) ⊆ Ioc A B := by
+        intro t ht
+        rcases Finset.mem_insert.1 ht with e | e
+        · rw [e]; simp; omega
+        · rw [Finset.mem_singleton.1 e]; simp; omega
+      have h1 : ∀ t ∈ Ioc A B \ {k, p}, 1 ≤ t := fun t ht => by
+        have := Finset.mem_Ioc.1 (Finset.mem_sdiff.1 ht).1; omega
+      have hsing : ∀ t ∈ ({k, p} : Finset ℕ), Good p ((p : ℚ) * Fr.Delta t)
+          ((fun t => if t = k then -(4 * ((j : ℕ) : ZMod p)⁻¹) else (1 : ZMod p)) t) := by
+        intro t ht
+        rcases Finset.mem_insert.1 ht with e | e
+        · rw [e]; simp only [if_true]
+          exact good_Delta_k hL S.hk S.hj0 S.hjp S.hk0 S.hkp
+        · rw [Finset.mem_singleton.1 e]; simp only [if_neg hkne.symm]
+          exact good_Delta_p hL hp5
+      have hr : ∀ t ∈ Ioc A B \ {k, p}, Reg p t := fun t ht => by
+        obtain ⟨h1, h2⟩ := Finset.mem_sdiff.1 ht
+        have h1' := Finset.mem_Ioc.1 h1
+        have h2k : t ≠ k := fun e => h2 (by simp [e])
+        have h2p : t ≠ p := fun e => h2 (by simp [e])
+        exact S.reg (by omega) (by omega) h2k h2p
+      have hsum : ∑ t ∈ ({k, p} : Finset ℕ),
+          (fun t => if t = k then -(4 * ((j : ℕ) : ZMod p)⁻¹) else (1 : ZMod p)) t =
+          -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 := by
+        rw [Finset.sum_pair hkne]; simp [hkne.symm]
+      by_cases hBA : B - A = p
+      · rw [if_pos hBA]
+        have := Mn_goodPP hL hp5 hAB hBA {k, p} hsub h1 _ hsing hr
+        rw [hsum] at this
+        exact this
+      · rw [if_neg hBA]
+        have := Mn_goodP hL hp5 hAB {k, p} hsub h1 _ hsing hr
+          (sub_ne_zero_of_ne hAB (by omega) hBA)
+        exact ((good_pow_mul_zero this (n := 1) le_rfl).congr' (by ring))
+  · -- A ≥ k: the entry vanishes mod p at its weight
+    have hw2 : 2 ≤ uPot p r k A + uPot p r k B := by unfold uPot; split_ifs <;> omega
+    unfold TB; rw [if_neg hBk, if_neg hAk]
+    by_cases hBp : B < p
+    · have := Mn_good0 hL hp5 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
+        (fun t ht => by
+          obtain ⟨h1, h2⟩ := Finset.mem_Ioc.1 ht
+          exact S.reg (by omega) (by omega) (by omega) (by omega))
+        (sub_ne_zero_of_lt hAB (by omega))
+      exact good_pow_mul_zero this (by omega)
+    · by_cases hAp : A < p
+      · have hBA : B - A ≠ p := by omega
+        have := Mn_goodP hL hp5 hAB {p} (by intro t ht; rw [Finset.mem_singleton.1 ht]; simp; omega)
+          (fun t ht => by have := Finset.mem_Ioc.1 (Finset.mem_sdiff.1 ht).1; omega)
+          (fun _ => (1 : ZMod p))
+          (fun t ht => by rw [Finset.mem_singleton.1 ht]; exact good_Delta_p hL hp5)
+          (fun t ht => by
+            obtain ⟨h1, h2⟩ := Finset.mem_sdiff.1 ht
+            have h1' := Finset.mem_Ioc.1 h1
+            have h2p : t ≠ p := fun e => h2 (by simp [e])
+            exact S.reg (by omega) (by omega) (by omega) h2p)
+          (sub_ne_zero_of_ne hAB (by omega) hBA)
+        obtain ⟨w', hw'⟩ : ∃ w', uPot p r k A + uPot p r k B = w' + 1 :=
+          ⟨uPot p r k A + uPot p r k B - 1, by omega⟩
+        rw [hw', pow_succ]
+        exact ((good_pow_mul_zero this (n := w') (by omega)).congr' (by ring))
+      · have := Mn_good0 hL hp5 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
+          (fun t ht => by
+            obtain ⟨h1, h2⟩ := Finset.mem_Ioc.1 ht
+            exact S.reg (by omega) (by omega) (by omega) (by omega))
+          (sub_ne_zero_of_lt hAB (by omega))
+        exact good_pow_mul_zero this (by omega)
+
+end TableThm
+
 end TableB
 
 end CatalanCore.Arith.Hybrid
