@@ -42,7 +42,7 @@ lemma DhybD_pos (δ : ℕ → ℕ) : 0 < DhybD I r m δ := by
   exact Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
 
 /-- Integrality of the deficit denominator. -/
-theorem DhybD_integral (hδ : DefHyp I r m δ) (i : ℕ) :
+theorem DhybD_integral [I.DiagOK r m] (hδ : DefHyp I r m δ) (i : ℕ) :
     ∃ z : ℤ, (DhybD I r m δ : ℚ) * (Fr.fullPoly r m).coeff i = z := by
   apply int_of_forall_locRing
   intro p hp
@@ -84,7 +84,7 @@ lemma log_DhybD (hδ : DefHyp I r m δ) :
     positivity
 
 /-- The trivial deficit family. -/
-lemma defHyp_zero : DefHyp I r m (fun _ => 0) := by
+lemma defHyp_zero [I.DiagOK r m] : DefHyp I r m (fun _ => 0) := by
   intro p hp _
   refine ⟨Nat.zero_le _, fun [Fact p.Prime] => ?_⟩
   simpa using fullPoly_gle I p r m
@@ -109,7 +109,7 @@ def LemmaEHyp (clean : ℕ → Prop) : Prop :=
   ∀ p : ℕ, p.Prime → p < Bnd I r m → clean p → m ≤ tropExp I r m p ∧
     ∀ [Fact p.Prime], GLE p (tropExp I r m p - m) (Fr.fullPoly r m)
 
-lemma defHyp_clean {clean : ℕ → Prop} (hE : LemmaEHyp I r m clean) :
+lemma defHyp_clean [I.DiagOK r m] {clean : ℕ → Prop} (hE : LemmaEHyp I r m clean) :
     DefHyp I r m (cleanDef m clean) := by
   intro p hp hb
   by_cases hc : clean p

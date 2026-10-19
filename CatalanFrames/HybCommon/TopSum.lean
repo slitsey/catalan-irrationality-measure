@@ -150,7 +150,7 @@ theorem HybParams.topC_sum {I : HybInst Fr} (P : HybParams I) {ε : ℝ} (hε : 
 
 /-- **Bordering step**: a content bound for a simultaneous member-1/member-2 deficit family gives
 `Mem2Content` (the border cost is `O(r log r)`). -/
-theorem mem2Content_of_both_G (I : HybInst Fr) {Λ0 Λ : ℝ} (hΛ : Λ0 ≤ Λ)
+theorem mem2Content_of_both_G (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ0 Λ : ℝ} (hΛ : Λ0 ≤ Λ)
     (hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop,
       ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
         (topC I r (r / 8) p : ℝ) * Real.log p ≤ ε * (r : ℝ) ^ 2)

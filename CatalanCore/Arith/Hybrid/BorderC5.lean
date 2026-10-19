@@ -19,7 +19,7 @@ variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup o p r m k)
 
 include S in
 /-- Bordered twin of `gleAt_C5_lam`. -/
-theorem gleAt_C5_lamTop {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr o) :
+theorem gleAt_C5_lamTop {Fr : Frame} (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) :
     GLE p (∑ a, wC p r k (Frame.hybRow r m a) + ∑ b, wC p r k (Frame.hybCol r m b) -
       (p + k - r - m) + topC I r m p) ((afterTop r m).fullPolyG Fr) :=
   (gleAt_C5_lam_wit S hL).border I
@@ -28,7 +28,7 @@ end GleTop
 
 open Classical in
 /-- **Theorem C5 for the bordered member**: twin of `defHypT_C5`. -/
-theorem defHypTop_C5 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypTop_C5 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup o p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup o p r m k →

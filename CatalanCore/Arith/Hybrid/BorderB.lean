@@ -22,7 +22,7 @@ section
 variable {p : ℕ} [Fact p.Prime] {r m j k : ℕ}
 
 /-- **Bordered Theorem B at a prime** (member 2, cost `topC`), from the rank witness. -/
-theorem gleAt_Btop_lam {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o)
+theorem gleAt_Btop_lam {Fr : Frame} (I : HybInst Fr) [I.DiagOK r m] {o : ℕ} (hL : LamData Fr o)
     (S : BSetup o p r m j k) (hpm : p < r + m) :
     GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
       (m - (p - r)) + topC I r m p) ((afterTop r m).fullPolyG Fr) :=
@@ -32,7 +32,7 @@ end
 
 open Classical in
 /-- **Bordered Theorem B as a `DefHypTop` family** (twin of `defHypT_B`, same hypotheses). -/
-theorem defHypTop_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypTop_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
     (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup o p r m j k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)

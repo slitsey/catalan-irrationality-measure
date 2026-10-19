@@ -33,7 +33,7 @@ open Classical in
 `p ≡ 1 (mod 4)`, `L_p = (7p+1)/4 - r ∈ [m, 2m)`, `r + 2m ≤ 2p` (where `CSetup7` holds); `T p` is any
 exponent bound dominating both `tropExp` and the dual value of the D2 potentials.  The deficit is
 `δ p = L_p - m` on `W`, `0` elsewhere. -/
-theorem defHypT_C7 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypT_C7 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup7 o p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup7 o p r m k →

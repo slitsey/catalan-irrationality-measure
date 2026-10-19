@@ -17,7 +17,7 @@ namespace CatalanCore.Arith.Hybrid
 
 open Classical in
 /-- **Theorem C7 for the bordered member**: twin of `defHypT_C7` (same hypotheses). -/
-theorem defHypTop_C7 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypTop_C7 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup7 o p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup7 o p r m k →

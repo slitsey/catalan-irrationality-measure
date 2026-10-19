@@ -110,31 +110,32 @@ theorem Mem2Content.toA {Λ : ℝ} (h : Mem2Content Fr Λ) : Mem2ContentA Fr (ad
     exact ⟨N₀, fun r m ⟨h8, _⟩ hr => H r h8 hr⟩
 
 open Classical in
-/-- The denominators of the pair family: member 1 uses the deficit denominator when its
+/-- The denominators of the pair family, for an instance family `I r m`: member 1 uses the deficit denominator when its
 hypothesis holds (always for large `r`), else the plain `Dhyb`. -/
-noncomputable def pairDdenA (I : HybInst Fr) (T δ : ℕ → ℕ → ℕ → ℕ) (D2 : ℕ → ℕ → ℕ) :
+noncomputable def pairDdenF (I : ℕ → ℕ → HybInst Fr) (T δ : ℕ → ℕ → ℕ → ℕ) (D2 : ℕ → ℕ → ℕ) :
     (ℕ × ℕ) × Bool → ℕ
-  | ((r, m), false) => if DefHypT I r m (T r m) (δ r m) then DhybT I r m (T r m) (δ r m)
-      else Dhyb I r m
+  | ((r, m), false) => if DefHypT (I r m) r m (T r m) (δ r m) then DhybT (I r m) r m (T r m) (δ r m)
+      else Dhyb (I r m) r m
   | ((r, m), true) => D2 r m
 
 /-- **Content of the pair family for an admissible relation** (G3): member-1 deficit families
 `(T r m, δ r m)` on `A` plus the second-member content. -/
-theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ)
+theorem hasContent_hybPairF {A : ℕ → ℕ → Prop} (I : ℕ → ℕ → HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ)
     (T δ : ℕ → ℕ → ℕ → ℕ)
-    (hdef : ∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m))
+    (hdef : ∀ᶠ r in atTop, ∀ m, A r m → DefHypT (I r m) r m (T r m) (δ r m))
     (hlog : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
-      Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
-    (M2 : Mem2ContentA Fr A Λ) : HasContent (hybPairFamA Fr A) Λ := by
+      Real.log (DhybT (I r m) r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (M2 : Mem2ContentA Fr A Λ)
+    [∀ r m, (I r m).DiagOK r m] : HasContent (hybPairFamA Fr A) Λ := by
   classical
   obtain ⟨D2, hD2pos, hD2int, hD2log⟩ := M2
-  refine ⟨pairDdenA I T δ D2, ?_, ?_, ?_⟩
+  refine ⟨pairDdenF I T δ D2, ?_, ?_, ?_⟩
   · rintro ⟨⟨r, m⟩, b⟩
     cases b
-    · simp only [pairDdenA]
+    · simp only [pairDdenF]
       split_ifs
       · exact Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
-      · exact Dhyb_pos I r m
+      · exact Dhyb_pos (I r m) r m
     · exact hD2pos r m
   · rintro ⟨⟨r, m⟩, b⟩ hA p q hq
     cases b
@@ -142,13 +143,13 @@ theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) {Λ : �
       have hQ : (hybPairFamA Fr A).evalQ ((r, m), false) ((p : ℚ) / q) =
           (Fr.fullPoly r m).eval ((p : ℚ) / q) := by
         simp [PolyFamily.evalQ, hybPairFamA_Q_false]
-      have hint : ∀ i, ∃ z : ℤ, (pairDdenA I T δ D2 ((r, m), false) : ℚ) *
+      have hint : ∀ i, ∃ z : ℤ, (pairDdenF I T δ D2 ((r, m), false) : ℚ) *
           (Fr.fullPoly r m).coeff i = z := by
         intro i
-        simp only [pairDdenA]
+        simp only [pairDdenF]
         split_ifs with h
-        · exact DhybT_integral I r m h i
-        · exact Dhyb_integral I r m i
+        · exact DhybT_integral (I r m) r m h i
+        · exact Dhyb_integral (I r m) r m i
       rw [hdeg, hQ]
       exact int_clear _ r (by simpa [det_full_after] using natDegree_after_le (Fr := Fr) r m)
         _ hint p q hq
@@ -166,9 +167,9 @@ theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) {Λ : �
     rintro ⟨⟨r, m⟩, b⟩ hA hr
     cases b
     · have hr' : max (max R1 R2) R3 + 1 ≤ r := hr
-      have hd : DefHypT I r m (T r m) (δ r m) := hR1 r (by omega) m hA
-      have e : pairDdenA I T δ D2 ((r, m), false) = DhybT I r m (T r m) (δ r m) := by
-        simp only [pairDdenA]; exact if_pos hd
+      have hd : DefHypT (I r m) r m (T r m) (δ r m) := hR1 r (by omega) m hA
+      have e : pairDdenF I T δ D2 ((r, m), false) = DhybT (I r m) r m (T r m) (δ r m) := by
+        simp only [pairDdenF]; exact if_pos hd
       rw [e]
       exact hR2 r (by omega) m hA
     · have hr' : max (max R1 R2) R3 + 1 ≤ r + 1 := hr
@@ -178,24 +179,37 @@ theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) {Λ : �
       have : (0 : ℝ) ≤ Λ + ε := by linarith
       nlinarith [sq_nonneg (r : ℝ), (Nat.cast_nonneg r : (0 : ℝ) ≤ r)]
 
+/-- Fixed-instance form of `pairDdenF`. -/
+noncomputable abbrev pairDdenA (I : HybInst Fr) (T δ : ℕ → ℕ → ℕ → ℕ) (D2 : ℕ → ℕ → ℕ) :
+    (ℕ × ℕ) × Bool → ℕ := pairDdenF (fun _ _ => I) T δ D2
+
+/-- Fixed-instance form of `hasContent_hybPairF`. -/
+theorem hasContent_hybPairA {A : ℕ → ℕ → Prop} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ : ℝ}
+    (hΛ0 : 0 ≤ Λ) (T δ : ℕ → ℕ → ℕ → ℕ)
+    (hdef : ∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m))
+    (hlog : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
+      Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (M2 : Mem2ContentA Fr A Λ) : HasContent (hybPairFamA Fr A) Λ :=
+  hasContent_hybPairF (fun _ _ => I) hΛ0 T δ hdef hlog M2
+
 /-- An `ε`-independent deficit family from "for each `ε`, eventually some deficit family", on an
 admissible relation `A` (G3). -/
-theorem contentFamA_of_eps (I : HybInst Fr) (Λ : ℝ) (A : ℕ → ℕ → Prop)
-    (h : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypT I r m T δ ∧
-      Real.log (DhybT I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
-    ∃ T δ : ℕ → ℕ → ℕ → ℕ, (∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m)) ∧
+theorem contentFamF_of_eps (I : ℕ → ℕ → HybInst Fr) (Λ : ℝ) (A : ℕ → ℕ → Prop)
+    (h : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypT (I r m) r m T δ ∧
+      Real.log (DhybT (I r m) r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    ∃ T δ : ℕ → ℕ → ℕ → ℕ, (∀ᶠ r in atTop, ∀ m, A r m → DefHypT (I r m) r m (T r m) (δ r m)) ∧
       ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
-        Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+        Real.log (DhybT (I r m) r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
   classical
   haveI : Nonempty (ℕ → (ℕ → ℕ) × (ℕ → ℕ)) := ⟨fun _ => (fun _ => 0, fun _ => 0)⟩
   obtain ⟨f, hf⟩ := exists_diag (β := ℕ → (ℕ → ℕ) × (ℕ → ℕ))
-    (fun ε r b => ∀ m, A r m → DefHypT I r m (b m).1 (b m).2 ∧
-      Real.log (DhybT I r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (fun ε r b => ∀ m, A r m → DefHypT (I r m) r m (b m).1 (b m).2 ∧
+      Real.log (DhybT (I r m) r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
     (fun ε ε' r b hε hb m hA =>
       ⟨(hb m hA).1, (hb m hA).2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
     (fun ε hε => (h ε hε).mono fun r hr => by
-      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypT I r m b.1 b.2 ∧
-          Real.log (DhybT I r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypT (I r m) r m b.1 b.2 ∧
+          Real.log (DhybT (I r m) r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
         intro m
         by_cases hA : A r m
         · obtain ⟨T, δ, h1, h2⟩ := hr m hA
@@ -206,6 +220,15 @@ theorem contentFamA_of_eps (I : HybInst Fr) (Λ : ℝ) (A : ℕ → ℕ → Prop
   refine ⟨fun r m => (f r m).1, fun r m => (f r m).2, ?_,
     fun ε hε => (hf ε hε).mono fun r hr m hA => (hr m hA).2⟩
   exact (hf 1 one_pos).mono fun r hr m hA => (hr m hA).1
+
+/-- Fixed-instance form of `contentFamF_of_eps`. -/
+theorem contentFamA_of_eps (I : HybInst Fr) (Λ : ℝ) (A : ℕ → ℕ → Prop)
+    (h : ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypT I r m T δ ∧
+      Real.log (DhybT I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    ∃ T δ : ℕ → ℕ → ℕ → ℕ, (∀ᶠ r in atTop, ∀ m, A r m → DefHypT I r m (T r m) (δ r m)) ∧
+      ∀ ε > 0, ∀ᶠ r in atTop, ∀ m, A r m →
+        Real.log (DhybT I r m (T r m) (δ r m)) ≤ (Λ + ε) * (r : ℝ) ^ 2 :=
+  contentFamF_of_eps (fun _ _ => I) Λ A h
 
 /-- The slope-`1/8` form (`m = r / 8`) of `contentFamA_of_eps`. -/
 theorem contentFam_of_eps (I : HybInst Fr) (Λ : ℝ)
@@ -221,7 +244,7 @@ theorem contentFam_of_eps (I : HybInst Fr) (Λ : ℝ)
     fun ε hε => (h2 ε hε).mono fun r hr => hr _ rfl⟩
 
 /-- The slope-`1/8` form of `hasContent_hybPairA`. -/
-theorem hasContent_hybPair (I : HybInst Fr) {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (T δ : ℕ → ℕ → ℕ)
+theorem hasContent_hybPair (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (T δ : ℕ → ℕ → ℕ)
     (hdef : ∀ᶠ r in atTop, DefHypT I r (r / 8) (T r) (δ r))
     (hlog : ∀ ε > 0, ∀ᶠ r in atTop,
       Real.log (DhybT I r (r / 8) (T r) (δ r)) ≤ (Λ + ε) * (r : ℝ) ^ 2)

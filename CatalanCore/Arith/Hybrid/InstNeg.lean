@@ -68,13 +68,19 @@ noncomputable def HybInst.neg (I : HybInst Fr₁) (hΔ : ∀ k, Fr₂.Delta k = 
       simp only [hΔ, Finset.sum_neg_distrib]; ring
     rw [e, mul_neg]
     exact (LocRing p).neg_mem this
-  diag_val := fun p _ E N a h1 h2 => by
-    have := I.diag_val p E N a h1 h2
+  dok := I.dok
+  diag_val := fun p _ E N a h1 h2 h3 => by
+    have := I.diag_val p E N a h1 h2 h3
     have e : ∑ k ∈ Finset.Icc 1 a, Fr₂.Dsq k = -∑ k ∈ Finset.Icc 1 a, Fr₁.Dsq k := by
       simp only [hD, Finset.sum_neg_distrib]
     rw [e, mul_neg]
     exact (LocRing p).neg_mem this
   lev_large := I.lev_large
   lev_Ebd := I.lev_Ebd
+
+instance (I : HybInst Fr₁) (hΔ : ∀ k, Fr₂.Delta k = -Fr₁.Delta k)
+    (hD : ∀ k, Fr₂.Dsq k = -Fr₁.Dsq k) (hn : Fr₂.norm = Fr₁.norm)
+    (hM : ∀ a b, Fr₂.Mn a b = -Fr₁.Mn a b) (r m : ℕ) [h : I.DiagOK r m] :
+    (I.neg hΔ hD hn hM).DiagOK r m := ⟨h.ok⟩
 
 end CatalanCore.Arith.Hybrid

@@ -32,7 +32,7 @@ end Gle3
 
 open Classical in
 /-- **GK (class 3) as a `DefHypT` family.** -/
-theorem defHypT_GK3 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypT_GK3 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, GKS3 o p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → W p → 2 * r + m ≤ T p) :

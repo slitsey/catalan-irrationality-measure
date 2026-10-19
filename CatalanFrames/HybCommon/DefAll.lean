@@ -231,7 +231,7 @@ lemma eNG_GK (h : LowCleanO o r (r / 8) p) : 2 * r + r / 8 ≤ eNG o r p := by
 
 /-- **E (both classes), B, C5, C7 and GK as a single `DefHypT` family, for any offset `o`.** -/
 theorem defHypT_allG (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3) {r : ℕ}
-    (hr : 16 ≤ r) : DefHypT I r (r / 8) (TfunG o I r) (defG o r) := by
+    [I.DiagOK r (r / 8)] (hr : 16 ≤ r) : DefHypT I r (r / 8) (TfunG o I r) (defG o r) := by
   refine defHypT_of_local I r (r / 8) (TfunG o I r) (defG o r) (fun p _ _ => le_max_left _ _)
     (fun p => LowCleanO o r (r / 8) p ∨ WC7G o r p ∨ WC5G o r p ∨ WBG r p ∨ cleanE3G o r p ∨
       cleanE1G o r p) ?_ ?_

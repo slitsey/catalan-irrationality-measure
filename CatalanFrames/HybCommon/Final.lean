@@ -20,7 +20,7 @@ namespace CatalanFrames.HybCommon
 
 variable {Fr : Frame}
 
-theorem both_eps_G (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3)
+theorem both_eps_G (I : HybInst Fr) [∀ r, I.DiagOK r (r / 8)] {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3)
     (hlogT : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
       Real.log (DhybT I r (r / 8) (TfunG o I r) δ) ≤
         (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
@@ -71,7 +71,7 @@ theorem both_eps_G (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 �
 
 /-- **All seven bordered deficits (E, B, C5, C7, GK)**: constant
 `Λ₁ = 24729491161/6665218560 - 1/448 - 1/576 - 1/352 = 3.7034204…`. -/
-theorem both_eps_G7 (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3)
+theorem both_eps_G7 (I : HybInst Fr) [∀ r, I.DiagOK r (r / 8)] {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3)
     (hlogT : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
       Real.log (DhybT I r (r / 8) (TfunG o I r) δ) ≤
         (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -

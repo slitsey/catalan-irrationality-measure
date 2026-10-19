@@ -60,19 +60,31 @@ structure HybInst (Fr : Frame) where
   cd : CatalanCore.Arith.ContentData Fr
   Ebd : ℕ → ℕ
   lev : ℕ → ℕ → ℕ
+  /-- positions whose diagonal entry is used by `Full r m` (`DiagOK`); `diag_val` is only
+  required there.  Default: all positions (λ, mirror, `ofSing`). -/
+  dok : ℕ → Prop := fun _ => True
   /-- off-diagonal: `1/(b-a) · ∑_{a<k≤b} Δ_k` has valuation `≥ -levels` -/
   off_val : ∀ (p : ℕ) [Fact p.Prime] (E N lo hi : ℕ), Ebd N < p ^ (E + 1) → N < p ^ (E + 1) →
     lo < hi → hi ≤ N →
     (p : ℚ) ^ (levels lev p E lo hi) *
       ((1 / ((hi : ℚ) - lo)) * ∑ k ∈ Ioc lo hi, Fr.Delta k) ∈ LocRing p
   /-- diagonal: `∑_{k≤a} D_k` has valuation `≥ -levels` -/
-  diag_val : ∀ (p : ℕ) [Fact p.Prime] (E N a : ℕ), Ebd N < p ^ (E + 1) → a ≤ N →
+  diag_val : ∀ (p : ℕ) [Fact p.Prime] (E N a : ℕ), Ebd N < p ^ (E + 1) → a ≤ N → dok a →
     (p : ℚ) ^ (levels lev p E a a) * ∑ k ∈ Icc 1 a, Fr.Dsq k ∈ LocRing p
   /-- levels vanish above `L N` for good primes -/
   lev_large : ∀ (p e N a : ℕ), p.Prime → p ∉ cd.bad → 1 ≤ e → cd.L * N < p ^ e → a ≤ N →
     lev (p ^ e) a = 0
   /-- levels vanish above `Ebd N + N` for every modulus -/
   lev_Ebd : ∀ (q N a : ℕ), Ebd N + N < q → a ≤ N → lev q a = 0
+
+/-- The diagonal positions used by `Full r m` (`c < r`) and by the border (`r + 2 m`) are
+covered by `I.dok`.  A class, so that it is threaded automatically through generic sections. -/
+class HybInst.DiagOK {Fr : Frame} (I : HybInst Fr) (r m : ℕ) : Prop where
+  ok : ∀ c, c < r ∨ c = r + 2 * m → I.dok c
+
+/-- instances with all diagonal positions admissible -/
+lemma HybInst.DiagOK.of_all {Fr : Frame} {I : HybInst Fr} (h : ∀ c, I.dok c) (r m : ℕ) :
+    I.DiagOK r m := ⟨fun c _ => h c⟩
 
 /-! ### Entry bounds -/
 
@@ -84,7 +96,7 @@ variable {Fr : Frame} (I : HybInst Fr) (p : ℕ) [hp : Fact p.Prime] (c : ℕ)
 
 lemma entry_gle {E N : ℕ} (hc : (p : ℚ) ^ c * (1 / (I.cd.normN : ℚ)) ∈ LocRing p)
     (hE1 : I.Ebd N < p ^ (E + 1)) (hE2 : N < p ^ (E + 1)) {A B : ℕ} (hA : A ≤ N)
-    (hB : B ≤ N) :
+    (hB : B ≤ N) (hd : A = B → I.dok A) :
     (p : ℚ) ^ (c + levels I.lev p E A B) * Fr.Mn A B ∈ LocRing p := by
   rcases lt_trichotomy A B with h | h | h
   · have hMn : Fr.Mn A B = (1 / (I.cd.normN : ℚ)) *
@@ -106,7 +118,7 @@ lemma entry_gle {E N : ℕ} (hc : (p : ℚ) ^ c * (1 / (I.cd.normN : ℚ)) ∈ L
           ∑ k ∈ Icc 1 A, Fr.Dsq k) := by
       rw [hMn]; ring
     rw [e]
-    exact (LocRing p).mul_mem ((LocRing p).neg_mem hc) (I.diag_val p E N A hE1 hA)
+    exact (LocRing p).mul_mem ((LocRing p).neg_mem hc) (I.diag_val p E N A hE1 hA (hd rfl))
   · have hMn : Fr.Mn A B = Fr.Mn B A := by
       unfold Frame.Mn
       rw [if_neg (by omega), if_neg (by omega), max_comm, min_comm]
@@ -171,8 +183,13 @@ lemma hybCol_le (r m : ℕ) (a : Fin r ⊕ Fin m) : Frame.hybCol r m a ≤ r + 2
   · simp [Frame.hybCol]; have := c.2; omega
   · simp [Frame.hybCol]; try (have := i.2; omega)
 
+lemma hybDiag_lt {r m : ℕ} {a b : Fin r ⊕ Fin m} (h : Frame.hybRow r m a = Frame.hybCol r m b) :
+    Frame.hybRow r m a < r ∨ Frame.hybRow r m a = r + 2 * m := by
+  rcases a with c | i <;> rcases b with c' | j <;> simp [Frame.hybRow, Frame.hybCol] at h ⊢ <;>
+    first | exact Or.inl c.2 | omega
+
 /-- **The hybrid tropical bound.**  Every coefficient of `det Full(X)` is `p^{tropExp}`-integral. -/
-theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) :
+theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) [hd : I.DiagOK r m] :
     GLE p (tropExp I r m p) (Fr.fullPoly r m) := by
   unfold Frame.fullPoly tropExp
   apply det_gle
@@ -182,6 +199,7 @@ theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) :
     rw [GLE.C_iff]
     exact entry_gle I p _ (cOf_mem I p) (Elev_lt I p (Fact.out : p.Prime).two_le r m).1
       (Elev_lt I p (Fact.out : p.Prime).two_le r m).2 (hybRow_le r m a) (hybCol_le r m b)
+      (fun h => hd.ok _ (hybDiag_lt h))
   have hX : GLE p (hybW I r m p a b) (X : ℚ[X]) := GLE.X.mono (Nat.zero_le _)
   rcases a with c | i <;> rcases b with c' | j
   · by_cases h : c = c'
@@ -246,7 +264,7 @@ lemma Dhyb_pos (r m : ℕ) : 0 < Dhyb I r m := by
   exact Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
 
 /-- **Integrality.**  `Dhyb · det Full(X)` has integer coefficients. -/
-theorem Dhyb_integral (r m : ℕ) (i : ℕ) :
+theorem Dhyb_integral (r m : ℕ) [I.DiagOK r m] (i : ℕ) :
     ∃ z : ℤ, (Dhyb I r m : ℚ) * (Fr.fullPoly r m).coeff i = z := by
   apply int_of_forall_locRing
   intro p hp

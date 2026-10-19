@@ -45,7 +45,7 @@ variable {Fr : Frame} (I : HybInst Fr) (r m : ℕ) (p : ℕ) [Fact p.Prime]
 
 /-- **Bordered `tcore_vec`** for `det Full(afterTop r m)`: the `tcore_vec` data of the inner block
 `Frame.fullPoly r m` (with integral partners) gives `GLE p (2r + 2 topW)`. -/
-theorem gle_fullTop_of_vec
+theorem gle_fullTop_of_vec [I.DiagOK r m]
     (hI : ∀ i j, Int1 p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ i j))
     (hprim : gn p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁).det = 1)
     (α : Matrix (Fin m) (Fin r) ℚ[X]) (β : Matrix (Fin r) (Fin m) ℚ[X])
@@ -100,7 +100,7 @@ namespace GK1
 variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- **GK (class 1) for `afterTop`.** -/
-theorem gleTop_GK1 (I : HybInst Fr) (hL : LamData Fr o) (S : GKS1 o p r m k) :
+theorem gleTop_GK1 (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (S : GKS1 o p r m k) :
     GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) :=
   gle_fullTop_of_vec I r m p (Atil_int hL S) (Atil_prim hL S) (alphaM Fr p r m) (betaM Fr p r m)
     (fun _ c => avec_int S.p13 S.h1009 _ c) (fun c _ => avec_int S.p13 S.h1009 _ c)
@@ -113,7 +113,7 @@ section GK3
 variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- **GK (class 3) for `afterTop`.** -/
-theorem gleTop_GK3 (I : HybInst Fr) (hL : LamData Fr o) (S : GKS3 o p r m k) :
+theorem gleTop_GK3 (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (S : GKS3 o p r m k) :
     GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) :=
   gle_fullTop_of_vec I r m p (Atil_int hL S) (Atil_prim hL S) (alphaM Fr p r m) (betaM Fr p r m)
     (fun _ c => avec_int S.p13 S.h139 _ c) (fun c _ => avec_int S.p13 S.h139 _ c)
@@ -125,7 +125,7 @@ open Classical in
 /-- **GK as a `DefHypTop` family, generic in the offset `o`**: deficit `m` on `LowCleanO`, against
 any `T ≥ 2r + m` (the border costs `2 topW + 1`, absorbed by `topC`; one unit of slack). -/
 theorem defHypTop_GK_o {Fr : Frame} (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o = 3)
-    (hL : LamData Fr o) (r m : ℕ) (hm : 0 < m)
+    (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (hm : 0 < m)
     (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → LowCleanO o r m p → 2 * r + m ≤ T p) :
     DefHypTop I r m T (fun p => if LowCleanO o r m p then m else 0) := by
@@ -144,7 +144,7 @@ theorem defHypTop_GK_o {Fr : Frame} (I : HybInst Fr) {o : ℕ} (ho : o = 1 ∨ o
 open Classical in
 /-- **GK as a `DefHypTop` family** (λ): deficit `m` on `LowClean`, against any `T ≥ 2r + m`
 (bordered twin of `defHypT_GK`). -/
-theorem defHypTop_GK {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr 1) (r m : ℕ) (hm : 0 < m)
+theorem defHypTop_GK {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr 1) (r m : ℕ) [I.DiagOK r m] (hm : 0 < m)
     (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → LowClean r m p → 2 * r + m ≤ T p) :
     DefHypTop I r m T (fun p => if LowClean r m p then m else 0) := by

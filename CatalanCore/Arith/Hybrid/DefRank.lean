@@ -35,7 +35,7 @@ theorem defAt_of_rank (p : ℕ) [Fact p.Prime] (u v : Fin r ⊕ Fin m → ℕ)
   exact this.mono (by omega)
 
 /-- Assemble a `DefHyp` family from local conclusions on a set `S` of primes. -/
-theorem defHyp_of_local (δ : ℕ → ℕ) (S : ℕ → Prop) (hδ : ∀ p, ¬ S p → δ p = 0)
+theorem defHyp_of_local [I.DiagOK r m] (δ : ℕ → ℕ) (S : ℕ → Prop) (hδ : ∀ p, ¬ S p → δ p = 0)
     (hS : ∀ p : ℕ, p.Prime → p < Bnd I r m → S p →
       δ p ≤ tropExp I r m p ∧ ∀ [Fact p.Prime], GLE p (tropExp I r m p - δ p) (Fr.fullPoly r m)) :
     DefHyp I r m δ := by
@@ -64,7 +64,7 @@ noncomputable def DhybT (T δ : ℕ → ℕ) : ℕ :=
   ∏ p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime, p ^ (T p - δ p)
 
 /-- Integrality of `DhybT T δ · det Full(X)`. -/
-theorem DhybT_integral {T δ : ℕ → ℕ} (hδ : DefHypT I r m T δ) (i : ℕ) :
+theorem DhybT_integral [I.DiagOK r m] {T δ : ℕ → ℕ} (hδ : DefHypT I r m T δ) (i : ℕ) :
     ∃ z : ℤ, (DhybT I r m T δ : ℚ) * (Fr.fullPoly r m).coeff i = z := by
   apply int_of_forall_locRing
   intro p hp
@@ -109,7 +109,7 @@ lemma log_DhybT {T δ : ℕ → ℕ} (hδ : DefHypT I r m T δ) :
 lemma DefHyp.toT {δ : ℕ → ℕ} (h : DefHyp I r m δ) : DefHypT I r m (tropExp I r m) δ := h
 
 /-- Assemble a `DefHypT` family from local conclusions. -/
-theorem defHypT_of_local (T δ : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
+theorem defHypT_of_local [I.DiagOK r m] (T δ : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (S : ℕ → Prop) (hδ : ∀ p, ¬ S p → δ p = 0)
     (hS : ∀ p : ℕ, p.Prime → p < Bnd I r m → S p →
       δ p ≤ T p ∧ ∀ [Fact p.Prime], GLE p (T p - δ p) (Fr.fullPoly r m)) :

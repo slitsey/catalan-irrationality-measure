@@ -50,21 +50,23 @@ lemma topW_ge {a : ℕ} (ha : a ≤ r + 2 * m) :
     (Finset.mem_range.2 (show a < r + 2 * m + 1 by omega))
   omega
 
-lemma gle_entry_top {a : ℕ} (ha : a ≤ r + 2 * m) :
+lemma gle_entry_top [hd : I.DiagOK r m] {a : ℕ} (ha : a ≤ r + 2 * m) :
     GLE p (topW I r m p) (C (Fr.Mn a (r + 2 * m))) := by
   have := entry_gle I p (cOf I p) (cOf_mem I p) (Elev_lt I p (Fact.out : p.Prime).two_le r m).1
     (Elev_lt I p (Fact.out : p.Prime).two_le r m).2 ha (le_refl (r + 2 * m))
+    (fun h => hd.ok _ (Or.inr h))
   exact (GLE.C_iff.2 this).mono (topW_ge I r m p ha)
 
-lemma gle_top_entry {a : ℕ} (ha : a ≤ r + 2 * m) :
+lemma gle_top_entry [hd : I.DiagOK r m] {a : ℕ} (ha : a ≤ r + 2 * m) :
     GLE p (topW I r m p) (C (Fr.Mn (r + 2 * m) a)) := by
   have := entry_gle I p (cOf I p) (cOf_mem I p) (Elev_lt I p (Fact.out : p.Prime).two_le r m).1
     (Elev_lt I p (Fact.out : p.Prime).two_le r m).2 (le_refl (r + 2 * m)) ha
+    (fun _ => hd.ok _ (Or.inr rfl))
   rw [levels_comm'] at this
   exact (GLE.C_iff.2 this).mono (topW_ge I r m p ha)
 
 /-- **Rank principle for the bordered determinant** (drop-in replacement of `gle_full_of_rank`). -/
-theorem gle_fullTop_of_rank' (u v : Fin r ⊕ Fin m → ℕ)
+theorem gle_fullTop_of_rank' [I.DiagOK r m] (u v : Fin r ⊕ Fin m → ℕ)
     (Bbar : Matrix (Fin r ⊕ Fin m) (Fin r ⊕ Fin m) (RatFunc (ZMod p)))
     (hB : ∀ a b, ∃ g : (LocRing p)[X],
       toQ p g = C ((p : ℚ) ^ (u a + v b)) * fullEntry Fr r m a b ∧ phiP p g = Bbar a b)
@@ -79,7 +81,7 @@ theorem gle_fullTop_of_rank' (u v : Fin r ⊕ Fin m → ℕ)
   omega
 
 /-- The tropical bound for the bordered determinant. -/
-theorem fullTop_gle' :
+theorem fullTop_gle' [hd : I.DiagOK r m] :
     GLE p (tropExp I r m p + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) := by
   rw [← det_topMat]
   have h := det_gle_border p (topMat Fr r m) (hybW I r m p)
@@ -90,6 +92,7 @@ theorem fullTop_gle' :
         rw [GLE.C_iff]
         exact entry_gle I p _ (cOf_mem I p) (Elev_lt I p (Fact.out : p.Prime).two_le r m).1
           (Elev_lt I p (Fact.out : p.Prime).two_le r m).2 (hybRow_le r m a) (hybCol_le r m b)
+          (fun h => hd.ok _ (hybDiag_lt h))
       have hX : GLE p (hybW I r m p a b) (X : ℚ[X]) := GLE.X.mono (Nat.zero_le _)
       rcases a with c | i <;> rcases b with c' | j
       · by_cases h : c = c'
@@ -106,7 +109,7 @@ theorem fullTop_gle' :
   exact h
 
 /-- The tropical bound for the bordered determinant (with the rank `+1`). -/
-theorem fullTop_gle :
+theorem fullTop_gle [I.DiagOK r m] :
     GLE p (tropExp I r m p + topC I r m p) ((afterTop r m).fullPolyG Fr) :=
   (fullTop_gle' I r m p).mono (by unfold topC; omega)
 
@@ -163,7 +166,7 @@ lemma DefHypTop.add {T δ₁ δ₂ : ℕ → ℕ} (h1 : DefHypTop I r m T δ₁)
   · simp only [h, add_zero]; exact h1 p hp hb
 
 /-- Assemble from local conclusions on a set `S` of primes. -/
-theorem defHypTop_of_local (T δ : ℕ → ℕ)
+theorem defHypTop_of_local [I.DiagOK r m] (T δ : ℕ → ℕ)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (S : ℕ → Prop) (hδ : ∀ p, ¬ S p → δ p = 0)
     (hS : ∀ p : ℕ, p.Prime → p < Bnd I r m → S p → ∀ [Fact p.Prime],
@@ -185,6 +188,7 @@ namespace CatalanCore.Arith.Hybrid
 bordered statement for `det Full(afterTop r m)` at the cost `topC`.  This is the single place where
 member 2 inherits the rank-route deficits. -/
 theorem HasRankWit.border {Fr : Frame} (I : HybInst Fr) {p : ℕ} [Fact p.Prime] {r m : ℕ}
+    [I.DiagOK r m]
     {u v : Fin r ⊕ Fin m → ℕ} {k : ℕ} (h : HasRankWit Fr p r m u v k) :
     GLE p (∑ a, u a + ∑ b, v b - k + topC I r m p) ((afterTop r m).fullPolyG Fr) := by
   obtain ⟨Bbar, hB, hrk⟩ := h
@@ -197,7 +201,7 @@ namespace CatalanCore.Arith.Hybrid
 /-- **Generic bordered deficit family from rank witnesses**: if at every prime of a set `W` there are
 scalings `(u, v)` with total `≤ T p` and a rank witness of corank `δ p`, then `δ` is a `DefHypTop`
 family (`δ = 0` off `W`).  The one skeleton behind all rank-route bordered families. -/
-theorem defHypTop_of_wit {Fr : Frame} (I : HybInst Fr) (r m : ℕ) (T δ : ℕ → ℕ)
+theorem defHypTop_of_wit {Fr : Frame} (I : HybInst Fr) (r m : ℕ) [I.DiagOK r m] (T δ : ℕ → ℕ)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p) (W : ℕ → Prop)
     (hδ : ∀ p, ¬ W p → δ p = 0)
     (hW : ∀ p : ℕ, p.Prime → W p → ∀ [Fact p.Prime], ∃ u v : Fin r ⊕ Fin m → ℕ,

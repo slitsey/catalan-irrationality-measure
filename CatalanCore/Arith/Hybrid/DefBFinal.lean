@@ -212,7 +212,7 @@ open Classical in
 an exceptional set on which `BSetup` fails); `T p` is any exponent bound that dominates both
 `tropExp` and the dual value `∑u + ∑v` of the D4 potentials at the prime `p` (with its singular
 block start `k`).  The deficit is `δ p = r + m - p` on `W`, `0` elsewhere. -/
-theorem defHypT_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypT_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) [I.DiagOK r m] (T : ℕ → ℕ)
     (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
     (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup o p r m j k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)

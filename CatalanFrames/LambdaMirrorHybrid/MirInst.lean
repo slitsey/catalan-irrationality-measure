@@ -26,10 +26,15 @@ lemma mirPhi_le (k N : ℕ) (h : k ≤ N) : mirCD.Phi k ≤ 4 * N * N := by
 noncomputable def mirInst : HybInst mirFrame :=
   HybInst.ofSing mirCD (fun N => 4 * N * N) mirPhi_le
 
+instance mirInst_diagOK (r m : ℕ) : mirInst.DiagOK r m :=
+  inferInstanceAs ((HybInst.ofSing mirCD (fun N => 4 * N * N) mirPhi_le).DiagOK r m)
+
 /-- The mirror hybrid instance for the λ-like sign. -/
 noncomputable def mirNInst : HybInst mirNFrame :=
   mirInst.neg (fun k => by rw [mir_Delta_neg, neg_neg]) (fun k => by rw [mir_Dsq_neg, neg_neg]) rfl
     (fun a b => by rw [mir_Mn_neg, neg_neg])
+
+instance mirNInst_diagOK (r m : ℕ) : mirNInst.DiagOK r m := ⟨fun _ _ => trivial⟩
 
 lemma mirNInst_lev (q c : ℕ) : mirNInst.lev q c = blk mirCD.Phi q c := rfl
 

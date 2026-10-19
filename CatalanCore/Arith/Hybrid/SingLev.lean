@@ -195,9 +195,11 @@ noncomputable def HybInst.ofSing : HybInst Fr where
   Ebd := Ebd
   lev := blk cd.Phi
   off_val := fun p _ E N lo hi h1 h2 h3 h4 => sing_off_val cd Ebd hle p E N lo hi h1 h2 h3 h4
-  diag_val := fun p _ E N a h1 h2 => sing_diag_val cd Ebd hle p E N a h1 h2
+  diag_val := fun p _ E N a h1 h2 _ => sing_diag_val cd Ebd hle p E N a h1 h2
   lev_large := fun p e N a hp hb he hbig ha => sing_lev_large cd p e N a hp hb he hbig ha
   lev_Ebd := fun q N a hbig ha => sing_lev_Ebd cd Ebd hle q N a hbig ha
+
+instance (r m : ℕ) : (HybInst.ofSing cd Ebd hle).DiagOK r m := ⟨fun _ _ => trivial⟩
 
 /--  iff the first singular index has been reached. -/
 theorem blk_pos_iff (hatt : ∀ q, IsPrimePow q → (∀ p ∈ cd.bad, ¬ p ∣ q) →

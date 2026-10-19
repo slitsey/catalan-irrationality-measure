@@ -32,7 +32,7 @@ theorem DhybTop_pos (T δ : ℕ → ℕ) : 0 < DhybTop I r m T δ :=
   Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
 
 /-- Integrality of `DhybTop · det Full(afterTop r m)`. -/
-theorem DhybTop_integral {T δ : ℕ → ℕ} (hδ : DefHypTop I r m T δ) (i : ℕ) :
+theorem DhybTop_integral [I.DiagOK r m] {T δ : ℕ → ℕ} (hδ : DefHypTop I r m T δ) (i : ℕ) :
     ∃ z : ℤ, (DhybTop I r m T δ : ℚ) * ((afterTop r m).fullPolyG Fr).coeff i = z := by
   apply int_of_forall_locRing
   intro p hp
@@ -78,19 +78,19 @@ theorem log_DhybTop {T δ : ℕ → ℕ} (h : DefHypT I r m T δ) :
 
 open Classical in
 /-- **`Mem2ContentA` from bordered deficit families** (G3): any admissible relation `A`. -/
-theorem mem2ContentA_of_top (I : HybInst Fr) {Λ : ℝ} (A : ℕ → ℕ → Prop)
-    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypTop I r m T δ ∧
-      Real.log (DhybTop I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+theorem mem2ContentF_of_top (I : ℕ → ℕ → HybInst Fr) {Λ : ℝ} (A : ℕ → ℕ → Prop) [∀ r m, (I r m).DiagOK r m]
+    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypTop (I r m) r m T δ ∧
+      Real.log (DhybTop (I r m) r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
     Mem2ContentA Fr A Λ := by
   haveI : Nonempty (ℕ → (ℕ → ℕ) × (ℕ → ℕ)) := ⟨fun _ => (fun _ => 0, fun _ => 0)⟩
   obtain ⟨f, hf⟩ := exists_diag (β := ℕ → (ℕ → ℕ) × (ℕ → ℕ))
-    (fun ε r b => ∀ m, A r m → DefHypTop I r m (b m).1 (b m).2 ∧
-      Real.log (DhybTop I r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
+    (fun ε r b => ∀ m, A r m → DefHypTop (I r m) r m (b m).1 (b m).2 ∧
+      Real.log (DhybTop (I r m) r m (b m).1 (b m).2) ≤ (Λ + ε) * (r : ℝ) ^ 2)
     (fun ε ε' r b hε hb m hA =>
       ⟨(hb m hA).1, (hb m hA).2.trans (by nlinarith [sq_nonneg (r : ℝ)])⟩)
     (fun ε hε => (h ε hε).mono fun r hr => by
-      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypTop I r m b.1 b.2 ∧
-          Real.log (DhybTop I r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
+      have : ∀ m, ∃ b : (ℕ → ℕ) × (ℕ → ℕ), A r m → DefHypTop (I r m) r m b.1 b.2 ∧
+          Real.log (DhybTop (I r m) r m b.1 b.2) ≤ (Λ + ε) * (r : ℝ) ^ 2 := by
         intro m
         by_cases hA : A r m
         · obtain ⟨T, δ, h1, h2⟩ := hr m hA
@@ -98,20 +98,20 @@ theorem mem2ContentA_of_top (I : HybInst Fr) {Λ : ℝ} (A : ℕ → ℕ → Pro
         · exact ⟨(fun _ => 0, fun _ => 0), fun h => absurd h hA⟩
       choose b hb using this
       exact ⟨b, hb⟩)
-  have hdef0 : ∀ r m, DefHypTop I r m (tropExp I r m) (fun _ => 0) := fun r m =>
-    defHypTop_of_local (I := I) (r := r) (m := m) _ _ (fun p _ _ => le_rfl) (fun _ => False)
+  have hdef0 : ∀ r m, DefHypTop (I r m) r m (tropExp (I r m) r m) (fun _ => 0) := fun r m =>
+    defHypTop_of_local (I := I r m) (r := r) (m := m) _ _ (fun p _ _ => le_rfl) (fun _ => False)
       (fun _ _ => rfl) (fun p _ _ hS => absurd hS id)
-  refine ⟨fun r m => if DefHypTop I r m (f r m).1 (f r m).2 then
-      DhybTop I r m (f r m).1 (f r m).2
-      else DhybTop I r m (tropExp I r m) (fun _ => 0), ?_, ?_, ?_⟩
+  refine ⟨fun r m => if DefHypTop (I r m) r m (f r m).1 (f r m).2 then
+      DhybTop (I r m) r m (f r m).1 (f r m).2
+      else DhybTop (I r m) r m (tropExp (I r m) r m) (fun _ => 0), ?_, ?_, ?_⟩
   · intro r m
     dsimp only
-    split_ifs <;> exact DhybTop_pos I r m _ _
+    split_ifs <;> exact DhybTop_pos (I r m) r m _ _
   · intro r m _ i
     dsimp only
     split_ifs with hd
-    · exact DhybTop_integral I r m hd i
-    · exact DhybTop_integral I r m (hdef0 r m) i
+    · exact DhybTop_integral (I r m) r m hd i
+    · exact DhybTop_integral (I r m) r m (hdef0 r m) i
   · intro ε hε
     obtain ⟨R, hR⟩ := eventually_atTop.1 (hf ε hε)
     refine ⟨R, fun r m hA hr => ?_⟩
@@ -120,8 +120,15 @@ theorem mem2ContentA_of_top (I : HybInst Fr) {Λ : ℝ} (A : ℕ → ℕ → Pro
     rw [if_pos hd]
     exact hlog
 
+/-- Fixed-instance form of `mem2ContentF_of_top`. -/
+theorem mem2ContentA_of_top (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ : ℝ} (A : ℕ → ℕ → Prop)
+    (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m → ∃ T δ : ℕ → ℕ, DefHypTop I r m T δ ∧
+      Real.log (DhybTop I r m T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
+    Mem2ContentA Fr A Λ :=
+  mem2ContentF_of_top (fun _ _ => I) A h
+
 /-- **`Mem2Content` from bordered deficit families** (slope `1/8`, `m = r / 8`). -/
-theorem mem2Content_of_top (I : HybInst Fr) {Λ : ℝ}
+theorem mem2Content_of_top (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Λ : ℝ}
     (h : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∃ T δ : ℕ → ℕ, DefHypTop I r (r / 8) T δ ∧
       Real.log (DhybTop I r (r / 8) T δ) ≤ (Λ + ε) * (r : ℝ) ^ 2) :
     Mem2Content Fr Λ := by

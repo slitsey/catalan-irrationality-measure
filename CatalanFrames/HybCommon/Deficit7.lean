@@ -22,7 +22,7 @@ namespace CatalanFrames.HybCommon
 variable {Fr : Frame}
 
 /-- **The tropical bound for `Dhyb`**: `log Dhyb ≤ (Λ8 + ε) r²`. -/
-theorem logDhyb_le_G {I : HybInst Fr} {o : ℕ} (T : TropFacts I o) {Lc cm : ℕ} (B : BadInfo I Lc cm) {ε : ℝ}
+theorem logDhyb_le_G {I : HybInst Fr} [∀ r, I.DiagOK r (r / 8)] {o : ℕ} (T : TropFacts I o) {Lc cm : ℕ} (B : BadInfo I Lc cm) {ε : ℝ}
     (hε : 0 < ε) : ∀ᶠ r : ℕ in atTop,
     Real.log (Dhyb I r (r / 8)) ≤ (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 := by
   filter_upwards [logDhybT_le_G T B hε] with r hr
@@ -126,7 +126,7 @@ lemma dAll7_le (ho : o = 1 ∨ o = 3) (hr : 16 ≤ r) {δ : ℕ → ℕ}
 end Values
 
 /-- **The content bound with the seven deficits, for every `δ` with the prescribed window values.** -/
-theorem content_deficit7_G {I : HybInst Fr} {o : ℕ} (T : TropFacts I o) {Lc cm : ℕ} (B : BadInfo I Lc cm) {ε : ℝ}
+theorem content_deficit7_G {I : HybInst Fr} [∀ r, I.DiagOK r (r / 8)] {o : ℕ} (T : TropFacts I o) {Lc cm : ℕ} (B : BadInfo I Lc cm) {ε : ℝ}
     (hε : 0 < ε) : ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
       (∀ p, cleanE1G o r p → δ p = r / 8) → (∀ p, cleanE3G o r p → δ p = r / 8) →
       (∀ p, WBG r p → δ p = r / 8 - (p - r)) →

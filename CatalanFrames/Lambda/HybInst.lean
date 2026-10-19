@@ -29,6 +29,9 @@ lemma lamPhi_le (k N : ℕ) (h : k ≤ N) : lamCD.Phi k ≤ 4 * N * N := by
 noncomputable def lamInst : HybInst lamFrame :=
   HybInst.ofSing lamCD (fun N => 4 * N * N) lamPhi_le
 
+instance lamInst_diagOK (r m : ℕ) : lamInst.DiagOK r m :=
+  inferInstanceAs ((HybInst.ofSing lamCD (fun N => 4 * N * N) lamPhi_le).DiagOK r m)
+
 lemma lamInst_lev (q c : ℕ) : lamInst.lev q c = blk lamCD.Phi q c := rfl
 
 lemma lam_4kq {q : ℕ} (hq2 : q % 2 = 1) (hq : 2 ≤ q) : 4 * kq q = jq q * q + 1 ∧ 0 < kq q := by

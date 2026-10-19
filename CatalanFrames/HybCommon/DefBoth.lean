@@ -45,7 +45,7 @@ lemma DefBothG.add {I : HybInst Fr} {r : ℕ} {T δ₁ δ₂ : ℕ → ℕ} (h1 
   · simp only [h, add_zero]; exact h1.1 p hp hb
 
 /-- **A `DefBothG` family from rank witnesses.** -/
-theorem defBoth_of_wit (I : HybInst Fr) (r : ℕ) (T δ : ℕ → ℕ)
+theorem defBoth_of_wit (I : HybInst Fr) (r : ℕ) [I.DiagOK r (r / 8)] (T δ : ℕ → ℕ)
     (hT : ∀ p, p.Prime → p < Bnd I r (r / 8) → tropExp I r (r / 8) p ≤ T p) (W : ℕ → Prop)
     (hδ : ∀ p, ¬ W p → δ p = 0)
     (hW : ∀ p : ℕ, p.Prime → W p → ∀ [Fact p.Prime], ∃ u v : Fin r ⊕ Fin (r / 8) → ℕ,
@@ -69,7 +69,7 @@ noncomputable def dC7 (o r p : ℕ) : ℕ := if WC7G o r p then p + (3 * p + o) 
 
 section Windows
 
-variable {I : HybInst Fr} {o : ℕ} {r : ℕ}
+variable {I : HybInst Fr} {o : ℕ} {r : ℕ} [I.DiagOK r (r / 8)]
 
 lemma TfunG_ge_trop (p : ℕ) : tropExp I r (r / 8) p ≤ TfunG o I r p := le_max_left _ _
 lemma TfunG_ge_eNG (p : ℕ) : eNG o r p ≤ TfunG o I r p := le_max_right _ _
@@ -176,7 +176,7 @@ noncomputable def dAll5 (o r p : ℕ) : ℕ := dE1 o r p + dE3 o r p + dB r p + 
 
 /-- **E (both classes), B, C5, C7 as a single `DefBothG` family.** -/
 theorem defBoth_all5 {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3) {I : HybInst Fr} {r : ℕ}
-    (hr : 16 ≤ r) : DefBothG I r (TfunG o I r) (dAll5 o r) := by
+    [I.DiagOK r (r / 8)] (hr : 16 ≤ r) : DefBothG I r (TfunG o I r) (dAll5 o r) := by
   have h1 := defBoth_E1 (I := I) (r := r) hL ho
   have h3 := defBoth_E3 (I := I) (r := r) hL ho hr
   have hB := defBoth_B (I := I) (r := r) hL ho hr
@@ -211,7 +211,7 @@ theorem defBoth_all5 {o : ℕ} (hL : LamData Fr o) (ho : o = 1 ∨ o = 3) {I : H
 
 section GKs
 
-variable {I : HybInst Fr} {o r : ℕ}
+variable {I : HybInst Fr} {o r : ℕ} [I.DiagOK r (r / 8)]
 
 /-- The two branches of `LowCleanO`. -/
 def LCa (o r p : ℕ) : Prop :=
