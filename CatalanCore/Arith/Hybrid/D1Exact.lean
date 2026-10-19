@@ -304,4 +304,18 @@ theorem val_D1x (hodd : q % 2 = 1) (hq : 0 < q) (m : ℕ) :
 
 end D1val
 
+/-- Nearest-multiple bound: if `n p ≤ m` then `min (m - n p) ((n+1) p - m) ≤ dist (m, pℤ)`. -/
+lemma dist_ge (p m n : ℕ) (hp : 0 < p) (h : n * p ≤ m) :
+    min (m - n * p) ((n + 1) * p - m) ≤ min (m % p) (p - m % p) := by
+  by_cases hlt : m < (n + 1) * p
+  · have hdiv : m / p = n := Nat.div_eq_of_lt_le h hlt
+    have hmod : m % p = m - n * p := by
+      rw [Nat.mod_eq_sub_mul_div, hdiv, Nat.mul_comm]
+    rw [hmod]
+    have e : (n + 1) * p = n * p + p := by ring
+    rw [e] at hlt ⊢
+    omega
+  · have : (n + 1) * p - m = 0 := by omega
+    rw [this]; simp
+
 end CatalanCore.Arith.Hybrid
