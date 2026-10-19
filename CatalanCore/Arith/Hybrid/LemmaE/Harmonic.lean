@@ -127,4 +127,41 @@ lemma H2_refl (hp : 5 ≤ p) {n : ℕ} (hn : n ≤ p - 1) :
   have := Gs_refl p (fun x => (x⁻¹) ^ 2) 1 (fun x => by simp [inv_neg]) (Gs_inv_sq_top p hp) hn
   simpa using this
 
+/-- Tail sums: `∑_{c=K}^{p-1} f(c-u) = G_{p-1-u} - G_{K-1-u}` for `u < K ≤ p`. -/
+lemma tail_sum (f : ZMod p → ZMod p) {K u : ℕ} (hu : u < K) (hK : K ≤ p) :
+    ∑ c ∈ Ico K p, f (((c : ℕ) : ZMod p) - u) = Gs p f (p - 1 - u) - Gs p f (K - 1 - u) := by
+  have e1 : ∑ c ∈ Ico K p, f (((c : ℕ) : ZMod p) - u) =
+      ∑ j ∈ range (p - K), f ((((K - 1 - u) + j + 1 : ℕ)) : ZMod p) := by
+    rw [Finset.sum_Ico_eq_sum_range]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    congr 1
+    apply sub_eq_of_eq_add
+    have : (K - 1 - u + j + 1) + u = K + j := by omega
+    rw [← Nat.cast_add, this]
+  have e2 := Finset.sum_range_add (fun x : ℕ => f ((x + 1 : ℕ) : ZMod p)) (K - 1 - u) (p - K)
+  rw [show K - 1 - u + (p - K) = p - 1 - u by omega] at e2
+  unfold Gs
+  rw [e1]
+  rw [e2]; ring
+
+/-- **Off-diagonal scalar Schur identity** (DQ Lemma 3.1, steps 2-3):
+`φ(u) - φ(w) + ∑_{c=K}^{p-1} (1/(c-w) - 1/(c-u)) = 0` with `φ(n) = H_n + H_{K-1} - H_{K-1-n}`. -/
+theorem schur_offdiag (hp : 3 ≤ p) {K u w : ℕ} (hK : K ≤ p - 1) (hu : u < K) (hw : w < K) :
+    (Gs p (fun x => x⁻¹) u + Gs p (fun x => x⁻¹) (K - 1) - Gs p (fun x => x⁻¹) (K - 1 - u)) -
+      (Gs p (fun x => x⁻¹) w + Gs p (fun x => x⁻¹) (K - 1) - Gs p (fun x => x⁻¹) (K - 1 - w)) +
+      ∑ c ∈ Ico K p, ((((c : ℕ) : ZMod p) - w)⁻¹ - (((c : ℕ) : ZMod p) - u)⁻¹) = 0 := by
+  rw [Finset.sum_sub_distrib, tail_sum p (fun x => x⁻¹) hw (by omega),
+    tail_sum p (fun x => x⁻¹) hu (by omega), H_refl p hp (by omega : u ≤ p - 1),
+    H_refl p hp (by omega : w ≤ p - 1)]
+  ring
+
+/-- **Diagonal scalar Schur identity** (DQ Lemma 3.1, step 4):
+`H2_u - H2_{K-1} + H2_{K-1-u} + ∑_{c=K}^{p-1} 1/(c-u)² = -H2_{K-1}`. -/
+theorem schur_diag (hp : 5 ≤ p) {K u : ℕ} (hK : K ≤ p - 1) (hu : u < K) :
+    Gs p (fun x => (x⁻¹) ^ 2) u - Gs p (fun x => (x⁻¹) ^ 2) (K - 1) +
+      Gs p (fun x => (x⁻¹) ^ 2) (K - 1 - u) +
+      ∑ c ∈ Ico K p, ((((c : ℕ) : ZMod p) - u)⁻¹) ^ 2 = -Gs p (fun x => (x⁻¹) ^ 2) (K - 1) := by
+  rw [tail_sum p (fun x => (x⁻¹) ^ 2) hu (by omega), H2_refl p hp (by omega : u ≤ p - 1)]
+  ring
+
 end CatalanCore.Arith.Hybrid.LemmaE
