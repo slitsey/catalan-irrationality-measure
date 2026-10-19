@@ -213,6 +213,57 @@ theorem gle_full_of_rank (Fr : Frame) (r m : ℕ) (u v : Fin r ⊕ Fin m → ℕ
     (fun a b => hg1 a b) k ?_
   rw [hmap]; simpa using hrk
 
+/-! ### Lifting helpers for the entries of `Full(X)` -/
+
+/-- The constant `a` and the variable `X` in `𝔽_p(X)`. -/
+noncomputable def rfC (a : ZMod p) : RatFunc (ZMod p) := algebraMap (ZMod p)[X] _ (Polynomial.C a)
+
+noncomputable def rfX : RatFunc (ZMod p) := algebraMap (ZMod p)[X] _ Polynomial.X
+
+lemma rfC_zero : rfC p 0 = 0 := by simp [rfC]
+
+lemma rfC_one : rfC p 1 = 1 := by simp [rfC]
+
+lemma phiP_C (a : LocRing p) : phiP p (C a) = rfC p (redQ p a) := by
+  simp [phiP, rfC]
+
+lemma phiP_X : phiP p (X : (LocRing p)[X]) = rfX p := by
+  simp [phiP, rfX]
+
+/-- Off-diagonal entry: a constant `x` with `p^c x ∈ ℤ_(p)` lifts, with reduction `p^c x mod p`. -/
+lemma exists_lift_const (c : ℕ) (x : ℚ) (hx : (p : ℚ) ^ c * x ∈ LocRing p) :
+    ∃ g : (LocRing p)[X], toQ p g = C ((p : ℚ) ^ c) * C x ∧
+      phiP p g = rfC p (redQ p ⟨_, hx⟩) := by
+  refine ⟨C ⟨_, hx⟩, ?_, phiP_C p _⟩
+  simp [toQ, C_mul]
+
+/-- Diagonal entry `X + x` of weight `c`: the reduction keeps `X` exactly when `c = 0`. -/
+lemma exists_lift_diag (c : ℕ) (x : ℚ) (hx : (p : ℚ) ^ c * x ∈ LocRing p) :
+    ∃ g : (LocRing p)[X], toQ p g = C ((p : ℚ) ^ c) * (X + C x) ∧
+      phiP p g = (if c = 0 then rfX p else 0) + rfC p (redQ p ⟨_, hx⟩) := by
+  have hc : ((p : ℚ) ^ c) ∈ LocRing p := by
+    simpa using int_mem_locRing (ℓ := p) ((p : ℤ) ^ c)
+  refine ⟨C ⟨(p : ℚ) ^ c, hc⟩ * X + C ⟨_, hx⟩, ?_, ?_⟩
+  · simp [toQ, C_mul]; ring
+  · rw [map_add, map_mul, phiP_C, phiP_X, phiP_C]
+    by_cases h0 : c = 0
+    · subst h0
+      have : redQ p ⟨(p : ℚ) ^ 0, hc⟩ = 1 := by
+        have : (⟨(p : ℚ) ^ 0, hc⟩ : LocRing p) = 1 := by apply Subtype.ext; simp
+        rw [this, map_one]
+      rw [this, rfC_one, one_mul, if_pos rfl]
+    · have : redQ p ⟨(p : ℚ) ^ c, hc⟩ = 0 := by
+        have : (⟨(p : ℚ) ^ c, hc⟩ : LocRing p) = ((p : ℕ) : LocRing p) * ⟨(p : ℚ) ^ (c - 1), by
+            simpa using int_mem_locRing (ℓ := p) ((p : ℤ) ^ (c - 1))⟩ := by
+          apply Subtype.ext
+          simp only [Subring.coe_mul, Subring.coe_natCast]
+          rw [← pow_succ' (p : ℚ) (c - 1)]
+          congr 1; omega
+        rw [this, map_mul]
+        have : redQ p ((p : ℕ) : LocRing p) = 0 := (redQ_eq_zero_iff p _).2 dvd_rfl
+        rw [this, zero_mul]
+      rw [this, rfC_zero, zero_mul, if_neg h0, zero_add]
+
 end Bridge
 
 end CatalanCore.Arith.Hybrid
