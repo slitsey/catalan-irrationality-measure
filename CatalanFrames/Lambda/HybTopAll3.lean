@@ -33,7 +33,7 @@ theorem lam_defBoth_all3 {r : ℕ} (hr : 16 ≤ r) :
   have h0' : DefBoth r (Tfun3 r) δ0 := h0.mono_T fun p _ _ => hT0 p
   have hTr : ∀ p, p.Prime → p < Bnd lamInst r (r / 8) → tropExp lamInst r (r / 8) p ≤ Tfun3 r p :=
     fun p _ _ => le_trans (le_max_left _ _) (le_trans (le_max_left _ _) (hT0 p))
-  have hd : ∀ p : ℕ, p.Prime → WC7 r p → ∀ k, CSetup7 p r (r / 8) k →
+  have hd : ∀ p : ℕ, p.Prime → WC7 r p → ∀ k, CSetup7 1 p r (r / 8) k →
       ∑ a, wC7 p r k (Frame.hybRow r (r / 8) a) + ∑ b, wC7 p r k (Frame.hybCol r (r / 8) b)
         ≤ Tfun3 r p := fun p hp hW k S => by
     have hk : k = (3 * p + 1) / 4 := by have := S.hk; omega

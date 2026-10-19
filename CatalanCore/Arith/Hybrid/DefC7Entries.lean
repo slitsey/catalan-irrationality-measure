@@ -25,9 +25,12 @@ section
 variable {p : ℕ} [Fact p.Prime]
 
 /-- The hypotheses of the Theorem C7 (j = 3, p ≡ 1 mod 4) setting (`j = 1`). -/
-structure CSetup7 (p r m k : ℕ) : Prop where
+structure CSetup7 (o p r m k : ℕ) : Prop where
   p5 : 5 ≤ p
-  hk : 4 * k = 3 * p + 1
+  hp6 : 8 ≤ p
+  ho0 : 0 < o
+  ho3 : o ≤ 3
+  hk : 4 * k = 3 * p + o
   hrp : p < r
   hLlo : r + m ≤ p + k
   hLhi : p + k < r + 2 * m
@@ -52,13 +55,13 @@ def singD7 (p k A : ℕ) : ZMod p := (if k ≤ A then -(16 * ((3 : ZMod p)⁻¹)
 
 /-- The residue of `p^w Mn A B`, `A < B`. -/
 noncomputable def TCgen7 (p k w A B : ℕ) : ZMod p :=
-  if w = 0 then regE p A B
+  if w = 0 then regE p k A B
   else if w = 1 then (16 * ((B : ZMod p) - A))⁻¹ * sing7 p k A B
   else if w = 2 ∧ B - A = p then (16 : ZMod p)⁻¹ * sing7 p k A B else 0
 
 /-- The residue of `p^w Mn A A`. -/
 noncomputable def TCDgen7 (p : ℕ) [Fact p.Prime] (k w A : ℕ) : ZMod p :=
-  if w = 0 then regD p A else if w = 2 then -(1 / 16 : ZMod p) * singD7 p k A else 0
+  if w = 0 then regD p k A else if w = 2 then -(1 / 16 : ZMod p) * singD7 p k A else 0
 
 lemma sum_res_eq7 (A B : ℕ) {k : ℕ} (hk0 : 0 < k) (hkp : k < p) :
     ∑ t ∈ ({k, p, p + k} : Finset ℕ).filter (fun t => t ∈ Ioc A B), resS7 p k t = sing7 p k A B := by
@@ -74,8 +77,8 @@ lemma sum_res_eq7 (A B : ℕ) {k : ℕ} (hk0 : 0 < k) (hkp : k < p) :
   have e5 : k ≠ 0 := by omega
   simp [e1, e2, e3, e4, e5]
 
-lemma reg57 {k : ℕ} (hk : 4 * k = 3 * p + 1) (hp5 : 5 ≤ p) {t : ℕ} (h1 : 1 ≤ t) (ht2 : t < 2 * p)
-    (hnk : t ≠ k) (hnp : t ≠ p) (hnkp : t ≠ p + k) : Reg p t := by
+lemma reg57 {o k : ℕ} (hk : 4 * k = 3 * p + o) (ho0 : 0 < o) (ho3 : o ≤ 3) (hp5 : 5 ≤ p) {t : ℕ} (h1 : 1 ≤ t) (ht2 : t < 2 * p)
+    (hnk : t ≠ k) (hnp : t ≠ p) (hnkp : t ≠ p + k) : Reg p k t := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp : k < p := by omega
   refine ⟨?_, ?_⟩
@@ -87,16 +90,7 @@ lemma reg57 {k : ℕ} (hk : 4 * k = 3 * p + 1) (hp5 : 5 ≤ p) {t : ℕ} (h1 : 1
     · have : p * (c + 1 + 1) ≥ p * 2 := Nat.mul_le_mul_left p (by omega)
       omega
   · intro h0
-    have h4k : (4 : ZMod p) * (k : ZMod p) = 1 := by
-      have : ((4 * k : ℕ) : ZMod p) = ((3 * p + 1 : ℕ) : ZMod p) := by rw [hk]
-      push_cast at this
-      simpa [ZMod.natCast_self] using this
-    have h4 : (4 : ZMod p) ≠ 0 := four_ne_zmod p hp5
-    have : (t : ZMod p) = (k : ZMod p) := by
-      have : (4 : ZMod p) * ((t : ZMod p) - k) = 0 := by linear_combination h0 - h4k
-      rcases mul_eq_zero.1 this with h | h
-      · exact absurd h h4
-      · exact sub_eq_zero.1 h
+    have : (t : ZMod p) = (k : ZMod p) := sub_eq_zero.1 h0
     rw [ZMod.natCast_eq_natCast_iff'] at this
     by_cases htp : t < p
     · rw [Nat.mod_eq_of_lt htp, Nat.mod_eq_of_lt hkp] at this; exact hnk this
@@ -106,13 +100,13 @@ lemma reg57 {k : ℕ} (hk : 4 * k = 3 * p + 1) (hp5 : 5 ≤ p) {t : ℕ} (h1 : 1
       omega
 
 /-- `p Δ_{k'}` at a singular index `4k' = j p + 1`, `p ∤ j`, `p ∤ k'`. -/
-lemma good_Delta_gen7 {Fr : Frame} (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j * p + 1)
+lemma good_Delta_gen7 {Fr : Frame} {o : ℕ} (hL : LamData Fr o) {j k : ℕ} (hk : 4 * k = j * p + o)
     (hj0 : 0 < j) (hjz : ((j : ℕ) : ZMod p) ≠ 0) (hkz : ((k : ℕ) : ZMod p) ≠ 0) :
     Good p ((p : ℚ) * Fr.Delta k) (-(4 * ((j : ℕ) : ZMod p)⁻¹)) := by
-  have hk0 : 0 < k := by omega
+  have hk0 : 0 < k := by have := hL.o_pos; omega
   rw [hL.delta_eq k hk0]
-  have hkQ : 4 * (k : ℚ) - 1 = (j : ℚ) * p := by
-    have : (4 * k : ℚ) = j * p + 1 := by exact_mod_cast hk
+  have hkQ : 4 * (k : ℚ) - (o : ℚ) = (j : ℚ) * p := by
+    have : (4 * k : ℚ) = j * p + o := by exact_mod_cast hk
     linarith
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hjQ : (j : ℚ) ≠ 0 := by exact_mod_cast hj0.ne'
@@ -126,21 +120,24 @@ lemma good_Delta_gen7 {Fr : Frame} (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j
   rw [hkQ]
   field_simp
 
-lemma CSetup7.kp {r m k : ℕ} (S : CSetup7 p r m k) : k < p := by
-  have := S.p5; have := S.hk; omega
+lemma CSetup7.kp {o r m k : ℕ} (S : CSetup7 o p r m k) : k < p := by
+  have := S.p5; have := S.hk; have := S.ho0; have := S.ho3; have := S.hp6; omega
 
-lemma CSetup7.k0 {r m k : ℕ} (S : CSetup7 p r m k) : 0 < k := by have := S.hk; omega
+lemma CSetup7.hk4 {o p r m k : ℕ} [Fact p.Prime] (S : CSetup7 o p r m k) :
+    (4 : ZMod p) * (k : ZMod p) = (o : ZMod p) := hk4_of (j := 3) S.hk
+
+lemma CSetup7.k0 {o r m k : ℕ} (S : CSetup7 o p r m k) : 0 < k := by have := S.hk; have := S.ho0; have := S.ho3; have := S.hp6; omega
 
 section Gen7
 
-variable {Fr : Frame} (hL : LamData Fr) {r m k : ℕ} (S : CSetup7 p r m k)
+variable {Fr : Frame} {o : ℕ} (hL : LamData Fr o) {r m k : ℕ} (S : CSetup7 o p r m k)
 
 include hL S
 
 lemma good_res_Delta7 {t : ℕ} (ht : t ∈ ({k, p, p + k} : Finset ℕ)) :
     Good p ((p : ℚ) * Fr.Delta t) (resS7 p k t) := by
   have hp5 := S.p5
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hkp := S.kp
   have hk0 := S.k0
   have hpp : 0 < p := (Fact.out : p.Prime).pos
@@ -175,7 +172,7 @@ lemma good_res_Delta7 {t : ℕ} (ht : t ∈ ({k, p, p + k} : Finset ℕ)) :
 lemma good_res_Dsq7 {t : ℕ} (ht : t ∈ ({k, p} : Finset ℕ)) :
     Good p ((p : ℚ) ^ 2 * Fr.Dsq t) (resD7 p k t) := by
   have hp5 := S.p5
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hkp := S.kp
   have hk0 := S.k0
   simp only [Finset.mem_insert, Finset.mem_singleton] at ht
@@ -189,21 +186,21 @@ lemma good_res_Dsq7 {t : ℕ} (ht : t ∈ ({k, p} : Finset ℕ)) :
 
 omit hL in
 lemma reg_C7 {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m) (hnk : t ≠ k) (hnp : t ≠ p)
-    (hnkp : t ≠ p + k) : Reg p t :=
-  reg57 S.hk S.p5 h1 (by have := S.hN; omega) hnk hnp hnkp
+    (hnkp : t ≠ p + k) : Reg p k t :=
+  reg57 S.hk S.ho0 S.ho3 S.p5 h1 (by have := S.hN; omega) hnk hnp hnkp
 
 /-- **The label-level table of Theorem C7 (j = 3, p ≡ 1 mod 4), off-diagonal.** -/
 theorem good_TCgen7 {w A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m)
     (h0 : w = 0 → B < k) (h1 : w = 1 → B - A ≠ p) :
     Good p ((p : ℚ) ^ w * Fr.Mn A B) (TCgen7 p k w A B) := by
   have hp5 := S.p5
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hkp := S.kp
   have hk0 := S.k0
   have hN := S.hN
   have hpp : 0 < p := (Fact.out : p.Prime).pos
   have hreg : ∀ t ∈ Ioc A B \ (({k, p, p + k} : Finset ℕ).filter (fun t => t ∈ Ioc A B)),
-      Reg p t := by
+      Reg p k t := by
     intro t ht
     obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht
     have hI' := Finset.mem_Ioc.1 hI
@@ -222,7 +219,7 @@ theorem good_TCgen7 {w A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m)
     rw [pow_zero, one_mul]
     unfold TCgen7; rw [if_pos rfl]
     have hBk := h0 rfl
-    exact Mn_good0 hL hp5 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
+    exact Mn_good0 hL hp5 S.hk4 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
       (fun t ht => by
         obtain ⟨h1, h2⟩ := Finset.mem_Ioc.1 ht
         exact reg_C7 S (by omega) (by omega) (by omega) (by omega) (by omega))
@@ -232,14 +229,14 @@ theorem good_TCgen7 {w A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m)
     rw [pow_one]
     unfold TCgen7; rw [if_neg (by omega), if_pos rfl]
     have hBA := h1 rfl
-    have := Mn_goodP hL hp5 hAB _ hsub h1' (resS7 p k) hsing hreg
+    have := Mn_goodP hL hp5 S.hk4 hAB _ hsub h1' (resS7 p k) hsing hreg
       (sub_ne_zero_of_ne hAB (by omega) hBA)
     rw [hsum] at this
     exact this
   -- w ≥ 2
   obtain ⟨w', rfl⟩ : ∃ w', w = w' + 2 := ⟨w - 2, by omega⟩
   by_cases hBA : B - A = p
-  · have := Mn_goodPP hL hp5 hAB hBA _ hsub h1' (resS7 p k) hsing hreg
+  · have := Mn_goodPP hL hp5 S.hk4 hAB hBA _ hsub h1' (resS7 p k) hsing hreg
     rw [hsum] at this
     by_cases hw2 : w' = 0
     · subst hw2
@@ -249,7 +246,7 @@ theorem good_TCgen7 {w A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m)
       rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
       have := (good_pow_mul_zero this (n := w') (by omega))
       exact this.congr' (by ring)
-  · have := Mn_goodP hL hp5 hAB _ hsub h1' (resS7 p k) hsing hreg
+  · have := Mn_goodP hL hp5 S.hk4 hAB _ hsub h1' (resS7 p k) hsing hreg
       (sub_ne_zero_of_ne hAB (by omega) hBA)
     unfold TCgen7
     rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
@@ -260,7 +257,7 @@ theorem good_TCgen7 {w A B : ℕ} (hAB : A < B) (hBN : B < r + 2 * m)
 theorem good_TCDgen7 {w A : ℕ} (hA : A < r) (hw : w = 0 ∨ w = 2) (h0 : w = 0 → A < k) :
     Good p ((p : ℚ) ^ w * Fr.Mn A A) (TCDgen7 p k w A) := by
   have hp5 := S.p5
-  have hk := S.hk
+  have hk := S.hk; have := S.ho0; have := S.ho3; have := S.hp6
   have hkp := S.kp
   have hk0 := S.k0
   have hN := S.hN
@@ -270,14 +267,14 @@ theorem good_TCDgen7 {w A : ℕ} (hA : A < r) (hw : w = 0 ∨ w = 2) (h0 : w = 0
   · rw [pow_zero, one_mul]
     unfold TCDgen7; rw [if_pos rfl]
     have hAk := h0 rfl
-    exact Mn_diag_good0 hL hp5 (fun t ht => by
+    exact Mn_diag_good0 hL hp5 S.hk4 (fun t ht => by
       obtain ⟨h1, h2⟩ := Finset.mem_Icc.1 ht
       exact reg_C7 S h1 (by omega) (by omega) (by omega) (by omega))
   · have e20 : ¬ ((2:ℕ) = 0) := by norm_num
     unfold TCDgen7; rw [if_neg e20, if_pos rfl]
     have hsub : (({k, p} : Finset ℕ).filter (fun t => t ∈ Icc 1 A)) ⊆ Icc 1 A :=
       fun t ht => (Finset.mem_filter.1 ht).2
-    have := Mn_diag_goodP2 hL hp5 (A := A) _ hsub (resD7 p k)
+    have := Mn_diag_goodP2 hL hp5 S.hk4 (A := A) _ hsub (resD7 p k)
       (fun t ht => good_res_Dsq7 hL S (Finset.mem_filter.1 ht).1)
       (fun t ht => by
         obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht

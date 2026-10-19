@@ -65,7 +65,7 @@ end Equiv
 
 section Main
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 lemma BE_ll (c c' : Fin r) : BE p j r m k (Sum.inl c) (Sum.inl c') =
     rfC p (TE p j r k c c') + (if c = c' ∧ wE p r k (c : ℕ) = 0 then rfX p else 0) := by

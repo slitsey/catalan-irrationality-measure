@@ -27,7 +27,7 @@ variable {p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame}
 
 variable {r m : ℕ}
 
-theorem Atil_int (hL : LamData Fr) (S : GKS1 p r m k) (c c' : Fin r) :
+theorem Atil_int (hL : LamData Fr 1) (S : GKS1 p r m k) (c c' : Fin r) :
     Int1 p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ c c') := by
   have hN := S.hN
   have hc := c.2; have hc' := c'.2
@@ -49,7 +49,7 @@ lemma good_Qq1 (h13 : 13 ≤ p) (z : ℤ) :
   have := (Good.intCast (ℓ := p) z).div (Good.ofNat (ℓ := p) 56448) (n56448 h13)
   simpa [div_eq_mul_inv] using this
 
-theorem Atil_cng (hL : LamData Fr) (S : GKS1 p r m k) (c c' : Fin r) :
+theorem Atil_cng (hL : LamData Fr 1) (S : GKS1 p r m k) (c c' : Fin r) :
     Cng p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁ c c')
       (Mq1 p k r c c') := by
   have hN := S.hN
@@ -126,7 +126,7 @@ theorem Mq1_det (S : GKS1 p r m k) : gn p (Mq1 p k r).det = 1 := by
     rw [padicNorm.mul, hn2, hn1]; norm_num
   rw [hn]; norm_num
 
-theorem Atil_prim (hL : LamData Fr) (S : GKS1 p r m k) :
+theorem Atil_prim (hL : LamData Fr 1) (S : GKS1 p r m k) :
     gn p (Atil p (fun _ : Fin r => 1) (Matrix.of (fullEntry Fr r m)).toBlocks₁₁).det = 1 :=
   prim_det_Atil p (fun _ : Fin r => 1) _ (Mq1 p k r) (Atil_int hL S)
     (Mq1_int S.p13) (Atil_cng hL S) (Mq1_det S)

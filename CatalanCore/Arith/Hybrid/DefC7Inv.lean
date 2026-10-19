@@ -44,7 +44,7 @@ lemma eC7_ne (hp5 : 5 ≤ p) : eC7 p ≠ 0 := by
 
 lemma b1C7_ne (hp5 : 5 ≤ p) : b1C7 p ≠ 0 := pow_ne_zero 2 (inv_ne_zero (three_ne hp5))
 
-variable {r m k : ℕ} (S : CSetup7 p r m k)
+variable {o r m k : ℕ} (S : CSetup7 o p r m k)
 include S
 
 lemma Mval7_P0 {C D : ℕ} (hC : C < r - p) (hD : D < r) :
@@ -127,7 +127,7 @@ end Vals7
 
 section Inv7
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 o p r m k)
 
 lemma sum_ite_BP7 {α : Type*} [AddCommMonoid α] (F : BP7 p r k → α) (d0 : BP7 p r k)
     (h : ∀ d, d ≠ d0 → F d = 0) : ∑ d, F d = F d0 :=

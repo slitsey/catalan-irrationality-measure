@@ -33,12 +33,12 @@ open Classical in
 `p ≡ 1 (mod 4)`, `L_p = (7p+1)/4 - r ∈ [m, 2m)`, `r + 2m ≤ 2p` (where `CSetup7` holds); `T p` is any
 exponent bound dominating both `tropExp` and the dual value of the D2 potentials.  The deficit is
 `δ p = L_p - m` on `W`, `0` elsewhere. -/
-theorem defHypT_C7 {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (T : ℕ → ℕ)
-    (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup7 p r m k)
+theorem defHypT_C7 {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
+    (W : ℕ → Prop) (hSet : ∀ p : ℕ, p.Prime → W p → ∃ k, CSetup7 o p r m k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
-    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup7 p r m k →
+    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ k, CSetup7 o p r m k →
       ∑ a, wC7 p r k (Frame.hybRow r m a) + ∑ b, wC7 p r k (Frame.hybCol r m b) ≤ T p) :
-    DefHypT I r m T (fun p => if W p then p + (3 * p + 1) / 4 - r - m else 0) := by
+    DefHypT I r m T (fun p => if W p then p + (3 * p + o) / 4 - r - m else 0) := by
   refine defHypT_of_local I r m T _ hT W (fun p hp => by simp [hp]) ?_
   intro p hp hb hWp
   obtain ⟨k, S⟩ := hSet p hp hWp
@@ -46,7 +46,7 @@ theorem defHypT_C7 {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (
   have hd := hTd p hp hWp k S
   have h1 := wC_sum_ge7 (p := p) (r := r) (m := m) (k := k)
   have hg := gleAt_C7_lam S hL
-  have hk : (3 * p + 1) / 4 = k := by have := S.hk; omega
+  have hk : (3 * p + o) / 4 = k := by have := S.hk; have := S.ho0; have := S.ho3; have := S.hp6; omega
   have hLhi := S.hLhi
   have hLlo := S.hLlo
   simp only [if_pos hWp, hk]

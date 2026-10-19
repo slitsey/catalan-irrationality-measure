@@ -15,9 +15,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section Gle7
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 o p r m k)
 
-lemma card_low7 (S : CSetup7 p r m k) :
+lemma card_low7 (S : CSetup7 o p r m k) :
     (Finset.univ.filter (fun x : Fin m => r + 2 * (x : ℕ) < p + k)).card +
       (Finset.univ.filter (fun y : Fin m => r + 2 * (y : ℕ) + 1 < p + k)).card = p + k - r := by
   have hLlo := S.hLlo; have hLhi := S.hLhi
@@ -32,7 +32,7 @@ lemma card_low7 (S : CSetup7 p r m k) :
 
 include S in
 /-- **Theorem C7 (j = 3, p ≡ 1 mod 4) at a prime `p < r`, in dual form** (λ-like frame). -/
-theorem gleAt_C7_lam_wit {Fr : Frame} (hL : LamData Fr) :
+theorem gleAt_C7_lam_wit {Fr : Frame} (hL : LamData Fr o) :
     HasRankWit Fr p r m (fun a => wC7 p r k (Frame.hybRow r m a))
       (fun b => wC7 p r k (Frame.hybCol r m b)) (p + k - r - m) := by
   classical
@@ -130,7 +130,7 @@ theorem gleAt_C7_lam_wit {Fr : Frame} (hL : LamData Fr) :
 
 include S in
 /-- **Theorem C7 (j = 3, p ≡ 1 mod 4) at a prime `p < r`, in dual form** (λ-like frame). -/
-theorem gleAt_C7_lam {Fr : Frame} (hL : LamData Fr) :
+theorem gleAt_C7_lam {Fr : Frame} (hL : LamData Fr o) :
     GLE p (∑ a, wC7 p r k (Frame.hybRow r m a) + ∑ b, wC7 p r k (Frame.hybCol r m b) -
       (p + k - r - m)) (Fr.fullPoly r m) :=
   (gleAt_C7_lam_wit S hL).gle

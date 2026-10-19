@@ -25,36 +25,36 @@ section
 variable {p : ℕ} [Fact p.Prime] {Fr : Frame}
 
 /-- Singular data. -/
-structure SingData (p N : ℕ) [Fact p.Prime] where
+structure SingData (p N k : ℕ) [Fact p.Prime] where
   Sg : Finset ℕ
   ρ : ℕ → ZMod p
   ρ2 : ℕ → ZMod p
   pos : ∀ t ∈ Sg, 1 ≤ t
-  reg : ∀ t, 1 ≤ t → t < N → t ∉ Sg → Reg p t
+  reg : ∀ t, 1 ≤ t → t < N → t ∉ Sg → Reg p k t
 
-variable {N : ℕ}
+variable {N k : ℕ}
 
 /-- Sum of the residues of `Δ` over `(A, B]`. -/
-def singG (D : SingData p N) (A B : ℕ) : ZMod p :=
+def singG (D : SingData p N k) (A B : ℕ) : ZMod p :=
   ∑ t ∈ D.Sg.filter (fun t => A < t ∧ t ≤ B), D.ρ t
 
 /-- Sum of the residues of `D` over `[1, A]`. -/
-def singG2 (D : SingData p N) (A : ℕ) : ZMod p :=
+def singG2 (D : SingData p N k) (A : ℕ) : ZMod p :=
   ∑ t ∈ D.Sg.filter (fun t => t ≤ A), D.ρ2 t
 
-noncomputable def TEoG (D : SingData p N) (w A B : ℕ) : ZMod p :=
+noncomputable def TEoG (D : SingData p N k) (w A B : ℕ) : ZMod p :=
   if B - A = p then (if w = 2 then (16 : ZMod p)⁻¹ * singG D A B else 0)
   else if w = 1 then (16 * ((B : ZMod p) - A))⁻¹ * singG D A B else 0
 
-noncomputable def TEdG (D : SingData p N) (w A : ℕ) : ZMod p :=
+noncomputable def TEdG (D : SingData p N k) (w A : ℕ) : ZMod p :=
   if w = 2 then -(1 / 16 : ZMod p) * singG2 D A else 0
 
 /-- The hypotheses on the singular residues. -/
-structure SingGood (Fr : Frame) (D : SingData p N) : Prop where
+structure SingGood (Fr : Frame) (D : SingData p N k) : Prop where
   hΔ : ∀ t ∈ D.Sg, Good p ((p : ℚ) * Fr.Delta t) (D.ρ t)
   hD : ∀ t ∈ D.Sg, Good p ((p : ℚ) ^ 2 * Fr.Dsq t) (D.ρ2 t)
 
-theorem good_TEoG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : SingGood Fr D)
+theorem good_TEoG {o : ℕ} (hL : LamData Fr o) (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p)) (D : SingData p N k) (hG : SingGood Fr D)
     {A B w : ℕ} (hAB : A < B) (hB : B < N) (hw : 1 ≤ w) (hdiff : B - A < 2 * p)
     (hpair : B - A = p → 2 ≤ w) :
     Good p ((p : ℚ) ^ w * Fr.Mn A B) (TEoG D w A B) := by
@@ -68,7 +68,7 @@ theorem good_TEoG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : Sin
     have := Finset.mem_Ioc.1 (Finset.mem_sdiff.1 ht).1; omega
   have hsing : ∀ t ∈ S0, Good p ((p : ℚ) * Fr.Delta t) (D.ρ t) :=
     fun t ht => hG.hΔ t ((hmem t).1 ht).1
-  have hr : ∀ t ∈ Ioc A B \ S0, Reg p t := fun t ht => by
+  have hr : ∀ t ∈ Ioc A B \ S0, Reg p k t := fun t ht => by
     obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht
     have hI' := Finset.mem_Ioc.1 hI
     have hns : t ∉ D.Sg := fun e => hn ((hmem t).2 ⟨e, hI'⟩)
@@ -76,7 +76,7 @@ theorem good_TEoG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : Sin
   have hsum : singG D A B = ∑ t ∈ S0, D.ρ t := rfl
   by_cases hBA : B - A = p
   · have hw2 := hpair hBA
-    have key := Mn_goodPP hL hp5 hAB hBA S0 hsub h1 D.ρ hsing hr
+    have key := Mn_goodPP hL hp5 hk4 hAB hBA S0 hsub h1 D.ρ hsing hr
     rw [← hsum] at key
     unfold TEoG
     rw [if_pos hBA]
@@ -88,7 +88,7 @@ theorem good_TEoG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : Sin
       refine this.congr' ?_
       ring
   · have hd : ((B : ZMod p) - A) ≠ 0 := sub_ne_zero_of_ne hAB hdiff hBA
-    have key := Mn_goodP hL hp5 hAB S0 hsub h1 D.ρ hsing hr hd
+    have key := Mn_goodP hL hp5 hk4 hAB S0 hsub h1 D.ρ hsing hr hd
     rw [← hsum] at key
     unfold TEoG
     rw [if_neg hBA]
@@ -100,7 +100,7 @@ theorem good_TEoG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : Sin
       refine this.congr' ?_ |>.congr (by simp)
       ring
 
-theorem good_TEdG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : SingGood Fr D)
+theorem good_TEdG {o : ℕ} (hL : LamData Fr o) (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p)) (D : SingData p N k) (hG : SingGood Fr D)
     {A w : ℕ} (hA : A < N) (hw : w = 2) :
     Good p ((p : ℚ) ^ w * Fr.Mn A A) (TEdG D w A) := by
   subst hw
@@ -112,12 +112,12 @@ theorem good_TEdG (hL : LamData Fr) (hp5 : 5 ≤ p) (D : SingData p N) (hG : Sin
     exact Finset.mem_Icc.2 ⟨D.pos t this.1, this.2⟩
   have hsing : ∀ t ∈ S0, Good p ((p : ℚ) ^ 2 * Fr.Dsq t) (D.ρ2 t) :=
     fun t ht => hG.hD t ((hmem t).1 ht).1
-  have hr : ∀ t ∈ Icc 1 A \ S0, Reg p t := fun t ht => by
+  have hr : ∀ t ∈ Icc 1 A \ S0, Reg p k t := fun t ht => by
     obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht
     have hI' := Finset.mem_Icc.1 hI
     have hns : t ∉ D.Sg := fun e => hn ((hmem t).2 ⟨e, hI'.2⟩)
     exact D.reg t hI'.1 (by omega) hns
-  have key := Mn_diag_goodP2 hL hp5 (A := A) S0 hsub D.ρ2 hsing hr
+  have key := Mn_diag_goodP2 hL hp5 hk4 (A := A) S0 hsub D.ρ2 hsing hr
   unfold TEdG
   rw [if_pos rfl]
   exact key

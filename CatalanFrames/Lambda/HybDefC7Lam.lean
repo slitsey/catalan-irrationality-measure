@@ -19,7 +19,7 @@ open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
 namespace CatalanFrames.Lambda
 
 /-- The dual value of the D2 potentials of C7. -/
-lemma wC7_dual_eq {p r m k : ℕ} (S : CSetup7 p r m k) :
+lemma wC7_dual_eq {p r m k : ℕ} (S : CSetup7 1 p r m k) :
     ∑ a : Fin r ⊕ Fin m, wC7 p r k (Frame.hybRow r m a) +
       ∑ b : Fin r ⊕ Fin m, wC7 p r k (Frame.hybCol r m b) = 2 * r + 2 * m - (p + k - r) := by
   have hk := S.hk
@@ -89,9 +89,9 @@ noncomputable def eGK (r p : ℕ) : ℕ := by
   classical exact if LowClean r (r / 8) p then 2 * r + r / 8 else 0
 
 lemma csetup7_of_wc7 {r p : ℕ} (hr : 16 ≤ r) (h : WC7 r p) :
-    CSetup7 p r (r / 8) ((3 * p + 1) / 4) := by
+    CSetup7 1 p r (r / 8) ((3 * p + 1) / 4) := by
   obtain ⟨hp, h4, h1, h2⟩ := h
-  exact ⟨by omega, by omega, by omega, by omega, by omega, by omega⟩
+  exact ⟨by omega, by omega, by omega, by omega, by omega, by omega, by omega, by omega, by omega⟩
 
 /-- `Tfun2` with the C7 and GK duals. -/
 noncomputable def Tfun3 (r p : ℕ) : ℕ := max (Tfun2 r p) (max (eC7 r p) (eGK r p))

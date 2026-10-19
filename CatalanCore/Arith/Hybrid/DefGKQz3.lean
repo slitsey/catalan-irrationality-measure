@@ -82,7 +82,7 @@ lemma sub_ne3 {A B : ℕ} (hAB : A < B) (hB : B < 3 * p) (h1 : B - A ≠ p) (h2 
 
 variable {Fr : Frame}
 
-theorem good_Qz3_lt (hL : LamData Fr) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ} (hAB : A < B)
+theorem good_Qz3_lt (hL : LamData Fr 1) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ} (hAB : A < B)
     (hB : B < r + 2 * m) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz3 p k A B : ZMod p) * 129600⁻¹) := by
   have h13 := S.p13
@@ -117,7 +117,7 @@ theorem good_Qz3_lt (hL : LamData Fr) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ}
     rw [if_pos hAB, if_neg h1, if_neg h2]
     simp
 
-theorem good_Qz3 (hL : LamData Fr) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ}
+theorem good_Qz3 (hL : LamData Fr 1) {r m : ℕ} (S : GKS3 p r m k) {A B : ℕ}
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) (hd : A = B → A < r) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz3 p k A B : ZMod p) * 129600⁻¹) := by
   have h13 := S.p13

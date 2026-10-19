@@ -164,7 +164,7 @@ lemma hybCol_lt (a : Fin r ⊕ Fin m) : Frame.hybCol r m a < r + 2 * m := by
   · have := i.2; simp [Frame.hybCol] <;> omega
 
 /-- Off-diagonal labels. -/
-lemma lift_offdiag (hL : LamData Fr) (S : BSetup p r m j k) {A B : ℕ} (hAB : A ≠ B)
+lemma lift_offdiag {o : ℕ} (hL : LamData Fr o) (S : BSetup o p r m j k) {A B : ℕ} (hAB : A ≠ B)
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (uPot p r k A + uPot p r k B)) * C (Fr.Mn A B) ∧
@@ -179,7 +179,7 @@ lemma lift_offdiag (hL : LamData Fr) (S : BSetup p r m j k) {A B : ℕ} (hAB : A
     rw [e, add_comm (uPot p r k A), Mn_symm]; exact lift_good p this
 
 /-- **The entries of `Full(X)` reduce to the table `BT`.** -/
-theorem hred_B (hL : LamData Fr) (S : BSetup p r m j k) (a b : Fin r ⊕ Fin m) :
+theorem hred_B {o : ℕ} (hL : LamData Fr o) (S : BSetup o p r m j k) (a b : Fin r ⊕ Fin m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (uPot p r k (Frame.hybRow r m a) + uPot p r k (Frame.hybCol r m b))) *
         fullEntry Fr r m a b ∧ phiP p g = BT p r m j k a b := by

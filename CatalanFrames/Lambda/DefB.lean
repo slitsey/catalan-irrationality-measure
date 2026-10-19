@@ -15,16 +15,20 @@ open CatalanCore CatalanCore.Arith.Hybrid
 
 namespace CatalanFrames.Lambda
 
-theorem lamData : LamData lamFrame where
+theorem lamData : LamData lamFrame 1 where
   norm_eq := rfl
+  o_pos := by norm_num
+  o_le := by norm_num
   delta_eq := by
     intro t ht
     rw [Delta_eq t ht]
+    push_cast
     obtain ⟨h1, h2, _⟩ := one_le_ne ht
     field_simp
     ring
   dsq_eq := by
     intro t ht
+    push_cast
     exact Dsq_eq t ht
 
 end CatalanFrames.Lambda

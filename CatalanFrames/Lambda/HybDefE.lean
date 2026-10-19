@@ -29,8 +29,10 @@ def cleanE1 (r p : ℕ) : Prop := p.Prime ∧ p % 4 = 1 ∧ 5 * r + 8 ≤ 7 * p 
 def dualE1 (r m p : ℕ) : ℕ := 2 * ((r - p) + (r - (3 * p + 1) / 4)) + 4 * m
 
 lemma eSetup_of_clean {r p : ℕ} (hp : p.Prime) (h4 : p % 4 = 1) (h7 : 5 * r + 8 ≤ 7 * p)
-    (hpr : p < r) : ESetup p r (r / 8) 3 ((3 * p + 1) / 4) where
+    (hpr : p < r) : ESetup 1 p r (r / 8) 3 ((3 * p + 1) / 4) where
   p5 := by omega
+  ho0 := by omega
+  ho3 := by omega
   hk := by omega
   hj0 := by norm_num
   hjp := by omega

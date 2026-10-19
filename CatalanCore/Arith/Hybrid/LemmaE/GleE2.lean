@@ -14,7 +14,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Main
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- The reduction matrix in the block index type. -/
 noncomputable def BmE (p j r m k : ℕ) [Fact p.Prime] :

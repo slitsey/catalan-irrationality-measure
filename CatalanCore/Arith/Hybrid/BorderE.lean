@@ -17,10 +17,10 @@ open Finset Polynomial CatalanCore CatalanCore.Basic CatalanCore.Rect Matrix
 
 namespace CatalanCore.Arith.Hybrid
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- Bordered twin of `gleAt_E`. -/
-theorem gleAt_E_top (I : HybInst Fr) (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
+theorem gleAt_E_top (I : HybInst Fr) (hL : LamData Fr o) (S : ESetup o p r m j k) (sU : ZMod p)
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
     (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +
@@ -30,7 +30,7 @@ theorem gleAt_E_top (I : HybInst Fr) (hL : LamData Fr) (S : ESetup p r m j k) (s
   (gleAt_E_wit hL S sU hj he hUU).border I
 
 /-- Bordered twin of `gleAt_E3`. -/
-theorem gleAt_E3_top (I : HybInst Fr) {k1 : ℕ} (S : ESetup3 p r m k1) (hL : LamData Fr)
+theorem gleAt_E3_top (I : HybInst Fr) {k1 : ℕ} (S : ESetup3 o p r m k1) (hL : LamData Fr o)
     (h6255 : ¬ p ∣ 6255) :
     GLE p (∑ a, wr p r m (Frame.hybRow r m a) + ∑ b, wc p r m (Frame.hybCol r m b) - m
       + topC I r m p) ((afterTop r m).fullPolyG Fr) :=

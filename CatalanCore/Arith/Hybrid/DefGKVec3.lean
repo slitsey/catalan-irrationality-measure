@@ -144,7 +144,7 @@ lemma Qz_zero_c1 {r m : ℕ} (S : GKS3 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 :
   have h13 := S.p13; have hr := S.hr; have hN := S.hN
   refine ⟨?_, ?_, ?_⟩ <;> apply Qz3_zero <;> omega
 
-theorem lbnd (hL : LamData Fr) (S : GKS3 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
+theorem lbnd (hL : LamData Fr 1) (S : GKS3 p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m)
     (c : Fin r) :
     gn p (C (Fr.Mn u (c : ℕ) - ∑ c' : Fin r, avec p r u c' * Fr.Mn (c' : ℕ) (c : ℕ))) ≤ p := by
   have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN

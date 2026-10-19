@@ -50,7 +50,7 @@ lemma GKS1.kp {r m k : ℕ} (S : GKS1 p r m k) : k < p := by have := S.p13; have
 lemma GKS1.k0 {r m k : ℕ} (S : GKS1 p r m k) : 0 < k := by have := S.hk; omega
 
 lemma reg1 {r m k : ℕ} (S : GKS1 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2 * p + k)
-    (hn : t ∉ Sg1 p k) : Reg p t := by
+    (hn : t ∉ Sg1 p k) : Reg p k t := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
   have h13 := S.p13
@@ -65,16 +65,7 @@ lemma reg1 {r m k : ℕ} (S : GKS1 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2
     · have : p * (c + 1 + 1 + 1) ≥ p * 3 := Nat.mul_le_mul_left p (by omega)
       omega
   · intro h0
-    have h4k : (4 : ZMod p) * (k : ZMod p) = 1 := by
-      have : ((4 * k : ℕ) : ZMod p) = ((3 * p + 1 : ℕ) : ZMod p) := by rw [hk]
-      push_cast at this
-      simpa [ZMod.natCast_self] using this
-    have h4 : (4 : ZMod p) ≠ 0 := four_ne_zmod p (by omega)
-    have : (t : ZMod p) = (k : ZMod p) := by
-      have : (4 : ZMod p) * ((t : ZMod p) - k) = 0 := by linear_combination h0 - h4k
-      rcases mul_eq_zero.1 this with h | h
-      · exact absurd h h4
-      · exact sub_eq_zero.1 h
+    have : (t : ZMod p) = (k : ZMod p) := sub_eq_zero.1 h0
     rw [ZMod.natCast_eq_natCast_iff'] at this
     rw [Nat.mod_eq_of_lt hkp] at this
     by_cases htp : t < p
@@ -89,8 +80,8 @@ lemma reg1 {r m k : ℕ} (S : GKS1 p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2
           omega
         omega
 
-theorem sgData1 {Fr : Frame} (hL : LamData Fr) {r m k : ℕ} (S : GKS1 p r m k) :
-    SgData Fr p (r + 2 * m) (Sg1 p k) (res1 p k) (resD1 p k) := by
+theorem sgData1 {Fr : Frame} (hL : LamData Fr 1) {r m k : ℕ} (S : GKS1 p r m k) :
+    SgData Fr p (r + 2 * m) k (Sg1 p k) (res1 p k) (resD1 p k) := by
   have hp0 := (Fact.out : p.Prime).pos
   have hkp := S.kp
   have hk0 := S.k0
@@ -114,7 +105,7 @@ theorem sgData1 {Fr : Frame} (hL : LamData Fr) {r m k : ℕ} (S : GKS1 p r m k) 
   have e4 : k ≠ 2 * p := by omega
   have e5 : p ≠ 2 * p := by omega
   have e6 : p + k ≠ 2 * p := by omega
-  refine ⟨?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro t ht
     simp only [Sg1, Finset.mem_insert, Finset.mem_singleton] at ht
     omega
@@ -154,6 +145,7 @@ theorem sgData1 {Fr : Frame} (hL : LamData Fr) {r m k : ℕ} (S : GKS1 p r m k) 
         e6.symm]
   · intro t h1 ht hn
     exact reg1 S h1 (by have := S.hN; omega) hn
+  · exact hk4_of (j := 3) (o := 1) S.hk
 
 end Inst1
 

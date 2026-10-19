@@ -19,10 +19,10 @@ namespace CatalanCore.Arith.Hybrid
 
 section Main
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- **Lemma E at a prime `p < r` of class 1, in dual form.** -/
-theorem gleAt_E_wit (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
+theorem gleAt_E_wit {o : ℕ} (hL : LamData Fr o) (S : ESetup o p r m j k) (sU : ZMod p)
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
     (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +
@@ -33,7 +33,7 @@ theorem gleAt_E_wit (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
   refine ⟨BE p j r m k, fun a b => hred_E hL S a b, ?_⟩
   omega
 
-theorem gleAt_E (hL : LamData Fr) (S : ESetup p r m j k) (sU : ZMod p)
+theorem gleAt_E {o : ℕ} (hL : LamData Fr o) (S : ESetup o p r m j k) (sU : ZMod p)
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
     (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +

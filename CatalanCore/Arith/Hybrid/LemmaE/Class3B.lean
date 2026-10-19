@@ -18,7 +18,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k1 : ℕ}
 
 /-- The partners `c_x = r - p + 2x` of the zone rows. -/
 def isCz (p r m c : ℕ) : Prop := r - p ≤ c ∧ c < r - p + 2 * m ∧ (c - (r - p)) % 2 = 0
@@ -32,17 +32,17 @@ def wc (p r m c : ℕ) : ℕ := if c < r then (if isCz p r m c then 2 else 1) el
 def rowLab (r m A : ℕ) : Prop := A < r ∨ (r ≤ A ∧ A < r + 2 * m ∧ (A - r) % 2 = 0)
 def colLab (r m B : ℕ) : Prop := B < r ∨ (r ≤ B ∧ B < r + 2 * m ∧ (B - r) % 2 = 1)
 
-noncomputable def TEw3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m)) (A B : ℕ) : ZMod p :=
+noncomputable def TEw3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m) k1) (A B : ℕ) : ZMod p :=
   if A < B then TEoG D (wr p r m A + wc p r m B) A B
   else if B < A then TEoG D (wr p r m A + wc p r m B) B A
   else TEdG D (wr p r m A + wc p r m B) A
 
-lemma feas3 (S : ESetup3 p r m k1) {A B : ℕ} (hA : rowLab r m A) (hB : colLab r m B) :
+lemma feas3 (S : ESetup3 o p r m k1) {A B : ℕ} (hA : rowLab r m A) (hB : colLab r m B) :
     1 ≤ wr p r m A + wc p r m B ∧
     (A < B → B - A = p → 2 ≤ wr p r m A + wc p r m B) ∧
     (B < A → A - B = p → 2 ≤ wr p r m A + wc p r m B) ∧
     (A = B → wr p r m A + wc p r m B = 2) := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN; have := S.p5
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN; have := S.p5
   unfold rowLab at hA
   unfold colLab at hB
   unfold wr wc isCz
@@ -52,7 +52,7 @@ lemma feas3 (S : ESetup3 p r m k1) {A B : ℕ} (hA : rowLab r m A) (hB : colLab 
   · intro h1 h2; split_ifs <;> omega
   · intro h1; split_ifs <;> omega
 
-theorem good_TEw3 (hL : LamData Fr) (S : ESetup3 p r m k1) {A B : ℕ} (hA : rowLab r m A)
+theorem good_TEw3 {o : ℕ} (hL : LamData Fr o) (S : ESetup3 o p r m k1) {A B : ℕ} (hA : rowLab r m A)
     (hB : colLab r m B) :
     Good p ((p : ℚ) ^ (wr p r m A + wc p r m B) * Fr.Mn A B)
       (TEw3 p r m (sd3 S) A B) := by
@@ -66,19 +66,19 @@ theorem good_TEw3 (hL : LamData Fr) (S : ESetup3 p r m k1) {A B : ℕ} (hA : row
   · have e : TEw3 p r m (sd3 S) A B = TEoG (sd3 S) (wr p r m A + wc p r m B) A B := by
       unfold TEw3; rw [if_pos h]
     rw [e]
-    exact good_TEoG hL S.p5 (sd3 S) hG h hBN f1 (by omega) (f2 h)
+    exact good_TEoG hL S.p5 S.hk4 (sd3 S) hG h hBN f1 (by omega) (f2 h)
   · subst h
     have e : TEw3 p r m (sd3 S) A A = TEdG (sd3 S) (wr p r m A + wc p r m A) A := by
       unfold TEw3; rw [if_neg (lt_irrefl _), if_neg (lt_irrefl _)]
     rw [e]
-    exact good_TEdG hL S.p5 (sd3 S) hG hAN (f4 rfl)
+    exact good_TEdG hL S.p5 S.hk4 (sd3 S) hG hAN (f4 rfl)
   · have e : TEw3 p r m (sd3 S) A B = TEoG (sd3 S) (wr p r m A + wc p r m B) B A := by
       unfold TEw3; rw [if_neg (by omega), if_pos h]
     rw [e, Mn_symm]
-    exact good_TEoG hL S.p5 (sd3 S) hG h hAN f1 (by omega) (f3 h)
+    exact good_TEoG hL S.p5 S.hk4 (sd3 S) hG h hAN f1 (by omega) (f3 h)
 
 /-- The reduction matrix of Lemma E, class 3 (no `X`: every weight is `≥ 1`). -/
-noncomputable def BE3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m)) :
+noncomputable def BE3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m) k1) :
     Matrix (Fin r ⊕ Fin m) (Fin r ⊕ Fin m) (RatFunc (ZMod p)) :=
   Matrix.of fun a b => rfC p (TEw3 p r m D (Frame.hybRow r m a) (Frame.hybCol r m b))
 
@@ -92,7 +92,7 @@ lemma colLab_hyb (b : Fin r ⊕ Fin m) : colLab r m (Frame.hybCol r m b) := by
   · have := c.2; show colLab r m (c : ℕ); unfold colLab; left; exact this
   · have := i.2; show colLab r m (r + 2 * (i : ℕ) + 1); unfold colLab; right; omega
 
-theorem hred_E3 (hL : LamData Fr) (S : ESetup3 p r m k1) (a b : Fin r ⊕ Fin m) :
+theorem hred_E3 {o : ℕ} (hL : LamData Fr o) (S : ESetup3 o p r m k1) (a b : Fin r ⊕ Fin m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wr p r m (Frame.hybRow r m a) + wc p r m (Frame.hybCol r m b))) *
         fullEntry Fr r m a b ∧ phiP p g = BE3 p r m (sd3 S) a b := by

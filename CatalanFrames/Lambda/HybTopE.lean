@@ -18,7 +18,7 @@ open Finset CatalanCore CatalanCore.Basic CatalanCore.Rect CatalanCore.Arith
 namespace CatalanFrames.Lambda
 
 /-- Lemma E for λ at a class-1 prime, bordered. -/
-theorem gleAt_E_lam_top {p r m k : ℕ} [Fact p.Prime] (S : ESetup p r m 3 k) :
+theorem gleAt_E_lam_top {p r m k : ℕ} [Fact p.Prime] (S : ESetup 1 p r m 3 k) :
     GLE p (2 * ((r - p) + (r - k)) + 4 * m - m + topC lamInst r m p)
       ((afterTop r m).fullPolyG lamFrame) := by
   have := (gleAt_E_lam_wit S).border lamInst

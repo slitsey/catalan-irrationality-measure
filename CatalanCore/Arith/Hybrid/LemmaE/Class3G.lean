@@ -15,14 +15,14 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 
 lemma dZ_B1 {a : ℕ} (h1 : k1 ≤ a) (h2 : a < p) : dZ S a = 1 := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have h16 := h16_ne (p := p) S.p5
   unfold dZ
   rw [singG2_B1 S h1 h2]
@@ -30,7 +30,7 @@ lemma dZ_B1 {a : ℕ} (h1 : k1 ≤ a) (h2 : a < p) : dZ S a = 1 := by
   field_simp
 
 lemma dZ_lo {a : ℕ} (h1 : a < k1) : dZ S a = 0 := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   unfold dZ
   rw [singG2_eval S]
   have e1 : ¬ k1 ≤ a := by omega
@@ -41,7 +41,7 @@ lemma dZ_lo {a : ℕ} (h1 : a < k1) : dZ S a = 0 := by
 
 lemma eZ_lo1 {a : ℕ} (h0 : a < k1) : eZ S a =
     (16 : ZMod p)⁻¹ * (-(4 * (((1 : ℕ) : ZMod p))⁻¹) + 1) := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have hpr := S.hpr
   have hk2r := S.hk2r
   have hrp : a < r - p := by omega
@@ -55,7 +55,7 @@ lemma eZ_lo1 {a : ℕ} (h0 : a < k1) : eZ S a =
 
 lemma eZ_lo2 {a : ℕ} (h0 : k1 ≤ a) (h1 : a < r - p) : eZ S a =
     (16 : ZMod p)⁻¹ * s3 p := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have hpr := S.hpr
   have hk2r := S.hk2r
   have hN := S.hN
@@ -65,7 +65,7 @@ lemma eZ_lo2 {a : ℕ} (h0 : k1 ≤ a) (h1 : a < r - p) : eZ S a =
 lemma dZ_B3 {b : ℕ} (h : p + k1 ≤ b) : dZ S b =
     -(1 / 16 : ZMod p) * (-(16 * ((((1 : ℕ) : ZMod p))⁻¹) ^ 2) + 1 +
       -(16 * ((((5 : ℕ) : ZMod p))⁻¹) ^ 2)) := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   unfold dZ
   rw [singG2_eval S]
   have e1 : k1 ≤ b := by omega
@@ -81,7 +81,7 @@ lemma num_id (h5 : (5 : ZMod p) ≠ 0) (h16 : (16 : ZMod p) ≠ 0) :
 lemma delta_core {a : ℕ} (h : a < r - p) (h3 : (3 : ZMod p) ≠ 0)
     (h5 : (5 : ZMod p) ≠ 0) (h6255 : (6255 : ZMod p) ≠ 0) :
     dZ S a * dZ S (a + p) - eZ S a ^ 2 ≠ 0 := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have hp5 := S.p5
   have h16 := h16_ne (p := p) S.p5
   have hpr := S.hpr

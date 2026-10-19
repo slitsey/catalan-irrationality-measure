@@ -14,16 +14,16 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 
 lemma h1_sys (c : Pt3 p r m) (y : Fin m) :
     ∑ c', Mat3 p r m (sd3 S) (Sum.inl (Sum.inl c)) (Sum.inl (Sum.inl c')) * V1 S c' y =
       Mat3 p r m (sd3 S) (Sum.inl (Sum.inl c)) (Sum.inr y) := by
-  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1
+  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1o
   obtain ⟨he1, he2⟩ := e0_bounds S y
   have hy := y.2
   rw [Finset.sum_eq_single (e0 S y)]
@@ -53,7 +53,7 @@ lemma h2_sys (w : Wt3 p r m) (y : Fin m) :
     ∑ c', Mat3 p r m (sd3 S) (Sum.inl (Sum.inr w)) (Sum.inl (Sum.inl c')) * V1 S c' y +
     ∑ w', Mat3 p r m (sd3 S) (Sum.inl (Sum.inr w)) (Sum.inl (Sum.inr w')) * V2 w' y =
       Mat3 p r m (sd3 S) (Sum.inl (Sum.inr w)) (Sum.inr y) := by
-  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1
+  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1o
   obtain ⟨hw1, hw2, hw3⟩ := wC_bounds S w
   have hy := y.2
   have hfirst : ∑ c', Mat3 p r m (sd3 S) (Sum.inl (Sum.inr w)) (Sum.inl (Sum.inl c')) *
@@ -83,7 +83,7 @@ lemma h2_sys (w : Wt3 p r m) (y : Fin m) :
 lemma h3_sys (x y : Fin m) :
     ∑ c', Mat3 p r m (sd3 S) (Sum.inr x) (Sum.inl (Sum.inl c')) * V1 S c' y +
     ∑ w', Mat3 p r m (sd3 S) (Sum.inr x) (Sum.inl (Sum.inr w')) * V2 w' y = 0 := by
-  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1
+  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1o
   have hy := y.2
   have hx := x.2
   have hp0 : 0 < p := (Fact.out : p.Prime).pos

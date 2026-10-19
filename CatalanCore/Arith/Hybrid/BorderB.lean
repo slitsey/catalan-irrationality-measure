@@ -22,8 +22,8 @@ section
 variable {p : ℕ} [Fact p.Prime] {r m j k : ℕ}
 
 /-- **Bordered Theorem B at a prime** (member 2, cost `topC`), from the rank witness. -/
-theorem gleAt_Btop_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
-    (S : BSetup p r m j k) (hpm : p < r + m) :
+theorem gleAt_Btop_lam {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o)
+    (S : BSetup o p r m j k) (hpm : p < r + m) :
     GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
       (m - (p - r)) + topC I r m p) ((afterTop r m).fullPolyG Fr) :=
   (gleAt_B_lam_wit hL S hpm).border I
@@ -32,11 +32,11 @@ end
 
 open Classical in
 /-- **Bordered Theorem B as a `DefHypTop` family** (twin of `defHypT_B`, same hypotheses). -/
-theorem defHypTop_B {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypTop_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
     (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
-    (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup p r m j k)
+    (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup o p r m j k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
-    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ j k, BSetup p r m j k →
+    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ j k, BSetup o p r m j k →
       ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤ T p) :
     DefHypTop I r m T (fun p => if W p then m - (p - r) else 0) := by
   refine defHypTop_of_local T _ hT W (fun p hp => by simp [hp]) ?_

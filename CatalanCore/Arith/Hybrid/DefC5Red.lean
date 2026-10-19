@@ -16,7 +16,7 @@ section Hred
 
 variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k : ℕ}
 
-lemma lift_offdiag5 (hL : LamData Fr) (S : CSetup p r m k) {A B : ℕ} (hAB : A ≠ B)
+lemma lift_offdiag5 {o : ℕ} (hL : LamData Fr o) (S : CSetup o p r m k) {A B : ℕ} (hAB : A ≠ B)
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wC p r k A + wC p r k B)) * C (Fr.Mn A B) ∧
@@ -24,7 +24,7 @@ lemma lift_offdiag5 (hL : LamData Fr) (S : CSetup p r m k) {A B : ℕ} (hAB : A 
   lift_good p (good_TcF S hL hAB hA hB)
 
 /-- **The entries of `Full(X)` reduce to the table `BTc`.** -/
-theorem hred_C (hL : LamData Fr) (S : CSetup p r m k) (a b : Fin r ⊕ Fin m) :
+theorem hred_C {o : ℕ} (hL : LamData Fr o) (S : CSetup o p r m k) (a b : Fin r ⊕ Fin m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wC p r k (Frame.hybRow r m a) + wC p r k (Frame.hybCol r m b))) *
         fullEntry Fr r m a b ∧ phiP p g = BTc p r k m a b := by

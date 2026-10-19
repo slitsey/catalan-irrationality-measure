@@ -20,9 +20,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 
@@ -56,8 +56,8 @@ lemma card_Wt : Fintype.card (Wt3 p r m) = m := by
 
 lemma rank_BE3_le (h6255 : ¬ p ∣ 6255) : (BE3 p r m (sd3 S)).rank ≤ r := by
   have hp5 := S.p5
-  have hp3 := S.hp3
-  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1
+  have := S.hp6
+  have hN := S.hN; have hpr := S.hpr; have hk2r := S.hk2r; have hk1 := S.hk1o
   have h3 : (3 : ZMod p) ≠ 0 := by
     intro h
     have h' : ((3 : ℕ) : ZMod p) = 0 := by exact_mod_cast h
@@ -104,7 +104,7 @@ lemma rank_BE3_le (h6255 : ¬ p ∣ 6255) : (BE3 p r m (sd3 S)).rank ≤ r := by
   omega
 
 /-- **Lemma E at a class-3 prime, dual form.** -/
-theorem gleAt_E3_wit (hL : LamData Fr) (h6255 : ¬ p ∣ 6255) :
+theorem gleAt_E3_wit (hL : LamData Fr o) (h6255 : ¬ p ∣ 6255) :
     HasRankWit Fr p r m (fun a => wr p r m (Frame.hybRow r m a))
       (fun b => wc p r m (Frame.hybCol r m b)) m := by
   have hrank := rank_BE3_le S h6255
@@ -112,7 +112,7 @@ theorem gleAt_E3_wit (hL : LamData Fr) (h6255 : ¬ p ∣ 6255) :
   omega
 
 /-- **Lemma E at a class-3 prime, dual form.** -/
-theorem gleAt_E3 (hL : LamData Fr) (h6255 : ¬ p ∣ 6255) :
+theorem gleAt_E3 (hL : LamData Fr o) (h6255 : ¬ p ∣ 6255) :
     GLE p (∑ a, wr p r m (Frame.hybRow r m a) + ∑ b, wc p r m (Frame.hybCol r m b) - m)
       (Fr.fullPoly r m) :=
   (gleAt_E3_wit S hL h6255).gle

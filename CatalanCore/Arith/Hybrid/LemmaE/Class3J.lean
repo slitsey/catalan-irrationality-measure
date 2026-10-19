@@ -17,9 +17,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 

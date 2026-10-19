@@ -49,7 +49,7 @@ lemma eC_ne (hp5 : 5 ≤ p) : eC p ≠ 0 := by
   unfold eC
   exact mul_ne_zero (inv_ne_zero (h16 hp5)) (neg_ne_zero.2 (three_ne hp5))
 
-variable {r m k : ℕ} (S : CSetup p r m k)
+variable {o r m k : ℕ} (S : CSetup o p r m k)
 include S
 
 lemma Mval_P0 {C D : ℕ} (hC : C < r - p) (hD : D < r) :
@@ -130,7 +130,7 @@ end Vals
 
 section Inv
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup o p r m k)
 
 lemma sum_ite_BP {α : Type*} [AddCommMonoid α] (F : BP p r k → α) (d0 : BP p r k)
     (h : ∀ d, d ≠ d0 → F d = 0) : ∑ d, F d = F d0 :=

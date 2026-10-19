@@ -18,7 +18,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Elim7
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup7 o p r m k)
 include S
 
 lemma TcF7_UU {u w : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hw1 : r - p ≤ w) (hw2 : w < k) :
@@ -44,7 +44,7 @@ lemma TcF7_UB1 {u c : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hc1 : k ≤ c) (hc
   simp
 
 omit S in
-lemma Ival_col_B17 {α β : ℕ} (hS : CSetup7 p r m k) (hα : α < r) (hb1 : k ≤ β) (hb2 : β < p) :
+lemma Ival_col_B17 {α β : ℕ} (hS : CSetup7 o p r m k) (hα : α < r) (hb1 : k ≤ β) (hb2 : β < p) :
     Ival7 p r α β = if β = α then (b1C7 p)⁻¹ else 0 := by
   have := hS.kp; have := hS.hLlo; have := hS.hrp; have := hS.hN
   unfold Ival7; split_ifs <;> first | rfl | (exfalso; omega)

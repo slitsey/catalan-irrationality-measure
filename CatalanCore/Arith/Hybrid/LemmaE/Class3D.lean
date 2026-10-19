@@ -18,7 +18,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
 abbrev Wt3 (p r m : ℕ) := {c : Fin r // isCz p r m (c : ℕ)}
 abbrev Pt3 (p r m : ℕ) := {c : Fin r // ¬ isCz p r m (c : ℕ)}
@@ -44,12 +44,12 @@ lemma e3_symm_r (y : Fin m) : (e3 p r m).symm (Sum.inr y) = Sum.inr y := by
   rw [Equiv.symm_apply_eq]; simp [e3]
 
 /-- The reduction matrix in block form. -/
-noncomputable def Mat3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m)) :
+noncomputable def Mat3 (p r m : ℕ) [Fact p.Prime] (D : SingData p (r + 2 * m) k1) :
     Matrix ((Pt3 p r m ⊕ Wt3 p r m) ⊕ Fin m) ((Pt3 p r m ⊕ Wt3 p r m) ⊕ Fin m)
       (RatFunc (ZMod p)) :=
   (BE3 p r m D).submatrix (e3 p r m).symm (e3 p r m).symm
 
-variable (D : SingData p (r + 2 * m))
+variable (D : SingData p (r + 2 * m) k1)
 
 lemma Mat3_pp (c c' : Pt3 p r m) : Mat3 p r m D (Sum.inl (Sum.inl c)) (Sum.inl (Sum.inl c')) =
     rfC p (TEw3 p r m D c.1 c'.1) := by

@@ -65,7 +65,7 @@ theorem lam_defBoth_all {r : ℕ} (hr : 16 ≤ r) :
   have hE1 : DefBoth r T (defE1 r) := ⟨defHypT_E1 r T hT1 hd1, defHypTop_E1 r T hT1 hd1⟩
   have hE3 : DefBoth r T (defE3 r) :=
     ⟨defHypT_E3 hr T hT1 hd3, defHypTop_E3 hr T hT1 hd3⟩
-  have hBd : ∀ p : ℕ, p.Prime → WB r p → ∀ j k, BSetup p r (r / 8) j k →
+  have hBd : ∀ p : ℕ, p.Prime → WB r p → ∀ j k, BSetup 1 p r (r / 8) j k →
       ∑ a, uPot p r k (Frame.hybRow r (r / 8) a) + ∑ b, uPot p r k (Frame.hybCol r (r / 8) b)
         ≤ T p := fun p hp hW j k S => by
     rw [bsetup_k hW.1 S]
@@ -125,7 +125,7 @@ theorem lam_defBoth_all2 {r : ℕ} (hr : 16 ≤ r) :
   classical
   obtain ⟨δ0, h0, h1, h3, hB⟩ := lam_defBoth_all hr
   have h0' : DefBoth r (Tfun2 r) δ0 := h0.mono_T fun p _ _ => le_max_left _ _
-  have hCs : ∀ p : ℕ, p.Prime → WC5 r p → ∀ k, CSetup p r (r / 8) k →
+  have hCs : ∀ p : ℕ, p.Prime → WC5 r p → ∀ k, CSetup 1 p r (r / 8) k →
       ∑ a, wC p r k (Frame.hybRow r (r / 8) a) + ∑ b, wC p r k (Frame.hybCol r (r / 8) b)
         ≤ Tfun2 r p := fun p hp hW k S => by
     have hk : k = (p + 1) / 4 := by have := S.hk; omega

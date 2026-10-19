@@ -22,14 +22,14 @@ section
 
 variable {p : ℕ} [Fact p.Prime] {Fr : Frame}
 
-lemma good_Delta_kz (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j * p + 1) (hj0 : 0 < j)
+lemma good_Delta_kz {o : ℕ} (hL : LamData Fr o) {j k : ℕ} (hk : 4 * k = j * p + o) (hj0 : 0 < j)
     (hjp : j < p) (hk0 : 0 < k) (hkz : ((k : ℕ) : ZMod p) ≠ 0) :
     Good p ((p : ℚ) * Fr.Delta k) (-(4 * ((j : ℕ) : ZMod p)⁻¹)) := by
   rw [hL.delta_eq k hk0]
   have hjz : ((j : ℕ) : ZMod p) ≠ 0 := by
     rw [Ne, ZMod.natCast_eq_zero_iff]; intro hd; exact absurd (Nat.le_of_dvd hj0 hd) (by omega)
-  have hkQ : 4 * (k : ℚ) - 1 = (j : ℚ) * p := by
-    have : (4 * k : ℚ) = j * p + 1 := by exact_mod_cast hk
+  have hkQ : 4 * (k : ℚ) - (o : ℚ) = (j : ℚ) * p := by
+    have : (4 * k : ℚ) = j * p + o := by exact_mod_cast hk
     linarith
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hjQ : (j : ℚ) ≠ 0 := by exact_mod_cast hj0.ne'
@@ -43,14 +43,14 @@ lemma good_Delta_kz (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j * p + 1) (hj0 
   rw [hkQ]
   field_simp
 
-lemma good_Dsq_kz (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j * p + 1) (hj0 : 0 < j)
+lemma good_Dsq_kz {o : ℕ} (hL : LamData Fr o) {j k : ℕ} (hk : 4 * k = j * p + o) (hj0 : 0 < j)
     (hjp : j < p) (hk0 : 0 < k) (hkz : ((k : ℕ) : ZMod p) ≠ 0) :
     Good p ((p : ℚ) ^ 2 * Fr.Dsq k) (-(16 * (((j : ℕ) : ZMod p)⁻¹) ^ 2)) := by
   rw [hL.dsq_eq k hk0]
   have hjz : ((j : ℕ) : ZMod p) ≠ 0 := by
     rw [Ne, ZMod.natCast_eq_zero_iff]; intro hd; exact absurd (Nat.le_of_dvd hj0 hd) (by omega)
-  have hkQ : 4 * (k : ℚ) - 1 = (j : ℚ) * p := by
-    have : (4 * k : ℚ) = j * p + 1 := by exact_mod_cast hk
+  have hkQ : 4 * (k : ℚ) - (o : ℚ) = (j : ℚ) * p := by
+    have : (4 * k : ℚ) = j * p + o := by exact_mod_cast hk
     linarith
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hjQ : (j : ℚ) ≠ 0 := by exact_mod_cast hj0.ne'
@@ -69,20 +69,28 @@ lemma good_Dsq_kz (hL : LamData Fr) {j k : ℕ} (hk : 4 * k = j * p + 1) (hj0 : 
   field_simp
 
 /-- The setting of Lemma E, class 3. -/
-structure ESetup3 (p r m k1 : ℕ) : Prop where
+structure ESetup3 (o p r m k1 : ℕ) : Prop where
   p5 : 5 ≤ p
-  hp3 : p % 4 = 3
-  hk1 : 4 * k1 = p + 1
+  hp6 : 6 ≤ p
+  ho0 : 0 < o
+  ho3 : o ≤ 3
+  hk1 : 4 * k1 = p + o
   hpr : p < r
   hk2r : p + k1 < r
   hN : r + 2 * m < 2 * p
 
-variable {r m k1 : ℕ}
+variable {o r m k1 : ℕ}
 
-lemma ESetup3.reg (S : ESetup3 p r m k1) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m)
-    (h2 : t ≠ k1) (h3 : t ≠ p) (h4 : t ≠ p + k1) : Reg p t := by
+lemma ESetup3.hk4 {p : ℕ} [Fact p.Prime] (S : ESetup3 o p r m k1) :
+    (4 : ZMod p) * (k1 : ZMod p) = (o : ZMod p) := hk4_of (j := 1) (by rw [one_mul]; exact S.hk1)
+
+lemma ESetup3.hk1o (S : ESetup3 o p r m k1) : 4 * k1 = p + o ∧ 0 < o ∧ o ≤ 3 ∧ 6 ≤ p :=
+  ⟨S.hk1, S.ho0, S.ho3, S.hp6⟩
+
+lemma ESetup3.reg (S : ESetup3 o p r m k1) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m)
+    (h2 : t ≠ k1) (h3 : t ≠ p) (h4 : t ≠ p + k1) : Reg p k1 t := by
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have hSN := S.hN
   refine ⟨?_, ?_⟩
   · rw [Ne, ZMod.natCast_eq_zero_iff]
@@ -93,18 +101,18 @@ lemma ESetup3.reg (S : ESetup3 p r m k1) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 
     · have : p * (c + 1 + 1) ≥ p * 2 := Nat.mul_le_mul_left p (by omega)
       omega
   · intro h0
-    have h5 : ((4 * t - 1 : ℕ) : ZMod p) = 0 := by
-      rw [Nat.cast_sub (by omega)]; push_cast; exact h0
-    rw [ZMod.natCast_eq_zero_iff] at h5
-    obtain ⟨j, hj⟩ := h5
-    have hj8 : j < 8 := by
-      by_contra hh
-      have : p * 8 ≤ p * j := Nat.mul_le_mul_left p (by omega)
+    have hk1p : k1 < p := by omega
+    have : (t : ZMod p) = (k1 : ZMod p) := sub_eq_zero.1 h0
+    rw [ZMod.natCast_eq_natCast_iff'] at this
+    by_cases htp : t < p
+    · rw [Nat.mod_eq_of_lt htp, Nat.mod_eq_of_lt hk1p] at this; exact h2 this
+    · have : t % p = t - p := by
+        rw [Nat.mod_eq_sub_mod (by omega), Nat.mod_eq_of_lt (by omega)]
+      rw [Nat.mod_eq_of_lt hk1p] at *
       omega
-    interval_cases j <;> omega
 
 /-- The singular data of class 3. -/
-noncomputable def sd3 (S : ESetup3 p r m k1) : SingData p (r + 2 * m) where
+noncomputable def sd3 (S : ESetup3 o p r m k1) : SingData p (r + 2 * m) k1 where
   Sg := {k1, p, p + k1}
   ρ := fun t => if t = k1 then -(4 * (((1 : ℕ) : ZMod p))⁻¹)
     else if t = p then 1 else -(4 * (((5 : ℕ) : ZMod p))⁻¹)
@@ -112,7 +120,7 @@ noncomputable def sd3 (S : ESetup3 p r m k1) : SingData p (r + 2 * m) where
     else if t = p then 1 else -(16 * ((((5 : ℕ) : ZMod p))⁻¹) ^ 2)
   pos := by
     intro t ht
-    have hk1 := S.hk1
+    have hk1 := S.hk1o
     simp only [Finset.mem_insert, Finset.mem_singleton] at ht
     rcases ht with h | h | h <;> omega
   reg := by
@@ -120,10 +128,10 @@ noncomputable def sd3 (S : ESetup3 p r m k1) : SingData p (r + 2 * m) where
     simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hn
     exact S.reg h1 hN hn.1 hn.2.1 hn.2.2
 
-theorem sd3_good (hL : LamData Fr) (S : ESetup3 p r m k1) : SingGood Fr (sd3 S) where
+theorem sd3_good {o : ℕ} (hL : LamData Fr o) (S : ESetup3 o p r m k1) : SingGood Fr (sd3 S) where
   hΔ := by
     intro t ht
-    have hk1 := S.hk1
+    have hk1 := S.hk1o
     have hp5 := S.p5
     have hp0 : 0 < p := (Fact.out : p.Prime).pos
     simp only [sd3, Finset.mem_insert, Finset.mem_singleton] at ht
@@ -147,7 +155,7 @@ theorem sd3_good (hL : LamData Fr) (S : ESetup3 p r m k1) : SingGood Fr (sd3 S) 
       rw [ZMod.natCast_self, zero_add]; exact hk1z
   hD := by
     intro t ht
-    have hk1 := S.hk1
+    have hk1 := S.hk1o
     have hp5 := S.p5
     have hp0 : 0 < p := (Fact.out : p.Prime).pos
     simp only [sd3, Finset.mem_insert, Finset.mem_singleton] at ht

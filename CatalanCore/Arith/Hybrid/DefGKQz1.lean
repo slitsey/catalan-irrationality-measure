@@ -63,7 +63,7 @@ lemma Pv_eq_Pz {r m : ℕ} (S : GKS1 p r m k) (n : ℕ) :
 
 variable {Fr : Frame}
 
-theorem good_Qz1_lt (hL : LamData Fr) {r m : ℕ} (S : GKS1 p r m k) {A B : ℕ} (hAB : A < B)
+theorem good_Qz1_lt (hL : LamData Fr 1) {r m : ℕ} (S : GKS1 p r m k) {A B : ℕ} (hAB : A < B)
     (hB : B < r + 2 * m) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz1 p k A B : ZMod p) * 56448⁻¹) := by
   have h13 := S.p13
@@ -99,7 +99,7 @@ theorem good_Qz1_lt (hL : LamData Fr) {r m : ℕ} (S : GKS1 p r m k) {A B : ℕ}
     rw [if_pos hAB, if_neg h1, if_neg h2]
     simp
 
-theorem good_Qz1 (hL : LamData Fr) {r m : ℕ} (S : GKS1 p r m k) {A B : ℕ}
+theorem good_Qz1 (hL : LamData Fr 1) {r m : ℕ} (S : GKS1 p r m k) {A B : ℕ}
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) (hd : A = B → A < r) :
     Good p ((p : ℚ) ^ 2 * Fr.Mn A B) ((Qz1 p k A B : ZMod p) * 56448⁻¹) := by
   have h13 := S.p13

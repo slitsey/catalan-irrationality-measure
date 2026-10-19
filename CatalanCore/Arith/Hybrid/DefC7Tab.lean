@@ -42,7 +42,7 @@ lemma TcF7_diag (A : ℕ) :
 
 section Wt7
 
-variable {m : ℕ} (S : CSetup7 p r m k)
+variable {o m : ℕ} (S : CSetup7 o p r m k)
 include S
 
 lemma wC7_U {A : ℕ} (h1 : r - p ≤ A) (h2 : A < k) : wC7 p r k A = 0 := by
@@ -59,7 +59,7 @@ lemma wC7_high {A : ℕ} (h1 : p + k ≤ A) : wC7 p r k A = 1 := by
 
 lemma wC7_le {A : ℕ} : wC7 p r k A ≤ 2 := by unfold wC7; split_ifs <;> omega
 
-variable {Fr : Frame} (hL : LamData Fr)
+variable {Fr : Frame} (hL : LamData Fr o)
 include hL
 
 theorem good_TcF7 {A B : ℕ} (hAB : A ≠ B) (hA : A < r + 2 * m) (hB : B < r + 2 * m) :

@@ -14,7 +14,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section Zero
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup o p r m k)
 include S
 
 omit S in

@@ -34,9 +34,11 @@ lemma not_dvd_6255 {p : ℕ} (hp : p.Prime) (h7 : 7 ≤ p) (h139 : p ≠ 139) : 
     exact h139 this
 
 lemma eSetup3_of_clean {r p : ℕ} (hp : p.Prime) (h4 : p % 4 = 3) (h8 : 5 * r + 8 ≤ 8 * p)
-    (h5 : 5 * p + 5 ≤ 4 * r) (hr : 16 ≤ r) : ESetup3 p r (r / 8) ((p + 1) / 4) where
+    (h5 : 5 * p + 5 ≤ 4 * r) (hr : 16 ≤ r) : ESetup3 1 p r (r / 8) ((p + 1) / 4) where
   p5 := by omega
-  hp3 := h4
+  hp6 := by omega
+  ho0 := by omega
+  ho3 := by omega
   hk1 := by omega
   hpr := by omega
   hk2r := by omega

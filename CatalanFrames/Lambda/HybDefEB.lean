@@ -27,7 +27,7 @@ def dualB (r m p : ℕ) : ℕ :=
 /-- The window of Theorem B. -/
 def WB (r p : ℕ) : Prop := p.Prime ∧ r < p ∧ p < r + r / 8
 
-lemma bsetup_k {p r m j k : ℕ} (hp : p.Prime) (S : BSetup p r m j k) : k = kB p := by
+lemma bsetup_k {p r m j k : ℕ} (hp : p.Prime) (S : BSetup 1 p r m j k) : k = kB p := by
   have hp5 := S.p5
   have hodd : p % 2 = 1 := by
     by_contra h
@@ -45,7 +45,7 @@ lemma bsetup_k {p r m j k : ℕ} (hp : p.Prime) (S : BSetup p r m j k) : k = kB 
   interval_cases j <;> split_ifs <;> omega
 
 lemma bsetup_of {p r : ℕ} (hr : 16 ≤ r) (hp : p.Prime) (h1 : r < p) (h2 : p < r + r / 8) :
-    BSetup p r (r / 8) (if p % 4 = 1 then 3 else 1) (kB p) := by
+    BSetup 1 p r (r / 8) (if p % 4 = 1 then 3 else 1) (kB p) := by
   have hodd : p % 2 = 1 := by
     by_contra h
     have h2' : 2 ∣ p := by omega

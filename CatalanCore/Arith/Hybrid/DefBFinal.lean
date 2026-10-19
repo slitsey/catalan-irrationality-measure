@@ -19,9 +19,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m j k : ℕ}
 
-lemma Tfull_zone (S : BSetup p r m j k) {z w : ℕ} (hz : r ≤ z) (hw : w < k) :
+lemma Tfull_zone (S : BSetup o p r m j k) {z w : ℕ} (hz : r ≤ z) (hw : w < k) :
     Tfull p j k z w = if z < p then (16 * ((z : ZMod p) - w))⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹))
       else if z - w = p then (16 : ZMod p)⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹) + 1) else 0 := by
   have := S.hkr
@@ -35,7 +35,7 @@ lemma card_blk (r k : ℕ) : Fintype.card (Blk0 r k) + Fintype.card (Blk1 r k) =
   exact this
 
 /-- The shape of a zone row/column `z ≥ r` against `w ∈ B0` (generic in the label `z`). -/
-lemma zone_shape (S : BSetup p r m j k) {d : ℕ} (hd : d = p - r) (hd0 : 0 < d) {z : ℕ}
+lemma zone_shape (S : BSetup o p r m j k) {d : ℕ} (hd : d = p - r) (hd0 : 0 < d) {z : ℕ}
     (hz : r ≤ z) (hzN : z < r + 2 * m) (w : Blk0 r k)
     (cz : Blk0 r k) (hcz : z < p ∨ (cz.1.val = z - p)) :
     rfC p (Tfull p j k z w.1.val) =
@@ -86,8 +86,8 @@ lemma zone_shape (S : BSetup p r m j k) {d : ℕ} (hd : d = p - r) (hd0 : 0 < d)
 /-- **Theorem B at a prime `r < p < r + m`, in dual form** (λ-like frame): with `τ' = ∑u + ∑v` the
 value of the D4 potentials, `p^{τ' - (r + m - p)} · det Full(X)` is `ℤ_(p)`-integral.  No
 primal optimality is needed. -/
-theorem gleAt_B_lam_wit {Fr : Frame} (hL : LamData Fr)
-    (S : BSetup p r m j k) (hpm : p < r + m) :
+theorem gleAt_B_lam_wit {Fr : Frame} {o : ℕ} (hL : LamData Fr o)
+    (S : BSetup o p r m j k) (hpm : p < r + m) :
     HasRankWit Fr p r m (fun a => uPot p r k (Frame.hybRow r m a))
       (fun b => uPot p r k (Frame.hybCol r m b)) (m - (p - r)) := by
   have hrp := S.hrp
@@ -99,10 +99,7 @@ theorem gleAt_B_lam_wit {Fr : Frame} (hL : LamData Fr)
   have hrd : r + d = p := by omega
   have hd0 : 0 < d := by omega
   have hdm : d ≤ m := by omega
-  have hk4 : (4 : ZMod p) * (k : ZMod p) = 1 := by
-    have : ((4 * k : ℕ) : ZMod p) = ((j * p + 1 : ℕ) : ZMod p) := by rw [S.hk]
-    push_cast at this
-    simpa [ZMod.natCast_self] using this
+  have hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p) := hk4_of S.hk
   have hjz : ((j : ℕ) : ZMod p) ≠ 0 := natCast_ne_zero_of_lt S.hj0 S.hjp
   have hpi : piL p j ≠ 0 := by
     unfold piL; rw [rfC_eq]
@@ -179,8 +176,8 @@ theorem gleAt_B_lam_wit {Fr : Frame} (hL : LamData Fr)
     exact ⟨g, h1, h2.trans (BT_eq p r m j k hkr a b).symm⟩
 
 
-theorem gleAt_B_lam {Fr : Frame} (hL : LamData Fr)
-    (S : BSetup p r m j k) (hpm : p < r + m) :
+theorem gleAt_B_lam {Fr : Frame} {o : ℕ} (hL : LamData Fr o)
+    (S : BSetup o p r m j k) (hpm : p < r + m) :
     GLE p (∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) -
       (m - (p - r))) (Fr.fullPoly r m) :=
   (gleAt_B_lam_wit hL S hpm).gle
@@ -198,8 +195,8 @@ lemma uPot_sum_ge (hrp : r < p) :
 
 /-- **Theorem B at a prime `r < p < r + m`** in the `tropExp` form of `DefHyp`, assuming the D4
 weights are tropically optimal (`hopt`). -/
-theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr)
-    (S : BSetup p r m j k) (hpm : p < r + m)
+theorem defAt_B_lam {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o)
+    (S : BSetup o p r m j k) (hpm : p < r + m)
     (hopt : ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤
       tropExp I r m p) :
     m - (p - r) ≤ tropExp I r m p ∧
@@ -215,11 +212,11 @@ open Classical in
 an exceptional set on which `BSetup` fails); `T p` is any exponent bound that dominates both
 `tropExp` and the dual value `∑u + ∑v` of the D4 potentials at the prime `p` (with its singular
 block start `k`).  The deficit is `δ p = r + m - p` on `W`, `0` elsewhere. -/
-theorem defHypT_B {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (T : ℕ → ℕ)
+theorem defHypT_B {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o) (r m : ℕ) (T : ℕ → ℕ)
     (W : ℕ → Prop) (hW : ∀ p, W p → p < r + m)
-    (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup p r m j k)
+    (hSet : ∀ p : ℕ, p.Prime → W p → ∃ j k, BSetup o p r m j k)
     (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
-    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ j k, BSetup p r m j k →
+    (hTd : ∀ p : ℕ, p.Prime → W p → ∀ j k, BSetup o p r m j k →
       ∑ a, uPot p r k (Frame.hybRow r m a) + ∑ b, uPot p r k (Frame.hybCol r m b) ≤ T p) :
     DefHypT I r m T (fun p => if W p then m - (p - r) else 0) := by
   refine defHypT_of_local I r m T _ hT W (fun p hp => by simp [hp]) ?_

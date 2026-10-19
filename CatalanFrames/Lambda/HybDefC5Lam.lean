@@ -36,7 +36,7 @@ lemma sum_range_two (n q : ℕ) :
     split_ifs <;> omega
 
 /-- The dual value of the D2 potentials. -/
-lemma wC_dual_eq {p r m k : ℕ} (S : CSetup p r m k) :
+lemma wC_dual_eq {p r m k : ℕ} (S : CSetup 1 p r m k) :
     ∑ a : Fin r ⊕ Fin m, wC p r k (Frame.hybRow r m a) +
       ∑ b : Fin r ⊕ Fin m, wC p r k (Frame.hybCol r m b) = 2 * r + 2 * m - (p + k - r) := by
   have hk := S.hk
@@ -86,9 +86,9 @@ lemma wC_dual_eq {p r m k : ℕ} (S : CSetup p r m k) :
 noncomputable def eC5 (r p : ℕ) : ℕ := by
   classical exact if WC5 r p then 2 * r + 2 * (r / 8) - (p + (p + 1) / 4 - r) else 0
 
-lemma csetup_of_wc5 {r p : ℕ} (hr : 16 ≤ r) (h : WC5 r p) : CSetup p r (r / 8) ((p + 1) / 4) := by
+lemma csetup_of_wc5 {r p : ℕ} (hr : 16 ≤ r) (h : WC5 r p) : CSetup 1 p r (r / 8) ((p + 1) / 4) := by
   obtain ⟨hp, h4, h1, h2, h3⟩ := h
-  exact ⟨by omega, by omega, h3, by omega, by omega, by omega⟩
+  exact ⟨by omega, by omega, by omega, by omega, by omega, h3, by omega, by omega, by omega⟩
 
 /-- `Tfun` with the C5 dual. -/
 noncomputable def Tfun2 (r p : ℕ) : ℕ := max (Tfun r p) (eC5 r p)

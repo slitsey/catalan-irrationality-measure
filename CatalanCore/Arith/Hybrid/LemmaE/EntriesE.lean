@@ -22,31 +22,14 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame}
-
-lemma good_Dsq_p (hL : LamData Fr) (hp5 : 5 ≤ p) : Good p ((p : ℚ) ^ 2 * Fr.Dsq p) 1 := by
-  have hp1 : 1 ≤ p := (Fact.out : p.Prime).one_lt.le
-  rw [hL.dsq_eq p hp1]
-  have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
-  have h4 : (4 * (p : ℚ) - 1) ≠ 0 := by
-    have : (5 : ℚ) ≤ p := by exact_mod_cast hp5
-    linarith
-  have hl0 : ((p : ℕ) : ZMod p) = 0 := ZMod.natCast_self p
-  have hz : (4 * ((p : ℕ) : ZMod p) - 1) ≠ 0 := by rw [hl0]; simp
-  have g2 : Good p ((p : ℚ) ^ 2 * (16 / (4 * (p : ℚ) - 1) ^ 2)) 0 := by
-    have := ((Good.ofNat (ℓ := p) 16).div
-      ((((Good.ofNat (ℓ := p) 4).mul (Good.natCast (ℓ := p) p)).sub Good.one).pow' 2)
-      (pow_ne_zero 2 hz)).ell_mul.ell_mul
-    refine this.congr' ?_
-    ring
-  have := (Good.one (ℓ := p)).sub g2
-  refine this.congr' ?_ |>.congr (by simp)
-  field_simp
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame}
 
 /-- The setting of Lemma E, class 1 (`j = 3`). -/
-structure ESetup (p r m j k : ℕ) : Prop where
+structure ESetup (o p r m j k : ℕ) : Prop where
   p5 : 5 ≤ p
-  hk : 4 * k = j * p + 1
+  ho0 : 0 < o
+  ho3 : o ≤ 3
+  hk : 4 * k = j * p + o
   hj0 : 0 < j
   hjp : j < p
   hk0 : 0 < k
@@ -69,14 +52,14 @@ def singE2 (p j k A : ℕ) : ZMod p :=
 /-- The residue of `p^w Mn A B` for `A < B`. -/
 noncomputable def TEo (p j k w A B : ℕ) [Fact p.Prime] : ZMod p :=
   if w = 0 then (16 * ((B : ZMod p) - A))⁻¹ *
-      ∑ t ∈ Ioc A B, (((t : ℕ) : ZMod p)⁻¹ - 4 * (4 * ((t : ℕ) : ZMod p) - 1)⁻¹)
+      ∑ t ∈ Ioc A B, (((t : ℕ) : ZMod p)⁻¹ - (((t : ℕ) : ZMod p) - (k : ZMod p))⁻¹)
   else if B - A = p then (if w = 2 then (16 : ZMod p)⁻¹ * singE p j k A B else 0)
   else if w = 1 then (16 * ((B : ZMod p) - A))⁻¹ * singE p j k A B else 0
 
 /-- The residue of `p^w Mn A A`. -/
 noncomputable def TEd (p j k w A : ℕ) [Fact p.Prime] : ZMod p :=
   if w = 0 then -(1 / 16 : ZMod p) * ∑ t ∈ Icc 1 A,
-      ((((t : ℕ) : ZMod p)⁻¹) ^ 2 - 16 * ((4 * ((t : ℕ) : ZMod p) - 1)⁻¹) ^ 2)
+      ((((t : ℕ) : ZMod p)⁻¹) ^ 2 - ((((t : ℕ) : ZMod p) - (k : ZMod p))⁻¹) ^ 2)
   else if w = 2 then -(1 / 16 : ZMod p) * singE2 p j k A else 0
 
 /-- The symmetric residue table on labels. -/
@@ -87,18 +70,18 @@ noncomputable def TE (p j r k A B : ℕ) [Fact p.Prime] : ZMod p :=
 
 variable {r m j k : ℕ}
 
-lemma ESetup.reg (S : ESetup p r m j k) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m)
-    (hnk : t ≠ k) (hnp : t ≠ p) : Reg p t :=
+lemma ESetup.reg (S : ESetup o p r m j k) {t : ℕ} (h1 : 1 ≤ t) (hN : t < r + 2 * m)
+    (hnk : t ≠ k) (hnp : t ≠ p) : Reg p k t :=
   reg_of S.hk S.p5 S.hkp h1 (by have := S.hN; have := S.hkp; omega)
     (by have := S.hN; omega) hnk hnp
 
-lemma ESetup.pair_w (S : ESetup p r m j k) {A B : ℕ} (hAB : B - A = p) (hlt : A < B)
+lemma ESetup.pair_w (S : ESetup o p r m j k) {A B : ℕ} (hAB : B - A = p) (hlt : A < B)
     (hB : B < r + 2 * m) : 2 ≤ wE p r k A + wE p r k B := by
   have := S.hN; have := S.hpr; have := S.hkp; have := S.hrk
   unfold wE
   split_ifs <;> omega
 
-lemma ESetup.zero_w (S : ESetup p r m j k) {A B : ℕ} (hw : wE p r k A + wE p r k B = 0) :
+lemma ESetup.zero_w (S : ESetup o p r m j k) {A B : ℕ} (hw : wE p r k A + wE p r k B = 0) :
     r - p ≤ A ∧ A < k ∧ r - p ≤ B ∧ B < k := by
   unfold wE at hw
   split_ifs at hw <;> omega
@@ -121,7 +104,7 @@ lemma sumE_S0' (hkp : k < p) (j A : ℕ) :
 
 section Table
 
-variable (hL : LamData Fr) (S : ESetup p r m j k)
+variable (hL : LamData Fr o) (S : ESetup o p r m j k)
 
 include hL S
 
@@ -140,7 +123,7 @@ theorem good_TEo {A B : ℕ} (hAB : A < B) (hB : B < r + 2 * m) :
     obtain ⟨_, _, _, hBk⟩ := S.zero_w hw
     rw [pow_zero, one_mul]
     unfold TEo; rw [if_pos rfl]
-    exact Mn_good0 hL hp5 hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
+    exact Mn_good0 hL hp5 (hk4_of S.hk) hAB (fun t ht => by have := Finset.mem_Ioc.1 ht; omega)
       (fun t ht => by
         obtain ⟨h1, h2⟩ := Finset.mem_Ioc.1 ht
         exact S.reg (by omega) (by omega) (by omega) (by omega))
@@ -162,7 +145,7 @@ theorem good_TEo {A B : ℕ} (hAB : A < B) (hB : B < r + 2 * m) :
         exact good_Delta_k hL S.hk S.hj0 S.hjp S.hk0 S.hkp
       · subst e; simp only [if_neg hkne.symm]
         exact good_Delta_p hL hp5
-    have hr : ∀ t ∈ Ioc A B \ S0, Reg p t := fun t ht => by
+    have hr : ∀ t ∈ Ioc A B \ S0, Reg p k t := fun t ht => by
       obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht
       have hI' := Finset.mem_Ioc.1 hI
       have h2k : t ≠ k := fun e => hn ((hmem t).2 ⟨Or.inl e, hI'⟩)
@@ -172,7 +155,7 @@ theorem good_TEo {A B : ℕ} (hAB : A < B) (hB : B < r + 2 * m) :
     by_cases hBA : B - A = p
     · have hw2 := S.pair_w hBA hAB hB
       rw [hw] at hw2
-      have key := Mn_goodPP hL hp5 hAB hBA S0 hsub h1 _ hsing hr
+      have key := Mn_goodPP hL hp5 (hk4_of S.hk) hAB hBA S0 hsub h1 _ hsing hr
       rw [hsum] at key
       unfold TEo
       rw [if_neg hw0, if_pos hBA]
@@ -184,7 +167,7 @@ theorem good_TEo {A B : ℕ} (hAB : A < B) (hB : B < r + 2 * m) :
         refine this.congr' ?_
         ring
     · have hd : ((B : ZMod p) - A) ≠ 0 := sub_ne_zero_of_ne hAB (by omega) hBA
-      have key := Mn_goodP hL hp5 hAB S0 hsub h1 _ hsing hr hd
+      have key := Mn_goodP hL hp5 (hk4_of S.hk) hAB S0 hsub h1 _ hsing hr hd
       rw [hsum] at key
       unfold TEo
       rw [if_neg hw0, if_neg hBA]
@@ -209,7 +192,7 @@ theorem good_TEd {A : ℕ} (hA : A < r) :
   · have hw : wE p r k A + wE p r k A = 0 := by unfold wE; split_ifs <;> omega
     rw [hw, pow_zero, one_mul]
     unfold TEd; rw [if_pos rfl]
-    exact Mn_diag_good0 hL hp5 (fun t ht => by
+    exact Mn_diag_good0 hL hp5 (hk4_of S.hk) (fun t ht => by
       obtain ⟨h1, h2⟩ := Finset.mem_Icc.1 ht
       exact S.reg h1 (by omega) (by omega) (by omega))
   · have hw : wE p r k A + wE p r k A = 2 := by unfold wE; split_ifs <;> omega
@@ -232,13 +215,13 @@ theorem good_TEd {A : ℕ} (hA : A < r) :
         exact good_Dsq_k hL S.hk S.hj0 S.hjp S.hk0 S.hkp
       · subst e; simp only [if_neg hkne.symm]
         exact good_Dsq_p hL hp5
-    have hr : ∀ t ∈ Icc 1 A \ S0, Reg p t := fun t ht => by
+    have hr : ∀ t ∈ Icc 1 A \ S0, Reg p k t := fun t ht => by
       obtain ⟨hI, hn⟩ := Finset.mem_sdiff.1 ht
       have hI' := Finset.mem_Icc.1 hI
       have h2k : t ≠ k := fun e => hn ((hmem t).2 ⟨Or.inl e, hI'.2⟩)
       have h2p : t ≠ p := fun e => hn ((hmem t).2 ⟨Or.inr e, hI'.2⟩)
       exact S.reg hI'.1 (by omega) h2k h2p
-    have key := Mn_diag_goodP2 hL hp5 (A := A) S0 hsub _ hsing hr
+    have key := Mn_diag_goodP2 hL hp5 (hk4_of S.hk) (A := A) S0 hsub _ hsing hr
     rw [sumE_S0' hkp j A] at key
     exact key
 

@@ -22,12 +22,12 @@ section
 
 variable {p : ℕ} [Fact p.Prime] {r m k : ℕ}
 
-lemma hK4_of (S : ESetup p r m 3 k) : 4 * (k : ZMod p) = 1 := by
+lemma hK4_of (S : ESetup 1 p r m 3 k) : 4 * (k : ZMod p) = 1 := by
   have : ((4 * k : ℕ) : ZMod p) = ((3 * p + 1 : ℕ) : ZMod p) := by rw [S.hk]
   push_cast at this
   simpa [ZMod.natCast_self] using this
 
-lemma TE_U_eq_red (S : ESetup p r m 3 k) {a b : ℕ} (ha1 : r - p ≤ a) (ha2 : a < k)
+lemma TE_U_eq_red (S : ESetup 1 p r m 3 k) {a b : ℕ} (ha1 : r - p ≤ a) (ha2 : a < k)
     (hb1 : r - p ≤ b) (hb2 : b < k) (hab : a < b) :
     TE p 3 r k a b = ((lamFrame.Mn a b : ℚ) : ZMod p) := by
   have hr := S.hpr
@@ -41,7 +41,7 @@ lemma TE_U_eq_red (S : ESetup p r m 3 k) {a b : ℕ} (ha1 : r - p ≤ a) (ha2 : 
   rw [e, hw, ← hg.2]
   rfl
 
-lemma TE_U_diag (S : ESetup p r m 3 k) {a : ℕ} (ha1 : r - p ≤ a) (ha2 : a < k) :
+lemma TE_U_diag (S : ESetup 1 p r m 3 k) {a : ℕ} (ha1 : r - p ≤ a) (ha2 : a < k) :
     TE p 3 r k a a = ((lamFrame.Mn a a : ℚ) : ZMod p) := by
   have hr := S.hpr
   have hkp := S.hkp
@@ -55,7 +55,7 @@ lemma TE_U_diag (S : ESetup p r m 3 k) {a : ℕ} (ha1 : r - p ≤ a) (ha2 : a < 
   rfl
 
 /-- **The scalar Schur complement hypothesis for λ** (DQ Lemma 3.1). -/
-theorem lam_hUU (S : ESetup p r m 3 k) :
+theorem lam_hUU (S : ESetup 1 p r m 3 k) :
     ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p 3 r k a b = (16 : ZMod p)⁻¹ * ((if a = b then Gs p (fun x => (x⁻¹) ^ 2) (k - 1) else 0) +
         ∑ c ∈ Ico k p, ((c : ZMod p) - a)⁻¹ * ((c : ZMod p) - b)⁻¹) := by
@@ -91,7 +91,7 @@ theorem lam_hUU (S : ESetup p r m 3 k) :
     exact Finset.sum_congr rfl fun c _ => by rw [mul_comm]
 
 /-- **Lemma E for λ at a class-1 prime** (dual form). -/
-theorem gleAt_E_lam_wit (S : ESetup p r m 3 k) :
+theorem gleAt_E_lam_wit (S : ESetup 1 p r m 3 k) :
     HasRankWit lamFrame p r m (fun a => wE p r k (Frame.hybRow r m a))
       (fun b => wE p r k (Frame.hybCol r m b)) m := by
   have hp5 := S.p5
@@ -110,13 +110,13 @@ theorem gleAt_E_lam_wit (S : ESetup p r m 3 k) :
     exact one_ne_zero (neg_eq_zero.1 h4)
   exact gleAt_E_wit lamData S (Gs p (fun x => (x⁻¹) ^ 2) (k - 1)) h3 he (lam_hUU S)
 
-theorem wE_sum_lam (S : ESetup p r m 3 k) :
+theorem wE_sum_lam (S : ESetup 1 p r m 3 k) :
     ∑ a : Fin r ⊕ Fin m, wE p r k (Frame.hybRow r m a) +
       ∑ b : Fin r ⊕ Fin m, wE p r k (Frame.hybCol r m b) = 2 * ((r - p) + (r - k)) + 4 * m :=
   wE_sum S.hrk (by have := S.hkp; have := S.hpr; omega)
 
 /-- **Lemma E for λ at a class-1 prime** (dual form). -/
-theorem gleAt_E_lam (S : ESetup p r m 3 k) :
+theorem gleAt_E_lam (S : ESetup 1 p r m 3 k) :
     GLE p (2 * ((r - p) + (r - k)) + 4 * m - m) (lamFrame.fullPoly r m) := by
   have := (gleAt_E_lam_wit S).gle
   rw [wE_sum_lam S] at this

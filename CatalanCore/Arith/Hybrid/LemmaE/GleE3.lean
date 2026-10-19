@@ -14,14 +14,14 @@ namespace CatalanCore.Arith.Hybrid
 
 section Main
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- The `U × B₁` entries. -/
 def VZE (p j : ℕ) [Fact p.Prime] (a i : ℕ) : ZMod p :=
   (16 * ((i : ZMod p) - a))⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹))
 
 /-- **The rank count of Lemma E (class 1).** -/
-theorem rank_BE_le (S : ESetup p r m j k) (sU : ZMod p)
+theorem rank_BE_le (S : ESetup o p r m j k) (sU : ZMod p)
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (he : -(4 * ((j : ℕ) : ZMod p)⁻¹) + 1 ≠ 0)
     (hUU : ∀ a b : ℕ, r - p ≤ a → a < k → r - p ≤ b → b < k →
       TE p j r k a b = (16 : ZMod p)⁻¹ * ((if a = b then sU else 0) +

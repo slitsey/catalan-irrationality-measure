@@ -36,7 +36,7 @@ def LowClean (r m p : ℕ) : Prop :=
 
 open Classical in
 /-- **GK as a `DefHypT` family**: deficit `m` on `LowClean`, against any `T ≥ 2r + m`. -/
-theorem defHypT_GK {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr) (r m : ℕ) (hm : 0 < m)
+theorem defHypT_GK {Fr : Frame} (I : HybInst Fr) (hL : LamData Fr 1) (r m : ℕ) (hm : 0 < m)
     (T : ℕ → ℕ) (hT : ∀ p, p.Prime → p < Bnd I r m → tropExp I r m p ≤ T p)
     (hTd : ∀ p : ℕ, p.Prime → LowClean r m p → 2 * r + m ≤ T p) :
     DefHypT I r m T (fun p => if LowClean r m p then m else 0) := by

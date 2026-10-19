@@ -16,7 +16,7 @@ section Hred7
 
 variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m k : ℕ}
 
-lemma lift_offdiag57 (hL : LamData Fr) (S : CSetup7 p r m k) {A B : ℕ} (hAB : A ≠ B)
+lemma lift_offdiag57 {o : ℕ} (hL : LamData Fr o) (S : CSetup7 o p r m k) {A B : ℕ} (hAB : A ≠ B)
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wC7 p r k A + wC7 p r k B)) * C (Fr.Mn A B) ∧
@@ -24,7 +24,7 @@ lemma lift_offdiag57 (hL : LamData Fr) (S : CSetup7 p r m k) {A B : ℕ} (hAB : 
   lift_good p (good_TcF7 S hL hAB hA hB)
 
 /-- **The entries of `Full(X)` reduce to the table `BTc7`.** -/
-theorem hred_C7 (hL : LamData Fr) (S : CSetup7 p r m k) (a b : Fin r ⊕ Fin m) :
+theorem hred_C7 {o : ℕ} (hL : LamData Fr o) (S : CSetup7 o p r m k) (a b : Fin r ⊕ Fin m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wC7 p r k (Frame.hybRow r m a) + wC7 p r k (Frame.hybCol r m b))) *
         fullEntry Fr r m a b ∧ phiP p g = BTc7 p r k m a b := by

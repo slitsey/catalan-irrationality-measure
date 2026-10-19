@@ -14,9 +14,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 lemma rfC_ne_zero {x : ZMod p} (h : x ≠ 0) : rfC p x ≠ 0 := by
   rw [rfC_eq]; exact (map_ne_zero (rfCH p)).2 h
@@ -45,7 +45,7 @@ noncomputable def M0_invertible (h3 : (3 : ZMod p) ≠ 0) (h5 : (5 : ZMod p) ≠
     (h6255 : (6255 : ZMod p) ≠ 0) :
     Invertible (Matrix.of fun c c' : Pt3 p r m =>
       Mat3 p r m (sd3 S) (Sum.inl (Sum.inl c)) (Sum.inl (Sum.inl c'))) := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   have hpr := S.hpr
   have hk2r := S.hk2r
   have hN := S.hN

@@ -36,7 +36,7 @@ lemma sum_avec_disj (u w : ℕ) (hne : u ≠ w) (h1 : u < w + p) (h2 : w < u + p
   Finset.sum_eq_zero fun c _ => avec_disj u w hne h1 h2 c
 
 /-- The `p`-level residue of one term, in terms of `δ = w - u`. -/
-theorem t_val (hL : LamData Fr) (S : GKS3 p r m k) {A B : ℕ} (hA : A < r + 2 * m)
+theorem t_val (hL : LamData Fr 1) (S : GKS3 p r m k) {A B : ℕ} (hA : A < r + 2 * m)
     (hB : B < r + 2 * m) (δ : ZMod p) (hδ : (B : ZMod p) - A = δ) (hδ0 : δ ≠ 0) (La Lb : ℤ)
     (hLa : Lz3 p k A = La) (hLb : Lz3 p k B = Lb) :
     Good p ((p : ℚ) * Fr.Mn A B) ((16 * δ)⁻¹ * (((Lb : ℤ) : ZMod p) - (La : ZMod p)) * 90⁻¹) := by
@@ -78,7 +78,7 @@ lemma zone_delta_ne (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤ u) (hu2 : u < r 
     have := sub_ne3 (p := p) h (by omega) (by omega) (by omega)
     apply this; linear_combination -h0
 
-theorem delta_good (hL : LamData Fr) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤ u)
+theorem delta_good (hL : LamData Fr 1) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤ u)
     (hu2 : u < r + 2 * m) (hw1 : r ≤ w) (hw2 : w < r + 2 * m) (hne : u ≠ w) :
     Good p ((p : ℚ) * X0 Fr p u w) 0 := by
   have h13 := S.p13; have hk := S.hk; have hkp := S.kp; have hr := S.hr; have hN := S.hN
@@ -120,7 +120,7 @@ theorem delta_good (hL : LamData Fr) (S : GKS3 p r m k) {u w : ℕ} (hu1 : r ≤
   push_cast
   ring
 
-theorem hDelta_bound (hL : LamData Fr) (S : GKS3 p r m k) (i j : Fin m) :
+theorem hDelta_bound (hL : LamData Fr 1) (S : GKS3 p r m k) (i j : Fin m) :
     Int1 p (((Matrix.of (fullEntry Fr r m)).toBlocks₂₂ - alphaM Fr p r m *
         (Matrix.of (fullEntry Fr r m)).toBlocks₁₂ -
       (Matrix.of (fullEntry Fr r m)).toBlocks₂₁ * betaM Fr p r m +

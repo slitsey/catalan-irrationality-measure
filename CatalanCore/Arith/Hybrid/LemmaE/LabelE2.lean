@@ -17,12 +17,12 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m j k : ℕ}
 
 /-- The partner map. -/
 def tauN (p r a : ℕ) : ℕ := if a < r - p then a + p else if p ≤ a then a - p else a
 
-lemma TE_P (S : ESetup p r m j k) {a b : ℕ} (ha : a < r) (haP : ¬ (r - p ≤ a ∧ a < k))
+lemma TE_P (S : ESetup o p r m j k) {a b : ℕ} (ha : a < r) (haP : ¬ (r - p ≤ a ∧ a < k))
     (hb : b < r) (hbP : ¬ (r - p ≤ b ∧ b < k)) :
     TE p j r k a b =
       if b = a then (if a < r - p then 0 else if tauN p r a = a then ((j : ZMod p)⁻¹) ^ 2
@@ -105,27 +105,27 @@ lemma TE_P (S : ESetup p r m j k) {a b : ℕ} (ha : a < r) (haP : ¬ (r - p ≤ 
 abbrev UE (p r k : ℕ) := {c : Fin r // r - p ≤ (c : ℕ) ∧ (c : ℕ) < k}
 abbrev PE (p r k : ℕ) := {c : Fin r // ¬ (r - p ≤ (c : ℕ) ∧ (c : ℕ) < k)}
 
-lemma tauN_lt (S : ESetup p r m j k) {a : ℕ} (ha : a < r) (haP : ¬ (r - p ≤ a ∧ a < k)) :
+lemma tauN_lt (S : ESetup o p r m j k) {a : ℕ} (ha : a < r) (haP : ¬ (r - p ≤ a ∧ a < k)) :
     tauN p r a < r ∧ ¬ (r - p ≤ tauN p r a ∧ tauN p r a < k) := by
   have := S.hkp; have := S.hpr; have := S.hrk
   unfold tauN
   split_ifs <;> omega
 
 /-- The partner map on `P`. -/
-def tauP (S : ESetup p r m j k) (c : PE p r k) : PE p r k :=
+def tauP (S : ESetup o p r m j k) (c : PE p r k) : PE p r k :=
   ⟨⟨tauN p r c.1.val, (tauN_lt S c.1.2 c.2).1⟩, (tauN_lt S c.1.2 c.2).2⟩
 
-lemma tauP_val (S : ESetup p r m j k) (c : PE p r k) :
+lemma tauP_val (S : ESetup o p r m j k) (c : PE p r k) :
     ((tauP S c).1 : ℕ) = tauN p r c.1.val := rfl
 
-lemma tauP_invol (S : ESetup p r m j k) (c : PE p r k) : tauP S (tauP S c) = c := by
+lemma tauP_invol (S : ESetup o p r m j k) (c : PE p r k) : tauP S (tauP S c) = c := by
   have := S.hkp; have := S.hpr; have := S.hrk; have := c.2; have := c.1.2
   apply Subtype.ext; apply Fin.ext
   show tauN p r (tauN p r c.1.val) = c.1.val
   unfold tauN
   split_ifs <;> omega
 
-lemma tauP_lo (S : ESetup p r m j k) (c : PE p r k) (h : (c.1 : ℕ) < r - p) :
+lemma tauP_lo (S : ESetup o p r m j k) (c : PE p r k) (h : (c.1 : ℕ) < r - p) :
     tauP S c ≠ c ∧ ¬ ((tauP S c).1 : ℕ) < r - p := by
   have := S.hkp; have := S.hpr; have := S.hrk
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
@@ -137,7 +137,7 @@ lemma tauP_lo (S : ESetup p r m j k) (c : PE p r k) (h : (c.1 : ℕ) < r - p) :
     split_ifs at this <;> omega
   · rw [tauP_val]; unfold tauN; split_ifs <;> omega
 
-lemma tauP_hi (S : ESetup p r m j k) (c : PE p r k) (h1 : ¬ (c.1 : ℕ) < r - p)
+lemma tauP_hi (S : ESetup o p r m j k) (c : PE p r k) (h1 : ¬ (c.1 : ℕ) < r - p)
     (h2 : tauP S c ≠ c) : ((tauP S c).1 : ℕ) < r - p := by
   have := S.hkp; have := S.hpr; have := S.hrk; have := c.2; have := c.1.2
   by_contra hh
@@ -146,7 +146,7 @@ lemma tauP_hi (S : ESetup p r m j k) (c : PE p r k) (h1 : ¬ (c.1 : ℕ) < r - p
   rw [tauP_val] at hh ⊢; unfold tauN at hh ⊢
   split_ifs at hh ⊢ <;> omega
 
-lemma tauP_fix (S : ESetup p r m j k) (c : PE p r k) :
+lemma tauP_fix (S : ESetup o p r m j k) (c : PE p r k) :
     tauP S c = c ↔ k ≤ (c.1 : ℕ) ∧ (c.1 : ℕ) < p := by
   have := S.hkp; have := S.hpr; have := S.hrk; have := c.2; have := c.1.2
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
@@ -162,7 +162,7 @@ lemma tauP_fix (S : ESetup p r m j k) (c : PE p r k) :
     split_ifs <;> omega
 
 /-- Sum over the fixed points of the partner map. -/
-lemma sum_fixed (S : ESetup p r m j k) {M : Type*} [AddCommMonoid M] (F : ℕ → M) :
+lemma sum_fixed (S : ESetup o p r m j k) {M : Type*} [AddCommMonoid M] (F : ℕ → M) :
     ∑ c : PE p r k, (if tauP S c = c then F (c.1 : ℕ) else 0) = ∑ i ∈ Ico k p, F i := by
   have := S.hkp; have := S.hpr; have := S.hrk
   have h1 : ∀ c : PE p r k, (if tauP S c = c then F (c.1 : ℕ) else 0) =

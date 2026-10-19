@@ -17,15 +17,12 @@ namespace CatalanCore.Arith.Hybrid
 
 section Final
 
-variable {p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup p r m k)
+variable {o p : ℕ} [Fact p.Prime] {r m k : ℕ} (S : CSetup o p r m k)
 include S
 
 lemma CSetup.m0 : 0 < m := by have := S.hLlo; have := S.hLhi; omega
 
-lemma hk4_C : (4 : ZMod p) * (k : ZMod p) = 1 := by
-  have : ((4 * k : ℕ) : ZMod p) = ((p + 1 : ℕ) : ZMod p) := by rw [S.hk]
-  push_cast at this
-  simpa [ZMod.natCast_self] using this
+lemma hk4_C : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p) := S.hk4
 
 /-- The scalar Schur complement on `U`. -/
 lemma ScUU [Invertible (Mp5 p r k)] (u w : BU p r k) :

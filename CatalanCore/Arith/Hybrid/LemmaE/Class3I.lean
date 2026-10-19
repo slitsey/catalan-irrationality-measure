@@ -14,9 +14,9 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 
@@ -24,7 +24,7 @@ lemma cast_sub_p {a : ℕ} (h : p ≤ a) : ((a - p : ℕ) : ZMod p) = (a : ZMod 
   rw [Nat.cast_sub h, ZMod.natCast_self, sub_zero]
 
 lemma singG_zero_big {a b : ℕ} (h : p + k1 ≤ a) : singG (sd3 S) a b = 0 := by
-  have hk1 := S.hk1
+  have hk1 := S.hk1o
   rw [singG_eval S]
   have e1 : ¬ (a < k1 ∧ k1 ≤ b) := by omega
   have e2 : ¬ (a < p ∧ p ≤ b) := by omega
@@ -34,7 +34,7 @@ lemma singG_zero_big {a b : ℕ} (h : p + k1 ≤ a) : singG (sd3 S) a b = 0 := b
 
 lemma TE3_WW {a b : ℕ} (ha : a < r) (haC : isCz p r m a) (hb : b < r) (hbC : isCz p r m b) :
     TEw3 p r m (sd3 S) a b = if b = a then 1 else 0 := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN
   have hw : wr p r m a + wc p r m b = 2 := by
     unfold wr wc; rw [if_pos ha, if_pos hb, if_pos haC, if_pos hbC]
   by_cases hab : b = a
@@ -60,7 +60,7 @@ lemma TE3_PW {a b : ℕ} (ha : a < r) (haP : ¬ isCz p r m a) (hb : b < r) (hbC 
 
 lemma TE3_ZZ {x y : ℕ} (hx : r ≤ x) (hy : r ≤ y) (hne : x ≠ y) (hd : x - y ≠ p) (hd' : y - x ≠ p) :
     TEw3 p r m (sd3 S) x y = 0 := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN
   have hw : wr p r m x + wc p r m y = 1 := by
     rw [wr_zone hx, wc_zone hy]
   rcases lt_or_gt_of_ne hne with h | h

@@ -17,15 +17,15 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m k1 : ℕ}
 
-variable (S : ESetup3 p r m k1)
+variable (S : ESetup3 o p r m k1)
 
 include S
 
 lemma tauN3_ok {a : ℕ} (ha : a < r) (hnc : ¬ isCz p r m a) :
     tauN p r a < r ∧ ¬ isCz p r m (tauN p r a) := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN
   unfold tauN isCz at *
   split_ifs <;> omega
 
@@ -36,7 +36,7 @@ def tau3 (c : Pt3 p r m) : Pt3 p r m :=
 lemma tau3_val (c : Pt3 p r m) : ((tau3 S c).1 : ℕ) = tauN p r c.1.val := rfl
 
 lemma tau3_invol (c : Pt3 p r m) : tau3 S (tau3 S c) = c := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN; have := c.2; have := c.1.2
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN; have := c.2; have := c.1.2
   apply Subtype.ext; apply Fin.ext
   show tauN p r (tauN p r c.1.val) = c.1.val
   unfold tauN
@@ -44,7 +44,7 @@ lemma tau3_invol (c : Pt3 p r m) : tau3 S (tau3 S c) = c := by
 
 lemma tau3_fix (c : Pt3 p r m) :
     tau3 S c = c ↔ ¬ ((c.1 : ℕ) < r - p) ∧ ¬ (p ≤ (c.1 : ℕ)) := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN; have := c.1.2
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN; have := c.1.2
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
   constructor
   · intro hh
@@ -66,7 +66,7 @@ noncomputable def eZ (a : ℕ) : ZMod p :=
   else (16 : ZMod p)⁻¹ * singG (sd3 S) (a - p) a
 
 lemma eZ_tau {a : ℕ} (ha : a < r) (hnc : ¬ isCz p r m a) : eZ S (tauN p r a) = eZ S a := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
   unfold eZ tauN isCz at *
   by_cases h1 : a < r - p
@@ -83,7 +83,7 @@ lemma eZ_tau {a : ℕ} (ha : a < r) (hnc : ¬ isCz p r m a) : eZ S (tauN p r a) 
 lemma TE3_PP {a b : ℕ} (ha : a < r) (haP : ¬ isCz p r m a) (hb : b < r) (hbP : ¬ isCz p r m b) :
     TEw3 p r m (sd3 S) a b =
       if b = a then dZ S a else if b = tauN p r a then eZ S a else 0 := by
-  have := S.hpr; have := S.hk2r; have := S.hk1; have := S.hN
+  have := S.hpr; have := S.hk2r; have := S.hk1o; have := S.hN
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
   have hw : wr p r m a + wc p r m b = 2 := by
     unfold wr wc; rw [if_pos ha, if_pos hb, if_neg haP, if_neg hbP]

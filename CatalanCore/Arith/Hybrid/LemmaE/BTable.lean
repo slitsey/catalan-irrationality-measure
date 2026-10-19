@@ -20,7 +20,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {Fr : Frame} {r m j k : ℕ}
 
 /-- The reduction matrix of Lemma E (class 1). -/
 noncomputable def BE (p j r m k : ℕ) [Fact p.Prime] :
@@ -30,7 +30,7 @@ noncomputable def BE (p j r m k : ℕ) [Fact p.Prime] :
       | Sum.inl c, Sum.inl c' => if c = c' ∧ wE p r k (c : ℕ) = 0 then rfX p else 0
       | _, _ => 0)
 
-lemma lift_offdiagE (hL : LamData Fr) (S : ESetup p r m j k) {A B : ℕ} (hAB : A ≠ B)
+lemma lift_offdiagE {o : ℕ} (hL : LamData Fr o) (S : ESetup o p r m j k) {A B : ℕ} (hAB : A ≠ B)
     (hA : A < r + 2 * m) (hB : B < r + 2 * m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wE p r k A + wE p r k B)) * C (Fr.Mn A B) ∧
@@ -46,7 +46,7 @@ lemma lift_offdiagE (hL : LamData Fr) (S : ESetup p r m j k) {A B : ℕ} (hAB : 
     rw [e, Nat.add_comm (wE p r k A), Mn_symm]; exact lift_good p this
 
 /-- **The entries of `Full(X)` reduce to `BE`.** -/
-theorem hred_E (hL : LamData Fr) (S : ESetup p r m j k) (a b : Fin r ⊕ Fin m) :
+theorem hred_E {o : ℕ} (hL : LamData Fr o) (S : ESetup o p r m j k) (a b : Fin r ⊕ Fin m) :
     ∃ g : (LocRing p)[X], toQ p g =
       C ((p : ℚ) ^ (wE p r k (Frame.hybRow r m a) + wE p r k (Frame.hybCol r m b))) *
         fullEntry Fr r m a b ∧ phiP p g = BE p j r m k a b := by

@@ -21,22 +21,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime]
-
-lemma conv4 (hp5 : 5 ≤ p) {k : ℕ} (hk4 : (4 : ZMod p) * (k : ZMod p) = 1) (t : ZMod p) :
-    4 * (4 * t - 1)⁻¹ = (t - (k : ZMod p))⁻¹ := by
-  have h4 := four_ne_zmod p hp5
-  have : 4 * t - 1 = 4 * (t - (k : ZMod p)) := by linear_combination hk4
-  rw [this, mul_inv]
-  field_simp
-
-lemma conv4sq (hp5 : 5 ≤ p) {k : ℕ} (hk4 : (4 : ZMod p) * (k : ZMod p) = 1) (t : ZMod p) :
-    16 * ((4 * t - 1)⁻¹) ^ 2 = ((t - (k : ZMod p))⁻¹) ^ 2 := by
-  have h4 := four_ne_zmod p hp5
-  have : 4 * t - 1 = 4 * (t - (k : ZMod p)) := by linear_combination hk4
-  rw [this, mul_inv]
-  field_simp
-  ring
+variable {o p : ℕ} [Fact p.Prime]
 
 variable {j k : ℕ}
 
@@ -45,25 +30,21 @@ lemma Tfull_lh {u c : ℕ} (hu : u < k) (hc : k ≤ c) (hcp : c < p) :
   unfold Tfull TB
   rw [if_pos (by omega), if_neg (by omega), if_pos hu, if_pos hcp]
 
-lemma Tfull_ll {u w : ℕ} (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1) (huw : u < w)
+lemma Tfull_ll {u w : ℕ} (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p)) (huw : u < w)
     (hw : w < k) :
     Tfull p j k u w = (16 * ((w : ZMod p) - u))⁻¹ *
       ∑ t ∈ Ioc u w, (((t : ℕ) : ZMod p)⁻¹ - ((t : ZMod p) - (k : ZMod p))⁻¹) := by
   unfold Tfull TB
   rw [if_pos huw, if_pos hw]
-  congr 1
-  exact Finset.sum_congr rfl fun t _ => by rw [conv4 hp5 hk4]
 
-lemma Tfull_dd {u : ℕ} (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1) (hu : u < k) :
+lemma Tfull_dd {u : ℕ} (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p)) (hu : u < k) :
     Tfull p j k u u = -(1 / 16 : ZMod p) * ∑ t ∈ Icc 1 u,
       ((((t : ℕ) : ZMod p)⁻¹) ^ 2 - (((t : ZMod p) - (k : ZMod p))⁻¹) ^ 2) := by
   unfold Tfull TD
   rw [if_neg (lt_irrefl _), if_neg (lt_irrefl _), if_pos hu]
-  congr 1
-  exact Finset.sum_congr rfl fun t _ => by rw [conv4sq hp5 hk4]
 
 /-- **The scalar Schur complement.**  -/
-theorem schur_Z (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
+theorem schur_Z (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p))
     (hj : ((j : ℕ) : ZMod p) ≠ 0) {r d : ℕ} (hrd : r + d = p) (hkr : k ≤ r) {u w : ℕ}
     (hu : u < k) (hw : w < k) :
     Tfull p j k u w - ((((j : ℕ) : ZMod p)⁻¹) ^ 2)⁻¹ *
@@ -111,7 +92,7 @@ theorem schur_Z (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
 /-- **Theorem C5, scalar Schur complement of the `B1` block** (`d = 0`, `r := p`): for `u, w < k`,
 `T_{uw} - π⁻¹ ∑_{c=k}^{p-1} T_{uc} T_{wc} = [u = w] H^{(2)}_{k-1}/16`.  This is DQ Lemma 3.1
 with the sum over the whole of `[k, p)`. -/
-theorem schur_Z_C5 (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
+theorem schur_Z_C5 (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p))
     (hj : ((j : ℕ) : ZMod p) ≠ 0) (hkp : k ≤ p) {u w : ℕ} (hu : u < k) (hw : w < k) :
     Tfull p j k u w - ((((j : ℕ) : ZMod p)⁻¹) ^ 2)⁻¹ *
         ∑ c ∈ Ico k p, Tfull p j k u c * Tfull p j k w c =
@@ -125,7 +106,7 @@ end
 
 section Mat
 
-variable (p : ℕ) [Fact p.Prime] (r m j k : ℕ)
+variable {o : ℕ} (p : ℕ) [Fact p.Prime] (r m j k : ℕ)
 
 /-- `rfC` as a ring homomorphism. -/
 noncomputable def rfCH : ZMod p →+* RatFunc (ZMod p) :=
@@ -156,7 +137,7 @@ noncomputable def s0L : RatFunc (ZMod p) := rfX p + rfC p (hm2 p (k - 1) / 16)
 noncomputable def κL : RatFunc (ZMod p) := rfC p (-(1 / 16 : ZMod p))
 
 /-- **Theorem B, Schur identity over `𝔽_p(X)`**: `Ā00 - π⁻¹ V Vᵀ = s₀ I - κ E Eᵀ`. -/
-theorem hS_L (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = 1)
+theorem hS_L (hp5 : 5 ≤ p) (hk4 : (4 : ZMod p) * (k : ZMod p) = (o : ZMod p))
     (hj : ((j : ℕ) : ZMod p) ≠ 0) {d : ℕ} (hrd : r + d = p) (hkr : k ≤ r) :
     A0L p r j k - (piL p j)⁻¹ • (VL p r j k * (VL p r j k)ᵀ) =
       s0L p k • (1 : Matrix (Blk0 r k) (Blk0 r k) _) - κL p • (EL p r k d * (EL p r k d)ᵀ) := by

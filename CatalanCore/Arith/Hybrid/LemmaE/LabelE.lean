@@ -17,7 +17,7 @@ namespace CatalanCore.Arith.Hybrid
 
 section
 
-variable {p : ℕ} [Fact p.Prime] {r m j k : ℕ}
+variable {o p : ℕ} [Fact p.Prime] {r m j k : ℕ}
 
 lemma TEo_big {w : ℕ} (hw : 3 ≤ w) (A B : ℕ) : TEo p j k w A B = 0 := by
   unfold TEo
@@ -74,7 +74,7 @@ lemma singE_zero {A B : ℕ} (hk : k < p) (h : B < k) : singE p j k A B = 0 := b
   simp [singE, h1, h2]
 
 /-- `U × P` entries. -/
-lemma TE_UP (S : ESetup p r m j k) {u c : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hc : c < r)
+lemma TE_UP (S : ESetup o p r m j k) {u c : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hc : c < r)
     (hcP : ¬ (r - p ≤ c ∧ c < k)) :
     TE p j r k u c = if u < c then (16 * ((c : ZMod p) - u))⁻¹ * singE p j k u c
       else (16 * ((u : ZMod p) - c))⁻¹ * singE p j k c u := by
@@ -90,7 +90,7 @@ lemma TE_UP (S : ESetup p r m j k) {u c : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k)
     rw [TEo_one (by omega)]
 
 /-- `U × zone` entries. -/
-lemma TE_UZ (S : ESetup p r m j k) {u z : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hz : r ≤ z) :
+lemma TE_UZ (S : ESetup o p r m j k) {u z : ℕ} (hu1 : r - p ≤ u) (hu2 : u < k) (hz : r ≤ z) :
     TE p j r k u z = if z - u = p then (16 : ZMod p)⁻¹ * (-(4 * ((j : ℕ) : ZMod p)⁻¹) + 1)
       else 0 := by
   have hkp := S.hkp
