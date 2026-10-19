@@ -32,7 +32,9 @@ lemma Qh_eval_int_ne' [CharZero F] (m S : ℕ) (c : ℤ) (h : ∀ j < m, c + S +
 
 /-- **(CC) polynomial form, border case.** -/
 theorem CC_polyY [CharZero F] (K m : ℕ) (hm : 1 ≤ m) (S θ y : F)
-    (hQ1 : (Qh m S).eval (1 - y) ≠ 0) (hQ3 : (Qh m S).eval (-y - 1) ≠ 0) :
+    (hQ1 : (Qh m S).eval (1 - y) ≠ 0)
+    (hr3 : (bP K m S θ).eval (-y - 1) =
+      (bP K m S θ).eval (-y - 1) / (Qh m S).eval (-y - 1) * (Qh m S).eval (-y - 1)) :
     ∃ N : F[X], N.natDegree < m ∧
       Hz K m S θ y (S - K + m + 1)
         (-2 * ((K : F) - 1) * (θ + (S - K + m + 1)) - 2 * K ^ 2 + 2 * K - m ^ 2)
@@ -59,7 +61,7 @@ theorem CC_polyY [CharZero F] (K m : ℕ) (hm : 1 ≤ m) (S θ y : F)
       rw [eval_sub, eval_mul, eval_mul, eval_C]
       unfold Qh
       rw [hd]; ring)
-    (by rw [eval_sub, eval_mul, eval_C, hr, div_mul_cancel₀ _ hQ3, sub_self])
+    (by rw [eval_sub, eval_mul, eval_C, hr]; exact sub_eq_zero.2 hr3)
   have heq : Hz K m S θ y g c0 - Qh m S * (C ℓ * (lin 1 y * lin 1 (y + 1))
       + C d * (lin 1 (y - 1) * lin 1 (y + 1)) + C r * (lin 1 (y - 1) * lin 1 y))
       = (lin 1 (y - 1) * lin 1 y * lin 1 (y + 1)) * N := by
@@ -105,7 +107,7 @@ theorem Ttil_colY [CharZero F] (K m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen 
     have := Qh_eval_int_ne' (F := F) m S (-((S + 2 * j + 1 : ℕ) : ℤ) - 1)
       (fun i _ => by push_cast; omega)
     push_cast at this; rw [hy]; push_cast; exact this
-  obtain ⟨N, hNd, heq⟩ := CC_polyY K m hm (S : F) θ y hQ1 hQ3
+  obtain ⟨N, hNd, heq⟩ := CC_polyY K m hm (S : F) θ y hQ1 (div_mul_cancel₀ _ hQ3).symm
   obtain ⟨κ, hκ⟩ := partial_frac m (S : F) N hNd
   have hl : (aP K m (S : F) θ).eval (1 - y) = 0 := by
     unfold aP
