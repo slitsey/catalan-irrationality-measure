@@ -281,4 +281,8 @@ theorem Xm_Ttil [CharZero F] (K' m S : ℕ) (hm : 1 ≤ m) (θ : F) (hθ : Gen �
       push_cast
       linear_combination (v ⟨(i : ℕ), by omega⟩) * hd + (-(v ⟨(i : ℕ) + 1, by omega⟩)) * hn
 
+/-- `Xm` is `Xmat (K'+1)` (the row type `Fin (K'+1-1)` is `Fin K'`). -/
+lemma Xm_eq_Xmat (K' m S : ℕ) (θ : F) :
+    Xm K' m S θ = (Xmat (K' + 1) m S θ : Matrix (Fin K') (Fin (K' + 1)) F) := rfl
+
 end CatalanCore.Star.Leonard
