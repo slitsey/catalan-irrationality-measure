@@ -1,7 +1,7 @@
 module
 
 public import CatalanFrames.P6Hybrid.Data3
-public import CatalanFrames.LambdaHybrid.NV.Hyb3
+public import CatalanFrames.LambdaHybrid.NV.FinalNV
 
 /-!
 # P6 hybrid nonvanishing
@@ -23,8 +23,8 @@ theorem p6_hyb_nonvanishing (hl : ℓ = 6 * t + 1) (ht : 1 ≤ t) (m : ℕ) (hm 
     (hband : 2 * m + 1 ≤ t) {x : ℚ} (hx : x ∈ S ℓ)
     (h1 : ((Rect.after (3 * t - 2 * m) m).Full p6Frame x).det = 0)
     (h2 : ((Rect.afterTop (3 * t - 2 * m) m).Full p6Frame x).det = 0) : False :=
-  nv_hyb_nonvanishing3 (p6Data3 hl ht) m (3 * t) (3 * t - 2 * m) hm (by omega) (by omega)
-    (by omega) (by omega) (by omega) (by omega) hx h1 h2
+  nv_hyb_nonvanishing_gen (p6Data3 hl ht) m (3 * t) (3 * t - 2 * m) hm (by omega) (by omega)
+    (by omega) (by omega) (Or.inr ⟨by omega, by omega⟩) hx h1 h2
 
 #print axioms p6_hyb_nonvanishing
 

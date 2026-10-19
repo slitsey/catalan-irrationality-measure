@@ -1,19 +1,21 @@
 module
 
-public import CatalanFrames.LambdaHybrid.NV.Instance
+public import CatalanFrames.LambdaHybrid.NV.Split
+public import CatalanFrames.LambdaHybrid.NV.Main
 public import CatalanFrames.LambdaHybrid.NV.Primal
 
 /-!
-# Three-level mod-`ℓ` reduction (P6 hybrid): `ModData3`
+# Generic level-indexed mod-`ℓ` reduction: `ModData3` (DO Prop 1.3, frame-generic)
 
-`ModData` (two node levels: low `[0,K)`, high `[K,ℓ)`) does not fit P6, whose nodes have three levels:
-low `[0,K)`, mid `[K,T)` and top `[T,ℓ)` (`T = (ℓ+1)/2`).  The top nodes never occur in a geometry; they
-enter only through the harmonic sum, with a different weight `τ₀` than the mid nodes (`κ`).
+`ModData3 Fr ℓ K T` carries the node levels low `[0,K)`, mid `[K,T)` and top `[T,ℓ)`.  Geometry nodes
+are `< T`; the top nodes enter only through the harmonic sum, with weight `τ₀` instead of the mid
+weight `κ`.  The two-level data `ModData Fr ℓ K` is the instance `T = ℓ` (`ModData.toLevels`, no top
+nodes, `τ₀ = 1`); P6 has `T = (ℓ+1)/2`.
 
-Here: the data structure `ModData3`, the `borderedN` form of the Schur step (`det_ZmatN`, arbitrary
-`N` in place of `G Gᵀ`), the entry transfer `y_good3` (geometry nodes `< T`), the harmonic split
-`hA_ident3` and `reduction_G3`: `det Full(x) = 0` gives
-`det borderedN (h + x̄/κ) (Gm Gmᵀ + (τ₀/κ) Ttop) WX WY = 0`.
+Here: `det_ZmatN` (the `borderedN` form of the Schur step, arbitrary `N` in place of `G Gᵀ`), the entry
+transfer `y_good3`, the harmonic split `hA_ident3`, and `reduction_G3`: `det Full(x) = 0` gives
+`det borderedN (h + x̄/κ) (Gm Gmᵀ + (τ₀/κ) Ttop) WX WY = 0`.  The old two-level `reduction_G` is the
+corollary in `Instance.lean`.
 -/
 
 @[expose] public section
@@ -48,6 +50,27 @@ structure ModData3 (Fr : Frame) (ℓ K T : ℕ) [Fact ℓ.Prime] where
   harm : ∀ a a' : Fin K, A a a' = κ * ((if a = a' then h else 0) +
       ∑ n ∈ Ico K T, (1 / (((a : ℕ) : ZMod ℓ) - n)) * (1 / (((a' : ℕ) : ZMod ℓ) - n))) +
     τ₀ * ∑ n ∈ Ico T ℓ, (1 / (((a : ℕ) : ZMod ℓ) - n)) * (1 / (((a' : ℕ) : ZMod ℓ) - n))
+
+/-- The two-level data is the `T = ℓ` instance (no top nodes; `τ₀ = 1`). -/
+def ModData.toLevels {Fr : Frame} {ℓ K : ℕ} [Fact ℓ.Prime] (D : ModData Fr ℓ K) :
+    ModData3 Fr ℓ K ℓ where
+  t := D.t
+  d := D.d
+  κ := D.κ
+  h := D.h
+  τ₀ := 1
+  A := D.A
+  ht := D.ht
+  hd := D.hd
+  hκ := D.hκ
+  hτ := one_ne_zero
+  htk := D.htk
+  low := D.low
+  lh := D.lh
+  hl := D.hl
+  hhOff := D.hhOff
+  hhDiag := D.hhDiag
+  harm a a' := by simp [D.harm a a']
 
 section SchurN
 
