@@ -334,6 +334,39 @@ theorem Xm_N_mem (x : Fin (m + n' + 1) → F)
     rw [this]
     exact sumX_mem (m + n' + 1) m n' θ ℱ
 
+include hm hθ in
+/-- **`X Ã = Ã' X`** (vector form, all `x`), for `Ã = Π N_S Π`, `Ã' = Π' N'_{S+1} Π'`. -/
+theorem Xm_Atil
+    (hΔ : IsUnit ((Wb (m + n' + 1) θ (bX m (n' : ℤ)))ᵀ * Wb (m + n' + 1) θ (bY m (n' : ℤ))).det)
+    (hΔ' : IsUnit ((Wb (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)))ᵀ *
+      Wb (m + n') θ (bY m ((n' + 1 : ℕ) : ℤ))).det) (x : Fin (m + n' + 1) → F) :
+    Xm (m + n') m n' θ *ᵥ (Atil m (n' + 1) n' θ *ᵥ x) =
+      Atil m n' (n' + 1) θ *ᵥ (Xm (m + n') m n' θ *ᵥ x) := by
+  have hK3 := Xm_projB m n' hm θ hθ hΔ hΔ'
+  have hK3v : ∀ y, Xm (m + n') m n' θ *ᵥ (projB (m + n' + 1) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ y) =
+      projB (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)) (bY m ((n' + 1 : ℕ) : ℤ)) *ᵥ
+        (Xm (m + n') m n' θ *ᵥ y) := by
+    intro y
+    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hK3]
+  obtain ⟨hPW', -⟩ := projB_props m n' (n' + 1) θ hΔ'
+  have hmem := Xm_N_mem m n' hm θ hθ
+    (projB (m + n' + 1) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ x)
+    (WXt_projB m (n' + 1) n' θ hΔ x)
+  have key : Xm (m + n') m n' θ *ᵥ (projB (m + n' + 1) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ
+        (Nsum (fun y : ℕ => wcol (m + n' + 1) θ (y : ℤ)) n' *ᵥ
+          (projB (m + n' + 1) θ (bX m (n' : ℤ)) (bY m (n' : ℤ)) *ᵥ x))) =
+      projB (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)) (bY m ((n' + 1 : ℕ) : ℤ)) *ᵥ
+        (Nsum (fun y : ℕ => wcol (m + n') θ (y : ℤ)) (n' + 1) *ᵥ
+          (projB (m + n') θ (bX m ((n' + 1 : ℕ) : ℤ)) (bY m ((n' + 1 : ℕ) : ℤ)) *ᵥ
+            (Xm (m + n') m n' θ *ᵥ x))) := by
+    rw [hK3v]
+    have h1 := hPW' _ hmem
+    rw [Matrix.mulVec_sub, sub_eq_zero] at h1
+    rw [h1, hK3v x]
+  unfold Atil
+  simp only [← Matrix.mulVec_mulVec]
+  exact key
+
 end K4
 
 end CatalanCore.Star.Leonard
