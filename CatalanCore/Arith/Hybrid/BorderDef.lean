@@ -78,8 +78,8 @@ theorem gle_fullTop_of_rank' (u v : Fin r ⊕ Fin m → ℕ)
   omega
 
 /-- The tropical bound for the bordered determinant. -/
-theorem fullTop_gle :
-    GLE p (tropExp I r m p + topC I r m p) ((afterTop r m).fullPolyG Fr) := by
+theorem fullTop_gle' :
+    GLE p (tropExp I r m p + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) := by
   rw [← det_topMat]
   have h := det_gle_border p (topMat Fr r m) (hybW I r m p)
     (fun a b => by
@@ -102,8 +102,32 @@ theorem fullTop_gle :
       rw [topMat_corner]
       exact (GLE.X.mono (Nat.zero_le _)).add
         ((gle_entry_top I r m p (le_refl _)).mono (Nat.le_add_left _ _)))
-  refine h.mono ?_
-  unfold tropExp topC
+  exact h
+
+/-- The tropical bound for the bordered determinant (with the rank `+1`). -/
+theorem fullTop_gle :
+    GLE p (tropExp I r m p + topC I r m p) ((afterTop r m).fullPolyG Fr) :=
+  (fullTop_gle' I r m p).mono (by unfold topC; omega)
+
+theorem topW_eq_zero_of_ge (hp : p.Prime) (hb : Bnd I r m ≤ p) : topW I r m p = 0 := by
+  have hnb : p ∉ I.cd.bad := by
+    intro h
+    have := Finset.le_sup (f := id) h
+    unfold Bnd at hb
+    simp at this
+    omega
+  unfold topW
+  rw [cOf_eq_zero I hp hnb, zero_add]
+  apply Nat.eq_zero_of_le_zero
+  apply Finset.sup_le
+  intro a ha
+  have haN : a ≤ r + 2 * m := by have := Finset.mem_range.1 ha; omega
+  unfold levels
+  rw [Finset.sum_eq_zero]
+  intro e he
+  refine wt_eq_zero_of_large I hp hnb (Finset.mem_Icc.1 he).1 ?_ haN le_rfl
+  have : p ≤ p ^ e := Nat.le_self_pow (by have := (Finset.mem_Icc.1 he).1; omega) p
+  unfold Bnd at hb
   omega
 
 end Top
