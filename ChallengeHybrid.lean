@@ -9,7 +9,7 @@ public section
 
 /-!
 The strongest hybrid measure statements, with constants written as series:
-`G - 5π²/48` and `G + 5π²/48` have exponent 34.74; `L(2, χ₋₃)` has exponent 17.60.
+`G - 5π²/48` and `G + 5π²/48` have exponent 34.74; `L(2, χ₋₃)` has exponent 15.50.
 For every positive error in the exponent, the bound holds at all sufficiently
 large coprime denominators.
 -/
@@ -30,9 +30,9 @@ theorem mir_hybrid_measure_3474 :
           - (p : ℝ) / q| := by
   sorry
 
-theorem chi3_hybrid_measure_1760 :
+theorem chi3_hybrid_measure_1550 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((88 / 5 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((31 / 2 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| := by
   sorry

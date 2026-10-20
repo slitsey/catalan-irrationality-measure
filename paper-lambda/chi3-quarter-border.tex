@@ -1,0 +1,134 @@
+% Quarter-border upgrade. The preceding finite-field argument is retained.
+\section{A quarter border and characteristic-zero selection}
+\label{sec:chi3-quarter}
+
+For the conductor-three frame, characteristic-zero interpolation permits a
+larger border than the finite-field selection above. We take
+\[
+ r\le4m\le r+3,
+\]
+and retain the full determinant together with its principal restrictions
+obtained by omitting one common node. Their degree budget is still $r$.
+The denominator and decay estimates below apply uniformly to every member.
+
+\begin{theorem}[One common-node deletion]\label{thm:chi3-charzero-selection}
+For every $r\ge1$, $m\ge0$ and rational input, the full conductor-three
+determinant or one of its principal common-node deletions is nonzero.
+No prime-band restriction on $m/r$ is required.
+\end{theorem}
+
+\begin{proof}
+Here is the interpolation argument underlying the certified selector.
+Write $N=r+2m$, $n=r+m$, and use the $r$ common nodes followed by the
+alternating row and column nodes in the consecutive tail. After the fixed
+normalization of the conductor-three frame, its divided differences have
+prefix values $f_i$, with
+\[
+ f_{i+1}-f_i=\delta(i),\qquad
+ \delta(z)=\frac{1-z}{216(z+1)(z+1/3)(z+1/2)}.
+\]
+The diagonal prefix $e_i$ satisfies
+$e_{i+1}-e_i=-\delta'(i)$. Barycentric interpolation identifies either
+kernel with pairs $(p,q)$ of degree less than $n$ satisfying
+$q(i)=f_i p(i)$ at all $N$ nodes, and
+$q'(c)=f_c p'(c)+(U-e_c)p(c)$ at the common nodes.
+
+Two such pairs have zero cross product: its degree is at most $2n-2$,
+while the value and first-jet conditions give $N+r=2n$ zeros counted
+with multiplicity. If the kernel had dimension at least two, a nonzero
+pair could therefore be chosen with both degrees at most $n-2$.
+The discrete Wronskian
+\[
+ W(z)=216(z+1)(z+1/3)(z+1/2)
+       [q(z+1)p(z)-q(z)p(z+1)]-(1-z)p(z)p(z+1)
+\]
+would have degree at most $2n-3$, but its prescribed values and first
+jets supply $2n-2$ zeros. Thus $W=0$. This would make $q/p$ a rational
+antidifference of $\delta$, which is impossible: the simple pole at $-1$
+is isolated in its integer-translation class. After cancellation of a
+numerator-denominator gcd, evaluating the cleared identity propagates
+a denominator root indefinitely in one direction, contradicting finite
+degree. The boundary case $n=1$ is immediate.
+
+If the full determinant is nonzero, retain it. Otherwise both kernels are one dimensional. A nonzero kernel pair cannot vanish at every common node. Dividing by
+their common node polynomial would give degree at most $m-1$ and the
+same value interpolation at all $N$ nodes; its Wronskian would again
+vanish by degree and root count. The left and right barycentric maps land in the same one-dimensional interpolation-pair space. At a common node their coordinates are the same $p(c)$ multiplied by nonzero punctured-node factors. Thus the same common index is nonzero on both sides, and their adjugate outer product has a nonzero diagonal entry there. That principal cofactor is the required deletion.
+\end{proof}
+
+\subsection{The uniform arithmetic profile}
+The existing $H$ and $Z$ duals suffice; no new local valuation identity is
+needed. At a prime $p$, put $u=p/r$. Use the $H$ bound always, and the
+minimum of the $H$ and $Z$ bounds when $r+2m\le2p$, the proved domain of
+the latter. For the two unit classes modulo $6$, the resulting continuum
+profiles $w_1,w_5$ have the following pieces. Endpoints can be assigned
+to either neighboring piece since the functions agree there.
+\[
+\begin{array}{c|c|c}
+\text{class}&\text{interval for }u&w(u)\\\hline
+1,5 &[0,1/4]&5/2\\
+1,5 &[1/4,1/2]&11/4-u\\
+1 &[1/2,15/16]&9/4\\
+1 &[15/16,9/8]&7/2-4u/3\\
+1 &[9/8,3/2]&5-8u/3\\
+1 &[3/2,2]&2-2u/3\\
+1 &[2,3]&1-u/6\\
+1 &[3,9/2]&3/2-u/3\\
+5 &[1/2,5/6]&9/4\\
+5 &[5/6,1]&7/2-3u/2\\
+5 &[1,3/2]&4-2u\\
+5 &[3/2,2]&5/2-u\\
+5 &[2,3]&3/2-u/2
+\end{array}
+\]
+Both profiles are zero beyond their last nonzero interval. Their exact
+integrals are $581/128$ and $355/96$. The prime number theorem in the two
+classes gives
+\[
+ \Lambda=\frac12\left(\frac{581}{128}+\frac{355}{96}\right)
+         =\frac{3163}{768}.
+\]
+The finite-size proof uses affine covers with a fixed additive allowance
+for rounding $m$ and the residue endpoints. The generic prime summation
+retains every higher-prime-power and bad-prime cost. The original
+entrywise tropical denominator clears every principal restriction, so
+the same bound holds for the one-deletion family.
+
+\subsection{The new analytic certificate}
+The existing rectangular decay engine is instantiated with
+$\alpha=1/4$ and a rational probability measure on $600$ atoms: $100$
+real atoms and $250$ conjugate pairs. Its regularization radius is
+$1/2048$; all support points have modulus at most $16$. The certified
+function is
+\[
+ g(s)=\frac54 U^\sigma(s)-U^{\nu_{1/4}}(s)
+                 +\frac{999}{1000}\pi|\operatorname{Im}s|.
+\]
+The interval-potential identity
+\[
+ U^{\nu_{1/4}}(s)=\frac12U^\tau(s)
+       +\frac34U^\tau(2s/3)-\frac34\log(3/2)
+\]
+reuses the existing pointwise potential bounds. The finite cells,
+far-field Taylor bounds, continuum tails and pair-energy sums give
+\[
+ m'=\frac{9327}{4000},\quad
+ g_{\min}=-\frac{1693001}{1000000},\quad
+ S_{\rm base}=-\frac{1353}{50000},\quad
+ I^\sigma\le\frac{1838}{1000},\quad
+ I^\nu\ge\frac{184428}{100000}.
+\]
+Thus $D\ge4639/1000$ and $c=161/20$ are valid. Bounded deletion changes
+only a linear term, absorbed by the existing asymptotic decay theorem.
+Theorem~\ref{thm:chi3-charzero-selection} supplies the pinned interface
+on the unit-width interval $(1,2)$; the existing square-divisibility
+prime rule has $s=1$. Since $D-\Lambda<1$, the pinned measure criterion
+applies without a prime-location surcharge and gives
+\[
+ \mu\bigl(L(2,\chi_{-3})\bigr)
+ \le\frac{161/20}{4639/1000-3163/768}
+ =\frac{772800}{49969}<15.50.
+\]
+The public statement is $15.50$. The certificate uses the shared
+content, common-minor decay and pinned measure interfaces; no new
+global determinant engine is introduced.

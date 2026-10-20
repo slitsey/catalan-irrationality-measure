@@ -24,7 +24,7 @@ The repository also contains a second, fully formalized result:
 
 - μ(G − 5π²/48) ≤ 34.74;
 - μ(G + 5π²/48) ≤ 34.74;
-- μ(L(2, χ₋₃)) ≤ 17.60.
+- μ(L(2, χ₋₃)) ≤ 15.50.
 
 The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
 
@@ -32,8 +32,8 @@ The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Ta
 - Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
 - Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
 - The 34.74 improvements reuse the existing decay and nonvanishing proofs. A generic monic rescaling, translated-chain cancellation, weighted border, and kernel-checked 61-row prime profile improve the content constant to 3.68274.
-- The 17.60 improvement uses a finite-field corank-three theorem, deletion of at most three common low nodes, and valuation-one nonvanishing. A shared periodic-pole argument and a checked 26-row profile improve the content constant to 2159207/645120; the existing decay certificate is reused.
-- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The repository paper includes the 34.74 and 17.60 improvements; the linked v1 preprint has not been updated.
+- The 15.50 improvement uses characteristic-zero selection with at most one common-node deletion and a quarter border. The content profile gives Λ = 3163/768; a kernel-checked 600-atom analytic certificate gives D ≥ 4.639 and c = 8.05. The resulting ratio is 772800/49969 < 15.50. Shared content, selection and decay interfaces are reused.
+- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The TeX sources include the 34.74 and 15.50 improvements; the stored PDF predates the 15.50 update, and the linked v1 preprint has not been updated.
 - Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
@@ -278,7 +278,7 @@ Generic reduction geometry and `ModData3` now live in `CatalanCore/NV/`.
 The old frame modules reexport their names, constructors and projections.
 `ValOneFrame` now has 10 local dependencies, all in Core, instead of 18 including
 9 frame modules. The public roots export only the four strongest bounds: 740, 34.74,
-34.74 and 17.60. Historical corollaries remain internal to the proof libraries where needed.
+34.74 and 15.50. Historical corollaries remain internal to the proof libraries where needed.
 
 Further maintenance can treat the older E tables, canonical-G certificate helper duplicates,
 and archive target organization separately. This pass certifies the changed arithmetic and
@@ -287,7 +287,7 @@ its consumers without rebuilding Mathlib or the legacy Catalan-measure developme
 The P6 arithmetic now instantiates a shared periodic-pole interface. Principal common-core
 restrictions follow by integral diagonal perturbation and determinant differences; no deletion
 penalty is needed. The exact 26-window content gain is `11983/645120`, giving the checked
-17.60 theorem with the existing decay and selector certificates. The old shift chain lemmas
+earlier 17.60 theorem with the existing decay and selector certificates. The new quarter-border files reuse these interfaces with characteristic-zero selection and a fresh analytic certificate. The old shift chain lemmas
 are thin wrappers over the same interface, and prime-product denominator clearing is shared.
 
 The attempted non-clean second-level improvement is recorded in
