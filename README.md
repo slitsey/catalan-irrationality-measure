@@ -34,7 +34,7 @@ The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Ta
 - Statements: [`ChallengeHybrid.lean`](ChallengeHybrid.lean) (Mathlib only).
 - Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
 - Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
-- Paper: [`paper-lambda/lambda-irrationality.pdf`](paper-lambda/lambda-irrationality.pdf), with its source and bibliography alongside.
+- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version).
 - Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
