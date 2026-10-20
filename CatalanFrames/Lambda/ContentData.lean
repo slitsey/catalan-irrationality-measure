@@ -2,6 +2,7 @@ module
 
 public import CatalanFrames.Lambda.Frame
 public import CatalanCore.Arith.Growth
+public import CatalanCore.Arith.KqGen
 
 @[expose] public section
 
@@ -95,63 +96,14 @@ def jq (q : ℕ) : ℕ := if q % 4 = 3 then 1 else 3
 /-- First `k ≥ 1` with `q ∣ k (4k-1)` (for odd prime powers `q`). -/
 def kq (q : ℕ) : ℕ := (jq q * q + 1) / 4
 
-lemma jq_cases (q : ℕ) : jq q = 1 ∨ jq q = 3 := by unfold jq; split_ifs <;> simp
+lemma jq_eq (q : ℕ) : jq q = jqG 1 q := rfl
+
+lemma kq_eq (q : ℕ) : kq q = kqG 1 q := rfl
 
 lemma kq_le_of_dvd {q k : ℕ} (hq : IsPrimePow q) (hqo : Odd q) (hk : 0 < k)
-    (hd : q ∣ k * (4 * k - 1)) : kq q ≤ k ∧ q ≤ 4 * k - 1 := by
-  obtain ⟨p, e, hp0, he, rfl⟩ := hq
-  have hp := hp0.nat_prime
-  have hq2 : (p ^ e) % 2 = 1 := Nat.odd_iff.mp hqo
-  have hcop : Nat.Coprime k (4 * k - 1) := by
-    have h1 : Nat.gcd k (4 * k - 1) ∣ 4 * k - 1 := Nat.gcd_dvd_right _ _
-    have h2 : Nat.gcd k (4 * k - 1) ∣ 4 * k := Dvd.dvd.mul_left (Nat.gcd_dvd_left _ _) 4
-    have h3 := Nat.dvd_sub h2 h1
-    have : 4 * k - (4 * k - 1) = 1 := by omega
-    rw [this] at h3
-    exact Nat.dvd_one.mp h3
-  have hcases : p ^ e ∣ k ∨ p ^ e ∣ 4 * k - 1 := by
-    by_cases hpk : p ∣ k
-    · left
-      have : Nat.Coprime p (4 * k - 1) := by
-        rw [Nat.Prime.coprime_iff_not_dvd hp]
-        intro h4
-        have := Nat.dvd_sub (Dvd.dvd.mul_left hpk 4) h4
-        have e1 : 4 * k - (4 * k - 1) = 1 := by omega
-        rw [e1] at this
-        exact hp.one_lt.ne' (Nat.dvd_one.mp this)
-      exact (Nat.Coprime.pow_left e this).dvd_of_dvd_mul_right hd
-    · right
-      have : Nat.Coprime (p ^ e) k := Nat.Coprime.pow_left e ((Nat.Prime.coprime_iff_not_dvd hp).2 hpk)
-      exact this.dvd_of_dvd_mul_left hd
-  have hjq := jq_cases (p ^ e)
-  rcases hcases with hc | hc
-  · have := Nat.le_of_dvd hk hc
-    unfold kq
-    rcases hjq with hj | hj <;> rw [hj] <;> omega
-  · obtain ⟨t, ht⟩ := hc
-    have h4k : 4 * k - 1 = (p ^ e) * t := ht
-    have hq3 : (p ^ e) % 4 = 1 ∨ (p ^ e) % 4 = 3 := by omega
-    have htpos : 0 < t := by
-      rcases Nat.eq_zero_or_pos t with h0 | h0
-      · rw [h0] at h4k; omega
-      · exact h0
-    refine ⟨?_, ?_⟩
-    · unfold kq
-      have hmod : ((p ^ e) * t) % 4 = 3 := by omega
-      rcases hq3 with h1 | h3
-      · have hj : jq (p ^ e) = 3 := by unfold jq; simp [h1]
-        rw [hj]
-        have := Nat.mul_mod (p ^ e) t 4
-        rw [h1] at this
-        have ht3 : t % 4 = 3 := by omega
-        have : 3 ≤ t := by omega
-        have : 3 * (p ^ e) ≤ (p ^ e) * t := by nlinarith
-        omega
-      · have hj : jq (p ^ e) = 1 := by unfold jq; simp [h3]
-        rw [hj]
-        have : (p ^ e) ≤ (p ^ e) * t := Nat.le_mul_of_pos_right _ htpos
-        omega
-    · rw [h4k]; exact Nat.le_mul_of_pos_right _ htpos
+    (hd : q ∣ k * (4 * k - 1)) : kq q ≤ k ∧ q ≤ 4 * k - 1 :=
+  kqG_le_of_dvd (a := 1) (Or.inl rfl) hq hqo
+    (fun _ hp _ h => hp.one_lt.ne' (Nat.dvd_one.mp h)) hk hd
 
 lemma cast4 {k : ℕ} (hk : 0 < k) : ((4 * k - 1 : ℕ) : ℚ) = 4 * (k : ℚ) - 1 := by
   rw [Nat.cast_sub (by omega)]; push_cast; ring
