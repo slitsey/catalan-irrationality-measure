@@ -3,6 +3,7 @@ module
 public import CatalanCore.Cert.SigmaP6H.Data
 public import CatalanCore.Cert.SigmaP6.IBound
 public import CatalanCore.Decay.Rect.IrhoAppend
+public import CatalanCore.Decay.Rect.EnergyGen
 
 @[expose] public section
 
@@ -30,9 +31,8 @@ def lamPt (k : Fin 32) : Pt := ((2 : ℤ) ^ 40 + ((k : ℕ) : ℤ) * 2 ^ 33 - 2 
 
 def lamP : List Pt := List.ofFn lamPt
 
-def iTotL (B : List Pt) : List Pt → ℤ
-  | [] => 0
-  | p :: ps => (p.2.2 : ℤ) * iRow p B + iTotL B ps
+/-- Integer total of `A` against `B` (generic `EnergyGen.iTotL` at this frame's `iRow`). -/
+abbrev iTotL (B A : List Pt) : ℤ := CatalanCore.Decay.EnergyGen.iTotL iRow B A
 
 lemma sum_lam (f : Pt → ℝ) : ∑ k : Fin 32, f (lamPt k) = (lamP.map f).sum := by
   unfold lamP; rw [List.map_ofFn, List.sum_ofFn]; rfl
@@ -48,21 +48,12 @@ lemma cpt_lamPt (k : Fin 32) : cpt (lamPt k) = lamC k := by
 lemma lamW_eq (k : Fin 32) : lamW k = ((lamPt k).2.2 : ℝ) / 2 ^ 32 := by
   unfold lamW lamPt; norm_num
 
-lemma totL (B : List Pt) : ∀ A : List Pt,
-    (A.map (fun p => (B.map (Jr p)).sum)).sum = -(iTotL B A : ℝ) / 2 ^ 129 := by
-  intro A
-  induction A with
-  | nil => simp [iTotL]
-  | cons p ps ih =>
-    rw [List.map_cons, List.sum_cons, ih, row_eq]
-    simp only [iTotL]
-    push_cast
-    ring
-
 lemma iTotL_append (B a b : List Pt) : iTotL B (a ++ b) = iTotL B a + iTotL B b := by
   induction a with
-  | nil => simp [iTotL]
-  | cons p ps ih => simp only [List.cons_append, iTotL, ih]; ring
+  | nil => simp [iTotL, CatalanCore.Decay.EnergyGen.iTotL]
+  | cons p ps ih =>
+    simp only [List.cons_append, iTotL, CatalanCore.Decay.EnergyGen.iTotL] at ih ⊢
+    rw [ih]; ring
 
 theorem X1_0 : iTotL lamP (iChunk 0) = (2028625047015848599058920597132148736 : ℤ) := by decide +kernel
 theorem X1_1 : iTotL lamP (iChunk 1) = (1089337204742110077302765585201889280 : ℤ) := by decide +kernel
@@ -102,36 +93,21 @@ theorem X2_val : iTotL lamP lamP = X2 := by decide +kernel
 
 theorem cross_le : ∑ k : Fin 699, ∑ l : Fin 32, mS k * lamW l *
       krho (1 / 2048 : ℝ) (cS k) (lamC l) ≤ -(X1 : ℝ) / 2 ^ 129 := by
-  have h1 : ∑ k : Fin 699, ∑ l : Fin 32, mS k * lamW l * krho (1 / 2048 : ℝ) (cS k) (lamC l)
-      ≤ ∑ k : Fin 699, ∑ l : Fin 32, Jr (ptAt k) (lamPt l) := by
-    refine Finset.sum_le_sum (fun k _ => Finset.sum_le_sum (fun l _ => ?_))
-    have := pair_le (ptAt k) (lamPt l)
-    rw [cpt_lamPt] at this
-    rw [lamW_eq]
-    exact this
-  have h2 : ∑ k : Fin 699, ∑ l : Fin 32, Jr (ptAt k) (lamPt l) = -(iTotL lamP SigmaP6.sigD : ℝ) / 2 ^ 129 := by
-    have e1 : ∀ k : Fin 699, ∑ l : Fin 32, Jr (ptAt k) (lamPt l) = (lamP.map (Jr (ptAt k))).sum :=
-      fun k => sum_lam (Jr (ptAt k))
-    simp_rw [e1]
-    rw [sum_sigma (fun p => (lamP.map (Jr p)).sum), totL]
-  rw [X1_val] at h2
-  exact h1.trans h2.le
+  refine CatalanCore.Decay.EnergyGen.sum2_le_gen row_eq _ SigmaP6.sigD lamP (fun k : Fin 699 => ptAt k) lamPt
+    sum_sigma sum_lam (fun k l => ?_) X1 X1_val
+  have := pair_le (ptAt k) (lamPt l)
+  rw [cpt_lamPt] at this
+  rw [lamW_eq]
+  exact this
 
 theorem ll_le : Irho (1 / 2048 : ℝ) lamC lamW ≤ -(X2 : ℝ) / 2 ^ 129 := by
-  have h1 : Irho (1 / 2048 : ℝ) lamC lamW ≤ ∑ k : Fin 32, ∑ l : Fin 32, Jr (lamPt k) (lamPt l) := by
-    unfold Irho
-    refine Finset.sum_le_sum (fun k _ => Finset.sum_le_sum (fun l _ => ?_))
-    have := pair_le (lamPt k) (lamPt l)
-    rw [cpt_lamPt, cpt_lamPt] at this
-    rw [lamW_eq, lamW_eq]
-    exact this
-  have h2 : ∑ k : Fin 32, ∑ l : Fin 32, Jr (lamPt k) (lamPt l) = -(iTotL lamP lamP : ℝ) / 2 ^ 129 := by
-    have e1 : ∀ k : Fin 32, ∑ l : Fin 32, Jr (lamPt k) (lamPt l) = (lamP.map (Jr (lamPt k))).sum :=
-      fun k => sum_lam (Jr (lamPt k))
-    simp_rw [e1]
-    rw [sum_lam (fun p => (lamP.map (Jr p)).sum), totL]
-  rw [X2_val] at h2
-  exact h1.trans h2.le
+  unfold Irho
+  refine CatalanCore.Decay.EnergyGen.sum2_le_gen row_eq _ lamP lamP lamPt lamPt
+    sum_lam sum_lam (fun k l => ?_) X2 X2_val
+  have := pair_le (lamPt k) (lamPt l)
+  rw [cpt_lamPt, cpt_lamPt] at this
+  rw [lamW_eq, lamW_eq]
+  exact this
 
 theorem Irho_hyb_expand :
     Irho (1 / 2048 : ℝ) cH wtH

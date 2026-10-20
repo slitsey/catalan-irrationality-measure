@@ -1,6 +1,8 @@
 module
 
 public import CatalanCore.Cert.SigmaHyb.IData
+public import CatalanCore.Decay.Rect.IrhoAppend
+public import CatalanCore.Decay.Rect.EnergyGen
 
 @[expose] public section
 
@@ -19,16 +21,10 @@ open CatalanLambda.Cert
 
 set_option maxRecDepth 100000
 
-lemma totL (B : List Pt) : ∀ A : List Pt,
-    (A.map (fun p => (B.map (Jr p)).sum)).sum = -(iTotL B A : ℝ) / 2 ^ 129 := by
-  intro A
+lemma iTotL_eq (B A : List Pt) : iTotL B A = CatalanCore.Decay.EnergyGen.iTotL iRow B A := by
   induction A with
-  | nil => simp [iTotL]
-  | cons p ps ih =>
-    rw [List.map_cons, List.sum_cons, ih, row_eq]
-    simp only [iTotL]
-    push_cast
-    ring
+  | nil => simp [iTotL, CatalanCore.Decay.EnergyGen.iTotL]
+  | cons p ps ih => simp only [iTotL, CatalanCore.Decay.EnergyGen.iTotL, ih]
 
 lemma iTotL_append (B a b : List Pt) : iTotL B (a ++ b) = iTotL B a + iTotL B b := by
   induction a with
@@ -55,59 +51,31 @@ lemma cL_eq (l : Fin 180) : cL l = cpt (ptAtL lamS l) := rfl
 
 theorem cross_le : ∑ k : Fin 300, ∑ l : Fin 180, mS k * mL l *
       CatalanLambda.Decay.krho (1 / 1024 : ℝ) (cS k) (cL l) ≤ -(X1 : ℝ) / 2 ^ 129 := by
-  have h1 : ∑ k : Fin 300, ∑ l : Fin 180, mS k * mL l *
-      CatalanLambda.Decay.krho (1 / 1024 : ℝ) (cS k) (cL l)
-      ≤ ∑ k : Fin 300, ∑ l : Fin 180, Jr (ptAt k) (ptAtL lamS l) := by
-    refine Finset.sum_le_sum (fun k _ => Finset.sum_le_sum (fun l _ => ?_))
-    have := pair_le (ptAt k) (ptAtL lamS l)
-    unfold mS mL mOfL
-    exact this
-  have h2 : ∑ k : Fin 300, ∑ l : Fin 180, Jr (ptAt k) (ptAtL lamS l)
-      = -(iTotL lamS sigmaS : ℝ) / 2 ^ 129 := by
-    have e1 : ∀ k : Fin 300, ∑ l : Fin 180, Jr (ptAt k) (ptAtL lamS l) = (lamS.map (Jr (ptAt k))).sum :=
-      fun k => sum_gen lamS 180 lamS_len (Jr (ptAt k))
-    simp_rw [e1]
-    rw [sum_sigma (fun p => (lamS.map (Jr p)).sum), totL]
-  rw [X1_val] at h2
-  exact h1.trans h2.le
+  refine CatalanCore.Decay.EnergyGen.sum2_le_gen row_eq _ sigmaS lamS (fun k : Fin 300 => ptAt k) (fun l : Fin 180 => ptAtL lamS l)
+    sum_sigma (sum_gen lamS 180 lamS_len) (fun k l => ?_) X1 (by rw [← iTotL_eq]; exact X1_val)
+  have := pair_le (ptAt k) (ptAtL lamS l)
+  unfold mS mL mOfL
+  exact this
 
 theorem ll_le : CatalanLambda.Decay.Irho (1 / 1024 : ℝ) cL mL ≤ -(X2 : ℝ) / 2 ^ 129 := by
-  have h1 : CatalanLambda.Decay.Irho (1 / 1024 : ℝ) cL mL ≤ ∑ k : Fin 180, ∑ l : Fin 180, Jr (ptAtL lamS k) (ptAtL lamS l) := by
-    unfold CatalanLambda.Decay.Irho
-    refine Finset.sum_le_sum (fun k _ => Finset.sum_le_sum (fun l _ => ?_))
-    have := pair_le (ptAtL lamS k) (ptAtL lamS l)
-    unfold mL mOfL
-    exact this
-  have h2 : ∑ k : Fin 180, ∑ l : Fin 180, Jr (ptAtL lamS k) (ptAtL lamS l)
-      = -(iTotL lamS lamS : ℝ) / 2 ^ 129 := by
-    have e1 : ∀ k : Fin 180, ∑ l : Fin 180, Jr (ptAtL lamS k) (ptAtL lamS l) = (lamS.map (Jr (ptAtL lamS k))).sum :=
-      fun k => sum_gen lamS 180 lamS_len (Jr (ptAtL lamS k))
-    simp_rw [e1]
-    rw [sum_gen lamS 180 lamS_len (fun p => (lamS.map (Jr p)).sum), totL]
-  rw [X2_val] at h2
-  exact h1.trans h2.le
-
-lemma krho_symm (z w : ℂ) : CatalanLambda.Decay.krho (1 / 1024 : ℝ) z w = CatalanLambda.Decay.krho (1 / 1024 : ℝ) w z := by
-  unfold CatalanLambda.Decay.krho
-  rw [norm_sub_rev]
+  unfold CatalanLambda.Decay.Irho
+  refine CatalanCore.Decay.EnergyGen.sum2_le_gen row_eq _ lamS lamS (fun k : Fin 180 => ptAtL lamS k) (fun l : Fin 180 => ptAtL lamS l)
+    (sum_gen lamS 180 lamS_len) (sum_gen lamS 180 lamS_len) (fun k l => ?_) X2
+    (by rw [← iTotL_eq]; exact X2_val)
+  have := pair_le (ptAtL lamS k) (ptAtL lamS l)
+  unfold mL mOfL
+  exact this
 
 theorem Irho_hyb_expand :
     CatalanLambda.Decay.Irho (1 / 1024 : ℝ) cH wtH
       = (64 / 81) * (CatalanLambda.Decay.Irho (1 / 1024 : ℝ) cS mS
         + 2 * ∑ k : Fin 300, ∑ l : Fin 180, mS k * mL l * CatalanLambda.Decay.krho (1 / 1024 : ℝ) (cS k) (cL l)
         + CatalanLambda.Decay.Irho (1 / 1024 : ℝ) cL mL) := by
-  unfold CatalanLambda.Decay.Irho wtH mH cH
-  simp only [Fin.sum_univ_add, Fin.append_left, Fin.append_right]
-  have hsw : ∑ i : Fin 180, ∑ j : Fin 300, mL i * mS j * CatalanLambda.Decay.krho (1 / 1024 : ℝ) (cL i) (cS j)
-      = ∑ j : Fin 300, ∑ i : Fin 180, mS j * mL i * CatalanLambda.Decay.krho (1 / 1024 : ℝ) (cS j) (cL i) := by
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl (fun j _ => Finset.sum_congr rfl (fun i _ => ?_))
-    rw [krho_symm]; ring
-  have e : ∀ a b c : ℝ, a / (1 + 1 / 8) * (b / (1 + 1 / 8)) * c = (64 / 81) * (a * b * c) := by
-    intros; ring
-  simp_rw [e]
-  simp only [← Finset.mul_sum, Finset.sum_add_distrib]
-  rw [hsw]
+  have h := CatalanCore.Decay.Irho_append_div (1 / 1024 : ℝ) (1 + 1 / 8) (by norm_num) cS mS cL mL
+  have e : (fun k : Fin (300 + 180) => (Fin.append mS mL k) / (1 + (1 / 8 : ℝ))) = wtH := rfl
+  rw [e] at h
+  unfold cH
+  rw [h]
   ring
 
 def IboundH : ℚ := 200560832 / 10 ^ 8
