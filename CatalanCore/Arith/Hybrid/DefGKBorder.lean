@@ -1,5 +1,7 @@
 module
 
+public import CatalanCore.Arith.Hybrid.LemmaE.BorderIndex
+public import CatalanCore.Arith.Hybrid.GKTopUniform
 public import CatalanCore.Arith.Hybrid.DefGKBorderCore
 public import CatalanCore.Arith.Hybrid.DefGKFam
 public import CatalanCore.Arith.Hybrid.BorderDef
@@ -9,7 +11,7 @@ public import CatalanCore.Arith.Hybrid.BorderDef
 /-!
 # GK for the second member `afterTop r m` (bordered T-route; no new entry tables)
 
-The determinant of `Full(afterTop r m)` is the determinant of `topMat Fr r m` (`Frame.fullPoly r m`'s
+The two class endpoints reuse the uniform whole-zone zero-weight theorem. The determinant of `Full(afterTop r m)` is the determinant of `topMat Fr r m` (`Frame.fullPoly r m`'s
 matrix bordered by the node `b = r + 2m`).  Reindexing `Option (Fin r ⊕ Fin m)` as
 `Fin r ⊕ Option (Fin m)` (clean block, zone, border) the inner `Fin r ⊕ Fin m` block is exactly
 `Matrix.of (fullEntry Fr r m)`, so the GK data of the first member (`Atil_int`, `Atil_prim`,
@@ -25,19 +27,6 @@ open Finset Polynomial CatalanCore CatalanCore.Basic CatalanCore.Rect Matrix
 open CatalanCore.Arith.Hybrid.LemmaE
 
 namespace CatalanCore.Arith.Hybrid
-
-/-- `Fin r ⊕ Option (Fin m) ≃ Option (Fin r ⊕ Fin m)` (the border is `none`). -/
-def borderEquiv (r m : ℕ) : Fin r ⊕ Option (Fin m) ≃ Option (Fin r ⊕ Fin m) where
-  toFun
-    | Sum.inl c => some (Sum.inl c)
-    | Sum.inr none => none
-    | Sum.inr (some j) => some (Sum.inr j)
-  invFun
-    | none => Sum.inr none
-    | some (Sum.inl c) => Sum.inl c
-    | some (Sum.inr j) => Sum.inr (some j)
-  left_inv := by rintro (_ | _ | _) <;> rfl
-  right_inv := by rintro (_ | _ | _) <;> rfl
 
 section Vec
 
@@ -101,10 +90,7 @@ variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- **GK (class 1) for `afterTop`.** -/
 theorem gleTop_GK1 (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (S : GKS1 o p r m k) :
-    GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) :=
-  gle_fullTop_of_vec I r m p (Atil_int hL S) (Atil_prim hL S) (alphaM Fr p r m) (betaM Fr p r m)
-    (fun _ c => avec_int S.p13 S.h1009 _ c) (fun c _ => avec_int S.p13 S.h1009 _ c)
-    (hL_bound hL S) (hL'_bound hL S) (hDelta_bound hL S)
+    GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) := S.uniform_top_gle I hL
 
 end GK1
 
@@ -114,10 +100,7 @@ variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- **GK (class 3) for `afterTop`.** -/
 theorem gleTop_GK3 (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (S : GKS3 o p r m k) :
-    GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) :=
-  gle_fullTop_of_vec I r m p (Atil_int hL S) (Atil_prim hL S) (alphaM Fr p r m) (betaM Fr p r m)
-    (fun _ c => avec_int S.p13 S.h139 _ c) (fun c _ => avec_int S.p13 S.h139 _ c)
-    (hL_bound hL S) (hL'_bound hL S) (hDelta_bound hL S)
+    GLE p (2 * r + (topW I r m p + topW I r m p)) ((afterTop r m).fullPolyG Fr) := S.uniform_top_gle I hL
 
 end GK3
 

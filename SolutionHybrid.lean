@@ -1,7 +1,7 @@
 module
 
-public import CatalanFrames.LambdaHybrid.AssemblyFinal
-public import CatalanFrames.LambdaMirrorHybrid.MirFinalAll
+public import CatalanFrames.LambdaHybrid.UniformFinal
+public import CatalanFrames.LambdaMirrorHybrid.UniformFinal
 public import CatalanFrames.P6Hybrid.AssemblySquare
 public import CatalanFrames.P6Hybrid.AssemblyMinor
 
@@ -10,9 +10,9 @@ public import CatalanFrames.P6Hybrid.AssemblyMinor
 /-!
 # Proofs of the statements of `ChallengeHybrid.lean`
 
-From `CatalanFrames.LambdaHybrid.lam_hyb_measure_final`,
-`CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final` and
-`CatalanFrames.P6Hybrid.chi3_hybrid_measure_wide`; `MeasureLBAt x E` unfolds to the displayed
+The strongest bounds use `CatalanFrames.LambdaHybrid.lam_hyb_measure_uniform`,
+`CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform` and
+`CatalanFrames.P6Hybrid.chi3_hybrid_measure_minor`; the older bounds are retained. `MeasureLBAt x E` unfolds to the displayed
 statement.
 
 The additional theorem `chi3_hybrid_measure_2116` uses the square-divisor
@@ -45,6 +45,22 @@ theorem chi3_hybrid_measure :
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.chi3_hybrid_measure_wide
 
+/-- **`μ(G - 5π²/48) ≤ 34.74`, from the uniform interval profile.** -/
+theorem lam_hybrid_measure_3474 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
+        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48)
+          - (p : ℝ) / q| :=
+  CatalanFrames.LambdaHybrid.lam_hyb_measure_uniform
+
+/-- **`μ(G + 5π²/48) ≤ 34.74`, from the uniform interval profile.** -/
+theorem mir_hybrid_measure_3474 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
+        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
+          - (p : ℝ) / q| :=
+  CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform
+
 theorem chi3_hybrid_measure_2116 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(((2116 / 100 : ℚ) : ℝ) + e)) <
@@ -59,6 +75,8 @@ theorem chi3_hybrid_measure_1850 :
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.chi3_hybrid_measure_minor
 
+#print axioms lam_hybrid_measure_3474
+#print axioms mir_hybrid_measure_3474
 #print axioms lam_hybrid_measure
 #print axioms mir_hybrid_measure
 #print axioms chi3_hybrid_measure

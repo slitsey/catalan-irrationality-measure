@@ -23,8 +23,8 @@ Assembly of `μ(λ) ≤ C/(D - Λ)` (the `κ = 0` exponent; pinned degree) for
   (`lam_hyb_measure_of_content_eps`);
 * decay: `HasDecay (hybridFamUp lamFrame (1/8)) D C` (hypothesis; `decay_of_certG_rect`);
 * nonvanishing: `lam_hybPairNV` from `nv_hyb_nonvanishing`, prime choice by `hasNVPin_hybPair`;
-* OPEN (analytic, DZ-audit item 4): content and decay of DO's second member `afterTop r m`
-  (`Mem2Content`, `Mem2Decay`).
+* second member: content and decay of `afterTop r m` are proved in `Mem2Content` and
+  `Mem2Decay`; this generic assembly accepts those results through its second-member hypotheses.
 -/
 
 open Filter CatalanCore CatalanCore.Rect CatalanCore.Arith.Hybrid CatalanFrames.Lambda

@@ -46,13 +46,13 @@ lemma gn_const_pow_det (b : ℕ) (M : Matrix κ κ ℚ[X]) (h : ∀ a c, GLE p b
     simp
   exact ((gle_iff_gn p _ _).mp (h1.mono h2))
 
-/-- **T-route criterion.** -/
-theorem tcore (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X]) (g : ℚ[X]) (hg : gn p g = 1)
+/-- The T-route with an arbitrary bound for the scaled Schur determinant. -/
+theorem tcore_of_det_gle (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X]) (g : ℚ[X]) (hg : gn p g = 1)
     (N : Matrix ι ι ℚ[X]) (hAN : Full.toBlocks₁₁ * N = g • (1 : Matrix ι ι ℚ[X]))
     (s : ℕ) (hdet : C ((p : ℚ) ^ s) * Full.toBlocks₁₁.det = g)
-    (b : ℕ) (hT : ∀ z y, GLE p b (Tscaled g Full.toBlocks₁₁ Full.toBlocks₁₂ Full.toBlocks₂₁
-        Full.toBlocks₂₂ N z y)) :
-    GLE p (Fintype.card κ * b + s) Full.det := by
+    (e : ℕ) (hT : GLE p e (Tscaled g Full.toBlocks₁₁ Full.toBlocks₁₂ Full.toBlocks₂₁
+        Full.toBlocks₂₂ N).det) :
+    GLE p (e + s) Full.det := by
   classical
   set A := Full.toBlocks₁₁
   set B := Full.toBlocks₁₂
@@ -115,8 +115,7 @@ theorem tcore (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X]) (g : ℚ[X]) (hg : 
       _ = φ g * (T.map φ).det := by
         rw [hd, ← mul_pow, inv_mul_cancel₀ hgK, one_pow, mul_one]
   -- norms
-  have hT' : gn p T.det ≤ (p : ℝ) ^ (Fintype.card κ * b) :=
-    gn_const_pow_det p b T hT
+  have hT' : gn p T.det ≤ (p : ℝ) ^ e := (gle_iff_gn p e T.det).mp hT
   have hn : gn p (cc * Full.det * g ^ Fintype.card κ) = gn p (g * T.det) := by
     rw [key]
   rw [gn_mul, gn_mul, gn_mul, hg] at hn
@@ -132,12 +131,25 @@ theorem tcore (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X]) (g : ℚ[X]) (hg : 
   rw [hpow, hpow'] at hn
   have hp0 : (0 : ℝ) < (p : ℝ) := by exact_mod_cast (Fact.out : p.Prime).pos
   rw [gle_iff_gn]
-  have h3 : ((p : ℝ)⁻¹) ^ s * gn p Full.det ≤ (p : ℝ) ^ (Fintype.card κ * b) := by
+  have h3 : ((p : ℝ)⁻¹) ^ s * gn p Full.det ≤ (p : ℝ) ^ (e) := by
     linarith
   rw [inv_pow, inv_mul_le_iff₀ (pow_pos hp0 s)] at h3
-  calc gn p Full.det ≤ (p : ℝ) ^ s * (p : ℝ) ^ (Fintype.card κ * b) := h3
-    _ = (p : ℝ) ^ (Fintype.card κ * b + s) := by rw [← pow_add, add_comm]
+  calc gn p Full.det ≤ (p : ℝ) ^ s * (p : ℝ) ^ (e) := h3
+    _ = (p : ℝ) ^ (e + s) := by rw [← pow_add, add_comm]
 
+/-- The original constant-entry T-route is a corollary of the determinant-bound core. -/
+theorem tcore (Full : Matrix (ι ⊕ κ) (ι ⊕ κ) ℚ[X]) (g : ℚ[X]) (hg : gn p g = 1)
+    (N : Matrix ι ι ℚ[X]) (hAN : Full.toBlocks₁₁ * N = g • (1 : Matrix ι ι ℚ[X]))
+    (s : ℕ) (hdet : C ((p : ℚ) ^ s) * Full.toBlocks₁₁.det = g)
+    (b : ℕ) (hT : ∀ z y, GLE p b (Tscaled g Full.toBlocks₁₁ Full.toBlocks₁₂ Full.toBlocks₂₁
+        Full.toBlocks₂₂ N z y)) :
+    GLE p (Fintype.card κ * b + s) Full.det :=
+  tcore_of_det_gle p Full g hg N hAN s hdet (Fintype.card κ * b)
+    ((gle_iff_gn p _ _).mpr (gn_const_pow_det p b _ hT))
 end Tcore
 
 end CatalanCore.Arith.Hybrid.LemmaE
+
+
+#print axioms CatalanCore.Arith.Hybrid.LemmaE.tcore_of_det_gle
+#print axioms CatalanCore.Arith.Hybrid.LemmaE.tcore

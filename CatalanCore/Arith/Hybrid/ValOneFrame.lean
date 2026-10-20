@@ -1,7 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.ValOne
-public import CatalanFrames.LambdaHybrid.NV.Mod3
+public import CatalanCore.NV.LevelData
 
 @[expose] public section
 
@@ -11,7 +11,7 @@ Reuse the existing level data, adding only integrality of off-diagonal mid
 entries. Common nodes may be any finite set containing the low interval.
 -/
 
-open Finset Matrix CatalanCore CatalanCore.Rect CatalanFrames.LambdaHybrid.NV
+open Finset Matrix CatalanCore CatalanCore.Rect CatalanCore.NV
 
 namespace CatalanCore.Arith.Hybrid.ValOne
 

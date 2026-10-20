@@ -133,13 +133,8 @@ lemma two_ne_cJ1 (ho : o = 1 ∨ o = 3) : (2 : ZMod 4) ≠ cJ1 o := by
 lemma two_ne_cJ3 (ho : o = 1 ∨ o = 3) : (2 : ZMod 4) ≠ cJ3 o := by
   rcases ho with rfl | rfl <;> decide
 
-theorem class1_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ1 o) (WTG I o r) 0 (5 * r) ≤
-      (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε) := by
-  have h := class_total (M := 4) (isUnit_cJ1 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
-    (by norm_num) l3x l3x_chain hε
-  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
-  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (by
+lemma WTG_covers_l3x (T : TropFacts I o) (r : ℕ) (hr4 : 400≤r) :
+    ∀ P∈l3x, Covers (cJ1 o) (WTG I o r) r P := by
     intro P hP
     unfold l3x at hP
     rcases List.mem_append.mp hP with h | h
@@ -163,17 +158,20 @@ theorem class1_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
         cwd1_15 T _ (two_ne_cJ1 T.ho) r hr4]
     · simp only [l3, List.mem_cons, List.mem_nil_iff, or_false] at h
       rcases h with rfl | rfl | rfl | rfl | rfl
-      exacts [cwj1_1 T r hr4, cwj1_2 T r hr4, cwj1_3 T r hr4, cwj1_4 T r hr4, cwj1_5 T r hr4])
+      exacts [cwj1_1 T r hr4, cwj1_2 T r hr4, cwj1_3 T r hr4, cwj1_4 T r hr4, cwj1_5 T r hr4]
+
+theorem class1_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ1 o) (WTG I o r) 0 (5 * r) ≤
+      (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε) := by
+  have h := class_total (M := 4) (isUnit_cJ1 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
+    (by norm_num) l3x l3x_chain hε
+  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
+  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (WTG_covers_l3x T r hr4)
   rw [l3x_end, floor_frac] at this
   simpa [tot4] using this
 
-theorem class3_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ3 o) (WTG I o r) 0 (5 * r / 3) ≤
-      (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l1x) / 2 + ε) := by
-  have h := class_total (M := 4) (isUnit_cJ3 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
-    (by norm_num) l1x l1x_chain hε
-  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
-  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (by
+lemma WTG_covers_l1x (T : TropFacts I o) (r : ℕ) (hr4 : 400≤r) :
+    ∀ P∈l1x, Covers (cJ3 o) (WTG I o r) r P := by
     intro P hP
     unfold l1x at hP
     rcases List.mem_append.mp hP with h | h
@@ -198,37 +196,50 @@ theorem class3_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
     · simp only [l1, List.mem_cons, List.mem_nil_iff, or_false] at h
       rcases h with rfl | rfl | rfl | rfl | rfl | rfl
       exacts [cwj3_1 T r hr4, cwj3_2 T r hr4, cwj3_3 T r hr4, cwj3_4 T r hr4, cwj3_5 T r hr4,
-        cwj3_6 T r hr4])
+        cwj3_6 T r hr4]
+
+theorem class3_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ3 o) (WTG I o r) 0 (5 * r / 3) ≤
+      (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l1x) / 2 + ε) := by
+  have h := class_total (M := 4) (isUnit_cJ3 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
+    (by norm_num) l1x l1x_chain hε
+  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
+  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (WTG_covers_l1x T r hr4)
   rw [l1x_end, floor_frac] at this
   simpa [tot4] using this
 
 /-- **The content bound for the glued deficit family (before the deficit sums).** -/
-theorem logDhybT_le_G {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
-      Real.log (DhybT I r (r / 8) (TfunG o I r) δ) ≤
+theorem logDhybT_le_weight {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm)
+    (Exp : ℕ → ℕ → ℕ) (W : ℕ → ℕ → ℝ)
+    (hW : ∀ r p, 0 ≤ W r p)
+    (hExp : ∀ r, 400 ≤ r → ∀ p, p.Prime →
+      (Exp r p : ℝ) ≤ (if p ∈ I.cd.bad then exBad cm r (r / 8) else 0) +
+        ((2 * (r + r / 8) * cntG I r (r / 8) p : ℕ) : ℝ) +
+        (if p ∈ I.cd.bad then 0 else W r p))
+    (htail1 : ∀ r, 400 ≤ r → ∀ p, p.Prime → 5 ≤ p → p%4=4-o → 5*r<p → W r p=0)
+    (htail3 : ∀ r, 400 ≤ r → ∀ p, p.Prime → 5 ≤ p → p%4=o → 5*r/3<p → W r p=0)
+    (hclass1 : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ1 o) (W r) 0 (5*r) ≤
+      (r : ℝ)^2 * (((9/4 : ℝ)*(1/68)+listInt l3x)/2+ε))
+    (hclass3 : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ3 o) (W r) 0 (5*r/3) ≤
+      (r : ℝ)^2 * (((9/4 : ℝ)*(1/68)+listInt l1x)/2+ε))
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (Exp r) δ →
+      Real.log (DhybT I r (r / 8) (Exp r) δ) ≤
         (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
         ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (δ p : ℝ) * Real.log p := by
-  have h1 := class1_totalG T (ε := ε / 4) (by positivity)
-  have h3 := class3_totalG T (ε := ε / 4) (by positivity)
+  have h1 := hclass1 (ε / 4) (by positivity)
+  have h3 := hclass3 (ε / 4) (by positivity)
   have hx := B.extra_small (ε / 2) (by positivity)
   filter_upwards [h1, h3, hx, eventually_ge_atTop 400] with r hr1 hr3 hrx hr0 δ hδ
   have hr16 : 16 ≤ r := by omega
   rw [log_DhybT I r (r / 8) hδ]
   have hne : cJ1 o ≠ cJ3 o := by rcases T.ho with rfl | rfl <;> decide
-  have w1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 4 - o → 5 * r < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
-    have hz := XG_tail1 T r p hp h5 hm ht
-    have he := eNG_tail T.ho hr16 (r := r) (p := p) (by omega)
-    simp [WTG, WG, hz, he]
-  have w3 : ∀ p, p.Prime → 5 ≤ p → p % 4 = o → 5 * r / 3 < p → WTG I o r p = 0 := fun p hp h5 hm ht => by
-    have hz := XG_tail3 T r p hp h5 hm ht
-    have he := eNG_tail T.ho hr16 (r := r) (p := p) ht
-    simp [WTG, WG, hz, he]
   have hsumT := sum_Bnd_le_gen B ({cJ1 o, cJ3 o} : Finset (ZMod 4))
-    (fun c => if c = cJ1 o then 5 * r else 5 * r / 3) r (r / 8) (TfunG o I r) (WTG I o r)
-    (WTG_nonneg _ _ _) (cntG I r (r / 8))
+    (fun c => if c = cJ1 o then 5 * r else 5 * r / 3) r (r / 8) (Exp r) (W r)
+    (hW r) (cntG I r (r / 8))
     (fun p hp => (cntG_le I r (r / 8) p hp).trans (by rw [B.L_eq]))
     (fun p hp h => cntG_zero I r (r / 8) p hp (by rw [B.L_eq]; exact h))
-    (fun p hp => TfunG_leG T B r p hr16 hp)
+    (fun p hp => hExp r hr0 p hp)
     (fun p hp hpb => by
       have h2 : p ≠ 2 := fun h => hpb (h ▸ B.two_mem)
       rcases prime_class4 hp h2 with ⟨h3', _⟩ | ⟨h1', _⟩
@@ -260,12 +271,12 @@ theorem logDhybT_le_G {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) {�
         omega
       rcases hcc with rfl | rfl
       · rw [if_pos rfl] at hlt
-        exact w1 p hp h5 (mod_j1 T hpc) hlt
+        exact htail1 r hr0 p hp h5 (mod_j1 T hpc) hlt
       · rw [if_neg (Ne.symm hne)] at hlt
-        exact w3 p hp h5 (mod_j3 T hpc) hlt)
+        exact htail3 r hr0 p hp h5 (mod_j3 T hpc) hlt)
   have hmain : ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime,
-      (TfunG o I r p : ℝ) * Real.log p ≤ extraG Lc Ecub cm (badLog I) r (r / 8) +
-        clsSum 4 (cJ1 o) (WTG I o r) 0 (5 * r) + clsSum 4 (cJ3 o) (WTG I o r) 0 (5 * r / 3) := by
+      (Exp r p : ℝ) * Real.log p ≤ extraG Lc Ecub cm (badLog I) r (r / 8) +
+        clsSum 4 (cJ1 o) (W r) 0 (5 * r) + clsSum 4 (cJ3 o) (W r) 0 (5 * r / 3) := by
     rw [Finset.sum_pair hne, if_pos rfl, if_neg (Ne.symm hne)] at hsumT
     linarith
   have hex := hrx (r / 8) (Nat.div_le_self r 8)
@@ -277,6 +288,25 @@ theorem logDhybT_le_G {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) {�
     congr 1
     linarith
   nlinarith [hmain, hr3, hr1, hex, e]
+
+
+/-- **The content bound for the glued deficit family (before the deficit sums).** -/
+theorem logDhybT_le_G {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∀ δ : ℕ → ℕ, DefHypT I r (r / 8) (TfunG o I r) δ →
+      Real.log (DhybT I r (r / 8) (TfunG o I r) δ) ≤
+        (24994314577 / 6665218560 + ε) * (r : ℝ) ^ 2 -
+        ∑ p ∈ (Finset.range (Bnd I r (r / 8))).filter Nat.Prime, (δ p : ℝ) * Real.log p := by
+  apply logDhybT_le_weight T B (TfunG o I) (WTG I o) (WTG_nonneg I o)
+    (fun r hr p hp => TfunG_leG T B r p (by omega) hp)
+    ?_ ?_ (fun ε hε => class1_totalG T hε) (fun ε hε => class3_totalG T hε) hε
+  · intro r hr p hp h5 hm ht
+    have hz := XG_tail1 T r p hp h5 hm ht
+    have he := eNG_tail T.ho (by omega : 16≤r) (r := r) (p := p) (by omega)
+    simp [WTG, WG, hz, he]
+  · intro r hr p hp h5 hm ht
+    have hz := XG_tail3 T r p hp h5 hm ht
+    have he := eNG_tail T.ho (by omega : 16≤r) (r := r) (p := p) ht
+    simp [WTG, WG, hz, he]
 
 end Totals
 

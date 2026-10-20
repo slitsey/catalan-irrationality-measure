@@ -1,5 +1,6 @@
 module
 
+public import CatalanCore.Arith.Hybrid.GKConditions
 public import CatalanCore.Arith.Hybrid.DefGKTab
 public import CatalanCore.Arith.Hybrid.DefC7Entries
 
@@ -112,21 +113,6 @@ noncomputable def res3 (p k : ℕ) (t : ℕ) : ZMod p :=
 noncomputable def resD3 (p k : ℕ) (t : ℕ) : ZMod p :=
   if t = k then -16 else if t = p then 1 else if t = p + k then -(16 * ((5 : ZMod p)⁻¹) ^ 2)
   else if t = 2 * p then (4 : ZMod p)⁻¹ else -(16 * ((9 : ZMod p)⁻¹) ^ 2)
-
-/-- Hypotheses of the class-3 GK setting. -/
-structure GKS3 (o p r m k : ℕ) : Prop where
-  p13 : 13 ≤ p
-  hk : 4 * k = p + o ∧ 0 < o ∧ o ≤ 3
-  hr : 2 * p + k < r
-  hN : r + 2 * m ≤ 3 * p
-  hm : 0 < m
-  h139 : p ≠ 139
-  h37 : p ≠ 37
-  h73 : p ≠ 73
-  hbig : p ≠ 350972849
-
-lemma GKS3.kp {r m k : ℕ} (S : GKS3 o p r m k) : k < p := by have := S.p13; have := S.hk; omega
-lemma GKS3.k0 {r m k : ℕ} (S : GKS3 o p r m k) : 0 < k := by have := S.hk; omega
 
 lemma reg3 {r m k : ℕ} (S : GKS3 o p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 3 * p)
     (hn : t ∉ Sg3 p k) : Reg p k t := by

@@ -60,8 +60,8 @@ Building on OpenAI's determinant method for the irrationality of Catalan's const
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \[
 \begin{gathered}
- \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 38.35,\qquad
- \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 38.35,\\
+ \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 34.74,\qquad
+ \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 34.74,\\
  \mu\bigl(L(2,\chi_{-3})\bigr)\le 18.50 ,
 \end{gathered}
 \]
@@ -113,16 +113,16 @@ sufficiently large $b$.
 For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
 \[
 \begin{gathered}
- \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\qquad
- \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\\
+ \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\qquad
+ \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\\
  \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-18.50-\varepsilon}.
 \end{gathered}
 \]
-In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le38.35$ and
+In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le34.74$ and
 $\mu(L(2,\chi_{-3}))\le18.50$.
 \end{theorem}
 
-The computed values of the exponents are $38.342$ and $18.498632$. Theorem~\ref{thm:main}, together with every
+The computed values of the exponents are $34.738$ and $18.498632$. Theorem~\ref{thm:main}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -232,10 +232,10 @@ configuration of $(1+\alpha)r$ nodes, $\alpha=m/r$. The content grows too, but l
 columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants become (for $\lambda$)
 \[
 \begin{gathered}
- \Lambda=3.70343\quad(\text{square frame: }313/105=2.98095),\\ D=3.9028\quad(\text{square frame: }3.1114),
+ \Lambda=3.68274\quad(\text{square frame: }313/105=2.98095),\\ D=3.9028\quad(\text{square frame: }3.1114),
 \end{gathered}
 \]
-and the margin $\eta=D-\Lambda$ rises from $0.1304$ to $0.1994$. The interleaving of $X'$ and $Y'$ is
+and the margin $\eta=D-\Lambda$ rises from $0.1304$ to $0.2201$. The interleaving of $X'$ and $Y'$ is
 essential: it keeps the two Cauchy determinants in Andr\'eief's formula comparable (\S\ref{sec:decay}) and
 it gives the reduction modulo $\ell$ the bordered structure of \S\ref{sec:nonvanishing}.
 
@@ -256,7 +256,9 @@ $B$ modulo $p$ over $\F_p(x)$ saves one factor of $p$. We compute this corank in
 using the block structure of the reduction (residue classes modulo $p$), Schur complements, the identity
 $H_{p-1-n}\equiv H_n\pmod p$ for harmonic numbers, an antisymmetry of Cauchy-type sums, and the
 Frobenius--K\"onig theorem. The savings lower the content from $3.74993$ to $3.70343$; with the decay constant below this
-lowers the exponent from about $50.0$ to $38.34$.
+lowers the exponent from about $50.0$ to $38.35$.
+The uniform rescaled-core argument of Section~\ref{sec:uniform-deficit} adds the missing
+interval savings without changing the determinant family, giving content $3.68274$ and exponent $34.74$.
 
 \subsection{New idea 3: nonvanishing through a commuting Jacobi matrix}
 Fix a prime $\ell$ in a suitable residue class with $\ell\nmid q$. After scaling by $\ell$ the rows and columns
@@ -317,7 +319,7 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
 is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
 $\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
-$\mu\le7.6444/0.19937<38.35$. For $L(2,\chi_{-3})$, the original pair family gives
+$\mu\le7.6444/0.22006<34.74$. For $L(2,\chi_{-3})$, the original pair family gives
 $6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a family with at most three
 common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
 the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-10339/3072)<18.50$.
@@ -328,8 +330,8 @@ the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-10339/3072)<18.50$.
 \toprule
 constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ & exponent\\
 \midrule
-$G-5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
-$G+5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
+$G-5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
+$G+5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
 $L(2,\chi_{-3})$ & $10339/3072$ & $3.7251$ & $6.6510$ & $0.35954$ & $0$ & $18.498632$\\
 \bottomrule
 \end{tabular}}
@@ -426,7 +428,7 @@ For admissible geometries of scale $r$,
 \[
  \log\den P_{\mathcal G}\le(\Lambda+o(1))\,r^2,
 \]
-where $\Lambda=3.70343$ for $\lambda$ and $\lambda'$, and $\Lambda=10339/3072=3.36556\ldots$ for $L(2,\chi_{-3})$.
+where $\Lambda=3.68274$ for $\lambda$ and $\lambda'$, and $\Lambda=10339/3072=3.36556\ldots$ for $L(2,\chi_{-3})$.
 \end{theorem}
 
 We give the details for $\lambda$ and indicate the changes for $\lambda'$ and for $L(2,\chi_{-3})$ at the end.
@@ -606,9 +608,9 @@ a general statement: if every residue-class block of the leading form of $p^2A$ 
 $T$ is integral. The proof splits $p^2A=B_0+pE$ with $B_0$ block diagonal by residue class, inverts by a Neumann
 series, and shows that the order-$p$ term vanishes: the translation $c\mapsto c+(y-z)$ identifies the classes of
 $z$ and $y$ (cleanness is used here), and what remains is $\sum_{i,j}g_ig_j(L_i-L_j)=0$, an antisymmetric sum.
-In the two families listed the classes have size $2$ or $3$ and the block determinants are explicit rationals,
+The original proof for the two listed families used classes of size $2$ or $3$ and explicit rational block determinants,
 for example $-350972849/368640000$ (with prime numerator), which are nonzero modulo $p$ except at $p=139$ and
-$p=1009$.
+$p=1009$. The uniform argument in Section~\ref{sec:uniform-deficit} proves the needed clean-case bound without these exceptional determinants.
 
 \subsection{Summation}
 Each family is a union of intervals $p\in(ar,br)$ in a fixed class, and $\delta_p$ is a linear function of $p$
@@ -621,6 +623,8 @@ there. With the prime number theorem in progressions, the total saving is
  \Lambda_\lambda\le\Lambda_{\rm trop}(\tfrac18)-0.0465412=3.7033935\ldots\le3.70343 .
 \]
 (The formal proof uses the slightly coarser rational value $3.7034204$, from a truncation of the sawtooth term.)
+This is the intermediate content constant before the additional savings of Section~\ref{sec:uniform-deficit},
+which complete the improved constant in Theorem~\ref{thm:content}.
 
 \subsection{The second member}
 The geometry $\mathcal G_2$ has one extra common node $b=r+2m$. Bordering $\Phi_{\mathcal G_1}$ by one row and one
@@ -648,6 +652,245 @@ $\Lambda_\chi=\frac{10339}{3072}$. The per-prime bound agrees with the exact ass
 tested ($r=256$ and $r=1024$).
 
 %% =====================================================================
+\section{A uniform rescaled-core deficit}
+\label{sec:uniform-deficit}
+
+We retain the determinant family and the previously established clean-prime
+estimates.  A common rescaled-core argument supplies three additional,
+disjoint groups of prime windows.  The gain comes from a first-order
+cancellation and an elementary assignment dual; no assertion about a Smith
+normal form or the optimality of the previous tropical bound is required.
+The argument applies to both offsets $o\in\{1,3\}$.
+
+\paragraph{Monic rescaling.}
+For the finite certificate take $m=\lfloor r/8\rfloor$; the same leading estimates hold for
+$m=r/8+O(1)$, since all endpoint and border losses are bounded per prime. Put $N=r+2m$ and write $C=[0,r)$ for the
+common core and $Z=[r,N)$ for the interleaved border zone.  We use primes
+$p\ge13$ satisfying $4(N+1)<p^2$.  In the normalized symmetric rational
+matrix $R$, whose omitted normalization factors are $p$-adic units, every
+entry has valuation at least $-2$.  Replace the polynomial variable $X$
+by $x/p^2$ and set
+\[
+ A=R_{CC}+\frac{x}{p^2}I_r,\qquad Q=p^2A=p^2R_{CC}+xI_r.
+\]
+The entries of $Q$ are integral for the $p$-adic Gauss valuation.  Its
+reduction is block diagonal according to residues of core nodes modulo
+$p$.  Every reduced block has the form $M+xI$, so its determinant is
+monic and nonzero over $\mathbb F_p(x)$.  Consequently
+\[
+ v_G(\det Q)=0,\qquad v_G(\det A)=-2r.
+\]
+This remains valid when the constant matrix $M$ is singular.  The single
+Gauss unit $\det Q$ and its adjugate suffice to express all inverse
+entries; separate denominators for individual residue blocks are unnecessary.
+
+Let $T$ be the Schur matrix left after eliminating $C$.  If every
+assignment in its $m\times m$ zone matrix has total entry price at most
+$\tau$, with $v_G(T_{zy})\ge-w_{zy}$, then the determinant expansion gives
+\[
+ v_G\bigl(F(x/p^2)\bigr)\ge-2r-\tau.
+\]
+Indeed, for $F(X)=\sum_i c_iX^i$ the left side is
+$\min_i(v_p(c_i)-2i)$.  Thus every coefficient satisfies
+$v_p(c_i)\ge-2r-\tau+2i\ge-2r-\tau$.
+The substitution estimates coefficients of the original polynomial and
+introduces no new approximation family.
+
+\paragraph{Translation and cancellation.}
+The singular cuts are the integers in the two residue classes
+$0$ and $(cp+o)/4$ modulo $p$, where $c=1$ or $3$ is determined by the
+prime class.  For a zone node $z$, its core chain consists of
+\[
+ \{z-ip: i\ge1,\ 0\le z-ip<r\}.
+\]
+Between consecutive singular cuts and the core-exit cuts $r+ip$, translation
+by $y-z$ identifies the chains of $z$ and $y$, their leading node data,
+the leading core--zone vectors, and their symmetric leading chain matrices.
+For the one-interval construction below, clipping the right endpoint at
+$r+p$ controls the core-exit cut.  The formal diagonal $xI$ is preserved
+by the same identification.
+
+For completeness, write $Q=B+pE$, where $B$ retains the full
+same-residue blocks of $Q$.  Modulo $p^2$,
+\[
+ Q^{-1}=B^{-1}-pB^{-1}EB^{-1}.
+\]
+For two distinct residues the order $-2$ Schur term vanishes.  For two
+nodes in one translated class, let $g$ be the common leading inverse
+vector and $L$ the leading node datum.  Up to one common normalization,
+the three order $-1$ correction sums are
+\[
+ \begin{gathered}\frac\gamma{y-z}\sum_u g_u\bigl(L(z)-L(u)\bigr),\\
+ \frac\gamma{y-z}\sum_u g_u\bigl(L(u)-L(z)\bigr),\\
+ -\frac\gamma{y-z}\sum_{u,v}g_ug_v\bigl(L(u)-L(v)\bigr).\end{gathered}
+\]
+The first two cancel termwise, and the last vanishes by interchanging
+$u,v$.  The direct order $-1$ entry also vanishes since $L(y)=L(z)$.
+This proves integrality within the selected class.  Between distinct
+residues the price is at most $1$; equal residues have price at most $2$.
+No specialization at $x=0$ or additional spectral hypothesis enters this
+calculation.
+
+\paragraph{One interval and a $0/1/2$ dual.}
+Choose consecutive singular cut indices $A_4<B_4$, with no permitted
+numerator strictly between them, and put
+\[
+ \begin{gathered} a=\max\left(r,\left\lfloor\frac{A_4p+\epsilon_{A_4}}4\right\rfloor\right),
+ \\ b=\min\left(N,r+p,
+       \left\lfloor\frac{B_4p+\epsilon_{B_4}}4\right\rfloor\right),
+ \\ \epsilon_j=\begin{cases}0&j\equiv0\pmod4,\\o&\text{otherwise}.\end{cases}\end{gathered}
+\]
+In the high range $p>2m$ the clipping at $r+p$ is redundant.
+All nodes of $[a,b)$ lie in one translated class and have distinct
+residues.  In the low range $m<p<2m$, use the smaller interval
+\[
+ J=[\max(a,N-p),b),
+\]
+interpreting its length as zero when its left endpoint exceeds its right
+endpoint.  Since $b\le r+p$, a node in $J$ has no other zone node of the
+same residue.  In the high range take $J=[a,b)$.
+Assign potential $0$ to every row or column node in $J$, and potential
+$1$ to every other zone node.  Two nodes in $J$ have integral Schur
+entry, a mixed pair has price at most $1$, and an outside pair has price
+at most $2$.  Therefore this is a feasible dual and
+\[
+ \tau\le2m-|J|.
+\]
+This elementary certificate replaces class-count and parity calculations.
+
+The second member adds one row and column to the remaining Schur matrix.
+Every new incident entry, including its rescaled polynomial corner, has
+price at most $2$.  An assignment uses at most two such incidences;
+extending the remaining partial assignment gives a total additional
+price at most $4$.  Thus both members satisfy the common coefficient
+bound
+\[
+ \operatorname{denexp}_p F_i\le2r+2m-|J|+4\qquad(i=1,2).
+\]
+The constant $4$ is retained in the integer deficit, rather than silently
+discarded before summation.
+
+\paragraph{Baseline and finite profile.}
+Let $T_{\rm old}$ be the exponent used for the already banked estimates.
+Only on the new profile windows enlarge it to
+\[
+ T_*=\max(T_{\rm old},B_0),\qquad
+ B_0=\begin{cases}2r+3m-p,&m<p<2m,\\2r+m,&p>2m.\end{cases}
+\]
+The existing affine majorants already cover these values with their
+existing constant slack; their leading integral is unchanged.  This
+comparison requires no equality between $B_0$ and a tropical optimum.
+The resulting nonnegative integer deficits are
+\[
+ \delta_p=\begin{cases}
+ (m+|J|-p-4)_+,&m<p<2m,\\
+ (|J|-m-4)_+,&p>2m.
+ \end{cases}
+\]
+Outside the new windows set the new deficit to zero.  Retain all old
+E, B, C5, C7, and clean GK estimates: this rescaling is not asserted to
+reproduce their sharper savings.
+
+Here is a compact specification of the complete rational certificate.
+Write $u=p/r$, $A=A_4/4$, $B=B_4/4$.  In the low range put
+\[
+ \begin{gathered}a_0=\max(1,Au),\qquad b_0=\min(5/4,Bu,1+u),\\
+ f(u)\le\min(1/8-u+b_0-a_0,\ b_0-9/8).\end{gathered}
+\]
+In the high range the corresponding certificate is
+\[
+ f(u)\le\min(5/4,Bu)-\max(1,Au)-1/8.
+\]
+For an affine $f$, each assertion reduces to finitely many affine
+endpoint inequalities: nine in the low case and four in the high case.
+The certificate contains 37 low rows, 20 nonclean rows below $u=3/5$,
+and four missing upper rows.  In addition to the affine inequalities,
+it checks consecutive pole numerators, the residue class, nonnegativity,
+and pairwise disjointness within each prime class.
+
+Every raw interval $[s,t]$ is replaced once and for all by
+\[
+ [s+\eta,t-\eta],\qquad \eta=10^{-7}.
+\]
+This fixed trimming leaves a strict margin at all old-window boundaries.
+For either offset the active rows eventually avoid every banked deficit
+window; this is a finite rational range check.  In particular there is
+no addition of two deficits at the same prime.  The exact integer
+implementation also guards the new deficit by the vanishing of the old
+one.  The guard holds throughout every trimmed profile window for all
+sufficiently large $r$.
+
+Replacing $m$ by $r/8$ and the cuts by $A_4p/4,B_4p/4$ changes interval
+endpoints by bounded amounts.  The explicit rounding bounds yield,
+uniformly over all rows,
+\[
+ \delta_p\ge r f(p/r)-8.
+\]
+Both offsets use the same rational profile.  Its tag $c=1$ selects
+$p\equiv4-o\pmod4$, and its tag $c=3$ selects $p\equiv o\pmod4$;
+thus the mirror exchanges the two prime classes without changing their
+integrated contribution.
+
+\paragraph{Prime summation and the final constants.}
+For a row $f(u)=\alpha+\beta u$ on a trimmed interval $[s,t]$, the prime
+number theorem in progressions gives the quadratic contribution
+\[
+ \frac12\int_s^t f(u)\,du
+ =\frac12\left(\alpha(t-s)+\frac\beta2(t^2-s^2)\right).
+\]
+The constant loss $8$ contributes only $O(r)$ to the logarithmically
+weighted prime sum.  The finite sum uses the same prime range as the
+old denominator bound.  The untrimmed contributions are
+{\renewcommand{\arraystretch}{1.8}
+\[
+\begin{array}{c|c|c}
+\text{group}&\text{number of rows}&\text{gain}\\\hline
+m<p<2m&37&\frac{14667950664797}{5028641371353600}\simeq0.0029168814\\
+\text{nonclean}&20&\frac{160166243}{12415603200}\simeq0.0129003996\\
+\text{upper windows}&4&\frac{109}{22400}\simeq0.0048660714
+\end{array}
+\]
+}
+The four upper affine profiles, in tag order, are
+{\renewcommand{\arraystretch}{1.8}
+\[
+\begin{array}{c|c|c}
+c&u\text{-interval}&f(u)\\\hline
+1&(4/5,9/10)&9/8-5u/4\\
+1&(3/5,5/8)&2u-9/8\\
+3&(5/8,9/14)&9/8-7u/4\\
+3&(3/5,5/8)&u/4-1/8.
+\end{array}
+\]
+The 61-row sum after the fixed trimming is exactly
+\[
+ \Delta_\eta=
+ \frac{4420349242147094110541}{213717258282528000000000}
+ =0.0206831646525407\ldots.
+\]
+The trimming loss is less than $1.879\times10^{-7}$.
+Starting from the banked content constant
+\[
+ \begin{aligned}\Lambda_{\rm old}&=\frac{24729491161}{6665218560}-\frac1{448}-\frac1{576}-\frac1{352}
+\\ &=\frac{320572813}{86561280}=3.7034204323226274\ldots,\end{aligned}
+\]
+the new quadratic content constant is at most
+\[
+ \Lambda_{\rm old}-\Delta_\eta
+ =3.6827372676700867\ldots
+ \ <\ \frac{184137}{50000}=3.68274.
+\]
+In the existing measure conversion take $D=3.9028$ and $c=7.6444$.
+The rational inequalities
+\[
+ \frac{c}{D-3.68274}<\frac{1737}{50}=34.74,
+ \qquad D-3.68274>0
+\]
+give $\mu(G\pm5\pi^2/48)\le34.74$ by the existing measure conversion.  This improvement
+uses no claimed new gain for $p<m$ and no unproved higher-order Smith
+factorization.
+
+
 \section{Nonvanishing modulo a prime}\label{sec:nonvanishing}
 
 This section follows the formal proof. We treat $\lambda$ in detail; $\lambda'$ and $L(2,\chi_{-3})$ are in
@@ -1380,9 +1623,6 @@ denominator times $P_J(p/q)$ is an integer. Neither the degree scale nor
 the exponential window changes when the nonzero member is selected.
 
 
-
-
-
 \section{Analytic decay}\label{sec:decay}
 
 \begin{theorem}[decay and window]\label{thm:decay}
@@ -1545,7 +1785,7 @@ $(r,m+1)$ with one column node moved by one place, at an energy cost $O(r)$.
 
 \subsection{$G\pm5\pi^2/48$}
 Let $\xi=\lambda$ (the case $\lambda'$ is identical, with primes $\ell\equiv1\pmod 4$). Let
-$\eta=D-\Lambda\ge3.9028-3.70343=0.19937$, let $\nu>c/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put
+$\eta=D-\Lambda\ge3.9028-3.68274=0.22006$, let $\nu>c/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put
 $L=\log q$. Choose $\delta>0$ with $\nu>c(1+\delta)/\eta$, let $r=\lceil(1+\delta)L/\eta\rceil$ and choose $m$ with
 $r\le8m\le r+8$.
 
@@ -1562,7 +1802,7 @@ $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2
 
 \emph{Contradiction.} Comparing, $(\eta-o(1))r^2\le(r+1)L$; but $\eta r\ge(1+\delta)L$. Hence $\mu(\lambda)\le c/\eta$, and
 \[
- \frac c\eta\le\frac{7.6444}{3.9028-3.7034204}=38.3419\ldots<38.35 .
+ \frac c\eta\le\frac{7.6444}{3.9028-3.68274}=34.737798\ldots<34.74 .
 \]
 Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
@@ -1625,8 +1865,8 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 \end{remark}
 
 \begin{remark}[where the constants enter]
-For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-192$, so the third decimal of $D$ matters. The rank deficits of
-\S\ref{sec:content} lower the exponent from $50.0$ to $38.34$, and the free choice of $\ell$ (Theorem~\ref{thm:nv} for all
+For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
+\S\ref{sec:content} first lower the exponent from $50.0$ to $38.35$, and Section~\ref{sec:uniform-deficit} lowers it to $34.74$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
 $S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
 For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
 bounded low-node deletion then removes the remaining prime-location cost and gives $18.50$.
@@ -1650,9 +1890,9 @@ definitions of the development: $G$ is $\sum_j(-1)^j/(2j+1)^2$ and $L(2,\chi_{-3
 $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \lean{ChallengeHybrid.lean} and proved in
 \lean{SolutionHybrid.lean} (namespace \lean{CatalanHybridChallenge}):
 \begin{itemize}
-\item \lean{lam_hybrid_measure}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
- $q^{-(38.35+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_final};
-\item \lean{mir_hybrid_measure}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_final};
+\item \lean{lam_hybrid_measure_3474}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
+ $q^{-(34.74+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_uniform};
+\item \lean{mir_hybrid_measure_3474}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_uniform}. The earlier $38.35$ exports are retained;
 \item \lean{chi3_hybrid_measure_1850}: the same for $L(2,\chi_{-3})$ with exponent $18.50$; it is
  \lean{chi3_hybrid_measure_minor}. The exports \lean{chi3_hybrid_measure} and \lean{chi3_hybrid_measure_2116}
  retain $23.82$ and $21.16$;
@@ -1661,7 +1901,7 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
 \item \lean{hyb_primal_false} and \lean{primal_pair}: the end of the nonvanishing chain and Lemma~\ref{lem:primal};
 \item \lean{lam_hybrid_decay}, \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $\lambda$ and $L(2,\chi_{-3})$;
-\item \lean{lam_both_eps4}, \lean{p6_content}: Theorem~\ref{thm:content} for $\lambda$ and $L(2,\chi_{-3})$.
+\item \lean{profile_both_eps}, \lean{p6_content}: Theorem~\ref{thm:content} for $\lambda$ and $L(2,\chi_{-3})$.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}, and the command \texttt{\#print axioms} reports only the
 three standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The file
@@ -1708,7 +1948,9 @@ companion project \cite{Litsey2026}, which this work reuses, were developed with
 The subsequent improvement for $L(2,\chi_{-3})$ from $23.82$ to $18.50$, including valuation-one reduction,
 the finite-field corank argument, bounded-deletion transfer, their Lean formalization and the corresponding
 additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
-stronger theorem requires changes.
+stronger theorem requires changes. The subsequent uniform rescaled-core argument for both
+$G\pm5\pi^2/48$, the finite interval profile and its Lean formalization, and the improvement from $38.35$
+to $34.74$ were also developed with OpenAI Codex.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal

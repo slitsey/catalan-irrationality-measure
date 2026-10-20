@@ -1,6 +1,6 @@
 module
 
-public import CatalanCore.Arith.Hybrid.DefGKDelta3
+public import CatalanCore.Arith.Hybrid.GKUniform
 
 @[expose] public section
 
@@ -22,11 +22,7 @@ section Gle3
 variable {o p : ℕ} [Fact p.Prime] {k : ℕ} {Fr : Frame} {r m : ℕ}
 
 /-- **GK, class 3.** -/
-theorem gleAt_GK3 (hL : LamData Fr o) (S : GKS3 o p r m k) : GLE p (2 * r) (Fr.fullPoly r m) := by
-  have := tcore_vec (Full := Matrix.of (fullEntry Fr r m)) (Atil_int hL S) (Atil_prim hL S)
-    (alphaM Fr p r m) (betaM Fr p r m) (hL_bound hL S) (hL'_bound hL S) (hDelta_bound hL S)
-  rw [Fintype.card_fin] at this
-  exact this
+theorem gleAt_GK3 (hL : LamData Fr o) (S : GKS3 o p r m k) : GLE p (2 * r) (Fr.fullPoly r m) := S.uniform_gle hL
 
 end Gle3
 

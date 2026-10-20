@@ -5,8 +5,8 @@ version: "v0.4"
 project:
   name: "Irrationality measures for G - 5 pi^2/48, G + 5 pi^2/48 and L(2, chi_{-3}) (hybrid frames)"
   description: >-
-    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 38.35
-    and mu(G + 5 pi^2/48) <= 38.35, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
+    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 34.74
+    and mu(G + 5 pi^2/48) <= 34.74, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
     we prove mu(L(2, chi_{-3})) <= 18.50: for every e > 0, all large q and all p coprime to q,
     |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
     frames of the modular engine CatalanCore, the ell-adic Schur-complement nonvanishing
@@ -33,7 +33,7 @@ related_formalizations:
 status:
   scope: >-
     All three advertised statements are fully proved (SolutionHybrid.lean, via
-    lam_hyb_measure_final, mir_hyb_measure_final and chi3_hybrid_measure_minor). No sorry and
+    lam_hyb_measure_uniform, mir_hyb_measure_uniform and chi3_hybrid_measure_minor). No sorry and
     no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -42,7 +42,7 @@ status:
 fidelity:
   divergences: >-
     None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 3835/100 and 37/2 as rationals cast to R.
+    to q (IsCoprime p q) and q >= q0, with E = 1737/50 and 37/2 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -51,6 +51,14 @@ review:
 alignment:
   namespace: "CatalanHybridChallenge"
   statements:
+    - source: "Litsey (2026), uniform hybrid measure for G - 5 pi^2/48, exponent 34.74"
+      lean: "CatalanHybridChallenge.lam_hybrid_measure_3474"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), uniform hybrid measure for G + 5 pi^2/48, exponent 34.74"
+      lean: "CatalanHybridChallenge.mir_hybrid_measure_3474"
+      module: "ChallengeHybrid"
+      status: proved
     - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 18.50"
       lean: "CatalanHybridChallenge.chi3_hybrid_measure_1850"
       module: "ChallengeHybrid"
@@ -93,7 +101,9 @@ automation:
       framework: "Codex desktop with shell tools and parallel mathematical agents"
       tool_setup: >-
         Codex developed the valuation-one and bounded-deletion improvement to 18.50,
-        its generic Lean modules, paper additions and export checks.
+        its generic Lean modules, paper additions and export checks. Codex subsequently proved the
+        uniform rescaled-core deficit and certified rational prime profile giving both 34.74 bounds,
+        reusing the existing decay and nonvanishing modules.
   notes: >-
     The shared modular engine (CatalanCore) and certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.

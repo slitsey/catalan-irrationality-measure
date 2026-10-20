@@ -1,5 +1,6 @@
 module
 
+public import CatalanCore.Arith.Hybrid.GKConditions
 public import CatalanCore.Arith.Hybrid.DefGKTab
 public import CatalanCore.Arith.Hybrid.DefGKInst3
 
@@ -36,19 +37,6 @@ noncomputable def res1 (p k : ℕ) (t : ℕ) : ZMod p :=
 noncomputable def resD1 (p k : ℕ) (t : ℕ) : ZMod p :=
   if t = k then -(16 * ((3 : ZMod p)⁻¹) ^ 2) else if t = p then 1
   else if t = p + k then -(16 * ((7 : ZMod p)⁻¹) ^ 2) else (4 : ZMod p)⁻¹
-
-/-- Hypotheses of the class-1 GK setting. -/
-structure GKS1 (o p r m k : ℕ) : Prop where
-  p13 : 13 ≤ p
-  hk : 4 * k = 3 * p + o ∧ 0 < o ∧ o ≤ 3
-  hr : 2 * p < r
-  hN : 4 * (r + 2 * m) ≤ 11 * p + o
-  hm : 0 < m
-  h1009 : p ≠ 1009
-  h8663 : p ≠ 8663
-
-lemma GKS1.kp {r m k : ℕ} (S : GKS1 o p r m k) : k < p := by have := S.p13; have := S.hk; omega
-lemma GKS1.k0 {r m k : ℕ} (S : GKS1 o p r m k) : 0 < k := by have := S.hk; omega
 
 lemma reg1 {r m k : ℕ} (S : GKS1 o p r m k) {t : ℕ} (h1 : 1 ≤ t) (ht : t < 2 * p + k)
     (hn : t ∉ Sg1 p k) : Reg p k t := by
