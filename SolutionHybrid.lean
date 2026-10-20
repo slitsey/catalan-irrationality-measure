@@ -1,51 +1,24 @@
 module
 
-public import CatalanFrames.LambdaHybrid.UniformFinal
-public import CatalanFrames.LambdaMirrorHybrid.UniformFinal
-public import CatalanFrames.P6Hybrid.AssemblySquare
-public import CatalanFrames.P6Hybrid.AssemblyMinor
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.NumberTheory.Real.Irrational
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
-@[expose] public section
+import CatalanFrames.LambdaHybrid.UniformFinal
+import CatalanFrames.LambdaMirrorHybrid.UniformFinal
+import CatalanFrames.P6Hybrid.AssemblyMinor
+
+public section
 
 /-!
-# Proofs of the statements of `ChallengeHybrid.lean`
-
-The strongest bounds use `CatalanFrames.LambdaHybrid.lam_hyb_measure_uniform`,
-`CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform` and
-`CatalanFrames.P6Hybrid.chi3_hybrid_measure_minor`; the older bounds are retained. `MeasureLBAt x E` unfolds to the displayed
-statement.
-
-The additional theorem `chi3_hybrid_measure_2116` uses the square-divisor
-prime rule and the generic valuation-one nonvanishing argument.
-
-`chi3_hybrid_measure_1850` also uses a generic finite-field corank bound and
-a family with at most three common low-node deletions.
+Proofs of the three strongest statements in `ChallengeHybrid.lean`.
+The shared uniform profile gives both 34.74 bounds; bounded low-node deletion
+gives the 18.50 bound. `MeasureLBAt` unfolds to the displayed statements.
 -/
 
 namespace CatalanHybridChallenge
 
-theorem lam_hybrid_measure :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((3835 / 100 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| :=
-  CatalanFrames.LambdaHybrid.lam_hyb_measure_final
-
-theorem mir_hybrid_measure :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((3835 / 100 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| :=
-  CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final
-
-theorem chi3_hybrid_measure :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((2382 / 100 : ℚ) : ℝ) + e)) <
-        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
-          - (p : ℝ) / q| :=
-  CatalanFrames.P6Hybrid.chi3_hybrid_measure_wide
-
-/-- **`μ(G - 5π²/48) ≤ 34.74`, from the uniform interval profile.** -/
 theorem lam_hybrid_measure_3474 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
@@ -53,20 +26,12 @@ theorem lam_hybrid_measure_3474 :
           - (p : ℝ) / q| :=
   CatalanFrames.LambdaHybrid.lam_hyb_measure_uniform
 
-/-- **`μ(G + 5π²/48) ≤ 34.74`, from the uniform interval profile.** -/
 theorem mir_hybrid_measure_3474 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
           - (p : ℝ) / q| :=
   CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform
-
-theorem chi3_hybrid_measure_2116 :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((2116 / 100 : ℚ) : ℝ) + e)) <
-        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
-          - (p : ℝ) / q| :=
-  CatalanFrames.P6Hybrid.chi3_hybrid_measure_square
 
 theorem chi3_hybrid_measure_1850 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
@@ -77,10 +42,6 @@ theorem chi3_hybrid_measure_1850 :
 
 #print axioms lam_hybrid_measure_3474
 #print axioms mir_hybrid_measure_3474
-#print axioms lam_hybrid_measure
-#print axioms mir_hybrid_measure
-#print axioms chi3_hybrid_measure
-#print axioms chi3_hybrid_measure_2116
 #print axioms chi3_hybrid_measure_1850
 
 end CatalanHybridChallenge

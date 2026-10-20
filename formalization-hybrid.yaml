@@ -63,22 +63,6 @@ alignment:
       lean: "CatalanHybridChallenge.chi3_hybrid_measure_1850"
       module: "ChallengeHybrid"
       status: proved
-    - source: "Litsey (2026), retained intermediate bound 21.16"
-      lean: "CatalanHybridChallenge.chi3_hybrid_measure_2116"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for G - 5 pi^2/48, exponent 38.35"
-      lean: "CatalanHybridChallenge.lam_hybrid_measure"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for G + 5 pi^2/48, exponent 38.35"
-      lean: "CatalanHybridChallenge.mir_hybrid_measure"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 23.82"
-      lean: "CatalanHybridChallenge.chi3_hybrid_measure"
-      module: "ChallengeHybrid"
-      status: proved
 
 sources:
   - title: "Irrationality measures for G -/+ 5 pi^2/48 and L(2, chi_{-3})"

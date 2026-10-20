@@ -2155,7 +2155,9 @@ OpenAI certificate is retained separately. It uses OpenAI's definitions directly
 Catalan's constant is \lean{catalan}, defined as the series
 $\sum_j(-1)^j/(2j+1)^2$; the matrix \eqref{eq:matrix} and its rational form are OpenAI's
 \lean{determinant} and \lean{determinantRat}. The current main statements are in \lean{CatalanMeasure.Parametric};
-the listed historical lemmas remain in \lean{OAI.InternalCatalan}:
+the listed historical lemmas remain in \lean{OAI.InternalCatalan}.
+The public roots \lean{Challenge.lean} and \lean{Solution.lean} export only the strongest bound, $740$;
+the other results below remain in the proof libraries:
 \begin{itemize}
 \item \lean{catalan\_irrationalityMeasure\_740}: for all sufficiently large $b\in\N$ and all $a\in\Z$, $b^{-740}<|G-a/b|$ (Theorem~\ref{thm:main});
 \item \lean{catalan\_irrationalityMeasure\_2220}: the same with exponent $2\,220$, using Chebyshev for final prime selection;

@@ -120,7 +120,7 @@ status:
     project through OpenAI's vendored formalization and compatibility additions. The paper's
     remarks about the limits of the method are not formalized. The solution
     development has no sorry; Challenge retains statement-template holes.
-    Public 740/2220, 759/2276, 878/2632 and retained 955/2864 axiom reports contain only propext,
+    The public 740 axiom report contains only propext,
     Classical.choice and Quot.sound; no additional axioms are introduced.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -177,7 +177,7 @@ automation:
     transfer to primes in (4N, 9N/2) and the current 740/2220 assembly, were
     derived and formalized by Claude (Anthropic) working with the human author.
     Both worked at the request of the human author, who is responsible for the submission.
-    The current 740/2220, the 759/2276, 878/2632 and retained 955/2864 checkpoints pass the main Lean kernel and standard-axiom
+    The public 740 statement and the internal proof checkpoints pass the main Lean kernel and standard-axiom
     audits. Independent-kernel and Comparator acceptance remain pending; the author
     deferred CI and Palomar optimization until bound-reduction research stalls.
 
@@ -203,46 +203,6 @@ alignment:
       module: "Challenge"
       status: proved
       note: "For all large b and all integers a, b^(-740) < |G - a/b|."
-    - source: "Litsey (2026), Theorem 1.1, second statement (Chebyshev final selection)"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2220"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-2220) < |G - a/b|; denominator and content estimates retain PNT."
-    - source: "Litsey (2026), earlier 759 bound"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_759"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-759) < |G - a/b|."
-    - source: "Litsey (2026), earlier 2276 Chebyshev bound"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2276"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-2276) < |G - a/b|; denominator and content estimates retain PNT."
-    - source: "Litsey (2026), earlier 878 bound"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_878"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-878) < |G - a/b|."
-    - source: "Litsey (2026), earlier 2632 Chebyshev bound"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2632"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-2632) < |G - a/b|; denominator and content estimates retain PNT."
-    - source: "Litsey (2026), retained 955 checkpoint"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_955"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-955) < |G - a/b|."
-    - source: "Litsey (2026), retained 2864 Chebyshev checkpoint"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_2864"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-2864) < |G - a/b|."
-    - source: "Litsey (2026), retained historical Chebyshev statement"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_3662"
-      module: "Challenge"
-      status: proved
-      note: "For all large b and all integers a, b^(-3662) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; the
