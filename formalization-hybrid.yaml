@@ -7,7 +7,7 @@ project:
   description: >-
     For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 38.35
     and mu(G + 5 pi^2/48) <= 38.35, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
-    we prove mu(L(2, chi_{-3})) <= 23.82: for every e > 0, all large q and all p coprime to q,
+    we prove mu(L(2, chi_{-3})) <= 18.50: for every e > 0, all large q and all p coprime to q,
     |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
     frames of the modular engine CatalanCore, the ell-adic Schur-complement nonvanishing
     argument, Cauchy-determinant decay and kernel-checked rational certificates. They supersede
@@ -33,7 +33,7 @@ related_formalizations:
 status:
   scope: >-
     All three advertised statements are fully proved (SolutionHybrid.lean, via
-    lam_hyb_measure_final, mir_hyb_measure_final and chi3_hybrid_measure_wide). No sorry and
+    lam_hyb_measure_final, mir_hyb_measure_final and chi3_hybrid_measure_minor). No sorry and
     no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -42,7 +42,7 @@ status:
 fidelity:
   divergences: >-
     None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 3835/100 and 2382/100 as rationals cast to R.
+    to q (IsCoprime p q) and q >= q0, with E = 3835/100 and 37/2 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -51,6 +51,14 @@ review:
 alignment:
   namespace: "CatalanHybridChallenge"
   statements:
+    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 18.50"
+      lean: "CatalanHybridChallenge.chi3_hybrid_measure_1850"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), retained intermediate bound 21.16"
+      lean: "CatalanHybridChallenge.chi3_hybrid_measure_2116"
+      module: "ChallengeHybrid"
+      status: proved
     - source: "Litsey (2026), hybrid measure for G - 5 pi^2/48, exponent 38.35"
       lean: "CatalanHybridChallenge.lam_hybrid_measure"
       module: "ChallengeHybrid"
@@ -80,6 +88,12 @@ automation:
         kernel-checked numerical certificate (decide +kernel, no native_decide), using Python,
         Lean 4, Lake and Mathlib. The human author posed the problem, directed the work and
         checked the outcome.
+    - method: agent
+      models: ["OpenAI Codex"]
+      framework: "Codex desktop with shell tools and parallel mathematical agents"
+      tool_setup: >-
+        Codex developed the valuation-one and bounded-deletion improvement to 18.50,
+        its generic Lean modules, paper additions and export checks.
   notes: >-
     The shared modular engine (CatalanCore) and certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.

@@ -18,7 +18,7 @@ measure of `x` is at most `E`:
 
 * `x = G - 5π²/48`, `E = 38.35`;
 * `x = G + 5π²/48`, `E = 38.35`;
-* `x = L(2, χ₋₃)`, `E = 23.82`.
+* `x = L(2, χ₋₃)`, `E = 18.50` (with the earlier 23.82 and 21.16 statements retained).
 
 These supersede the earlier square-frame results (kept under `archive/`).
 -/
@@ -45,6 +45,20 @@ theorem mir_hybrid_measure :
 theorem chi3_hybrid_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(((2382 / 100 : ℚ) : ℝ) + e)) <
+        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          - (p : ℝ) / q| := by
+  sorry
+
+theorem chi3_hybrid_measure_2116 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2116 / 100 : ℚ) : ℝ) + e)) <
+        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          - (p : ℝ) / q| := by
+  sorry
+
+theorem chi3_hybrid_measure_1850 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((37 / 2 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| := by
   sorry

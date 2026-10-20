@@ -27,14 +27,15 @@ The repository also contains a second, fully formalized result:
 
 - μ(G − 5π²/48) ≤ 38.35;
 - μ(G + 5π²/48) ≤ 38.35;
-- μ(L(2, χ₋₃)) ≤ 23.82.
+- μ(L(2, χ₋₃)) ≤ 18.50 (earlier 23.82 and 21.16 exports retained).
 
 The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
 
 - Statements: [`ChallengeHybrid.lean`](ChallengeHybrid.lean) (Mathlib only).
 - Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
 - Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
-- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version).
+- The 18.50 improvement uses a finite-field corank-three theorem, deletion of at most three common low nodes, and valuation-one nonvanishing. The existing content and decay certificates are reused.
+- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The repository paper includes the 18.50 improvement; the linked v1 preprint has not been updated.
 - Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
@@ -260,3 +261,7 @@ Submissions to the registry go through the form at https://submit.palomar-regist
 ## Licence
 
 Apache License 2.0; see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
+
+## Queued Lean maintenance
+
+Refresh the dependency inventory against the current solution roots; extract the shared modular reduction interface from `LambdaHybrid.NV` into Core; remove repeated determinant-evaluation plumbing; review small-module boundaries and weaker public-bound corollaries. Then address the handoff's GK class-1/class-3 interface merge and remaining structural duplicates. Preserve theorem names and check all five hybrid exports and their axiom reports throughout. This maintenance is queued, not part of the 18.50 mathematics.

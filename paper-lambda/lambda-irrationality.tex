@@ -62,7 +62,7 @@ $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \begin{gathered}
  \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 38.35,\qquad
  \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 38.35,\\
- \mu\bigl(L(2,\chi_{-3})\bigr)\le 23.82 ,
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le 18.50 ,
 \end{gathered}
 \]
 where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
@@ -72,7 +72,8 @@ effective bound $\mu\le24781$.
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer nodes.
 We bound their denominators with $p$-adic assignment problems and rank deficits modulo $p$. We prove nonvanishing
 modulo a prime by reducing it to bordered Krylov determinants, which we evaluate through Jacobi matrices and
-Darboux transformations. We bound their size with Andr\'eief's identity and a certified lower bound for a
+Darboux transformations. For $L(2,\chi_{-3})$, a finite-field interpolation argument bounds the corank by three;
+removing at most three common low nodes gives nonvanishing at a fixed scale throughout a prime interval. We bound their size with Andr\'eief's identity and a certified lower bound for a
 discrete logarithmic energy.
 
 Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
@@ -114,14 +115,14 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 \begin{gathered}
  \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\qquad
  \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\\
- \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-23.82-\varepsilon}.
+ \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-18.50-\varepsilon}.
 \end{gathered}
 \]
 In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le38.35$ and
-$\mu(L(2,\chi_{-3}))\le23.82$.
+$\mu(L(2,\chi_{-3}))\le18.50$.
 \end{theorem}
 
-The computed values of the exponents are $38.342$ and $23.8194$. Theorem~\ref{thm:main}, together with every
+The computed values of the exponents are $38.342$ and $18.498632$. Theorem~\ref{thm:main}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -141,7 +142,7 @@ its main estimate is not justified.
 Calegari, Dimitrov and Tang proved that $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ are linearly independent over
 $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a construction of Zagier. In
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
-Theorem~\ref{thm:main} improves this to $23.82$.
+Theorem~\ref{thm:main} improves this to $18.50$.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
@@ -316,8 +317,10 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
 is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
 $\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
-$\mu\le7.6444/0.19937<38.35$. For $L(2,\chi_{-3})$ the size is tied to $\ell$ ($g=\frac25$), and $\ell\nmid q$
-is needed ($s=2$), so $\mu\le6.6510\,(1/0.35954+0.8)<23.82$.
+$\mu\le7.6444/0.19937<38.35$. For $L(2,\chi_{-3})$, the original pair family gives
+$6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a family with at most three
+common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
+the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-10339/3072)<18.50$.
 
 \begin{center}
 {\setlength{\tabcolsep}{3pt}
@@ -327,7 +330,7 @@ constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ 
 \midrule
 $G-5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
 $G+5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
-$L(2,\chi_{-3})$ & $10339/3072$ & $3.7251$ & $6.6510$ & $0.35954$ & $0.8$ & $23.8194$\\
+$L(2,\chi_{-3})$ & $10339/3072$ & $3.7251$ & $6.6510$ & $0.35954$ & $0$ & $18.498632$\\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -1032,6 +1035,8 @@ $W=8$ it fails exactly when $\ell\equiv43\pmod{60}$. We therefore use $r\le8m\le
 $\ell\equiv1\pmod6$ with $\ell\ge61$ has a pair, with $5r\le2\ell\le5r+11$.
 
 %% =====================================================================
+\input{chi3-bounded-deletions}
+
 \section{Analytic decay}\label{sec:decay}
 
 \begin{theorem}[decay and window]\label{thm:decay}
@@ -1216,6 +1221,7 @@ $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2
 Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
 \subsection{$L(2,\chi_{-3})$}
+\emph{The earlier pair-family bound.}
 Now the geometry is tied to the prime: for each prime $\ell\equiv1\pmod6$, $\ell\ge61$, there is an admissible pair of
 members of scale $r$ with $5r\le2\ell\le5r+11$, so $r/\ell\to g=\frac25$, and Theorem~\ref{thm:nv} (in the form of
 \S\ref{ssec:nvother}) applies when $\ell\nmid q$. Let $\eta=3.7251-\frac{10339}{3072}=0.359540\ldots$, $\nu>c(1/\eta+\frac45)$,
@@ -1228,7 +1234,41 @@ so $cr<\nu L$ for $\delta$ small, and the comparison above, with $|C|\le r+1$, g
 \[
  \mu\bigl(\tfrac14L(2,\chi_{-3})\bigr)\le c\Bigl(\frac1\eta+gs\Bigr),\qquad g=\tfrac25,\ s=2,
 \]
-and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. This completes the proof of Theorem~\ref{thm:main}. \qed
+and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. The valuation-one argument of Section~\ref{sec:minor-nv} also allows $s=1$, giving the retained bound $21.16$.
+
+\emph{The bounded-deletion family.} Put
+\[
+ \eta=\frac{37251}{10000}-\frac{10339}{3072}=\frac{690317}{1920000},\qquad c=\frac{6651}{1000}.
+\]
+Let $\nu>c/\eta$, choose $\delta>0$ so that $c(1+\delta)/\eta<\nu$, put $L=\log q$ and
+$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/8\rceil$.
+For all sufficiently large $r$, every prime $\ell\equiv1\pmod6$ in
+\[
+ \frac{51}{20}r\le\ell\le\frac{59}{20}r
+\]
+satisfies $K=(\ell+2)/3\le r$ and $r+2m\le(\ell-1)/2$.
+Indeed $r+2m\le5r/4+7/4$ and the lower endpoint leaves a positive linear margin;
+the upper endpoint gives $K\le59r/60+2/3\le r$ for large $r$.
+The prime number theorem in this progression gives
+\[
+ \log\prod_{\substack{51r/20\le\ell\le59r/20\\\ell\equiv1\ (6)}}\ell^2
+   =\left(\frac25+o(1)\right)r>L,
+\]
+since $2/5>\eta$. Thus some such prime satisfies $\ell^2\nmid q$.
+By Theorem~\ref{thm:minor-nv}, some retained common set $J$ with at most three omissions has
+$P_J(p/q)\ne0$. The original tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
+and the estimates in Section~\ref{sec:minor-nv} give
+\[
+ q^{-r}\le |d_{r,m}P_J(p/q)|
+ \le \exp\bigl(- (\eta-o(1))r^2\bigr)
+\]
+whenever $|\xi_\chi-p/q|<q^{-\nu}$; the required window holds because $cr<\nu L$.
+This contradicts $\eta r\ge(1+\delta)L$. Consequently
+\[
+ \mu(\xi_\chi)\le\frac c\eta=\frac{12769920}{690317}
+ =18.498631788\ldots<\frac{37}{2}.
+\]
+Rational scaling by four preserves the exponent, completing the proof of Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1241,8 +1281,11 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 \begin{remark}[where the constants enter]
 For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-192$, so the third decimal of $D$ matters. The rank deficits of
 \S\ref{sec:content} lower the exponent from $50.0$ to $38.34$, and the free choice of $\ell$ (Theorem~\ref{thm:nv} for all
-$S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$. For $L(2,\chi_{-3})$ the term $c\,g\,s=5.32$ is
-still present; a version of Theorem~\ref{thm:nv} that also covers primes dividing $q$ to the first power would halve it.
+$S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
+For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
+bounded low-node deletion then removes the remaining prime-location cost and gives $18.50$.
+With the present constants the limiting ratio is $18.498631788\ldots$. Reducing the fixed number of deletions,
+or proving nonvanishing for a smaller fixed family, would not change this ratio.
 \end{remark}
 
 %% =====================================================================
@@ -1264,8 +1307,11 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \item \lean{lam_hybrid_measure}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
  $q^{-(38.35+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_final};
 \item \lean{mir_hybrid_measure}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_final};
-\item \lean{chi3_hybrid_measure}: the same for $L(2,\chi_{-3})$ with exponent $23.82$; it is
- \lean{chi3_hybrid_measure_wide};
+\item \lean{chi3_hybrid_measure_1850}: the same for $L(2,\chi_{-3})$ with exponent $18.50$; it is
+ \lean{chi3_hybrid_measure_minor}. The exports \lean{chi3_hybrid_measure} and \lean{chi3_hybrid_measure_2116}
+ retain $23.82$ and $21.16$;
+\item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
+ the bounded-deletion nonvanishing argument of Section~\ref{sec:minor-nv};
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
 \item \lean{hyb_primal_false} and \lean{primal_pair}: the end of the nonvanishing chain and Lemma~\ref{lem:primal};
 \item \lean{lam_hybrid_decay}, \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $\lambda$ and $L(2,\chi_{-3})$;
@@ -1306,13 +1352,17 @@ system and ported to the current toolchain; the repository's README and provenan
 
 \section*{Disclosure of AI use}
 
-The development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
+The original development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
 (Anthropic): the mathematics, including the rectangular frames, the content bounds and rank deficits, the
 nonvanishing argument and the decay certificates, and all proofs; the Lean formalization; the numerical
 computations and the certificate generators; the literature search; and the text of this paper. Claude worked in a
 series of conversations at the request of the author, who posed the problem, directed the work, and is responsible
 for this submission. The repository infrastructure, vendored formalizations and certificate tooling of the
 companion project \cite{Litsey2026}, which this work reuses, were developed with OpenAI Codex as described there.
+The subsequent improvement for $L(2,\chi_{-3})$ from $23.82$ to $18.50$, including valuation-one reduction,
+the finite-field corank argument, bounded-deletion transfer, their Lean formalization and the corresponding
+additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
+stronger theorem requires changes.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal

@@ -188,12 +188,13 @@ lemma hybDiag_lt {r m : ℕ} {a b : Fin r ⊕ Fin m} (h : Frame.hybRow r m a = F
   rcases a with c | i <;> rcases b with c' | j <;> simp [Frame.hybRow, Frame.hybCol] at h ⊢ <;>
     first | exact Or.inl c.2 | omega
 
-/-- **The hybrid tropical bound.**  Every coefficient of `det Full(X)` is `p^{tropExp}`-integral. -/
-theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) [hd : I.DiagOK r m] :
-    GLE p (tropExp I r m p) (Fr.fullPoly r m) := by
-  unfold Frame.fullPoly tropExp
-  apply det_gle
-  intro a b
+/-- Entrywise form of the hybrid bound, also usable on principal restrictions. -/
+theorem fullEntry_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) [hd : I.DiagOK r m]
+    (a b : Fin r ⊕ Fin m) :
+    GLE p (hybW I r m p a b)
+      ((match a, b with
+        | Sum.inl c, Sum.inl c' => if c = c' then (X : ℚ[X]) else 0
+        | _, _ => 0) + C (Fr.Mn (Frame.hybRow r m a) (Frame.hybCol r m b))) := by
   have h1 : GLE p (hybW I r m p a b)
       (C (Fr.Mn (Frame.hybRow r m a) (Frame.hybCol r m b))) := by
     rw [GLE.C_iff]
@@ -206,6 +207,12 @@ theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) [hd : I.DiagOK r m] :
     · simpa [Matrix.of_apply, h] using hX.add h1
     · simpa [Matrix.of_apply, h] using h1
   all_goals simpa [Matrix.of_apply] using h1
+
+/-- **The hybrid tropical bound.**  Every coefficient of `det Full(X)` is `p^{tropExp}`-integral. -/
+theorem fullPoly_gle (p : ℕ) [Fact p.Prime] (r m : ℕ) [I.DiagOK r m] :
+    GLE p (tropExp I r m p) (Fr.fullPoly r m) := by
+  unfold Frame.fullPoly tropExp
+  exact det_gle _ _ (fullEntry_gle I p r m)
 
 lemma wt_eq_zero_of_levzero {lev : ℕ → ℕ → ℕ} {q N A B : ℕ} (hbig : N < q)
     (hA : lev q A = 0) (hB : lev q B = 0) (hAN : A ≤ N) (hBN : B ≤ N) : wt lev q A B = 0 := by
@@ -263,12 +270,13 @@ lemma Dhyb_pos (r m : ℕ) : 0 < Dhyb I r m := by
   unfold Dhyb
   exact Finset.prod_pos fun p hp => pow_pos (Nat.Prime.pos (Finset.mem_filter.mp hp).2) _
 
-/-- **Integrality.**  `Dhyb · det Full(X)` has integer coefficients. -/
-theorem Dhyb_integral (r m : ℕ) [I.DiagOK r m] (i : ℕ) :
-    ∃ z : ℤ, (Dhyb I r m : ℚ) * (Fr.fullPoly r m).coeff i = z := by
+/-- The tropical denominator clears any polynomial satisfying the same primewise bound. -/
+theorem Dhyb_integral_of_gle (r m : ℕ) (f : ℚ[X])
+    (hf : ∀ (p : ℕ) [Fact p.Prime], GLE p (tropExp I r m p) f) (i : ℕ) :
+    ∃ z : ℤ, (Dhyb I r m : ℚ) * f.coeff i = z := by
   apply int_of_forall_locRing
   intro p hp
-  have hgle := fullPoly_gle I p r m i
+  have hgle := hf p i
   by_cases hb : p < Bnd I r m
   · have hmem : p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime :=
       Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hb, hp.out⟩
@@ -289,6 +297,11 @@ theorem Dhyb_integral (r m : ℕ) [I.DiagOK r m] (i : ℕ) :
     simp only [pow_zero, one_mul] at hgle
     rw [mul_comm]
     exact (LocRing p).mul_mem hgle (by exact_mod_cast int_mem_locRing (ℓ := p) (Dhyb I r m : ℤ))
+
+/-- **Integrality.**  `Dhyb · det Full(X)` has integer coefficients. -/
+theorem Dhyb_integral (r m : ℕ) [I.DiagOK r m] (i : ℕ) :
+    ∃ z : ℤ, (Dhyb I r m : ℚ) * (Fr.fullPoly r m).coeff i = z :=
+  Dhyb_integral_of_gle I r m _ (fun p => fullPoly_gle I p r m) i
 
 lemma log_Dhyb (r m : ℕ) :
     Real.log (Dhyb I r m) = ∑ p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime,

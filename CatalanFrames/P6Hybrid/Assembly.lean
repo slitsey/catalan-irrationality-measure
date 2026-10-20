@@ -58,20 +58,9 @@ theorem p6_pair_decay :
 theorem p6_pair_content_of {A : ℕ → ℕ → Prop} (hA : ∀ r m, A r m → P6Adm9 r m) :
     HasContent (hybPairFamA p6Frame A) (10339 / 3072 : ℝ) := by
   classical
-  have h1 : P6ContentStmt (fun r => (r + 7) / 8) :=
-    p6_content _ (fun r => ⟨by omega, by omega⟩)
-  have h2 : P6ContentStmt (fun r => r / 8 + 1) :=
-    p6_content _ (fun r => ⟨by omega, by omega⟩)
-  have h3 : P6ContentStmt p6mfC :=
-    p6_content _ (fun r => by unfold p6mfC; split_ifs <;> omega)
   have hall : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, A r m →
-      Real.log (Dhyb (p6Inst r m) r m) ≤ (10339 / 3072 + ε) * (r : ℝ) ^ 2 := by
-    intro ε hε
-    filter_upwards [h1 ε hε, h2 ε hε, h3 ε hε] with r a b c m hm
-    rcases (hA r m hm).cases with rfl | rfl | rfl
-    · exact a
-    · exact b
-    · exact c
+      Real.log (Dhyb (p6Inst r m) r m) ≤ (10339 / 3072 + ε) * (r : ℝ) ^ 2 :=
+    p6_log_Dhyb_uniform hA
   refine hasContent_hybPairF (A := A) p6Inst (by norm_num)
     (fun r m p => tropExp (p6Inst r m) r m p) (fun _ _ _ => 0) ?_ ?_ (p6_mem2ContentA hA)
   · filter_upwards with r m _ p hp hb
@@ -107,12 +96,15 @@ theorem p6_pairNV {Cls : ℕ → Prop} : PairNV p6Frame Cls (fun ℓ x => ¬ ℓ
 
 /-- **Unpinned NV** on any relation `A`, for any prime class `Cls`, from a selection of pairs
 `r + 2m = 3t` (`ℓ = 6t+1`, `1 ≤ m`, `2m+1 ≤ t`, `r ≈ (2/5) ℓ`). -/
-theorem p6_hasNVC_of {Cls : ℕ → Prop} {A : ℕ → ℕ → Prop}
+theorem p6_hasNVC_of_regular {Cls : ℕ → Prop} {A : ℕ → ℕ → Prop}
+    {Reg : ℕ → ℚ → Prop} {Bad : ℕ → ℕ → Prop}
+    (hNV : PairNV p6Frame Cls Reg P6Good)
+    (hReg : ∀ ℓ, ℓ.Prime → Cls ℓ → ∀ p q : ℤ, 0 < q → IsCoprime p q →
+      ¬ Bad ℓ q.natAbs → Reg ℓ ((p : ℚ) / q))
     (hsel : ∀ ℓ : ℕ, ℓ.Prime → 61 ≤ ℓ → Cls ℓ → ∃ t r m : ℕ, ℓ = 6 * t + 1 ∧ r + 2 * m = 3 * t ∧
       A r m ∧ 1 ≤ m ∧ 2 * m + 1 ≤ t ∧ 5 * r ≤ 2 * ℓ ∧ 2 * ℓ ≤ 5 * r + 11) :
-    HasNVC (hybPairFamA p6Frame A) Cls P6Bad (((2 / 5 : ℚ)) : ℝ) (((2 / 5 : ℚ)) : ℝ) := by
-  refine hasNVC_pairA p6_pairNV
-    (fun ℓ hℓ hc p q hq hcop hbad => not_dvd_den_of_not_dvd ℓ p q hq hbad) A _ _ 3 61 ?_
+    HasNVC (hybPairFamA p6Frame A) Cls Bad (((2 / 5 : ℚ)) : ℝ) (((2 / 5 : ℚ)) : ℝ) := by
+  refine hasNVC_pairA hNV hReg A _ _ 3 61 ?_
   intro ℓ hℓ hl0 hc
   obtain ⟨t, r, m, h1, h2, h3, h4, h5, h6', h7⟩ := hsel ℓ hℓ hl0 hc
   refine ⟨r, m, h3, ⟨t, h1, by omega, h4, h5, by omega⟩, ?_, ?_⟩
@@ -120,6 +112,13 @@ theorem p6_hasNVC_of {Cls : ℕ → Prop} {A : ℕ → ℕ → Prop}
     push_cast; linarith
   · have h' : (5 : ℝ) * r ≤ 2 * ℓ := by exact_mod_cast h6'
     push_cast; linarith
+
+theorem p6_hasNVC_of {Cls : ℕ → Prop} {A : ℕ → ℕ → Prop}
+    (hsel : ∀ ℓ : ℕ, ℓ.Prime → 61 ≤ ℓ → Cls ℓ → ∃ t r m : ℕ, ℓ = 6 * t + 1 ∧ r + 2 * m = 3 * t ∧
+      A r m ∧ 1 ≤ m ∧ 2 * m + 1 ≤ t ∧ 5 * r ≤ 2 * ℓ ∧ 2 * ℓ ≤ 5 * r + 11) :
+    HasNVC (hybPairFamA p6Frame A) Cls P6Bad (((2 / 5 : ℚ)) : ℝ) (((2 / 5 : ℚ)) : ℝ) :=
+  p6_hasNVC_of_regular p6_pairNV
+    (fun ℓ _ _ p q hq _ hbad => not_dvd_den_of_not_dvd ℓ p q hq hbad) hsel
 
 theorem p6_hasNVC :
     HasNVC p6Fam P6Cls P6Bad (((2 / 5 : ℚ)) : ℝ) (((2 / 5 : ℚ)) : ℝ) := by
@@ -159,13 +158,6 @@ theorem chi3_hybrid_measure :
 
 /-- The widened relation. -/
 noncomputable abbrev p6FamW : PolyFamily := hybPairFamA p6Frame P6Adm9
-
-/-- The prime class `ℓ ≡ 1 (mod 6)`. -/
-def P6Cls1 (l : ℕ) : Prop := (l : ZMod 6) ∈ ({1} : Finset (ZMod 6))
-
-theorem P6Cls1.mod6 {l : ℕ} (h : P6Cls1 l) : l % 6 = 1 := by
-  have h' : (l : ZMod 6) = 1 := by simpa [P6Cls1] using h
-  exact cls_one h'
 
 theorem p6_hasNVC_wide :
     HasNVC p6FamW P6Cls1 P6Bad (((2 / 5 : ℚ)) : ℝ) (((2 / 5 : ℚ)) : ℝ) := by

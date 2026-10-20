@@ -2,7 +2,8 @@ module
 
 public import CatalanFrames.LambdaHybrid.AssemblyFinal
 public import CatalanFrames.LambdaMirrorHybrid.MirFinalAll
-public import CatalanFrames.P6Hybrid.Assembly
+public import CatalanFrames.P6Hybrid.AssemblySquare
+public import CatalanFrames.P6Hybrid.AssemblyMinor
 
 @[expose] public section
 
@@ -13,6 +14,12 @@ From `CatalanFrames.LambdaHybrid.lam_hyb_measure_final`,
 `CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final` and
 `CatalanFrames.P6Hybrid.chi3_hybrid_measure_wide`; `MeasureLBAt x E` unfolds to the displayed
 statement.
+
+The additional theorem `chi3_hybrid_measure_2116` uses the square-divisor
+prime rule and the generic valuation-one nonvanishing argument.
+
+`chi3_hybrid_measure_1850` also uses a generic finite-field corank bound and
+a family with at most three common low-node deletions.
 -/
 
 namespace CatalanHybridChallenge
@@ -38,8 +45,24 @@ theorem chi3_hybrid_measure :
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.chi3_hybrid_measure_wide
 
+theorem chi3_hybrid_measure_2116 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2116 / 100 : ℚ) : ℝ) + e)) <
+        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          - (p : ℝ) / q| :=
+  CatalanFrames.P6Hybrid.chi3_hybrid_measure_square
+
+theorem chi3_hybrid_measure_1850 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((37 / 2 : ℚ) : ℝ) + e)) <
+        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          - (p : ℝ) / q| :=
+  CatalanFrames.P6Hybrid.chi3_hybrid_measure_minor
+
 #print axioms lam_hybrid_measure
 #print axioms mir_hybrid_measure
 #print axioms chi3_hybrid_measure
+#print axioms chi3_hybrid_measure_2116
+#print axioms chi3_hybrid_measure_1850
 
 end CatalanHybridChallenge

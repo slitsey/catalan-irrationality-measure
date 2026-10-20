@@ -62,7 +62,7 @@ $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \begin{gathered}
  \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 38.35,\qquad
  \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 38.35,\\
- \mu\bigl(L(2,\chi_{-3})\bigr)\le 23.82 ,
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le 18.50 ,
 \end{gathered}
 \]
 where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
@@ -72,7 +72,8 @@ effective bound $\mu\le24781$.
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer nodes.
 We bound their denominators with $p$-adic assignment problems and rank deficits modulo $p$. We prove nonvanishing
 modulo a prime by reducing it to bordered Krylov determinants, which we evaluate through Jacobi matrices and
-Darboux transformations. We bound their size with Andr\'eief's identity and a certified lower bound for a
+Darboux transformations. For $L(2,\chi_{-3})$, a finite-field interpolation argument bounds the corank by three;
+removing at most three common low nodes gives nonvanishing at a fixed scale throughout a prime interval. We bound their size with Andr\'eief's identity and a certified lower bound for a
 discrete logarithmic energy.
 
 Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
@@ -114,14 +115,14 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 \begin{gathered}
  \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\qquad
  \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-38.35-\varepsilon},\\
- \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-23.82-\varepsilon}.
+ \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-18.50-\varepsilon}.
 \end{gathered}
 \]
 In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le38.35$ and
-$\mu(L(2,\chi_{-3}))\le23.82$.
+$\mu(L(2,\chi_{-3}))\le18.50$.
 \end{theorem}
 
-The computed values of the exponents are $38.342$ and $23.8194$. Theorem~\ref{thm:main}, together with every
+The computed values of the exponents are $38.342$ and $18.498632$. Theorem~\ref{thm:main}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -141,7 +142,7 @@ its main estimate is not justified.
 Calegari, Dimitrov and Tang proved that $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ are linearly independent over
 $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a construction of Zagier. In
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
-Theorem~\ref{thm:main} improves this to $23.82$.
+Theorem~\ref{thm:main} improves this to $18.50$.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
@@ -316,8 +317,10 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
 is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
 $\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
-$\mu\le7.6444/0.19937<38.35$. For $L(2,\chi_{-3})$ the size is tied to $\ell$ ($g=\frac25$), and $\ell\nmid q$
-is needed ($s=2$), so $\mu\le6.6510\,(1/0.35954+0.8)<23.82$.
+$\mu\le7.6444/0.19937<38.35$. For $L(2,\chi_{-3})$, the original pair family gives
+$6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a family with at most three
+common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
+the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-10339/3072)<18.50$.
 
 \begin{center}
 {\setlength{\tabcolsep}{3pt}
@@ -327,7 +330,7 @@ constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ 
 \midrule
 $G-5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
 $G+5\pi^2/48$ & $3.70343$ & $3.9028$ & $7.6444$ & $0.19937$ & $0$ & $38.342$\\
-$L(2,\chi_{-3})$ & $10339/3072$ & $3.7251$ & $6.6510$ & $0.35954$ & $0.8$ & $23.8194$\\
+$L(2,\chi_{-3})$ & $10339/3072$ & $3.7251$ & $6.6510$ & $0.35954$ & $0$ & $18.498632$\\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -1032,6 +1035,354 @@ $W=8$ it fails exactly when $\ell\equiv43\pmod{60}$. We therefore use $r\le8m\le
 $\ell\equiv1\pmod6$ with $\ell\ge61$ has a pair, with $5r\le2\ell\le5r+11$.
 
 %% =====================================================================
+% New section: bounded low-node deletions for the chi frame.
+% This file deliberately leaves the preceding pair argument unchanged.
+\section{Uniform nonvanishing after bounded low-node deletion}\label{sec:minor-nv}
+
+For the $\chi$ frame, allowing a bounded number of common nodes to be omitted
+removes the restriction $r+2m=3t$ in the preceding pair construction. The
+borders remain fixed. We use the rational kernel $M$ of
+Section~\ref{sec:construction}. For $J\subseteq[0,r)$ put
+\[
+ X'=\{r+2i:0\le i<m\},\qquad Y'=\{r+2i+1:0\le i<m\},
+\]
+and put $\xi_\chi=\tfrac14L(2,\chi_{-3})$. Let $\Phi_J(x)$ have rows $J\sqcup X'$, columns $J\sqcup Y'$, and entries
+$M[a,b]+x\mathbf1[a=b\in J]$. Write $P_J(x)=\det\Phi_J(x)$.
+
+\begin{theorem}\label{thm:minor-nv}
+Let $\ell=6t+1$ be prime, and suppose
+\begin{equation}\label{eq:minor-room}
+ m\ge1,\qquad K:=2t+1\le r,\qquad r+2m\le3t.
+\end{equation}
+If $x\in\Q$ and $\ell^2\nmid\den x$, there is a set $I\subseteq[0,K)$,
+$|I|\le3$, such that, for $J=[0,r)\setminus I$,
+\[
+ P_J(x)\ne0.
+\]
+\end{theorem}
+
+The proof bounds the dimension of a kernel, rather than asserting simplicity
+of its eigenvalues. Conditions~\eqref{eq:minor-room} imply $2m+1\le t$, so
+$t\ge3$ and $\ell\ge19$. All occurrences of $2,3,6,18,36$ below are therefore
+units modulo $\ell$.
+
+\subsection{Reflected coordinates and the signed moment pencil}
+Work first over $k=\F_\ell$. The physical node $b$ and its reflected coordinate
+$y=\ell-b$ will be kept distinct. Put
+\[
+ S=3t+1,\qquad g=\ell-r-2m,\qquad d=K-m,\qquad h=r-K.
+\]
+Then $1<S\le g$, $3\le d<K$, $d\le g$, and
+$K+g+2m+h=\ell$. For a reflected coordinate $y$ define
+\[
+ c_y=\bigl((a+y)^{-1}\bigr)_{0\le a<K},\qquad
+ N=\sum_{y=1}^{g}\epsilon_y c_yc_y^{\top},\qquad
+ \epsilon_y=\begin{cases}1&y<S,\\-2&y\ge S.\end{cases}
+\]
+Reversing the order of each physical border gives the reflected border
+coordinates $g+2,g+4,\ldots,g+2m$ and
+$g+1,g+3,\ldots,g+2m-1$. Denote their column matrices by $W_X,W_Y$, respectively,
+and set
+\[
+ \Gamma=W_X^{\top}W_Y,\qquad
+ B_z=\begin{pmatrix}N-zI_K&W_Y\\W_X^{\top}&0\end{pmatrix}.
+\]
+Proposition~\ref{prop:delta} gives $\det\Gamma\ne0$: its range condition is
+$g+K+2m=\ell-r+K\le\ell$.
+
+Introduce the polynomials
+\begin{align*}
+ D(y)&=\prod_{a=0}^{K-1}(y+a),&
+ B_X(y)&=\prod_{i=0}^{m-1}(y-g-2i-2),\\
+ B_Y(y)&=\prod_{i=0}^{m-1}(y-g-2i-1),& R(y)&=B_X(y)B_Y(y).
+\end{align*}
+For $0\le i<d$ define residue-basis matrices by
+\begin{equation}\label{eq:minor-residues}
+ (V_X)_{a i}=\frac{B_X(-a)(-a)^i}{D'(-a)},\qquad
+ (V_Y)_{a i}=\frac{B_Y(-a)(-a)^i}{D'(-a)}.
+\end{equation}
+All displayed denominators and all $B_X(-a),B_Y(-a)$ are nonzero.
+Partial fractions give, for $\deg p<d$,
+\begin{equation}\label{eq:minor-pf}
+ \sum_{a=0}^{K-1}\frac{B_X(-a)p(-a)}{D'(-a)(y+a)}
+       =\frac{B_X(y)p(y)}{D(y)},
+\end{equation}
+and likewise for $Y$. Thus the columns of $V_X$ lie in
+$\ker W_X^{\top}$. They are independent, since evaluation of a polynomial
+of degree $<d\le K$ at the $K$ distinct points $-a$ is injective.
+Since $\Gamma$ is invertible, $W_X,W_Y$ have rank $m$; consequently $V_X,V_Y$
+are bases of $\ker W_X^{\top},\ker W_Y^{\top}$.
+
+The compressed matrix is the symmetric Hankel pencil
+\[
+ A_z=V_Y^{\top}(N-zI_K)V_X=G-zH,
+\]
+whose entries, indexed by $0\le i,j<d$, are
+\begin{align}
+ H_{ij}&=\sum_{u\in\{0,-1,\ldots,1-K\}}
+             \frac{R(u)}{D'(u)^2}u^{i+j},\label{eq:minor-H}\\
+ G_{ij}&=\sum_{y=1}^{g}\epsilon_y\frac{R(y)}{D(y)^2}y^{i+j}.
+ \label{eq:minor-G}
+\end{align}
+These identities follow from~\eqref{eq:minor-residues} and
+\eqref{eq:minor-pf}. In particular the same polynomial coordinates describe
+the left and right kernels; this fact will be needed for principal deletion.
+
+\subsection{A uniform corank bound}
+\begin{lemma}\label{lem:minor-corank}
+For every $z\in k$, $\dim_k\ker A_z\le3$.
+\end{lemma}
+\begin{proof}
+Identify a coefficient vector in $\ker A_z$ with a polynomial $p$, $\deg p<d$.
+Equations~\eqref{eq:minor-H}--\eqref{eq:minor-G} say that its first $d$
+weighted moments vanish. To use these conditions, complete the root sets by
+\[
+ E(y)=\prod_{j=1}^{g}(y-j),\qquad
+ C(y)=\prod_{j=g+2m+1}^{\ell-K}(y-j).
+\]
+The last product is $1$ when $h=0$. The roots of $D,E,R,C$ partition $k$, so
+\begin{equation}\label{eq:minor-fullfield}
+ DERC=y^\ell-y,\qquad (y^\ell-y)'=-1.
+\end{equation}
+Let $T=DE$. On its simple roots define
+\[
+ w_z(v)=\begin{cases}
+ -zR(v)/D'(v)^2&D(v)=0,\\
+ \epsilon_v R(v)/D(v)^2&E(v)=0,
+ \end{cases}
+\]
+and form the polynomial, linear in $p$,
+\[
+ B_p(y)=\sum_{T(v)=0}w_z(v)p(v)\frac{T(y)}{y-v},\qquad
+ F_p(y)=D(y)^2C(y)B_p(y).
+\]
+The first $d$ moments are zero. Expanding
+$B_p/T=\sum_v w_z(v)p(v)/(y-v)$ formally at infinity therefore gives
+\[
+ \deg B_p\le K+g-d-1=g+m-1,\qquad \deg F_p\le\ell+d-1.
+\]
+Equivalently these degree bounds follow by comparing the first $d$ leading
+coefficients in the finite polynomial sum defining $B_p$.
+Evaluating at a root of $T$, and differentiating
+\eqref{eq:minor-fullfield}, gives the exact identities
+\begin{equation}\label{eq:minor-interpolation}
+ \begin{array}{ll}
+ F_p(u)=F_p'(u)=0,\quad F_p''(u)=2zp(u)&(D(u)=0),\\
+ F_p(j)=-\epsilon_jp(j)&(1\le j\le g),\\
+ F_p(j)=0&(C(j)=0).
+ \end{array}
+\end{equation}
+For example $B_p(u)=-zR(u)E(u)p(u)/D'(u)$ at a root $u$ of $D$;
+then $F_p''(u)=2D'(u)^2C(u)B_p(u)=2zp(u)$ by
+$D'(u)E(u)R(u)C(u)=-1$. The high-node identity follows in the same way.
+
+Consider the finite-difference Wronskian
+\[
+ W_p(y)=F_p(y+1)p(y)-F_p(y)p(y+1).
+\]
+At each low adjacency $-K+1,\ldots,-1$, its value and first derivative
+vanish. Its second derivative also vanishes, by the equality
+$2zp(y+1)p(y)-2zp(y)p(y+1)=0$. Hence these are triple roots.
+At the high adjacencies $1,\ldots,S-2$ and $S,\ldots,g-1$ its value
+vanishes because the two weights agree. It vanishes at every root of $C$:
+for the last such root, $\ell-K$, the next point is the first low root
+$\ell-K+1$. Thus
+\begin{equation}\label{eq:minor-fixedfactor}
+ Q_0(y):=\prod_{a=1}^{K-1}(y+a)^3
+       \prod_{j=1}^{S-2}(y-j)\prod_{j=S}^{g-1}(y-j)C(y)
+       \quad\hbox{divides } W_p(y).
+\end{equation}
+The supports are disjoint, and
+\[
+ \begin{gathered}
+ \deg Q_0=3(K-1)+(g-2)+h=\ell+2d-5,
+ \\ Q_0(S-1)\ne0,\qquad W_p(S-1)=3p(S)p(S-1).
+ \end{gathered}
+\]
+
+We also need that $W_p\ne0$ for nonzero $p$ in the kernel.
+If $W_p=0$, reduce $F_p/p=A/B$ to coprime polynomials with $B$ monic.
+Then $A(y+1)B(y)=A(y)B(y+1)$ implies $B\mid B(y+1)$, and hence
+$B(y+1)=B(y)$. But $\deg B\le\deg p<\ell$; a nonconstant polynomial
+of degree $e<\ell$ has a nonzero leading term of degree $e-1$ in its
+first difference. Thus $B$ is constant. The polynomial quotient $F_p/p$
+is translation invariant and has degree $<2\ell$. Its positive degree,
+if any, must be $\ell$ by the same leading-coefficient argument.
+Subtracting a multiple of $y^\ell-y$ therefore shows
+\[
+ F_p=p\bigl(a(y^\ell-y)+b\bigr).
+\]
+Some low node $u$ has $p(u)\ne0$, since $\deg p<K$. The first two
+identities in~\eqref{eq:minor-interpolation} force $b=0$ and $a=0$.
+Then the high-node identity forces $p$ to vanish at $g>\deg p$ points,
+a contradiction.
+
+Finally, if the kernel had dimension at least four, its three linear
+conditions
+\[
+ [y^{d-1}]p=[y^{d-2}]p=0,\qquad p(S)=0
+\]
+would admit a nonzero solution. This solution has $\deg p\le d-3$.
+The leading terms in the two products defining $W_p$ cancel, so
+$\deg W_p\le\deg F_p+\deg p-1\le\ell+2d-5=\deg Q_0$.
+By~\eqref{eq:minor-fixedfactor}, $W_p$ is a scalar multiple of $Q_0$;
+its value at $S-1$ makes that scalar zero. This contradicts the preceding
+paragraph and proves the lemma.
+\end{proof}
+
+\subsection{Selecting a nonzero principal minor}
+\begin{lemma}\label{lem:minor-rescue}
+For every $z\in k$, deleting at most three low principal coordinates from
+$B_z$ leaves a nonsingular matrix.
+\end{lemma}
+\begin{proof}
+Let $\mathcal P_z$ be the polynomial kernel of $A_z$, and put
+$k_0=\dim\mathcal P_z\le3$. A right kernel vector of $B_z$ has low
+part $v\in\ker W_X^{\top}$, hence $v=V_Xp$ uniquely. Its remaining
+equation is $(N-zI)v\in\operatorname{im}W_Y$, which is equivalent to
+$V_Y^{\top}(N-zI)V_Xp=0$. The border coordinates are then unique,
+since $\Gamma$ is invertible. Conversely every $p\in\mathcal P_z$
+lifts to such a kernel vector. The transpose has the corresponding
+parametrization with low part $V_Yp$; the polynomial space is the same
+because $A_z$ is symmetric.
+
+Evaluation $p\mapsto(p(-a))_{a<K}$ is injective on $\mathcal P_z$.
+Choose $k_0$ coordinates on which it is an isomorphism, and let $I$ be
+the corresponding low indices. By~\eqref{eq:minor-residues}, restriction
+of either full kernel to $I$ is an isomorphism: it differs from polynomial
+evaluation only by nonzero diagonal factors.
+
+Here is the elementary principal-minor criterion being used. Suppose a
+square matrix has injective restriction of its right kernel to $I$ and
+surjective restriction of its left kernel to $I$. A kernel vector of
+the complementary principal matrix, extended by zero on $I$, is sent by
+the full matrix to a vector supported on $I$. Pairing with left kernel
+vectors shows that this image is zero. Right-kernel injectivity then
+shows the extended vector is zero. Thus the complementary principal
+matrix is nonsingular. Apply this criterion to $B_z$.
+\end{proof}
+
+\subsection{Return to the physical determinant}
+Suppose first $\ell\nmid\den x$, and write $\bar x$ for its reduction.
+Let
+\[
+ c_0=\sum_{y=1}^{3t}y^{-2}-2\sum_{y=3t+1}^{4t}y^{-2},\quad
+ \kappa=-\frac1{18},\quad \tau_0=\frac1{36},\quad h_0=\frac{c_0}{2}.
+\]
+The three-level entry calculation of Section~\ref{ssec:nvother} applies
+under~\eqref{eq:minor-room}; it does not require equality $r+2m=3t$.
+The physical absent middle nodes are $[r+2m,S)$, which reflect to $[S,g]$;
+the top nodes reflect to $[1,S)$. Their weighted Gram matrix is therefore
+\[
+ N_{\rm phys}=\sum_{y=S}^{g}c_yc_y^{\top}
+              -\frac12\sum_{y=1}^{S-1}c_yc_y^{\top}=-\frac12 N.
+\]
+Consequently the physical reduced low block is exactly
+\begin{equation}\label{eq:minor-physical}
+ (h_0+\bar x/\kappa)I+N_{\rm phys}
+       =-\frac12\bigl(N-zI\bigr),\qquad z=c_0-36\bar x.
+\end{equation}
+Both border orders are reversed simultaneously to obtain $W_X,W_Y$.
+Scaling a low block by a nonzero scalar $c$ preserves bordered
+nonsingularity, since
+\[
+ \begin{pmatrix}cI&0\\0&I\end{pmatrix}
+ \begin{pmatrix}M_0&W_Y\\W_X^{\top}&0\end{pmatrix}
+ \begin{pmatrix}I&0\\0&c^{-1}I\end{pmatrix}
+ =\begin{pmatrix}cM_0&W_Y\\W_X^{\top}&0\end{pmatrix}.
+\]
+This also holds after any low principal restriction. Thus
+Lemma~\ref{lem:minor-rescue} supplies a nonzero physical bordered minor.
+
+For completeness, this minor transfers to the rational matrix without
+assuming that the retained common set contains every low node.
+Start with the original geometry and multiply its low rows and columns
+by $1$, its middle rows and columns by $\ell$, and negate the matrix.
+For any retained low set $U\subseteq[0,K)$ its reduced principal
+restriction has the same Schur identity as the full matrix. Writing
+$M_{\rm phys}$ for the left-hand side of~\eqref{eq:minor-physical},
+\begin{equation}\label{eq:minor-schur-factor}
+ \det Z_U=(1/2)^{r-K+m}(1/18)^{|U|}
+ \det\begin{pmatrix}
+ M_{\rm phys}[U,U]&W_Y[U,*]\\
+ W_X[U,*]^{\top}&0
+ \end{pmatrix}.
+\end{equation}
+Indeed the invertible middle common block is unchanged by low restriction;
+the harmonic identity restricts entrywise, and the border row and column
+operations are unchanged. Every prefactor is a unit. A zero rational
+principal determinant would remain zero after the rational diagonal
+scalings and after reduction, contradicting~\eqref{eq:minor-schur-factor}.
+Taking $U=[0,K)\setminus I$ proves the theorem in this case.
+
+It remains to treat $\ell\mid\den x$ but $\ell^2\nmid\den x$.
+Coprimality of the reduced numerator and denominator shows that
+$u=\overline{\ell x}$ is nonzero. Use the undeleted common set $J=[0,r)$.
+Multiply \emph{every} row of $\Phi_J(x)$ by $\ell$ and additionally
+multiply each middle common column by $\ell$. With rows and columns
+ordered as low, middle common, border, the resulting integral matrix
+reduces to
+\[
+ \begin{pmatrix}
+ uI_K&0&-\tfrac16W_Y\\
+ -\tfrac16W_C^{\top}&-\tfrac12I_{r-K}&0\\
+ -\tfrac16W_X^{\top}&0&0
+ \end{pmatrix}.
+\]
+Here $W_C$ consists of the middle common columns. In verifying the zero
+blocks one uses integrality of distinct middle--middle entries, rather
+than merely integrality after multiplication by $\ell^2$; it follows
+directly from the off-diagonal divided-difference formula, whose interval
+contains neither singular index $K$ nor $S$.
+Reorder the middle common block last. Its determinant is $(-1/2)^{r-K}$,
+and the remaining bordered determinant is
+\[
+ \det\begin{pmatrix}uI_K&-\tfrac16W_Y\\-\tfrac16W_X^{\top}&0\end{pmatrix}
+       =u^{K-m}(-1/36)^m\det\Gamma\ne0.
+\]
+Thus $P_{[0,r)}(x)\ne0$. This proves
+Theorem~\ref{thm:minor-nv} in the remaining case.
+
+\subsection{Content, decay, and the original degree budget}
+The enlarged family consists of all $P_J$ with $|[0,r)\setminus J|\le3$.
+For admissible $r\le8m\le r+9$ it retains the constants
+\[
+ \Lambda=\frac{10339}{3072},\qquad D=3.7251,\qquad c=6.6510.
+\]
+To see the content assertion, use the entrywise tropical denominator
+bound from Section~\ref{sec:content}, before any determinant cancellation.
+Any assignment for a retained principal submatrix extends to one for
+the original matrix by fixing the omitted common coordinates. All
+weights are nonnegative, so the smaller assignment value cannot be
+larger. Write $d_{r,m}$ for this common integer denominator. It clears every $P_J$, and
+its logarithm is at most $(\Lambda+o(1))r^2$, uniformly in $J$.
+
+The energy estimates of Section~\ref{sec:decay} already apply to every
+subset of common nodes, with the borders retained. If $k\le3$ common
+nodes are forced to be absent, expansion at $\xi_\chi+v$ has terms
+\[
+ v^{r-k-|A|}\det\bigl(\omega\Lw_{F_\chi}[A\sqcup X',A\sqcup Y']\bigr),
+ \qquad A\subseteq J.
+\]
+For $|v|\le e^{-cr}$, use
+$|v|^{r-k-|A|}\le e^{-cr(r-k-|A|)}$. Replacing the original exponent
+$r-|A|$ by $r-k-|A|$ therefore costs at most $e^{crk}$ in the termwise
+upper bound, also at $v=0$. This is
+a logarithmic loss of at most $3cr=O(r)$, and the number of terms is
+still at most $2^r$. It is absorbed by the existing $o(r^2)$ errors.
+Hence $|P_J(\xi_\chi+v)|\le\exp(-(D-o(1))r^2)$ on the same window,
+uniformly in $J$; no comparison of possibly cancelling determinants is
+needed.
+
+Finally $\deg P_J\le|J|\le r$. We keep the declared degree budget equal
+to the original $r$ for every member, so $q^r$ times the common clearing
+denominator times $P_J(p/q)$ is an integer. Neither the degree scale nor
+the exponential window changes when the nonzero member is selected.
+
+
+
+
+
 \section{Analytic decay}\label{sec:decay}
 
 \begin{theorem}[decay and window]\label{thm:decay}
@@ -1216,6 +1567,7 @@ $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2
 Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
 \subsection{$L(2,\chi_{-3})$}
+\emph{The earlier pair-family bound.}
 Now the geometry is tied to the prime: for each prime $\ell\equiv1\pmod6$, $\ell\ge61$, there is an admissible pair of
 members of scale $r$ with $5r\le2\ell\le5r+11$, so $r/\ell\to g=\frac25$, and Theorem~\ref{thm:nv} (in the form of
 \S\ref{ssec:nvother}) applies when $\ell\nmid q$. Let $\eta=3.7251-\frac{10339}{3072}=0.359540\ldots$, $\nu>c(1/\eta+\frac45)$,
@@ -1228,7 +1580,41 @@ so $cr<\nu L$ for $\delta$ small, and the comparison above, with $|C|\le r+1$, g
 \[
  \mu\bigl(\tfrac14L(2,\chi_{-3})\bigr)\le c\Bigl(\frac1\eta+gs\Bigr),\qquad g=\tfrac25,\ s=2,
 \]
-and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. This completes the proof of Theorem~\ref{thm:main}. \qed
+and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. The valuation-one argument of Section~\ref{sec:minor-nv} also allows $s=1$, giving the retained bound $21.16$.
+
+\emph{The bounded-deletion family.} Put
+\[
+ \eta=\frac{37251}{10000}-\frac{10339}{3072}=\frac{690317}{1920000},\qquad c=\frac{6651}{1000}.
+\]
+Let $\nu>c/\eta$, choose $\delta>0$ so that $c(1+\delta)/\eta<\nu$, put $L=\log q$ and
+$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/8\rceil$.
+For all sufficiently large $r$, every prime $\ell\equiv1\pmod6$ in
+\[
+ \frac{51}{20}r\le\ell\le\frac{59}{20}r
+\]
+satisfies $K=(\ell+2)/3\le r$ and $r+2m\le(\ell-1)/2$.
+Indeed $r+2m\le5r/4+7/4$ and the lower endpoint leaves a positive linear margin;
+the upper endpoint gives $K\le59r/60+2/3\le r$ for large $r$.
+The prime number theorem in this progression gives
+\[
+ \log\prod_{\substack{51r/20\le\ell\le59r/20\\\ell\equiv1\ (6)}}\ell^2
+   =\left(\frac25+o(1)\right)r>L,
+\]
+since $2/5>\eta$. Thus some such prime satisfies $\ell^2\nmid q$.
+By Theorem~\ref{thm:minor-nv}, some retained common set $J$ with at most three omissions has
+$P_J(p/q)\ne0$. The original tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
+and the estimates in Section~\ref{sec:minor-nv} give
+\[
+ q^{-r}\le |d_{r,m}P_J(p/q)|
+ \le \exp\bigl(- (\eta-o(1))r^2\bigr)
+\]
+whenever $|\xi_\chi-p/q|<q^{-\nu}$; the required window holds because $cr<\nu L$.
+This contradicts $\eta r\ge(1+\delta)L$. Consequently
+\[
+ \mu(\xi_\chi)\le\frac c\eta=\frac{12769920}{690317}
+ =18.498631788\ldots<\frac{37}{2}.
+\]
+Rational scaling by four preserves the exponent, completing the proof of Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1241,8 +1627,11 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 \begin{remark}[where the constants enter]
 For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-192$, so the third decimal of $D$ matters. The rank deficits of
 \S\ref{sec:content} lower the exponent from $50.0$ to $38.34$, and the free choice of $\ell$ (Theorem~\ref{thm:nv} for all
-$S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$. For $L(2,\chi_{-3})$ the term $c\,g\,s=5.32$ is
-still present; a version of Theorem~\ref{thm:nv} that also covers primes dividing $q$ to the first power would halve it.
+$S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
+For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
+bounded low-node deletion then removes the remaining prime-location cost and gives $18.50$.
+With the present constants the limiting ratio is $18.498631788\ldots$. Reducing the fixed number of deletions,
+or proving nonvanishing for a smaller fixed family, would not change this ratio.
 \end{remark}
 
 %% =====================================================================
@@ -1264,8 +1653,11 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \item \lean{lam_hybrid_measure}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
  $q^{-(38.35+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_final};
 \item \lean{mir_hybrid_measure}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_final};
-\item \lean{chi3_hybrid_measure}: the same for $L(2,\chi_{-3})$ with exponent $23.82$; it is
- \lean{chi3_hybrid_measure_wide};
+\item \lean{chi3_hybrid_measure_1850}: the same for $L(2,\chi_{-3})$ with exponent $18.50$; it is
+ \lean{chi3_hybrid_measure_minor}. The exports \lean{chi3_hybrid_measure} and \lean{chi3_hybrid_measure_2116}
+ retain $23.82$ and $21.16$;
+\item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
+ the bounded-deletion nonvanishing argument of Section~\ref{sec:minor-nv};
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
 \item \lean{hyb_primal_false} and \lean{primal_pair}: the end of the nonvanishing chain and Lemma~\ref{lem:primal};
 \item \lean{lam_hybrid_decay}, \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $\lambda$ and $L(2,\chi_{-3})$;
@@ -1306,13 +1698,17 @@ system and ported to the current toolchain; the repository's README and provenan
 
 \section*{Disclosure of AI use}
 
-The development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
+The original development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
 (Anthropic): the mathematics, including the rectangular frames, the content bounds and rank deficits, the
 nonvanishing argument and the decay certificates, and all proofs; the Lean formalization; the numerical
 computations and the certificate generators; the literature search; and the text of this paper. Claude worked in a
 series of conversations at the request of the author, who posed the problem, directed the work, and is responsible
 for this submission. The repository infrastructure, vendored formalizations and certificate tooling of the
 companion project \cite{Litsey2026}, which this work reuses, were developed with OpenAI Codex as described there.
+The subsequent improvement for $L(2,\chi_{-3})$ from $23.82$ to $18.50$, including valuation-one reduction,
+the finite-field corank argument, bounded-deletion transfer, their Lean formalization and the corresponding
+additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
+stronger theorem requires changes.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal
