@@ -21,26 +21,21 @@ Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload 
 Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
 ([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
 
-## Companion result: irrationality measures for G ∓ 5π²/48
+## Companion result: G ± 5π²/48 and L(2, χ₋₃)
 
-The repository also contains a separate, fully formalized result. Write
-`λ = G/2 − 5π²/96` and `λ′ = G/2 + 5π²/96`, so that `G ∓ 5π²/48 = 2λ, 2λ′`. Both λ and λ′ are irrational.
-For all coprime `p, q` with `q` sufficiently large,
-`|λ − p/q| > q^(-78)` and `|λ′ − p/q| > q^(-78)`, and `|G + 5π²/48 − p/q| > q^(-79)`.
-The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
+The repository also contains a second, fully formalized result:
 
-- Statements: [`ChallengeLambda.lean`](ChallengeLambda.lean) (Mathlib only, with G written as a series).
-- Proofs: [`SolutionLambda.lean`](SolutionLambda.lean) and the library [`CatalanLambda/`](CatalanLambda/).
-- Kernel-checked certificate: `CatalanLambda.Cert.certFacts`, using `decide +kernel` only.
-- Checking: [`comparator-lambda.json`](comparator-lambda.json). Axioms are `propext`, `Quot.sound` and `Classical.choice`.
-- Metadata: [`formalization-lambda.yaml`](formalization-lambda.yaml).
-- Paper: [`paper-lambda/`](paper-lambda/), with certificate scripts in `paper-lambda/scripts/`. The paper also proves two stronger
-  bounds that are **not formalized**. Both rest on proofs audited by independent Claude agents, not on a human referee:
-  - μ(λ) ≤ 52.69 and μ(λ′) ≤ 52.69 (also for G + 5π²/48), by a determinant evaluation, with the nonvanishing pair chosen freely (v8; earlier versions gave 57.85).
-  - **μ(λ) ≤ 46.45**, by a rectangular "hybrid" Löwner frame. Its interval-arithmetic decay and window certificate is in
-    `paper-lambda/scripts-hybrid/`. The hybrid has not been done for λ′, whose best bound is 52.69.
+- μ(G − 5π²/48) ≤ 38.35;
+- μ(G + 5π²/48) ≤ 38.35;
+- μ(L(2, χ₋₃)) ≤ 23.82.
 
-**Update.** The square-frame λ/λ′ and L(2, χ₋₃) results above (and the files they link to) are now archived under `archive/CatalanArchive/` (`lake build Archive`; configs in `archive/legacy-configs/`). The current headlines are the hybrid bounds μ(G − 5π²/48) ≤ 38.35, μ(G + 5π²/48) ≤ 38.35 and μ(L(2, χ₋₃)) ≤ 23.82, stated in [`ChallengeHybrid.lean`](ChallengeHybrid.lean), proved in [`SolutionHybrid.lean`](SolutionHybrid.lean), with [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
+The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
+
+- Statements: [`ChallengeHybrid.lean`](ChallengeHybrid.lean) (Mathlib only).
+- Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
+- Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
+- Paper: [`paper-lambda/lambda-irrationality.pdf`](paper-lambda/lambda-irrationality.pdf), with its source and bibliography alongside.
+- Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
 
