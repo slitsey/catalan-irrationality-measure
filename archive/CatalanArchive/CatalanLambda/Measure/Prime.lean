@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.GrowthFinal
-public import CatalanLambda.PNTAP
+public import CatalanArchive.CatalanLambda.GrowthFinal
+public import CatalanArchive.CatalanLambda.PNTAP
 public import Mathlib.NumberTheory.Chebyshev
 
 @[expose] public section

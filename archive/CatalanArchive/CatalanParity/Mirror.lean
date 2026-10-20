@@ -1,7 +1,7 @@
 module
 
-public import CatalanFrames.LambdaMirror.Final
-public import ChallengeLambda
+public import CatalanArchive.CatalanFrames.LambdaMirror.Final
+public import CatalanArchive.ChallengeLambda
 
 /-!
 # Parity gate for the mirror constant (WP8), deleted at cut-over

@@ -40,7 +40,7 @@ The exact exponent proved in Lean is `31682445459/409965000 ≈ 77.28`.
   - **μ(λ) ≤ 46.45**, by a rectangular "hybrid" Löwner frame. Its interval-arithmetic decay and window certificate is in
     `paper-lambda/scripts-hybrid/`. The hybrid has not been done for λ′, whose best bound is 52.69.
 
-Build the λ result with `lake build CatalanLambda ChallengeLambda SolutionLambda`. It is not a default target.
+**Update.** The square-frame λ/λ′ and L(2, χ₋₃) results above (and the files they link to) are now archived under `archive/CatalanArchive/` (`lake build Archive`; configs in `archive/legacy-configs/`). The current headlines are the hybrid bounds μ(G − 5π²/48) ≤ 38.35, μ(G + 5π²/48) ≤ 38.35 and μ(L(2, χ₋₃)) ≤ 23.82, stated in [`ChallengeHybrid.lean`](ChallengeHybrid.lean), proved in [`SolutionHybrid.lean`](SolutionHybrid.lean), with [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
 
 ## What to read
 

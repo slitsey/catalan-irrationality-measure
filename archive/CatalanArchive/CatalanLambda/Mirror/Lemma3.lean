@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Mirror.NVMain
-public import CatalanLambda.Mirror.Irrational
+public import CatalanArchive.CatalanLambda.Mirror.NVMain
+public import CatalanArchive.CatalanLambda.Mirror.Irrational
 
 @[expose] public section
 

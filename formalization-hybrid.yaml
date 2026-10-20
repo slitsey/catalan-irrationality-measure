@@ -1,0 +1,89 @@
+# Formalization metadata for the three hybrid results (separate from formalization.yaml, which describes the mu(G) result).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Irrationality measures for G - 5 pi^2/48, G + 5 pi^2/48 and L(2, chi_{-3}) (hybrid frames)"
+  description: >-
+    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 38.35
+    and mu(G + 5 pi^2/48) <= 38.35, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
+    we prove mu(L(2, chi_{-3})) <= 23.82: for every e > 0, all large q and all p coprime to q,
+    |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
+    frames of the modular engine CatalanCore, the ell-adic Schur-complement nonvanishing
+    argument, Cauchy-determinant decay and kernel-checked rational certificates. They supersede
+    the square-frame bounds 77.28/78/79 and 31 (archived under archive/).
+  authors:
+    - "Sean Litsey"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Sean Litsey"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11J82", "11J72"]
+
+related_formalizations:
+  - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan"
+    relationship: builds-on
+    note: >-
+      The Loewner/Cauchy-determinant framework follows OpenAI's irrationality proof for
+      Catalan's constant; the prime number theorem in progressions is derived from the
+      vendored PNT+ Wiener-Ikehara theorem. The L(2, chi_{-3}) development is otherwise independent.
+
+status:
+  scope: >-
+    All three advertised statements are fully proved (SolutionHybrid.lean, via
+    lam_hyb_measure_final, mir_hyb_measure_final and chi3_hybrid_measure_wide). No sorry and
+    no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+fidelity:
+  divergences: >-
+    None known. The constants are written out as series; the measure is stated for p coprime
+    to q (IsCoprime p q) and q >= q0, with E = 3835/100 and 2382/100 as rationals cast to R.
+
+review:
+  status: "self-assessed"
+  reviewers: []
+
+alignment:
+  namespace: "CatalanHybridChallenge"
+  statements:
+    - source: "Litsey (2026), hybrid measure for G - 5 pi^2/48, exponent 38.35"
+      lean: "CatalanHybridChallenge.lam_hybrid_measure"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), hybrid measure for G + 5 pi^2/48, exponent 38.35"
+      lean: "CatalanHybridChallenge.mir_hybrid_measure"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 23.82"
+      lean: "CatalanHybridChallenge.chi3_hybrid_measure"
+      module: "ChallengeHybrid"
+      status: proved
+
+sources:
+  - title: "Irrationality measures for G -/+ 5 pi^2/48 and L(2, chi_{-3})"
+    type: original-proof
+    relationship: other
+    note: "Companion work by S. Litsey (2026)."
+
+automation:
+  methods:
+    - method: agent
+      models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
+      framework: "Claude Code desktop with native Windows shell and file tools, coordinating subagents"
+      tool_setup: >-
+        Claude agents produced the mathematics and the Lean development, including the
+        kernel-checked numerical certificate (decide +kernel, no native_decide), using Python,
+        Lean 4, Lake and Mathlib. The human author posed the problem, directed the work and
+        checked the outcome.
+  notes: >-
+    The shared modular engine (CatalanCore) and certificate tooling are described in
+    archive/legacy-configs/formalization-lambda.yaml.
+
+acknowledgements: >-
+  OpenAI's proof and Lean formalization of the irrationality of Catalan's constant; Lean 4,
+  Mathlib and the PNT+ project.

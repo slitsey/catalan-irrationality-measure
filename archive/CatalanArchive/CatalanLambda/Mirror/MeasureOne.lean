@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Mirror.Measure
-public import CatalanLambda.Mirror.Lemma3
+public import CatalanArchive.CatalanLambda.Mirror.Measure
+public import CatalanArchive.CatalanLambda.Mirror.Lemma3
 
 @[expose] public section
 

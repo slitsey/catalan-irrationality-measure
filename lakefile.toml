@@ -1,6 +1,6 @@
 name = "CatalanIrrationalityMeasure"
 version = "0.1.0"
-defaultTargets = ["CatalanMeasure", "Challenge", "Solution"]
+defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid"]
 
 [leanOptions]
 autoImplicit = false
@@ -47,31 +47,27 @@ srcDir = "archive"
 roots = ["CatalanArchive"]
 globs = ["CatalanArchive.+"]
 
-# Lambda nonvanishing (ell-adic Schur complement) development.  Not a default target.
+# Shared legacy-lambda library modules still used by the hybrid frames (CatalanFrames.*).
+# The square-frame lambda/lambda' and L(2, chi_{-3}) results (CatalanLambda.Final, Mirror.*, Measure.*,
+# CatalanFrames.Lambda/LambdaMirror square files, Challenge/SolutionLambda and Challenge/SolutionChi3)
+# live under archive/ (`lake build Archive`).
 [[lean_lib]]
 name = "CatalanLambda"
 roots = ["CatalanLambda"]
-globs = ["CatalanLambda", "CatalanLambda.+"]
+globs = ["CatalanLambda.+"]
+
+# Hybrid headlines: mu(G - 5 pi^2/48) <= 38.35, mu(G + 5 pi^2/48) <= 38.35, mu(L(2, chi_{-3})) <= 23.82.
+[[lean_lib]]
+name = "ChallengeHybrid"
+roots = ["ChallengeHybrid"]
 
 [[lean_lib]]
-name = "ChallengeLambda"
-roots = ["ChallengeLambda"]
-
-[[lean_lib]]
-name = "SolutionLambda"
-roots = ["SolutionLambda"]
-
-[[lean_lib]]
-name = "ChallengeChi3"
-roots = ["ChallengeChi3"]
-
-[[lean_lib]]
-name = "SolutionChi3"
-roots = ["SolutionChi3"]
+name = "SolutionHybrid"
+roots = ["SolutionHybrid"]
 
 # Modular architecture (design FU).  None of these is a default target.
 # CatalanCore: frame-generic mathematics; CatalanFrames: per-constant instances;
-# CatalanParity: temporary old-vs-new parity checks (deleted at cut-over).
+# CatalanParity: parity-check templates (the old-vs-new square-frame parity files are archived).
 [[lean_lib]]
 name = "CatalanCore"
 roots = ["CatalanCore"]

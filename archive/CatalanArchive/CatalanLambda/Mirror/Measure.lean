@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.MeasureCore
+public import CatalanArchive.CatalanLambda.Mirror.MeasureCore
 
 @[expose] public section
 

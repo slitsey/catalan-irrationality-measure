@@ -1,7 +1,7 @@
 module
 
-public import CatalanFrames.Lambda.Final
-public import CatalanFrames.Lambda.NVStrong
+public import CatalanArchive.CatalanFrames.Lambda.Final
+public import CatalanArchive.CatalanFrames.Lambda.NVStrong
 
 /-!
 # λ final statement with `κ = 0` nonvanishing: exponent `c/η`

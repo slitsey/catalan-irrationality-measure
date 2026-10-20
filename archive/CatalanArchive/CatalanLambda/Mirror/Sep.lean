@@ -1,8 +1,8 @@
 module
 
-public import CatalanLambda.Mirror.Window
+public import CatalanArchive.CatalanLambda.Mirror.Window
 public import CatalanLambda.Mirror.LambdaCatalan
-public import CatalanLambda.Mirror.GrowthFinal
+public import CatalanArchive.CatalanLambda.Mirror.GrowthFinal
 
 @[expose] public section
 

@@ -54,16 +54,16 @@ alignment:
   statements:
     - source: "Litsey (2026), irrationality of L(2, chi_{-3})"
       lean: "CatalanChi3Challenge.chi3_irrational"
-      module: "ChallengeChi3"
+      module: "CatalanArchive.ChallengeChi3"
       status: proved
     - source: "Litsey (2026), irrationality measure of L(2, chi_{-3}), exponent M + e"
       lean: "CatalanChi3Challenge.chi3_irrationalityMeasure"
-      module: "ChallengeChi3"
+      module: "CatalanArchive.ChallengeChi3"
       status: proved
       note: "M = 224384787/7474000 = c_cert (1/(D_cert - 67/24) + 1/2) for g1 = g2 = 1/2, s = 1."
     - source: "Litsey (2026), round exponent 31"
       lean: "CatalanChi3Challenge.chi3_irrationalityMeasure_31"
-      module: "ChallengeChi3"
+      module: "CatalanArchive.ChallengeChi3"
       status: proved
 
 sources:

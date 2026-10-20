@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.RayBound
+public import CatalanArchive.CatalanLambda.Mirror.RayBound
 public import CatalanLambda.Decay.AndreiefTentR
 
 @[expose] public section

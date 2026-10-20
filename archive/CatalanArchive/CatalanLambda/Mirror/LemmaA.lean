@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.LemmaB
+public import CatalanArchive.CatalanLambda.Mirror.LemmaB
 public import CatalanLambda.Decay.ThmNLemmaA
 
 @[expose] public section

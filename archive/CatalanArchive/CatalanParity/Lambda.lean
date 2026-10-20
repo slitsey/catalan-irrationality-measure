@@ -1,7 +1,7 @@
 module
 
-public import CatalanFrames.Lambda.Final
-public import ChallengeLambda
+public import CatalanArchive.CatalanFrames.Lambda.Final
+public import CatalanArchive.ChallengeLambda
 
 /-!
 # Parity gate for λ (negative control A and D), deleted at cut-over

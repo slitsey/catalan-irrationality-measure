@@ -2,8 +2,8 @@ module
 
 public import CatalanLambda.Decay.ThmNAsymp
 public import CatalanLambda.Decay.LambdaCatalan
-public import CatalanLambda.GrowthFinal
-public import CatalanLambda.Main
+public import CatalanArchive.CatalanLambda.GrowthFinal
+public import CatalanArchive.CatalanLambda.Main
 
 @[expose] public section
 

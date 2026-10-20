@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Integrality
+public import CatalanArchive.CatalanLambda.Integrality
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic

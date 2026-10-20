@@ -2,7 +2,7 @@ module
 
 public import CatalanLambda.Decay.RayFTC
 public import CatalanLambda.Decay.Contour
-public import CatalanLambda.Mirror.Reflect
+public import CatalanArchive.CatalanLambda.Mirror.Reflect
 
 @[expose] public section
 

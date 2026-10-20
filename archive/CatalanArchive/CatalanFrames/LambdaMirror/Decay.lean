@@ -2,7 +2,7 @@ module
 
 public import CatalanFrames.LambdaMirror.Const
 public import CatalanFrames.LambdaMirror.Frame
-public import CatalanLambda.Mirror.Window
+public import CatalanArchive.CatalanLambda.Mirror.Window
 
 /-!
 # Mirror decay: `HasDecay (ofFrame mirFrame) D_cert c_cert` from the legacy mirror window corollary

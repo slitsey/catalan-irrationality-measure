@@ -1,8 +1,8 @@
 module
 
-public import CatalanFrames.Lambda.Content
-public import CatalanLambda.Measure.Lemma3
-public import CatalanLambda.Measure.Irrational
+public import CatalanArchive.CatalanFrames.Lambda.Content
+public import CatalanArchive.CatalanLambda.Measure.Lemma3
+public import CatalanArchive.CatalanLambda.Measure.Irrational
 
 /-!
 # λ nonvanishing: `HasNV (ofFrame lamFrame) lamRule (3/4) 1`

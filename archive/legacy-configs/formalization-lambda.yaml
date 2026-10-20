@@ -54,37 +54,37 @@ alignment:
   statements:
     - source: "Litsey (2026), irrationality of lambda"
       lean: "CatalanLambdaChallenge.lambda_irrational"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
     - source: "Litsey (2026), irrationality measure of lambda, exponent M + e"
       lean: "CatalanLambdaChallenge.lambda_irrationalityMeasure"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
       note: "M = 31682445459/409965000 = c_cert (4/(3 (D_cert - 313/105)) + 1)."
     - source: "Litsey (2026), round exponent 78"
       lean: "CatalanLambdaChallenge.lambda_irrationalityMeasure_78"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
     - source: "Mirror constant lambda' = G/2 + 5 pi^2/96: irrationality (hence G + 5 pi^2/48 = 2 lambda' irrational)"
       lean: "CatalanLambdaChallenge.lambdaMirror_irrational"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
       note: "Same certificate; mirror l = 1 mod 4 nonvanishing, mirror contour identity."
     - source: "Mirror constant lambda', irrationality measure exponent M + e (same M as lambda)"
       lean: "CatalanLambdaChallenge.lambdaMirror_irrationalityMeasure"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
     - source: "Mirror constant lambda', round exponent 78"
       lean: "CatalanLambdaChallenge.lambdaMirror_irrationalityMeasure_78"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
     - source: "G + 5 pi^2/48 = 2 lambda' is irrational"
       lean: "CatalanLambdaChallenge.catalan_add_irrational"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
     - source: "Irrationality measure of G + 5 pi^2/48, round exponent 79"
       lean: "CatalanLambdaChallenge.catalan_add_irrationalityMeasure_79"
-      module: "ChallengeLambda"
+      module: "CatalanArchive.ChallengeLambda"
       status: proved
 
 sources:

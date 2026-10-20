@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Measure.Prime
+public import CatalanArchive.CatalanLambda.Measure.Prime
 
 @[expose] public section
 

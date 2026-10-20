@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.Contour
+public import CatalanArchive.CatalanLambda.Mirror.Contour
 public import CatalanLambda.Decay.RayDirection
 
 @[expose] public section

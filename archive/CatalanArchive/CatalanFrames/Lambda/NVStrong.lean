@@ -1,11 +1,11 @@
 module
 
-public import CatalanFrames.Lambda.NV
+public import CatalanArchive.CatalanFrames.Lambda.NV
 public import CatalanCore.ThmA.NoCommonRoot
 public import CatalanCore.ThmA.UnitOfLt
 public import CatalanCore.Measure.Pinned
 public import CatalanCore.NT.Rules
-public import CatalanLambda.Main
+public import CatalanArchive.CatalanLambda.Main
 
 /-!
 # λ strong (κ = 0) nonvanishing: a free pair `h ∈ {H, H+1}`

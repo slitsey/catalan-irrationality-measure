@@ -1,6 +1,6 @@
 {
-  "challenge_module": "ChallengeChi3",
-  "solution_module": "SolutionChi3",
+  "challenge_module": "CatalanArchive.ChallengeChi3",
+  "solution_module": "CatalanArchive.SolutionChi3",
   "theorem_names": [
     "CatalanChi3Challenge.chi3_irrational",
     "CatalanChi3Challenge.chi3_irrationalityMeasure",

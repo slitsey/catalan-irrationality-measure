@@ -1,7 +1,7 @@
 module
 
 public import CatalanLambda.Assembly
-public import CatalanLambda.Measure.Irrational
+public import CatalanArchive.CatalanLambda.Measure.Irrational
 
 @[expose] public section
 

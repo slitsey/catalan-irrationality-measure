@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Measure.MeasureCore
+public import CatalanArchive.CatalanLambda.Measure.MeasureCore
 
 @[expose] public section
 

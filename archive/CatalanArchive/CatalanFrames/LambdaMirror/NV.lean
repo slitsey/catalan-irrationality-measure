@@ -1,8 +1,8 @@
 module
 
-public import CatalanFrames.LambdaMirror.Content
-public import CatalanLambda.Mirror.Lemma3
-public import CatalanLambda.Mirror.Irrational
+public import CatalanArchive.CatalanFrames.LambdaMirror.Content
+public import CatalanArchive.CatalanLambda.Mirror.Lemma3
+public import CatalanArchive.CatalanLambda.Mirror.Irrational
 
 /-!
 # Mirror nonvanishing: `HasNV (ofFrame mirFrame) mirRule (3/4) 1`

@@ -1,6 +1,6 @@
 {
-  "challenge_module": "ChallengeLambda",
-  "solution_module": "SolutionLambda",
+  "challenge_module": "CatalanArchive.ChallengeLambda",
+  "solution_module": "CatalanArchive.SolutionLambda",
   "theorem_names": [
     "CatalanLambdaChallenge.lambda_irrational",
     "CatalanLambdaChallenge.lambda_irrationalityMeasure",

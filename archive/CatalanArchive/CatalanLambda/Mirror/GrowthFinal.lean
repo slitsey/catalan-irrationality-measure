@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Mirror.Growth
-public import CatalanLambda.GrowthFinal
+public import CatalanArchive.CatalanLambda.Mirror.Growth
+public import CatalanArchive.CatalanLambda.GrowthFinal
 
 @[expose] public section
 

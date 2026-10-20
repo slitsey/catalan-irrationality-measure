@@ -1,9 +1,9 @@
 module
 
 public import CatalanLambda.Cert.Final
-public import CatalanLambda.Measure.Irrational
-public import CatalanLambda.Measure.Measure
-public import CatalanLambda.Measure.MeasureOne
+public import CatalanArchive.CatalanLambda.Measure.Irrational
+public import CatalanArchive.CatalanLambda.Measure.Measure
+public import CatalanArchive.CatalanLambda.Measure.MeasureOne
 public import OAI.NumberTheory.Catalan.Estimates.Contract
 
 @[expose] public section

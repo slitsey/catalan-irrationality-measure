@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Measure.Sep
+public import CatalanArchive.CatalanLambda.Measure.Sep
 public import Mathlib.NumberTheory.Real.Irrational
 
 @[expose] public section

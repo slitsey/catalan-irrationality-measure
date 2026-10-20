@@ -1,8 +1,8 @@
 module
 
 public import CatalanLambda.Cert.RayBox
-public import CatalanLambda.Cert.SigmaData
-public import CatalanLambda.Cert.RayPilotData
+public import CatalanArchive.CatalanLambda.Cert.SigmaData
+public import CatalanArchive.CatalanLambda.Cert.RayPilotData
 
 @[expose] public section
 

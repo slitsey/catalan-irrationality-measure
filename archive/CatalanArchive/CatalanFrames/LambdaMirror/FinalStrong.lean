@@ -1,7 +1,7 @@
 module
 
-public import CatalanFrames.LambdaMirror.Final
-public import CatalanFrames.LambdaMirror.NVStrong
+public import CatalanArchive.CatalanFrames.LambdaMirror.Final
+public import CatalanArchive.CatalanFrames.LambdaMirror.NVStrong
 
 /-!
 # λ′ final statement with `κ = 0` nonvanishing: exponent `c/η` (mirror of `Lambda.FinalStrong`).

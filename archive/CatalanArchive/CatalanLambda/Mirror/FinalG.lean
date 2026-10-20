@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.Final
+public import CatalanArchive.CatalanLambda.Mirror.Final
 
 @[expose] public section
 

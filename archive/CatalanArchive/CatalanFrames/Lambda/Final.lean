@@ -1,11 +1,11 @@
 module
 
-public import CatalanFrames.Lambda.Content
+public import CatalanArchive.CatalanFrames.Lambda.Content
 public import CatalanFrames.Lambda.Decay
-public import CatalanFrames.Lambda.NV
+public import CatalanArchive.CatalanFrames.Lambda.NV
 public import CatalanFrames.Lambda.Const
 public import CatalanCore.Measure.Statements
-public import CatalanLambda.Final
+public import CatalanArchive.CatalanLambda.Final
 
 /-!
 # λ final statements through the generic `CatalanCore.Measure` (negative control A)

@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.Integ
+public import CatalanArchive.CatalanLambda.Mirror.Integ
 public import CatalanLambda.Decay.ThmNAsymp
 
 @[expose] public section

@@ -1,6 +1,6 @@
 module
 
-public import CatalanLambda.Mirror.Atoms
+public import CatalanArchive.CatalanLambda.Mirror.Atoms
 public import CatalanLambda.Decay.Reflect
 
 @[expose] public section

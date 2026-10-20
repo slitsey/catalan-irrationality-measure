@@ -1,8 +1,8 @@
 module
 
-public import CatalanLambda.Measure.Sep
-public import CatalanLambda.Measure.Prime
-public import CatalanLambda.Measure.Irrational
+public import CatalanArchive.CatalanLambda.Measure.Sep
+public import CatalanArchive.CatalanLambda.Measure.Prime
+public import CatalanArchive.CatalanLambda.Measure.Irrational
 
 @[expose] public section
 

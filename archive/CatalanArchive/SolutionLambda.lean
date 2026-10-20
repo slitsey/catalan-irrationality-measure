@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Final
-public import CatalanLambda.Mirror.FinalG
+public import CatalanArchive.CatalanLambda.Final
+public import CatalanArchive.CatalanLambda.Mirror.FinalG
 
 @[expose] public section
 

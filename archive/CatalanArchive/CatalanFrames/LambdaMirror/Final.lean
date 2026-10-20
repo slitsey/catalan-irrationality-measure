@@ -1,12 +1,12 @@
 module
 
-public import CatalanFrames.LambdaMirror.Content
-public import CatalanFrames.LambdaMirror.Decay
-public import CatalanFrames.LambdaMirror.NV
+public import CatalanArchive.CatalanFrames.LambdaMirror.Content
+public import CatalanArchive.CatalanFrames.LambdaMirror.Decay
+public import CatalanArchive.CatalanFrames.LambdaMirror.NV
 public import CatalanFrames.LambdaMirror.Const
 public import CatalanCore.Measure.Statements
-public import CatalanLambda.Final
-public import CatalanLambda.Mirror.Prime
+public import CatalanArchive.CatalanLambda.Final
+public import CatalanArchive.CatalanLambda.Mirror.Prime
 
 /-!
 # Mirror final statements through the generic `CatalanCore.Measure` (WP8)

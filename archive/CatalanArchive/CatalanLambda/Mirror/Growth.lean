@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Mirror.Integrality
-public import CatalanLambda.Growth
+public import CatalanArchive.CatalanLambda.Mirror.Integrality
+public import CatalanArchive.CatalanLambda.Growth
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic

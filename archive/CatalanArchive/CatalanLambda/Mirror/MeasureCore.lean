@@ -1,8 +1,8 @@
 module
 
-public import CatalanLambda.Mirror.Sep
-public import CatalanLambda.Mirror.Prime
-public import CatalanLambda.Mirror.Irrational
+public import CatalanArchive.CatalanLambda.Mirror.Sep
+public import CatalanArchive.CatalanLambda.Mirror.Prime
+public import CatalanArchive.CatalanLambda.Mirror.Irrational
 
 @[expose] public section
 

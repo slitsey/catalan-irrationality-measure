@@ -1,8 +1,8 @@
 module
 
-public import CatalanFrames.LambdaMirror.NV
-public import CatalanFrames.Lambda.NVStrong
-public import CatalanLambda.Mirror.NVMain
+public import CatalanArchive.CatalanFrames.LambdaMirror.NV
+public import CatalanArchive.CatalanFrames.Lambda.NVStrong
+public import CatalanArchive.CatalanLambda.Mirror.NVMain
 
 /-!
 # λ′ strong (κ = 0) nonvanishing: `HasNVPin mirFamily mirDvdRule (3/2) (7/2)`

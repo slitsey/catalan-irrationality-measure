@@ -1,8 +1,8 @@
 module
 
-public import CatalanLambda.Mirror.Point
+public import CatalanArchive.CatalanLambda.Mirror.Point
 public import CatalanLambda.Decay.ThmNLemmaB
-public import CatalanLambda.Mirror.AndreiefTent
+public import CatalanArchive.CatalanLambda.Mirror.AndreiefTent
 
 @[expose] public section
 

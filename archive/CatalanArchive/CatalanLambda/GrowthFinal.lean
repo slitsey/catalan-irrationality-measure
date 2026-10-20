@@ -1,7 +1,7 @@
 module
 
-public import CatalanLambda.Growth
-public import CatalanLambda.PNTAP
+public import CatalanArchive.CatalanLambda.Growth
+public import CatalanArchive.CatalanLambda.PNTAP
 
 @[expose] public section
 
