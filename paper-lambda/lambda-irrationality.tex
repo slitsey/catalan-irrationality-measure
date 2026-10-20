@@ -126,34 +126,38 @@ result in this paper, has been verified in the Lean~4 proof assistant, with no u
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
 
-We stress that Theorem~\ref{thm:main} concerns specific linear forms in $1,G,\pi^2$; it is not a statement
-about $G$ alone, whose irrationality is OpenAI's theorem. Since $\lambda+\lambda'=G$ one may ask whether the two
-measures combine to a measure for $G$; they do not: a rational number close to $G$ does not yield rational numbers
-close to $\lambda$ and to $\lambda'$ separately.
-
 \subsection{Previous results}
 For earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003,Zudilin02Cheb,KrattRivoal08,KrattZudilin19} and the survey
 \cite{Zudilin19Survey}; for recent rational approximations to $G$ see Eskandari \cite{Eskandari2026}. Finite
 irrationality exponents for $G$ itself were obtained after OpenAI's proof by Jha \cite{Jha2026}, Carreira
-\cite{Carreira2026} and the author \cite{Litsey2026}. None of this concerns the numbers $G\pm5\pi^2/48$:
-irrationality of $G$ does not imply that of a $\Q$-linear combination of $G$ and $\pi^2$, and a measure for $G$
-gives no measure for such a combination. Our searches found no previous irrationality result, and no
-irrationality measure, for $G-5\pi^2/48$ or $G+5\pi^2/48$.
+\cite{Carreira2026} and the author \cite{Litsey2026}. Our searches found no previous irrationality result, and no irrationality measure, for $G-5\pi^2/48$ or $G+5\pi^2/48$.
+Eskandari, Murty and Nemoto \cite{EMN2025} construct a $2$-dimensional mixed motive over $\Q$ with period $G$ and
+use it to obtain linear forms in $1$ and $G$. Eskandari \cite{Eskandari2026} improves the approximation exponent of these
+Rivoal--Zudilin type forms from $0.52$ to $0.62$ (a preprint; explicit approximations, not a lower bound for all
+rationals). Sun's preprint \cite{Sun2026} claimed a proof of the irrationality of $G$; Wachs \cite{Wachs2026} reports that
+its main estimate is not justified.
 
 Calegari, Dimitrov and Tang proved that $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ are linearly independent over
 $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a construction of Zagier. In
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
 Theorem~\ref{thm:main} improves this to $23.82$.
 
-For comparison, finite bounds are known for few classical constants, for example $\log2$ ($\mu<3.5746$,
-Marcovecchio \cite{Marcovecchio09}), $\zeta(2)$ and $\zeta(3)$ (Rhin and Viola \cite{RhinViola96,RhinViola01},
-after Ap\'ery and Beukers \cite{Beukers79}) and $\pi$ ($\mu<7.1033$, Zeilberger and Zudilin
-\cite{ZeilbergerZudilin20}).
+For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
+and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
+\cite{Beukers79}) have been joined by recent preprints. OpenAI proved $\mu(\pi)=2$ \cite{OpenAIPi2026}, improving
+the bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log a)=2$ for
+every rational $a>0$, $a\ne1$, and for nonzero rational combinations of such logarithms \cite{LiuJiangZhang26}. Giraudin
+\cite{Giraudin26} lowered the bound for $\mu(\zeta(2))$ to below $5.0193784$. Fauzan \cite{Fauzan2026} announced a proof that
+$\zeta(5)$ is irrational, using rationally normalized Hankel determinants, and Lai
+\cite{Lai2026} combined his method with simultaneous approximations of Zudilin and of Dauguet and Zudilin to show that
+$1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent over $\Q$.
 
 \emph{Related work on determinants.} Irrationality proofs built on determinants of large size have a precedent
-in Zudilin's determinantal criterion with Hankel determinants \cite{Zudilin}; the recent preprint of Liu, Jiang
-and Zhang on logarithms \cite{LiuJiangZhang26} also works with determinants of interpolation type. The framework
+in Zudilin's determinantal criterion with Hankel determinants \cite{Zudilin}; the preprint of Liu, Jiang
+and Zhang on logarithms \cite{LiuJiangZhang26} uses a separated-weight interpolation determinant, and the arguments of
+Fauzan and Lai \cite{Fauzan2026,Lai2026} use Hankel determinants. Brown \cite{Brown26} proposes a multivariate
+transfinite-diameter test for Mellin-type integrals, applied to $\zeta(2)$. The framework
 we use, determinants whose decay is controlled by Cauchy determinants and Andr\'eief's identity and whose
 denominators are controlled prime by prime, is OpenAI's \cite{OpenAI2026}. Our determinants are L\"owner
 (divided-difference) matrices of a digamma difference, a matrix-valued analogue of Pad\'e and Hermite--Pad\'e
