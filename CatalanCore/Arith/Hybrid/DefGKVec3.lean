@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Arith.Hybrid.DefGKHprim
+public import CatalanCore.Arith.Hybrid.DefGKGen
 
 @[expose] public section
 
@@ -101,25 +102,8 @@ lemma good_avec (h13 : 13 ≤ p) (hp : p ≠ 139) (u : ℕ) (c : Fin r) :
   · exact Good.zero
 
 lemma sum_avec (u : ℕ) (hu : 2 * p ≤ u) (hur : u - p < r) (hp0 : 0 < p) (f : ℕ → ℚ) :
-    ∑ c : Fin r, avec p r u c * f c = a1q * f (u - 2 * p) + a2q * f (u - p) := by
-  classical
-  have h1 : u - 2 * p < r := by omega
-  have hne : (⟨u - 2 * p, h1⟩ : Fin r) ≠ ⟨u - p, hur⟩ := by
-    intro h; have := congrArg Fin.val h; simp at this; omega
-  rw [Finset.sum_eq_add (⟨u - 2 * p, h1⟩ : Fin r) ⟨u - p, hur⟩ hne]
-  · have e1 : avec p r u ⟨u - 2 * p, h1⟩ = a1q := by
-      unfold avec; simp only; rw [if_pos (by omega)]
-    have e2 : avec p r u ⟨u - p, hur⟩ = a2q := by
-      unfold avec; simp only; rw [if_neg (by omega), if_pos (by omega)]
-    rw [e1, e2]
-  · intro c _ hc
-    have h2 : (c : ℕ) + 2 * p ≠ u := by
-      intro h; apply hc.1; apply Fin.ext; simp; omega
-    have h3 : (c : ℕ) + p ≠ u := by
-      intro h; apply hc.2; apply Fin.ext; simp; omega
-    unfold avec; rw [if_neg h2, if_neg h3]; simp
-  · intro h; exact absurd (Finset.mem_univ _) h
-  · intro h; exact absurd (Finset.mem_univ _) h
+    ∑ c : Fin r, avec p r u c * f c = a1q * f (u - 2 * p) + a2q * f (u - p) :=
+  GKGen.sum_avecG a1q a2q u hu hur hp0 f
 
 /-- The Qz3 values at the zone class `u - 2p, u - p, u`. -/
 lemma zone_vals {r m : ℕ} (S : GKS3 o p r m k) {u : ℕ} (hu1 : r ≤ u) (hu2 : u < r + 2 * m) :
