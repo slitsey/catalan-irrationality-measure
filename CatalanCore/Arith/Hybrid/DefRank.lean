@@ -1,4 +1,5 @@
 module
+public import CatalanCore.Arith.Hybrid.PrimeDenominator
 
 public import CatalanCore.Arith.Hybrid.RankGLE
 public import CatalanCore.Arith.Hybrid.Deficit
@@ -66,44 +67,21 @@ noncomputable def DhybT (T δ : ℕ → ℕ) : ℕ :=
 /-- Integrality of `DhybT T δ · det Full(X)`. -/
 theorem DhybT_integral [I.DiagOK r m] {T δ : ℕ → ℕ} (hδ : DefHypT I r m T δ) (i : ℕ) :
     ∃ z : ℤ, (DhybT I r m T δ : ℚ) * (Fr.fullPoly r m).coeff i = z := by
-  apply int_of_forall_locRing
+  change ∃ z : ℤ, (primeDenominator (Bnd I r m) (fun p => T p - δ p) : ℚ) * (Fr.fullPoly r m).coeff i = z
+  apply primeDenominator_integral
   intro p hp
   by_cases hb : p < Bnd I r m
-  · have hmem : p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime :=
-      Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hb, hp.out⟩
-    have hgle := (hδ p hp.out hb).2 i
-    have hD : (DhybT I r m T δ : ℚ) = (p : ℚ) ^ (T p - δ p) *
-        ((∏ q ∈ ((Finset.range (Bnd I r m)).filter Nat.Prime).erase p,
-          q ^ (T q - δ q) : ℕ) : ℚ) := by
-      unfold DhybT
-      rw [← Nat.cast_pow, ← Nat.cast_mul,
-        Finset.mul_prod_erase _ (fun q => q ^ (T q - δ q)) hmem]
-    rw [hD]
-    have hR := int_mem_locRing (ℓ := p)
-      ((∏ q ∈ ((Finset.range (Bnd I r m)).filter Nat.Prime).erase p,
-          q ^ (T q - δ q) : ℕ) : ℤ)
-    have := (LocRing p).mul_mem hgle (by simpa using hR)
-    convert this using 1; push_cast; ring
-  · have h0 := tropExp_eq_zero I r m p hp.out (by omega)
-    have hgle := fullPoly_gle I p r m i
-    rw [h0] at hgle
-    simp only [pow_zero, one_mul] at hgle
-    rw [mul_comm]
-    exact (LocRing p).mul_mem hgle (by exact_mod_cast int_mem_locRing (ℓ := p) (DhybT I r m T δ : ℤ))
+  · simpa only [if_pos hb] using (hδ p hp.out hb).2
+  · simp only [if_neg hb]
+    have H := fullPoly_gle I p r m
+    rwa [tropExp_eq_zero I r m p hp.out (by omega)] at H
 
 lemma log_DhybT {T δ : ℕ → ℕ} (hδ : DefHypT I r m T δ) :
     Real.log (DhybT I r m T δ) =
       ∑ p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime, (T p : ℝ) * Real.log p -
       ∑ p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime, (δ p : ℝ) * Real.log p := by
-  unfold DhybT
-  rw [Nat.cast_prod, Real.log_prod, ← Finset.sum_sub_distrib]
-  · apply Finset.sum_congr rfl
-    intro p hp
-    have hh := hδ p (Finset.mem_filter.mp hp).2 (Finset.mem_range.mp (Finset.mem_filter.mp hp).1)
-    rw [Nat.cast_pow, Real.log_pow, Nat.cast_sub hh.1]; ring
-  · intro p hp
-    have := (Finset.mem_filter.mp hp).2.pos
-    positivity
+  exact log_primeDenominator_sub (Bnd I r m) (T) δ
+    (fun p hp hb => (hδ p hp hb).1)
 
 /-- A `DefHyp` family is a `DefHypT` family with `T = tropExp`. -/
 lemma DefHyp.toT {δ : ℕ → ℕ} (h : DefHyp I r m δ) : DefHypT I r m (tropExp I r m) δ := h

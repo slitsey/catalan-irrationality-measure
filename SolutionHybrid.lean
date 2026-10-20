@@ -13,8 +13,8 @@ public section
 
 /-!
 Proofs of the three strongest statements in `ChallengeHybrid.lean`.
-The shared uniform profile gives both 34.74 bounds; bounded low-node deletion
-gives the 18.50 bound. `MeasureLBAt` unfolds to the displayed statements.
+The shared uniform profile gives both 34.74 bounds; periodic content and
+bounded low-node deletion give 17.60. `MeasureLBAt` unfolds to the displayed statements.
 -/
 
 namespace CatalanHybridChallenge
@@ -33,15 +33,15 @@ theorem mir_hybrid_measure_3474 :
           - (p : ℝ) / q| :=
   CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform
 
-theorem chi3_hybrid_measure_1850 :
+theorem chi3_hybrid_measure_1760 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((37 / 2 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((88 / 5 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.chi3_hybrid_measure_minor
 
 #print axioms lam_hybrid_measure_3474
 #print axioms mir_hybrid_measure_3474
-#print axioms chi3_hybrid_measure_1850
+#print axioms chi3_hybrid_measure_1760
 
 end CatalanHybridChallenge

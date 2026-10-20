@@ -1,4 +1,5 @@
 module
+public import CatalanCore.Arith.Hybrid.ChainAlgebra
 public import CatalanCore.Arith.Hybrid.ChainBlocks
 public import CatalanCore.Arith.Hybrid.ClearedCancellation
 @[expose] public section
@@ -6,15 +7,9 @@ open Polynomial CatalanCore
 namespace CatalanCore.Arith.Hybrid.ChainClasses
 open LemmaE
 variable {p : ℕ} [Fact p.Prime]
-noncomputable def residueLift (a : ZMod p) : ℚ := a.val
-lemma good_residueLift (a : ZMod p) : Good p (residueLift a) a := by
-  simpa only [residueLift, ZMod.natCast_zmod_val] using Good.natCast (ℓ:=p) a.val
-lemma residueLift_int1 (a : ZMod p) : Int1 p (C (residueLift a)) := by
-  rw [Int1,gn_C]
-  exact_mod_cast (mem_locRing_iff_padicNorm (p:=p)).mp (good_residueLift a).mem
-lemma chainNode_zmod {r z : ℕ} (i : ChainIndex p r z) :
-    ((chainNode i).val : ZMod p) = z :=
-  (ZMod.natCast_eq_natCast_iff' _ _ _).mpr (chainNode_mod i)
+
+
+
 
 /-- Uniform first-order entry congruence in integral rational lifts of finite-field data. -/
 lemma loewner_entry_cng {Fr : Frame} {o N k A B : ℕ}

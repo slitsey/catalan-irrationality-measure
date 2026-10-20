@@ -1,7 +1,7 @@
 module
 
 public import CatalanFrames.P6Hybrid.Admissible
-public import CatalanCore.Rect.MinorContent
+public import CatalanFrames.P6Hybrid.IntervalContentFinal
 
 @[expose] public section
 
@@ -9,9 +9,9 @@ open CatalanCore CatalanCore.Rect CatalanFrames.P6
 
 namespace CatalanFrames.P6Hybrid
 
-/-- All common-node deletions share the base family's tropical denominator. -/
+/-- All common-node deletions share the improved periodic content denominator. -/
 theorem p6_minor_content (d : ℕ) :
-    HasContent (commonMinorFam p6Frame P6Adm9 d) (10339 / 3072) :=
-  hasContent_commonMinorFam p6Inst P6Adm9 d _ (p6_log_Dhyb_uniform (fun _ _ h => h))
+    HasContent (commonMinorFam p6Frame P6Adm9 d) (2159207 / 645120) :=
+  p6_interval_minor_content d
 
 end CatalanFrames.P6Hybrid

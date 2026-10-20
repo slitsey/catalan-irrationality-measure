@@ -1,6 +1,6 @@
 module
 
-public import CatalanCore.Arith.Hybrid.Tropical
+public import CatalanCore.Arith.Hybrid.PrimeDenominator
 public import CatalanCore.Frame.Spec
 public import CatalanCore.Arith.Weights
 public import Mathlib.Algebra.Order.BigOperators.Group.Finset
@@ -274,29 +274,12 @@ lemma Dhyb_pos (r m : ℕ) : 0 < Dhyb I r m := by
 theorem Dhyb_integral_of_gle (r m : ℕ) (f : ℚ[X])
     (hf : ∀ (p : ℕ) [Fact p.Prime], GLE p (tropExp I r m p) f) (i : ℕ) :
     ∃ z : ℤ, (Dhyb I r m : ℚ) * f.coeff i = z := by
-  apply int_of_forall_locRing
+  change ∃ z : ℤ, (primeDenominator (Bnd I r m) (tropExp I r m) : ℚ) * f.coeff i = z
+  apply primeDenominator_integral
   intro p hp
-  have hgle := hf p i
   by_cases hb : p < Bnd I r m
-  · have hmem : p ∈ (Finset.range (Bnd I r m)).filter Nat.Prime :=
-      Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hb, hp.out⟩
-    have hD : (Dhyb I r m : ℚ) = (p : ℚ) ^ tropExp I r m p *
-        ((∏ q ∈ ((Finset.range (Bnd I r m)).filter Nat.Prime).erase p,
-          q ^ tropExp I r m q : ℕ) : ℚ) := by
-      unfold Dhyb
-      rw [← Nat.cast_pow, ← Nat.cast_mul,
-        Finset.mul_prod_erase _ (fun q => q ^ tropExp I r m q) hmem]
-    rw [hD]
-    have hR := int_mem_locRing (ℓ := p)
-      ((∏ q ∈ ((Finset.range (Bnd I r m)).filter Nat.Prime).erase p,
-          q ^ tropExp I r m q : ℕ) : ℤ)
-    have := (LocRing p).mul_mem hgle (by simpa using hR)
-    convert this using 1; push_cast; ring
-  · have h0 := tropExp_eq_zero I r m p hp.out (by omega)
-    rw [h0] at hgle
-    simp only [pow_zero, one_mul] at hgle
-    rw [mul_comm]
-    exact (LocRing p).mul_mem hgle (by exact_mod_cast int_mem_locRing (ℓ := p) (Dhyb I r m : ℤ))
+  · simpa only [if_pos hb] using hf p
+  · simpa only [if_neg hb, tropExp_eq_zero I r m p hp.out (by omega)] using hf p
 
 /-- **Integrality.**  `Dhyb · det Full(X)` has integer coefficients. -/
 theorem Dhyb_integral (r m : ℕ) [I.DiagOK r m] (i : ℕ) :

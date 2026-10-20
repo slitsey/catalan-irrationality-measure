@@ -1,0 +1,140 @@
+% Periodic content improvement; existing decay and nonvanishing are retained.
+\section{Periodic content for the conductor-three frame}\label{sec:chi-periodic}
+
+The translated-chain argument also applies to the $\chi$ frame. It improves
+the content estimate without changing the node family, the decay certificate,
+or the nonvanishing theorem of Section~\ref{sec:minor-nv}.
+
+\begin{proposition}\label{prop:chi-periodic-local}
+Let $p\ge5$ be prime, $p>2m$, and $p^2>3(r+2m)$. Suppose a cut-free
+interval of the zone $[r,r+2m)$ contains $L$ consecutive nodes.
+For every retained common-node set $J\subseteq[0,r)$, the coefficient
+denominator of $P_J$ has $p$-exponent at most
+\[
+  2r+m-\max(0,L-m).
+\]
+Here the cut set consists of the singular indices and the points
+$jp,r+jp$, $j\in\mathbf Z$.
+\end{proposition}
+\begin{proof}
+The pole data are
+\[
+ \Delta_k=\frac1k+\frac6{3k-2}-\frac6{2k-1},\qquad
+ D_k=\frac1{k^2}+\frac{18}{(3k-2)^2}-\frac{12}{(2k-1)^2},
+ \qquad n=36.
+\]
+Thus $p\Delta_k,p^2D_k$ are integral, and both unscaled quantities are
+integral away from $p\mid k(3k-2)(2k-1)$. This singular set is periodic
+modulo $p$. After $x=U/p^2$, the scaled core is $UI+C$ with integral
+constant entries. Its residue-class blocks have monic determinant, so
+their cleared inverses have primitive denominators. Translation within
+one cut-free cell identifies the corresponding core chains and their
+cleared source vectors. The divided-difference formula then gives the
+same antisymmetric first-order cancellation as in the uniform argument:
+the cleared Schur entries inside the cell are integral, and entries
+between distinct residues have denominator exponent at most one.
+There are no repeated residues in the zone because $p>2m$.
+The zero/one assignment bound is therefore
+$2r+2m-L$ when $L>m$, and $2r+m$ otherwise.
+
+The same bound holds after any integral constant perturbation $E$ of
+the common core. Indeed, keep the old cleared partners $S_R,S_C$.
+The residuals change by $-S_RE,-ES_C$, which are integral, and the
+cleared second difference changes by $S_RES_C$, also integral.
+The changed scaled core remains a monic shift of an integral matrix.
+All nonnegative entry budgets, and hence the determinant bound, survive.
+To recover a principal minor, add diagonal entries $0$ or $1$ only at
+the omitted common coordinates and take successive determinant
+differences. Multilinearity replaces those rows by identity rows;
+deleting them leaves exactly the desired principal restriction.
+This argument introduces no deletion penalty.
+\end{proof}
+
+For $p\equiv c\pmod6$, the singular endpoints, up to bounded integer
+shifts, are $jp/6$ with
+\[
+ j\bmod6\in\{0,2,3\}\quad(c=1),\qquad
+ j\bmod6\in\{0,3,4\}\quad(c=5).
+\]
+For consecutive endpoints $j,k$ from this dictionary, use the integral
+witness interval
+\[
+ a=\max\!\left(r,\left\lfloor\frac{jp+4}{6}\right\rfloor+1\right),
+ \qquad b=\min\!\left(r+2m,\left\lfloor\frac{kp}{6}\right\rfloor\right).
+\]
+The inequalities $jp+4<6t<kp$ exclude all three kinds of singularity;
+the interval lies within one zone period. Also $2(b-a)\le p$ whenever
+$b\ge a$. Thus a positive saving $(b-a-m)^+$ already implies $p>2m$.
+
+The following disjoint windows give an affine lower bound
+$Ar+Bp-100$ for the integer saving, uniformly for $r\le8m\le r+9$.
+Only the level-one budget is $2r+m$ here; higher prime-power and bad-prime
+costs are retained in the total denominator and contribute $o(r^2)$.
+\begin{center}
+\begin{tabular}{crrrrrr}
+\toprule
+$c$ & lower $p/r$ & upper $p/r$ & $A$ & $B$ & $j$ & $k$\\
+\midrule
+$1$ & $9/32$ & $2/7$ & $-9/8$ & $4$ & $21$ & $24$\\
+$1$ & $2/7$ & $5/16$ & $-1/8$ & $1/2$ & $21$ & $24$\\
+$1$ & $5/16$ & $9/28$ & $9/8$ & $-7/2$ & $21$ & $24$\\
+$1$ & $3/8$ & $2/5$ & $-9/8$ & $3$ & $15$ & $18$\\
+$1$ & $2/5$ & $5/12$ & $-1/8$ & $1/2$ & $15$ & $18$\\
+$1$ & $5/12$ & $9/20$ & $9/8$ & $-5/2$ & $15$ & $18$\\
+$1$ & $27/56$ & $1/2$ & $-9/8$ & $7/3$ & $12$ & $14$\\
+$1$ & $1/2$ & $15/28$ & $-1/8$ & $1/3$ & $12$ & $14$\\
+$1$ & $15/28$ & $9/16$ & $9/8$ & $-2$ & $12$ & $14$\\
+$1$ & $9/16$ & $5/8$ & $-9/8$ & $2$ & $9$ & $12$\\
+$1$ & $5/8$ & $2/3$ & $1/8$ & $0$ & $9$ & $12$\\
+$1$ & $2/3$ & $3/4$ & $9/8$ & $-3/2$ & $9$ & $12$\\
+$1$ & $3/4$ & $5/6$ & $-1/8$ & $1/6$ & $8$ & $9$\\
+$1$ & $5/6$ & $27/32$ & $9/8$ & $-4/3$ & $8$ & $9$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{crrrrrr}
+\toprule
+$c$ & lower $p/r$ & upper $p/r$ & $A$ & $B$ & $j$ & $k$\\
+\midrule
+$5$ & $1/4$ & $5/18$ & $-1/8$ & $1/2$ & $24$ & $27$\\
+$5$ & $5/18$ & $9/32$ & $9/8$ & $-4$ & $24$ & $27$\\
+$5$ & $9/28$ & $1/3$ & $-9/8$ & $7/2$ & $18$ & $21$\\
+$5$ & $1/3$ & $5/14$ & $-1/8$ & $1/2$ & $18$ & $21$\\
+$5$ & $5/14$ & $3/8$ & $9/8$ & $-3$ & $18$ & $21$\\
+$5$ & $3/8$ & $5/12$ & $-1/8$ & $1/3$ & $16$ & $18$\\
+$5$ & $5/12$ & $27/64$ & $9/8$ & $-8/3$ & $16$ & $18$\\
+$5$ & $9/20$ & $1/2$ & $-9/8$ & $5/2$ & $12$ & $15$\\
+$5$ & $1/2$ & $9/16$ & $9/8$ & $-2$ & $12$ & $15$\\
+$5$ & $9/16$ & $3/5$ & $-9/8$ & $2$ & $10$ & $12$\\
+$5$ & $3/5$ & $5/8$ & $-1/8$ & $1/3$ & $10$ & $12$\\
+$5$ & $5/8$ & $27/40$ & $9/8$ & $-5/3$ & $10$ & $12$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Each row satisfies the explicit integer inequality
+\[
+ (b-a-m)^+\ge Ar+Bp-100.
+\]
+The prime number theorem in the two reduced classes modulo $6$ gives
+the total gain
+\[
+ \frac12\sum_{\rm rows}\int_{\theta_-}^{\theta_+}(A+B\theta)\,d\theta
+   =\frac{11983}{645120}.
+\]
+Subtracting this from the base content constant yields
+\begin{equation}\label{eq:chi-periodic-content}
+ \Lambda_\chi=\frac{10339}{3072}-\frac{11983}{645120}
+   =\frac{2159207}{645120}=3.346985057\ldots .
+\end{equation}
+Proposition~\ref{prop:chi-periodic-local} makes this content estimate
+uniform in $J$. The existing $D=3.7251$, $c=6.6510$ and prime interval
+of width $2/5$ therefore give
+\[
+ \frac{c}{D-\Lambda_\chi}
+   =\frac{536336640}{30491189}=17.589889328\ldots<17.60,
+ \qquad D-\Lambda_\chi<\frac25.
+\]
+The periodic entry interface, cleared cancellation, integral perturbation
+and principal-minor transfer, finite profile, prime summation and final
+measure assembly are kernel checked in Lean.
