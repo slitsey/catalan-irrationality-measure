@@ -47,7 +47,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 19, 2026}
+\date{October 20, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -1816,10 +1816,11 @@ while the value and first-jet conditions give $N+r=2n$ zeros counted
 with multiplicity. If the kernel had dimension at least two, a nonzero
 pair could therefore be chosen with both degrees at most $n-2$.
 The discrete Wronskian
-\[
- W(z)=216(z+1)(z+1/3)(z+1/2)
-       [q(z+1)p(z)-q(z)p(z+1)]-(1-z)p(z)p(z+1)
-\]
+\begin{align*}
+ W(z)={}&216(z+1)(z+1/3)(z+1/2)\\
+ &\quad\cdot[q(z+1)p(z)-q(z)p(z+1)]\\
+ &-(1-z)p(z)p(z+1).
+\end{align*}
 would have degree at most $2n-3$, but its prescribed values and first
 jets supply $2n-2$ zeros. Thus $W=0$. This would make $q/p$ a rational
 antidifference of $\delta$, which is impossible: the simple pole at $-1$
@@ -1889,13 +1890,13 @@ The interval-potential identity
 \]
 reuses the existing pointwise potential bounds. The finite cells,
 far-field Taylor bounds, continuum tails and pair-energy sums give
-\[
- m'=\frac{9327}{4000},\quad
- g_{\min}=-\frac{1693001}{1000000},\quad
- S_{\rm base}=-\frac{1353}{50000},\quad
- I^\sigma\le\frac{1838}{1000},\quad
+\begin{gather*}
+ m'=\frac{9327}{4000},\qquad
+ g_{\min}=-\frac{1693001}{1000000},\qquad
+ S_{\rm base}=-\frac{1353}{50000},\\
+ I^\sigma\le\frac{1838}{1000},\qquad
  I^\nu\ge\frac{184428}{100000}.
-\]
+\end{gather*}
 Thus $D\ge4639/1000$ and $c=161/20$ are valid. Bounded deletion changes
 only a linear term, absorbed by the existing asymptotic decay theorem.
 Theorem~\ref{thm:chi3-charzero-selection} supplies the pinned interface
@@ -2250,7 +2251,8 @@ the finite-field corank argument, bounded-deletion transfer, their Lean formaliz
 additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
 stronger theorem requires changes. The subsequent uniform rescaled-core argument for both
 $G\pm5\pi^2/48$, the finite interval profile and its Lean formalization, and the improvement from $38.35$
-to $34.74$ were also developed with OpenAI Codex.The subsequent quarter-border improvement to $15.50$, including characteristic-zero selection and the new analytic certificate, was developed with OpenAI Codex.The subsequent quarter-border improvement to $15.50$, including characteristic-zero selection and the new analytic certificate, was developed with OpenAI Codex.
+to $34.74$ were also developed with OpenAI Codex.
+The subsequent quarter-border improvement to $15.50$, including characteristic-zero selection and the new analytic certificate, was developed with OpenAI Codex.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal
