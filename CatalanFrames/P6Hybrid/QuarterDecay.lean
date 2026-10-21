@@ -30,7 +30,7 @@ theorem decay : HasDecay family (4639/1000) (161/20) := by
   rw [certQ_ccert] at h
   convert h using 1 <;> norm_num
 
-theorem chi3_measure : Measure.MeasureLBAt chi3L2 (((31/2 : ℚ)) : ℝ) := by
+theorem chi3_measure : Measure.MeasureLBAt chi3L2 (((153/10 : ℚ)) : ℝ) := by
   convert chi3_measure_of_decay decay using 1 <;> norm_num
 end CatalanFrames.P6Hybrid.Quarter
 #print axioms CatalanFrames.P6Hybrid.Quarter.decay
