@@ -62,7 +62,7 @@ The existing $H$ and $Z$ duals suffice; no new local valuation identity is
 needed. At a prime $p$, put $u=p/r$. Use the $H$ bound always, and the
 minimum of the $H$ and $Z$ bounds when $r+2m\le2p$, the proved domain of
 the latter. For the two unit classes modulo $6$, the resulting continuum
-profiles $w_1,w_5$ have the following pieces. Endpoints can be assigned
+coarse profiles $w_1,w_5$ have the following pieces. Endpoints can be assigned
 to either neighboring piece since the functions agree there.
 \[
 \begin{array}{c|c|c}
@@ -86,15 +86,43 @@ Both profiles are zero beyond their last nonzero interval. Their exact
 integrals are $581/128$ and $355/96$. The prime number theorem in the two
 classes gives
 \[
- \Lambda=\frac12\left(\frac{581}{128}+\frac{355}{96}\right)
+ \Lambda_0=\frac12\left(\frac{581}{128}+\frac{355}{96}\right)
          =\frac{3163}{768}.
 \]
 The finite-size proof uses affine covers with a fixed additive allowance
 for rounding $m$ and the residue endpoints. The generic prime summation
 retains every higher-prime-power and bad-prime cost. The original
 entrywise tropical denominator clears every principal restriction, so
-the same bound holds for the one-deletion family.
+this coarse bound holds for the one-deletion family.
 
+\paragraph{Retaining the periodic D1 saving.}
+For odd primes $p\le m$, the coarse level-one tropical profile discards the existing exact bound
+\[
+ v_p^{\rm trop}\le 2r+2m-\min(m\bmod p,p-m\bmod p).
+\]
+It holds at every node level. For $m/3<p<m$, retain the following four
+pieces of the nearest-multiple saving:
+\[
+\begin{array}{c|c}
+\text{interval for }p&\text{saving}\\\hline
+(m/3,2m/5)&3p-m\\
+(2m/5,m/2)&m-2p\\
+(m/2,2m/3)&2p-m\\
+(2m/3,m)&m-p
+\end{array}
+\]
+Their integrals total $m^2(1/60+1/12)=m^2/10$.
+The weighted prime number theorem in the two unit classes modulo $6$
+therefore saves $m^2/10+o(m^2)=r^2/160+o(r^2)$ in the same denominator
+estimate. Fixed rounding allowances handle $m=\lceil r/4\rceil$ and the
+endpoints. All bad-prime and higher-power charges are unchanged. Thus
+\[
+ \Lambda=\Lambda_0-\frac1{160}=\frac{15791}{3840}.
+\]
+The same denominator clears every retained common minor, so this
+refinement changes neither the family nor its selector. The generic
+four-piece proof is \texttt{D1Quarter}; its P6 adapter is
+\texttt{Quarter.Periodic.hasContent}.
 \subsection{The new analytic certificate}
 The existing rectangular decay engine is instantiated with
 $\alpha=1/4$ and a rational probability measure on $600$ atoms: $100$
@@ -127,9 +155,9 @@ prime rule has $s=1$. Since $D-\Lambda<1$, the pinned measure criterion
 applies without a prime-location surcharge and gives
 \[
  \mu\bigl(L(2,\chi_{-3})\bigr)
- \le\frac{161/20}{4639/1000-3163/768}
- =\frac{772800}{49969}<15.50.
+ \le\frac{161/20}{4639/1000-15791/3840}
+ =\frac{772800}{50569}<15.30.
 \]
-The public statement is $15.50$. The certificate uses the shared
+The public statement is $15.30$. The certificate uses the shared
 content, common-minor decay and pinned measure interfaces; no new
 global determinant engine is introduced.
