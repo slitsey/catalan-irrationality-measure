@@ -1,5 +1,4 @@
 module
-
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk00
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk01
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk02
@@ -60,18 +59,74 @@ public import CatalanCore.Cert.SigmaQuarter.EnergyChunk56
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk57
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk58
 public import CatalanCore.Cert.SigmaQuarter.EnergyChunk59
-
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk60
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk61
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk62
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk63
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk64
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk65
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk66
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk67
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk68
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk69
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk70
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk71
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk72
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk73
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk74
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk75
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk76
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk77
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk78
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk79
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk80
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk81
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk82
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk83
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk84
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk85
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk86
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk87
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk88
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk89
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk90
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk91
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk92
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk93
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk94
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk95
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk96
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk97
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk98
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk99
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk100
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk101
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk102
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk103
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk104
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk105
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk106
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk107
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk108
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk109
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk110
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk111
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk112
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk113
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk114
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk115
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk116
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk117
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk118
+public import CatalanCore.Cert.SigmaQuarter.EnergyChunk119
 @[expose] public section
 namespace CatalanCore.Cert.SigmaQuarter
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
-
-theorem energy_chunks : pts = energyChunk 0 ++ energyChunk 1 ++ energyChunk 2 ++ energyChunk 3 ++ energyChunk 4 ++ energyChunk 5 ++ energyChunk 6 ++ energyChunk 7 ++ energyChunk 8 ++ energyChunk 9 ++ energyChunk 10 ++ energyChunk 11 ++ energyChunk 12 ++ energyChunk 13 ++ energyChunk 14 ++ energyChunk 15 ++ energyChunk 16 ++ energyChunk 17 ++ energyChunk 18 ++ energyChunk 19 ++ energyChunk 20 ++ energyChunk 21 ++ energyChunk 22 ++ energyChunk 23 ++ energyChunk 24 ++ energyChunk 25 ++ energyChunk 26 ++ energyChunk 27 ++ energyChunk 28 ++ energyChunk 29 ++ energyChunk 30 ++ energyChunk 31 ++ energyChunk 32 ++ energyChunk 33 ++ energyChunk 34 ++ energyChunk 35 ++ energyChunk 36 ++ energyChunk 37 ++ energyChunk 38 ++ energyChunk 39 ++ energyChunk 40 ++ energyChunk 41 ++ energyChunk 42 ++ energyChunk 43 ++ energyChunk 44 ++ energyChunk 45 ++ energyChunk 46 ++ energyChunk 47 ++ energyChunk 48 ++ energyChunk 49 ++ energyChunk 50 ++ energyChunk 51 ++ energyChunk 52 ++ energyChunk 53 ++ energyChunk 54 ++ energyChunk 55 ++ energyChunk 56 ++ energyChunk 57 ++ energyChunk 58 ++ energyChunk 59 := by decide +kernel
-
-theorem energyTot_val : energyTot pts = (-1250837350937396876287209246288743738534 : ℤ) := by
+theorem energy_chunks : pts = energyChunk 0 ++ energyChunk 1 ++ energyChunk 2 ++ energyChunk 3 ++ energyChunk 4 ++ energyChunk 5 ++ energyChunk 6 ++ energyChunk 7 ++ energyChunk 8 ++ energyChunk 9 ++ energyChunk 10 ++ energyChunk 11 ++ energyChunk 12 ++ energyChunk 13 ++ energyChunk 14 ++ energyChunk 15 ++ energyChunk 16 ++ energyChunk 17 ++ energyChunk 18 ++ energyChunk 19 ++ energyChunk 20 ++ energyChunk 21 ++ energyChunk 22 ++ energyChunk 23 ++ energyChunk 24 ++ energyChunk 25 ++ energyChunk 26 ++ energyChunk 27 ++ energyChunk 28 ++ energyChunk 29 ++ energyChunk 30 ++ energyChunk 31 ++ energyChunk 32 ++ energyChunk 33 ++ energyChunk 34 ++ energyChunk 35 ++ energyChunk 36 ++ energyChunk 37 ++ energyChunk 38 ++ energyChunk 39 ++ energyChunk 40 ++ energyChunk 41 ++ energyChunk 42 ++ energyChunk 43 ++ energyChunk 44 ++ energyChunk 45 ++ energyChunk 46 ++ energyChunk 47 ++ energyChunk 48 ++ energyChunk 49 ++ energyChunk 50 ++ energyChunk 51 ++ energyChunk 52 ++ energyChunk 53 ++ energyChunk 54 ++ energyChunk 55 ++ energyChunk 56 ++ energyChunk 57 ++ energyChunk 58 ++ energyChunk 59 ++ energyChunk 60 ++ energyChunk 61 ++ energyChunk 62 ++ energyChunk 63 ++ energyChunk 64 ++ energyChunk 65 ++ energyChunk 66 ++ energyChunk 67 ++ energyChunk 68 ++ energyChunk 69 ++ energyChunk 70 ++ energyChunk 71 ++ energyChunk 72 ++ energyChunk 73 ++ energyChunk 74 ++ energyChunk 75 ++ energyChunk 76 ++ energyChunk 77 ++ energyChunk 78 ++ energyChunk 79 ++ energyChunk 80 ++ energyChunk 81 ++ energyChunk 82 ++ energyChunk 83 ++ energyChunk 84 ++ energyChunk 85 ++ energyChunk 86 ++ energyChunk 87 ++ energyChunk 88 ++ energyChunk 89 ++ energyChunk 90 ++ energyChunk 91 ++ energyChunk 92 ++ energyChunk 93 ++ energyChunk 94 ++ energyChunk 95 ++ energyChunk 96 ++ energyChunk 97 ++ energyChunk 98 ++ energyChunk 99 ++ energyChunk 100 ++ energyChunk 101 ++ energyChunk 102 ++ energyChunk 103 ++ energyChunk 104 ++ energyChunk 105 ++ energyChunk 106 ++ energyChunk 107 ++ energyChunk 108 ++ energyChunk 109 ++ energyChunk 110 ++ energyChunk 111 ++ energyChunk 112 ++ energyChunk 113 ++ energyChunk 114 ++ energyChunk 115 ++ energyChunk 116 ++ energyChunk 117 ++ energyChunk 118 ++ energyChunk 119 := by decide +kernel
+theorem energyTot_val : energyTot pts = (-1228868341422383409212529345051889752200 : ℤ) := by
   conv_lhs => rw [energy_chunks]
   simp only [energyTot_append]
-  rw [energyChunk_0, energyChunk_1, energyChunk_2, energyChunk_3, energyChunk_4, energyChunk_5, energyChunk_6, energyChunk_7, energyChunk_8, energyChunk_9, energyChunk_10, energyChunk_11, energyChunk_12, energyChunk_13, energyChunk_14, energyChunk_15, energyChunk_16, energyChunk_17, energyChunk_18, energyChunk_19, energyChunk_20, energyChunk_21, energyChunk_22, energyChunk_23, energyChunk_24, energyChunk_25, energyChunk_26, energyChunk_27, energyChunk_28, energyChunk_29, energyChunk_30, energyChunk_31, energyChunk_32, energyChunk_33, energyChunk_34, energyChunk_35, energyChunk_36, energyChunk_37, energyChunk_38, energyChunk_39, energyChunk_40, energyChunk_41, energyChunk_42, energyChunk_43, energyChunk_44, energyChunk_45, energyChunk_46, energyChunk_47, energyChunk_48, energyChunk_49, energyChunk_50, energyChunk_51, energyChunk_52, energyChunk_53, energyChunk_54, energyChunk_55, energyChunk_56, energyChunk_57, energyChunk_58, energyChunk_59]
+  rw [energyChunk_0, energyChunk_1, energyChunk_2, energyChunk_3, energyChunk_4, energyChunk_5, energyChunk_6, energyChunk_7, energyChunk_8, energyChunk_9, energyChunk_10, energyChunk_11, energyChunk_12, energyChunk_13, energyChunk_14, energyChunk_15, energyChunk_16, energyChunk_17, energyChunk_18, energyChunk_19, energyChunk_20, energyChunk_21, energyChunk_22, energyChunk_23, energyChunk_24, energyChunk_25, energyChunk_26, energyChunk_27, energyChunk_28, energyChunk_29, energyChunk_30, energyChunk_31, energyChunk_32, energyChunk_33, energyChunk_34, energyChunk_35, energyChunk_36, energyChunk_37, energyChunk_38, energyChunk_39, energyChunk_40, energyChunk_41, energyChunk_42, energyChunk_43, energyChunk_44, energyChunk_45, energyChunk_46, energyChunk_47, energyChunk_48, energyChunk_49, energyChunk_50, energyChunk_51, energyChunk_52, energyChunk_53, energyChunk_54, energyChunk_55, energyChunk_56, energyChunk_57, energyChunk_58, energyChunk_59, energyChunk_60, energyChunk_61, energyChunk_62, energyChunk_63, energyChunk_64, energyChunk_65, energyChunk_66, energyChunk_67, energyChunk_68, energyChunk_69, energyChunk_70, energyChunk_71, energyChunk_72, energyChunk_73, energyChunk_74, energyChunk_75, energyChunk_76, energyChunk_77, energyChunk_78, energyChunk_79, energyChunk_80, energyChunk_81, energyChunk_82, energyChunk_83, energyChunk_84, energyChunk_85, energyChunk_86, energyChunk_87, energyChunk_88, energyChunk_89, energyChunk_90, energyChunk_91, energyChunk_92, energyChunk_93, energyChunk_94, energyChunk_95, energyChunk_96, energyChunk_97, energyChunk_98, energyChunk_99, energyChunk_100, energyChunk_101, energyChunk_102, energyChunk_103, energyChunk_104, energyChunk_105, energyChunk_106, energyChunk_107, energyChunk_108, energyChunk_109, energyChunk_110, energyChunk_111, energyChunk_112, energyChunk_113, energyChunk_114, energyChunk_115, energyChunk_116, energyChunk_117, energyChunk_118, energyChunk_119]
   norm_num
-
 end CatalanCore.Cert.SigmaQuarter

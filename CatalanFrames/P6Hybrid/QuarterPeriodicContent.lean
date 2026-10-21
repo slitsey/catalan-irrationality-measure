@@ -1,6 +1,6 @@
 module
 public import CatalanFrames.P6Hybrid.QuarterContent
-public import CatalanCore.Arith.Hybrid.D1Quarter
+public import CatalanCore.Arith.Hybrid.D1QuarterPrefix
 @[expose] public section
 open Finset Filter CatalanCore CatalanCore.Rect CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames.HybCommon CatalanFrames.P6
 namespace CatalanFrames.P6Hybrid.Quarter.Periodic
@@ -47,12 +47,12 @@ private theorem class_refined (c : ZMod 6) (hc : IsUnit c)
     {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
       clsSum 6 c (fun p => (Wsharp r m p : ℝ)) 0 (9*r) ≤
-        (r : ℝ)^2 * ((I-1/160+ε/12)/2+ε/4) := by
-  have hch : Chain (1/12) (quarterD1Pieces ++ l) := by
-    rw [chain_append, quarterD1_end]
-    exact ⟨quarterD1_chain, hchain⟩
-  have h := class_total (M := 6) hc (α0 := 5/2+ε) (t1 := 1/12)
-    (by positivity) (by norm_num) (quarterD1Pieces ++ l) hch
+        (r : ℝ)^2 * ((I-(3163/768-339258406689121/82516315939200)+ε/68)/2+ε/4) := by
+  have hch : Chain (1/68) ((quarterD1Prefix 16) ++ l) := by
+    rw [chain_append, quarterD1Prefix16_end]
+    exact ⟨quarterD1Prefix16_chain, hchain⟩
+  have h := class_total (M := 6) hc (α0 := 5/2+ε) (t1 := 1/68)
+    (by positivity) (by norm_num) ((quarterD1Prefix 16) ++ l) hch
     (ε := ε/4) (by positivity)
   filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2/ε⌉₊] with r hr hr100 hre
   intro m ha
@@ -66,19 +66,19 @@ private theorem class_refined (c : ZMod 6) (hc : IsUnit c)
     exact hle.trans (prefix_real ha he)) (by
     intro P hP
     rcases List.mem_append.mp hP with hP | hP
-    · exact quarterD1_covers ha.1 ha.2
-        (fun p _ hpc => sharp_exact r m p (hgood p hpc)) P hP
+    · exact quarterD1Prefix_covers ha.1 ha.2
+        (fun p _ hpc => sharp_exact r m p (hgood p hpc)) 16 P hP
     · exact covers_sharp (hcovers ha hr100 P hP))
-  have heq : lastEnd (1/12) (quarterD1Pieces ++ l) = 9 := by
-    rw [lastEnd_append, quarterD1_end, hend]
+  have heq : lastEnd (1/68) ((quarterD1Prefix 16) ++ l) = 9 := by
+    rw [lastEnd_append, quarterD1Prefix16_end, hend]
   have hfloor : ⌊(9 : ℝ)*(r : ℝ)⌋₊=9*r := by
     rw [show (9 : ℝ)*(r : ℝ)=((9*r : ℕ) : ℝ) by push_cast; ring, Nat.floor_natCast]
   rw [heq, hfloor] at hh
   have htot : (Nat.totient 6 : ℝ) = 2 := by
     rw [show Nat.totient 6 = 2 by decide]; norm_num
-  have hi : (5/2+ε)*(1/12)+listInt (quarterD1Pieces ++ l)=I-1/160+ε/12 := by
+  have hi : (5/2+ε)*(1/68)+listInt ((quarterD1Prefix 16) ++ l)=I-(3163/768-339258406689121/82516315939200)+ε/68 := by
     rw [listInt_append]
-    linarith [quarterD1_integral]
+    linarith [quarterD1Prefix16_integral]
   rw [htot, hi] at hh
   simpa using hh
 
@@ -102,7 +102,7 @@ private lemma covers_five {r m : ℕ} (ha : Adm r m) (hr : 100 ≤ r) :
 
 theorem hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
     ∑ c ∈ ({1,5} : Finset (ZMod 6)), clsSum 6 c (fun p => (Wsharp r m p : ℝ)) 0 (9*r) ≤
-      (15791/3840+ε)*(r : ℝ)^2 := by
+      (339258406689121/82516315939200+ε)*(r : ℝ)^2 := by
   intro ε hε
   have h1 := class_refined 1 (by decide)
     (fun p h => Or.inl (cls_one h)) lp1 (581/128) lp1_chain
@@ -118,7 +118,7 @@ theorem hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
 
 /-- Improved estimate of the SAME full denominator, including all bad and higher-power costs. -/
 theorem log_content : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
-    Real.log (Dhyb (p6Inst r m) r m) ≤ (15791/3840+ε)*(r : ℝ)^2 := by
+    Real.log (Dhyb (p6Inst r m) r m) ≤ (339258406689121/82516315939200+ε)*(r : ℝ)^2 := by
   intro ε hε
   have hx := (p6_badInfo 0 0).extra_small (ε/2) (by positivity)
   filter_upwards [hsum (ε/2) (by positivity), hx, eventually_ge_atTop 100] with r hs he hr
@@ -141,7 +141,7 @@ theorem log_content : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
   have hS := hs m ha
   linarith
 
-theorem hasContent (d : ℕ) : HasContent (commonMinorFam p6Frame Adm d) (15791/3840) :=
-  hasContent_commonMinorFam p6Inst Adm d (15791/3840) log_content
+theorem hasContent (d : ℕ) : HasContent (commonMinorFam p6Frame Adm d) (339258406689121/82516315939200) :=
+  hasContent_commonMinorFam p6Inst Adm d (339258406689121/82516315939200) log_content
 end CatalanFrames.P6Hybrid.Quarter.Periodic
 #print axioms CatalanFrames.P6Hybrid.Quarter.Periodic.hasContent

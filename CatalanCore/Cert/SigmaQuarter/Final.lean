@@ -6,14 +6,14 @@ public import CatalanCore.Cert.SigmaQuarter.Jfun
 @[expose] public section
 namespace CatalanCore.Cert.SigmaQuarter
 
-/-- Frozen600-atom certificate at the quarter border. -/
+/-- Frozen1200-atom certificate at the quarter border. -/
 noncomputable def certQ :
     CertCoreG pts.length (1/2048 : ℝ) (1/1000 : ℝ) cQ mQ :=
   assemble controls I_ok
 
-theorem certQ_ccert : certQ.ccert = 161/20 := rfl
+theorem certQ_ccert : certQ.ccert = 4013201/500000 := rfl
 
-theorem D_le : (4639/1000 : ℚ) ≤ certQ.Dof 3 (1/4) (184428/100000) :=
+theorem D_le : (2323303/500000 : ℚ) ≤ certQ.Dof 3 (1/4) (184428/100000) :=
   assemble_D_le controls I_ok
 
 theorem hg_Q (s : ℂ) : certQ.g s = (1+(((1/4 : ℚ)) : ℝ)) *

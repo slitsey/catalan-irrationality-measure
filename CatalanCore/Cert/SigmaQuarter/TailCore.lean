@@ -36,7 +36,7 @@ theorem Unu_upper (s : ℂ) {α : ℝ} (hα : 0 ≤ α) (hi : 0 < |s.im|) :
 theorem tail_core {K : ℕ} (c : Fin K → ℂ) (m : Fin K → ℝ)
     (hm : ∀ k, 0 ≤ m k) (hsum : ∑ k, m k = 1) (hn : ∀ k, ‖c k‖ ≤ 16)
     (u δ : ℝ) (hu : (3 / 2 : ℝ) ≤ u) (hδ : |δ| ≤ 1 / 2 ^ 30) :
-    (9327 / 4000 : ℝ) ≤
+    (11571 / 5000 : ℝ) ≤
       gAlpha (1 / 2048) (1 / 1000) c m (1 / 4) (Unu (1 / 4))
         ⟨-(1 / 10 : ℝ) + δ - u, 3 * u⟩ := by
   have hu0 : 0 < u := by linarith
@@ -88,7 +88,7 @@ theorem tail_core {K : ℕ} (c : Fin K → ℂ) (m : Fin K → ℝ)
   have hf : 13 ≤ (999 / 1000 : ℝ) * Real.pi * (3 * u) := by
     have : (999 / 1000 : ℝ) * 3 * (3 * u) ≤ (999 / 1000 : ℝ) * Real.pi * (3 * u) := by gcongr
     nlinarith
-  change (9327 / 4000 : ℝ) ≤ gAlpha (1 / 2048) (1 / 1000) c m (1 / 4) (Unu (1 / 4)) z
+  change (11571 / 5000 : ℝ) ≤ gAlpha (1 / 2048) (1 / 1000) c m (1 / 4) (Unu (1 / 4)) z
   unfold gAlpha
   rw [hIm]
   nlinarith

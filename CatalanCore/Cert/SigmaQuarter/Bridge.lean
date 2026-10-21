@@ -1,6 +1,6 @@
 module
 
-public import CatalanCore.Cert.SigmaQuarter.Data
+public import CatalanCore.Cert.SigmaQuarter.PointCheckData
 public import CatalanCore.Cert.SigmaP6.Symm
 
 @[expose] public section
@@ -18,14 +18,12 @@ open CatalanCore.Cert.SigmaP6
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
-def ptAtQ (k : ℕ) : Pt := pts.getD k (0, 0, 0)
-
 noncomputable def cQ (k : Fin pts.length) : ℂ :=
   ⟨((ptAtQ k).1 : ℝ) / 2 ^ 40, ((ptAtQ k).2.1 : ℝ) / 2 ^ 40⟩
 
 noncomputable def mQ (k : Fin pts.length) : ℝ := ((ptAtQ k).2.2 : ℝ) / 2 ^ 32
 
-theorem pts_len : pts.length = 600 := by decide +kernel
+theorem pts_len : pts.length = 1200 := by decide +kernel
 
 lemma pts_ofFn : pts = List.ofFn (fun k : Fin pts.length => ptAtQ k) := by
   apply List.ext_getElem
@@ -62,10 +60,12 @@ theorem mQ_nonneg (k : Fin pts.length) : 0 ≤ mQ k := by
   unfold mQ
   positivity
 
-def radiusOK (k : ℕ) : Bool :=
-  decide ((ptAtQ k).1 ^ 2 + (ptAtQ k).2.1 ^ 2 ≤ (256 : ℤ) * (2 ^ 40) ^ 2)
-
-theorem radius_check : (List.range pts.length).all radiusOK = true := by decide +kernel
+theorem radius_check : (List.range pts.length).all radiusOK = true := by
+  apply List.all_eq_true.mpr
+  intro k hk
+  have h := List.all_eq_true.mp point_check k hk
+  simp only [pointCheck, Bool.and_eq_true] at h
+  exact h.1
 
 theorem cQ_norm (k : Fin pts.length) : ‖cQ k‖ ≤ 16 := by
   have h := List.all_eq_true.mp radius_check k (List.mem_range.mpr k.2)
@@ -81,17 +81,12 @@ theorem cQ_norm (k : Fin pts.length) : ‖cQ k‖ ≤ 16 := by
       sq_nonneg (((ptAtQ k).2.1 : ℝ) / 2 ^ 40)]
   nlinarith [norm_nonneg (cQ k)]
 
-def conjIndexQ (k : ℕ) : ℕ :=
-  if k < 500 then (if k % 2 = 0 then k + 1 else k - 1) else k
-
-def conjOKQ (k : ℕ) : Bool :=
-  decide (conjIndexQ k < pts.length) &&
-    decide ((ptAtQ (conjIndexQ k)).1 = (ptAtQ k).1) &&
-    decide ((ptAtQ (conjIndexQ k)).2.1 = -(ptAtQ k).2.1) &&
-    decide ((ptAtQ (conjIndexQ k)).2.2 = (ptAtQ k).2.2) &&
-    decide (conjIndexQ (conjIndexQ k) = k)
-
-theorem conj_check : (List.range pts.length).all conjOKQ = true := by decide +kernel
+theorem conj_check : (List.range pts.length).all conjOKQ = true := by
+  apply List.all_eq_true.mpr
+  intro k hk
+  have h := List.all_eq_true.mp point_check k hk
+  simp only [pointCheck, Bool.and_eq_true] at h
+  exact h.2
 
 lemma conj_propQ (k : Fin pts.length) :
     conjIndexQ k < pts.length ∧

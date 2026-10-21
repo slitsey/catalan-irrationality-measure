@@ -22,7 +22,7 @@ lemma energyTot_eq : ∀ l : List Pt,
     push_cast
     ring
 
-theorem I_le_of_energy (hEnergy : -(energyTot pts : ℝ) / 2 ^ 129 ≤ (1838 / 1000 : ℝ)) : CatalanLambda.Decay.Irho (1 / 2048 : ℝ) cQ mQ ≤ (1838 / 1000 : ℝ) := by
+theorem I_le_of_energy (hEnergy : -(energyTot pts : ℝ) / 2 ^ 129 ≤ (90283 / 50000 : ℝ)) : CatalanLambda.Decay.Irho (1 / 2048 : ℝ) cQ mQ ≤ (90283 / 50000 : ℝ) := by
   have h1 : CatalanLambda.Decay.Irho (1 / 2048 : ℝ) cQ mQ ≤
       ∑ k : Fin pts.length, ∑ l : Fin pts.length, Jr (ptAtQ k) (ptAtQ l) := by
     unfold CatalanLambda.Decay.Irho
