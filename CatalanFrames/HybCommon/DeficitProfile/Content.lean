@@ -73,7 +73,25 @@ theorem profile_both_eps (I : HybInst Fr) [∀r, I.DiagOK r (r/8)]
   profile_both_eps_of_rows I hL ho T B newProfile_rowData (profileRowLocal_new I hL ho)
     (profileCover ho) profile_content_round_real
 
+/-- **Negative control.**  The empty row list is a valid instance of the generic interface and
+returns exactly the banked seven-window constant `24729491161/6665218560 - 1/448 - 1/576 - 1/352`
+(no profile gain), so the interface adds nothing by itself. -/
+theorem profile_both_eps_nil (I : HybInst Fr) [∀r, I.DiagOK r (r/8)]
+    {o Lc cm : ℕ} (hL : LamData Fr o) (ho : o=1 ∨ o=3)
+    (T : TropFacts I o) (B : BadInfo I Lc cm) :
+    ∀ε>0, ∀ᶠr : ℕ in atTop, ∃T δ : ℕ→ℕ, DefBothG I r T δ ∧
+      Real.log (DhybT I r (r/8) T δ)≤
+        ((24729491161 / 6665218560 - 1 / 448 - 1 / 576 - 1 / 352 : ℝ)+ε)*(r : ℝ)^2 := by
+  have hD : RowData ([] : List DeficitRow) :=
+    ⟨by simp, by simp, List.Pairwise.nil, List.nodup_nil, by simp⟩
+  refine profile_both_eps_of_rows I hL ho T B hD ?_ ?_ ?_
+  · intro r p _ _ hr P hP
+    simp at hP
+  · exact Filter.Eventually.of_forall (by simp)
+  · simp [profileIntegralL]
+
 #print axioms profile_both_eps
 #print axioms profile_both_eps_of_rows
+#print axioms profile_both_eps_nil
 
 end CatalanFrames.HybCommon
