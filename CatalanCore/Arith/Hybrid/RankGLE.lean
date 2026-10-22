@@ -121,24 +121,14 @@ lemma toQ_coeff (g : (LocRing p)[X]) (i : ℕ) : (toQ p g).coeff i = ((g.coeff i
 lemma toQ_C_natCast (k : ℕ) : toQ p (C ((p : ℕ) : LocRing p) ^ k) = C (p : ℚ) ^ k := by
   simp [toQ]
 
-/-- **Rank principle for `GLE`.** -/
-theorem gle_det_of_rank {ι : Type*} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℚ[X])
+/-- **Bridge.** `π^k ∣ det Bl` and `toQ Bl = diag(p^u)·M·diag(p^v)` give `GLE (∑u+∑v-k) det M`.
+The rank principle and the two-level principle differ only in how they produce `hdvd`. -/
+theorem gle_det_of_scaled_dvd {ι : Type*} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℚ[X])
     (Bl : Matrix ι ι (LocRing p)[X]) (u v : ι → ℕ)
     (hB : ∀ i j, toQ p (Bl i j) = C ((p : ℚ) ^ (u i + v j)) * M i j) (k : ℕ)
-    (hrk : (Bl.map (phiP p)).rank + k ≤ Fintype.card ι) :
+    (hdvd : C ((p : ℕ) : LocRing p) ^ k ∣ Bl.det) :
     GLE p (∑ i, u i + ∑ j, v j - k) M.det := by
   classical
-  set e := Fintype.equivFin ι
-  set Bf := Bl.submatrix e.symm e.symm with hBf
-  have hrank : (Bf.map (phiP p)).rank = (Bl.map (phiP p)).rank := by
-    have : Bf.map (phiP p) = (Bl.map (phiP p)).submatrix e.symm e.symm := rfl
-    rw [this, Matrix.rank_submatrix]
-  have hprime : Prime (C ((p : ℕ) : LocRing p) : (LocRing p)[X]) :=
-    Polynomial.prime_C_iff.2 (prime_p p)
-  have hdvd : C ((p : ℕ) : LocRing p) ^ k ∣ Bl.det := by
-    have := dvd_det_of_rank (phiP p) hprime (phiP_eq_zero_iff p) (Fintype.card ι) k Bf
-      (by rw [hrank]; exact hrk)
-    rwa [hBf, Matrix.det_submatrix_equiv_self] at this
   obtain ⟨g, hg⟩ := hdvd
   have hmat : (toQ p).mapMatrix Bl = Matrix.diagonal (fun i => C ((p : ℚ) ^ u i)) * M *
       Matrix.diagonal (fun j => C ((p : ℚ) ^ v j)) := by
@@ -177,6 +167,26 @@ theorem gle_det_of_rank {ι : Type*} [Fintype ι] [DecidableEq ι] (M : Matrix �
       rw [← hdetQ, C_pow]; ring
     rw [hSk, pow_zero, one_mul, e, coeff_C_mul]
     exact (LocRing p).mul_mem (hpow d) hgi
+
+/-- **Rank principle for `GLE`.** -/
+theorem gle_det_of_rank {ι : Type*} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℚ[X])
+    (Bl : Matrix ι ι (LocRing p)[X]) (u v : ι → ℕ)
+    (hB : ∀ i j, toQ p (Bl i j) = C ((p : ℚ) ^ (u i + v j)) * M i j) (k : ℕ)
+    (hrk : (Bl.map (phiP p)).rank + k ≤ Fintype.card ι) :
+    GLE p (∑ i, u i + ∑ j, v j - k) M.det := by
+  classical
+  set e := Fintype.equivFin ι
+  set Bf := Bl.submatrix e.symm e.symm with hBf
+  have hrank : (Bf.map (phiP p)).rank = (Bl.map (phiP p)).rank := by
+    have : Bf.map (phiP p) = (Bl.map (phiP p)).submatrix e.symm e.symm := rfl
+    rw [this, Matrix.rank_submatrix]
+  have hprime : Prime (C ((p : ℕ) : LocRing p) : (LocRing p)[X]) :=
+    Polynomial.prime_C_iff.2 (prime_p p)
+  have hdvd : C ((p : ℕ) : LocRing p) ^ k ∣ Bl.det := by
+    have := dvd_det_of_rank (phiP p) hprime (phiP_eq_zero_iff p) (Fintype.card ι) k Bf
+      (by rw [hrank]; exact hrk)
+    rwa [hBf, Matrix.det_submatrix_equiv_self] at this
+  exact gle_det_of_scaled_dvd p M Bl u v hB k hdvd
 
 /-- A `GLE` polynomial, scaled, lifts to an integral polynomial. -/
 lemma exists_lift {c : ℕ} {f : ℚ[X]} (hf : GLE p c f) :
