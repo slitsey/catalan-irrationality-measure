@@ -110,59 +110,87 @@ theorem profile_row_both_gle {Fr : Frame} {o r p : ℕ} [Fact p.Prime]
     (witness_zero_condition hcut) witness_one_condition
   exact ⟨H1.mono (by omega),H2.mono (by omega)⟩
 
+/-- **Row-local interface.**  What an active row of positive deficit must deliver at one prime:
+its deficit is within the baseline and both family members clear the baseline minus the deficit
+(the second member with the production border slack `topC`).  For the banked kinds 0, 1, 2 this is
+`profile_row_cost` and `profile_row_both_gle`; the two-level (kind 3) rows supply it from
+`twoLevel_fullPoly_gle` / `twoLevel_top_gle`. -/
+def ProfileRowLocal {Fr : Frame} (I : HybInst Fr) (o : ℕ) (L : List DeficitRow) : Prop :=
+  ∀ (r p : ℕ) [Fact p.Prime] [I.DiagOK r (r/8)], 1000000000≤r → ∀P∈L,
+    profileRowActive o r p P → profilePrimeGood o r p → 0<profileRowDeficit o r p P →
+    profileRowDeficit o r p P≤profileBaseline r p ∧
+    GLE p (profileBaseline r p-profileRowDeficit o r p P) (Fr.fullPoly r (r/8)) ∧
+    GLE p (profileBaseline r p-profileRowDeficit o r p P+topC I r (r/8) p)
+      ((afterTop r (r/8)).fullPolyG Fr)
+
+/-- The banked rows satisfy the row-local interface. -/
+theorem profileRowLocal_new {Fr : Frame} (I : HybInst Fr) {o : ℕ} (hL : LamData Fr o)
+    (ho : o=1 ∨ o=3) : ProfileRowLocal I o newProfile := by
+  intro r p _ _ hr P hP ha hg hpos
+  have Hcost:=profile_row_cost hr hP ha hpos
+  have H:=profile_row_both_gle hL ho hr hP ha hg hpos
+  exact ⟨Hcost.1,H.1,H.2.mono (by omega)⟩
+
 /-- Local family bookkeeping uses the profile guard and unique active row. -/
-theorem profile_local {Fr : Frame} (I : HybInst Fr) {o r p : ℕ}
-    [Fact p.Prime] [I.DiagOK r (r/8)] (hL : LamData Fr o)
+theorem profile_local {Fr : Frame} (I : HybInst Fr) {L : List DeficitRow} (hD : RowData L)
+    {o r p : ℕ}
+    [Fact p.Prime] [I.DiagOK r (r/8)] (hrow : ProfileRowLocal I o L)
     (ho : o=1 ∨ o=3) (hr : 1000000000≤r) :
-    profileDeficit o r p≤profileT o I r p ∧
-    GLE p (profileT o I r p-profileDeficit o r p) (Fr.fullPoly r (r/8)) ∧
-    GLE p (profileT o I r p-profileDeficit o r p+topC I r (r/8) p)
+    profileDeficitL L o r p≤profileTL L o I r p ∧
+    GLE p (profileTL L o I r p-profileDeficitL L o r p) (Fr.fullPoly r (r/8)) ∧
+    GLE p (profileTL L o I r p-profileDeficitL L o r p+topC I r (r/8) p)
       ((afterTop r (r/8)).fullPolyG Fr) := by
-  have hT : tropExp I r (r/8) p≤profileT o I r p :=
-    (TfunG_ge_trop (o:=o) p).trans (profileT_ge o I r p)
-  by_cases hpos : 0<profileDeficit o r p
+  have hT : tropExp I r (r/8) p≤profileTL L o I r p :=
+    (TfunG_ge_trop (o:=o) p).trans (profileT_ge L o I r p)
+  by_cases hpos : 0<profileDeficitL L o r p
   · have hg : profilePrimeGood o r p := by
       by_contra hn
-      simp only [profileDeficit,if_neg hn] at hpos
+      simp only [profileDeficitL,if_neg hn] at hpos
       omega
-    have hs : profileSupport o r p := by
+    have hs : profileSupportL L o r p := by
       by_contra hn
-      have H:=profileDeficit_eq_zero_of_inactive o r p hn
+      have H:=profileDeficit_eq_zero_of_inactive L o r p hn
       omega
     obtain ⟨P,hP,ha⟩:=hs
-    have he:=profileDeficit_eq_row o r p ho P hP hg ha
-    have hrow : 0<profileRowDeficit o r p P := by omega
-    have Hcost:=profile_row_cost hr hP ha hrow
-    have H:=profile_row_both_gle hL ho hr hP ha hg hrow
-    have hbase : profileBaseline r p≤profileT o I r p := by
-      unfold profileT
+    have he:=profileDeficit_eq_row hD o r p ho P hP hg ha
+    have hrowpos : 0<profileRowDeficit o r p P := by omega
+    have H:=hrow r p hr P hP ha hg hrowpos
+    have hbase : profileBaseline r p≤profileTL L o I r p := by
+      unfold profileTL
       rw [if_pos ⟨P,hP,ha⟩]
       exact le_max_right _ _
-    exact ⟨by omega,H.1.mono (by omega),H.2.mono (by omega)⟩
-  · have he : profileDeficit o r p=0 := by omega
+    exact ⟨by omega,H.2.1.mono (by omega),H.2.2.mono (by omega)⟩
+  · have he : profileDeficitL L o r p=0 := by omega
     rw [he,Nat.sub_zero]
     exact ⟨Nat.zero_le _,(fullPoly_gle I p r (r/8)).mono hT,
       (fullTop_gle I r (r/8) p).mono (by omega)⟩
 
-/-- Concrete two-member deficit family for the finite certified profile. -/
-theorem defBoth_profile {Fr : Frame} (I : HybInst Fr) {o r : ℕ}
-    [I.DiagOK r (r/8)] (hL : LamData Fr o) (ho : o=1 ∨ o=3)
+/-- Concrete two-member deficit family for a certified row list. -/
+theorem defBoth_profileL {Fr : Frame} (I : HybInst Fr) {L : List DeficitRow} (hD : RowData L)
+    {o r : ℕ}
+    [I.DiagOK r (r/8)] (hrow : ProfileRowLocal I o L) (ho : o=1 ∨ o=3)
     (hr : 1000000000≤r) :
-    DefBothG I r (profileT o I r) (profileDeficit o r) := by
+    DefBothG I r (profileTL L o I r) (profileDeficitL L o r) := by
   constructor
   · intro p hp hb
     letI : Fact p.Prime:=⟨hp⟩
-    have H:=profile_local (p:=p) I hL ho hr
+    have H:=profile_local (p:=p) I hD hrow ho hr
     exact ⟨H.1,fun [Fact p.Prime]=>H.2.1⟩
   · intro p hp hb _
-    exact (profile_local (p:=p) I hL ho hr).2.2
+    exact (profile_local (p:=p) I hD hrow ho hr).2.2
+
+theorem profile_defBothL {Fr : Frame} (I : HybInst Fr) {L : List DeficitRow} (hD : RowData L)
+    {o : ℕ}
+    [∀r,I.DiagOK r (r/8)] (hrow : ProfileRowLocal I o L) (ho : o=1 ∨ o=3) :
+    ∀ᶠr : ℕ in atTop, DefBothG I r (profileTL L o I r) (profileDeficitL L o r) := by
+  filter_upwards [eventually_ge_atTop 1000000000] with r hr
+  exact defBoth_profileL I hD hrow ho hr
 
 theorem profile_defBoth {Fr : Frame} (I : HybInst Fr) {o : ℕ}
     [∀r,I.DiagOK r (r/8)] (hL : LamData Fr o) (ho : o=1 ∨ o=3) :
-    ∀ᶠr : ℕ in atTop, DefBothG I r (profileT o I r) (profileDeficit o r) := by
-  filter_upwards [eventually_ge_atTop 1000000000] with r hr
-  exact defBoth_profile I hL ho hr
+    ∀ᶠr : ℕ in atTop, DefBothG I r (profileT o I r) (profileDeficit o r) :=
+  profile_defBothL I newProfile_rowData (profileRowLocal_new I hL ho) ho
 
-#print axioms defBoth_profile
+#print axioms profile_defBothL
 #print axioms profile_defBoth
 end CatalanFrames.HybCommon

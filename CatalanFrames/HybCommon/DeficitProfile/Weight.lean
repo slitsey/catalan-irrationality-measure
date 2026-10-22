@@ -90,16 +90,10 @@ theorem profileWeight_class3 {I : HybInst Fr} {o : ℕ} (T : TropFacts I o) {ε 
   rw [l1x_end,floor_frac] at hh
   simpa [tot4] using hh
 
-set_option maxRecDepth 100000 in
-set_option maxHeartbeats 2000000 in
-theorem profile_lift_support : ∀P∈newProfile, (1/8 : ℚ)≤P.lo ∧
-    (if P.kind=0 then P.hi≤1/4 else
-      1/4≤P.lo ∧ P.hi≤(if P.poleClass=1 then 9/10 else 9/14)) := by
-  norm_num [newProfile,rawProfile,DeficitRow.trim,profileTrim]
-
-theorem profileSupport_lower {o r p : ℕ} (hs : profileSupport o r p) : r/8<p := by
+theorem profileSupport_lower {L : List DeficitRow} (hD : RowData L) {o r p : ℕ}
+    (hs : profileSupportL L o r p) : r/8<p := by
   obtain ⟨P,hP,ha⟩ := hs
-  have hh := (profile_lift_support P hP).1
+  have hh := (hD.lift P hP).1
   have hhR := (Rat.cast_le (K := ℝ)).2 hh
   push_cast at hhR
   have hR : (1/8 : ℝ)*r≤(P.lo : ℝ)*r := mul_le_mul_of_nonneg_right hhR (Nat.cast_nonneg r)
@@ -108,11 +102,12 @@ theorem profileSupport_lower {o r p : ℕ} (hs : profileSupport o r p) : r/8<p :
   rw [he] at hf
   exact lt_of_le_of_lt hf ha.2.1
 
-theorem profileBaseline_le_weight {I : HybInst Fr} {o r p : ℕ}
-    (hs : profileSupport o r p) : (profileBaseline r p : ℝ)≤profileWeight I o r p := by
+theorem profileBaseline_le_weight {L : List DeficitRow} (hD : RowData L)
+    {I : HybInst Fr} {o r p : ℕ}
+    (hs : profileSupportL L o r p) : (profileBaseline r p : ℝ)≤profileWeight I o r p := by
   obtain ⟨P,hP,ha⟩ := hs
-  have hcert := newProfile_cert P hP
-  have hmeta := profile_lift_support P hP
+  have hcert := hD.basic P hP
+  have hmeta := hD.lift P hP
   by_cases hk : P.kind=0
   · have hhi := hmeta.2
     rw [if_pos hk] at hhi

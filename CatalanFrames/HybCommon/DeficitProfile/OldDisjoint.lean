@@ -20,8 +20,8 @@ lemma defG_eq_dAll7 {o r : ℕ} (ho : o=1 ∨ o=3) (hr : 16≤r) (p : ℕ) :
   · rw [defG_e1 ho hr h1,dAll7_e1 ho hr h1]
   rw [dAll7_zero ho hl h7 h5 hb h3 h1]
   simp [defG,hl,h7,h5,hb,h3,h1]
-lemma profileDeficit_disjoint_all7 {o r : ℕ} (ho : o=1 ∨ o=3) (hr : 16≤r) (p : ℕ) :
-    dAll7 o r p=0 ∨ profileDeficit o r p=0 := by
+lemma profileDeficit_disjoint_all7 (L : List DeficitRow) {o r : ℕ} (ho : o=1 ∨ o=3) (hr : 16≤r) (p : ℕ) :
+    dAll7 o r p=0 ∨ profileDeficitL L o r p=0 := by
   rw [←defG_eq_dAll7 ho hr p]
-  exact profileDeficit_disjoint o r p
+  exact profileDeficit_disjoint L o r p
 end CatalanFrames.HybCommon
