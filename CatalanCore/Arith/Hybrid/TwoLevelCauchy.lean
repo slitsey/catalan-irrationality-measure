@@ -183,8 +183,8 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
       phiP p T = ∑ c : ZMod p, rfC p ((c - res z)⁻¹) * w c * rfC p ((c - res y)⁻¹))
     (sb : Finset (ZMod p))
     (hzero : ∀ c, c ∉ sb → w c = 0 ∨ (∃ y, y ∉ CC ∧ res y = c) ∨ (∃ z, z ∉ CR ∧ res z = c)) :
-    ∃ W : TwoLevelWit p M sb.card,
-      W.cost = ∑ i, u i + ∑ j, v j -
+    ∃ W : TwoLevelWit p M sb.card, W.u = u ∧ W.v = v ∧
+      W.s.card = CR.card + CC.card - Fintype.card Z ∧ W.cost = ∑ i, u i + ∑ j, v j -
         ((CR.card + CC.card - Fintype.card Z) +
           ((CR.card + CC.card - Fintype.card Z) - sb.card)) := by
   classical
@@ -346,7 +346,7 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     simp only [Matrix.mul_apply, Finset.sum_mul]
     rw [Finset.sum_comm]
   refine ⟨{ Bl := Bl, u := u, v := v, hB := hB, s := s, L := L, P := P, hL := ?_, hP := ?_,
-            hrow := hrow, hcol := hcol, hH := ?_ }, ?_⟩
+            hrow := hrow, hcol := hcol, hH := ?_ }, rfl, rfl, hs_card, ?_⟩
   · exact phiP_det_liftMat p ML hMLdet
   · change phiP p (liftMat p MP).transpose.det ≠ 0
     rw [Matrix.det_transpose]
@@ -394,7 +394,8 @@ theorem gle_det_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     GLE p (∑ i, u i + ∑ j, v j -
         ((CR.card + CC.card - Fintype.card Z) +
           ((CR.card + CC.card - Fintype.card Z) - sb.card))) M.det := by
-  obtain ⟨W, hW⟩ := exists_twoLevelWit_of_cauchy p M Bl u v hB res CR CC hlead₁ hlead₂ w hwt sb hzero
+  obtain ⟨W, -, -, -, hW⟩ :=
+    exists_twoLevelWit_of_cauchy p M Bl u v hB res CR CC hlead₁ hlead₂ w hwt sb hzero
   rw [← hW]
   exact W.gle
 
