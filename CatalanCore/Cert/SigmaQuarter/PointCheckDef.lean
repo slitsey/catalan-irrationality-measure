@@ -9,7 +9,7 @@ def radiusOK (k : ℕ) : Bool :=
   decide ((ptAtQ k).1 ^ 2 + (ptAtQ k).2.1 ^ 2 ≤ (256 : ℤ) * (2 ^ 40) ^ 2)
 
 def conjIndexQ (k : ℕ) : ℕ :=
-  if k < 1000 then (if k % 2 = 0 then k + 1 else k - 1) else k
+  if k < 1200 then (if k % 2 = 0 then k + 1 else k - 1) else k
 
 def conjOKQ (k : ℕ) : Bool :=
   decide (conjIndexQ k < pts.length) &&

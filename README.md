@@ -24,7 +24,7 @@ The repository also contains a second, fully formalized result:
 
 - μ(G − 5π²/48) ≤ 34.74;
 - μ(G + 5π²/48) ≤ 34.74;
-- μ(L(2, χ₋₃)) ≤ 14.9972.
+- μ(L(2, χ₋₃)) ≤ 14.35.
 
 The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
 
@@ -32,8 +32,8 @@ The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Ta
 - Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
 - Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
 - The 34.74 improvements reuse the existing decay and nonvanishing proofs. A generic monic rescaling, translated-chain cancellation, weighted border, and kernel-checked 61-row prime profile improve the content constant to 3.68274.
-- The 14.9972 improvement uses the same characteristic-zero selector, at most one common-node deletion and a quarter border. One generic nearest-multiple estimate retains sixteen periodic D1 strips, giving Λ = 339258406689121/82516315939200. A kernel-checked 1200-atom analytic witness gives D ≥ 4.646606 and c = 8.026402; c/(D − Λ) is approximately 14.997126345. Shared content, selection and decay interfaces are reused.
-- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The local TeX sources include the 34.74 and 14.9972 bounds. The stored PDF predates this 14.9972 update, and the linked v1 preprint has not been updated.
+- The 14.35 improvement uses the same characteristic-zero selector, at most one common-node deletion and a quarter border. Sixteen periodic D1 strips give Λ = 339258406689121/82516315939200. A kernel-checked 1600-atom witness, with positive-real support and redistributed ray nodes, gives D ≥ 4.633628 and c = 7.49256; c/(D − Λ) is approximately 14.347571379. Shared content, selection and decay interfaces are reused. The exact witness and budget are in [`paper-lambda/certificates/`](paper-lambda/certificates/).
+- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The local TeX sources include the 34.74 and 14.35 bounds. The stored PDF predates this 14.35 update, and the linked v1 preprint has not been updated.
 - Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
@@ -278,7 +278,7 @@ Generic reduction geometry and `ModData3` now live in `CatalanCore/NV/`.
 The old frame modules reexport their names, constructors and projections.
 `ValOneFrame` now has 10 local dependencies, all in Core, instead of 18 including
 9 frame modules. The public roots export only the four strongest bounds: 740, 34.74,
-34.74 and 14.9972. Historical corollaries remain internal to the proof libraries where needed.
+34.74 and 14.35. Historical corollaries remain internal to the proof libraries where needed.
 
 Further maintenance can treat the older E tables, canonical-G certificate helper duplicates,
 and archive target organization separately. This pass certifies the changed arithmetic and

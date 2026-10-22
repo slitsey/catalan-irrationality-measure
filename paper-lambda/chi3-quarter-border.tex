@@ -126,8 +126,8 @@ proof is \texttt{D1QuarterPrefix}; its P6 adapter is
 \texttt{Quarter.Periodic.hasContent}.
 \subsection{The new analytic certificate}
 The existing rectangular decay engine is instantiated with
-$\alpha=1/4$ and a rational probability measure on $1200$ atoms: $200$
-real atoms and $500$ conjugate pairs. Its regularization radius is
+$\alpha=1/4$ and a rational probability measure on $1600$ atoms: $200$ negative real
+atoms, $200$ positive real atoms and $600$ conjugate pairs. Its regularization radius is
 $1/2048$; all support points have modulus at most $16$. The certified
 function is
 \[
@@ -142,14 +142,14 @@ The interval-potential identity
 reuses the existing pointwise potential bounds. The finite cells,
 far-field Taylor bounds, continuum tails and pair-energy sums give
 \begin{gather*}
- m'=\frac{11571}{5000},\qquad
- g_{\min}=-\frac{1699001}{1000000},\qquad
- S_{\rm base}=-\frac{269717}{10000000},\\
- I^\sigma\le\frac{90283}{50000},\qquad
+ m'=\frac{231169}{100000},\qquad
+ g_{\min}=-\frac{143459}{100000},\qquad
+ S_{\rm base}=-\frac{274719}{10000000},\\
+ I^\sigma\le\frac{1808029}{1000000},\qquad
  I^\nu\ge\frac{184428}{100000}.
 \end{gather*}
-Thus $D\ge2323303/500000=4.646606$ and
-$c=4013201/500000=8.026402$ are valid. Bounded deletion changes
+Thus $D\ge1158407/250000=4.633628$ and
+$c=93657/12500=7.49256$ are valid. Bounded deletion changes
 only a linear term, absorbed by the existing asymptotic decay theorem.
 Theorem~\ref{thm:chi3-charzero-selection} supplies the pinned interface
 on the unit-width interval $(1,2)$; the existing square-divisibility
@@ -157,9 +157,9 @@ prime rule has $s=1$. Since $D-\Lambda<1$, the pinned measure criterion
 applies without a prime-location surcharge and gives
 \[
  \mu\bigl(L(2,\chi_{-3})\bigr)
- \le\frac{4013201/500000}{2323303/500000-\Lambda_{16}}
- =14.997126345\ldots<14.9972.
+ \le\frac{93657/12500}{1158407/250000-\Lambda_{16}}
+ =14.3475713785\ldots<14.35.
 \]
-The public statement is $14.9972$. The certificate uses the shared
+The public statement is $14.35$. The certificate uses the shared
 content, common-minor decay and pinned measure interfaces; no new
 global determinant engine is introduced.

@@ -7,7 +7,7 @@ project:
   description: >-
     For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 34.74
     and mu(G + 5 pi^2/48) <= 34.74, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
-    we prove mu(L(2, chi_{-3})) <= 14.9972: for every e > 0, all large q and all p coprime to q,
+    we prove mu(L(2, chi_{-3})) <= 14.35: for every e > 0, all large q and all p coprime to q,
     |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
     frames of the modular engine CatalanCore, characteristic-zero and ell-adic nonvanishing
     argument, Cauchy-determinant decay and kernel-checked rational certificates. They supersede
@@ -42,7 +42,7 @@ status:
 fidelity:
   divergences: >-
     None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 1737/50 and 37493/2500 as rationals cast to R.
+    to q (IsCoprime p q) and q >= q0, with E = 1737/50 and 287/20 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -59,8 +59,8 @@ alignment:
       lean: "CatalanHybridChallenge.mir_hybrid_measure_3474"
       module: "ChallengeHybrid"
       status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.9972"
-      lean: "CatalanHybridChallenge.chi3_hybrid_measure_149972"
+    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.35"
+      lean: "CatalanHybridChallenge.chi3_hybrid_measure_1435"
       module: "ChallengeHybrid"
       status: proved
 
@@ -87,7 +87,7 @@ automation:
         Codex developed the valuation-one and bounded-deletion improvement to 18.50,
         its generic Lean modules, paper additions and export checks. Codex subsequently proved the
         uniform rescaled-core deficit and certified rational prime profile giving both 34.74 bounds,
-        reusing the existing decay and nonvanishing modules. The conductor-three periodic content extension, integral diagonal perturbation and principal-minor transfer, and a checked 26-row profile gave 17.60 for L(2, chi_{-3}). A characteristic-zero one-node selector, a quarter-border content profile and a 600-atom analytic certificate gave 15.50. Retaining four periodic D1 pieces first gave 15.30. One generic nearest-multiple estimate now retains sixteen strips; a fixed 1200-atom witness checked by the existing analytic engine strengthens the same family to 14.9972.
+        reusing the existing decay and nonvanishing modules. The conductor-three periodic content extension, integral diagonal perturbation and principal-minor transfer, and a checked 26-row profile gave 17.60 for L(2, chi_{-3}). A characteristic-zero one-node selector, a quarter-border content profile and a 600-atom analytic certificate gave 15.50. Retaining four periodic D1 pieces first gave 15.30. One generic nearest-multiple estimate now retains sixteen strips; a fixed 1200-atom witness checked by the existing analytic engine strengthened the same family to 14.9972. Matched-objective witness optimization then added positive-real support and redistributed ray nodes; the existing kernel checker certifies one 1600-atom witness giving 14.35, with the same geometry, arithmetic and selector.
   notes: >-
     The shared modular engine (CatalanCore) and certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.

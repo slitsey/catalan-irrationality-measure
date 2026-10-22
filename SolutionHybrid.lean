@@ -14,7 +14,7 @@ public section
 /-!
 Proofs of the three strongest statements in `ChallengeHybrid.lean`.
 The shared uniform profile gives both 34.74 bounds; periodic content and
-characteristic-zero selection with a quarter border give 14.9972. `MeasureLBAt` unfolds to the displayed statements.
+characteristic-zero selection with a quarter border give 14.35. `MeasureLBAt` unfolds to the displayed statements.
 -/
 
 namespace CatalanHybridChallenge
@@ -33,15 +33,15 @@ theorem mir_hybrid_measure_3474 :
           - (p : ℝ) / q| :=
   CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform
 
-theorem chi3_hybrid_measure_149972 :
+theorem chi3_hybrid_measure_1435 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((37493 / 2500 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((287/20 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.Quarter.chi3_measure
 
 #print axioms lam_hybrid_measure_3474
 #print axioms mir_hybrid_measure_3474
-#print axioms chi3_hybrid_measure_149972
+#print axioms chi3_hybrid_measure_1435
 
 end CatalanHybridChallenge

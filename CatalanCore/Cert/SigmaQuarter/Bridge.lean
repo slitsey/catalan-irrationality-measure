@@ -23,7 +23,7 @@ noncomputable def cQ (k : Fin pts.length) : ℂ :=
 
 noncomputable def mQ (k : Fin pts.length) : ℝ := ((ptAtQ k).2.2 : ℝ) / 2 ^ 32
 
-theorem pts_len : pts.length = 1200 := by decide +kernel
+theorem pts_len : pts.length = 1600 := by decide +kernel
 
 lemma pts_ofFn : pts = List.ofFn (fun k : Fin pts.length => ptAtQ k) := by
   apply List.ext_getElem

@@ -15,7 +15,7 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 def segGeo1 : List Macro := Seg8Data ++ Seg9Data ++ Seg10Data ++ Seg11Data ++ Seg12Data ++ Seg13Data ++ Seg14Data ++ Seg15Data
 theorem segGeo1_shape : (boxes segGeo1).all (fun b => decide (segShape b)) = true := by decide +kernel
-theorem segGeo1_cover : IntervalCovers (intervals segGeo1) (-96636764161 / 1099511627776 : ℚ) (-41446434407 / 549755813888 : ℚ) :=
+theorem segGeo1_cover : IntervalCovers (intervals segGeo1) (-25179245773 / 274877906944 : ℚ) (-45204530791 / 549755813888 : ℚ) :=
   chainCovers_sound _ _ _ (by decide +kernel)
-theorem segGeo1_cost : ((boxes segGeo1).map segCost).sum = (-825458241549123639319 / 2951479051793528258560000 : ℚ) := by decide +kernel
+theorem segGeo1_cost : ((boxes segGeo1).map segCost).sum = (-512261395852560816793 / 7378697629483820646400000 : ℚ) := by decide +kernel
 end CatalanCore.Cert.SigmaQuarter

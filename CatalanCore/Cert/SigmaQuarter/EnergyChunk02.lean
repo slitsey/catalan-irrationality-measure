@@ -4,5 +4,5 @@ public import CatalanCore.Cert.SigmaQuarter.EnergyDef
 namespace CatalanCore.Cert.SigmaQuarter
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
-theorem energyChunk_2 : energyTot (energyChunk 2) = (752797253113175589891642968697083980 : ℤ) := by decide +kernel
+theorem energyChunk_2 : energyTot (energyChunk 2) = (7737660916483620824930385453771672 : ℤ) := by decide +kernel
 end CatalanCore.Cert.SigmaQuarter

@@ -15,6 +15,6 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 def lineGeo5 : List Macro := Line40Data ++ Line41Data ++ Line42Data ++ Line43Data ++ Line44Data ++ Line45Data ++ Line46Data ++ Line47Data
 theorem lineGeo5_shape : (boxes lineGeo5).all (fun b => decide (lineShape b)) = true := by decide +kernel
-theorem lineGeo5_cover : IntervalCovers (intervals lineGeo5) (28939 / 32768 : ℚ) (29003 / 32768 : ℚ) :=
+theorem lineGeo5_cover : IntervalCovers (intervals lineGeo5) (3687 / 4096 : ℚ) (15161 / 16384 : ℚ) :=
   chainCovers_sound _ _ _ (by decide +kernel)
 end CatalanCore.Cert.SigmaQuarter

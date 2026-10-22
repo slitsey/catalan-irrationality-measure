@@ -29,7 +29,7 @@ lemma rayIntervals_append (a b : List Macro) : rayIntervals (a ++ b) = rayInterv
   simp only [rayIntervals, boxes_append, List.map_append]
 
 def segCost (b : QBox) : ℚ :=
-  ((axisInterval b).2 - (axisInterval b).1) * qmin (gamma b - 11571 / 5000) 0
+  ((axisInterval b).2 - (axisInterval b).1) * qmin (gamma b - 231169/100000) 0
 
 def rayShape (b : QBox) : Prop :=
   0 ≤ (rayInterval b).1 ∧
@@ -38,7 +38,7 @@ def rayShape (b : QBox) : Prop :=
 
 def segShape (b : QBox) : Prop := b.1.1 ≤ b.1.2.1 ∧ b.1.2.1 ≤ 0
 def lineShape (b : QBox) : Prop :=
-  b.1.2.1 ≤ 2 ^ 40 ∧ (-1699001 / 1000000 : ℚ) ≤ gamma b
+  b.1.2.1 ≤ 2 ^ 40 ∧ (-143459/100000 : ℚ) ≤ gamma b
 
 instance (b : QBox) : Decidable (rayShape b) := by unfold rayShape; infer_instance
 instance (b : QBox) : Decidable (segShape b) := by unfold segShape; infer_instance
@@ -46,7 +46,7 @@ instance (b : QBox) : Decidable (lineShape b) := by unfold lineShape; infer_inst
 
 structure Controls (rays segs lines : List Macro) : Prop where
   ray_far : ∀ m ∈ rays, farOK pts m
-  ray_ok : ∀ m ∈ rays, rayOK pts (11571 / 5000) m = true
+  ray_ok : ∀ m ∈ rays, rayOK pts (231169/100000) m = true
   seg_far : ∀ m ∈ segs, farOK pts m
   seg_ok : ∀ m ∈ segs, axisOK pts m = true
   line_far : ∀ m ∈ lines, farOK pts m
@@ -57,7 +57,7 @@ structure Controls (rays segs lines : List Macro) : Prop where
   ray_cover : IntervalCovers (rayIntervals rays) 0 (3 / 2)
   seg_cover : IntervalCovers (intervals segs) (-1 / 10) 0
   line_cover : IntervalCovers (intervals lines) 0 1
-  scost : (-269717 / 10000000 : ℚ) ≤ ((boxes segs).map segCost).sum
+  scost : (-274719/10000000 : ℚ) ≤ ((boxes segs).map segCost).sum
 
 variable {rays segs lines : List Macro} (C : Controls rays segs lines)
 
@@ -65,7 +65,7 @@ include C in
 theorem ray_gQuarter (b : QBox) (hb : b ∈ boxes rays) (x y : ℝ)
     (h1 : (b.1.1 : ℝ) / 2 ^ 40 ≤ x) (h2 : x ≤ (b.1.2.1 : ℝ) / 2 ^ 40)
     (h3 : (b.1.2.2.1 : ℝ) / 2 ^ 40 ≤ y) (h4 : y ≤ (b.1.2.2.2 : ℝ) / 2 ^ 40) :
-    (11571 / 5000 : ℝ) ≤ gQuarter pts x y := by
+    (231169/100000 : ℝ) ≤ gQuarter pts x y := by
   obtain ⟨m,hm,hb⟩ := List.mem_flatMap.mp hb
   have h := rayMacro_sound pts _ m (C.ray_far m hm) (C.ray_ok m hm) b hb x y h1 h2 h3 h4
   norm_num at h
@@ -85,7 +85,7 @@ theorem ray_box_bound (p : ℚ × ℚ) (hp : p ∈ rayIntervals rays) (x y : ℝ
     (h1 : -(1 / 10 : ℝ) - p.2 - 1 / 2 ^ 30 ≤ x)
     (h2 : x ≤ -(1 / 10 : ℝ) - p.1 + 1 / 2 ^ 30)
     (h3 : 3 * (p.1 : ℝ) ≤ y) (h4 : y ≤ 3 * (p.2 : ℝ)) :
-    (11571 / 5000 : ℝ) ≤
+    (231169/100000 : ℝ) ≤
       gAlpha (1 / 2048) (1 / 1000) cQ mQ (1 / 4) (CatalanCore.Decay.Unu (1 / 4)) ⟨x,y⟩ := by
   obtain ⟨b,hb,rfl⟩ := List.mem_map.mp hp
 
@@ -131,7 +131,7 @@ theorem segment_bound (b : QBox) (hb : b ∈ boxes segs) (x : ℝ)
 include C in
 theorem line_bound (p : ℚ × ℚ) (hp : p ∈ intervals lines) (x : ℝ)
     (h1 : (p.1 : ℝ) ≤ x) (h2 : x ≤ (p.2 : ℝ)) :
-    (-1699001 / 1000000 : ℝ) ≤
+    (-143459/100000 : ℝ) ≤
       gAlpha (1 / 2048) (1 / 1000) cQ mQ (1 / 4) (CatalanCore.Decay.Unu (1 / 4)) ⟨x,0⟩ := by
   obtain ⟨b,hb,rfl⟩ := List.mem_map.mp hp
   have hs := C.line_shape b hb
@@ -143,7 +143,7 @@ theorem line_bound (p : ℚ × ℚ) (hp : p ∈ intervals lines) (x : ℝ)
   rw [gAlpha_bridge_axis x hx]
   have h1' : (b.1.1 : ℝ) / 2 ^ 40 ≤ x := by simpa [axisInterval] using h1
   have h2' : x ≤ (b.1.2.1 : ℝ) / 2 ^ 40 := by simpa [axisInterval] using h2
-  have hg : (-1699001 / 1000000 : ℝ) ≤ (gamma b : ℝ) := by exact_mod_cast hs.2
+  have hg : (-143459/100000 : ℝ) ≤ (gamma b : ℝ) := by exact_mod_cast hs.2
   exact hg.trans (axis_gQuarter lines C.line_far C.line_ok b hb x h1' h2')
 
 end CatalanCore.Cert.SigmaQuarter

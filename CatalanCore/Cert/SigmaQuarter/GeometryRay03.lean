@@ -15,6 +15,6 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 def rayGeo3 : List Macro := Ray24Data ++ Ray25Data ++ Ray26Data ++ Ray27Data ++ Ray28Data ++ Ray29Data ++ Ray30Data ++ Ray31Data
 theorem rayGeo3_shape : (boxes rayGeo3).all (fun b => decide (rayShape b)) = true := by decide +kernel
-theorem rayGeo3_cover : IntervalCovers (rayIntervals rayGeo3) (3003 / 131072 : ℚ) (4773 / 131072 : ℚ) :=
+theorem rayGeo3_cover : IntervalCovers (rayIntervals rayGeo3) (5271 / 1048576 : ℚ) (6933 / 1048576 : ℚ) :=
   chainCovers_sound _ _ _ (by decide +kernel)
 end CatalanCore.Cert.SigmaQuarter

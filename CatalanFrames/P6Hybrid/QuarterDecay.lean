@@ -17,7 +17,7 @@ theorem adm_real {r m : ℕ} (ha : Adm r m) :
 
 /-- The general common-minor decay engine is instantiated without a new
 determinant estimate or any historical witness certificate. -/
-theorem decay : HasDecay family (2323303/500000) (4013201/500000) := by
+theorem decay : HasDecay family (1158407/250000) (93657/12500) := by
   have hInu : (((184428/100000 : ℚ)) : ℝ) ≤
       CatalanCore.Decay.Jfun (((1/4 : ℚ)) : ℝ) := by
     convert Inu_le using 1 <;> norm_num
@@ -30,7 +30,7 @@ theorem decay : HasDecay family (2323303/500000) (4013201/500000) := by
   rw [certQ_ccert] at h
   convert h using 1 <;> norm_num
 
-theorem chi3_measure : Measure.MeasureLBAt chi3L2 ((((37493/2500) : ℚ)) : ℝ) := by
+theorem chi3_measure : Measure.MeasureLBAt chi3L2 ((((287/20) : ℚ)) : ℝ) := by
   convert chi3_measure_of_decay decay using 1 <;> norm_num
 end CatalanFrames.P6Hybrid.Quarter
 #print axioms CatalanFrames.P6Hybrid.Quarter.decay

@@ -62,7 +62,7 @@ $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \begin{gathered}
  \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 34.74,\qquad
  \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 34.74,\\
- \mu\bigl(L(2,\chi_{-3})\bigr)\le 14.9972 ,
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le 14.35 ,
 \end{gathered}
 \]
 where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
@@ -115,14 +115,14 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 \begin{gathered}
  \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\qquad
  \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\\
- \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-14.9972-\varepsilon}.
+ \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-14.35-\varepsilon}.
 \end{gathered}
 \]
 In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le34.74$ and
-$\mu(L(2,\chi_{-3}))\le14.9972$.
+$\mu(L(2,\chi_{-3}))\le14.35$.
 \end{theorem}
 
-The computed values of the exponents are $34.738$ and $14.997126345\ldots$. Theorem~\ref{thm:main}, together with every
+The computed values of the exponents are $34.738$ and $14.3475713785\ldots$. Theorem~\ref{thm:main}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -142,7 +142,7 @@ its main estimate is not justified.
 Calegari, Dimitrov and Tang proved that $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ are linearly independent over
 $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a construction of Zagier. In
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
-Theorem~\ref{thm:main} improves this to $14.9972$.
+Theorem~\ref{thm:main} improves this to $14.35$.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
@@ -324,7 +324,7 @@ $6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a fam
 common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
 the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-2159207/645120)<17.60$.
 Section~\ref{sec:chi3-quarter} then permits a quarter border through characteristic-zero selection, supplies an analytic certificate and retains a periodic D1 saving, giving
-$\mu\le(4013201/500000)/(2323303/500000-\Lambda_{16})<14.9972$, with $\Lambda_{16}=339258406689121/82516315939200$.
+$\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=339258406689121/82516315939200$.
 
 \begin{center}
 {\setlength{\tabcolsep}{2pt}
@@ -334,7 +334,7 @@ constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ 
 \midrule
 $G-5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
 $G+5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
-$L(2,\chi_{-3})$ & $\Lambda_{16}$ & $4.646606$ & $8.026402$ & $0.535196$ & $0$ & $14.997127$\\
+$L(2,\chi_{-3})$ & $\Lambda_{16}$ & $4.633628$ & $7.49256$ & $0.535196$ & $0$ & $14.997127$\\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -1282,13 +1282,13 @@ Rational scaling by four preserves the exponent. The periodic content profile of
 
 \emph{The quarter-border family.} Finally use Section~\ref{sec:chi3-quarter}, with $m=\lceil r/4\rceil$, at most one common-node deletion, and
 \[
- \eta=\frac{2323303}{500000}-\Lambda_{16}=0.535195997\ldots,
- \qquad c=\frac{4013201}{500000}.
+ \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
+ \qquad c=\frac{93657}{12500}.
 \]
 For any $\nu>c/\eta$, choose $\delta>0$ with $c(1+\delta)/\eta<\nu$ and take $r=\lceil(1+\delta)\log q/\eta\rceil$ as above.
 The characteristic-zero selector gives a nonzero retained member at every rational input. Its degree is at most $r$; the uniform quarter-border content and decay bounds give the same integer comparison
 $q^{-r}\le |d_{r,m}P_J(p/q)|\le\exp[-(\eta-o(1))r^2]$ in the required window. This again contradicts $\eta r\ge(1+\delta)\log q$.
-Consequently $\mu(\xi_\chi)\le c/\eta=14.997126345\ldots<14.9972$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
+Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1304,7 +1304,7 @@ For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decim
 $S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
 For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
 bounded low-node deletion removes the remaining prime-location cost; the periodic content improvement then gives $17.60$.
-Characteristic-zero selection then allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.997126345\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
+Characteristic-zero selection then allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
 \end{remark}
 
 %% =====================================================================
@@ -1326,7 +1326,7 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \item \lean{lam_hybrid_measure_3474}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
  $q^{-(34.74+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_uniform};
 \item \lean{mir_hybrid_measure_3474}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_uniform};
-\item \lean{chi3_hybrid_measure_149972}: the same for $L(2,\chi_{-3})$ with exponent $14.9972$; it is
+\item \lean{chi3_hybrid_measure_1435}: the same for $L(2,\chi_{-3})$ with exponent $14.35$; it is
  \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
 \item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
@@ -1384,7 +1384,7 @@ additions to this paper, was developed with OpenAI Codex. The earlier exposition
 stronger theorem requires changes. The subsequent uniform rescaled-core argument for both
 $G\pm5\pi^2/48$, the finite interval profile and its Lean formalization, and the improvement from $38.35$
 to $34.74$ were also developed with OpenAI Codex.
-The subsequent quarter-border improvement to $14.9972$, including characteristic-zero selection, the analytic certificate and the retained periodic D1 saving, was developed with OpenAI Codex.
+The subsequent quarter-border improvement to $14.35$, including characteristic-zero selection, the analytic certificate and the retained periodic D1 saving, was developed with OpenAI Codex.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal

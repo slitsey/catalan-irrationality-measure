@@ -13,7 +13,7 @@ def energyTot : List Pt → ℤ
   | [] => 0
   | p :: ps => (p.2.2 : ℤ) * iRow p pts + energyTot ps
 
-def energyChunk (r : ℕ) : List Pt := (pts.drop (10 * r)).take 10
+def energyChunk (r : ℕ) : List Pt := (pts.drop (5 * r)).take 5
 
 lemma energyTot_append (a b : List Pt) : energyTot (a ++ b) = energyTot a + energyTot b := by
   induction a with
