@@ -1,5 +1,6 @@
 module
 public import CatalanCore.Arith.Hybrid.ShiftRow
+public import CatalanCore.Arith.Hybrid.ShiftGamma
 public import CatalanCore.Arith.Hybrid.ShiftNeumann
 public import CatalanCore.Arith.Hybrid.ShiftCell
 public import CatalanCore.Arith.Hybrid.PoleContraction
@@ -18,6 +19,7 @@ generic two-level determinant bounds (`TwoLevelGLE`, `TwoLevelCauchy`, `TwoLevel
 the frame side (`ShiftLead` = leading cross-cell block, `ShiftCell` = cell constancy,
 `ShiftNeumann` = second-order partners, `ResponseLongChain` = free-long response),
 and the assembled row theorem `twoLevel_row_both` / `twoLevel_row_local`, which is conditional on
-exactly one named obligation, `WeightedSameCell` (the weighted same-cell congruence N1).
+exactly one named obligation, `WeightedSameCell` (the weighted same-cell congruence N1), which
+`weightedSameCell_of_gamma` reduces to the one-node formula `GammaFormula`.
 No headline theorem is stated here and no existing module imports this file.
 -/

@@ -175,5 +175,161 @@ theorem zoneT_gamma (z₀ z y : Z) (hz₀ : r ≤ xs z₀) (hxz : r ≤ xs z) (h
 
 end Model
 
-#print axioms zoneT_gamma
+section Assembly
+open ChainModel
+variable {Fr : Frame} {p o r m : ℕ} [Fact p.Prime]
+
+lemma noCut_of_interval {a b : ℕ}
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    {x y : ℕ} (hx : a ≤ x ∧ x < b) (hy : a ≤ y ∧ y < b) (hxy : x ≤ y) :
+    NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (x : ℤ) (y : ℤ) := by
+  have := hcut x y hx.1 hx.2 hy.1 hy.2
+  rwa [min_eq_left (by exact_mod_cast hxy), max_eq_right (by exact_mod_cast hxy)] at this
+
+/-- Two nodes of one cut-free interval have the same source moments. -/
+lemma sourceAB_cell (hL : LamData Fr o) {x x' : ℕ}
+    (h1 : x ≤ x' → NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (x : ℤ) (x' : ℤ))
+    (h2 : x' ≤ x → NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (x' : ℤ) (x : ℤ)) :
+    sourceA Fr p o (fun j : ChainIndex p r x' => (chainNode j).val) x' =
+        sourceA Fr p o (fun j : ChainIndex p r x => (chainNode j).val) x ∧
+      sourceB Fr p o (fun j : ChainIndex p r x' => (chainNode j).val) x' =
+        sourceB Fr p o (fun j : ChainIndex p r x => (chainNode j).val) x := by
+  rcases le_total x x' with h | h
+  · exact sourceAB_chainTransport hL h (h1 h)
+  · have := sourceAB_chainTransport hL h (h2 h)
+    exact ⟨this.1.symm, this.2.symm⟩
+
+/-- `Γ` at a row node of the zone, with reference row `z₀`. -/
+noncomputable def zoneGamR (Fr : Frame) (p r m : ℕ) [Fact p.Prime] (z₀ z : Fin m) : ℚ[X] :=
+  gamF p (aR Fr p r (zoneX r m) (zoneY r m) z₀) (bR Fr p r (zoneX r m) (zoneY r m) z₀)
+    (aR Fr p r (zoneX r m) (zoneY r m) z) (bR Fr p r (zoneX r m) (zoneY r m) z)
+
+/-- `Γ` at a column node of the zone. -/
+noncomputable def zoneGamC (Fr : Frame) (p r m : ℕ) [Fact p.Prime] (z₀ y : Fin m) : ℚ[X] :=
+  gamF p (aR Fr p r (zoneX r m) (zoneY r m) z₀) (bR Fr p r (zoneX r m) (zoneY r m) z₀)
+    (aC Fr p r (zoneX r m) (zoneY r m) y) (bC Fr p r (zoneX r m) (zoneY r m) y)
+
+/-- **The one-node formula** (the real content of N1): for the cell `[a,b)` with reference row
+`z₀`, the reduction of `Γ(x)` is, up to a constant, `det Q · 16` times the Cauchy transform of the
+weight `w(c) = α (c̄_C - c̄(c)) + β 1_S(c)` at the node `x`. -/
+def GammaFormula (Fr : Frame) (p o r m a b h : ℕ) [Fact p.Prime] (z₀ : Fin m) : Prop :=
+  ∃ α β c0 : RatFunc (ZMod p),
+    (∀ z ∈ cellRows r m a b, redI p (zoneGamR Fr p r m z₀ z) =
+      c0 + redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 *
+        ∑ c : ZMod p, zoneWeight Fr p o r h (r + 2 * z₀.val) α β c *
+          rfC p ((c - ((zoneX r m z : ℕ) : ZMod p))⁻¹)) ∧
+    (∀ y ∈ cellCols r m a b, redI p (zoneGamC Fr p r m z₀ y) =
+      c0 + redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 *
+        ∑ c : ZMod p, zoneWeight Fr p o r h (r + 2 * z₀.val) α β c *
+          rfC p ((c - ((zoneY r m y : ℕ) : ZMod p))⁻¹))
+
+/-- **N1 follows from the one-node formula.** -/
+theorem weightedSameCell_of_gamma (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
+    (hN : 4 * (r + 2 * m) < p * p) {k : ℕ} (hk : (4 : ZMod p) * k = (o : ZMod p))
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) {a b : ℕ}
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : a ≤ r + 2 * z0.val ∧ r + 2 * z0.val < b)
+    (hlong : ∀ k, a ≤ k → k < b → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h)
+    (hG : GammaFormula Fr p o r m a b h z0) :
+    WeightedSameCell Fr p o r m a b h (r + 2 * z0.val) := by
+  classical
+  obtain ⟨α, β, c0, hR, hC⟩ := hG
+  refine ⟨α, β, ?_⟩
+  intro z hz y hy
+  have hzm := hz
+  have hym := hy
+  rw [mem_cellRows] at hz
+  rw [mem_cellCols] at hy
+  have hr0 : r ≤ r + 2 * m := by omega
+  have hxz : r ≤ zoneX r m z := by simp only [zoneX]; omega
+  have hyy : r ≤ zoneY r m y := by simp only [zoneY]; omega
+  have hz0r : r ≤ zoneX r m z0 := by simp only [zoneX]; omega
+  have hd : ((zoneY r m y : ℕ) : ZMod p) - ((zoneX r m z : ℕ) : ZMod p) ≠ 0 :=
+    zone_dist_ne (r := r) hm z.isLt y.isLt
+  have hint := zoneT_gle_one hL hp hm hN hk z y
+  have hnc₁ : zoneX r m z ≤ zoneY r m y →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (zoneX r m z : ℤ) (zoneY r m y : ℤ) :=
+    fun hle => noCut_of_interval hcut hz hy hle
+  have hnc₂ : zoneY r m y ≤ zoneX r m z →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (zoneY r m y : ℤ) (zoneX r m z : ℤ) :=
+    fun hle => noCut_of_interval hcut hy hz hle
+  obtain ⟨T', hT'⟩ := T_integral_same_cell (Fr := Fr) (p := p) (r := r) (N := r + 2 * m) (o := o)
+    (k := k) (xs := zoneX r m) (ys := zoneY r m) hL hp hN hr0 hk (fun z => zoneX_lt z)
+    (fun y => zoneY_lt y) z y hxz hyy hnc₁ hnc₂ hd hint
+  refine ⟨T', hT', ?_⟩
+  -- source moments are constant on the cell
+  have hZ := sourceAB_cell (Fr := Fr) (r := r) hL
+    (x := zoneX r m z0) (x' := zoneX r m z)
+    (fun hle => noCut_of_interval hcut hz0 hz hle) (fun hle => noCut_of_interval hcut hz hz0 hle)
+  have hY := sourceAB_cell (Fr := Fr) (r := r) hL
+    (x := zoneX r m z0) (x' := zoneY r m y)
+    (fun hle => noCut_of_interval hcut hz0 hy hle) (fun hle => noCut_of_interval hcut hy hz0 hle)
+  have G : redI p (Q Fr p r (zoneX r m) (zoneY r m)).det *
+        (rfC p 16 * (rfC p ((zoneY r m y : ℕ) : ZMod p) - rfC p ((zoneX r m z : ℕ) : ZMod p))) *
+        phiP p T' = redI p (zoneGamC Fr p r m z0 y) - redI p (zoneGamR Fr p r m z0 z) :=
+    zoneT_gamma (Fr := Fr) (p := p) (r := r) (N := r + 2 * m) (o := o) (k := k)
+      (xs := zoneX r m) (ys := zoneY r m) hL hp hN hr0 hk (fun z => zoneX_lt z)
+      (fun y => zoneY_lt y) z0 z y hz0r hxz hyy hZ.1 hZ.2 hY.1 hY.2 T' hT'
+  rw [hC y hym, hR z hzm] at G
+  -- the finite-field Cauchy identity
+  set zb : ZMod p := ((zoneX r m z : ℕ) : ZMod p) with hzb
+  set yb : ZMod p := ((zoneY r m y : ℕ) : ZMod p) with hyb
+  set w := zoneWeight Fr p o r h (r + 2 * z0.val) α β with hw
+  have hwz : w zb = 0 :=
+    zoneWeight_zero_of_cell hL hp hm hN hh hroot hcut z0 hz0 hlong α β hxz
+      (by have := z.isLt; simp only [zoneX]; omega) hz.1 hz.2
+  have hwy : w yb = 0 :=
+    zoneWeight_zero_of_cell hL hp hm hN hh hroot hcut z0 hz0 hlong α β hyy
+      (by have := y.isLt; simp only [zoneY]; omega) hy.1 hy.2
+  have hsub : rfC p yb - rfC p zb = rfC p (yb - zb) := by
+    simp only [← rfCHom_apply, map_sub]
+  have hterm : ∀ c : ZMod p, w c * (rfC p ((c - yb)⁻¹) - rfC p ((c - zb)⁻¹)) =
+      rfC p (yb - zb) * (rfC p ((c - zb)⁻¹) * w c * rfC p ((c - yb)⁻¹)) := by
+    intro c
+    by_cases hcz : c = zb
+    · rw [hcz, hwz]; ring
+    by_cases hcy : c = yb
+    · rw [hcy, hwy]; ring
+    have h1 : c - zb ≠ 0 := sub_ne_zero.2 hcz
+    have h2 : c - yb ≠ 0 := sub_ne_zero.2 hcy
+    have e : ((c - yb)⁻¹ - (c - zb)⁻¹ : ZMod p) = (yb - zb) * ((c - zb)⁻¹ * (c - yb)⁻¹) := by
+      field_simp
+      ring
+    have e' := congrArg (rfCHom p) e
+    simp only [rfCHom_apply, map_sub, map_mul] at e'
+    calc w c * (rfC p ((c - yb)⁻¹) - rfC p ((c - zb)⁻¹))
+        = w c * (rfC p (yb - zb) * (rfC p ((c - zb)⁻¹) * rfC p ((c - yb)⁻¹))) := by
+          rw [e', hsub]
+      _ = _ := by ring
+  have hK : redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 ≠ 0 := by
+    have h16 : (rfC p 16 : RatFunc (ZMod p)) ≠ 0 := by
+      apply rfC_ne_zero'
+      have h4 := four_ne_zmod p hp
+      have : (16 : ZMod p) = 4 * 4 := by norm_num
+      rw [this]; exact mul_ne_zero h4 h4
+    exact mul_ne_zero (redI_det_ne_zero hL hp hN hr0 (xs := zoneX r m) (ys := zoneY r m)) h16
+  have hdz : rfC p (yb - zb) ≠ 0 := rfC_ne_zero' hd
+  rw [hsub] at G
+  apply mul_left_cancel₀ (mul_ne_zero hK hdz)
+  have hsum : ∑ c : ZMod p, w c * (rfC p ((c - yb)⁻¹) - rfC p ((c - zb)⁻¹)) =
+      rfC p (yb - zb) * ∑ c : ZMod p, rfC p ((c - zb)⁻¹) * w c * rfC p ((c - yb)⁻¹) := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun c _ => hterm c
+  calc redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 * rfC p (yb - zb) * phiP p T'
+      = redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * (rfC p 16 * rfC p (yb - zb)) * phiP p T' := by
+        ring
+    _ = (c0 + redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 *
+          ∑ c : ZMod p, w c * rfC p ((c - yb)⁻¹)) -
+        (c0 + redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 *
+          ∑ c : ZMod p, w c * rfC p ((c - zb)⁻¹)) := G
+    _ = redI p (Q Fr p r (zoneX r m) (zoneY r m)).det * rfC p 16 *
+          ∑ c : ZMod p, w c * (rfC p ((c - yb)⁻¹) - rfC p ((c - zb)⁻¹)) := by
+        simp only [mul_sub, Finset.sum_sub_distrib]; ring
+    _ = _ := by rw [hsum]; ring
+
+end Assembly
+
+#print axioms weightedSameCell_of_gamma
 end CatalanCore.Arith.Hybrid
