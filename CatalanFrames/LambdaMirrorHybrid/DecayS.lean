@@ -1,6 +1,6 @@
 module
 
-public import CatalanFrames.LambdaMirrorHybrid.Assembly
+public import CatalanFrames.LambdaMirrorHybrid.MirContent
 public import CatalanCore.Cert.Sigma300.Glue
 public import CatalanCore.Cert.SigmaHybS.FrameDecay
 
