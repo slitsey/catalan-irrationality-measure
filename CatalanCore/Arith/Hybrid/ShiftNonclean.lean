@@ -2,6 +2,7 @@ module
 public import CatalanCore.Arith.Hybrid.ShiftRow
 public import CatalanCore.Arith.Hybrid.ShiftGamma
 public import CatalanCore.Arith.Hybrid.ShiftRho
+public import CatalanCore.Arith.Hybrid.ShiftRegular
 public import CatalanCore.Arith.Hybrid.ShiftNeumann
 public import CatalanCore.Arith.Hybrid.ShiftCell
 public import CatalanCore.Arith.Hybrid.PoleContraction
