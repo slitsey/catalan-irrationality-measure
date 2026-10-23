@@ -64,20 +64,24 @@ lemma profile_row_cost {o r p : ℕ} (hr : 1000000000≤r) {P : DeficitRow}
       simp only [hk,if_pos]
       exact (min_le_right _ _).trans (min_le_right _ _)
     have hd : 0<r/8+(profileRight o r p P-max (profileLeft o r p P) (r+2*(r/8)-p))-(p+4) := by
-      simpa only [profileRowDeficit,profileJLeft,hk,if_pos] using hpos
+      simpa only [profileRowDeficit_old (o:=o) (r:=r) (p:=p) (by omega : P.kind≠3),profileRowDeficitOld,profileJLeft,hk,if_pos] using hpos
     have hj : max (profileLeft o r p P) (r+2*(r/8)-p)≤profileRight o r p P := by omega
     have hab : profileLeft o r p P≤profileRight o r p P := by omega
     have HW:=witness_assignment_low hla hab hrb hbp hj
     have hn : profileRight o r p P-max (profileLeft o r p P) (r+2*(r/8)-p)≤2*(r/8) := by omega
-    simp only [profileBaseline,if_pos hp,profileRowDeficit,profileJLeft,hk,if_pos]
+    simp only [profileBaseline,if_pos hp,profileRowDeficit_old (o:=o) (r:=r) (p:=p) (by omega : P.kind≠3),profileRowDeficitOld,profileJLeft,hk,if_pos]
     omega
   · have hp:=Hrange.2.2 hk
+    have hk3 : P.kind≠3 := by
+      have hh := (newProfile_cert P hP).2.2.2.2
+      simp only [hk, if_false] at hh
+      rcases hh.1 with h|h <;> omega
     have hd : 0<(profileRight o r p P-profileLeft o r p P)-(r/8+4) := by
-      simpa only [profileRowDeficit,profileJLeft,hk,if_false] using hpos
+      simpa only [profileRowDeficit_old (o:=o) (r:=r) (p:=p) hk3,profileRowDeficitOld,profileJLeft,hk,if_false] using hpos
     have hab : profileLeft o r p P≤profileRight o r p P := by omega
     have HW:=witness_assignment_high hla hab hrb hp
     have hn : profileRight o r p P-profileLeft o r p P≤2*(r/8) := by omega
-    simp only [profileBaseline,if_neg (by omega : ¬p<2*(r/8)),profileRowDeficit,profileJLeft,hk,if_false]
+    simp only [profileBaseline,if_neg (by omega : ¬p<2*(r/8)),profileRowDeficit_old (o:=o) (r:=r) (p:=p) hk3,profileRowDeficitOld,profileJLeft,hk,if_false]
     omega
 /-- A positive active row clears both family members within its exact profile budget. -/
 theorem profile_row_both_gle {Fr : Frame} {o r p : ℕ} [Fact p.Prime]

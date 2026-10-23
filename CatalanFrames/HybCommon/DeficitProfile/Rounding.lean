@@ -64,14 +64,14 @@ lemma profileRowDeficit_low_rounding (o r p : ℕ) (P : DeficitRow)
   have h:=interval_low_rounding r p (r/8) (profileLeft o r p P) (profileRight o r p P)
     ((P.A4 : ℝ)*p/4) ((P.B4 : ℝ)*p/4) hp (profile_m_bounds r).1 (profile_m_bounds r).2
     (profileLeft_upper o r p P ho) (profileRight_lower_low o r p P ho hk)
-  simpa only [profileRowDeficit,profileJLeft,hk,if_pos] using h
+  simpa only [profileRowDeficit_old (o:=o) (r:=r) (p:=p) (by omega : P.kind≠3),profileRowDeficitOld,profileJLeft,hk,if_pos] using h
 
 lemma profileRowDeficit_nc_rounding (o r p : ℕ) (P : DeficitRow)
-    (ho : o≤3) (hk : P.kind≠0) :
+    (ho : o≤3) (hk : P.kind≠0) (hk3 : P.kind≠3) :
     min (5*(r : ℝ)/4) ((P.B4 : ℝ)*p/4)-max (r : ℝ) ((P.A4 : ℝ)*p/4)-(r : ℝ)/8-7≤
       (profileRowDeficit o r p P : ℝ) := by
   have h:=interval_nc_rounding r (r/8) (profileLeft o r p P) (profileRight o r p P)
     ((P.A4 : ℝ)*p/4) ((P.B4 : ℝ)*p/4) (profile_m_bounds r).2
     (profileLeft_upper o r p P ho) (profileRight_lower_nc o r p P ho hk)
-  simpa only [profileRowDeficit,profileJLeft,hk,if_false] using h
+  simpa only [profileRowDeficit_old (o:=o) (r:=r) (p:=p) hk3,profileRowDeficitOld,profileJLeft,hk,if_false] using h
 end CatalanFrames.HybCommon

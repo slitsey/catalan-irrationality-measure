@@ -14,9 +14,35 @@ def profileRight (o r p : ℕ) (P : DeficitRow) : ℕ :=
 def profileJLeft (o r p : ℕ) (P : DeficitRow) : ℕ :=
   if P.kind=0 then max (profileLeft o r p P) (r+2*(r/8)-p) else profileLeft o r p P
 
-def profileRowDeficit (o r p : ℕ) (P : DeficitRow) : ℕ :=
+/-! ## Kind 3: the two-level (shifted) rows
+
+A kind-3 row is a long cell `[cut A4, cut B4)` between poles `A4 = 4s+1, B4 = 4s+4` (class 1) or
+`A4 = 4s, B4 = 4s+3` (class 3), clipped to the zone `[r, r+2m)`, `m = r/8`.  Its deficit is the
+two-level saving `min m (σ + (σ - B'))` with `σ = n - m` (`n` the clipped cell length) and
+`B' = |S| - cov`, where `|S|` is the size of the short arc and `cov` counts the zone integers in the
+short cells of the periods `q4` and `q4 + 1` (`q4` carries `⌊r/p⌋`). -/
+def profileShortSize (o p c : ℕ) : ℕ := if c=1 then (p+o)/4 else (p-o)/4
+def profileShortLo (o p c s : ℕ) : ℕ := if c=1 then s*p else s*p+(3*p+o)/4
+def profileShortHi (o p c s : ℕ) : ℕ := if c=1 then s*p+(p+o)/4 else (s+1)*p
+def profileShortCell (o r p c s : ℕ) : ℕ :=
+  min (r+2*(r/8)) (profileShortHi o p c s)-max r (profileShortLo o p c s)
+
+def profileKind3Deficit (o r p : ℕ) (P : DeficitRow) : ℕ :=
+  min (r/8) (((profileRight o r p P-profileLeft o r p P)-r/8)+
+    (((profileRight o r p P-profileLeft o r p P)-r/8)-
+      (profileShortSize o p P.poleClass-
+        (profileShortCell o r p P.poleClass P.q4+profileShortCell o r p P.poleClass (P.q4+1)))))
+
+/-- The banked kinds 0, 1, 2. -/
+def profileRowDeficitOld (o r p : ℕ) (P : DeficitRow) : ℕ :=
   let n := profileRight o r p P-profileJLeft o r p P
   if P.kind=0 then r/8+n-(p+4) else n-(r/8+4)
+
+def profileRowDeficit (o r p : ℕ) (P : DeficitRow) : ℕ :=
+  if P.kind=3 then profileKind3Deficit o r p P else profileRowDeficitOld o r p P
+
+lemma profileRowDeficit_old {o r p : ℕ} {P : DeficitRow} (h : P.kind≠3) :
+    profileRowDeficit o r p P=profileRowDeficitOld o r p P := if_neg h
 
 noncomputable def profileRowActive (o r p : ℕ) (P : DeficitRow) : Prop :=
   (p : ZMod 4)=profileClass o P ∧ ⌊(P.lo : ℝ)*r⌋₊<p ∧ p≤⌊(P.hi : ℝ)*r⌋₊

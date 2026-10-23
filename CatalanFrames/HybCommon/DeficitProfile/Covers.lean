@@ -34,7 +34,11 @@ lemma profileRowDeficit_real_cover {o r p : ℕ} (ho : o=1 ∨ o=3) (hr : 0<r)
   · have hw:=mul_le_mul_of_nonneg_left (row_ncWitness hc hk huL huH) hrR.le
     rw [hev,ncWitness_mul _ _ _ _ hrR] at hw
     simp only [div_mul_eq_mul_div] at hw
-    have hround:=profileRowDeficit_nc_rounding o r p P ho3 hk
+    have hk3 : P.kind≠3 := by
+      have hh := hc.2.2.2.2
+      simp only [hk, if_false] at hh
+      rcases hh.1 with h|h <;> omega
+    have hround:=profileRowDeficit_nc_rounding o r p P ho3 hk hk3
     linarith
 
 /-- **Generic cover step.**  For any row list: the affine lower bound on each active row's
