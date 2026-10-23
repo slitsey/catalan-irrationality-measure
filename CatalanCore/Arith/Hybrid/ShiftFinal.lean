@@ -255,5 +255,60 @@ theorem gammaFormula_zone (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
 
 end ZoneFormula
 
-#print axioms CatalanCore.Arith.Hybrid.gammaFormula_zone
+
+section Unconditional
+open ChainModel ChainClasses LemmaE
+variable {Fr : Frame} {p o r m : ℕ} [Fact p.Prime]
+
+/-- **N1, the weighted same-cell congruence, for a long cell.** -/
+theorem weightedSameCell_zone (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
+    (hN : 4 * (r + 2 * m) < p * p) {k : ℕ} (hk : (4 : ZMod p) * k = (o : ZMod p))
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) {lo hi : ℕ}
+    (hcut : ∀ x y : ℕ, lo ≤ x → x < hi → lo ≤ y → y < hi →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : lo ≤ r + 2 * z0.val ∧ r + 2 * z0.val < hi)
+    (hlong : ∀ k, lo ≤ k → k < hi → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h) :
+    WeightedSameCell Fr p o r m lo hi h (r + 2 * z0.val) :=
+  weightedSameCell_of_gamma hL hp hm hN hk hh hroot hcut z0 hz0 hlong
+    (gammaFormula_zone hL hp hm hN hk hh hroot hcut z0 hz0 hlong)
+
+/-- **Both family members for one overfull long cell, unconditionally.** -/
+theorem twoLevel_row_both_unconditional (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o)
+    (hp : 5 ≤ p) (hm : 2 * m < p) (hN : 4 * (r + 2 * m + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * m)
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    {a b : ℕ} (hra : r ≤ a) (hbN : b ≤ r + 2 * m)
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : a ≤ r + 2 * z0.val ∧ r + 2 * z0.val < b)
+    (hlong : ∀ k, a ≤ k → k < b → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h)
+    (hσ : (b - a - m) + ((b - a - m) - (zoneSb p r m h).card) ≤ m) :
+    GLE p (m - ((b - a - m) + ((b - a - m) - (zoneSb p r m h).card)) + 2 * r) (Fr.fullPoly r m) ∧
+    GLE p (m - ((b - a - m) + ((b - a - m) - (zoneSb p r m h).card)) + topC I r m p + 2 * r)
+      ((Rect.afterTop r m).fullPolyG Fr) :=
+  twoLevel_row_both I hL hp hm hN hk hb hh hroot hra hbN hcut z0 hz0 hlong
+    (weightedSameCell_zone hL hp hm (by omega) hk hh hroot hcut z0 hz0 hlong) hσ
+
+/-- **The row-local shape, unconditionally.** -/
+theorem twoLevel_row_local_unconditional (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o)
+    (hp13 : 13 ≤ p) (hm : 2 * m < p) (hN : 4 * (r + 2 * m + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * m)
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    {a b : ℕ} (hra : r ≤ a) (hbN : b ≤ r + 2 * m)
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : a ≤ r + 2 * z0.val ∧ r + 2 * z0.val < b)
+    (hlong : ∀ k, a ≤ k → k < b → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h)
+    (hσ : (b - a - m) + ((b - a - m) - (zoneSb p r m h).card) ≤ m)
+    {δ : ℕ} (hδ : δ ≤ (b - a - m) + ((b - a - m) - (zoneSb p r m h).card)) :
+    GLE p (2 * r + m - δ) (Fr.fullPoly r m) ∧
+    GLE p (2 * r + m - δ + topC I r m p) ((Rect.afterTop r m).fullPolyG Fr) :=
+  twoLevel_row_local I hL hp13 hm hN hk hb hh hroot hra hbN hcut z0 hz0 hlong
+    (weightedSameCell_zone hL (by omega) hm (by omega) hk hh hroot hcut z0 hz0 hlong) hσ hδ
+
+end Unconditional
+
+#print axioms CatalanCore.Arith.Hybrid.weightedSameCell_zone
+#print axioms CatalanCore.Arith.Hybrid.twoLevel_row_both_unconditional
+#print axioms CatalanCore.Arith.Hybrid.twoLevel_row_local_unconditional
 end CatalanCore.Arith.Hybrid
