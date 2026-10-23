@@ -298,5 +298,41 @@ theorem T_integral_same_cell (z y : Z) (hxz : r ≤ xs z) (hyy : r ≤ ys y)
 
 end Integral
 
-#print axioms T_integral_same_cell
+section CrossCell
+variable {p r N o k : ℕ} [Fact p.Prime] {Fr : Frame} {Z : Type} [Fintype Z] [DecidableEq Z]
+  {xs ys : Z → ℕ}
+variable (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+  (hk : (4:ZMod p)*k=(o:ZMod p)) (hx : ∀ z, xs z<N) (hy : ∀ y, ys y<N)
+include hL hp hN hr hk hx hy
+
+/-- **`lead_cross_cell` (N3), explicit form.**  For every lift `g'` of `p T_zy`,
+`16 (y - z) · g' = det Q · (B_z A_y - A_z B_y)`, where `(A_z, B_z)` and `(A_y, B_y)` are the
+source moments of the chains of the row node `x_z` and of the column node `y_y`.  This is the
+spec's `(A_C B_D - B_C A_D) / (n (y - z))`; for nodes of one cell it vanishes
+(`T_integral_same_cell`). -/
+theorem lead_cross_cell (z y : Z) (hxz : r ≤ xs z) (hyy : r ≤ ys y) (g' : (LocRing p)[X])
+    (hg' : toQ p g' = C (p:ℚ) * LemmaE.Tscaled (ChainModel.Q Fr p r xs ys).det
+      (ChainModel.full Fr p r xs ys).toBlocks₁₁ (ChainModel.full Fr p r xs ys).toBlocks₁₂
+      (ChainModel.full Fr p r xs ys).toBlocks₂₁ (ChainModel.full Fr p r xs ys).toBlocks₂₂
+      (ChainModel.Nm Fr p r xs ys) z y) :
+    rfC p 16 * rfC p (((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p)) * phiP p g' =
+      redI p (ChainModel.Q Fr p r xs ys).det *
+        (sourceB Fr p o (fun j : ChainIndex p r (xs z) => (chainNode j).val) (xs z) *
+          sourceA Fr p o (fun j : ChainIndex p r (ys y) => (chainNode j).val) (ys y) -
+         sourceA Fr p o (fun j : ChainIndex p r (xs z) => (chainNode j).val) (xs z) *
+          sourceB Fr p o (fun j : ChainIndex p r (ys y) => (chainNode j).val) (ys y)) := by
+  have H := lead_identity_red hL hp hN hr hx hy z y g' hg'
+  rw [redI_aR hL hp hN hr hk hx hy z hxz, redI_bR hL hp hN hr hk hx hy z hxz,
+    redI_aC hL hp hN hr hk hx hy y hyy, redI_bC hL hp hN hr hk hx hy y hyy] at H
+  have hdet := redI_det_ne_zero hL hp hN hr (xs := xs) (ys := ys)
+  have hsub : rfC p (ys y : ZMod p) - rfC p (xs z : ZMod p) =
+      rfC p (((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p)) := by
+    simp only [← rfCHom_apply, map_sub]
+  rw [hsub] at H
+  apply mul_left_cancel₀ hdet
+  linear_combination H
+
+end CrossCell
+
+#print axioms lead_cross_cell
 end CatalanCore.Arith.Hybrid
