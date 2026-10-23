@@ -308,7 +308,66 @@ theorem twoLevel_row_local_unconditional (I : HybInst Fr) [I.DiagOK r m] (hL : L
 
 end Unconditional
 
+section LongCellSection
+open ChainModel ChainClasses LemmaE
+
+/-- **A long cell of the zone**: an interval `[lo, hi) ⊆ [r, r + 2m)` that is cut-free for all
+pairs (no singular node, no multiple of `p`, no core-exit cut inside), contains a row node `z0`, and
+whose residues all lie outside the short arc of the root `h` of `4 h = o` (the arc condition). -/
+structure LongCell (p o r m h : ℕ) [Fact p.Prime] where
+  lo : ℕ
+  hi : ℕ
+  hra : r ≤ lo
+  hhi : hi ≤ r + 2 * m
+  hcut : ∀ x y : ℕ, lo ≤ x → x < hi → lo ≤ y → y < hi →
+    NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y)
+  z0 : Fin m
+  hz0 : lo ≤ r + 2 * z0.val ∧ r + 2 * z0.val < hi
+  hlong : ∀ k, lo ≤ k → k < hi → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h
+
+namespace LongCell
+variable {p o r m h : ℕ} [Fact p.Prime]
+
+/-- The overfull count `σ = (hi - lo) - m`. -/
+def sigma (c : LongCell p o r m h) : ℕ := (c.hi - c.lo) - m
+
+/-- The number of short residues not covered by the zone. -/
+noncomputable def B (_ : LongCell p o r m h) : ℕ := (zoneSb p r m h).card
+
+variable {Fr : Frame}
+
+/-- **Member 1 for a long cell** (no size condition on `σ + (σ - B)`). -/
+theorem fullPoly_gle (c : LongCell p o r m h) (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
+    (hN : 4 * (r + 2 * m) < p * p) {k : ℕ} (hk : (4 : ZMod p) * k = (o : ZMod p))
+    (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) :
+    GLE p (m - (c.sigma + (c.sigma - c.B)) + 2 * r) (Fr.fullPoly r m) := by
+  have hcard := card_cellRows_add_cellCols (r := r) (m := m) c.hra c.hhi (a := c.lo) (b := c.hi)
+  obtain ⟨α, β, hwt⟩ := weightedSameCell_zone hL hp hm hN hk hh hroot c.hcut c.z0 c.hz0 c.hlong
+  have H := ChainModel.twoLevel_fullPoly_gle_of_wt (Fr := Fr) hL hp hm hN hk
+    (cellRows r m c.lo c.hi) (cellCols r m c.lo c.hi) _ (zoneSb p r m h)
+    (zoneCell_of_cut c.hcut) hwt
+    (zoneZero_of_response hL hp hm hN hh hroot c.hcut c.z0 c.hz0 c.hlong α β)
+  rw [hcard] at H
+  exact H
+
+/-- **Both members for a long cell, unconditionally.** -/
+theorem row_both (c : LongCell p o r m h) (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o)
+    (hp : 5 ≤ p) (hm : 2 * m < p) (hN : 4 * (r + 2 * m + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * m)
+    (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    (hσ : c.sigma + (c.sigma - c.B) ≤ m) :
+    GLE p (m - (c.sigma + (c.sigma - c.B)) + 2 * r) (Fr.fullPoly r m) ∧
+    GLE p (m - (c.sigma + (c.sigma - c.B)) + topC I r m p + 2 * r)
+      ((Rect.afterTop r m).fullPolyG Fr) :=
+  twoLevel_row_both_unconditional I hL hp hm hN hk hb hh hroot c.hra c.hhi c.hcut c.z0 c.hz0
+    c.hlong hσ
+
+end LongCell
+end LongCellSection
+
 #print axioms CatalanCore.Arith.Hybrid.weightedSameCell_zone
 #print axioms CatalanCore.Arith.Hybrid.twoLevel_row_both_unconditional
 #print axioms CatalanCore.Arith.Hybrid.twoLevel_row_local_unconditional
+#print axioms CatalanCore.Arith.Hybrid.LongCell.fullPoly_gle
+#print axioms CatalanCore.Arith.Hybrid.LongCell.row_both
 end CatalanCore.Arith.Hybrid
