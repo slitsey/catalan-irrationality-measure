@@ -111,7 +111,7 @@ theorem assemble_ccert {rays segs lines : List Macro} (C : Controls rays segs li
 theorem assemble_D_le {rays segs lines : List Macro} (C : Controls rays segs lines)
     (hI : CatalanLambda.Decay.Irho (1/2048 : ℝ) cQ mQ ≤ (1808029/1000000 : ℝ)) :
     (1158407/250000 : ℚ) ≤ (assemble C hI).Dof 3 (1/4) (184428/100000) := by
-  unfold CertCoreG.Dof assemble
+  unfold CatalanCore.Cert.CertCoreGs.Dof assemble
   norm_num
 end CatalanCore.Cert.SigmaQuarter
 #print axioms CatalanCore.Cert.SigmaQuarter.assemble

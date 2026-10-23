@@ -80,7 +80,7 @@ theorem hg_hyb : ∀ s : ℂ, certHyb.g s = (1 + (((1 / 8 : ℚ)) : ℝ)) * Cata
   rfl
 
 theorem D_le : (39028 / 10000 : ℚ) ≤ certHyb.Dof 2 (1 / 8) (17024457 / 10 ^ 7) := by
-  unfold CatalanCore.Cert.CertCoreG.Dof certHyb SbaseH IboundH SVALH
+  unfold CatalanCore.Cert.CertCoreGs.Dof certHyb SbaseH IboundH SVALH
   norm_num
 
 /-- **The hybrid λ decay certificate**: `D = 3.9028`, `c = 7.648` at `α = 1/8`. -/
