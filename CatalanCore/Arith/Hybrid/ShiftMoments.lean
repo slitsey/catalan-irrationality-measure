@@ -204,6 +204,155 @@ lemma int1_bC (y : Z) : Int1 p (bC Fr p r xs ys y) := by
 
 end Integral
 
+
+section Lead
+variable (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+  (hk : (4:ZMod p)*k=(o:ZMod p)) (hx : ∀ z, xs z<N)
+include hL hp hN hr
+
+lemma gn_Nm_le (i j : Fin r) : gn p (Nm Fr p r xs ys i j) ≤ ((p:ℝ)⁻¹)^2 := by
+  rw [Nm_apply, gn_mul, show (C ((p:ℚ)^2) : ℚ[X]) = (C (p:ℚ))^2 by rw [map_pow], gn_pow, gn_C,
+    padicNorm.padicNorm_p_of_prime]
+  have h1 : gn p ((Q Fr p r xs ys).adjugate i j) ≤ 1 := adj_int1 (Q_int1 hL hp hN hr) i j
+  have hp0 : (0:ℝ) ≤ ((p:ℝ)⁻¹)^2 := by positivity
+  push_cast
+  calc ((p:ℝ)⁻¹)^2 * gn p ((Q Fr p r xs ys).adjugate i j) ≤ ((p:ℝ)⁻¹)^2 * 1 :=
+        mul_le_mul_of_nonneg_left h1 hp0
+    _ = _ := mul_one _
+
+lemma gn_rowsum_le (w : Fin r → ℚ[X]) (hw : ∀ k, Int1 p (w k)) (i : Fin r) :
+    gn p (∑ k, Nm Fr p r xs ys i k * w k) ≤ ((p:ℝ)⁻¹)^2 := by
+  apply gn_sum_le_const _ _ _ (by positivity)
+  intro k _
+  rw [gn_mul]
+  calc gn p (Nm Fr p r xs ys i k) * gn p (w k) ≤ ((p:ℝ)⁻¹)^2 * 1 :=
+        mul_le_mul (gn_Nm_le hL hp hN hr i k) (hw k) (gn_nonneg p _) (by positivity)
+    _ = _ := mul_one _
+
+include hk hx in
+/-- **Leading moment.**  `h · ∑_i C_zi ∑_k N_ik w_k ≡ g · ∑_m Sr_zm w_m (mod p)` for integral `w`. -/
+theorem mom_lead (w : Fin r → ℚ[X]) (hw : ∀ k, Int1 p (w k)) (z : Z) :
+    Cng p (h Fr p r xs ys * ∑ i, (full Fr p r xs ys).toBlocks₂₁ z i *
+        ∑ k, Nm Fr p r xs ys i k * w k)
+      ((Q Fr p r xs ys).det * ∑ m, Sr Fr p r xs ys z m * w m) := by
+  have hres := Sr_residual_bound (xs := xs) (ys := ys) hL hp hN hr hk hx
+  set A := (full Fr p r xs ys).toBlocks₁₁ with hA
+  have hAN : A * Nm Fr p r xs ys = (Q Fr p r xs ys).det • (1 : Matrix (Fin r) (Fin r) ℚ[X]) :=
+    AN_eq p (fun _ : Fin r => 1) A
+  set rs : Fin r → ℚ[X] := fun i => ∑ k, Nm Fr p r xs ys i k * w k with hrs
+  have key : h Fr p r xs ys * ∑ i, (full Fr p r xs ys).toBlocks₂₁ z i * rs i -
+      (Q Fr p r xs ys).det * ∑ m, Sr Fr p r xs ys z m * w m =
+      ∑ i, ((h Fr p r xs ys • (full Fr p r xs ys).toBlocks₂₁ -
+        Sr Fr p r xs ys * A) z i) * rs i := by
+    have hAr : ∀ m, ∑ i, A m i * rs i = (Q Fr p r xs ys).det * w m := by
+      intro m
+      have hAN' : ∀ k, ∑ i, A m i * Nm Fr p r xs ys i k =
+          if m = k then (Q Fr p r xs ys).det else 0 := fun k => by
+        have := congrFun (congrFun hAN m) k
+        simpa [Matrix.mul_apply, Matrix.one_apply, Matrix.smul_apply] using this
+      calc ∑ i, A m i * rs i = ∑ i, ∑ k, A m i * Nm Fr p r xs ys i k * w k := by
+            apply Finset.sum_congr rfl; intro i _
+            simp only [hrs, Finset.mul_sum]
+            apply Finset.sum_congr rfl; intro k _; ring
+        _ = ∑ k, (∑ i, A m i * Nm Fr p r xs ys i k) * w k := by
+            rw [Finset.sum_comm]
+            apply Finset.sum_congr rfl; intro k _
+            rw [Finset.sum_mul]
+        _ = ∑ k, (if m = k then (Q Fr p r xs ys).det else 0) * w k := by
+            apply Finset.sum_congr rfl; intro k _; rw [hAN']
+        _ = (Q Fr p r xs ys).det * w m := by
+            simp only [ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    have e1 : ∑ i, ((Sr Fr p r xs ys * A) z i) * rs i =
+        (Q Fr p r xs ys).det * ∑ m, Sr Fr p r xs ys z m * w m := by
+      calc ∑ i, ((Sr Fr p r xs ys * A) z i) * rs i
+          = ∑ i, ∑ m, Sr Fr p r xs ys z m * (A m i * rs i) := by
+            apply Finset.sum_congr rfl; intro i _
+            rw [Matrix.mul_apply, Finset.sum_mul]
+            apply Finset.sum_congr rfl; intro m _; ring
+        _ = ∑ m, Sr Fr p r xs ys z m * ∑ i, A m i * rs i := by
+            rw [Finset.sum_comm]
+            apply Finset.sum_congr rfl; intro m _
+            rw [Finset.mul_sum]
+        _ = ∑ m, Sr Fr p r xs ys z m * ((Q Fr p r xs ys).det * w m) := by
+            apply Finset.sum_congr rfl; intro m _; rw [hAr]
+        _ = _ := by
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl; intro m _; ring
+    rw [Finset.mul_sum]
+    simp only [Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, sub_mul, Finset.sum_sub_distrib]
+    rw [e1]
+    apply congrArg (· - _)
+    apply Finset.sum_congr rfl; intro i _; ring
+  unfold Cng
+  rw [key]
+  have hp1 : (1:ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
+  have hp0 : (0:ℝ) < p := by linarith
+  have hb : gn p (∑ i, ((h Fr p r xs ys • (full Fr p r xs ys).toBlocks₂₁ -
+      Sr Fr p r xs ys * A) z i) * rs i) ≤ (p:ℝ) * ((p:ℝ)⁻¹)^2 := by
+    apply gn_sum_le_const _ _ _ (by positivity)
+    intro i _
+    rw [gn_mul]
+    exact mul_le_mul (hres z i) (gn_rowsum_le hL hp hN hr w hw i) (gn_nonneg p _) hp0.le
+  refine lt_of_le_of_lt hb ?_
+  have : (p:ℝ) * ((p:ℝ)⁻¹)^2 = (p:ℝ)⁻¹ := by field_simp
+  rw [this]
+  exact inv_lt_one_of_one_lt₀ hp1
+
+end Lead
+
+section LeadMoments
+variable (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+  (hk : (4:ZMod p)*k=(o:ZMod p)) (hx : ∀ z, xs z<N)
+include hL hp hN hr hk hx
+
+/-- `h α_z ≡ g (h - ∑_m Sr_zm) (mod p)`. -/
+theorem aR_lead (z : Z) :
+    Cng p (h Fr p r xs ys * aR Fr p r xs ys z)
+      ((Q Fr p r xs ys).det * (h Fr p r xs ys - ∑ m, Sr Fr p r xs ys z m)) := by
+  have H := mom_lead (xs := xs) (ys := ys) hL hp hN hr hk hx (fun _ => 1) (fun _ => Int1.one) z
+  simp only [mul_one] at H
+  have e1 : h Fr p r xs ys * aR Fr p r xs ys z =
+      h Fr p r xs ys * (Q Fr p r xs ys).det - h Fr p r xs ys * rowB Fr p r xs ys z := by
+    unfold aR; ring
+  have e2 : (Q Fr p r xs ys).det * (h Fr p r xs ys - ∑ m, Sr Fr p r xs ys z m) =
+      h Fr p r xs ys * (Q Fr p r xs ys).det -
+        (Q Fr p r xs ys).det * ∑ m, Sr Fr p r xs ys z m := by ring
+  rw [e1, e2]
+  exact (Cng.refl _).sub H
+
+/-- `h (pβ_z) ≡ g (h p Pf(x_z) - ∑_m Sr_zm p Pf(m)) (mod p)`. -/
+theorem bR_lead (z : Z) :
+    Cng p (h Fr p r xs ys * bR Fr p r xs ys z)
+      ((Q Fr p r xs ys).det * (h Fr p r xs ys * C ((p:ℚ) * fullPrefix Fr (xs z)) -
+        ∑ m, Sr Fr p r xs ys z m * C ((p:ℚ) * fullPrefix Fr m.val))) := by
+  have H := mom_lead (xs := xs) (ys := ys) hL hp hN hr hk hx (fun m => C ((p:ℚ) * fullPrefix Fr m.val))
+    (fun m => int1_pPf hL hp hN hr (lt_of_lt_of_le m.isLt hr)) z
+  have e0 : bR Fr p r xs ys z = (Q Fr p r xs ys).det * C ((p:ℚ) * fullPrefix Fr (xs z)) -
+      ∑ i, (full Fr p r xs ys).toBlocks₂₁ z i *
+        ∑ k, Nm Fr p r xs ys i k * C ((p:ℚ) * fullPrefix Fr k.val) := by
+    unfold bR rowP
+    rw [mul_sub, Finset.mul_sum, map_mul]
+    congr 1
+    · ring
+    · apply Finset.sum_congr rfl; intro i _
+      rw [Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
+      apply Finset.sum_congr rfl; intro k _
+      rw [map_mul]; ring
+  have e1 : h Fr p r xs ys * bR Fr p r xs ys z =
+      h Fr p r xs ys * ((Q Fr p r xs ys).det * C ((p:ℚ) * fullPrefix Fr (xs z))) -
+      h Fr p r xs ys * ∑ i, (full Fr p r xs ys).toBlocks₂₁ z i *
+        ∑ k, Nm Fr p r xs ys i k * C ((p:ℚ) * fullPrefix Fr k.val) := by
+    rw [e0]; ring
+  have e2 : (Q Fr p r xs ys).det * (h Fr p r xs ys * C ((p:ℚ) * fullPrefix Fr (xs z)) -
+        ∑ m, Sr Fr p r xs ys z m * C ((p:ℚ) * fullPrefix Fr m.val)) =
+      h Fr p r xs ys * ((Q Fr p r xs ys).det * C ((p:ℚ) * fullPrefix Fr (xs z))) -
+        (Q Fr p r xs ys).det * ∑ m, Sr Fr p r xs ys z m * C ((p:ℚ) * fullPrefix Fr m.val) := by
+    ring
+  rw [e1, e2]
+  exact (Cng.refl _).sub H
+
+end LeadMoments
+
 end ChainModel
-#print axioms ChainModel.int1_bC
+#print axioms ChainModel.bR_lead
 end CatalanCore.Arith.Hybrid
