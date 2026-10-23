@@ -187,5 +187,73 @@ theorem node_gamma (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
 
 end NodeGamma
 
-#print axioms CatalanCore.Arith.Hybrid.node_gamma
+
+section ZoneFormula
+open ChainModel ChainClasses LemmaE
+variable {Fr : Frame} {p o r m : ℕ} [Fact p.Prime]
+
+/-- **The one-node formula `GammaFormula` for a long cell.** -/
+theorem gammaFormula_zone (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
+    (hN : 4 * (r + 2 * m) < p * p) {k : ℕ} (hk : (4 : ZMod p) * k = (o : ZMod p))
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) {lo hi : ℕ}
+    (hcut : ∀ x y : ℕ, lo ≤ x → x < hi → lo ≤ y → y < hi →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : lo ≤ r + 2 * z0.val ∧ r + 2 * z0.val < hi)
+    (hlong : ∀ k, lo ≤ k → k < hi → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h) :
+    GammaFormula Fr p o r m lo hi h z0 := by
+  classical
+  have hr0 : r ≤ r + 2 * m := by omega
+  have hx : ∀ z : Fin m, zoneX r m z < r + 2 * m := fun z => zoneX_lt z
+  have hy : ∀ y : Fin m, zoneY r m y < r + 2 * m := fun y => zoneY_lt y
+  set gb := redI p (Q Fr p r (zoneX r m) (zoneY r m)).det with hgb
+  set α : RatFunc (ZMod p) := gb * (rfC p 16)⁻¹ * (rfC p 16)⁻¹ with hα
+  set β : RatFunc (ZMod p) := -(gb * srcB Fr p o r (zoneX r m z0) ^ 2 *
+    rfC p (if 2 * h < p then (1 : ZMod p) else -1) * (rfC p 16)⁻¹) with hβ
+  set w := zoneWeight Fr p o r h (r + 2 * z0.val) α β with hw
+  have hx0 : lo ≤ zoneX r m z0 ∧ zoneX r m z0 < hi := hz0
+  have hz0r : r ≤ zoneX r m z0 := by simp only [zoneX]; omega
+  have hn0 : ((zoneX r m z0 : ℕ) : ZMod p) ∉ shortArc p h :=
+    hlong _ hz0.1 hz0.2 hz0r (by simp only [zoneX]; have := z0.isLt; omega)
+  refine ⟨α, β, -(gb * rfC p 16 * ∑ c : ZMod p, w c *
+    rfC p ((c - ((zoneX r m z0 : ℕ) : ZMod p))⁻¹)), ?_, ?_⟩
+  · intro z hz
+    have hzm := hz
+    rw [mem_cellRows] at hz
+    have hzr : r ≤ zoneX r m z := by simp only [zoneX]; omega
+    have hZ := sourceAB_cell (Fr := Fr) (r := r) hL
+      (x := zoneX r m z0) (x' := zoneX r m z)
+      (fun hle => noCut_of_interval hcut hx0 hz hle) (fun hle => noCut_of_interval hcut hz hx0 hle)
+    have hn : ((zoneX r m z : ℕ) : ZMod p) ∉ shortArc p h :=
+      hlong _ hz.1 hz.2 hzr (by simp only [zoneX]; have := z.isLt; omega)
+    have H := node_gamma (Fr := Fr) (p := p) (r := r) (N := r + 2 * m) (o := o) (k := k)
+      (xs1 := zoneX r m) (ys1 := zoneY r m) (xs2 := zoneX r m) (ys2 := zoneY r m)
+      hL hp hN hr0 hk hh hroot hx hy hx hy rfl z z0 hzr hz0r
+      (fun hle => noCut_of_interval hcut hz hx0 hle) (fun hle => noCut_of_interval hcut hx0 hz hle)
+      hZ.1.symm hZ.2.symm hn hn0
+    show redI p (gamF p _ _ _ _) = _
+    rw [H]
+    simp only [mul_sub, Finset.sum_sub_distrib]
+    ring
+  · intro y hy'
+    have hym := hy'
+    rw [mem_cellCols] at hy'
+    have hyr : r ≤ zoneY r m y := by simp only [zoneY]; omega
+    have hY := sourceAB_cell (Fr := Fr) (r := r) hL
+      (x := zoneX r m z0) (x' := zoneY r m y)
+      (fun hle => noCut_of_interval hcut hx0 hy' hle) (fun hle => noCut_of_interval hcut hy' hx0 hle)
+    have hn : ((zoneY r m y : ℕ) : ZMod p) ∉ shortArc p h :=
+      hlong _ hy'.1 hy'.2 hyr (by simp only [zoneY]; have := y.isLt; omega)
+    have H := node_gamma (Fr := Fr) (p := p) (r := r) (N := r + 2 * m) (o := o) (k := k)
+      (xs1 := zoneY r m) (ys1 := zoneX r m) (xs2 := zoneX r m) (ys2 := zoneY r m)
+      hL hp hN hr0 hk hh hroot hy hx hx hy Q_swap y z0 hyr hz0r
+      (fun hle => noCut_of_interval hcut hy' hx0 hle) (fun hle => noCut_of_interval hcut hx0 hy' hle)
+      hY.1.symm hY.2.symm hn hn0
+    show redI p (gamF p _ _ (aC Fr p r (zoneX r m) (zoneY r m) y) (bC Fr p r (zoneX r m) (zoneY r m) y)) = _
+    rw [aC_eq_aR_swap, bC_eq_bR_swap, H]
+    simp only [mul_sub, Finset.sum_sub_distrib]
+    ring
+
+end ZoneFormula
+
+#print axioms CatalanCore.Arith.Hybrid.gammaFormula_zone
 end CatalanCore.Arith.Hybrid
