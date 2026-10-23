@@ -54,5 +54,45 @@ theorem shiftData_of_wt (CR CC : Finset Z) (w : ZMod p → RatFunc (ZMod p)) (sb
 
 end Data
 
-#print axioms shiftData_of_wt
+
+section Geometry
+open ChainClasses
+variable {p o : ℕ} [Fact p.Prime]
+
+/-- Zone geometry: inside a window `[r, r + p)` the exit cuts `r + j p` and the multiples of `p`
+cannot interfere, so `NoCut` for the full cut set reduces to the absence of singular nodes. -/
+theorem noCut_cut_of_singular {r a b : ℕ} (hra : r ≤ a) (hab : a ≤ b) (hb : b < r + p)
+    (h : NoCut (Singular (p:ℤ) (o:ℤ)) (a:ℤ) (b:ℤ)) :
+    NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (a:ℤ) (b:ℤ) := by
+  intro t h1 h2 hc
+  have hp0 : (0:ℤ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
+  rcases hc with hs | ⟨j, hj⟩ | ⟨j, hj⟩
+  · exact h t h1 h2 hs
+  · exact h t h1 h2 (Or.inl ⟨j, by rw [hj]; ring⟩)
+  · have hra' : (r:ℤ) ≤ a := by exact_mod_cast hra
+    have hb' : (b:ℤ) < r + p := by exact_mod_cast hb
+    have hjp : 0 < j * (p:ℤ) := by linarith
+    have hj1 : 1 ≤ j := by
+      by_contra hj0
+      push_neg at hj0
+      nlinarith
+    nlinarith
+
+/-- Distinct row and column nodes of the zone `r + 2i`, `r + 2j + 1` (`i, j < m`, `2m < p`) are
+incongruent modulo `p`. -/
+theorem zone_dist_ne {r m i j : ℕ} (hm : 2 * m < p) (hi : i < m) (hj : j < m) :
+    (((r + 2 * j + 1 : ℕ)) : ZMod p) - ((r + 2 * i : ℕ) : ZMod p) ≠ 0 := by
+  intro h
+  have h1 : ((((r + 2 * j + 1 : ℕ) : ℤ) - ((r + 2 * i : ℕ) : ℤ) : ℤ) : ZMod p) = 0 := by
+    push_cast at h ⊢; exact h
+  rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at h1
+  have h2 : |(((r + 2 * j + 1 : ℕ) : ℤ) - ((r + 2 * i : ℕ) : ℤ))| < (p:ℤ) := by
+    rw [abs_lt]; push_cast; constructor <;> omega
+  have := Int.eq_zero_of_abs_lt_dvd h1 h2
+  omega
+
+end Geometry
+
+#print axioms noCut_cut_of_singular
+#print axioms zone_dist_ne
 end CatalanCore.Arith.Hybrid
