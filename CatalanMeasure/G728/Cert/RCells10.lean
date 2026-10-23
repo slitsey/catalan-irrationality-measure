@@ -1,6 +1,6 @@
 module
 public import CatalanMeasure.G728.CellW
-public import CatalanMeasure.G728.RTab
+public import CatalanMeasure.G728.Cert.RTab
 public import CatalanMeasure.G728.CellSound
 public import CatalanMeasure.G728.Data
 @[expose] public section
