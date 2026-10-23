@@ -1,5 +1,6 @@
 module
 public import CatalanCore.Arith.Hybrid.ShiftOwn
+public import CatalanCore.Arith.Hybrid.ShiftGamma
 @[expose] public section
 open Finset Matrix Polynomial CatalanCore CatalanCore.Basic
 namespace CatalanCore.Arith.Hybrid
@@ -219,6 +220,194 @@ theorem Wown_cmp (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
 
 end Cmp
 
-#print axioms CatalanCore.Arith.Hybrid.rho_node
-#print axioms CatalanCore.Arith.Hybrid.Wown_cmp
+
+section GammaDiff
+open ChainModel ChainClasses LemmaE
+variable {p r N o k : ℕ} [Fact p.Prime] {Fr : Frame} {Z1 Z2 : Type} [Fintype Z1] [DecidableEq Z1]
+  [Fintype Z2] [DecidableEq Z2] {xs1 ys1 : Z1 → ℕ} {xs2 ys2 : Z2 → ℕ}
+
+lemma Cp_mul_gamF (a b α β : ℚ[X]) : C (p : ℚ) * gamF p a b α β = a * β - b * α := by
+  have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hCC : (C (p : ℚ) : ℚ[X]) * C ((p : ℚ)⁻¹) = 1 := by rw [← map_mul]; simp [hp0]
+  unfold gamF
+  calc C (p : ℚ) * (C ((p : ℚ)⁻¹) * (a * β - b * α)) = (C (p : ℚ) * C ((p : ℚ)⁻¹)) * (a * β - b * α) := by ring
+    _ = a * β - b * α := by rw [hCC, one_mul]
+
+lemma gle0_gamF {a b α β : ℚ[X]} (ha : GLE p 0 a) (hb : GLE p 0 b) (hα : GLE p 0 α) (hβ : GLE p 0 β)
+    (c1 : redI p α = redI p a) (c2 : redI p β = redI p b) : GLE p 0 (gamF p a b α β) := by
+  obtain ⟨u, hu, e1⟩ := exists_div_of_redI_eq hα ha c1
+  obtain ⟨v, hv, e2⟩ := exists_div_of_redI_eq hβ hb c2
+  rw [gamF_eq e1 e2]
+  exact gle0_of_int1 ((int1_of_gle0 (gle0_mul ha hv)).sub (int1_of_gle0 (gle0_mul hb hu)))
+
+lemma redI_Rg_diff (hp : 5 ≤ p) (a b : ℕ) :
+    redI p (C (Rg p o b - Rg p o a)) =
+      rfC p (cyclicPrefix (fun x : ZMod p => x⁻¹ - (x - (4 : ZMod p)⁻¹ * (o : ZMod p))⁻¹) b -
+        cyclicPrefix (fun x : ZMod p => x⁻¹ - (x - (4 : ZMod p)⁻¹ * (o : ZMod p))⁻¹) a) := by
+  have g := (good_regularPrefix (p := p) (o:ℤ) (four_ne_zmod p hp) b).sub
+    (good_regularPrefix (p := p) (o:ℤ) (four_ne_zmod p hp) a)
+  rw [Rg_eq_regularPrefix, Rg_eq_regularPrefix, redI_C g.mem, g.eq]
+  simp
+
+lemma redI_h_sub_sumSr {Z : Type} [Fintype Z] [DecidableEq Z] {xs ys : Z → ℕ}
+    (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N) (hx : ∀ z, xs z<N) (z : Z)
+    (hxz : r ≤ xs z) :
+    redI p (ChainModel.h Fr p r xs ys - ∑ m, Sr Fr p r xs ys z m) =
+      redI p (ChainModel.h Fr p r xs ys) * srcB Fr p o r (xs z) := by
+  have hSr : ∀ m, GLE p 0 (Sr Fr p r xs ys z m) := fun m =>
+    gle0_of_int1 (Sr_int1 hL hp hN hr hx z m)
+  have hh := gle0_h (xs := xs) (ys := ys) hL hp hN hr
+  have hs := sum_redI_Sr_chain (ys := ys) hL hp hN hr hx z hxz (fun _ => 1)
+  simp only [mul_one] at hs
+  rw [redI_sub hh (GLE.sum fun m _ => hSr m), redI_sum _ _ (fun m _ => hSr m), hs]
+  unfold srcB sourceB
+  ring
+
+end GammaDiff
+
+section GammaDiff2
+open ChainModel ChainClasses LemmaE
+variable {p r N o k : ℕ} [Fact p.Prime] {Fr : Frame} {Z1 Z2 : Type} [Fintype Z1] [DecidableEq Z1]
+  [Fintype Z2] [DecidableEq Z2] {xs1 ys1 : Z1 → ℕ} {xs2 ys2 : Z2 → ℕ}
+
+/-- **The difference of the one-node function `Γ` between two nodes of a cell, reduced.** -/
+theorem gamma_diff (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+    (hk : (4:ZMod p)*k=(o:ZMod p)) (hx1 : ∀ z, xs1 z<N) (hx2 : ∀ z, xs2 z<N)
+    (hQ : Q Fr p r xs1 ys1 = Q Fr p r xs2 ys2)
+    {a b : ℚ[X]} (ha : Int1 p a) (hb : Int1 p b) (z1 : Z1) (z2 : Z2)
+    (hz1 : r ≤ xs1 z1) (hz2 : r ≤ xs2 z2)
+    (hnc1 : xs1 z1 ≤ xs2 z2 →
+      NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs1 z1 : ℤ) (xs2 z2 : ℤ))
+    (hnc2 : xs2 z2 ≤ xs1 z1 →
+      NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs2 z2 : ℤ) (xs1 z1 : ℤ))
+    (hA1 : redI p a = redI p (Q Fr p r xs1 ys1).det * srcB Fr p o r (xs1 z1))
+    (hB1 : redI p b = redI p (Q Fr p r xs1 ys1).det * srcA Fr p o r (xs1 z1))
+    (hsA : srcA Fr p o r (xs2 z2) = srcA Fr p o r (xs1 z1))
+    (hsB : srcB Fr p o r (xs2 z2) = srcB Fr p o r (xs1 z1))
+    (hΓ1 : GLE p 0 (gamF p a b (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1)))
+    (hΓ2 : GLE p 0 (gamF p a b (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2))) :
+    redI p (ChainModel.h Fr p r xs1 ys1) ^ 2 *
+        (redI p (gamF p a b (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1)) -
+          redI p (gamF p a b (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2))) =
+      redI p (Q Fr p r xs1 ys1).det *
+        (-(redI p (ChainModel.h Fr p r xs1 ys1))^2 * redI p (Q Fr p r xs1 ys1).det *
+            srcB Fr p o r (xs1 z1) ^ 2 *
+            rfC p (cyclicPrefix (fun x : ZMod p => x⁻¹ - (x - (4 : ZMod p)⁻¹ * (o : ZMod p))⁻¹)
+              (xs2 z2) -
+              cyclicPrefix (fun x : ZMod p => x⁻¹ - (x - (4 : ZMod p)⁻¹ * (o : ZMod p))⁻¹)
+              (xs1 z1)) -
+          (redI p (ChainModel.h Fr p r xs1 ys1))^2 * redI p (Q Fr p r xs1 ys1).det *
+            ∑ c : ZMod p, (rfC p ((16 * (c - ((xs1 z1 : ℕ) : ZMod p)))⁻¹) -
+                rfC p ((16 * (c - ((xs2 z2 : ℕ) : ZMod p)))⁻¹)) *
+              respAt Fr p o r c (srcA Fr p o r (xs1 z1)) (srcB Fr p o r (xs1 z1))) := by
+  classical
+  have hQ0 : Q0 Fr p r xs1 ys1 = Q0 Fr p r xs2 ys2 := by unfold Q0; rw [hQ]
+  have hh : ChainModel.h Fr p r xs1 ys1 = ChainModel.h Fr p r xs2 ys2 := by
+    unfold ChainModel.h; rw [hQ0]
+  have hg : (Q Fr p r xs2 ys2).det = (Q Fr p r xs1 ys1).det := by rw [hQ]
+  have hε : (0:ℝ) ≤ ((p:ℝ)⁻¹)^2 := by
+    have : (0:ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
+    positivity
+  set gb := redI p (Q Fr p r xs1 ys1).det with hgb
+  obtain ⟨Y1, hY1g, hY1r, hY1b⟩ := rho_node (ys := ys1) hL hp hN hr hk hx1 ha hb gb z1 hz1 hA1 hB1
+  have hA2 : redI p a = gb * srcB Fr p o r (xs2 z2) := by rw [hsB]; exact hA1
+  have hB2 : redI p b = gb * srcA Fr p o r (xs2 z2) := by rw [hsA]; exact hB1
+  obtain ⟨Y2, hY2g, hY2r, hY2b⟩ := rho_node (ys := ys2) hL hp hN hr hk hx2 ha hb gb z2 hz2 hA2 hB2
+  rw [← hh, hg] at hY2b
+  rw [← hh, hsA, hsB] at hY2r
+  have W := Wown_cmp hL hp hN hr hx1 hx2 hQ0 z1 z2 hz1 hz2 hnc1 hnc2 ha hb
+  set R : ℚ := Rg p o (xs2 z2) - Rg p o (xs1 z1) with hRdef
+  set h := ChainModel.h Fr p r xs1 ys1 with hhdef
+  set g := (Q Fr p r xs1 ys1).det with hgdef
+  set σ := ∑ m, Sr Fr p r xs1 ys1 z1 m with hσ
+  set Γ1 := gamF p a b (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1) with hΓ1d
+  set Γ2 := gamF p a b (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2) with hΓ2d
+  set D' : ℚ[X] := h ^ 2 * (Γ1 - Γ2) - g * (-(h * (a * C R * (h - σ))) + (Y1 - Y2)) with hD'
+  -- C p * D' is small
+  have hCD : C (p : ℚ) * D' =
+      (h ^ 2 * (a * bR Fr p r xs1 ys1 z1 - b * aR Fr p r xs1 ys1 z1) - g * (h * Wown Fr p r xs1 ys1 a b z1 + C (p:ℚ) * Y1)) -
+      (h ^ 2 * (a * bR Fr p r xs2 ys2 z2 - b * aR Fr p r xs2 ys2 z2) - g * (h * Wown Fr p r xs2 ys2 a b z2 + C (p:ℚ) * Y2)) +
+      g * h * (Wown Fr p r xs1 ys1 a b z1 - Wown Fr p r xs2 ys2 a b z2 +
+        a * C ((p:ℚ) * R) * (h - σ)) := by
+    have e1 := Cp_mul_gamF (p := p) a b (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1)
+    have e2 := Cp_mul_gamF (p := p) a b (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+    have e3 : (C ((p:ℚ) * R) : ℚ[X]) = C (p:ℚ) * C R := by rw [map_mul]
+    rw [hD', e3]
+    linear_combination (h ^ 2) * e1 - (h ^ 2) * e2
+  have hgn1 : gn p g ≤ 1 := (ChainModel.Q_primitive (xs := xs1) (ys := ys1) hL hp hN hr).le
+  have hhn1 : gn p h ≤ 1 := by
+    have := (gle_iff_gn p 0 _).1 (gle0_h (xs := xs1) (ys := ys1) hL hp hN hr)
+    simpa using this
+  have hbound : gn p (C (p:ℚ) * D') ≤ ((p:ℝ)⁻¹)^2 := by
+    rw [hCD]
+    refine (gn_add_le _ _).trans (max_le ?_ ?_)
+    · rw [sub_eq_add_neg]
+      refine (gn_add_le _ _).trans (max_le hY1b ?_)
+      rw [gn_neg]; exact hY2b
+    · rw [gn_mul]
+      calc gn p (g * h) * _ ≤ 1 * ((p:ℝ)⁻¹)^2 := by
+            refine mul_le_mul ?_ W (gn_nonneg p _) zero_le_one
+            rw [gn_mul]
+            exact mul_le_one₀ hgn1 (gn_nonneg p _) hhn1
+        _ = _ := one_mul _
+  have hp0 : (0:ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
+  have hp1 : (1:ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
+  have hCp : gn p (C (p:ℚ)) = (p:ℝ)⁻¹ := by
+    rw [gn_C, padicNorm.padicNorm_p_of_prime]; push_cast; rfl
+  have hD'le : gn p D' ≤ (p:ℝ)⁻¹ := by
+    rw [gn_mul, hCp] at hbound
+    have hpi : (0:ℝ) < (p:ℝ)⁻¹ := by positivity
+    have : (p:ℝ)⁻¹ * gn p D' ≤ (p:ℝ)⁻¹ * (p:ℝ)⁻¹ := by nlinarith [hbound]
+    exact le_of_mul_le_mul_left this hpi
+  have hlt : gn p D' < 1 := lt_of_le_of_lt hD'le (inv_lt_one_of_one_lt₀ hp1)
+  -- integrality of the pieces
+  have h0 : GLE p 0 h := gle0_h (xs := xs1) (ys := ys1) hL hp hN hr
+  have g0 : GLE p 0 g := ChainModel.gle0_det hL hp hN hr
+  have a0 : GLE p 0 a := gle0_of_int1 ha
+  have CR0 : GLE p 0 (C R) := by
+    have hmem : R ∈ LocRing p := Subring.sub_mem _ (Rg_mem hp _) (Rg_mem hp _)
+    exact GLE.C_iff.2 (by simpa using hmem)
+  have hSr : ∀ m, GLE p 0 (Sr Fr p r xs1 ys1 z1 m) := fun m =>
+    gle0_of_int1 (Sr_int1 hL hp hN hr hx1 z1 m)
+  have σ0 : GLE p 0 σ := GLE.sum fun m _ => hSr m
+  have hs0 : GLE p 0 (h - σ) := gle0_of_int1 ((int1_of_gle0 h0).sub (int1_of_gle0 σ0))
+  have rhs0 : GLE p 0 (g * (-(h * (a * C R * (h - σ))) + (Y1 - Y2))) :=
+    gle0_mul g0 (gle0_of_int1 (((int1_of_gle0 (gle0_mul h0 (gle0_mul (gle0_mul a0 CR0) hs0))).neg).add
+      ((int1_of_gle0 hY1g).sub (int1_of_gle0 hY2g))))
+  have hh2 : GLE p 0 (h ^ 2) := by rw [pow_two]; exact gle0_mul h0 h0
+  have lhs0 : GLE p 0 (h ^ 2 * (Γ1 - Γ2)) :=
+    gle0_mul hh2 (gle0_of_int1 ((int1_of_gle0 hΓ1).sub (int1_of_gle0 hΓ2)))
+  have hcng : Cng p (h ^ 2 * (Γ1 - Γ2)) (g * (-(h * (a * C R * (h - σ))) + (Y1 - Y2))) := hlt
+  have hred := redI_cng lhs0 rhs0 hcng
+  rw [redI_mul hh2 (gle0_of_int1 ((int1_of_gle0 hΓ1).sub (int1_of_gle0 hΓ2))),
+    redI_sub hΓ1 hΓ2, redI_mul g0 (gle0_of_int1 (((int1_of_gle0 (gle0_mul h0
+      (gle0_mul (gle0_mul a0 CR0) hs0))).neg).add ((int1_of_gle0 hY1g).sub (int1_of_gle0 hY2g)))),
+    redI_add (gle0_of_int1 (int1_of_gle0 (gle0_mul h0 (gle0_mul (gle0_mul a0 CR0) hs0))).neg)
+      (gle0_of_int1 ((int1_of_gle0 hY1g).sub (int1_of_gle0 hY2g))),
+    redI_neg (gle0_mul h0 (gle0_mul (gle0_mul a0 CR0) hs0)),
+    redI_mul h0 (gle0_mul (gle0_mul a0 CR0) hs0), redI_mul (gle0_mul a0 CR0) hs0,
+    redI_mul a0 CR0, redI_sub hY1g hY2g, hA1, redI_h_sub_sumSr (ys := ys1) hL hp hN hr hx1 z1 hz1,
+    hY1r, hY2r] at hred
+  rw [redI_Rg_diff hp] at hred
+  have hpow : redI p (h ^ 2) = redI p h ^ 2 := by
+    rw [pow_two, redI_mul h0 h0, pow_two]
+  rw [hpow] at hred
+  rw [hred]
+  have hS : ∑ c : ZMod p, (rfC p ((16 * (c - ((xs1 z1 : ℕ) : ZMod p)))⁻¹) -
+        rfC p ((16 * (c - ((xs2 z2 : ℕ) : ZMod p)))⁻¹)) *
+      respAt Fr p o r c (srcA Fr p o r (xs1 z1)) (srcB Fr p o r (xs1 z1)) =
+      (∑ c : ZMod p, rfC p ((16 * (c - ((xs1 z1 : ℕ) : ZMod p)))⁻¹) *
+        respAt Fr p o r c (srcA Fr p o r (xs1 z1)) (srcB Fr p o r (xs1 z1))) -
+      ∑ c : ZMod p, rfC p ((16 * (c - ((xs2 z2 : ℕ) : ZMod p)))⁻¹) *
+        respAt Fr p o r c (srcA Fr p o r (xs1 z1)) (srcB Fr p o r (xs1 z1)) := by
+    simp only [sub_mul, Finset.sum_sub_distrib]
+  rw [hS]
+  have hgb' : redI p g = gb := rfl
+  have hhh : redI p (ChainModel.h Fr p r xs1 ys1) = redI p h := rfl
+  simp only [hgb', hhh]
+  ring
+
+end GammaDiff2
+
+#print axioms CatalanCore.Arith.Hybrid.gamma_diff
 end CatalanCore.Arith.Hybrid
