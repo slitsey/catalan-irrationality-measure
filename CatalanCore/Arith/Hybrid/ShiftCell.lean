@@ -116,6 +116,25 @@ theorem sourceAB_chainTransport (hL : LamData Fr o) {r x x' : ℕ} (hxx : x ≤ 
 
 end Transport
 
-#print axioms sourceAB_reindex
-#print axioms sourceAB_chainTransport
+
+section Const
+variable {p o : ℕ} [Fact p.Prime] {Fr : Frame} {Z : Type}
+
+/-- Constancy of the source moments over a set of nodes lying in one cut-free interval. -/
+theorem sourceAB_const (hL : LamData Fr o) {r : ℕ} (S : Finset Z) (node : Z → ℕ) (hS : S.Nonempty)
+    (hcell : ∀ z ∈ S, ∀ z' ∈ S, node z ≤ node z' →
+      NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (node z : ℤ) (node z' : ℤ)) :
+    ∃ SA SB : RatFunc (ZMod p), ∀ z ∈ S,
+      sourceA Fr p o (fun j : ChainIndex p r (node z) => (chainNode j).val) (node z) = SA ∧
+      sourceB Fr p o (fun j : ChainIndex p r (node z) => (chainNode j).val) (node z) = SB := by
+  obtain ⟨z0, hz0⟩ := hS
+  refine ⟨sourceA Fr p o (fun j : ChainIndex p r (node z0) => (chainNode j).val) (node z0),
+    sourceB Fr p o (fun j : ChainIndex p r (node z0) => (chainNode j).val) (node z0), fun z hz => ?_⟩
+  rcases le_total (node z0) (node z) with h | h
+  · exact sourceAB_chainTransport hL h (hcell z0 hz0 z hz h)
+  · have := sourceAB_chainTransport hL h (hcell z hz z0 hz0 h)
+    exact ⟨this.1.symm, this.2.symm⟩
+end Const
+
+#print axioms sourceAB_const
 end CatalanCore.Arith.Hybrid
