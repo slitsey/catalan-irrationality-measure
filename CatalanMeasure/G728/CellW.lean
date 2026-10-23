@@ -114,4 +114,42 @@ theorem cellValP_some_of (ev : ℚ → Option (ℚ × ℚ)) (D : PolyData) (pole
   rw [hpb]
   exact h
 
+theorem cellT_none_of_pieces (S : ℕ → Spec) (D : PolyData) (m L : ℕ) (MGL : ℤ) (cap : ℚ)
+    (cc hh : ℤ) (t : ℕ) (U : ℚ) (FH AA : List ℤ) (Mp : ℤ)
+    (hpeel : (S t).peel = none)
+    (hev : evLe (S t).ev ((cc : ℚ) / (TT : ℚ)) U = true)
+    (hfh : fhL D.N (S t).poles cc (polyValsD D cc (m + L)) m = FH)
+    (hA : AL D.N (polyValsD D cc (m + L)) m L = AA)
+    (hMp : MpoleV (S t).poles m (((cc - hh : ℤ) : ℚ) / (TT : ℚ)) (((cc + hh : ℤ) : ℚ) / (TT : ℚ)) = Mp)
+    (hfin : cellFin D (S t).poles m L MGL none cap (cc, hh) U FH AA Mp = true) :
+    cellT S D m L MGL cap (cc, hh, t) = true := by
+  unfold cellT
+  simp only
+  rw [hpeel]
+  exact cellValP_none_of _ _ _ _ _ _ _ _
+    (cellVal_of_pieces _ _ _ _ _ _ _ _ _ _ _ _ _ _ hev hfh hA hMp hfin)
+
+theorem cellT_some_of_pieces (S : ℕ → Spec) (D : PolyData) (m L : ℕ) (MGL : ℤ) (cap : ℚ)
+    (cc hh : ℤ) (t : ℕ) (w p u : ℚ) (U : ℚ) (FH AA : List ℤ) (Mp : ℤ)
+    (hpeel : (S t).peel = some (w, p))
+    (hpb : peelBound w p (((cc - hh : ℤ) : ℚ) / (TT : ℚ)) (((cc + hh : ℤ) : ℚ) / (TT : ℚ)) = some u)
+    (hev : evLe (S t).ev ((cc : ℚ) / (TT : ℚ)) U = true)
+    (hfh : fhL D.N (S t).poles cc (polyValsD D cc (m + L)) m = FH)
+    (hA : AL D.N (polyValsD D cc (m + L)) m L = AA)
+    (hMp : MpoleV (S t).poles m (((cc - hh : ℤ) : ℚ) / (TT : ℚ)) (((cc + hh : ℤ) : ℚ) / (TT : ℚ)) = Mp)
+    (hfin : cellFin D (S t).poles m L MGL (some p) (cap - u) (cc, hh) U FH AA Mp = true) :
+    cellT S D m L MGL cap (cc, hh, t) = true := by
+  unfold cellT
+  simp only
+  rw [hpeel]
+  exact cellValP_some_of _ _ _ _ _ _ _ _ _ _ _ _ hpb
+    (cellVal_of_pieces _ _ _ _ _ _ _ _ _ _ _ _ _ _ hev hfh hA hMp hfin)
+
+theorem ok_append {α : Type*} {p : α → Bool} {l1 l2 : List α} (h1 : ∀ c ∈ l1, p c = true)
+    (h2 : ∀ c ∈ l2, p c = true) : ∀ c ∈ l1 ++ l2, p c = true := by
+  intro c hc
+  rcases List.mem_append.mp hc with h | h
+  · exact h1 c h
+  · exact h2 c h
+
 end CatalanMeasure.G728
