@@ -22,8 +22,8 @@ Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determina
 
 The repository also contains a second, fully formalized result:
 
-- μ(G − 5π²/48) ≤ 34.74;
-- μ(G + 5π²/48) ≤ 34.74;
+- μ(G − 5π²/48) ≤ 32.44;
+- μ(G + 5π²/48) ≤ 32.44;
 - μ(L(2, χ₋₃)) ≤ 14.35.
 
 The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
@@ -31,9 +31,9 @@ The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Ta
 - Statements: [`ChallengeHybrid.lean`](ChallengeHybrid.lean) (Mathlib only).
 - Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
 - Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
-- The 34.74 improvements reuse the existing decay and nonvanishing proofs. A generic monic rescaling, translated-chain cancellation, weighted border, and kernel-checked 61-row prime profile improve the content constant to 3.68274.
+- The 32.44 bounds add a next-level Smith deficit at non-clean primes (a weighted Cauchy-type congruence on overfull long cells) and a decay certificate with contour rays of slope 5/2, ρ = 1/4096 and dual-guided atoms (D ≥ 3.90557, c ≤ 7.3546). Lean theorems: `lam_hybrid_measure_3244` and `mir_hybrid_measure_3244`. The content constant is Λ ≤ 2015079667893797/547747200000000 < 3.67885. The earlier 34.74 improvements reuse the existing decay and nonvanishing proofs. A generic monic rescaling, translated-chain cancellation, weighted border, and kernel-checked 61-row prime profile improve the content constant to 3.68274.
 - The 14.35 improvement uses the same characteristic-zero selector, at most one common-node deletion and a quarter border. Sixteen periodic D1 strips give Λ = 339258406689121/82516315939200. A kernel-checked 1600-atom witness, with positive-real support and redistributed ray nodes, gives D ≥ 4.633628 and c = 7.49256; c/(D − Λ) is approximately 14.347571379. Shared content, selection and decay interfaces are reused. The exact witness and budget are in [`paper-lambda/certificates/`](paper-lambda/certificates/).
-- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The repository PDF was regenerated from the current LaTeX sources on October 22, 2026 and includes the 34.74 and 14.35 bounds in its abstract, main theorem and detailed argument. The linked hosted v1 preprint has not been updated; this repository artifact update does not upload a new preprint version.
+- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The LaTeX sources were updated on October 23, 2026 and state the 32.44 and 14.35 bounds in the abstract, main theorem and detailed argument. They are prepared as v2 of `hexagon:2610.00401`, which is not yet uploaded.
 - Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
 
 ## What to read
