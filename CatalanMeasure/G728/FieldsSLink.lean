@@ -212,5 +212,67 @@ theorem rowFieldSP_hasDerivAt (R : RowWeights) {Pc Vc : List ℤ} {P V : List Ta
     field_simp
     ring
 
+/-! ### the column field -/
+
+theorem hasDerivAt_peel0c (b : ℝ) (f0 : Bool) {x : ℝ} (h0 : f0 = true ∨ x ≠ 0) :
+    HasDerivAt (fun y : ℝ => if f0 then (0 : ℝ) else b * Real.log y)
+      (if f0 then 0 else b / x) x := by
+  cases f0
+  · have hx : x ≠ 0 := h0.resolve_left (by simp)
+    have := Real.hasDerivAt_log hx
+    simpa [div_eq_mul_inv] using this.const_mul b
+  · simpa using hasDerivAt_const x (0 : ℝ)
+
+theorem colFieldSP_hasDerivAt (C : ColumnWeights) {Vc : List ℤ} {V : List TailQ}
+    (hV : tailsInDisk V = true) (hVz : ∀ t ∈ V, t.zr ≠ 0 ∨ t.zi ≠ 0)
+    (Z : List ℤ) (hZ : ∀ x : ℝ, 2 * finUR Vc x = ptZ Z 0 x)
+    (f0 f1 : Bool) {x : ℝ} (hx : x ∈ Ioo (-1 : ℝ) 1) (h0 : f0 = true ∨ x ≠ 0) :
+    HasDerivAt (colFieldSP C Vc V f0 f1) (ftZ Z (colPolesP C V f0 f1) 0 x) x := by
+  have hxa : |x| ≤ 1 := abs_le.mpr ⟨hx.1.le, hx.2.le⟩
+  have h1 : f1 = true ∨ x ≠ 1 := Or.inr hx.2.ne
+  obtain ⟨sV1, sV2⟩ := trialSeqS_summable (cs := Vc) hV
+  have hT := barrierTrialT_hasDerivAt_series (trialSeqS Vc V) sV1 sV2 hx
+  rw [(trialSeqS_U_hasSum Vc hV hxa).tsum_eq] at hT
+  have hall := ((hasDerivAt_peel0c (C.b : ℝ) f0 h0).add
+    (hasDerivAt_peel1 (C.q : ℝ) f1 h1)).add (hT.const_mul 2)
+  unfold colFieldSP colFieldGP colRegG
+  refine hall.congr_deriv ?_
+  unfold ftZ
+  rw [← hZ x]
+  simp only [colPolesP, List.map_append, List.sum_append, List.map_cons, List.map_nil,
+    List.sum_cons, List.sum_nil, sum_qt_poleC V hV hVz hxa]
+  unfold finUR
+  cases f0 <;> cases f1 <;>
+  · simp only [Bool.false_eq_true, if_false, if_true, List.map_nil, List.sum_nil,
+      List.map_cons, List.sum_cons, List.nil_append, qt_real, Rat.cast_zero, Rat.cast_one,
+      sub_zero]
+    ring
+
+/-! ### the residual field -/
+
+theorem resFieldS_hasDerivAt {Pc : List ℤ} {P : List TailQ}
+    (hP : tailsInDisk P = true) (hPz : ∀ t ∈ P, t.zr ≠ 0 ∨ t.zi ≠ 0)
+    (Z : List ℤ) (hZ : ∀ x : ℝ, -2 * finUR Pc x = ptZ Z 0 x)
+    {x : ℝ} (hx : x ∈ Ioo (-1 : ℝ) 1) :
+    HasDerivAt (resFieldS Pc P) (ftZ Z (resPoles P) 0 x) x := by
+  have hxa : |x| ≤ 1 := abs_le.mpr ⟨hx.1.le, hx.2.le⟩
+  obtain ⟨sP1, sP2⟩ := trialSeqS_summable (cs := Pc) hP
+  have hT := barrierTrialT_hasDerivAt_series (trialSeqS Pc P) sP1 sP2 hx
+  rw [(trialSeqS_U_hasSum Pc hP hxa).tsum_eq] at hT
+  have hg := (hasDerivAt_log_one_add_sq x).const_mul (-(9 / 10 : ℝ))
+  have hall := hg.sub (hT.const_mul 2)
+  unfold resFieldS resFieldG
+  refine hall.congr_deriv ?_
+  unfold ftZ
+  rw [← hZ x]
+  simp only [resPoles, List.map_cons, List.sum_cons, sum_qt_poleOfTail P hP hPz hxa]
+  rw [qt_i]
+  unfold finUR
+  have hd : (x ^ 2 + 1) ≠ 0 := by positivity
+  have hd' : (1 + x ^ 2) ≠ 0 := by positivity
+  push_cast
+  field_simp
+  ring
+
 end
 end CatalanMeasure.G728
