@@ -115,5 +115,77 @@ theorem node_formula_alg (hp : 5 ≤ p) {h : ℕ} (hh : h < p) (hroot : 4 * (h :
 
 end NodeAlg
 
-#print axioms CatalanCore.Arith.Hybrid.node_formula_alg
+
+section NodeGamma
+open ChainModel ChainClasses LemmaE
+variable {p r N o k : ℕ} [Fact p.Prime] {Fr : Frame} {Z1 Z2 : Type} [Fintype Z1] [DecidableEq Z1]
+  [Fintype Z2] [DecidableEq Z2] {xs1 ys1 : Z1 → ℕ} {xs2 ys2 : Z2 → ℕ}
+
+/-- **The one-node formula at a node of the cell, relative to the reference row.** -/
+theorem node_gamma (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+    (hk : (4:ZMod p)*k=(o:ZMod p)) {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    (hx1 : ∀ z, xs1 z<N) (hy1 : ∀ y, ys1 y<N) (hx2 : ∀ z, xs2 z<N) (hy2 : ∀ y, ys2 y<N)
+    (hQ : Q Fr p r xs1 ys1 = Q Fr p r xs2 ys2) (z1 : Z1) (z2 : Z2)
+    (hz1 : r ≤ xs1 z1) (hz2 : r ≤ xs2 z2)
+    (hnc1 : xs1 z1 ≤ xs2 z2 →
+      NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs1 z1 : ℤ) (xs2 z2 : ℤ))
+    (hnc2 : xs2 z2 ≤ xs1 z1 →
+      NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs2 z2 : ℤ) (xs1 z1 : ℤ))
+    (hsA : srcA Fr p o r (xs2 z2) = srcA Fr p o r (xs1 z1))
+    (hsB : srcB Fr p o r (xs2 z2) = srcB Fr p o r (xs1 z1))
+    (hn : ((xs1 z1 : ℕ) : ZMod p) ∉ shortArc p h) (hn0 : ((xs2 z2 : ℕ) : ZMod p) ∉ shortArc p h) :
+    redI p (gamF p (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+        (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1)) =
+      redI p (Q Fr p r xs2 ys2).det * rfC p 16 * ∑ c : ZMod p,
+        zoneWeight Fr p o r h (xs2 z2)
+          (redI p (Q Fr p r xs2 ys2).det * (rfC p 16)⁻¹ * (rfC p 16)⁻¹)
+          (-(redI p (Q Fr p r xs2 ys2).det * srcB Fr p o r (xs2 z2) ^ 2 *
+            rfC p (if 2 * h < p then (1 : ZMod p) else -1) * (rfC p 16)⁻¹)) c *
+          (rfC p ((c - ((xs1 z1 : ℕ) : ZMod p))⁻¹) - rfC p ((c - ((xs2 z2 : ℕ) : ZMod p))⁻¹)) := by
+  classical
+  have hg12 : (Q Fr p r xs1 ys1).det = (Q Fr p r xs2 ys2).det := by rw [hQ]
+  have hhh : ChainModel.h Fr p r xs1 ys1 = ChainModel.h Fr p r xs2 ys2 := by
+    unfold ChainModel.h Q0; rw [hQ]
+  -- reductions of the leading moments
+  have rA2 := redI_aR hL hp hN hr hk hx2 hy2 z2 hz2
+  have rB2 := redI_bR hL hp hN hr hk hx2 hy2 z2 hz2
+  have rA1 := redI_aR hL hp hN hr hk hx1 hy1 z1 hz1
+  have rB1 := redI_bR hL hp hN hr hk hx1 hy1 z1 hz1
+  have ha : Int1 p (aR Fr p r xs2 ys2 z2) := int1_aR hL hp hN hr hx2 hy2 z2
+  have hb : Int1 p (bR Fr p r xs2 ys2 z2) := int1_bR hL hp hN hr hx2 hy2 z2
+  have hA1 : redI p (aR Fr p r xs2 ys2 z2) = redI p (Q Fr p r xs1 ys1).det * srcB Fr p o r (xs1 z1) := by
+    rw [rA2, hg12]
+    change _ * srcB Fr p o r (xs2 z2) = _
+    rw [hsB]
+  have hB1 : redI p (bR Fr p r xs2 ys2 z2) = redI p (Q Fr p r xs1 ys1).det * srcA Fr p o r (xs1 z1) := by
+    rw [rB2, hg12]
+    change _ * srcA Fr p o r (xs2 z2) = _
+    rw [hsA]
+  have hΓ1 : GLE p 0 (gamF p (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+      (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1)) :=
+    gle0_gamF (gle0_of_int1 ha) (gle0_of_int1 hb)
+      (gle0_of_int1 (int1_aR hL hp hN hr hx1 hy1 z1)) (gle0_of_int1 (int1_bR hL hp hN hr hx1 hy1 z1))
+      (by rw [rA1, hA1]; rfl) (by rw [rB1, hB1]; rfl)
+  have hΓ2 : GLE p 0 (gamF p (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+      (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)) :=
+    gle0_gamF (gle0_of_int1 ha) (gle0_of_int1 hb) (gle0_of_int1 ha) (gle0_of_int1 hb) rfl rfl
+  have hG := gamma_diff hL hp hN hr hk hx1 hx2 hQ ha hb z1 z2 hz1 hz2 hnc1 hnc2 hA1 hB1 hsA hsB hΓ1 hΓ2
+  have hz : gamF p (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+      (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2) = 0 := by
+    unfold gamF; ring
+  rw [hz, redI_zero, hhh, hg12, ← hsA, ← hsB] at hG
+  have hnf := node_formula_alg hp hh hroot (xs1 z1) (xs2 z2) hn hn0
+    (redI p (gamF p (aR Fr p r xs2 ys2 z2) (bR Fr p r xs2 ys2 z2)
+        (aR Fr p r xs1 ys1 z1) (bR Fr p r xs1 ys1 z1))) 0
+    (redI p (ChainModel.h Fr p r xs2 ys2)) (redI p (Q Fr p r xs2 ys2).det)
+    (srcB Fr p o r (xs2 z2)) (srcC Fr p o r (xs2 z2))
+    (fun c => respAt Fr p o r c (srcA Fr p o r (xs2 z2)) (srcB Fr p o r (xs2 z2)))
+    (redI_h_ne_zero (xs := xs2) (ys := ys2) hL hp hN hr) hG
+  rw [sub_zero] at hnf
+  rw [hnf]
+  rfl
+
+end NodeGamma
+
+#print axioms CatalanCore.Arith.Hybrid.node_gamma
 end CatalanCore.Arith.Hybrid
