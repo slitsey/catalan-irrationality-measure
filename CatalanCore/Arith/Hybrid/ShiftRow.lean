@@ -88,6 +88,29 @@ theorem twoLevel_row_both (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (h
   rw [hcard] at H1 H2
   exact ⟨H1, H2⟩
 
+/-- **Row-local form.**  For any deficit `δ` within the two-level saving
+`σ + (σ - B)` (overfull long cell, `σ = (b - a) - m`), both family members clear the baseline
+`2 r + m` minus `δ`, the second one with the production border slack `topC`.  This is the shape
+`ProfileRowLocal` asks of a row (`baseline - rowDeficit` with `baseline = 2 r + m` for `2 m ≤ p`);
+`13 ≤ p` is the profile guard. -/
+theorem twoLevel_row_local (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o) (hp13 : 13 ≤ p)
+    (hm : 2 * m < p) (hN : 4 * (r + 2 * m + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * m)
+    {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    {a b : ℕ} (hra : r ≤ a) (hbN : b ≤ r + 2 * m)
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : a ≤ r + 2 * z0.val ∧ r + 2 * z0.val < b)
+    (hlong : ∀ k, a ≤ k → k < b → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h)
+    (hN1 : WeightedSameCell Fr p o r m a b h (r + 2 * z0.val))
+    (hσ : (b - a - m) + ((b - a - m) - (zoneSb p r m h).card) ≤ m)
+    {δ : ℕ} (hδ : δ ≤ (b - a - m) + ((b - a - m) - (zoneSb p r m h).card)) :
+    GLE p (2 * r + m - δ) (Fr.fullPoly r m) ∧
+    GLE p (2 * r + m - δ + topC I r m p) ((Rect.afterTop r m).fullPolyG Fr) := by
+  have H := twoLevel_row_both I hL (by omega) hm hN hk hb hh hroot hra hbN hcut z0 hz0 hlong hN1 hσ
+  exact ⟨H.1.mono (by omega), H.2.mono (by omega)⟩
+
 end Row
 #print axioms twoLevel_row_both
+#print axioms twoLevel_row_local
 end CatalanCore.Arith.Hybrid
