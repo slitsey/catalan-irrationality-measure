@@ -127,10 +127,9 @@ theorem rowFieldGP_continuousOn (α β γ : ℝ) (f0 f1 : Bool) {u v : ℕ → �
 
 theorem colFieldGP_continuousOn (b q : ℝ) (f0 f1 : Bool) {v : ℕ → ℝ}
     (hv : Summable (fun k => |v k|)) {S : Set ℝ}
-    (hS : S ⊆ Icc (0 : ℝ) 1) (h0 : f0 = true ∨ (0 : ℝ) ∉ S) (h1 : f1 = true ∨ (1 : ℝ) ∉ S) :
+    (hS : S ⊆ Icc (-1 : ℝ) 1) (h0 : f0 = true ∨ (0 : ℝ) ∉ S) (h1 : f1 = true ∨ (1 : ℝ) ∉ S) :
     ContinuousOn (colFieldGP b q f0 f1 v) S := by
-  have hr := (colRegG_continuousOn hv).mono
-    (hS.trans (Icc_subset_Icc (by norm_num) le_rfl))
+  have hr := (colRegG_continuousOn hv).mono hS
   have a0 : ContinuousOn (fun x : ℝ => if f0 then (0 : ℝ) else b * Real.log x) S := by
     cases f0
     · simpa using continuousOn_log_id (h0.resolve_left (by simp)) b
@@ -228,7 +227,7 @@ theorem rowFieldSP_continuousOn (R : RowWeights) {Pc Vc : List ℤ} {P V : List 
 
 theorem colFieldSP_continuousOn (C : ColumnWeights) {Vc : List ℤ} {V : List TailQ}
     (hV : tailsInDisk V = true) (f0 f1 : Bool) {S : Set ℝ}
-    (hS : S ⊆ Icc (0 : ℝ) 1) (h0 : f0 = true ∨ (0 : ℝ) ∉ S) (h1 : f1 = true ∨ (1 : ℝ) ∉ S) :
+    (hS : S ⊆ Icc (-1 : ℝ) 1) (h0 : f0 = true ∨ (0 : ℝ) ∉ S) (h1 : f1 = true ∨ (1 : ℝ) ∉ S) :
     ContinuousOn (colFieldSP C Vc V f0 f1) S :=
   colFieldGP_continuousOn _ _ f0 f1 (trialSeqS_summable hV).1 hS h0 h1
 
