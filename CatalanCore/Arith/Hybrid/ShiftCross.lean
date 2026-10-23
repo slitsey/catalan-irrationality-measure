@@ -54,5 +54,31 @@ theorem redI_pMn_cross (hL : LamData Fr o) (hp : 5 ≤ p) (hN : 4 * N < p * p) {
 
 end Cross
 
-#print axioms redI_pMn_cross
+
+section CrossSym
+variable {p N o : ℕ} [Fact p.Prime] {Fr : Frame}
+
+/-- The cross entry in either order. -/
+theorem good_pMn_cross_sym (hL : LamData Fr o) (hp : 5 ≤ p) (hN : 4 * N < p * p) {A B : ℕ}
+    (hA : A < N) (hB : B < N) (hd : ((B : ZMod p) - A) ≠ 0) :
+    (p : ℚ) * Fr.Mn A B ∈ LocRing p ∧
+    redI p (C ((p : ℚ) * Fr.Mn A B)) =
+      rfC p ((16 * ((B : ZMod p) - A))⁻¹) * (poleL Fr p o B - poleL Fr p o A) := by
+  rcases lt_trichotomy A B with h | h | h
+  · exact ⟨(good_pMn_cross hL hp hN h hB hd).mem, redI_pMn_cross hL hp hN h hB hd⟩
+  · subst h; exact absurd (sub_self _) hd
+  · have hd' : ((A : ZMod p) - B) ≠ 0 := by
+      intro he; apply hd; linear_combination -he
+    refine ⟨?_, ?_⟩
+    · rw [Mn_symm]; exact (good_pMn_cross hL hp hN h hA hd').mem
+    · rw [Mn_symm, redI_pMn_cross hL hp hN h hA hd']
+      have e : (16 * ((B : ZMod p) - A))⁻¹ = -(16 * ((A : ZMod p) - B))⁻¹ := by
+        rw [show (16 * ((B : ZMod p) - A)) = -(16 * ((A : ZMod p) - B)) by ring, inv_neg]
+      rw [e]
+      simp only [← rfCHom_apply, map_neg]
+      ring
+
+end CrossSym
+
+#print axioms good_pMn_cross_sym
 end CatalanCore.Arith.Hybrid
