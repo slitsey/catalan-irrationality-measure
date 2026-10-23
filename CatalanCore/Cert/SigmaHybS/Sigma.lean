@@ -1678,7 +1678,7 @@ def sigH5 : List Pt := [
 def sigH : List Pt := sigH0 ++ sigH1 ++ sigH2 ++ sigH3 ++ sigH4 ++ sigH5
 
 /-- the certified ray threshold `m'` and line floor `g_min` (Arb values minus the Taylor allowance `tau`). -/
-def MPRAY : ℚ := 217129 / 100000
-def GMINS : ℚ := -150603 / 100000
+def MPRAY : ℚ := 54279 / 25000
+def GMINS : ℚ := -7530749 / 5000000
 
 end CatalanCore.Cert.SigmaHybS

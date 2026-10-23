@@ -48,8 +48,6 @@ public import CatalanCore.Cert.SigmaHybS.IChunk44
 public import CatalanCore.Cert.SigmaHybS.IChunk45
 public import CatalanCore.Cert.SigmaHybS.IChunk46
 public import CatalanCore.Cert.SigmaHybS.IChunk47
-public import CatalanCore.Cert.SigmaHybS.IChunk48
-public import CatalanCore.Cert.SigmaHybS.IChunk49
 public import CatalanCore.Cert.SigmaHybS.IBoundDef
 public import CatalanCore.Cert.SigmaHybS.Bridge
 
@@ -79,7 +77,7 @@ theorem chunk_ok : ∀ k < NCH, rowsSum (chunkStart k) (chunkLen k) = chunkVal k
   intro k hk
   unfold NCH at hk
   interval_cases k
-  exacts [iChunk_0, iChunk_1, iChunk_2, iChunk_3, iChunk_4, iChunk_5, iChunk_6, iChunk_7, iChunk_8, iChunk_9, iChunk_10, iChunk_11, iChunk_12, iChunk_13, iChunk_14, iChunk_15, iChunk_16, iChunk_17, iChunk_18, iChunk_19, iChunk_20, iChunk_21, iChunk_22, iChunk_23, iChunk_24, iChunk_25, iChunk_26, iChunk_27, iChunk_28, iChunk_29, iChunk_30, iChunk_31, iChunk_32, iChunk_33, iChunk_34, iChunk_35, iChunk_36, iChunk_37, iChunk_38, iChunk_39, iChunk_40, iChunk_41, iChunk_42, iChunk_43, iChunk_44, iChunk_45, iChunk_46, iChunk_47, iChunk_48, iChunk_49]
+  exacts [iChunk_0, iChunk_1, iChunk_2, iChunk_3, iChunk_4, iChunk_5, iChunk_6, iChunk_7, iChunk_8, iChunk_9, iChunk_10, iChunk_11, iChunk_12, iChunk_13, iChunk_14, iChunk_15, iChunk_16, iChunk_17, iChunk_18, iChunk_19, iChunk_20, iChunk_21, iChunk_22, iChunk_23, iChunk_24, iChunk_25, iChunk_26, iChunk_27, iChunk_28, iChunk_29, iChunk_30, iChunk_31, iChunk_32, iChunk_33, iChunk_34, iChunk_35, iChunk_36, iChunk_37, iChunk_38, iChunk_39, iChunk_40, iChunk_41, iChunk_42, iChunk_43, iChunk_44, iChunk_45, iChunk_46, iChunk_47, iChunk_48, iChunk_49, iChunk_50, iChunk_51, iChunk_52, iChunk_53, iChunk_54, iChunk_55, iChunk_56, iChunk_57, iChunk_58, iChunk_59, iChunk_60, iChunk_61, iChunk_62, iChunk_63, iChunk_64, iChunk_65, iChunk_66, iChunk_67, iChunk_68, iChunk_69, iChunk_70, iChunk_71, iChunk_72, iChunk_73, iChunk_74, iChunk_75, iChunk_76, iChunk_77, iChunk_78, iChunk_79, iChunk_80, iChunk_81, iChunk_82, iChunk_83, iChunk_84, iChunk_85, iChunk_86, iChunk_87, iChunk_88, iChunk_89, iChunk_90, iChunk_91, iChunk_92, iChunk_93, iChunk_94, iChunk_95, iChunk_96, iChunk_97, iChunk_98, iChunk_99, iChunk_100, iChunk_101, iChunk_102, iChunk_103, iChunk_104, iChunk_105, iChunk_106, iChunk_107, iChunk_108, iChunk_109, iChunk_110, iChunk_111, iChunk_112, iChunk_113, iChunk_114, iChunk_115, iChunk_116, iChunk_117, iChunk_118, iChunk_119, iChunk_120, iChunk_121, iChunk_122, iChunk_123, iChunk_124, iChunk_125, iChunk_126, iChunk_127, iChunk_128, iChunk_129, iChunk_130, iChunk_131, iChunk_132, iChunk_133, iChunk_134, iChunk_135, iChunk_136, iChunk_137, iChunk_138, iChunk_139, iChunk_140, iChunk_141, iChunk_142, iChunk_143]
 
 lemma rows_prefix : ∀ k, k ≤ NCH → rowsSum 0 (chunkStart k) = cumVal k := by
   intro k

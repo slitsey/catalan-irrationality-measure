@@ -15,7 +15,7 @@ public import CatalanCore.Cert.Sigma300.Glue
 # The slope-`5/2`, `ρ = 1/4096` hybrid λ decay certificate (SigmaHybS)
 
 `certS : CertCoreGs (5/2) 1650 (1/4096) (1/1000) cH wtH` with `r0 = 7/50`, `W = 2^-30`, `u_max = 3/2`,
-`m′ = 217129/100000`, `g_min = -150603/100000`, `c = 91933/12500`, and the decay theorem for the λ frame
+`m′ = 54279/25000`, `g_min = -7530749/5000000`, `c = 18386549/2500000`, and the decay theorem for the λ frame
 at `α = 1/8` via `decay_of_certG_rect_slope`.
 -/
 
@@ -27,7 +27,7 @@ set_option maxRecDepth 100000
 
 /-! ### rays -/
 
-def rayBoxes : List (ℚ × ℚ) := (List.range 69632).map (fun i =>
+def rayBoxes : List (ℚ × ℚ) := (List.range 30720).map (fun i =>
   (2 * ((rayCellG i).2.2.1 : ℚ) / (5 * 2 ^ 40), 2 * ((rayCellG i).2.2.2 : ℚ) / (5 * 2 ^ 40)))
 
 theorem ray_box_ok_thm : ∀ p ∈ rayBoxes, ∀ x y : ℝ,
@@ -63,15 +63,15 @@ theorem ray_box_ok_thm : ∀ p ∈ rayBoxes, ∀ x y : ℝ,
 theorem ray_cover_thm : ∀ u : ℝ, 0 ≤ u → u ≤ ((3 / 2 : ℚ) : ℝ) →
     ∃ p ∈ rayBoxes, (p.1 : ℝ) ≤ u ∧ u ≤ (p.2 : ℝ) := by
   intro u hu0 hu1
-  have hc := cover_chain 69632 (fun i => 2 * ((rayCellG i).2.2.1 : ℝ) / (5 * 2 ^ 40))
+  have hc := cover_chain 30720 (fun i => 2 * ((rayCellG i).2.2.1 : ℝ) / (5 * 2 ^ 40))
     (fun i => 2 * ((rayCellG i).2.2.2 : ℝ) / (5 * 2 ^ 40)) 0 ((3 / 2 : ℚ) : ℝ) (by norm_num)
     (by
       have : (rayCellG 0).2.2.1 = 0 := ray_ends.1
       simp [this])
     (by
       have h := ray_ends.2
-      have h' : (15 : ℝ) * 2 ^ 40 ≤ 4 * ((rayCellG 69631).2.2.2 : ℝ) := by exact_mod_cast h
-      show ((3 / 2 : ℚ) : ℝ) ≤ 2 * ((rayCellG (69632 - 1)).2.2.2 : ℝ) / (5 * 2 ^ 40)
+      have h' : (15 : ℝ) * 2 ^ 40 ≤ 4 * ((rayCellG 30719).2.2.2 : ℝ) := by exact_mod_cast h
+      show ((3 / 2 : ℚ) : ℝ) ≤ 2 * ((rayCellG (30720 - 1)).2.2.2 : ℝ) / (5 * 2 ^ 40)
       rw [le_div_iff₀ (by positivity)]
       push_cast
       norm_num
@@ -92,16 +92,16 @@ theorem ray_tail_thm : ∀ u δ : ℝ, ((3 / 2 : ℚ) : ℝ) ≤ u → |δ| ≤ 
     ((MPRAY : ℚ) : ℝ) ≤ gHyb ⟨-((7 / 50 : ℚ) : ℝ) + δ - u, (5 / 2 : ℝ) * u⟩ := by
   intro u δ hu hδ
   have h := tail_hyb u δ (by push_cast at hu; exact hu) (by push_cast at hδ; exact hδ)
-  have e : ((MPRAY : ℚ) : ℝ) = 217129 / 100000 := by unfold MPRAY; push_cast; norm_num
+  have e : ((MPRAY : ℚ) : ℝ) = 217116 / 100000 := by unfold MPRAY; push_cast; norm_num
   rw [e]
   push_cast
   exact h
 
 /-! ### segment cells -/
 
-def segAq (i : Fin 12288) : ℚ := ((segCellG i).1 : ℚ) / 2 ^ 40
-def segBq (i : Fin 12288) : ℚ := ((segCellG i).2.1 : ℚ) / 2 ^ 40
-def segGq (i : Fin 12288) : ℚ := ((segCellG i).2.2 : ℚ) / 2 ^ 32
+def segAq (i : Fin 6144) : ℚ := ((segCellG i).1 : ℚ) / 2 ^ 40
+def segBq (i : Fin 6144) : ℚ := ((segCellG i).2.1 : ℚ) / 2 ^ 40
+def segGq (i : Fin 6144) : ℚ := ((segCellG i).2.2 : ℚ) / 2 ^ 32
 
 theorem seg_ab_thm : ∀ i, segAq i ≤ segBq i := by
   intro i
@@ -132,9 +132,9 @@ theorem seg_ok_thm : ∀ i, ∀ x : ℝ, (segAq i : ℝ) ≤ x → x ≤ (segBq 
   exact this
 
 theorem seg_cover_thm : ∀ x : ℝ, -((7 / 50 : ℚ) : ℝ) ≤ x → x ≤ 0 →
-    ∃ i : Fin 12288, (segAq i : ℝ) ≤ x ∧ x ≤ (segBq i : ℝ) := by
+    ∃ i : Fin 6144, (segAq i : ℝ) ≤ x ∧ x ≤ (segBq i : ℝ) := by
   intro x hx1 hx2
-  have hc := cover_chain 12288 (fun i => ((segCellG i).1 : ℝ) / 2 ^ 40)
+  have hc := cover_chain 6144 (fun i => ((segCellG i).1 : ℝ) / 2 ^ 40)
     (fun i => ((segCellG i).2.1 : ℝ) / 2 ^ 40) (-((7 / 50 : ℚ) : ℝ)) 0 (by norm_num)
     (by
       have h : (50 : ℝ) * ((segCellG 0).1 : ℝ) ≤ -7 * 2 ^ 40 := by exact_mod_cast seg_ends.1
@@ -143,8 +143,8 @@ theorem seg_cover_thm : ∀ x : ℝ, -((7 / 50 : ℚ) : ℝ) ≤ x → x ≤ 0 �
       push_cast
       linarith)
     (by
-      have h : (0 : ℝ) ≤ ((segCellG 12287).2.1 : ℝ) := by exact_mod_cast seg_ends.2
-      show (0 : ℝ) ≤ ((segCellG (12288 - 1)).2.1 : ℝ) / 2 ^ 40
+      have h : (0 : ℝ) ≤ ((segCellG 6143).2.1 : ℝ) := by exact_mod_cast seg_ends.2
+      show (0 : ℝ) ≤ ((segCellG (6144 - 1)).2.1 : ℝ) / 2 ^ 40
       positivity)
     (by
       intro i hi
@@ -159,14 +159,14 @@ theorem seg_cover_thm : ∀ x : ℝ, -((7 / 50 : ℚ) : ℝ) ≤ x → x ≤ 0 �
 
 lemma segterm (i : ℕ) :
     (((segCellG i).2.1 : ℝ) / 2 ^ 40 - ((segCellG i).1 : ℝ) / 2 ^ 40) *
-      min ((((segCellG i).2.2 : ℝ) / 2 ^ 32) - 217129 / 100000) 0
+      min ((((segCellG i).2.2 : ℝ) / 2 ^ 32) - 217116 / 100000) 0
       = (fSeg i : ℝ) / (100000 * 2 ^ 72) := by
   unfold fSeg
-  by_cases h : (segCellG i).2.2 * 100000 ≤ 217129 * 2 ^ 32
+  by_cases h : (segCellG i).2.2 * 100000 ≤ 217116 * 2 ^ 32
   · rw [if_pos h]
-    have hr : ((segCellG i).2.2 : ℝ) * 100000 ≤ 217129 * 2 ^ 32 := by exact_mod_cast h
-    have hm : (((segCellG i).2.2 : ℝ) / 2 ^ 32 - 217129 / 100000) ≤ 0 := by
-      have : ((segCellG i).2.2 : ℝ) / 2 ^ 32 ≤ 217129 / 100000 := by
+    have hr : ((segCellG i).2.2 : ℝ) * 100000 ≤ 217116 * 2 ^ 32 := by exact_mod_cast h
+    have hm : (((segCellG i).2.2 : ℝ) / 2 ^ 32 - 217116 / 100000) ≤ 0 := by
+      have : ((segCellG i).2.2 : ℝ) / 2 ^ 32 ≤ 217116 / 100000 := by
         rw [div_le_iff₀ (by positivity)]; linarith
       linarith
     rw [min_eq_left hm]
@@ -174,9 +174,9 @@ lemma segterm (i : ℕ) :
     field_simp
     ring
   · rw [if_neg h]
-    have hr : (217129 : ℝ) * 2 ^ 32 < ((segCellG i).2.2 : ℝ) * 100000 := by exact_mod_cast not_le.mp h
-    have hm : 0 ≤ (((segCellG i).2.2 : ℝ) / 2 ^ 32 - 217129 / 100000) := by
-      have : 217129 / 100000 ≤ ((segCellG i).2.2 : ℝ) / 2 ^ 32 := by
+    have hr : (217116 : ℝ) * 2 ^ 32 < ((segCellG i).2.2 : ℝ) * 100000 := by exact_mod_cast not_le.mp h
+    have hm : 0 ≤ (((segCellG i).2.2 : ℝ) / 2 ^ 32 - 217116 / 100000) := by
+      have : 217116 / 100000 ≤ ((segCellG i).2.2 : ℝ) / 2 ^ 32 := by
         rw [le_div_iff₀ (by positivity)]; linarith
       linarith
     rw [min_eq_right hm]
@@ -189,9 +189,9 @@ lemma sacc_sum (n : ℕ) : ∑ i ∈ Finset.range n, (fSeg i : ℝ) / (100000 * 
 
 def SBASE : ℚ := (SVAL : ℚ) / (100000 * 2 ^ 72)
 
-theorem Sbase_le_thm : (SBASE : ℝ) ≤ ∑ i : Fin 12288,
+theorem Sbase_le_thm : (SBASE : ℝ) ≤ ∑ i : Fin 6144,
     ((segBq i : ℝ) - segAq i) * min ((segGq i : ℝ) - ((MPRAY : ℚ) : ℝ)) 0 := by
-  have e : ∀ i : Fin 12288, ((segBq i : ℝ) - segAq i) * min ((segGq i : ℝ) - ((MPRAY : ℚ) : ℝ)) 0
+  have e : ∀ i : Fin 6144, ((segBq i : ℝ) - segAq i) * min ((segGq i : ℝ) - ((MPRAY : ℚ) : ℝ)) 0
       = (fSeg i : ℝ) / (100000 * 2 ^ 72) := by
     intro i
     rw [← segterm i]
@@ -199,7 +199,7 @@ theorem Sbase_le_thm : (SBASE : ℝ) ≤ ∑ i : Fin 12288,
     push_cast
     rfl
   simp_rw [e]
-  rw [Fin.sum_univ_eq_sum_range (fun i => (fSeg i : ℝ) / (100000 * 2 ^ 72)) 12288, sacc_sum, sacc_val]
+  rw [Fin.sum_univ_eq_sum_range (fun i => (fSeg i : ℝ) / (100000 * 2 ^ 72)) 6144, sacc_sum, sacc_val]
   unfold SBASE
   push_cast
   apply le_of_eq
@@ -207,7 +207,7 @@ theorem Sbase_le_thm : (SBASE : ℝ) ≤ ∑ i : Fin 12288,
 
 /-! ### line cells -/
 
-def lineCellsL : List (ℚ × ℚ) := (List.range 9216).map (fun i =>
+def lineCellsL : List (ℚ × ℚ) := (List.range 7168).map (fun i =>
   (((lineCellG i).1 : ℚ) / 2 ^ 40, ((lineCellG i).2.1 : ℚ) / 2 ^ 40))
 
 theorem line_ok_thm : ∀ p ∈ lineCellsL, ∀ x : ℝ, (p.1 : ℝ) ≤ x → x ≤ (p.2 : ℝ) →
@@ -231,15 +231,15 @@ theorem line_ok_thm : ∀ p ∈ lineCellsL, ∀ x : ℝ, (p.1 : ℝ) ≤ x → x
 theorem line_cover_thm : ∀ x : ℝ, 0 ≤ x → x ≤ 1 →
     ∃ p ∈ lineCellsL, (p.1 : ℝ) ≤ x ∧ x ≤ (p.2 : ℝ) := by
   intro x hx1 hx2
-  have hc := cover_chain 9216 (fun i => ((lineCellG i).1 : ℝ) / 2 ^ 40)
+  have hc := cover_chain 7168 (fun i => ((lineCellG i).1 : ℝ) / 2 ^ 40)
     (fun i => ((lineCellG i).2.1 : ℝ) / 2 ^ 40) 0 1 (by norm_num)
     (by
       have h : ((lineCellG 0).1 : ℝ) ≤ 0 := by exact_mod_cast line_ends.1
       show ((lineCellG 0).1 : ℝ) / 2 ^ 40 ≤ 0
       exact div_nonpos_of_nonpos_of_nonneg h (by positivity))
     (by
-      have h : (2 : ℝ) ^ 40 ≤ ((lineCellG 9215).2.1 : ℝ) := by exact_mod_cast line_ends.2
-      show (1 : ℝ) ≤ ((lineCellG (9216 - 1)).2.1 : ℝ) / 2 ^ 40
+      have h : (2 : ℝ) ^ 40 ≤ ((lineCellG 7167).2.1 : ℝ) := by exact_mod_cast line_ends.2
+      show (1 : ℝ) ≤ ((lineCellG (7168 - 1)).2.1 : ℝ) / 2 ^ 40
       rw [le_div_iff₀ (by positivity)]
       linarith)
     (by
@@ -265,7 +265,7 @@ noncomputable def certS : CertCoreGs (5 / 2 : ℝ) 1650 (1 / 4096 : ℝ) (1 / 10
   gmin := GMINS
   Sbase := SBASE
   Ibound := IBOUNDS
-  ccert := 91933 / 12500
+  ccert := 18386549 / 2500000
   r0_pos := by norm_num
   W_pos := by norm_num
   hρ := by norm_num
@@ -277,7 +277,7 @@ noncomputable def certS : CertCoreGs (5 / 2 : ℝ) 1650 (1 / 4096 : ℝ) (1 / 10
   ray_box_ok := ray_box_ok_thm
   ray_cover := ray_cover_thm
   ray_tail := ray_tail_thm
-  nSeg := 12288
+  nSeg := 6144
   segA := segAq
   segB := segBq
   segG := segGq
@@ -302,7 +302,7 @@ theorem hg_hybS : ∀ s : ℂ, certS.g s = (1 + (((1 / 8 : ℚ)) : ℝ)) *
   rw [e]
   rfl
 
-theorem D_le : (39059 / 10000 : ℚ) ≤ certS.Dof 2 (1 / 8) (17024457 / 10 ^ 7) := by
+theorem D_le : (39055 / 10000 : ℚ) ≤ certS.Dof 2 (1 / 8) (17024457 / 10 ^ 7) := by
   unfold CatalanCore.Cert.CertCoreGs.Dof certS
   simp only [SBASE, IBOUNDS, MPRAY, SVAL]
   norm_num
@@ -313,10 +313,10 @@ theorem lam_decayOKs : CatalanFrames.Lambda.lamFrame.DecayOKs' (5 / 2 : ℝ) whe
   atomRange := CatalanCore.Cert.Sigma300.lam_decayOK.atomRange
   norm_ge := CatalanCore.Cert.Sigma300.lam_decayOK.norm_ge
 
-/-- **The slope-`5/2`, `ρ = 1/4096` hybrid λ decay certificate**: `D = 3.9059`, `c = 7.35464` at `α = 1/8`. -/
+/-- **The slope-`5/2`, `ρ = 1/4096` hybrid λ decay certificate**: `D = 3.9055`, `c = 7.3546196` at `α = 1/8`. -/
 theorem lam_hybrid_decayS :
     HasDecay (CatalanCore.hybridFamUp CatalanFrames.Lambda.lamFrame (1 / 8 : ℚ))
-      (((39059 / 10000 : ℚ)) : ℝ) (((91933 / 12500 : ℚ)) : ℝ) :=
+      (((39055 / 10000 : ℚ)) : ℝ) (((18386549 / 2500000 : ℚ)) : ℝ) :=
   CatalanCore.decay_of_certG_rect_slope (sl := (5 / 2 : ℝ)) (Fr := CatalanFrames.Lambda.lamFrame)
     lam_decayOKs certS (α := 1 / 8) (by norm_num) hg_hybS
     (fun k => wtH_nonneg k) (Rc := 2) (by norm_num) cH_norm

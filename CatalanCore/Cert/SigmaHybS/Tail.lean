@@ -142,7 +142,7 @@ theorem Uex_tail_ub (u δ : ℝ) (hu : (3 / 2 : ℝ) ≤ u) :
   linarith
 
 theorem tail_hyb (u δ : ℝ) (hu : (3 / 2 : ℝ) ≤ u) (hδ : |δ| ≤ 1 / 2 ^ 30) :
-    (217129 / 100000 : ℝ) ≤ gHyb ⟨-(7 / 50 : ℝ) + δ - u, 5 / 2 * u⟩ := by
+    (217116 / 100000 : ℝ) ≤ gHyb ⟨-(7 / 50 : ℝ) + δ - u, 5 / 2 * u⟩ := by
   have hu0 : 0 < u := by linarith
   have h1 := Usig_tail_lb u δ hu hδ
   have h2 := Utau_tail_ub u δ hu

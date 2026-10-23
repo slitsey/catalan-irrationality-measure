@@ -78,7 +78,7 @@ w('RayGlue', t)
 cs = cfg('seg'); NS = len(cs['Ms']); SMs = [cs['Ms'][str(k)] for k in range(NS)]; NSC = NS * CPM
 cl = cfg('line'); NLN = len(cl['Ms']); LMs = [cl['Ms'][str(k)] for k in range(NLN)]; NLC = NLN * CPM
 # per-module sums V_k of the segment term
-MPn, MPd = 217129, 100000
+MPn, MPd = int(F(data()["info"]["MP"]) * 100000), 100000
 refined = json.load(open(os.path.join(HERE, 'refined_seg.json')))['cells']
 cellsS = [tuple(c) for c in refined]; cellsS += [(0, 0, cellsS[-1][2])] * (NSC - len(cellsS))
 def fseg(c):

@@ -55,7 +55,20 @@ if __name__ == '__main__':
         "def ITOT : ℤ := %d" % tot + NL + NL +
         "def IBOUNDS : ℚ := %d / %d" % (IB.numerator, IB.denominator) + NL + END)
     w('IBoundDef', HDR % 'Sigma' + defs)
-    for k in range(NCH):
-        w('IChunk%d' % k, HDR % 'IBoundDef' + "/-! Generated (genI.py): rows %d..%d of the triangle (one kernel cell). -/" % (CH[k][0], CH[k][0] + CH[k][1] - 1) + NL + NSP +
-          "theorem iChunk_%d : rowsSum (chunkStart %d) (chunkLen %d) = chunkVal %d := by decide +kernel" % (k, k, k, k) + NL + END)
+    G = 3
+    NMOD = (NCH + G - 1) // G
+    for m in range(NMOD):
+        ks = list(range(m * G, min(NCH, (m + 1) * G)))
+        w('IChunk%d' % m, HDR % 'IBoundDef' + "/-! Generated (genI.py): rows of triangle chunks %s (one kernel cell each). -/" % ks + NL + NSP +
+          "".join("theorem iChunk_%d : rowsSum (chunkStart %d) (chunkLen %d) = chunkVal %d := by decide +kernel" % (k, k, k, k) + NL + NL for k in ks) + END)
+    # IBound.lean: patch imports and the chunk table
+    import re
+    p = OUTD + 'IBound.lean'
+    s = open(p, encoding='utf-8').read()
+    pat1 = r'(public import CatalanCore\.Cert\.SigmaHybS\.IChunk\d+' + chr(10) + r')+'
+    s = re.sub(pat1, ''.join('public import CatalanCore.Cert.SigmaHybS.IChunk%d' % m + NL for m in range(NMOD)), s, count=1)
+    pat2 = r'  exacts \[iChunk_0.*?\]' + chr(10)
+    s = re.sub(pat2, '  exacts [' + ', '.join('iChunk_%d' % k for k in range(NCH)) + ']' + NL, s, count=1, flags=re.S)
+    open(p, 'w', encoding='utf-8', newline=NL).write(s)
+    print('chunk modules', NMOD)
     json.dump(dict(chunks=CH, vals=[str(v) for v in vals], tot=str(tot), IBound=str(IB), Iwt=float(Iwt)), open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cfg_I.json'), 'w'))

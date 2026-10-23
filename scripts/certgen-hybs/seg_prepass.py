@@ -9,7 +9,10 @@ def f(c):
     lb=F(-near_sum((a,b,0,0),PTS),2**97)-realRest((a,b))
     return min(g, math.floor((lb-S)*2**32))
 if __name__=='__main__':
-    L=[tuple(c) for c in D['seg']]
+    L0=[tuple(c) for c in D['seg']]
+    import os
+    MG=int(os.environ.get('HS_SEGMERGE','1'))
+    L=[(L0[i][0], L0[min(i+MG,len(L0))-1][1], min(c[2] for c in L0[i:i+MG])) for i in range(0,len(L0),MG)]
     with Pool(6) as p: gs=p.map(f,L,chunksize=50)
     cells=[[a,b,g] for (a,b,_),g in zip(L,gs)]
     lowered=sum(1 for (a,b,g0),g in zip(L,gs) if g<g0)
