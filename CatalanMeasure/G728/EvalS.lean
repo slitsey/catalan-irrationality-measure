@@ -175,21 +175,62 @@ theorem resFieldS_eq {Pc : List ℤ} {P : List TailQ} (hP : tailsInDisk P = true
   push_cast
   ring
 
+/-! ### logarithm sums with dyadic rounding
+
+`sumLogs` adds the exact rational logarithm enclosures, whose common denominator grows to
+~10^200000 over the ~60 terms of a field.  `sumLogsR` rounds each term to the `2^-128` grid
+(`encDiv`) before adding, at an extra error of `2^-128` per term. -/
+
+def sumLogsR : List LogTerm → Option (ℚ × ℚ)
+  | [] => some (0, 0)
+  | t :: l =>
+    match cLog t.c t.d t.a t.b, sumLogsR l with
+    | some q, some (v, e) => some ((encDiv q.num q.den).1 + v,
+        (wPieces t.c t.d : ℚ) / 1000000000000 + (encDiv q.num q.den).2 + e)
+    | _, _ => none
+
+theorem sumLogsR_spec {l : List LogTerm} {v e : ℚ} (h : sumLogsR l = some (v, e)) :
+    |(l.map LogTerm.val).sum - (v : ℝ)| ≤ (e : ℝ) := by
+  induction l generalizing v e with
+  | nil =>
+    simp only [sumLogsR, Option.some.injEq, Prod.mk.injEq] at h
+    obtain ⟨rfl, rfl⟩ := h
+    simp
+  | cons t l ih =>
+    simp only [sumLogsR] at h
+    split at h
+    · rename_i q v' e' hq hl
+      simp only [Option.some.injEq, Prod.mk.injEq] at h
+      obtain ⟨rfl, rfl⟩ := h
+      have h1 := cLog_spec hq
+      have h2 := ih hl
+      have h3 := encDiv_spec q.num q.den_pos
+      have hq' : ((q.num : ℝ) / (q.den : ℝ)) = (q : ℝ) := by
+        rw [Rat.cast_def]
+      rw [hq'] at h3
+      simp only [List.map_cons, List.sum_cons]
+      have hv : t.val = (barrierComplex t.c t.d * Complex.log ⟨(t.a : ℝ), (t.b : ℝ)⟩).re := rfl
+      rw [hv]
+      push_cast
+      rw [abs_le] at h1 h2 h3 ⊢
+      constructor <;> linarith [h1.1, h1.2, h2.1, h2.2, h3.1, h3.2]
+    · simp at h
+
 /-! ### enclosures -/
 
 def rowApproxS (R : RowWeights) (Pc Vc : List ℤ) (P V : List TailQ) (f0 f1 : Bool) (c : ℚ) :
     Option (ℚ × ℚ) :=
-  (sumLogs (rowTermsS R P V f0 f1 c)).map (fun ve =>
+  (sumLogsR (rowTermsS R P V f0 f1 c)).map (fun ve =>
     (ve.1 - 4 * (finTEnc Pc c).1 - (finSEnc Vc c).1,
      ve.2 + 4 * (finTEnc Pc c).2 + (finSEnc Vc c).2))
 
 def colApproxS (C : ColumnWeights) (Vc : List ℤ) (V : List TailQ) (f0 f1 : Bool) (c : ℚ) :
     Option (ℚ × ℚ) :=
-  (sumLogs (colTermsS C V f0 f1 c)).map (fun ve =>
+  (sumLogsR (colTermsS C V f0 f1 c)).map (fun ve =>
     (ve.1 + 2 * (finTEnc Vc c).1, ve.2 + 2 * (finTEnc Vc c).2))
 
 def resApproxS (Pc : List ℤ) (P : List TailQ) (c : ℚ) : Option (ℚ × ℚ) :=
-  (sumLogs (resTermsS P c)).map (fun ve =>
+  (sumLogsR (resTermsS P c)).map (fun ve =>
     (ve.1 - 2 * (finTEnc Pc c).1, ve.2 + 2 * (finTEnc Pc c).2))
 
 theorem rowApproxS_spec (R : RowWeights) {Pc Vc : List ℤ} {P V : List TailQ}
@@ -199,7 +240,7 @@ theorem rowApproxS_spec (R : RowWeights) {Pc Vc : List ℤ} {P V : List TailQ}
   unfold rowApproxS at h
   simp only [Option.map_eq_some_iff, Prod.mk.injEq] at h
   obtain ⟨⟨v', e'⟩, h1, rfl, rfl⟩ := h
-  have hs := sumLogs_spec h1
+  have hs := sumLogsR_spec h1
   have ht := finTEnc_spec Pc c
   have hv := finSEnc_spec Vc c
   rw [rowFieldSP_eq R hP hV f0 f1 hc]
@@ -215,7 +256,7 @@ theorem colApproxS_spec (C : ColumnWeights) {Vc : List ℤ} {V : List TailQ}
   unfold colApproxS at h
   simp only [Option.map_eq_some_iff, Prod.mk.injEq] at h
   obtain ⟨⟨v', e'⟩, h1, rfl, rfl⟩ := h
-  have hs := sumLogs_spec h1
+  have hs := sumLogsR_spec h1
   have ht := finTEnc_spec Vc c
   rw [colFieldSP_eq C hV f0 f1 hc]
   unfold finTR
@@ -229,7 +270,7 @@ theorem resApproxS_spec {Pc : List ℤ} {P : List TailQ} (hP : tailsInDisk P = t
   unfold resApproxS at h
   simp only [Option.map_eq_some_iff, Prod.mk.injEq] at h
   obtain ⟨⟨v', e'⟩, h1, rfl, rfl⟩ := h
-  have hs := sumLogs_spec h1
+  have hs := sumLogsR_spec h1
   have ht := finTEnc_spec Pc c
   rw [resFieldS_eq hP hc]
   unfold finTR
