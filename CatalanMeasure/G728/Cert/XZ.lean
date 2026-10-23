@@ -1,13 +1,15 @@
 module
 public import CatalanMeasure.G728.Cert.XTab
 public import CatalanMeasure.G728.PolyZ
+public import CatalanMeasure.G728.ZChain
 public import CatalanMeasure.G728.Data
 @[expose] public section
 namespace CatalanMeasure.G728
 open Set
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-theorem D_X_Z : D_X.Z = rowZ Pc Vc := by decide +kernel
+theorem D_X_Z : D_X.Z = rowZ Pc Vc := by
+  rw [PolyData.Z, shl_eq_mapIdx, rowZ, uSum_Pc, shl_two_eq_mapIdx]; decide +kernel
 theorem hZ_X : ∀ x : ℝ, -4 * finUR Pc x - finPR Vc x = ptZ D_X.Z 0 x := by
   intro x
   rw [D_X_Z]
