@@ -43,6 +43,7 @@ open Real
 namespace CatalanCore.Cert.SigmaHybS
 
 set_option maxRecDepth 100000
+set_option Elab.async false
 
 def rayM : ℕ → ℕ
   | 0 => 64

@@ -19,10 +19,12 @@ def tbl(name, ty, vals, default):
 def per_module(prefix, n, fn, args=""):
     s = ""
     for k in range(n):
-        s += "theorem %s_geom_%d : (List.range %d).all (fun i => %sGeomCell (%sCellG (%d * %d + i))) = true := by" % (prefix, k, CPM, prefix, prefix, CPM, k) + NL + "  decide +kernel" + NL + NL
+        arg = ("%sCellG (%d * %d + i)" % (prefix, CPM, k)) if prefix == 'ray' else ("%d * %d + i" % (CPM, k))
+        s += "theorem %s_geom_%d : (List.range %d).all (fun i => %sGeomCell (%s)) = true := by" % (prefix, k, CPM, prefix, arg) + NL + "  decide +kernel" + NL + NL
     for k in range(n):
         s += "theorem %s_chain_%d : (List.range %d).all (fun i => %sChainCell (%d * %d + i)) = true := by" % (prefix, k, CPM, prefix, CPM, k) + NL + "  decide +kernel" + NL + NL
-    s += "theorem %s_geom : ∀ m < %d, (List.range %d).all (fun i => %sGeomCell (%sCellG (%d * m + i))) = true := by" % (prefix, n, CPM, prefix, prefix, CPM) + NL + "  intro m hm" + NL + "  interval_cases m" + NL + "  exacts [%s]" % ", ".join("%s_geom_%d" % (prefix, k) for k in range(n)) + NL + NL
+    arg2 = ("%sCellG (%d * m + i)" % (prefix, CPM)) if prefix == 'ray' else ("%d * m + i" % CPM)
+    s += "theorem %s_geom : ∀ m < %d, (List.range %d).all (fun i => %sGeomCell (%s)) = true := by" % (prefix, n, CPM, prefix, arg2) + NL + "  intro m hm" + NL + "  interval_cases m" + NL + "  exacts [%s]" % ", ".join("%s_geom_%d" % (prefix, k) for k in range(n)) + NL + NL
     s += "theorem %s_chain : ∀ m < %d, (List.range %d).all (fun i => %sChainCell (%d * m + i)) = true := by" % (prefix, n, CPM, prefix, CPM) + NL + "  intro m hm" + NL + "  interval_cases m" + NL + "  exacts [%s]" % ", ".join("%s_chain_%d" % (prefix, k) for k in range(n)) + NL + NL
     return s
 
@@ -108,9 +110,9 @@ lemma cover_chain (n : ℕ) (a b : ℕ → ℝ) (lo hi : ℝ) (hn0 : 0 < n) (h0 
 '''
 def real_block(pre, Pre, n, Ms_, nc, mode, G):
     rhs = ('((((%sCellG i).2.2 : ℚ) / 2 ^ 32 : ℚ) : ℝ)' % pre) if mode == 'true' else '((GMINS : ℚ) : ℝ)'
-    s = tbl(pre + 'M', 'ℕ', Ms_, '1') + tbl(pre + 'P', 'ℕ', ['%sM%dP' % (Pre, k) for k in range(n)], '0')
+    s = tbl(pre + 'M', 'ℕ', Ms_, '1') + tbl(pre + 'P', 'ℕ', ['%s%dP' % (Pre, k) for k in range(n)], '0')
     s += ("theorem %sAll_ok : ∀ m < %d, ∀ j < %d / %sM m, realMacroOKH sigH %s %s (%sM m) (%sP m) j = true := by" % (pre, n, CPM, pre, mode, G, pre, pre) + NL +
-          "  intro m hm" + NL + "  interval_cases m" + NL + "  exacts [%s]" % ", ".join("%sM%d_ok" % (Pre, k) for k in range(n)) + NL + NL +
+          "  intro m hm" + NL + "  interval_cases m" + NL + "  exacts [%s]" % ", ".join("%s%d_ok" % (Pre, k) for k in range(n)) + NL + NL +
           "theorem %sM_pos (m : ℕ) : 0 < %sM m := by" % (pre, pre) + NL + "  unfold %sM; split <;> norm_num" % pre + NL + NL +
           "theorem %sM_dvd (m : ℕ) (hm : m < %d) : %sM m ∣ %d := by" % (pre, n, pre, CPM) + NL + "  interval_cases m <;> decide" + NL + NL +
           "def %sCellG (i : ℕ) : ℤ × ℤ × ℤ :=" % pre + NL +

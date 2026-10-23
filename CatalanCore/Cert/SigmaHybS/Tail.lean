@@ -17,12 +17,51 @@ open Real
 namespace CatalanCore.Cert.SigmaHybS
 
 set_option maxRecDepth 100000
+set_option Elab.async false
 
 def posOK (k : ℕ) : Bool :=
   decide (-(8 * 2 ^ 40 : ℤ) ≤ 25 * (ptAt k).1) && decide ((ptAt k).1 ≤ 2 ^ 40) &&
     decide (100 * (ptAt k).2.1 ≤ 43 * 2 ^ 40) && decide (-(43 * 2 ^ 40 : ℤ) ≤ 100 * (ptAt k).2.1)
 
-theorem pos_check : (List.range 1650).all posOK = true := by decide +kernel
+theorem pos_c0 : (List.range 50).all (fun i => posOK (50 * 0 + i)) = true := by decide +kernel
+theorem pos_c1 : (List.range 50).all (fun i => posOK (50 * 1 + i)) = true := by decide +kernel
+theorem pos_c2 : (List.range 50).all (fun i => posOK (50 * 2 + i)) = true := by decide +kernel
+theorem pos_c3 : (List.range 50).all (fun i => posOK (50 * 3 + i)) = true := by decide +kernel
+theorem pos_c4 : (List.range 50).all (fun i => posOK (50 * 4 + i)) = true := by decide +kernel
+theorem pos_c5 : (List.range 50).all (fun i => posOK (50 * 5 + i)) = true := by decide +kernel
+theorem pos_c6 : (List.range 50).all (fun i => posOK (50 * 6 + i)) = true := by decide +kernel
+theorem pos_c7 : (List.range 50).all (fun i => posOK (50 * 7 + i)) = true := by decide +kernel
+theorem pos_c8 : (List.range 50).all (fun i => posOK (50 * 8 + i)) = true := by decide +kernel
+theorem pos_c9 : (List.range 50).all (fun i => posOK (50 * 9 + i)) = true := by decide +kernel
+theorem pos_c10 : (List.range 50).all (fun i => posOK (50 * 10 + i)) = true := by decide +kernel
+theorem pos_c11 : (List.range 50).all (fun i => posOK (50 * 11 + i)) = true := by decide +kernel
+theorem pos_c12 : (List.range 50).all (fun i => posOK (50 * 12 + i)) = true := by decide +kernel
+theorem pos_c13 : (List.range 50).all (fun i => posOK (50 * 13 + i)) = true := by decide +kernel
+theorem pos_c14 : (List.range 50).all (fun i => posOK (50 * 14 + i)) = true := by decide +kernel
+theorem pos_c15 : (List.range 50).all (fun i => posOK (50 * 15 + i)) = true := by decide +kernel
+theorem pos_c16 : (List.range 50).all (fun i => posOK (50 * 16 + i)) = true := by decide +kernel
+theorem pos_c17 : (List.range 50).all (fun i => posOK (50 * 17 + i)) = true := by decide +kernel
+theorem pos_c18 : (List.range 50).all (fun i => posOK (50 * 18 + i)) = true := by decide +kernel
+theorem pos_c19 : (List.range 50).all (fun i => posOK (50 * 19 + i)) = true := by decide +kernel
+theorem pos_c20 : (List.range 50).all (fun i => posOK (50 * 20 + i)) = true := by decide +kernel
+theorem pos_c21 : (List.range 50).all (fun i => posOK (50 * 21 + i)) = true := by decide +kernel
+theorem pos_c22 : (List.range 50).all (fun i => posOK (50 * 22 + i)) = true := by decide +kernel
+theorem pos_c23 : (List.range 50).all (fun i => posOK (50 * 23 + i)) = true := by decide +kernel
+theorem pos_c24 : (List.range 50).all (fun i => posOK (50 * 24 + i)) = true := by decide +kernel
+theorem pos_c25 : (List.range 50).all (fun i => posOK (50 * 25 + i)) = true := by decide +kernel
+theorem pos_c26 : (List.range 50).all (fun i => posOK (50 * 26 + i)) = true := by decide +kernel
+theorem pos_c27 : (List.range 50).all (fun i => posOK (50 * 27 + i)) = true := by decide +kernel
+theorem pos_c28 : (List.range 50).all (fun i => posOK (50 * 28 + i)) = true := by decide +kernel
+theorem pos_c29 : (List.range 50).all (fun i => posOK (50 * 29 + i)) = true := by decide +kernel
+theorem pos_c30 : (List.range 50).all (fun i => posOK (50 * 30 + i)) = true := by decide +kernel
+theorem pos_c31 : (List.range 50).all (fun i => posOK (50 * 31 + i)) = true := by decide +kernel
+theorem pos_c32 : (List.range 50).all (fun i => posOK (50 * 32 + i)) = true := by decide +kernel
+
+theorem pos_check : (List.range 1650).all posOK = true :=
+  all_chunks posOK 33 50 (by
+    intro m hm
+    interval_cases m
+    exacts [pos_c0, pos_c1, pos_c2, pos_c3, pos_c4, pos_c5, pos_c6, pos_c7, pos_c8, pos_c9, pos_c10, pos_c11, pos_c12, pos_c13, pos_c14, pos_c15, pos_c16, pos_c17, pos_c18, pos_c19, pos_c20, pos_c21, pos_c22, pos_c23, pos_c24, pos_c25, pos_c26, pos_c27, pos_c28, pos_c29, pos_c30, pos_c31, pos_c32])
 
 lemma pos_bounds (k : Fin 1650) :
     -(8 / 25 : ℝ) ≤ (cH k).re ∧ (cH k).re ≤ 1 ∧ -(43 / 100 : ℝ) ≤ (cH k).im ∧ (cH k).im ≤ 43 / 100 := by

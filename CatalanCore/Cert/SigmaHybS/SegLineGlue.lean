@@ -26,6 +26,7 @@ open Real
 namespace CatalanCore.Cert.SigmaHybS
 
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 /-- cover lemma for a chain of closed intervals. -/
 lemma cover_chain (n : ℕ) (a b : ℕ → ℝ) (lo hi : ℝ) (hn0 : 0 < n) (h0 : a 0 ≤ lo)
@@ -53,18 +54,18 @@ def segM : ℕ → ℕ
   | _ => 1
 
 def segP : ℕ → ℕ
-  | 0 => SegMM0P
-  | 1 => SegMM1P
-  | 2 => SegMM2P
-  | 3 => SegMM3P
-  | 4 => SegMM4P
-  | 5 => SegMM5P
+  | 0 => SegM0P
+  | 1 => SegM1P
+  | 2 => SegM2P
+  | 3 => SegM3P
+  | 4 => SegM4P
+  | 5 => SegM5P
   | _ => 0
 
 theorem segAll_ok : ∀ m < 6, ∀ j < 1024 / segM m, realMacroOKH sigH true 0 (segM m) (segP m) j = true := by
   intro m hm
   interval_cases m
-  exacts [SegMM0_ok, SegMM1_ok, SegMM2_ok, SegMM3_ok, SegMM4_ok, SegMM5_ok]
+  exacts [SegM0_ok, SegM1_ok, SegM2_ok, SegM3_ok, SegM4_ok, SegM5_ok]
 
 theorem segM_pos (m : ℕ) : 0 < segM m := by
   unfold segM; split <;> norm_num
@@ -89,22 +90,22 @@ def segGeomCell (i : ℕ) : Bool :=
 def segChainCell (i : ℕ) : Bool :=
   decide (6144 ≤ i + 1 ∨ (segCellG (i + 1)).1 ≤ (segCellG i).2.1)
 
-theorem seg_geom_0 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 0 + i))) = true := by
+theorem seg_geom_0 : (List.range 1024).all (fun i => segGeomCell (1024 * 0 + i)) = true := by
   decide +kernel
 
-theorem seg_geom_1 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 1 + i))) = true := by
+theorem seg_geom_1 : (List.range 1024).all (fun i => segGeomCell (1024 * 1 + i)) = true := by
   decide +kernel
 
-theorem seg_geom_2 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 2 + i))) = true := by
+theorem seg_geom_2 : (List.range 1024).all (fun i => segGeomCell (1024 * 2 + i)) = true := by
   decide +kernel
 
-theorem seg_geom_3 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 3 + i))) = true := by
+theorem seg_geom_3 : (List.range 1024).all (fun i => segGeomCell (1024 * 3 + i)) = true := by
   decide +kernel
 
-theorem seg_geom_4 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 4 + i))) = true := by
+theorem seg_geom_4 : (List.range 1024).all (fun i => segGeomCell (1024 * 4 + i)) = true := by
   decide +kernel
 
-theorem seg_geom_5 : (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * 5 + i))) = true := by
+theorem seg_geom_5 : (List.range 1024).all (fun i => segGeomCell (1024 * 5 + i)) = true := by
   decide +kernel
 
 theorem seg_chain_0 : (List.range 1024).all (fun i => segChainCell (1024 * 0 + i)) = true := by
@@ -125,7 +126,7 @@ theorem seg_chain_4 : (List.range 1024).all (fun i => segChainCell (1024 * 4 + i
 theorem seg_chain_5 : (List.range 1024).all (fun i => segChainCell (1024 * 5 + i)) = true := by
   decide +kernel
 
-theorem seg_geom : ∀ m < 6, (List.range 1024).all (fun i => segGeomCell (segCellG (1024 * m + i))) = true := by
+theorem seg_geom : ∀ m < 6, (List.range 1024).all (fun i => segGeomCell (1024 * m + i)) = true := by
   intro m hm
   interval_cases m
   exacts [seg_geom_0, seg_geom_1, seg_geom_2, seg_geom_3, seg_geom_4, seg_geom_5]
@@ -231,19 +232,19 @@ def lineM : ℕ → ℕ
   | _ => 1
 
 def lineP : ℕ → ℕ
-  | 0 => LineMM0P
-  | 1 => LineMM1P
-  | 2 => LineMM2P
-  | 3 => LineMM3P
-  | 4 => LineMM4P
-  | 5 => LineMM5P
-  | 6 => LineMM6P
+  | 0 => LineM0P
+  | 1 => LineM1P
+  | 2 => LineM2P
+  | 3 => LineM3P
+  | 4 => LineM4P
+  | 5 => LineM5P
+  | 6 => LineM6P
   | _ => 0
 
 theorem lineAll_ok : ∀ m < 7, ∀ j < 1024 / lineM m, realMacroOKH sigH false GMINS (lineM m) (lineP m) j = true := by
   intro m hm
   interval_cases m
-  exacts [LineMM0_ok, LineMM1_ok, LineMM2_ok, LineMM3_ok, LineMM4_ok, LineMM5_ok, LineMM6_ok]
+  exacts [LineM0_ok, LineM1_ok, LineM2_ok, LineM3_ok, LineM4_ok, LineM5_ok, LineM6_ok]
 
 theorem lineM_pos (m : ℕ) : 0 < lineM m := by
   unfold lineM; split <;> norm_num
@@ -268,25 +269,25 @@ def lineGeomCell (i : ℕ) : Bool :=
 def lineChainCell (i : ℕ) : Bool :=
   decide (7168 ≤ i + 1 ∨ (lineCellG (i + 1)).1 ≤ (lineCellG i).2.1)
 
-theorem line_geom_0 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 0 + i))) = true := by
+theorem line_geom_0 : (List.range 1024).all (fun i => lineGeomCell (1024 * 0 + i)) = true := by
   decide +kernel
 
-theorem line_geom_1 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 1 + i))) = true := by
+theorem line_geom_1 : (List.range 1024).all (fun i => lineGeomCell (1024 * 1 + i)) = true := by
   decide +kernel
 
-theorem line_geom_2 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 2 + i))) = true := by
+theorem line_geom_2 : (List.range 1024).all (fun i => lineGeomCell (1024 * 2 + i)) = true := by
   decide +kernel
 
-theorem line_geom_3 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 3 + i))) = true := by
+theorem line_geom_3 : (List.range 1024).all (fun i => lineGeomCell (1024 * 3 + i)) = true := by
   decide +kernel
 
-theorem line_geom_4 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 4 + i))) = true := by
+theorem line_geom_4 : (List.range 1024).all (fun i => lineGeomCell (1024 * 4 + i)) = true := by
   decide +kernel
 
-theorem line_geom_5 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 5 + i))) = true := by
+theorem line_geom_5 : (List.range 1024).all (fun i => lineGeomCell (1024 * 5 + i)) = true := by
   decide +kernel
 
-theorem line_geom_6 : (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * 6 + i))) = true := by
+theorem line_geom_6 : (List.range 1024).all (fun i => lineGeomCell (1024 * 6 + i)) = true := by
   decide +kernel
 
 theorem line_chain_0 : (List.range 1024).all (fun i => lineChainCell (1024 * 0 + i)) = true := by
@@ -310,7 +311,7 @@ theorem line_chain_5 : (List.range 1024).all (fun i => lineChainCell (1024 * 5 +
 theorem line_chain_6 : (List.range 1024).all (fun i => lineChainCell (1024 * 6 + i)) = true := by
   decide +kernel
 
-theorem line_geom : ∀ m < 7, (List.range 1024).all (fun i => lineGeomCell (lineCellG (1024 * m + i))) = true := by
+theorem line_geom : ∀ m < 7, (List.range 1024).all (fun i => lineGeomCell (1024 * m + i)) = true := by
   intro m hm
   interval_cases m
   exacts [line_geom_0, line_geom_1, line_geom_2, line_geom_3, line_geom_4, line_geom_5, line_geom_6]
