@@ -238,5 +238,190 @@ theorem Sr_transport2 (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤
 
 end Sr2T
 
-#print axioms Sr_transport2
+
+section RegDiff
+open ChainClasses ChainModel LemmaE
+variable {p o : ℕ} [Fact p.Prime] {Fr : Frame}
+
+/-- The regular cumulative `∑_{k ≤ a} regularDelta k`. -/
+noncomputable def Rg (p o a : ℕ) : ℚ := ∑ k ∈ Icc 1 a, regularDelta p (o:ℤ) (k:ℤ)
+
+lemma fullPrefix_split (a : ℕ) : fullPrefix Fr a = polePrefix Fr p o a + Rg p o a := by
+  unfold fullPrefix polePrefix poleDelta Rg
+  simp only [Finset.sum_sub_distrib]
+  ring
+
+lemma Rg_eq_regularPrefix (a : ℕ) : Rg p o a = regularPrefix p (o:ℤ) a := by
+  induction a with
+  | zero => simp [Rg, regularPrefix]
+  | succ n ih =>
+    have h1 : Rg p o (n + 1) = Rg p o n + regularDelta p (o:ℤ) ((n + 1 : ℕ) : ℤ) := by
+      unfold Rg; exact Finset.sum_Icc_succ_top (by omega) _
+    rw [h1, ih]
+    unfold regularPrefix
+    rw [Finset.sum_range_succ]
+    push_cast
+    rfl
+
+lemma Rg_good (hp : 5 ≤ p) {a b : ℕ} (hab : a % p = b % p) :
+    Good p (Rg p o b - Rg p o a) 0 := by
+  rw [Rg_eq_regularPrefix, Rg_eq_regularPrefix]
+  exact good_regularPrefix_difference (p := p) (o:ℤ) (four_ne_zmod p hp) hab
+
+end RegDiff
+
+section Own
+open ChainClasses ChainModel LemmaE
+variable {p r N o : ℕ} [Fact p.Prime] {Fr : Frame} {Z1 Z2 : Type} [Fintype Z1] [DecidableEq Z1]
+  [Fintype Z2] [DecidableEq Z2] {xs1 ys1 : Z1 → ℕ} {xs2 ys2 : Z2 → ℕ}
+
+/-- The own-chain part `h ω_x - (Sr ω)_x` of the one-node residual. -/
+noncomputable def Wown (Fr : Frame) (p r : ℕ) [Fact p.Prime] {Z : Type} [Fintype Z] [DecidableEq Z]
+    (xs ys : Z → ℕ) (a b : ℚ[X]) (z : Z) : ℚ[X] :=
+  ChainModel.h Fr p r xs ys * omegaW Fr p a b (xs z) -
+    ∑ m, Sr Fr p r xs ys z m * omegaW Fr p a b m.val
+
+/-- **Own-chain transport.**  For two nodes of one cut-free interval,
+`W(x₁) - W(x₂) ≡ - a · p (R(x₂) - R(x₁)) · (h - ∑ Sr_{x₂})  (mod p²)`, `R` the regular cumulative. -/
+theorem Wown_transport2 (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+    (hx1 : ∀ z, xs1 z<N) (hx2 : ∀ z, xs2 z<N)
+    (hQ0 : Q0 Fr p r xs1 ys1 = Q0 Fr p r xs2 ys2)
+    (z1 : Z1) (z2 : Z2) (hz1 : r ≤ xs1 z1) (hz2 : r ≤ xs2 z2) (hxx : xs1 z1 ≤ xs2 z2)
+    (hnc : NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs1 z1 : ℤ) (xs2 z2 : ℤ))
+    {a b : ℚ[X]} (ha : Int1 p a) (hb : Int1 p b) :
+    gn p (Wown Fr p r xs1 ys1 a b z1 - Wown Fr p r xs2 ys2 a b z2 +
+      a * C ((p:ℚ) * (Rg p o (xs2 z2) - Rg p o (xs1 z1))) *
+        (ChainModel.h Fr p r xs2 ys2 - ∑ m, Sr Fr p r xs2 ys2 z2 m)) ≤ ((p:ℝ)⁻¹)^2 := by
+  classical
+  set e := chainTransport (sing := Singular (p:ℤ) (o:ℤ)) hxx hnc with he
+  have hh : ChainModel.h Fr p r xs1 ys1 = ChainModel.h Fr p r xs2 ys2 := by
+    unfold ChainModel.h; rw [hQ0]
+  have hp0 : (0:ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
+  have hε : (0:ℝ) ≤ ((p:ℝ)⁻¹)^2 := by positivity
+  set ω : ℕ → ℚ[X] := fun k => omegaW Fr p a b k with hω
+  have hωint : ∀ k, k < N → Int1 p (ω k) := fun k hk =>
+    (ha.mul (int1_pPf hL hp hN hr hk)).sub hb
+  -- sums over chains
+  have F1 : ∑ m, Sr Fr p r xs1 ys1 z1 m * ω m.val =
+      ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs1 ys1 z1 (chainNode q) * ω (chainNode q).val := by
+    rw [sum_chain (p := p) hz1 (fun m => Sr Fr p r xs1 ys1 z1 m * ω m.val)]
+    intro m hm
+    rw [Sr_support hL hp hN hr z1 m (fun h => hm h.symm), zero_mul]
+  have F2 : ∑ m, Sr Fr p r xs2 ys2 z2 m * ω m.val =
+      ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs2 ys2 z2 (chainNode (e q)) * ω (chainNode (e q)).val := by
+    rw [sum_chain (p := p) hz2 (fun m => Sr Fr p r xs2 ys2 z2 m * ω m.val)]
+    · exact (e.sum_comp (fun q' => Sr Fr p r xs2 ys2 z2 (chainNode q') * ω (chainNode q').val)).symm
+    · intro m hm
+      rw [Sr_support hL hp hN hr z2 m (fun h => hm h.symm), zero_mul]
+  have F3 : ∑ m, Sr Fr p r xs2 ys2 z2 m =
+      ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs2 ys2 z2 (chainNode (e q)) := by
+    rw [sum_chain (p := p) hz2 (fun m => Sr Fr p r xs2 ys2 z2 m)]
+    · exact (e.sum_comp (fun q' => Sr Fr p r xs2 ys2 z2 (chainNode q'))).symm
+    · intro m hm
+      exact Sr_support hL hp hN hr z2 m (fun h => hm h.symm)
+  -- the pole parts of the cumulatives agree
+  have h0 : NoCut (Singular (p:ℤ) (o:ℤ)) (xs1 z1 : ℤ) (xs2 z2 : ℤ) :=
+    fun t h1 h2 hs => hnc t h1 h2 (Or.inl hs)
+  have hpole1 : polePrefix Fr p o (xs1 z1) = polePrefix Fr p o (xs2 z2) :=
+    polePrefix_nocut hL hxx h0
+  set Δ : ℚ := Rg p o (xs2 z2) - Rg p o (xs1 z1) with hΔ
+  obtain ⟨R, hR⟩ : ∃ R : ChainIndex p r (xs1 z1) → ℚ, ∀ q, R q = Rg p o (chainNode (e q)).val - Rg p o (chainNode q).val := ⟨_, fun _ => rfl⟩
+  have F4 : ω (xs1 z1) - ω (xs2 z2) = -(a * C ((p:ℚ) * Δ)) := by
+    simp only [hω, omegaW]
+    rw [fullPrefix_split (Fr := Fr) (p := p) (o := o) (xs1 z1),
+      fullPrefix_split (Fr := Fr) (p := p) (o := o) (xs2 z2), hpole1, hΔ]
+    simp only [map_mul, map_add, map_sub]
+    ring
+  have F5 : ∀ q : ChainIndex p r (xs1 z1),
+      ω (chainNode (e q)).val = ω (chainNode q).val +
+        a * C ((p:ℚ) * R q) := by
+    intro q
+    obtain ⟨-, v1, -, -⟩ := chainTransport_pole hL hxx hnc q
+    replace v1 : polePrefix Fr p o (chainNode q).val = polePrefix Fr p o (chainNode (e q)).val := v1
+    simp only [hω, omegaW]
+    rw [fullPrefix_split (Fr := Fr) (p := p) (o := o) (chainNode q).val,
+      fullPrefix_split (Fr := Fr) (p := p) (o := o) (chainNode (e q)).val, v1, hR q]
+    simp only [map_mul, map_add, map_sub]
+    ring
+  -- error terms
+  have E2 : gn p (∑ q : ChainIndex p r (xs1 z1),
+      (Sr Fr p r xs1 ys1 z1 (chainNode q) - Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+        ω (chainNode q).val) ≤ ((p:ℝ)⁻¹)^2 := by
+    apply LemmaE.gn_sum_le_const _ _ _ hε
+    intro q _
+    rw [gn_mul]
+    calc gn p (Sr Fr p r xs1 ys1 z1 (chainNode q) - Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+          gn p (ω (chainNode q).val) ≤ ((p:ℝ)⁻¹)^2 * 1 :=
+        mul_le_mul (Sr_transport2 hL hp hN hr hx1 hx2 hQ0 z1 z2 hz1 hz2 hxx hnc q)
+          (hωint _ (lt_of_lt_of_le (chainNode q).isLt hr)) (gn_nonneg p _) hε
+      _ = _ := mul_one _
+  have E3 : gn p (∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) *
+      (C ((p:ℚ) * R q) -
+        C ((p:ℚ) * Δ))) ≤ ((p:ℝ)⁻¹)^2 := by
+    apply LemmaE.gn_sum_le_const _ _ _ hε
+    intro q _
+    have hG : Good p ((Rg p o (chainNode (e q)).val - Rg p o (xs2 z2)) -
+        (Rg p o (chainNode q).val - Rg p o (xs1 z1))) 0 := by
+      have g1 := Rg_good (p := p) (o := o) hp (a := xs2 z2) (b := (chainNode (e q)).val)
+        (by rw [chainNode_mod])
+      have g2 := Rg_good (p := p) (o := o) hp (a := xs1 z1) (b := (chainNode q).val)
+        (by rw [chainNode_mod])
+      simpa using g1.sub g2
+    have hgn := gn_C_le_of_good_zero hG
+    have e1 : C ((p:ℚ) * R q) -
+        C ((p:ℚ) * Δ) = C (p:ℚ) * C ((Rg p o (chainNode (e q)).val - Rg p o (xs2 z2)) -
+        (Rg p o (chainNode q).val - Rg p o (xs1 z1))) := by
+      rw [hR q, hΔ, ← map_sub, ← map_mul]; congr 1; ring
+    have hgp : gn p (C (p:ℚ)) = (p:ℝ)⁻¹ := by
+      rw [gn_C, padicNorm.padicNorm_p_of_prime]; push_cast; rfl
+    rw [e1]
+    simp only [gn_mul, hgp]
+    have hs := Sr_int1 (ys := ys2) hL hp hN hr hx2 z2 (chainNode (e q))
+    calc gn p a * gn p (Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+          (((p:ℝ)⁻¹) * gn p (C ((Rg p o (chainNode (e q)).val - Rg p o (xs2 z2)) -
+            (Rg p o (chainNode q).val - Rg p o (xs1 z1))))) ≤ 1 * 1 * ((p:ℝ)⁻¹ * (p:ℝ)⁻¹) :=
+        mul_le_mul (mul_le_mul ha hs (gn_nonneg p _) zero_le_one)
+          (mul_le_mul_of_nonneg_left hgn (by positivity)) (mul_nonneg (by positivity) (gn_nonneg p _)) (mul_nonneg zero_le_one zero_le_one)
+      _ = _ := by ring
+  -- the exact identity
+  have key : Wown Fr p r xs1 ys1 a b z1 - Wown Fr p r xs2 ys2 a b z2 +
+      a * C ((p:ℚ) * Δ) * (ChainModel.h Fr p r xs2 ys2 - ∑ m, Sr Fr p r xs2 ys2 z2 m) =
+      -(∑ q : ChainIndex p r (xs1 z1),
+        (Sr Fr p r xs1 ys1 z1 (chainNode q) - Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+          ω (chainNode q).val) +
+      ∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) *
+        (C ((p:ℚ) * R q) - C ((p:ℚ) * Δ)) := by
+    unfold Wown
+    rw [F1, F2, F3, ← hh]
+    have G1 : ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs2 ys2 z2 (chainNode (e q)) * ω (chainNode (e q)).val =
+        ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs2 ys2 z2 (chainNode (e q)) * ω (chainNode q).val +
+        ∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) *
+          C ((p:ℚ) * R q) := by
+      rw [← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun q _ => by rw [F5 q]; ring
+    simp only [sub_mul, mul_sub, Finset.sum_sub_distrib, ← Finset.mul_sum, Finset.sum_mul]
+    have F4' : omegaW Fr p a b (xs1 z1) = omegaW Fr p a b (xs2 z2) - a * C ((p:ℚ) * Δ) := by
+      have := F4; simp only [hω] at this; linear_combination this
+    have hS5 : ∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) * C ((p:ℚ) * Δ) =
+        a * C ((p:ℚ) * Δ) * ∑ q : ChainIndex p r (xs1 z1), Sr Fr p r xs2 ys2 z2 (chainNode (e q)) := by
+      rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun q _ => by ring
+    rw [F4']
+    linear_combination G1 + hS5
+  rw [key]
+  have : -(∑ q : ChainIndex p r (xs1 z1),
+        (Sr Fr p r xs1 ys1 z1 (chainNode q) - Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+          ω (chainNode q).val) +
+      ∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) *
+        (C ((p:ℚ) * R q) - C ((p:ℚ) * Δ)) =
+      (∑ q : ChainIndex p r (xs1 z1), a * Sr Fr p r xs2 ys2 z2 (chainNode (e q)) *
+        (C ((p:ℚ) * R q) - C ((p:ℚ) * Δ))) +
+      -(∑ q : ChainIndex p r (xs1 z1),
+        (Sr Fr p r xs1 ys1 z1 (chainNode q) - Sr Fr p r xs2 ys2 z2 (chainNode (e q))) *
+          ω (chainNode q).val) := by ring
+  rw [this]
+  exact (gn_add_le _ _).trans (max_le E3 (by rw [gn_neg]; exact E2))
+
+end Own
+
+#print axioms CatalanCore.Arith.Hybrid.Wown_transport2
 end CatalanCore.Arith.Hybrid
