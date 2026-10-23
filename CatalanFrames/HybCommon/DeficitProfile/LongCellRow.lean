@@ -53,7 +53,27 @@ noncomputable def longCellOfRow {o r p h : ℕ} [Fact p.Prime] (ho : o=1 ∨ o=3
   LongCell.ofNode hp hh hroot (profileLeft o r p P) (profileRight o r p P) (le_max_left _ _)
     (min_le_left _ _) (profile_row_cut_pair ho hclass hpair ha hp hb) z0 hz0 k0 hk0 hl0
 
+/-- **The binding shape for a two-level row.**  For any deficit `δ` within the two-level saving
+`σ + (σ - B')` (`B ≤ B' ≤ p`, `σ + (σ - B') ≤ m`), a long cell gives exactly the three conjuncts of
+`ProfileRowLocal` with `profileRowDeficit` replaced by `δ`.  A kind-3 row only has to define its
+deficit `δ` (in integer form) and prove `δ ≤ σ + (σ - B')`. -/
+theorem longCell_rowLocal {Fr : Frame} {o r p h : ℕ} [Fact p.Prime] (I : HybInst Fr)
+    [I.DiagOK r (r/8)] (hL : LamData Fr o) (c : LongCell p o r (r/8) h) (hp13 : 13 ≤ p)
+    (hm : 2 * (r/8) < p) (hN : 4 * (r + 2 * (r/8) + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * (r/8))
+    (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) {B' δ : ℕ} (hB : c.B ≤ B') (hBp : B' ≤ p)
+    (hσ : c.sigma + (c.sigma - B') ≤ r/8) (hδ : δ ≤ c.sigma + (c.sigma - B')) :
+    δ ≤ profileBaseline r p ∧
+    GLE p (profileBaseline r p - δ) (Fr.fullPoly r (r/8)) ∧
+    GLE p (profileBaseline r p - δ + topC I r (r/8) p) ((Rect.afterTop r (r/8)).fullPolyG Fr) := by
+  have hbase : profileBaseline r p = 2 * r + r/8 := by
+    unfold profileBaseline; rw [if_neg (by omega)]
+  have H := c.row_both_le I hL (by omega) hm hN hk hb hh hroot hB hBp hσ
+  rw [hbase]
+  exact ⟨by omega, H.1.mono (by omega), H.2.mono (by omega)⟩
+
 end CatalanFrames.HybCommon
 
 #print axioms CatalanFrames.HybCommon.profile_row_cut_pair
 #print axioms CatalanFrames.HybCommon.longCellOfRow
+#print axioms CatalanFrames.HybCommon.longCell_rowLocal
