@@ -128,5 +128,43 @@ def ofNode (hp : 5 ≤ p) (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
 
 end LongCell
 
+namespace LongCell
+variable {p o r m h : ℕ} [Fact p.Prime] {Fr : Frame}
+
+/-- The number of uncovered short residues is at most the size of the short arc. -/
+theorem B_le_card_shortArc (c : LongCell p o r m h) : c.B ≤ (shortArc p h).card := by
+  classical
+  unfold B zoneSb
+  exact Finset.card_le_card (Finset.filter_subset _ _)
+
+/-- **Row theorem with any upper bound `B'` (`B ≤ B' ≤ p`) for the uncovered count**: enlarge the set
+of uncovered short residues; the zero pattern only needs a superset. -/
+theorem row_both_le (c : LongCell p o r m h) (I : HybInst Fr) [I.DiagOK r m] (hL : LamData Fr o)
+    (hp : 5 ≤ p) (hm : 2 * m < p) (hN : 4 * (r + 2 * m + 1) < p * p) {k : ℕ}
+    (hk : (4 : ZMod p) * k = (o : ZMod p)) (hb : p ≤ r + 2 * m)
+    (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p)) {B' : ℕ} (hB : c.B ≤ B') (hBp : B' ≤ p)
+    (hσ : c.sigma + (c.sigma - B') ≤ m) :
+    GLE p (m - (c.sigma + (c.sigma - B')) + 2 * r) (Fr.fullPoly r m) ∧
+    GLE p (m - (c.sigma + (c.sigma - B')) + topC I r m p + 2 * r)
+      ((Rect.afterTop r m).fullPolyG Fr) := by
+  classical
+  obtain ⟨sb, hsub, hcard⟩ := Finset.exists_superset_card_eq (s := zoneSb p r m h) (n := B')
+    (by simpa [LongCell.B] using hB) (by simpa [ZMod.card] using hBp)
+  obtain ⟨α, β, hwt⟩ := weightedSameCell_zone hL hp hm (by omega) hk hh hroot c.hcut c.z0 c.hz0 c.hlong
+  have hz0' := zoneZero_of_response hL hp hm (by omega) hh hroot c.hcut c.z0 c.hz0 c.hlong α β
+  have hz : ChainModel.ZoneZero p r m (cellRows r m c.lo c.hi) (cellCols r m c.lo c.hi)
+      (zoneWeight Fr p o r h (r + 2 * c.z0.val) α β) sb := fun cc hcc => hz0' cc (fun hs => hcc (hsub hs))
+  have hcard2 := card_cellRows_add_cellCols (r := r) (m := m) c.hra c.hhi (a := c.lo) (b := c.hi)
+  have H1 := ChainModel.twoLevel_fullPoly_gle_of_wt (Fr := Fr) hL hp hm (by omega) hk
+    (cellRows r m c.lo c.hi) (cellCols r m c.lo c.hi) _ sb (zoneCell_of_cut c.hcut) hwt hz
+  have H2 := ChainModel.twoLevel_top_gle_of_wt I hL hp hm hN hk hb
+    (cellRows r m c.lo c.hi) (cellCols r m c.lo c.hi) _ sb (zoneCell_of_cut c.hcut) hwt hz
+    (by rw [hcard2, hcard]; exact hσ)
+  rw [hcard2, hcard] at H1 H2
+  exact ⟨H1, H2⟩
+
+end LongCell
+
 #print axioms CatalanCore.Arith.Hybrid.long_of_node
+#print axioms CatalanCore.Arith.Hybrid.LongCell.row_both_le
 end CatalanCore.Arith.Hybrid
