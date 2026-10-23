@@ -103,14 +103,14 @@ theorem hasDerivAt_peel (Z : List ℤ) (pre post : List PoleR) (w p : ℚ) (F Fr
 /-! ### peeled cells -/
 
 /-- `cellVal` for a field with an optional peeled logarithm `(w, p)` -/
-def cellValP (ev : ℚ → Option (ℚ × ℚ)) (D : PolyData) (poles : List PoleR) (m : ℕ) (MG : ℤ)
+def cellValP (ev : ℚ → Option (ℚ × ℚ)) (D : PolyData) (poles : List PoleR) (m L : ℕ) (MGL : ℤ)
     (peel : Option (ℚ × ℚ)) (cap : ℚ) (cell : ℤ × ℤ) : Bool :=
   match peel with
-  | none => cellVal ev D poles m MG none cap cell
+  | none => cellVal ev D poles m L MGL none cap cell
   | some (w, p) =>
     match peelBound w p (((cell.1 - cell.2 : ℤ) : ℚ) / (TT : ℚ)) (((cell.1 + cell.2 : ℤ) : ℚ) / (TT : ℚ)) with
     | none => false
-    | some u => cellVal ev D poles m MG (some p) (cap - u) cell
+    | some u => cellVal ev D poles m L MGL (some p) (cap - u) cell
 
 /-- what a cell type needs: the centre enclosure `ev` (for the regular part), the pole list of the
 regular part, and the optional peeled logarithm -/
@@ -135,10 +135,10 @@ def Spec.Sound (S : Spec) (D : PolyData) (F : ℝ → ℝ) : Prop :=
     (∀ y : ℝ, (∀ pr, S.peel = some pr → y ≠ (pr.2 : ℝ)) → F y = Freg y + peelTerm S.peel y) ∧
     (∀ pr, S.peel = some pr → 0 ≤ pr.1)
 
-theorem cellValP_sound (F : ℝ → ℝ) (S : Spec) (D : PolyData) (hD : D.Ok) (m : ℕ) (MG : ℤ)
-    (hMG : ∀ y : ℝ, |y| ≤ 1 → (SC : ℝ) * |ptZ D.Z m y| ≤ (MG : ℝ))
+theorem cellValP_sound (F : ℝ → ℝ) (S : Spec) (D : PolyData) (hD : D.Ok) (m L : ℕ) (MGL : ℤ)
+    (hMGL : ∀ y : ℝ, |y| ≤ 1 → (SC : ℝ) * |ptZ D.Z (m + L) y| ≤ (MGL : ℝ))
     (hS : S.Sound D F) (cap : ℚ) (cc hh : ℤ)
-    (h : cellValP S.ev D S.poles m MG S.peel cap (cc, hh) = true) :
+    (h : cellValP S.ev D S.poles m L MGL S.peel cap (cc, hh) = true) :
     ∀ x : ℝ, |x - (cc : ℝ) / TT| ≤ (hh : ℝ) / TT → (∀ pr, S.peel = some pr → x ≠ (pr.2 : ℝ)) →
       F x ≤ (cap : ℝ) := by
   intro x hx hxp
@@ -148,7 +148,7 @@ theorem cellValP_sound (F : ℝ → ℝ) (S : Spec) (D : PolyData) (hD : D.Ok) (
   rcases hpe : S.peel with _ | ⟨w, p⟩
   · rw [hpe] at h hFd hsplit
     simp only at h
-    have := cellVal_sound Freg S.ev D hD S.poles m MG hMG none cap hev hFc
+    have := cellVal_sound Freg S.ev D hD S.poles m L MGL hMGL none cap hev hFc
       (by simpa using hFd) cc hh h x hx
     rw [hsplit x (by simp)]
     simpa [peelTerm] using this
@@ -159,7 +159,7 @@ theorem cellValP_sound (F : ℝ → ℝ) (S : Spec) (D : PolyData) (hD : D.Ok) (
     cases pb with
     | none => simp at h
     | some u =>
-      have h1 := cellVal_sound Freg S.ev D hD S.poles m MG hMG (some p) (cap - u) hev hFc
+      have h1 := cellVal_sound Freg S.ev D hD S.poles m L MGL hMGL (some p) (cap - u) hev hFc
         (by simpa using hFd) cc hh h x hx
       have hw' : 0 ≤ w := hw (w, p) rfl
       have hxp' : x ≠ (p : ℝ) := hxp (w, p) rfl
@@ -222,21 +222,21 @@ theorem floor_le_of_ge (glo : ℚ) (x : ℝ) (hx : (glo : ℝ) ≤ x) :
   nlinarith
 
 /-- the check of one typed cell -/
-def cellT (S : ℕ → Spec) (D : PolyData) (m : ℕ) (MG : ℤ) (cap : ℚ) (c : TCell) : Bool :=
-  cellValP (S c.2.2).ev D (S c.2.2).poles m MG (S c.2.2).peel cap (c.1, c.2.1)
+def cellT (S : ℕ → Spec) (D : PolyData) (m L : ℕ) (MGL : ℤ) (cap : ℚ) (c : TCell) : Bool :=
+  cellValP (S c.2.2).ev D (S c.2.2).poles m L MGL (S c.2.2).peel cap (c.1, c.2.1)
 
 /-- **Pointwise sup from a cover**: if every cell of a covering list passes `cellT`, then `F ≤ cap` at every
 point of `[L/2^40, ghi]` that avoids the peeled singularities. -/
-theorem field_le_of_cells (F : ℝ → ℝ) (S : ℕ → Spec) (D : PolyData) (hD : D.Ok) (m : ℕ) (MG : ℤ)
-    (hMG : ∀ y : ℝ, |y| ≤ 1 → (SC : ℝ) * |ptZ D.Z m y| ≤ (MG : ℝ)) (cap : ℚ)
+theorem field_le_of_cells (F : ℝ → ℝ) (S : ℕ → Spec) (D : PolyData) (hD : D.Ok) (m L : ℕ) (MGL : ℤ)
+    (hMGL : ∀ y : ℝ, |y| ≤ 1 → (SC : ℝ) * |ptZ D.Z (m + L) y| ≤ (MGL : ℝ)) (cap : ℚ)
     (cells : List TCell) (hsound : ∀ c ∈ cells, (S c.2.2).Sound D F)
-    (L : ℤ) (ghi : ℚ) (hcov : coverFrom ghi L cells = true)
-    (hcells : ∀ c ∈ cells, cellT S D m MG cap c = true)
-    (x : ℝ) (hL : (L : ℝ) / TT ≤ x) (hx : x ≤ (ghi : ℝ))
+    (L0 : ℤ) (ghi : ℚ) (hcov : coverFrom ghi L0 cells = true)
+    (hcells : ∀ c ∈ cells, cellT S D m L MGL cap c = true)
+    (x : ℝ) (hL : (L0 : ℝ) / TT ≤ x) (hx : x ≤ (ghi : ℝ))
     (hxp : ∀ c ∈ cells, ∀ pr, (S c.2.2).peel = some pr → x ≠ (pr.2 : ℝ)) :
     F x ≤ (cap : ℝ) := by
-  obtain ⟨c, hc, hcx⟩ := cover_spec ghi cells L hcov x hL hx
-  exact cellValP_sound F (S c.2.2) D hD m MG hMG (hsound c hc) cap c.1 c.2.1 (hcells c hc) x hcx
+  obtain ⟨c, hc, hcx⟩ := cover_spec ghi cells L0 hcov x hL hx
+  exact cellValP_sound F (S c.2.2) D hD m L MGL hMGL (hsound c hc) cap c.1 c.2.1 (hcells c hc) x hcx
     (hxp c hc)
 
 end CatalanMeasure.G728
