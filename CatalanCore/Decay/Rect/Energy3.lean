@@ -21,6 +21,8 @@ open CatalanLambda.Decay
 
 namespace CatalanCore.Decay
 
+variable {sl : ℝ}
+
 lemma AS_eq_range (r m : ℕ) (xn : ℕ → ℕ) :
     AS (fun b : Fin (r + m) => nodeC r (xn b))
       = ∑ a ∈ range (r + m), ∑ b ∈ range (r + m), elog (nodeC r (xn a)) (nodeC r (xn b)) := by
@@ -34,7 +36,7 @@ lemma AS_eq_range (r m : ℕ) (xn : ℕ → ℕ) :
 
 set_option maxHeartbeats 4000000 in
 theorem energy_rectW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ}
-    {Fr : Frame} (hFr : Fr.DecayOK) (F : Cert.CertCoreG K ρ ε c wt)
+    {Fr : Frame} (hFr : Fr.DecayOKs sl) (F : Cert.CertCoreGs sl K ρ ε c wt)
     {α : ℝ} (hα : 0 < α) {w : ℝ} (hw : 1 ≤ w)
     (hg : ∀ s : ℂ, F.g s = (1 + α) * Usig ρ c wt s - Unu α s + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -43,7 +45,7 @@ theorem energy_rectW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K →
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * r)
     {m0 : ℝ} (hm0 : 0 < m0)
     {k : ℕ} (z : Fin k → ℂ) (hzi : Function.Injective z)
-    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay sl N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
     (s : Fin k → Fin (r + m)) (hs : Function.Injective s)
     (hkeep : ∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b)
     {e : ℝ} (he0 : 0 < e) (heε : e < ε) (hrbig : 2 * w ≤ Real.pi * (ε - e) * r)
@@ -289,7 +291,7 @@ theorem energy_rectW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K →
       ≤ 2 * ((r : ℝ) + m) * Usig ρ c wt (σ l) - 2 * r * Unu α (σ l) := by
     intro l
     have hnorm : ‖σ l‖ ≤ (F.r0 : ℝ) + Fr.xs + (2 / r) * |(z l).im| := by
-      have h1 := free_norm_le hxs.le hFr.atomRange hT (hz l)
+      have h1 := free_norm_le hFr.slope.one_le hxs.le hFr.atomRange hT (hz l)
       have h2 : ‖σ l‖ = ‖z l‖ / r := by
         show ‖z l / (r : ℂ)‖ = _
         rw [norm_div, Complex.norm_natCast]
@@ -423,9 +425,11 @@ theorem energy_rectW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K →
 
 namespace CatalanCore.Decay
 
+variable {sl : ℝ}
+
 /-- The window-`1` case of `energy_rectW`. -/
 theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ}
-    {Fr : Frame} (hFr : Fr.DecayOK) (F : Cert.CertCoreG K ρ ε c wt)
+    {Fr : Frame} (hFr : Fr.DecayOKs sl) (F : Cert.CertCoreGs sl K ρ ε c wt)
     {α : ℝ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + α) * Usig ρ c wt s - Unu α s + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -434,7 +438,7 @@ theorem energy_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * r)
     {m0 : ℝ} (hm0 : 0 < m0)
     {k : ℕ} (z : Fin k → ℂ) (hzi : Function.Injective z)
-    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay sl N0 (z l)) (hre : ∀ l, m0 ≤ -(z l).re)
     (s : Fin k → Fin (r + m)) (hs : Function.Injective s)
     (hkeep : ∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b)
     {e : ℝ} (he0 : 0 < e) (heε : e < ε) (hrbig : 2 ≤ Real.pi * (ε - e) * r)

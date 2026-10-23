@@ -19,16 +19,17 @@ open CatalanLambda.Decay (Irho)
 
 namespace CatalanCore.Cert
 
-variable {K K' : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
+variable {sl : ℝ} {K K' : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
 
 /-- **Transfer.**  `F.g ≤ g'` on `{Im = 0, Re ≤ 1} ∪ {Re ≤ -r0 + W}` gives a certificate for `g'`
 with the same data and the new energy bound `I`. -/
-noncomputable def CertCoreG.ofLe (F : CertCoreG K ρ ε c m) {c' : Fin K' → ℂ} {m' : Fin K' → ℝ}
+noncomputable def CertCoreGs.ofLe (F : CertCoreGs sl K ρ ε c m) {c' : Fin K' → ℂ} {m' : Fin K' → ℝ}
     (g' : ℂ → ℝ)
     (hle : ∀ s : ℂ, ((s.im = 0 ∧ s.re ≤ 1) ∨ s.re ≤ -(F.r0 : ℝ) + F.W) → F.g s ≤ g' s)
     (humax : (0 : ℝ) ≤ F.umax) (hseg : ∀ i, (F.segB i : ℝ) ≤ 1)
     (hconj : ∀ s, g' ((starRingEnd ℂ) s) = g' s) (hm : ∑ k, m' k = 1)
-    (I : ℚ) (hI : Irho ρ c' m' ≤ I) : CertCoreG K' ρ ε c' m' where
+    (I : ℚ) (hI : Irho ρ c' m' ≤ I) (hs : 0 ≤ sl := by norm_num) :
+    CertCoreGs sl K' ρ ε c' m' where
   g := g'
   r0 := F.r0
   W := F.W
@@ -53,7 +54,7 @@ noncomputable def CertCoreG.ofLe (F : CertCoreG K ρ ε c m) {c' : Fin K' → �
     simp only [Rat.cast_max, Rat.cast_zero] at hx1 hx2 hy1 hy2
     have hq0 : (q.1 : ℝ) ≤ max (q.1 : ℝ) 0 := le_max_left _ _
     have h00 : (0 : ℝ) ≤ max (q.1 : ℝ) 0 := le_max_right _ _
-    refine (F.ray_box_ok q hq x y hx1 (by linarith) (by linarith) hy2).trans (hle _ (Or.inr ?_))
+    refine (F.ray_box_ok q hq x y hx1 (by linarith) ((mul_le_mul_of_nonneg_left hq0 hs).trans hy1) hy2).trans (hle _ (Or.inr ?_))
     show x ≤ -(F.r0 : ℝ) + F.W
     linarith
   ray_cover := by
@@ -90,28 +91,42 @@ noncomputable def CertCoreG.ofLe (F : CertCoreG K ρ ε c m) {c' : Fin K' → �
   ccert_ge := F.ccert_ge
 
 section simp
+variable (F : CertCoreGs sl K ρ ε c m) (hs : 0 ≤ sl) {c' : Fin K' → ℂ} {m' : Fin K' → ℝ} (g' : ℂ → ℝ)
+  (hle : ∀ s : ℂ, ((s.im = 0 ∧ s.re ≤ 1) ∨ s.re ≤ -(F.r0 : ℝ) + F.W) → F.g s ≤ g' s)
+  (humax : (0 : ℝ) ≤ F.umax) (hseg : ∀ i, (F.segB i : ℝ) ≤ 1)
+  (hconj : ∀ s, g' ((starRingEnd ℂ) s) = g' s) (hm : ∑ k, m' k = 1)
+  (I : ℚ) (hI : Irho ρ c' m' ≤ I)
+
+@[simp] theorem CertCoreGs.ofLe_g : (F.ofLe g' hle humax hseg hconj hm I hI hs).g = g' := rfl
+@[simp] theorem CertCoreGs.ofLe_r0 : (F.ofLe g' hle humax hseg hconj hm I hI hs).r0 = F.r0 := rfl
+@[simp] theorem CertCoreGs.ofLe_W : (F.ofLe g' hle humax hseg hconj hm I hI hs).W = F.W := rfl
+@[simp] theorem CertCoreGs.ofLe_mprime :
+    (F.ofLe g' hle humax hseg hconj hm I hI hs).mprime = F.mprime := rfl
+@[simp] theorem CertCoreGs.ofLe_gmin : (F.ofLe g' hle humax hseg hconj hm I hI hs).gmin = F.gmin := rfl
+@[simp] theorem CertCoreGs.ofLe_Sbase :
+    (F.ofLe g' hle humax hseg hconj hm I hI hs).Sbase = F.Sbase := rfl
+@[simp] theorem CertCoreGs.ofLe_ccert :
+    (F.ofLe g' hle humax hseg hconj hm I hI hs).ccert = F.ccert := rfl
+@[simp] theorem CertCoreGs.ofLe_Ibound : (F.ofLe g' hle humax hseg hconj hm I hI hs).Ibound = I := rfl
+
+theorem CertCoreGs.ofLe_Dof (d : ℕ) (α Inu : ℚ) :
+    (F.ofLe g' hle humax hseg hconj hm I hI hs).Dof d α Inu
+      = 2 * ((1 + α) * F.mprime + d * F.Sbase) - (1 + α) ^ 2 * I + Inu := rfl
+
+end simp
+
+section slope3
 variable (F : CertCoreG K ρ ε c m) {c' : Fin K' → ℂ} {m' : Fin K' → ℝ} (g' : ℂ → ℝ)
   (hle : ∀ s : ℂ, ((s.im = 0 ∧ s.re ≤ 1) ∨ s.re ≤ -(F.r0 : ℝ) + F.W) → F.g s ≤ g' s)
   (humax : (0 : ℝ) ≤ F.umax) (hseg : ∀ i, (F.segB i : ℝ) ≤ 1)
   (hconj : ∀ s, g' ((starRingEnd ℂ) s) = g' s) (hm : ∑ k, m' k = 1)
   (I : ℚ) (hI : Irho ρ c' m' ≤ I)
 
-@[simp] theorem CertCoreG.ofLe_g : (F.ofLe g' hle humax hseg hconj hm I hI).g = g' := rfl
-@[simp] theorem CertCoreG.ofLe_r0 : (F.ofLe g' hle humax hseg hconj hm I hI).r0 = F.r0 := rfl
-@[simp] theorem CertCoreG.ofLe_W : (F.ofLe g' hle humax hseg hconj hm I hI).W = F.W := rfl
-@[simp] theorem CertCoreG.ofLe_mprime :
-    (F.ofLe g' hle humax hseg hconj hm I hI).mprime = F.mprime := rfl
-@[simp] theorem CertCoreG.ofLe_gmin : (F.ofLe g' hle humax hseg hconj hm I hI).gmin = F.gmin := rfl
-@[simp] theorem CertCoreG.ofLe_Sbase :
-    (F.ofLe g' hle humax hseg hconj hm I hI).Sbase = F.Sbase := rfl
-@[simp] theorem CertCoreG.ofLe_ccert :
-    (F.ofLe g' hle humax hseg hconj hm I hI).ccert = F.ccert := rfl
-@[simp] theorem CertCoreG.ofLe_Ibound : (F.ofLe g' hle humax hseg hconj hm I hI).Ibound = I := rfl
-
+/-- Slope-`3` name of `CertCoreGs.ofLe_Dof`. -/
 theorem CertCoreG.ofLe_Dof (d : ℕ) (α Inu : ℚ) :
     (F.ofLe g' hle humax hseg hconj hm I hI).Dof d α Inu
       = 2 * ((1 + α) * F.mprime + d * F.Sbase) - (1 + α) ^ 2 * I + Inu := rfl
 
-end simp
+end slope3
 
 end CatalanCore.Cert

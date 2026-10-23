@@ -35,45 +35,69 @@ open CatalanLambda.Decay (rayPt rayI contL kap2 kap2_pos sumM meInl meInr integr
 namespace CatalanCore
 namespace Decay
 
-/-- The angle of the direction `(-1, 3)`: `π - arctan 3`. -/
-noncomputable def phiR : ℝ := Real.pi - Real.arctan 3
+/-- The angle of the direction `(-1, sl)`: `π - arctan sl`.  The decay contour's ray slope is `sl`;
+the certified instances use `sl = 3`. -/
+noncomputable def phiS (sl : ℝ) : ℝ := Real.pi - Real.arctan sl
 
-lemma phiR_gt : Real.pi / 2 < phiR := by
-  unfold phiR
-  have := Real.arctan_lt_pi_div_two 3
+lemma phiS_gt (sl : ℝ) : Real.pi / 2 < phiS sl := by
+  unfold phiS
+  have := Real.arctan_lt_pi_div_two sl
   linarith
 
-lemma phiR_lt : phiR < Real.pi := by
-  unfold phiR
-  have := Real.arctan_pos.2 (show (0 : ℝ) < 3 by norm_num)
+lemma phiS_lt {sl : ℝ} (hs : 0 < sl) : phiS sl < Real.pi := by
+  unfold phiS
+  have := Real.arctan_pos.2 hs
   linarith
 
-lemma sin_phiR : Real.sin phiR = 3 / Real.sqrt 10 := by
-  unfold phiR
+lemma sin_phiS (sl : ℝ) : Real.sin (phiS sl) = sl / Real.sqrt (1 + sl ^ 2) := by
+  unfold phiS
   rw [Real.sin_pi_sub, Real.sin_arctan]
-  norm_num
 
-lemma cos_phiR : Real.cos phiR = -(1 / Real.sqrt 10) := by
-  unfold phiR
+lemma cos_phiS (sl : ℝ) : Real.cos (phiS sl) = -(1 / Real.sqrt (1 + sl ^ 2)) := by
+  unfold phiS
   rw [Real.cos_pi_sub, Real.cos_arctan]
-  norm_num
 
-lemma sin_phiR_pos : 0 < Real.sin phiR := by
-  rw [sin_phiR]; positivity
+lemma sin_phiS_pos {sl : ℝ} (hs : 0 < sl) : 0 < Real.sin (phiS sl) := by
+  rw [sin_phiS]; positivity
 
-lemma cos_phiR_neg : Real.cos phiR < 0 := by
-  rw [cos_phiR]; have : 0 < Real.sqrt 10 := by positivity
-  have : 0 < 1 / Real.sqrt 10 := by positivity
+lemma cos_phiS_neg (sl : ℝ) : Real.cos (phiS sl) < 0 := by
+  rw [cos_phiS]
+  have : 0 < Real.sqrt (1 + sl ^ 2) := Real.sqrt_pos.2 (by positivity)
+  have : 0 < 1 / Real.sqrt (1 + sl ^ 2) := by positivity
   linarith
 
-/-- `-cos φ_R ≤ 4 δ0 sin φ_R` as soon as `δ0 ≥ 1/12`. -/
-lemma phiR_cot {δ0 : ℚ} (h : (1 : ℚ) / 12 ≤ δ0) :
-    -Real.cos phiR ≤ 4 * (δ0 : ℝ) * Real.sin phiR := by
-  rw [sin_phiR, cos_phiR, neg_neg]
-  have hs : 0 < Real.sqrt 10 := by positivity
-  have h' : (1 : ℝ) / 12 ≤ (δ0 : ℝ) := by have := (Rat.cast_le (K := ℝ)).2 h; push_cast at this; exact this
-  rw [show 4 * (δ0 : ℝ) * (3 / Real.sqrt 10) = (12 * δ0) / Real.sqrt 10 by ring]
+/-! Slope-`3` instances (legacy form). -/
+
+lemma sin_phiR : Real.sin (phiS 3) = 3 / Real.sqrt 10 := by rw [sin_phiS]; norm_num
+
+lemma cos_phiR : Real.cos (phiS 3) = -(1 / Real.sqrt 10) := by rw [cos_phiS]; norm_num
+
+lemma phiR_gt : Real.pi / 2 < phiS 3 := phiS_gt 3
+
+end Decay
+
+namespace Frame
+
+/-- The slope hypothesis: the ray `(-1, sl)` has positive slope and satisfies the cotangent
+condition `-cos φ ≤ 4 δ0 sin φ`, i.e. `1 ≤ 4 sl δ0`; `1 ≤ sl` is used for the bound `|sin φ| ≥ 1/2`.  (At `sl = 3` this is `δ0 ≥ 1/12`.) -/
+structure SlopeOK (sl : ℝ) (Fr : Frame) : Prop where
+  pos : 0 < sl
+  one_le : 1 ≤ sl
+  cot : 1 ≤ 4 * sl * (Fr.δ0 : ℝ)
+
+/-- `-cos φ ≤ 4 δ0 sin φ` under the slope hypothesis. -/
+lemma SlopeOK.phiS_cot {sl : ℝ} {Fr : Frame} (h : Fr.SlopeOK sl) :
+    -Real.cos (Decay.phiS sl) ≤ 4 * (Fr.δ0 : ℝ) * Real.sin (Decay.phiS sl) := by
+  rw [Decay.sin_phiS, Decay.cos_phiS, neg_neg]
+  have hs : 0 < Real.sqrt (1 + sl ^ 2) := Real.sqrt_pos.2 (by have := h.pos; positivity)
+  rw [show 4 * (Fr.δ0 : ℝ) * (sl / Real.sqrt (1 + sl ^ 2))
+      = (4 * sl * Fr.δ0) / Real.sqrt (1 + sl ^ 2) by ring]
+  have := h.cot
   exact div_le_div_of_nonneg_right (by linarith) hs.le
+
+end Frame
+
+namespace Decay
 
 /-- Ray parameter space. -/
 abbrev RayP : Type := Set.Ioi (0 : ℝ)
@@ -211,39 +235,39 @@ instance (N0 : ℕ) : SigmaFinite (Fr.muT N0) := by
   infer_instance
 
 /-- Upper-ray weight `-(2πi)⁻¹ E(z) e^{iφ}`. -/
-noncomputable def wUp (N0 : ℕ) (r : ℝ) : ℂ :=
-  -((2 * Real.pi * I)⁻¹ * (Fr.EC (rayPt (Fr.xstar N0) phiR r) * exp ((phiR : ℂ) * I)))
+noncomputable def wUp (sl : ℝ) (N0 : ℕ) (r : ℝ) : ℂ :=
+  -((2 * Real.pi * I)⁻¹ * (Fr.EC (rayPt (Fr.xstar N0) (phiS sl) r) * exp (((phiS sl : ℝ) : ℂ) * I)))
 
 /-- Lower-ray weight `(2πi)⁻¹ E(z) e^{-iφ}`. -/
-noncomputable def wLow (N0 : ℕ) (r : ℝ) : ℂ :=
-  (2 * Real.pi * I)⁻¹ * (Fr.EC (rayPt (Fr.xstar N0) (-phiR) r) * exp (((-phiR : ℝ) : ℂ) * I))
+noncomputable def wLow (sl : ℝ) (N0 : ℕ) (r : ℝ) : ℂ :=
+  (2 * Real.pi * I)⁻¹ * (Fr.EC (rayPt (Fr.xstar N0) (-(phiS sl)) r) * exp (((-(phiS sl) : ℝ) : ℂ) * I))
 
 /-- The complex position of a point of `XT N0`. -/
-noncomputable def ptT (N0 : ℕ) : Fr.XT N0 → ℂ :=
+noncomputable def ptT (sl : ℝ) (N0 : ℕ) : Fr.XT N0 → ℂ :=
   Sum.elim (fun p => ((Fr.atomPos p.1 : ℝ) : ℂ))
-    (Sum.elim (fun r => rayPt (Fr.xstar N0) phiR r.1) (fun r => rayPt (Fr.xstar N0) (-phiR) r.1))
+    (Sum.elim (fun r => rayPt (Fr.xstar N0) (phiS sl) r.1) (fun r => rayPt (Fr.xstar N0) (-(phiS sl)) r.1))
 
 /-- The complex weight (density) on `XT N0`. -/
-noncomputable def wT (N0 : ℕ) : Fr.XT N0 → ℂ :=
+noncomputable def wT (sl : ℝ) (N0 : ℕ) : Fr.XT N0 → ℂ :=
   Sum.elim (fun p => ((Fr.w p.1.2 : ℤ) : ℂ))
-    (Sum.elim (fun r => Fr.wUp N0 r.1) (fun r => Fr.wLow N0 r.1))
+    (Sum.elim (fun r => Fr.wUp sl N0 r.1) (fun r => Fr.wLow sl N0 r.1))
 
-variable {Fr}
+variable {Fr} {sl : ℝ}
 
-lemma integrable_entry (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ Fr.δ0) (N0 a b : ℕ) :
-    Integrable (fun z => Fr.wT N0 z * (Fr.ptT N0 z - a)⁻¹ * (Fr.ptT N0 z - b)⁻¹) (Fr.muT N0) := by
+lemma integrable_entry (hC : Fr.ContourOK) (hδ : Fr.SlopeOK sl) (N0 a b : ℕ) :
+    Integrable (fun z => Fr.wT sl N0 z * (Fr.ptT sl N0 z - a)⁻¹ * (Fr.ptT sl N0 z - b)⁻¹) (Fr.muT N0) := by
   unfold muT
   rw [integrable_sumM_iff, integrable_sumM_iff]
   refine ⟨Integrable.of_finite, ?_, ?_⟩
-  · have h := Integrable.const_mul (Fr.integrableOn_E_ray hC phiR_gt phiR_lt (phiR_cot hδ) N0 a b
-      (θ := phiR) (Or.inl rfl)) (-(2 * Real.pi * I)⁻¹)
-    refine (integrable_comap_Ioi (fun r => Fr.wUp N0 r * (rayPt (Fr.xstar N0) phiR r - a)⁻¹
-      * (rayPt (Fr.xstar N0) phiR r - b)⁻¹)).2 (IntegrableOn.congr_fun h (fun r _ => ?_) measurableSet_Ioi)
+  · have h := Integrable.const_mul (Fr.integrableOn_E_ray hC (phiS_gt sl) (phiS_lt hδ.pos) hδ.phiS_cot N0 a b
+      (θ := (phiS sl)) (Or.inl rfl)) (-(2 * Real.pi * I)⁻¹)
+    refine (integrable_comap_Ioi (fun r => Fr.wUp sl N0 r * (rayPt (Fr.xstar N0) (phiS sl) r - a)⁻¹
+      * (rayPt (Fr.xstar N0) (phiS sl) r - b)⁻¹)).2 (IntegrableOn.congr_fun h (fun r _ => ?_) measurableSet_Ioi)
     simp only [wUp]; ring
-  · have h := Integrable.const_mul (Fr.integrableOn_E_ray hC phiR_gt phiR_lt (phiR_cot hδ) N0 a b
-      (θ := -phiR) (Or.inr rfl)) ((2 * Real.pi * I)⁻¹)
-    refine (integrable_comap_Ioi (fun r => Fr.wLow N0 r * (rayPt (Fr.xstar N0) (-phiR) r - a)⁻¹
-      * (rayPt (Fr.xstar N0) (-phiR) r - b)⁻¹)).2 (IntegrableOn.congr_fun h (fun r _ => ?_) measurableSet_Ioi)
+  · have h := Integrable.const_mul (Fr.integrableOn_E_ray hC (phiS_gt sl) (phiS_lt hδ.pos) hδ.phiS_cot N0 a b
+      (θ := -(phiS sl)) (Or.inr rfl)) ((2 * Real.pi * I)⁻¹)
+    refine (integrable_comap_Ioi (fun r => Fr.wLow sl N0 r * (rayPt (Fr.xstar N0) (-(phiS sl)) r - a)⁻¹
+      * (rayPt (Fr.xstar N0) (-(phiS sl)) r - b)⁻¹)).2 (IntegrableOn.congr_fun h (fun r _ => ?_) measurableSet_Ioi)
     simp only [wLow]; ring
 
 lemma atom_pt_prod (a b : ℕ) (μ : ℝ) :
@@ -266,11 +290,11 @@ lemma atomHead_eq (N0 a b : ℕ) :
   simp only [ite_not]
 
 lemma atom_sum (N0 a b : ℕ) :
-    ∑ p : ↥(Fr.atomIdx N0), (Fr.wT N0 (Sum.inl p) * (Fr.ptT N0 (Sum.inl p) - a)⁻¹
-        * (Fr.ptT N0 (Sum.inl p) - b)⁻¹)
+    ∑ p : ↥(Fr.atomIdx N0), (Fr.wT sl N0 (Sum.inl p) * (Fr.ptT sl N0 (Sum.inl p) - a)⁻¹
+        * (Fr.ptT sl N0 (Sum.inl p) - b)⁻¹)
       = ((Fr.atomHead N0 a b : ℝ) : ℂ) := by
-  have key : ∀ p : ↥(Fr.atomIdx N0), (Fr.wT N0 (Sum.inl p) * (Fr.ptT N0 (Sum.inl p) - a)⁻¹
-        * (Fr.ptT N0 (Sum.inl p) - b)⁻¹) = ((Fr.atomR p.1.2 a b (p.1.1 : ℝ) : ℝ) : ℂ) := by
+  have key : ∀ p : ↥(Fr.atomIdx N0), (Fr.wT sl N0 (Sum.inl p) * (Fr.ptT sl N0 (Sum.inl p) - a)⁻¹
+        * (Fr.ptT sl N0 (Sum.inl p) - b)⁻¹) = ((Fr.atomR p.1.2 a b (p.1.1 : ℝ) : ℝ) : ℂ) := by
     intro p
     simp only [wT, ptT, Sum.elim_inl, atomPos]
     rw [mul_assoc, atom_pt_prod a b]
@@ -284,45 +308,45 @@ lemma atom_sum (N0 a b : ℕ) :
   rfl
 
 /-- **The entries of `norm · T` as integrals against the combined measure.** -/
-theorem entry_T (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ Fr.δ0) (N0 a b : ℕ) :
-    ∫ z, Fr.wT N0 z * (Fr.ptT N0 z - a)⁻¹ * (Fr.ptT N0 z - b)⁻¹ ∂(Fr.muT N0)
+theorem entry_T (hC : Fr.ContourOK) (hδ : Fr.SlopeOK sl) (N0 a b : ℕ) :
+    ∫ z, Fr.wT sl N0 z * (Fr.ptT sl N0 z - a)⁻¹ * (Fr.ptT sl N0 z - b)⁻¹ ∂(Fr.muT N0)
       = (((Fr.norm : ℝ) * Fr.Tent a b : ℝ) : ℂ) := by
   have hint := integrable_entry hC hδ N0 a b
   unfold muT at hint ⊢
   rw [integral_sumM _ _ _ hint]
   have hint2 := ((integrable_sumM_iff _ _ _).1 hint).2
   rw [integral_sumM _ _ _ hint2]
-  have hA : ∫ p : ↥(Fr.atomIdx N0), (Fr.wT N0 (Sum.inl p) * (Fr.ptT N0 (Sum.inl p) - a)⁻¹
-        * (Fr.ptT N0 (Sum.inl p) - b)⁻¹) ∂(Measure.count : Measure ↥(Fr.atomIdx N0))
+  have hA : ∫ p : ↥(Fr.atomIdx N0), (Fr.wT sl N0 (Sum.inl p) * (Fr.ptT sl N0 (Sum.inl p) - a)⁻¹
+        * (Fr.ptT sl N0 (Sum.inl p) - b)⁻¹) ∂(Measure.count : Measure ↥(Fr.atomIdx N0))
       = ((Fr.atomHead N0 a b : ℝ) : ℂ) := by
     rw [integral_count]; exact atom_sum N0 a b
-  have hU : ∫ x : RayP, (Fr.wT N0 (Sum.inr (Sum.inl x)) * (Fr.ptT N0 (Sum.inr (Sum.inl x)) - a)⁻¹
-        * (Fr.ptT N0 (Sum.inr (Sum.inl x)) - b)⁻¹) ∂(Measure.comap Subtype.val (volume : Measure ℝ))
-      = ∫ r in Ioi (0 : ℝ), Fr.wUp N0 r * (rayPt (Fr.xstar N0) phiR r - a)⁻¹
-          * (rayPt (Fr.xstar N0) phiR r - b)⁻¹ :=
-    integral_subtype_comap measurableSet_Ioi (fun r => Fr.wUp N0 r * (rayPt (Fr.xstar N0) phiR r - a)⁻¹
-          * (rayPt (Fr.xstar N0) phiR r - b)⁻¹)
-  have hL : ∫ x : RayP, (Fr.wT N0 (Sum.inr (Sum.inr x)) * (Fr.ptT N0 (Sum.inr (Sum.inr x)) - a)⁻¹
-        * (Fr.ptT N0 (Sum.inr (Sum.inr x)) - b)⁻¹) ∂(Measure.comap Subtype.val (volume : Measure ℝ))
-      = ∫ r in Ioi (0 : ℝ), Fr.wLow N0 r * (rayPt (Fr.xstar N0) (-phiR) r - a)⁻¹
-          * (rayPt (Fr.xstar N0) (-phiR) r - b)⁻¹ :=
-    integral_subtype_comap measurableSet_Ioi (fun r => Fr.wLow N0 r * (rayPt (Fr.xstar N0) (-phiR) r - a)⁻¹
-          * (rayPt (Fr.xstar N0) (-phiR) r - b)⁻¹)
-  have eU : ∫ r in Ioi (0 : ℝ), Fr.wUp N0 r * (rayPt (Fr.xstar N0) phiR r - a)⁻¹
-          * (rayPt (Fr.xstar N0) phiR r - b)⁻¹
-      = -(2 * Real.pi * I)⁻¹ * rayI (Fr.xstar N0) phiR
+  have hU : ∫ x : RayP, (Fr.wT sl N0 (Sum.inr (Sum.inl x)) * (Fr.ptT sl N0 (Sum.inr (Sum.inl x)) - a)⁻¹
+        * (Fr.ptT sl N0 (Sum.inr (Sum.inl x)) - b)⁻¹) ∂(Measure.comap Subtype.val (volume : Measure ℝ))
+      = ∫ r in Ioi (0 : ℝ), Fr.wUp sl N0 r * (rayPt (Fr.xstar N0) (phiS sl) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (phiS sl) r - b)⁻¹ :=
+    integral_subtype_comap measurableSet_Ioi (fun r => Fr.wUp sl N0 r * (rayPt (Fr.xstar N0) (phiS sl) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (phiS sl) r - b)⁻¹)
+  have hL : ∫ x : RayP, (Fr.wT sl N0 (Sum.inr (Sum.inr x)) * (Fr.ptT sl N0 (Sum.inr (Sum.inr x)) - a)⁻¹
+        * (Fr.ptT sl N0 (Sum.inr (Sum.inr x)) - b)⁻¹) ∂(Measure.comap Subtype.val (volume : Measure ℝ))
+      = ∫ r in Ioi (0 : ℝ), Fr.wLow sl N0 r * (rayPt (Fr.xstar N0) (-(phiS sl)) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (-(phiS sl)) r - b)⁻¹ :=
+    integral_subtype_comap measurableSet_Ioi (fun r => Fr.wLow sl N0 r * (rayPt (Fr.xstar N0) (-(phiS sl)) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (-(phiS sl)) r - b)⁻¹)
+  have eU : ∫ r in Ioi (0 : ℝ), Fr.wUp sl N0 r * (rayPt (Fr.xstar N0) (phiS sl) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (phiS sl) r - b)⁻¹
+      = -(2 * Real.pi * I)⁻¹ * rayI (Fr.xstar N0) (phiS sl)
           (fun z => Fr.EC z * ((z - a)⁻¹ * (z - b)⁻¹)) := by
     unfold rayI
     rw [← integral_const_mul]
     congr 1; funext r; simp only [wUp]; ring
-  have eL : ∫ r in Ioi (0 : ℝ), Fr.wLow N0 r * (rayPt (Fr.xstar N0) (-phiR) r - a)⁻¹
-          * (rayPt (Fr.xstar N0) (-phiR) r - b)⁻¹
-      = (2 * Real.pi * I)⁻¹ * rayI (Fr.xstar N0) (-phiR)
+  have eL : ∫ r in Ioi (0 : ℝ), Fr.wLow sl N0 r * (rayPt (Fr.xstar N0) (-(phiS sl)) r - a)⁻¹
+          * (rayPt (Fr.xstar N0) (-(phiS sl)) r - b)⁻¹
+      = (2 * Real.pi * I)⁻¹ * rayI (Fr.xstar N0) (-(phiS sl))
           (fun z => Fr.EC z * ((z - a)⁻¹ * (z - b)⁻¹)) := by
     unfold rayI
     rw [← integral_const_mul]
     congr 1; funext r; simp only [wLow]; ring
-  have hci := Fr.contour_identity hC phiR_gt phiR_lt N0 a b
+  have hci := Fr.contour_identity hC (phiS_gt sl) (phiS_lt hδ.pos) N0 a b
   rw [← Fr.norm_mul_Tent a b] at hci
   rw [hA, hU, hL, eU, eL, hci, contL]
   ring
@@ -331,7 +355,7 @@ lemma im_rayPt (x θ r : ℝ) : (rayPt x θ r).im = r * Real.sin θ := by
   simp [rayPt, Complex.exp_ofReal_mul_I_im, Complex.exp_ofReal_mul_I_re]
 
 /-- No point of the combined space is a natural-number node. -/
-lemma ptT_ne (N0 : ℕ) (z : Fr.XT N0) (n : ℕ) : Fr.ptT N0 z ≠ (n : ℂ) := by
+lemma ptT_ne (hs : 0 < sl) (N0 : ℕ) (z : Fr.XT N0) (n : ℕ) : Fr.ptT sl N0 z ≠ (n : ℂ) := by
   rcases z with p | r | r
   · simp only [ptT, Sum.elim_inl, atomPos]
     intro h
@@ -348,7 +372,7 @@ lemma ptT_ne (N0 : ℕ) (z : Fr.XT N0) (n : ℕ) : Fr.ptT N0 z ≠ (n : ℂ) := 
     have hr : 0 < r.1 := r.2
     rcases mul_eq_zero.1 this with h1 | h1
     · linarith
-    · linarith [sin_phiR_pos]
+    · linarith [sin_phiS_pos hs]
   · simp only [ptT, Sum.elim_inr]
     intro h
     have := congrArg Complex.im h
@@ -357,7 +381,7 @@ lemma ptT_ne (N0 : ℕ) (z : Fr.XT N0) (n : ℕ) : Fr.ptT N0 z ≠ (n : ℂ) := 
     have hr : 0 < r.1 := r.2
     rcases mul_eq_zero.1 this with h1 | h1
     · linarith
-    · rw [Real.sin_neg] at h1; linarith [sin_phiR_pos]
+    · rw [Real.sin_neg] at h1; linarith [sin_phiS_pos hs]
 
 /-- The determinant `det[(x_l - s_i)⁻¹]` is the Cauchy determinant. -/
 lemma det_inv_eq_cauchy {k : ℕ} (s : Fin k → ℕ) (hs : Function.Injective s) (x : Fin k → ℂ)
@@ -372,19 +396,19 @@ lemma det_inv_eq_cauchy {k : ℕ} (s : Fin k → ℕ) (hs : Function.Injective s
   rw [this, Matrix.det_transpose, cauchy_det x (fun i => (s i : ℂ)) hinj hx]
 
 /-- **Absolute-value Andréief bound for every principal submatrix of `norm · T`.** -/
-theorem tent_andreief_bound (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ Fr.δ0) (N0 k : ℕ)
+theorem tent_andreief_bound (hC : Fr.ContourOK) (hδ : Fr.SlopeOK sl) (N0 k : ℕ)
     (s : Fin k → ℕ) (hs : Function.Injective s) :
     ‖(Matrix.of fun i j : Fin k => (((Fr.norm : ℝ) * Fr.Tent (s i) (s j) : ℝ) : ℂ)).det‖
       ≤ (1 / (k.factorial : ℝ)) * ∫ z : Fin k → Fr.XT N0,
-          (∏ l, ‖Fr.wT N0 (z l)‖) *
+          (∏ l, ‖Fr.wT sl N0 (z l)‖) *
             ‖(∏ l, ∏ l' ∈ Finset.Ioi l,
-                ((Fr.ptT N0 (z l') - Fr.ptT N0 (z l)) * ((s l : ℂ) - s l')))
-              / ∏ l, ∏ i, (Fr.ptT N0 (z l) - s i)‖ ^ 2 ∂(Measure.pi fun _ => Fr.muT N0) := by
-  have h := norm_det_le_andreief (Fr.muT N0) (Fr.wT N0) (fun (i : Fin k) z => (Fr.ptT N0 z - (s i : ℂ))⁻¹)
-    (fun (i : Fin k) z => (Fr.ptT N0 z - (s i : ℂ))⁻¹)
+                ((Fr.ptT sl N0 (z l') - Fr.ptT sl N0 (z l)) * ((s l : ℂ) - s l')))
+              / ∏ l, ∏ i, (Fr.ptT sl N0 (z l) - s i)‖ ^ 2 ∂(Measure.pi fun _ => Fr.muT N0) := by
+  have h := norm_det_le_andreief (Fr.muT N0) (Fr.wT sl N0) (fun (i : Fin k) z => (Fr.ptT sl N0 z - (s i : ℂ))⁻¹)
+    (fun (i : Fin k) z => (Fr.ptT sl N0 z - (s i : ℂ))⁻¹)
     (fun i j => integrable_entry hC hδ N0 (s i) (s j))
-  have hM : (Matrix.of fun i j : Fin k => ∫ z, Fr.wT N0 z * (Fr.ptT N0 z - (s i : ℂ))⁻¹
-        * (Fr.ptT N0 z - (s j : ℂ))⁻¹ ∂(Fr.muT N0))
+  have hM : (Matrix.of fun i j : Fin k => ∫ z, Fr.wT sl N0 z * (Fr.ptT sl N0 z - (s i : ℂ))⁻¹
+        * (Fr.ptT sl N0 z - (s j : ℂ))⁻¹ ∂(Fr.muT N0))
       = Matrix.of fun i j : Fin k => (((Fr.norm : ℝ) * Fr.Tent (s i) (s j) : ℝ) : ℂ) := by
     ext i j; exact entry_T hC hδ N0 (s i) (s j)
   rw [hM] at h
@@ -392,30 +416,30 @@ theorem tent_andreief_bound (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ Fr.δ0
   congr 1
   refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
   simp only
-  rw [det_inv_eq_cauchy s hs (fun l => Fr.ptT N0 (z l)) (fun l i => ptT_ne N0 (z l) (s i))]
+  rw [det_inv_eq_cauchy s hs (fun l => Fr.ptT sl N0 (z l)) (fun l i => ptT_ne hδ.pos N0 (z l) (s i))]
   ring
 
 /-- **Rectangular (two node families) Andréief bound** (hybrid-readiness, design 9.3): for a ROW node
 family `s` and a COLUMN node family `t`, both injective,
 `|det (norm · T[s, t])| ≤ (1/k!) ∫ ∏|w| · |C(z, s)| · |C(z, t)|`.  The square case `s = t` is
 `tent_andreief_bound`. -/
-theorem tent_andreief_bound_rect (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ Fr.δ0) (N0 k : ℕ)
+theorem tent_andreief_bound_rect (hC : Fr.ContourOK) (hδ : Fr.SlopeOK sl) (N0 k : ℕ)
     (s t : Fin k → ℕ) (hs : Function.Injective s) (ht : Function.Injective t) :
     ‖(Matrix.of fun i j : Fin k => (((Fr.norm : ℝ) * Fr.Tent (s i) (t j) : ℝ) : ℂ)).det‖
       ≤ (1 / (k.factorial : ℝ)) * ∫ z : Fin k → Fr.XT N0,
-          (∏ l, ‖Fr.wT N0 (z l)‖) *
+          (∏ l, ‖Fr.wT sl N0 (z l)‖) *
             (‖(∏ l, ∏ l' ∈ Finset.Ioi l,
-                ((Fr.ptT N0 (z l') - Fr.ptT N0 (z l)) * ((s l : ℂ) - s l')))
-              / ∏ l, ∏ i, (Fr.ptT N0 (z l) - s i)‖ *
+                ((Fr.ptT sl N0 (z l') - Fr.ptT sl N0 (z l)) * ((s l : ℂ) - s l')))
+              / ∏ l, ∏ i, (Fr.ptT sl N0 (z l) - s i)‖ *
             ‖(∏ l, ∏ l' ∈ Finset.Ioi l,
-                ((Fr.ptT N0 (z l') - Fr.ptT N0 (z l)) * ((t l : ℂ) - t l')))
-              / ∏ l, ∏ i, (Fr.ptT N0 (z l) - t i)‖) ∂(Measure.pi fun _ => Fr.muT N0) := by
-  have h := norm_det_le_andreief (Fr.muT N0) (Fr.wT N0)
-    (fun (i : Fin k) z => (Fr.ptT N0 z - (s i : ℂ))⁻¹)
-    (fun (i : Fin k) z => (Fr.ptT N0 z - (t i : ℂ))⁻¹)
+                ((Fr.ptT sl N0 (z l') - Fr.ptT sl N0 (z l)) * ((t l : ℂ) - t l')))
+              / ∏ l, ∏ i, (Fr.ptT sl N0 (z l) - t i)‖) ∂(Measure.pi fun _ => Fr.muT N0) := by
+  have h := norm_det_le_andreief (Fr.muT N0) (Fr.wT sl N0)
+    (fun (i : Fin k) z => (Fr.ptT sl N0 z - (s i : ℂ))⁻¹)
+    (fun (i : Fin k) z => (Fr.ptT sl N0 z - (t i : ℂ))⁻¹)
     (fun i j => integrable_entry hC hδ N0 (s i) (t j))
-  have hM : (Matrix.of fun i j : Fin k => ∫ z, Fr.wT N0 z * (Fr.ptT N0 z - (s i : ℂ))⁻¹
-        * (Fr.ptT N0 z - (t j : ℂ))⁻¹ ∂(Fr.muT N0))
+  have hM : (Matrix.of fun i j : Fin k => ∫ z, Fr.wT sl N0 z * (Fr.ptT sl N0 z - (s i : ℂ))⁻¹
+        * (Fr.ptT sl N0 z - (t j : ℂ))⁻¹ ∂(Fr.muT N0))
       = Matrix.of fun i j : Fin k => (((Fr.norm : ℝ) * Fr.Tent (s i) (t j) : ℝ) : ℂ) := by
     ext i j; exact entry_T hC hδ N0 (s i) (t j)
   rw [hM] at h
@@ -423,17 +447,17 @@ theorem tent_andreief_bound_rect (hC : Fr.ContourOK) (hδ : (1 : ℚ) / 12 ≤ F
   congr 1
   refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
   simp only
-  rw [det_inv_eq_cauchy s hs (fun l => Fr.ptT N0 (z l)) (fun l i => ptT_ne N0 (z l) (s i)),
-    det_inv_eq_cauchy t ht (fun l => Fr.ptT N0 (z l)) (fun l i => ptT_ne N0 (z l) (t i))]
+  rw [det_inv_eq_cauchy s hs (fun l => Fr.ptT sl N0 (z l)) (fun l i => ptT_ne hδ.pos N0 (z l) (s i)),
+    det_inv_eq_cauchy t ht (fun l => Fr.ptT sl N0 (z l)) (fun l i => ptT_ne hδ.pos N0 (z l) (t i))]
   ring
 
 /-- Norms of the weights: `|w_i|` on atoms, `‖E‖/(2π)` on the rays. -/
 lemma norm_wT_atom (N0 : ℕ) (p : ↥(Fr.atomIdx N0)) :
-    ‖Fr.wT N0 (Sum.inl p)‖ = |(Fr.w p.1.2 : ℝ)| := by
+    ‖Fr.wT sl N0 (Sum.inl p)‖ = |(Fr.w p.1.2 : ℝ)| := by
   simp [wT]
 
 lemma norm_wT_up (N0 : ℕ) (r : RayP) :
-    ‖Fr.wT N0 (Sum.inr (Sum.inl r))‖ = ‖Fr.EC (rayPt (Fr.xstar N0) phiR r.1)‖ / (2 * Real.pi) := by
+    ‖Fr.wT sl N0 (Sum.inr (Sum.inl r))‖ = ‖Fr.EC (rayPt (Fr.xstar N0) (phiS sl) r.1)‖ / (2 * Real.pi) := by
   simp only [wT, Sum.elim_inr, Sum.elim_inl, wUp, norm_neg, norm_mul, norm_inv,
     Complex.norm_exp_ofReal_mul_I]
   have : ‖(2 : ℂ)‖ * ‖(Real.pi : ℂ)‖ * ‖I‖ = 2 * Real.pi := by
@@ -441,7 +465,7 @@ lemma norm_wT_up (N0 : ℕ) (r : RayP) :
   rw [this]; field_simp
 
 lemma norm_wT_low (N0 : ℕ) (r : RayP) :
-    ‖Fr.wT N0 (Sum.inr (Sum.inr r))‖ = ‖Fr.EC (rayPt (Fr.xstar N0) (-phiR) r.1)‖ / (2 * Real.pi) := by
+    ‖Fr.wT sl N0 (Sum.inr (Sum.inr r))‖ = ‖Fr.EC (rayPt (Fr.xstar N0) (-(phiS sl)) r.1)‖ / (2 * Real.pi) := by
   simp only [wT, Sum.elim_inr, wLow, norm_mul, norm_inv, Complex.norm_exp_ofReal_mul_I]
   have : ‖(2 : ℂ)‖ * ‖(Real.pi : ℂ)‖ * ‖I‖ = 2 * Real.pi := by
     rw [show ‖(2:ℂ)‖ = 2 by simp, Complex.norm_real, Real.norm_of_nonneg Real.pi_pos.le, Complex.norm_I, mul_one]

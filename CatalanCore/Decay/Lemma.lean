@@ -31,13 +31,31 @@ open CatalanLambda.Decay (gfun Usig Utau Irho cexpr nodeC rmask rmask_cases sum_
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 namespace Frame
 
-/-- The frame hypotheses of the generic decay argument. -/
+/-- The frame hypotheses of the generic decay argument, at ray slope `sl`: `ContourOK`, the slope
+hypothesis (`1 ≤ 4 sl δ0`), and `atomRange`. -/
+structure DecayOKs (sl : ℝ) (Fr : Frame) : Prop where
+  contour : Fr.ContourOK
+  slope : Fr.SlopeOK sl
+  atomRange : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off
+
+/-- The legacy (slope 3) frame hypotheses. -/
 structure DecayOK (Fr : Frame) : Prop where
   contour : Fr.ContourOK
   delta : (1 : ℚ) / 12 ≤ Fr.δ0
   atomRange : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off
+
+/-- The slope-`3` hypotheses give the generic ones. -/
+theorem DecayOK.toDecayOKs {Fr : Frame} (h : Fr.DecayOK) : Fr.DecayOKs 3 :=
+  { contour := h.contour
+    slope := ⟨by norm_num, by norm_num, by
+      have := (Rat.cast_le (K := ℝ)).2 h.delta
+      push_cast at this
+      linarith⟩
+    atomRange := h.atomRange }
 
 /-- A positive lower bound for `xs` and all shifts `μ i` (the distance of the free points from the
 nodes `0, 1, 2, …`). -/
@@ -75,8 +93,8 @@ def IsAtom (Fr : Frame) (N0 : ℕ) (w : ℂ) : Prop :=
   ∃ p ∈ Fr.atomIdx N0, w = ((Fr.atomPos p : ℝ) : ℂ)
 
 /-- `w` is a point of one of the two certified rays. -/
-def IsRay (Fr : Frame) (N0 : ℕ) (w : ℂ) : Prop :=
-  ∃ r : ℝ, 0 < r ∧ ∃ θ : ℝ, (θ = Decay.phiR ∨ θ = -Decay.phiR) ∧ w = rayPt (Fr.xstar N0) θ r
+def IsRay (Fr : Frame) (sl : ℝ) (N0 : ℕ) (w : ℂ) : Prop :=
+  ∃ r : ℝ, 0 < r ∧ ∃ θ : ℝ, (θ = Decay.phiS sl ∨ θ = -Decay.phiS sl) ∧ w = rayPt (Fr.xstar N0) θ r
 
 end Frame
 
@@ -159,7 +177,7 @@ theorem ray_point_g {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → �
     (F : Cert.CertCore K ρ ε c m) (hxs : (0 : ℚ) < Fr.xs)
     {h : ℕ} (hh : 0 < h) {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * h⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * h) {θ : ℝ}
-    (hθ : θ = phiR ∨ θ = -phiR) {r : ℝ} (hr : 0 < r) :
+    (hθ : θ = (phiS 3) ∨ θ = -(phiS 3)) {r : ℝ} (hr : 0 < r) :
     (F.mprime : ℝ) ≤ gfun ρ ε c m (rayPt (Fr.xstar N0) θ r / h) := by
   have hh' : (0 : ℝ) < h := by exact_mod_cast hh
   have hr0 : (0 : ℝ) < F.r0 := by exact_mod_cast F.r0_pos
@@ -183,7 +201,7 @@ theorem ray_point_g {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → �
     have e : δ = ((F.r0 : ℝ) * h - N0 - Fr.xs) / h := by rw [hδ]; field_simp; ring
     rw [e, abs_div, abs_of_pos hh', div_le_iff₀ hh', abs_le]
     constructor <;> linarith
-  have hz : rayPt (Fr.xstar N0) θ r / h = ⟨-(F.r0 : ℝ) + δ - u, (if θ = phiR then 3 else -3) * u⟩ := by
+  have hz : rayPt (Fr.xstar N0) θ r / h = ⟨-(F.r0 : ℝ) + δ - u, (if θ = (phiS 3) then 3 else -3) * u⟩ := by
     apply Complex.ext
     · rw [Complex.div_natCast_re, CatalanLambda.Decay.rayPt_re]
       have hc : Real.cos θ = -(1 / Real.sqrt 10) := by
@@ -194,10 +212,10 @@ theorem ray_point_g {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → �
     · rw [Complex.div_natCast_im, CatalanLambda.Decay.rayPt_im]
       rcases hθ with e | e
       · rw [e, sin_phiR, if_pos rfl]; simp only [hu]; field_simp
-      · have : θ ≠ phiR := by
+      · have : θ ≠ (phiS 3) := by
           intro e2; rw [e] at e2
           have := phiR_gt; have := Real.pi_pos
-          unfold phiR at e2
+          unfold phiS at e2
           have := Real.arctan_lt_pi_div_two 3
           have := Real.arctan_pos.2 (show (0:ℝ) < 3 by norm_num)
           linarith
@@ -282,11 +300,11 @@ lemma atom_im {h N0 : ℕ} {w : ℂ} (hw : Fr.IsAtom N0 w) : (w / h).im = 0 := b
 /-- **Lemma B** (finite-cell version, general frame): for distinct free points, each an atom or a
 ray point, `k m′ + h d Sbase - d Γ ≤ ∑_l g(z_l / h)`. -/
 theorem lemmaB {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK) (F : Cert.CertCore K ρ ε c m)
+    (hFr : Fr.DecayOKs 3) (F : Cert.CertCore K ρ ε c m)
     {h k : ℕ} (hh : 0 < h) {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * h⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * h) (z : Fin k → ℂ)
     (hzi : Function.Injective z)
-    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) :
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay 3 N0 (z l)) :
     (k : ℝ) * F.mprime + h * (Fr.d * F.Sbase)
         - Fr.d * ∑ i, max ((F.mprime : ℝ) - F.segG i) 0
       ≤ ∑ l, gfun ρ ε c m (z l / h) := by
@@ -328,7 +346,7 @@ theorem lemmaB {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
       rw [← e] at hs
       rw [e] at hs
       linarith
-    · have hr : Fr.IsRay N0 (z l) := (hz l).resolve_left ha
+    · have hr : Fr.IsRay 3 N0 (z l) := (hz l).resolve_left ha
       obtain ⟨r, hr0', θ, hθ, hzl⟩ := hr
       simp only [hμ, if_neg ha, add_zero]
       rw [hzl]
@@ -386,13 +404,13 @@ theorem lemmaB {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
 /-! ### Lemma A -/
 
 theorem lemmaA {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK) (F : Cert.CertCore K ρ ε c m) {D : ℝ}
+    (hFr : Fr.DecayOKs 3) (F : Cert.CertCore K ρ ε c m) {D : ℝ}
     (hD : D ≤ 2 * ((F.mprime : ℝ) + Fr.d * F.Sbase) - F.Ibound + 3 / 2)
     {m0 : ℝ} (hm0 : 0 < m0)
     {h k : ℕ} (hh : 0 < h) {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * h⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * h)
     (s : Fin k → Fin h) (hs : Function.Injective s) (z : Fin k → ℂ) (hzi : Function.Injective z)
-    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l))
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay 3 N0 (z l))
     (hre : ∀ l, m0 ≤ -(z l).re) (q : Fin k → ℝ) (Cl : ℝ) (hCl : 0 ≤ Cl)
     (hq : ∀ l, Real.log (q l) ≤ (1 - ε) * (Cl - 2 * Real.pi * |(z l).im|)) :
     ∑ l, Real.log (q l) + Real.log (‖cexpr z (fun i => (((s i : Fin h) : ℕ) : ℂ))‖ ^ 2)

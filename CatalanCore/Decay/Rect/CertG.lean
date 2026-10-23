@@ -22,7 +22,7 @@ open CatalanLambda.Decay (gfun Usig Utau Irho)
 namespace CatalanCore.Cert
 
 /-- **Frame-free certificate facts over an abstract `g`.** -/
-structure CertCoreG (K : ℕ) (ρ ε : ℝ) (c : Fin K → ℂ) (m : Fin K → ℝ) where
+structure CertCoreGs (sl : ℝ) (K : ℕ) (ρ ε : ℝ) (c : Fin K → ℂ) (m : Fin K → ℝ) where
   /-- the certified function -/
   g : ℂ → ℝ
   r0 : ℚ
@@ -42,10 +42,10 @@ structure CertCoreG (K : ℕ) (ρ ε : ℝ) (c : Fin K → ℂ) (m : Fin K → �
   g_conj : ∀ s : ℂ, g ((starRingEnd ℂ) s) = g s
   rayBoxes : List (ℚ × ℚ)
   ray_box_ok : ∀ p ∈ rayBoxes, ∀ x y : ℝ, -(r0 : ℝ) - p.2 - W ≤ x → x ≤ -(r0 : ℝ) - p.1 + W →
-    3 * (p.1 : ℝ) ≤ y → y ≤ 3 * (p.2 : ℝ) → (mprime : ℝ) ≤ g ⟨x, y⟩
+    sl * (p.1 : ℝ) ≤ y → y ≤ sl * (p.2 : ℝ) → (mprime : ℝ) ≤ g ⟨x, y⟩
   ray_cover : ∀ u : ℝ, 0 ≤ u → u ≤ umax → ∃ p ∈ rayBoxes, (p.1 : ℝ) ≤ u ∧ u ≤ p.2
   ray_tail : ∀ u δ : ℝ, (umax : ℝ) ≤ u → |δ| ≤ W →
-    (mprime : ℝ) ≤ g ⟨-(r0 : ℝ) + δ - u, 3 * u⟩
+    (mprime : ℝ) ≤ g ⟨-(r0 : ℝ) + δ - u, sl * u⟩
   nSeg : ℕ
   segA : Fin nSeg → ℚ
   segB : Fin nSeg → ℚ
@@ -60,31 +60,31 @@ structure CertCoreG (K : ℕ) (ρ ε : ℝ) (c : Fin K → ℂ) (m : Fin K → �
   I_ok : Irho ρ c m ≤ Ibound
   ccert_ge : 2 * ((mprime : ℝ) - gmin) ≤ ccert
 
-namespace CertCoreG
+namespace CertCoreGs
 
-variable {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ} (F : CertCoreG K ρ ε c m)
+variable {sl : ℝ} {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ} (F : CertCoreGs sl K ρ ε c m)
 
 /-- The decay exponent `2((1+α) m′ + d Sbase) - (1+α)² I + Inu` (same formula as `CertCore.Dof`). -/
 def Dof (d : ℕ) (α Inu : ℚ) : ℚ :=
   2 * ((1 + α) * F.mprime + d * F.Sbase) - (1 + α) ^ 2 * F.Ibound + Inu
 
 /-- `g ≥ m′` on the upper ray. -/
-theorem ray_g_ge {u δ : ℝ} (hu : 0 ≤ u) (hδ : |δ| ≤ F.W) :
-    (F.mprime : ℝ) ≤ F.g ⟨-(F.r0 : ℝ) + δ - u, 3 * u⟩ := by
+theorem ray_g_ge (hs : 0 ≤ sl) {u δ : ℝ} (hu : 0 ≤ u) (hδ : |δ| ≤ F.W) :
+    (F.mprime : ℝ) ≤ F.g ⟨-(F.r0 : ℝ) + δ - u, sl * u⟩ := by
   rcases le_total u F.umax with h | h
   · obtain ⟨p, hp, h1, h2⟩ := F.ray_cover u hu h
     refine F.ray_box_ok p hp _ _ ?_ ?_ ?_ ?_
     · have := abs_le.1 hδ; linarith
     · have := abs_le.1 hδ; linarith
-    · linarith
-    · linarith
+    · exact mul_le_mul_of_nonneg_left (by exact_mod_cast h1) hs
+    · exact mul_le_mul_of_nonneg_left (by exact_mod_cast h2) hs
   · exact F.ray_tail u δ h hδ
 
 /-- `g ≥ m′` on the lower ray. -/
-theorem ray_g_ge' {u δ : ℝ} (hu : 0 ≤ u) (hδ : |δ| ≤ F.W) :
-    (F.mprime : ℝ) ≤ F.g ⟨-(F.r0 : ℝ) + δ - u, -(3 * u)⟩ := by
-  have h := F.ray_g_ge hu hδ
-  have e : (starRingEnd ℂ) (⟨-(F.r0 : ℝ) + δ - u, 3 * u⟩ : ℂ) = ⟨-(F.r0 : ℝ) + δ - u, -(3 * u)⟩ := by
+theorem ray_g_ge' (hs : 0 ≤ sl) {u δ : ℝ} (hu : 0 ≤ u) (hδ : |δ| ≤ F.W) :
+    (F.mprime : ℝ) ≤ F.g ⟨-(F.r0 : ℝ) + δ - u, -(sl * u)⟩ := by
+  have h := F.ray_g_ge hs hu hδ
+  have e : (starRingEnd ℂ) (⟨-(F.r0 : ℝ) + δ - u, sl * u⟩ : ℂ) = ⟨-(F.r0 : ℝ) + δ - u, -(sl * u)⟩ := by
     apply Complex.ext <;> simp
   rw [← e, F.g_conj]; exact h
 
@@ -94,7 +94,10 @@ theorem g_line_ge {x : ℝ} (h0 : 0 ≤ x) (h1 : x ≤ 1) :
   obtain ⟨p, hp, a, b⟩ := F.line_cover x h0 h1
   exact F.line_ok p hp x a b
 
-end CertCoreG
+end CertCoreGs
+
+/-- The slope-`3` certificate interface (the existing certificates). -/
+abbrev CertCoreG (K : ℕ) (ρ ε : ℝ) (c : Fin K → ℂ) (m : Fin K → ℝ) : Type := CertCoreGs 3 K ρ ε c m
 
 /-- **Bridge.**  The square `CertCore` is an instance of `CertCoreG` with `g := gfun ρ ε c m`. -/
 noncomputable def CertCore.toG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ} (F : CertCore K ρ ε c m) :

@@ -18,6 +18,8 @@ open CatalanLambda.Decay (cexpr)
 
 namespace CatalanCore.Frame
 
+variable {sl : ℝ}
+
 /-- distinct naturals are at distance `≥ 1`. -/
 lemma one_le_norm_nat_sub {a b : ℕ} (h : a ≠ b) : 1 ≤ ‖((a : ℂ) - (b : ℂ))‖ := by
   have : ((a : ℂ) - (b : ℂ)) = (((a : ℤ) - (b : ℤ) : ℤ) : ℂ) := by push_cast; ring
@@ -207,8 +209,8 @@ lemma cexpr_ne_zero {k : ℕ} (x : Fin k → ℂ) (hx : Function.Injective x) (h
 theorem rectEnergy_perturb {Fr : Frame} {N0 k : ℕ} {e m0 Cl T : ℝ} (hm0 : 0 < m0)
     {s t t' : Fin k → ℕ} (p : Fin k) (hne : ∀ i, i ≠ p → t' i = t i) (hp : t' p + 1 = t p)
     (ht : Function.Injective t) (ht' : Function.Injective t')
-    (hE : RectEnergy Fr N0 k e m0 Cl T s t) :
-    RectEnergy Fr N0 k e m0 Cl (T + k * Real.log (4 * (1 + 1 / m0))) s t' := by
+    (hE : RectEnergy Fr sl N0 k e m0 Cl T s t) :
+    RectEnergy Fr sl N0 k e m0 Cl (T + k * Real.log (4 * (1 + 1 / m0))) s t' := by
   intro x hx hxa hre q hq
   have h := hE x hx hxa hre q hq
   have hre' : ∀ l, (x l).re < 0 := fun l => by have := hre l; linarith

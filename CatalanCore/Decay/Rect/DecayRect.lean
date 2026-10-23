@@ -7,7 +7,7 @@ public import CatalanCore.Rect.Family
 @[expose] public section
 
 /-!
-# `decay_of_certG_rect`: the route-independent rectangular decay (WP-H2-core)
+# `decay_of_certG_rect_slope`: the route-independent rectangular decay (WP-H2-core)
 
 For any frame `Fr` (`DecayOK'`) and any `CertCoreG` whose function `g` satisfies the hybrid
 soundness identity `g = (1+α) U^σ - (U^τ + U^ex_{2α}) + (1-ε) π|Im|`:
@@ -23,6 +23,8 @@ open CatalanLambda.Decay (Usig Utau Irho cexpr)
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay
 
 /-- The hybrid family with the admissibility `α r ≤ m ≤ α r + 1` (coordinator decision). -/
@@ -33,7 +35,7 @@ noncomputable def hybridFamUp (Fr : Frame) (α : ℚ) : PolyFamily :=
 /-- **The window-`a` decay of the first member**: `decay_coreW` (window `w = a + 1`) plus the window
 lemma `window_rect` for the single pattern `(r, m)`, for every `α r ≤ m ≤ α r + a` (`0 ≤ a`). -/
 theorem decay_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -60,9 +62,9 @@ theorem decay_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K �
   apply Real.exp_le_exp.2
   linarith [hb]
 
-/-- `decay_of_certG_rect`: the window-`1` case of `decay_rect_win`, as decay of `hybridFamUp`. -/
-theorem decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+/-- `decay_of_certG_rect_slope`: the window-`1` case of `decay_rect_win`, as decay of `hybridFamUp`. -/
+theorem decay_of_certG_rect_slope {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -81,5 +83,16 @@ theorem decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fi
   show |(hybridFamUp Fr α).evalR (r, m) ((hybridFamUp Fr α).const + t)| ≤ _
   rw [hev]
   exact hN r m hr hαr hαr' t ht
+
+/-- **`decay_of_certG_rect`** (slope `3`, the existing statement): the slope-`3` corollary of
+`decay_of_certG_rect_slope`. -/
+theorem decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu) :
+    HasDecay (hybridFamUp Fr α) (D : ℝ) (F.ccert : ℝ) :=
+  decay_of_certG_rect_slope hFr.toDecayOKs' F hα hg hw0 hRc hc hInu hD
 
 end CatalanCore

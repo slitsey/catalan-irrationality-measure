@@ -11,28 +11,30 @@ open Finset Polynomial Matrix
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay
 
 /-- The original energy estimate with an arbitrary subset of the common nodes.
 The only extra price is `cc*r` for each forced deletion. -/
 theorem window_rect_common {ι : Type} [Fintype ι] [DecidableEq ι]
-    {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
+    {Fr : Frame} (hFr : Fr.DecayOKs' sl) {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
     {m0 : ℝ} (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i) {r m N0 : ℕ} {R : ℝ}
     (hR : (N0 : ℝ) ≤ R) {T0 cc : ℝ} (c : ι → Fin r) (hc : Function.Injective c)
     (hEn : ∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
         (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-        Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0) (T0 + r * (((r : ℝ) + m) - k) * cc)
+        Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0) (T0 + r * (((r : ℝ) + m) - k) * cc)
           (fun i => xnode r (s i)) (fun i => ynode r (s i)))
     {t : ℝ} (ht : |t| ≤ Real.exp (-cc * r)) :
     |(Rect.FullN Fr (fun a => (c a : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ))
       (fun i : Fin m => r + 2 * (i : ℕ) + 1) (Fr.const + t : ℝ)).det| ≤
       2 ^ r * Real.exp (T0 + cc * r * ((r : ℝ) - Fintype.card ι) + ((r : ℝ) + m) *
         Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ +
-          2 * (Fr.Aco ^ e / Frame.betaE e) + 1))) := by
+          2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1))) := by
   classical
   rw [Rect.det_fullN_expansion Fr _ _ _ (Fr.const : ℝ) t]
   let L0 := Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ +
-    2 * (Fr.Aco ^ e / Frame.betaE e) + 1))
+    2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1))
   let B := Real.exp (T0 + cc * r * ((r : ℝ) - Fintype.card ι) + ((r : ℝ) + m) * L0)
   have hι : Fintype.card ι ≤ r := by simpa using Fintype.card_le_of_injective c hc
   have hq : |t| * Real.exp (cc * r) ≤ 1 := by
