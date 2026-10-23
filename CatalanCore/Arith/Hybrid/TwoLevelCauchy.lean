@@ -13,11 +13,11 @@ public import Mathlib.Tactic
 # G3 : the Cauchy projection into the two levels
 
 A field-level, frame-free statement.  The zone is an abstract finite index `Z` with residue map
-`res : Z → ZMod p`.  The overfull cell supplies a row set `CR` and a column set `CC`.
+`resR resC : Z → ZMod p` (residues of the row and of the column node of an index).  The overfull cell supplies a row set `CR` and a column set `CC`.
 Suppose, for the integral lift `Bl = p · T` of the scaled Schur complement:
 
-* (lead) `Bl z y mod p = κ y · (res y - res z)⁻¹` for `z ∈ CR`, `y ∉ CC`, and symmetrically
-  `Bl z y mod p = κ' z · (res y - res z)⁻¹` for `z ∉ CR`, `y ∈ CC`;
+* (lead) `Bl z y mod p = κ y · (resC y - resR z)⁻¹` for `z ∈ CR`, `y ∉ CC`, and symmetrically
+  `Bl z y mod p = κ' z · (resC y - resR z)⁻¹` for `z ∉ CR`, `y ∈ CC`;
 * (wt) for `z ∈ CR`, `y ∈ CC`, `Bl z y = p · T z y` with `T z y mod p = ∑_c F(z,c) w(c) G(c,y)`;
 * (zero) the weight `w` vanishes at every residue outside `sb` that is not the residue of a node
   outside `CC` (rows) or outside `CR` (columns).
@@ -172,25 +172,25 @@ lemma C_p_ne_zero : (C ((p : ℕ) : LocRing p) : (LocRing p)[X]) ≠ 0 := by
 theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     (M : Matrix Z Z ℚ[X]) (Bl : Matrix Z Z (LocRing p)[X]) (u v : Z → ℕ)
     (hB : ∀ i j, toQ p (Bl i j) = C ((p : ℚ) ^ (u i + v j)) * M i j)
-    (res : Z → ZMod p) (CR CC : Finset Z)
+    (resR resC : Z → ZMod p) (CR CC : Finset Z)
     (hlead₁ : ∀ y, y ∉ CC → ∃ κ : RatFunc (ZMod p), ∀ z ∈ CR,
-      phiP p (Bl z y) = κ * rfC p ((res y - res z)⁻¹))
+      phiP p (Bl z y) = κ * rfC p ((resC y - resR z)⁻¹))
     (hlead₂ : ∀ z, z ∉ CR → ∃ κ : RatFunc (ZMod p), ∀ y ∈ CC,
-      phiP p (Bl z y) = κ * rfC p ((res y - res z)⁻¹))
+      phiP p (Bl z y) = κ * rfC p ((resC y - resR z)⁻¹))
     (w : ZMod p → RatFunc (ZMod p))
     (hwt : ∀ z ∈ CR, ∀ y ∈ CC, ∃ T : (LocRing p)[X],
       Bl z y = C ((p : ℕ) : LocRing p) * T ∧
-      phiP p T = ∑ c : ZMod p, rfC p ((c - res z)⁻¹) * w c * rfC p ((c - res y)⁻¹))
+      phiP p T = ∑ c : ZMod p, rfC p ((c - resR z)⁻¹) * w c * rfC p ((c - resC y)⁻¹))
     (sb : Finset (ZMod p))
-    (hzero : ∀ c, c ∉ sb → w c = 0 ∨ (∃ y, y ∉ CC ∧ res y = c) ∨ (∃ z, z ∉ CR ∧ res z = c)) :
+    (hzero : ∀ c, c ∉ sb → w c = 0 ∨ (∃ y, y ∉ CC ∧ resC y = c) ∨ (∃ z, z ∉ CR ∧ resR z = c)) :
     ∃ W : TwoLevelWit p M sb.card, W.u = u ∧ W.v = v ∧
       W.s.card = CR.card + CC.card - Fintype.card Z ∧ W.cost = ∑ i, u i + ∑ j, v j -
         ((CR.card + CC.card - Fintype.card Z) +
           ((CR.card + CC.card - Fintype.card Z) - sb.card)) := by
   classical
   -- the two kernel spaces over `𝔽_p`
-  let CL : Matrix Z {y // y ∉ CC} (ZMod p) := fun z y => (res y.1 - res z)⁻¹
-  let CRm : Matrix Z {z // z ∉ CR} (ZMod p) := fun y z => (res z.1 - res y)⁻¹
+  let CL : Matrix Z {y // y ∉ CC} (ZMod p) := fun z y => (resC y.1 - resR z)⁻¹
+  let CRm : Matrix Z {z // z ∉ CR} (ZMod p) := fun y z => (resR z.1 - resC y)⁻¹
   have h1 := card_le_finrank_kerSub CR CL
   have h2 := card_le_finrank_kerSub CC CRm
   have hcC : Fintype.card {y // y ∉ CC} = Fintype.card Z - CC.card := by
@@ -212,13 +212,13 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
   -- support and kernel properties
   have hLsupp : ∀ i ∈ s, ∀ z, z ∉ CR → ML i z = 0 := fun i hi z hz =>
     ((mem_kerSub.1 (hMLrows i hi)).1 z hz)
-  have hLker : ∀ i ∈ s, ∀ y, y ∉ CC → ∑ z, ML i z * (res y - res z)⁻¹ = 0 := by
+  have hLker : ∀ i ∈ s, ∀ y, y ∉ CC → ∑ z, ML i z * (resC y - resR z)⁻¹ = 0 := by
     intro i hi y hy
     have := congrFun (mem_kerSub.1 (hMLrows i hi)).2 ⟨y, hy⟩
     simpa [Matrix.vecMul, dotProduct, CL] using this
   have hPsupp : ∀ j ∈ s, ∀ y, y ∉ CC → MP j y = 0 := fun j hj y hy =>
     ((mem_kerSub.1 (hMProws j hj)).1 y hy)
-  have hPker : ∀ j ∈ s, ∀ z, z ∉ CR → ∑ y, MP j y * (res z - res y)⁻¹ = 0 := by
+  have hPker : ∀ j ∈ s, ∀ z, z ∉ CR → ∑ y, MP j y * (resR z - resC y)⁻¹ = 0 := by
     intro j hj z hz
     have := congrFun (mem_kerSub.1 (hMProws j hj)).2 ⟨z, hz⟩
     simpa [Matrix.vecMul, dotProduct, CRm] using this
@@ -241,7 +241,7 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
       · rw [hLsupp i hi z hz, map_zero, zero_mul]
     · obtain ⟨κ, hκ⟩ := hlead₁ y hy
       have : ∑ z, rfCHom p (ML i z) * phiP p (Bl z y) =
-          κ * rfCHom p (∑ z, ML i z * (res y - res z)⁻¹) := by
+          κ * rfCHom p (∑ z, ML i z * (resC y - resR z)⁻¹) := by
         rw [map_sum, Finset.mul_sum]
         apply Finset.sum_congr rfl
         intro z _
@@ -259,12 +259,12 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
       · rw [hPsupp j hj y hy, map_zero, mul_zero]
     · obtain ⟨κ, hκ⟩ := hlead₂ z hz
       have : ∑ y, phiP p (Bl z y) * rfCHom p (MP j y) =
-          -(κ * rfCHom p (∑ y, MP j y * (res z - res y)⁻¹)) := by
+          -(κ * rfCHom p (∑ y, MP j y * (resR z - resC y)⁻¹)) := by
         rw [map_sum, Finset.mul_sum, ← Finset.sum_neg_distrib]
         apply Finset.sum_congr rfl
         intro y _
         by_cases hy : y ∈ CC
-        · have e : (res y - res z)⁻¹ = -(res z - res y)⁻¹ := by rw [← inv_neg, neg_sub]
+        · have e : (resC y - resR z)⁻¹ = -(resR z - resC y)⁻¹ := by rw [← inv_neg, neg_sub]
           rw [hκ y hy, e]
           simp only [← rfCHom_apply, map_neg, map_mul]
           ring
@@ -311,11 +311,11 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     apply mul_left_cancel₀ (C_p_ne_zero p)
     rw [quotP_spec p (by rw [hquot i hi j hj]; exact dvd_mul_right _ _), hquot i hi j hj]
   let Lw : Matrix s Z (RatFunc (ZMod p)) := Matrix.of fun i z => rfCHom p (ML i z)
-  let Fm : Matrix Z (ZMod p) (RatFunc (ZMod p)) := Matrix.of fun z c => rfC p ((c - res z)⁻¹)
-  let Gm : Matrix (ZMod p) Z (RatFunc (ZMod p)) := Matrix.of fun c y => rfC p ((c - res y)⁻¹)
+  let Fm : Matrix Z (ZMod p) (RatFunc (ZMod p)) := Matrix.of fun z c => rfC p ((c - resR z)⁻¹)
+  let Gm : Matrix (ZMod p) Z (RatFunc (ZMod p)) := Matrix.of fun c y => rfC p ((c - resC y)⁻¹)
   let Rw : Matrix Z s (RatFunc (ZMod p)) := Matrix.of fun y j => rfCHom p (MP j y)
   have hpt : ∀ (i j : s) (z y : Z), phiP p (L i z * Tm' z y * P y j) =
-      rfCHom p (ML i z) * (∑ c : ZMod p, rfC p ((c - res z)⁻¹) * w c * rfC p ((c - res y)⁻¹)) *
+      rfCHom p (ML i z) * (∑ c : ZMod p, rfC p ((c - resR z)⁻¹) * w c * rfC p ((c - resC y)⁻¹)) *
         rfCHom p (MP j y) := by
     intro i j z y
     rw [map_mul, map_mul, hLphi, hPphi]
@@ -331,7 +331,7 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     rw [hq i.1 i.2 j.1 j.2, map_sum]
     set G3 : Matrix Z Z (RatFunc (ZMod p)) := Fm * Matrix.diagonal w * Gm with hG3def
     have hG3 : ∀ z y, G3 z y =
-        ∑ c : ZMod p, rfC p ((c - res z)⁻¹) * w c * rfC p ((c - res y)⁻¹) := by
+        ∑ c : ZMod p, rfC p ((c - resR z)⁻¹) * w c * rfC p ((c - resC y)⁻¹) := by
       intro z y
       rw [hG3def, Matrix.mul_apply]
       simp only [Matrix.mul_diagonal, Matrix.of_apply, Fm, Gm]
@@ -360,14 +360,14 @@ theorem exists_twoLevelWit_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
       intro u'
       subst hyc
       have hk := hLker u'.1 u'.2 y hy
-      have : (Lw * Fm) u' (res y) = rfCHom p (∑ z, ML u'.1 z * (res y - res z)⁻¹) := by
+      have : (Lw * Fm) u' (resC y) = rfCHom p (∑ z, ML u'.1 z * (resC y - resR z)⁻¹) := by
         simp only [Matrix.mul_apply, map_sum, map_mul, Lw, Fm]; rfl
       rw [this, hk, map_zero]
     · right; right
       intro v'
       subst hzc
       have hk := hPker v'.1 v'.2 z hz
-      have : (Gm * Rw) (res z) v' = rfCHom p (∑ y, MP v'.1 y * (res z - res y)⁻¹) := by
+      have : (Gm * Rw) (resR z) v' = rfCHom p (∑ y, MP v'.1 y * (resR z - resC y)⁻¹) := by
         simp only [Matrix.mul_apply, map_sum, map_mul, Gm, Rw]
         apply Finset.sum_congr rfl; intro y _
         change _ = rfCHom p _ * rfCHom p _
@@ -380,22 +380,22 @@ the `GLE` bound with the two-level saving `σ + (σ - b)`, `σ = |CR| + |CC| - |
 theorem gle_det_of_cauchy {Z : Type} [Fintype Z] [DecidableEq Z]
     (M : Matrix Z Z ℚ[X]) (Bl : Matrix Z Z (LocRing p)[X]) (u v : Z → ℕ)
     (hB : ∀ i j, toQ p (Bl i j) = C ((p : ℚ) ^ (u i + v j)) * M i j)
-    (res : Z → ZMod p) (CR CC : Finset Z)
+    (resR resC : Z → ZMod p) (CR CC : Finset Z)
     (hlead₁ : ∀ y, y ∉ CC → ∃ κ : RatFunc (ZMod p), ∀ z ∈ CR,
-      phiP p (Bl z y) = κ * rfC p ((res y - res z)⁻¹))
+      phiP p (Bl z y) = κ * rfC p ((resC y - resR z)⁻¹))
     (hlead₂ : ∀ z, z ∉ CR → ∃ κ : RatFunc (ZMod p), ∀ y ∈ CC,
-      phiP p (Bl z y) = κ * rfC p ((res y - res z)⁻¹))
+      phiP p (Bl z y) = κ * rfC p ((resC y - resR z)⁻¹))
     (w : ZMod p → RatFunc (ZMod p))
     (hwt : ∀ z ∈ CR, ∀ y ∈ CC, ∃ T : (LocRing p)[X],
       Bl z y = C ((p : ℕ) : LocRing p) * T ∧
-      phiP p T = ∑ c : ZMod p, rfC p ((c - res z)⁻¹) * w c * rfC p ((c - res y)⁻¹))
+      phiP p T = ∑ c : ZMod p, rfC p ((c - resR z)⁻¹) * w c * rfC p ((c - resC y)⁻¹))
     (sb : Finset (ZMod p))
-    (hzero : ∀ c, c ∉ sb → w c = 0 ∨ (∃ y, y ∉ CC ∧ res y = c) ∨ (∃ z, z ∉ CR ∧ res z = c)) :
+    (hzero : ∀ c, c ∉ sb → w c = 0 ∨ (∃ y, y ∉ CC ∧ resC y = c) ∨ (∃ z, z ∉ CR ∧ resR z = c)) :
     GLE p (∑ i, u i + ∑ j, v j -
         ((CR.card + CC.card - Fintype.card Z) +
           ((CR.card + CC.card - Fintype.card Z) - sb.card))) M.det := by
   obtain ⟨W, -, -, -, hW⟩ :=
-    exists_twoLevelWit_of_cauchy p M Bl u v hB res CR CC hlead₁ hlead₂ w hwt sb hzero
+    exists_twoLevelWit_of_cauchy p M Bl u v hB resR resC CR CC hlead₁ hlead₂ w hwt sb hzero
   rw [← hW]
   exact W.gle
 
