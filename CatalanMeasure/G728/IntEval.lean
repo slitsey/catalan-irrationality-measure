@@ -10,10 +10,12 @@ public import CatalanMeasure.Cert.FieldEval
 For a coefficient list `cs` (length `n`) and a rational point `c = a / D` (`a = c.num`, `D = c.den`),
 the finite sums
 `Σ_{k<n} (cs_k / 2^40) T_{k+1}(c) / (k+1)` and `Σ_{k<n} (cs_k / 2^40) c^{k+1} / (k+1)`
-are computed with big-INTEGER arithmetic only (no `ℚ` gcd per step): with `L = n!`, `N_k = D^k T_k(c)`
-satisfies `N_{k+2} = 2 a N_{k+1} - D² N_k`, and a Horner scheme in `D` gives
-`Acc = D^n Σ_k cs_k (L/(k+1)) T_{k+1}(c)`.  The value is `Acc / (2^40 · L · D^n)`; `encDiv` rounds it
-to a dyadic enclosure of width `2^-128`.
+are computed with big-INTEGER arithmetic only (no `ℚ` gcd per step): with `L = lcm(1..n)` and `y = 2c = a/D`
+(lowest terms), the MONIC Chebyshev numbers `P_k = D^k · 2 T_k(c)` satisfy `P_{k+2} = a P_{k+1} - D² P_k`
+(`P_0 = 2`, `P_1 = a`), and a Horner scheme in `D` gives `Acc = D^n Σ_k cs_k (L/(k+1)) · 2 T_{k+1}(c)`.
+Monic form and `lcm` (not `n!`) keep the integers odd-ish: the Lean kernel hashes big `Nat` literals by
+their low 64 bits, so highly 2-divisible numbers would collide.  `encDiv` rounds the quotient to a dyadic
+enclosure of width `2^-128`.
 -/
 
 open Polynomial
@@ -21,14 +23,33 @@ open Polynomial
 namespace CatalanMeasure.G728
 open CatalanMeasure.Cert
 
-/-- `N_n = D^n T_n(a/D)`. -/
-def chebN (a D : ℤ) : ℕ → ℤ
+/-- `lcm(1..n)` -/
+def lcmUpTo : ℕ → ℕ
   | 0 => 1
-  | 1 => a
-  | n + 2 => 2 * a * chebN a D (n + 1) - D * D * chebN a D n
+  | n + 1 => Nat.lcm (lcmUpTo n) (n + 1)
 
-theorem chebN_cast (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = x * D) (n : ℕ) :
-    (chebN a D n : ℝ) = (D : ℝ) ^ n * (Chebyshev.T ℝ (n : ℤ)).eval x := by
+theorem lcmUpTo_pos (n : ℕ) : 0 < lcmUpTo n := by
+  induction n with
+  | zero => simp [lcmUpTo]
+  | succ n ih => exact Nat.lcm_pos ih (Nat.succ_pos n)
+
+theorem dvd_lcmUpTo (n : ℕ) : ∀ k, k < n → (k + 1) ∣ lcmUpTo n := by
+  induction n with
+  | zero => intro k hk; omega
+  | succ n ih =>
+    intro k hk
+    by_cases h : k = n
+    · subst h; exact Nat.dvd_lcm_right _ _
+    · exact (ih k (by omega)).trans (Nat.dvd_lcm_left _ _)
+
+/-- `P_n = D^n · 2 T_n(a / (2D))`: monic Chebyshev numbers. -/
+def chebN (a D : ℤ) : ℕ → ℤ
+  | 0 => 2
+  | 1 => a
+  | n + 2 => a * chebN a D (n + 1) - D * D * chebN a D n
+
+theorem chebN_cast (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = 2 * x * D) (n : ℕ) :
+    (chebN a D n : ℝ) = (D : ℝ) ^ n * (2 * (Chebyshev.T ℝ (n : ℤ)).eval x) := by
   induction n using Nat.twoStepInduction with
   | zero => simp [chebN, Chebyshev.T_zero]
   | one => simp [chebN, Chebyshev.T_one, hx]; ring
@@ -42,26 +63,26 @@ theorem chebN_cast (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = x * D) (n : ℕ) :
     simp only [eval_sub, eval_mul, eval_X, eval_ofNat]
     ring
 
-/-- The Horner/Clenshaw-free loop for `Σ cs_k (L/(k+1)) T_{k+1}`; state: remaining coefficients,
-index `k`, `N_{k+1}`, `N_{k+2}`, accumulator. -/
+/-- The loop for `Σ cs_k (L/(k+1)) P_{k+1}`; state: remaining coefficients,
+index `k`, `P_{k+1}`, `P_{k+2}`, accumulator. -/
 def chebLoop (L : ℕ) (a D : ℤ) : List ℤ → ℕ → ℤ → ℤ → ℤ → ℤ
   | [], _, _, _, acc => acc
   | m :: ms, k, n1, n2, acc =>
-    chebLoop L a D ms (k + 1) n2 (2 * a * n2 - D * D * n1)
+    chebLoop L a D ms (k + 1) n2 (a * n2 - D * D * n1)
       (acc * D + m * ((L / (k + 1) : ℕ) : ℤ) * n1)
 
-theorem chebLoop_cast (L : ℕ) (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = x * D) (hD : (D : ℝ) ≠ 0) :
+theorem chebLoop_cast (L : ℕ) (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = 2 * x * D) :
     ∀ (ms : List ℤ) (k : ℕ) (acc : ℤ),
       (chebLoop L a D ms k (chebN a D (k + 1)) (chebN a D (k + 2)) acc : ℝ) =
         (acc : ℝ) * (D : ℝ) ^ ms.length + (D : ℝ) ^ (k + ms.length) *
           ∑ j ∈ Finset.range ms.length, (ms.getD j 0 : ℝ) * ((L / (k + j + 1) : ℕ) : ℝ) *
-            (Chebyshev.T ℝ ((k + j + 1 : ℕ) : ℤ)).eval x := by
+            (2 * (Chebyshev.T ℝ ((k + j + 1 : ℕ) : ℤ)).eval x) := by
   intro ms
   induction ms with
   | nil => intro k acc; simp [chebLoop]
   | cons m ms ih =>
     intro k acc
-    have e : chebN a D (k + 3) = 2 * a * chebN a D (k + 2) - D * D * chebN a D (k + 1) := rfl
+    have e : chebN a D (k + 3) = a * chebN a D (k + 2) - D * D * chebN a D (k + 1) := rfl
     simp only [chebLoop]
     have := ih (k + 1) (acc * D + m * ((L / (k + 1) : ℕ) : ℤ) * chebN a D (k + 1))
     rw [show k + 1 + 1 = k + 2 from rfl, show k + 1 + 2 = k + 3 from rfl, e] at this
@@ -106,22 +127,34 @@ theorem powLoop_cast (L : ℕ) (a D : ℤ) (x : ℝ) (hx : (a : ℝ) = x * D) :
 /-! ### Accumulators and values -/
 
 def chebAcc (cs : List ℤ) (c : ℚ) : ℤ :=
-  chebLoop (Nat.factorial cs.length) c.num (c.den : ℤ) cs 0 c.num (2 * c.num * c.num - (c.den : ℤ) * (c.den : ℤ)) 0
+  chebLoop (lcmUpTo cs.length) (2 * c).num ((2 * c).den : ℤ) cs 0 (2 * c).num
+    ((2 * c).num * (2 * c).num - 2 * ((2 * c).den : ℤ) * ((2 * c).den : ℤ)) 0
 
 def powAcc (cs : List ℤ) (c : ℚ) : ℤ :=
-  powLoop (Nat.factorial cs.length) c.num (c.den : ℤ) cs 0 c.num 0
+  powLoop (lcmUpTo cs.length) c.num (c.den : ℤ) cs 0 c.num 0
 
-/-- common denominator `2^40 · n! · D^n` -/
-def evalDen (cs : List ℤ) (c : ℚ) : ℕ := 1099511627776 * (Nat.factorial cs.length) * c.den ^ cs.length
+/-- common denominator `2^40 · L · D^n` of the power sum -/
+def evalDen (cs : List ℤ) (c : ℚ) : ℕ := 1099511627776 * lcmUpTo cs.length * c.den ^ cs.length
+
+/-- common denominator `2 · 2^40 · L · D^n` of the Chebyshev sum, `D = (2c).den` -/
+def evalDenT (cs : List ℤ) (c : ℚ) : ℕ :=
+  2 * 1099511627776 * lcmUpTo cs.length * (2 * c).den ^ cs.length
 
 theorem evalDen_pos (cs : List ℤ) (c : ℚ) : 0 < evalDen cs c := by
   unfold evalDen
   have := c.den_pos
+  have := lcmUpTo_pos cs.length
   positivity
 
-theorem cast_div_fact (n j : ℕ) (hj : j < n) :
-    (((Nat.factorial n) / (j + 1) : ℕ) : ℝ) = ((Nat.factorial n : ℕ) : ℝ) / ((j + 1 : ℕ) : ℝ) := by
-  rw [Nat.cast_div (Nat.dvd_factorial (by omega) (by omega)) (by positivity)]
+theorem evalDenT_pos (cs : List ℤ) (c : ℚ) : 0 < evalDenT cs c := by
+  unfold evalDenT
+  have := (2 * c).den_pos
+  have := lcmUpTo_pos cs.length
+  positivity
+
+theorem cast_div_lcm (n j : ℕ) (hj : j < n) :
+    ((lcmUpTo n / (j + 1) : ℕ) : ℝ) = ((lcmUpTo n : ℕ) : ℝ) / ((j + 1 : ℕ) : ℝ) := by
+  rw [Nat.cast_div (dvd_lcmUpTo n j hj) (by positivity)]
 
 theorem rat_num_eq (c : ℚ) : ((c.num : ℤ) : ℝ) = (c : ℝ) * (c.den : ℝ) := by
   have h := Rat.num_div_den c
@@ -132,30 +165,33 @@ theorem rat_num_eq (c : ℚ) : ((c.num : ℤ) : ℝ) = (c : ℝ) * (c.den : ℝ)
   rw [this]; field_simp
 
 theorem finT_value (cs : List ℤ) (c : ℚ) :
-    ((chebAcc cs c : ℤ) : ℝ) / (evalDen cs c : ℝ) =
+    ((chebAcc cs c : ℤ) : ℝ) / (evalDenT cs c : ℝ) =
       ∑ k ∈ Finset.range cs.length, ((cs.getD k 0 : ℝ) / 1099511627776) *
         (Chebyshev.T ℝ ((k + 1 : ℕ) : ℤ)).eval (c : ℝ) / ((k + 1 : ℕ) : ℝ) := by
-  have hD : ((c.den : ℤ) : ℝ) ≠ 0 := by exact_mod_cast c.den_nz
-  have hx : ((c.num : ℤ) : ℝ) = (c : ℝ) * ((c.den : ℤ) : ℝ) := by
-    simpa using rat_num_eq c
-  have h := chebLoop_cast (Nat.factorial cs.length) c.num (c.den : ℤ) (c : ℝ) hx hD cs 0 0
-  have e2 : chebN c.num (c.den : ℤ) 2 = 2 * c.num * c.num - (c.den : ℤ) * (c.den : ℤ) := by
-    simp [chebN]
-  have e1 : chebN c.num (c.den : ℤ) 1 = c.num := rfl
+  have hx : (((2 * c).num : ℤ) : ℝ) = 2 * (c : ℝ) * (((2 * c).den : ℤ) : ℝ) := by
+    have := rat_num_eq (2 * c)
+    push_cast at this ⊢
+    simpa using this
+  have h := chebLoop_cast (lcmUpTo cs.length) (2 * c).num ((2 * c).den : ℤ) (c : ℝ) hx cs 0 0
+  have e2 : chebN (2 * c).num ((2 * c).den : ℤ) 2 =
+      (2 * c).num * (2 * c).num - 2 * ((2 * c).den : ℤ) * ((2 * c).den : ℤ) := by
+    simp [chebN]; ring
+  have e1 : chebN (2 * c).num ((2 * c).den : ℤ) 1 = (2 * c).num := rfl
   rw [show (0 + 1 : ℕ) = 1 from rfl, show (0 + 2 : ℕ) = 2 from rfl, e1, e2] at h
-  unfold chebAcc evalDen
+  unfold chebAcc evalDenT
   rw [h]
-  have hLpos : (0 : ℝ) < ((Nat.factorial cs.length) : ℝ) := by exact_mod_cast Nat.factorial_pos _
-  have hDpos : (0 : ℝ) < (c.den : ℝ) := by exact_mod_cast c.den_pos
+  have hLpos : (0 : ℝ) < ((lcmUpTo cs.length : ℕ) : ℝ) := by exact_mod_cast lcmUpTo_pos _
+  have hDpos : (0 : ℝ) < ((2 * c).den : ℝ) := by exact_mod_cast (2 * c).den_pos
   push_cast
-  simp only [zero_mul, zero_add, Int.cast_zero, zero_add]
+  simp only [zero_mul, zero_add, Int.cast_zero]
   rw [Finset.mul_sum, Finset.sum_div]
   refine Finset.sum_congr rfl (fun j hj => ?_)
   have hj' := Finset.mem_range.mp hj
-  rw [cast_div_fact _ _ hj']
+  rw [cast_div_lcm _ _ hj']
   have hk : ((j + 1 : ℕ) : ℝ) ≠ 0 := by positivity
   simp only [Nat.cast_add, Nat.cast_one] at hk ⊢
   field_simp
+  ring
 
 theorem finS_value (cs : List ℤ) (c : ℚ) :
     ((powAcc cs c : ℤ) : ℝ) / (evalDen cs c : ℝ) =
@@ -163,18 +199,18 @@ theorem finS_value (cs : List ℤ) (c : ℚ) :
         (c : ℝ) ^ (k + 1) / ((k + 1 : ℕ) : ℝ) := by
   have hx : ((c.num : ℤ) : ℝ) = (c : ℝ) * ((c.den : ℤ) : ℝ) := by
     simpa using rat_num_eq c
-  have h := powLoop_cast (Nat.factorial cs.length) c.num (c.den : ℤ) (c : ℝ) hx cs 0 0
+  have h := powLoop_cast (lcmUpTo cs.length) c.num (c.den : ℤ) (c : ℝ) hx cs 0 0
   simp only [zero_add, pow_one] at h
   unfold powAcc evalDen
   rw [h]
-  have hLpos : (0 : ℝ) < ((Nat.factorial cs.length : ℕ) : ℝ) := by exact_mod_cast Nat.factorial_pos _
+  have hLpos : (0 : ℝ) < ((lcmUpTo cs.length : ℕ) : ℝ) := by exact_mod_cast lcmUpTo_pos _
   have hDpos : (0 : ℝ) < (c.den : ℝ) := by exact_mod_cast c.den_pos
   push_cast
   simp only [zero_mul, zero_add, Int.cast_zero]
   rw [Finset.mul_sum, Finset.sum_div]
   refine Finset.sum_congr rfl (fun j hj => ?_)
   have hj' := Finset.mem_range.mp hj
-  rw [cast_div_fact _ _ hj']
+  rw [cast_div_lcm _ _ hj']
   have hk : ((j + 1 : ℕ) : ℝ) ≠ 0 := by positivity
   simp only [Nat.cast_add, Nat.cast_one] at hk ⊢
   field_simp
@@ -225,7 +261,7 @@ theorem encDiv_spec (A : ℤ) {den : ℕ} (hden : 0 < den) :
   push_cast
   exact this
 
-def finTEnc (cs : List ℤ) (c : ℚ) : ℚ × ℚ := encDiv (chebAcc cs c) (evalDen cs c)
+def finTEnc (cs : List ℤ) (c : ℚ) : ℚ × ℚ := encDiv (chebAcc cs c) (evalDenT cs c)
 def finSEnc (cs : List ℤ) (c : ℚ) : ℚ × ℚ := encDiv (powAcc cs c) (evalDen cs c)
 
 theorem finTEnc_spec (cs : List ℤ) (c : ℚ) :
@@ -233,7 +269,7 @@ theorem finTEnc_spec (cs : List ℤ) (c : ℚ) :
         (Chebyshev.T ℝ ((k + 1 : ℕ) : ℤ)).eval (c : ℝ) / ((k + 1 : ℕ) : ℝ)) -
       ((finTEnc cs c).1 : ℝ)| ≤ ((finTEnc cs c).2 : ℝ) := by
   rw [← finT_value]
-  exact encDiv_spec _ (evalDen_pos cs c)
+  exact encDiv_spec _ (evalDenT_pos cs c)
 
 theorem finSEnc_spec (cs : List ℤ) (c : ℚ) :
     |(∑ k ∈ Finset.range cs.length, ((cs.getD k 0 : ℝ) / 1099511627776) *
