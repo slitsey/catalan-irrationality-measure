@@ -343,11 +343,10 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
 is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
 $\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
-$\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$, the original pair family gives
-$6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a family with at most three
-common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
-the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-2159207/645120)<17.60$.
-Section~\ref{sec:chi3-quarter} then permits a quarter border through characteristic-zero selection, supplies an analytic certificate and retains a periodic D1 saving, giving
+$\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$ the members are tied to the prime. Section~\ref{sec:minor-nv} proves nonvanishing for a family
+with bounded common low-node deletions; this permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$,
+so the term $gs$ again disappears. Section~\ref{sec:chi3-quarter} adds a quarter border through characteristic-zero selection,
+an analytic certificate and the periodic D1 saving, giving
 $\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=339258406689121/82516315939200$.
 
 \begin{center}
@@ -1285,64 +1284,22 @@ $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2
 Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
 \subsection{$L(2,\chi_{-3})$}
-\emph{The earlier pair-family bound.}
-Now the geometry is tied to the prime: for each prime $\ell\equiv1\pmod6$, $\ell\ge61$, there is an admissible pair of
-members of scale $r$ with $5r\le2\ell\le5r+11$, so $r/\ell\to g=\frac25$, and Theorem~\ref{thm:nv} (in the form of
-\S\ref{ssec:nvother}) applies when $\ell\nmid q$. Let $\eta=3.7251-\frac{10339}{3072}=0.359540\ldots$, $\nu>c(1/\eta+\frac45)$,
-and choose $\delta$ small. The primes $\ell\equiv1\pmod 6$ in an interval $(Y,Y+(2+\delta)L]$ with $Y=\frac52(1+\delta)L/\eta$
-have product $e^{(1+\delta/2+o(1))L}>q$, so one of them, $\ell$, does not divide $q$. The corresponding scale satisfies
+Use Section~\ref{sec:chi3-quarter} with at most one common-node deletion, and put
 \[
- (1+\delta)L/\eta-O(1)\le r\le\tfrac25\bigl(Y+(2+\delta)L\bigr)+O(1)=\Bigl(\frac{1+\delta}\eta+\frac{2(2+\delta)}5\Bigr)L+O(1),
-\]
-so $cr<\nu L$ for $\delta$ small, and the comparison above, with $|C|\le r+1$, gives a contradiction. Hence
-\[
- \mu\bigl(\tfrac14L(2,\chi_{-3})\bigr)\le c\Bigl(\frac1\eta+gs\Bigr),\qquad g=\tfrac25,\ s=2,
-\]
-and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. The valuation-one argument of Section~\ref{sec:minor-nv} also allows $s=1$, giving the retained bound $21.16$.
-
-\emph{The bounded-deletion family.} Put
-\[
- \eta=\frac{37251}{10000}-\frac{10339}{3072}=\frac{690317}{1920000},\qquad c=\frac{6651}{1000}.
+ \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
+ \qquad c=\frac{93657}{12500}.
 \]
 Let $\nu>c/\eta$, choose $\delta>0$ so that $c(1+\delta)/\eta<\nu$, put $L=\log q$ and
-$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/8\rceil$.
-For all sufficiently large $r$, every prime $\ell\equiv1\pmod6$ in
-\[
- \frac{51}{20}r\le\ell\le\frac{59}{20}r
-\]
-satisfies $K=(\ell+2)/3\le r$ and $r+2m\le(\ell-1)/2$.
-Indeed $r+2m\le5r/4+7/4$ and the lower endpoint leaves a positive linear margin;
-the upper endpoint gives $K\le59r/60+2/3\le r$ for large $r$.
-The prime number theorem in this progression gives
-\[
- \log\prod_{\substack{51r/20\le\ell\le59r/20\\\ell\equiv1\ (6)}}\ell^2
-   =\left(\frac25+o(1)\right)r>L,
-\]
-since $2/5>\eta$. Thus some such prime satisfies $\ell^2\nmid q$.
-By Theorem~\ref{thm:minor-nv}, some retained common set $J$ with at most three omissions has
-$P_J(p/q)\ne0$. The original tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
-and the estimates in Section~\ref{sec:minor-nv} give
+$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/4\rceil$.
+By Theorem~\ref{thm:chi3-charzero-selection}, some retained member $P_J$ (the full determinant or a principal restriction omitting one common node)
+has $P_J(p/q)\ne0$. The tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
+and the uniform quarter-border content and decay bounds give
 \[
  q^{-r}\le |d_{r,m}P_J(p/q)|
  \le \exp\bigl(- (\eta-o(1))r^2\bigr)
 \]
 whenever $|\xi_\chi-p/q|<q^{-\nu}$; the required window holds because $cr<\nu L$.
-This contradicts $\eta r\ge(1+\delta)L$. Consequently
-\[
- \mu(\xi_\chi)\le\frac c\eta=\frac{12769920}{690317}
- =18.498631788\ldots<\frac{37}{2}.
-\]
-Rational scaling by four preserves the exponent. The periodic content profile of Section~\ref{sec:chi-periodic} first replaces this ratio by $536336640/30491189<17.60$.
-
-\emph{The quarter-border family.} Finally use Section~\ref{sec:chi3-quarter}, with $m=\lceil r/4\rceil$, at most one common-node deletion, and
-\[
- \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
- \qquad c=\frac{93657}{12500}.
-\]
-For any $\nu>c/\eta$, choose $\delta>0$ with $c(1+\delta)/\eta<\nu$ and take $r=\lceil(1+\delta)\log q/\eta\rceil$ as above.
-The characteristic-zero selector gives a nonzero retained member at every rational input. Its degree is at most $r$; the uniform quarter-border content and decay bounds give the same integer comparison
-$q^{-r}\le |d_{r,m}P_J(p/q)|\le\exp[-(\eta-o(1))r^2]$ in the required window. This again contradicts $\eta r\ge(1+\delta)\log q$.
-Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
+This contradicts $\eta r\ge(1+\delta)L$. Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1356,9 +1313,7 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
 \S\ref{sec:content}, the uniform rescaled-core deficit of Section~\ref{sec:uniform-deficit} and the next-level deficit of Section~\ref{sec:next-level} determine $\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
 $S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
-For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
-bounded low-node deletion removes the remaining prime-location cost; the periodic content improvement then gives $17.60$.
-Characteristic-zero selection then allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
+For $L(2,\chi_{-3})$, bounded low-node deletion removes the prime-location cost, and characteristic-zero selection allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
 \end{remark}
 
 %% =====================================================================
@@ -1429,21 +1384,16 @@ system and ported to the current toolchain; the repository's README and provenan
 
 \section*{Disclosure of AI use}
 
-The original development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
-(Anthropic): the mathematics, including the rectangular frames, the content bounds and rank deficits, the
-nonvanishing argument and the decay certificates, and all proofs; the Lean formalization; the numerical
-computations and the certificate generators; the literature search; and the text of this paper. Claude worked in a
-series of conversations at the request of the author, who posed the problem, directed the work, and is responsible
-for this submission. The repository infrastructure, vendored formalizations and certificate tooling of the
-companion project \cite{Litsey2026}, which this work reuses, were developed with OpenAI Codex as described there.
-The subsequent improvement for $L(2,\chi_{-3})$ from $23.82$ to $17.60$, including valuation-one reduction and the periodic content improvement,
-the finite-field corank argument, bounded-deletion transfer, their Lean formalization and the corresponding
-additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
-stronger theorem requires changes. The subsequent uniform rescaled-core argument for both
-$G\pm5\pi^2/48$, the finite interval profile and its Lean formalization were also developed with OpenAI Codex.
-The subsequent improvement of the $G\pm5\pi^2/48$ exponent to \MuLam{} was carried out by Claude (Anthropic) working with Sean Litsey and with Codex-developed infrastructure: the
-second-level deficit at non-clean primes with its weighted congruence, the slope-parametrised decay engine and the dual-guided certificate, and their Lean formalization.
-The subsequent quarter-border improvement to $14.35$, including characteristic-zero selection, the analytic certificate and the retained periodic D1 saving, was developed with OpenAI Codex.
+The mathematics, proofs, Lean formalization and text were produced by AI systems at the request of the author, who posed the problem,
+directed the work, and is responsible for this submission. Claude Opus~5.5 and Claude Sonnet~5.5 (Anthropic), working in a series of
+conversations, produced the rectangular frames, the content bounds and rank deficits, the nonvanishing argument and the decay certificates,
+the second-level deficit at non-clean primes with its weighted congruence, the slope-parametrised decay engine and the dual-guided certificate,
+with their proofs and Lean formalization; the numerical computations and the certificate generators; the literature search; and the text.
+OpenAI Codex produced the repository infrastructure, vendored formalizations and certificate tooling of the companion project \cite{Litsey2026},
+which this work reuses; for $L(2,\chi_{-3})$, the valuation-one reduction, the periodic content profile, the finite-field corank argument,
+bounded-deletion transfer, the quarter border with characteristic-zero selection, the analytic certificate and the periodic D1 saving;
+and the uniform rescaled-core argument for $G\pm5\pi^2/48$ with its finite interval profile. Codex also produced the Lean formalization
+and the corresponding text for these parts.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal

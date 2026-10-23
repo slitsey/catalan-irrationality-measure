@@ -9,8 +9,7 @@ public section
 
 /-!
 The strongest hybrid measure statements, with constants written as series:
-`G - 5π²/48` and `G + 5π²/48` have exponent 32.44 (the earlier 34.74 statements follow by
-monotonicity and are kept); `L(2, χ₋₃)` has exponent 14.35.
+`G - 5π²/48` and `G + 5π²/48` have exponent 32.44; `L(2, χ₋₃)` has exponent 14.35.
 For every positive error in the exponent, the bound holds at all sufficiently
 large coprime denominators.
 -/
@@ -24,23 +23,9 @@ theorem lam_hybrid_measure_3244 :
           - (p : ℝ) / q| := by
   sorry
 
-theorem lam_hybrid_measure_3474 :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| := by
-  sorry
-
 theorem mir_hybrid_measure_3244 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
       (q : ℝ) ^ (-(((811 / 25 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| := by
-  sorry
-
-theorem mir_hybrid_measure_3474 :
-    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
           - (p : ℝ) / q| := by
   sorry
