@@ -1,6 +1,6 @@
 module
 
-public import CatalanFrames.LambdaHybrid.AssemblyFinal
+public import CatalanFrames.LambdaHybrid.PairG
 public import CatalanCore.Cert.SigmaHybS.FrameDecay
 
 @[expose] public section

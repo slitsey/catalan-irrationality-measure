@@ -1,6 +1,7 @@
 module
 
-public import CatalanFrames.LambdaMirrorHybrid.MirFinalAll
+public import CatalanFrames.LambdaMirrorHybrid.Assembly
+public import CatalanCore.Cert.Sigma300.Glue
 public import CatalanCore.Cert.SigmaHybS.FrameDecay
 
 @[expose] public section

@@ -1,6 +1,9 @@
 module
 public import CatalanFrames.HybCommon.DeficitProfile.MergedRows
-public import CatalanFrames.LambdaMirrorHybrid.MirFinalAll
+public import CatalanFrames.LambdaMirrorHybrid.MirInst
+public import CatalanFrames.LambdaMirrorHybrid.MirN
+public import CatalanFrames.LambdaMirrorHybrid.MirTrop
+public import CatalanFrames.LambdaMirrorHybrid.MirFinal
 @[expose] public section
 open Filter CatalanCore CatalanCore.Rect CatalanCore.Arith.Hybrid CatalanFrames.LambdaMirror
 namespace CatalanFrames.LambdaMirrorHybrid

@@ -1,6 +1,8 @@
 module
 public import CatalanFrames.HybCommon.DeficitProfile.MergedRows
-public import CatalanFrames.LambdaHybrid.AssemblyFinal
+public import CatalanFrames.Lambda.HybContent
+public import CatalanFrames.Lambda.HybInst
+public import CatalanFrames.Lambda.DefB
 @[expose] public section
 open Filter CatalanCore CatalanCore.Rect CatalanCore.Arith.Hybrid CatalanFrames.Lambda
 namespace CatalanFrames.LambdaHybrid
