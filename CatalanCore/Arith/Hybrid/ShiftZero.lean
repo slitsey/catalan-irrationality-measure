@@ -173,6 +173,45 @@ lemma zoneCell_of_cut {a b : ℕ}
   · rw [mem_cellCols] at hy hy'
     exact key _ _ hy.1 hy.2 hy'.1 hy'.2 hle
 
+/-- The weight vanishes at the residue of every node of the cell. -/
+theorem zoneWeight_zero_of_cell (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
+    (hN : 4 * (r + 2 * m) < p * p) {h : ℕ} (hh : h < p) (hroot : 4 * (h : ZMod p) = (o : ZMod p))
+    {a b : ℕ}
+    (hcut : ∀ x y : ℕ, a ≤ x → x < b → a ≤ y → y < b →
+      NoCut (Cut (p : ℤ) (r : ℤ) (Singular (p : ℤ) (o : ℤ))) (min (x : ℤ) y) (max (x : ℤ) y))
+    (z0 : Fin m) (hz0 : a ≤ r + 2 * z0.val ∧ r + 2 * z0.val < b)
+    (hlong : ∀ k, a ≤ k → k < b → r ≤ k → k < r + 2 * m → ((k : ℕ) : ZMod p) ∉ shortArc p h)
+    (α β : RatFunc (ZMod p)) {k : ℕ} (hk1 : r ≤ k) (hk2 : k < r + 2 * m) (hka : a ≤ k) (hkb : k < b) :
+    zoneWeight Fr p o r h (r + 2 * z0.val) α β ((k : ℕ) : ZMod p) = 0 := by
+  classical
+  have hx0r : r ≤ r + 2 * z0.val := by omega
+  have hx0N : r + 2 * z0.val < r + 2 * m := by have := z0.isLt; omega
+  have hsrc_long : ((r + 2 * z0.val : ℕ) : ZMod p) ∉ shortArc p h :=
+    hlong _ hz0.1 hz0.2 hx0r hx0N
+  have hcl : ((k : ℕ) : ZMod p) ∉ shortArc p h := hlong k hka hkb hk1 hk2
+  have hkmod : k % p = (((k : ℕ) : ZMod p)).val := (val_eq_of_natCast rfl)
+  have harc : ((((k : ℕ) : ZMod p)).val < h ∧ (r + 2 * z0.val) % p < h) ∨
+      (h ≤ (((k : ℕ) : ZMod p)).val ∧ h ≤ (r + 2 * z0.val) % p) := by
+    have h1 : (((r + 2 * z0.val : ℕ) : ZMod p)).val = (r + 2 * z0.val) % p := ZMod.val_natCast p _
+    simp only [shortArc, Finset.mem_filter, Finset.mem_univ, true_and] at hcl hsrc_long
+    rw [h1] at hsrc_long
+    by_cases h2 : 2 * h < p
+    · simp only [h2, if_true] at hcl hsrc_long; right; omega
+    · simp only [h2, if_false] at hcl hsrc_long; left; omega
+  have hdiv : k / p = (r + 2 * z0.val) / p := by
+    rcases le_total k (r + 2 * z0.val) with hle | hle
+    · apply div_eq_of_noCut (o := o) (r := r) hle
+      have := hcut k _ hka hkb hz0.1 hz0.2
+      rwa [min_eq_left (by exact_mod_cast hle), max_eq_right (by exact_mod_cast hle)] at this
+    · symm
+      apply div_eq_of_noCut (o := o) (r := r) hle
+      have := hcut k _ hka hkb hz0.1 hz0.2
+      rwa [min_eq_right (by exact_mod_cast hle), max_eq_left (by exact_mod_cast hle)] at this
+  have hresp := respAt_eq_srcC_occ hL hp hm hN hh hroot hx0r hx0N hk1 hk2 hdiv hkmod harc
+  unfold zoneWeight
+  rw [hresp, if_neg hcl]
+  ring
+
 /-- **The zero pattern.**  For every `α, β` the weight `zoneWeight` vanishes at each long residue
 that is free or occupied inside the cell, so `ZoneZero` holds with the uncovered short residues. -/
 theorem zoneZero_of_response (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
@@ -227,16 +266,8 @@ theorem zoneZero_of_response (hL : LamData Fr o) (hp : 5 ≤ p) (hm : 2 * m < p)
       -- the zero from an occupied node inside the cell
       have inCell : a ≤ k → k < b → zoneWeight Fr p o r h (r + 2 * z0.val) α β c = 0 := by
         intro hka hkb
-        apply wz hcS
-        refine respAt_eq_srcC_occ hL hp hm hN hh hroot hx0r hx0N hk1 hk2 ?_ hkmod (harc hcS)
-        rcases le_total k (r + 2 * z0.val) with hle | hle
-        · apply div_eq_of_noCut (o := o) (r := r) hle
-          have := hcut k _ hka hkb hz0.1 hz0.2
-          rwa [min_eq_left (by exact_mod_cast hle), max_eq_right (by exact_mod_cast hle)] at this
-        · symm
-          apply div_eq_of_noCut (o := o) (r := r) hle
-          have := hcut k _ hka hkb hz0.1 hz0.2
-          rwa [min_eq_right (by exact_mod_cast hle), max_eq_left (by exact_mod_cast hle)] at this
+        rw [← hkc]
+        exact zoneWeight_zero_of_cell hL hp hm hN hh hroot hcut z0 hz0 hlong α β hk1 hk2 hka hkb
       rcases zone_node_cases hk1 hk2 with ⟨i, rfl⟩ | ⟨j, rfl⟩
       · by_cases hi : i ∈ cellRows r m a b
         · rw [mem_cellRows] at hi; exact Or.inl (inCell hi.1 hi.2)
