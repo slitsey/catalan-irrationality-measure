@@ -228,6 +228,75 @@ theorem lead_cross_cell_cols (CC : Finset Z) (hCC : ∀ y ∈ CC, r ≤ ys y)
 
 end Lead
 
-#print axioms lead_cross_cell_rows
-#print axioms lead_cross_cell_cols
+
+section Integral
+variable {p r N o k : ℕ} [Fact p.Prime] {Fr : Frame} {Z : Type} [Fintype Z] [DecidableEq Z]
+  {xs ys : Z → ℕ}
+variable (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
+  (hk : (4:ZMod p)*k=(o:ZMod p)) (hx : ∀ z, xs z<N) (hy : ∀ y, ys y<N)
+include hL hp hN hr hk hx hy
+
+/-- **Integrality of the same-cell block (first conjunct of `weighted_same_cell`).**  If the row
+node and the column node lie in one cut-free interval, `p T_zy` is divisible by `p`: its leading
+part `α_z (pβ'_y) - (pβ_z) α'_y` cancels because both nodes have the same source moments. -/
+theorem T_integral_same_cell (z y : Z) (hxz : r ≤ xs z) (hyy : r ≤ ys y)
+    (hnc₁ : xs z ≤ ys y → NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (xs z : ℤ) (ys y : ℤ))
+    (hnc₂ : ys y ≤ xs z → NoCut (Cut (p:ℤ) (r:ℤ) (Singular (p:ℤ) (o:ℤ))) (ys y : ℤ) (xs z : ℤ))
+    (hd : ((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p) ≠ 0)
+    (hint : GLE p 1 (LemmaE.Tscaled (ChainModel.Q Fr p r xs ys).det
+      (ChainModel.full Fr p r xs ys).toBlocks₁₁ (ChainModel.full Fr p r xs ys).toBlocks₁₂
+      (ChainModel.full Fr p r xs ys).toBlocks₂₁ (ChainModel.full Fr p r xs ys).toBlocks₂₂
+      (ChainModel.Nm Fr p r xs ys) z y)) :
+    ∃ T' : (LocRing p)[X], toQ p T' = LemmaE.Tscaled (ChainModel.Q Fr p r xs ys).det
+      (ChainModel.full Fr p r xs ys).toBlocks₁₁ (ChainModel.full Fr p r xs ys).toBlocks₁₂
+      (ChainModel.full Fr p r xs ys).toBlocks₂₁ (ChainModel.full Fr p r xs ys).toBlocks₂₂
+      (ChainModel.Nm Fr p r xs ys) z y := by
+  obtain ⟨g', hg'⟩ := exists_lift p hint
+  rw [pow_one] at hg'
+  have H := lead_identity_red hL hp hN hr hx hy z y g' hg'
+  have hAB : sourceA Fr p o (fun j : ChainIndex p r (ys y) => (chainNode j).val) (ys y) =
+        sourceA Fr p o (fun j : ChainIndex p r (xs z) => (chainNode j).val) (xs z) ∧
+      sourceB Fr p o (fun j : ChainIndex p r (ys y) => (chainNode j).val) (ys y) =
+        sourceB Fr p o (fun j : ChainIndex p r (xs z) => (chainNode j).val) (xs z) := by
+    rcases le_total (xs z) (ys y) with h | h
+    · exact sourceAB_chainTransport hL h (hnc₁ h)
+    · have := sourceAB_chainTransport hL h (hnc₂ h)
+      exact ⟨this.1.symm, this.2.symm⟩
+  rw [redI_aR hL hp hN hr hk hx hy z hxz, redI_bR hL hp hN hr hk hx hy z hxz,
+    redI_aC hL hp hN hr hk hx hy y hyy, redI_bC hL hp hN hr hk hx hy y hyy, hAB.1, hAB.2] at H
+  have h16 : (rfC p 16 : RatFunc (ZMod p)) ≠ 0 := by
+    apply rfC_ne_zero'
+    have h4 := four_ne_zmod p hp
+    have : (16 : ZMod p) = 4 * 4 := by norm_num
+    rw [this]; exact mul_ne_zero h4 h4
+  have hdet := redI_det_ne_zero hL hp hN hr (xs := xs) (ys := ys)
+  have hd' : (rfC p (((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p)) : RatFunc (ZMod p)) ≠ 0 :=
+    rfC_ne_zero' hd
+  have hsub : rfC p (ys y : ZMod p) - rfC p (xs z : ZMod p) =
+      rfC p (((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p)) := by
+    simp only [← rfCHom_apply, map_sub]
+  rw [hsub] at H
+  have h0 : phiP p g' = 0 := by
+    have : redI p (ChainModel.Q Fr p r xs ys).det * (rfC p 16 *
+        rfC p (((ys y : ℕ) : ZMod p) - ((xs z : ℕ) : ZMod p))) * phiP p g' = 0 := by
+      rw [H]; ring
+    rcases mul_eq_zero.1 this with h | h
+    · exact absurd h (mul_ne_zero hdet (mul_ne_zero h16 hd'))
+    · exact h
+  rw [phiP_eq_zero_iff] at h0
+  obtain ⟨T'', hT''⟩ := h0
+  refine ⟨T'', ?_⟩
+  have hCp : toQ p (C ((p:ℕ) : LocRing p)) = C (p:ℚ) := by simp [toQ]
+  have : C (p:ℚ) * toQ p T'' = C (p:ℚ) * LemmaE.Tscaled (ChainModel.Q Fr p r xs ys).det
+      (ChainModel.full Fr p r xs ys).toBlocks₁₁ (ChainModel.full Fr p r xs ys).toBlocks₁₂
+      (ChainModel.full Fr p r xs ys).toBlocks₂₁ (ChainModel.full Fr p r xs ys).toBlocks₂₂
+      (ChainModel.Nm Fr p r xs ys) z y := by
+    rw [← hg', hT'', map_mul, hCp]
+  exact mul_left_cancel₀ (by
+    rw [Ne, Polynomial.C_eq_zero]
+    exact_mod_cast (Fact.out : p.Prime).ne_zero) this
+
+end Integral
+
+#print axioms T_integral_same_cell
 end CatalanCore.Arith.Hybrid
