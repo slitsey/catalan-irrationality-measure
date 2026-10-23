@@ -172,5 +172,10 @@ theorem first_lower : (9 / 50 : ℝ) ≤ trialSeqS Pc P 1 := by
   push_cast at h
   exact h
 
+/-! ### side conditions of the witness -/
+
+theorem P_nonzero : ∀ t ∈ P, t.zr ≠ 0 ∨ t.zi ≠ 0 := by decide +kernel
+theorem V_nonzero : ∀ t ∈ V, t.zr ≠ 0 ∨ t.zi ≠ 0 := by decide +kernel
+
 end
 end CatalanMeasure.G728
