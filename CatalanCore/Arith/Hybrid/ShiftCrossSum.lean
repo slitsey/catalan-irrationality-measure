@@ -127,5 +127,33 @@ theorem coef_reduce (hL : LamData Fr o) (hp : 5≤p) (hN : 4*N<p*p) (hr : r≤N)
 
 end Coef
 
+
+section ByClass
+open ChainClasses
+variable {p r : ℕ} [Fact p.Prime]
+
+/-- A sum over the core is the sum over the residue classes of the chain sums. -/
+theorem sum_fin_by_class {M : Type*} [AddCommMonoid M] (g : Fin r → M) :
+    ∑ j, g j = ∑ c : ZMod p, ∑ q : ChainIndex p r (c.val + p * r), g (chainNode q) := by
+  classical
+  rw [← Finset.sum_fiberwise Finset.univ (fun j : Fin r => ((j.val : ℕ) : ZMod p)) g]
+  apply Finset.sum_congr rfl
+  intro c _
+  have hxc : ((c.val + p * r : ℕ) : ZMod p) = c := by
+    push_cast; simp [ZMod.natCast_self]
+  rw [Finset.sum_filter]
+  rw [sum_chain (p := p) (le_chain_rep c) (fun j : Fin r => if ((j.val : ℕ) : ZMod p) = c then g j else 0)]
+  · apply Finset.sum_congr rfl; intro q _
+    rw [if_pos (by rw [chainNode_zmod, hxc])]
+  · intro m hm
+    rw [if_neg]
+    intro hc
+    apply hm
+    rw [chain_rep_mod]
+    exact val_eq_of_natCast hc
+
+end ByClass
+
 #print axioms CatalanCore.Arith.Hybrid.coef_reduce
+#print axioms CatalanCore.Arith.Hybrid.sum_fin_by_class
 end CatalanCore.Arith.Hybrid
