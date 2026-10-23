@@ -197,7 +197,7 @@ theorem Sbase_le_thm : (SBASE : ℝ) ≤ ∑ i : Fin 6144,
     rw [← segterm i]
     unfold segBq segAq segGq MPRAY
     push_cast
-    rfl
+    norm_num
   simp_rw [e]
   rw [Fin.sum_univ_eq_sum_range (fun i => (fSeg i : ℝ) / (100000 * 2 ^ 72)) 6144, sacc_sum, sacc_val]
   unfold SBASE
