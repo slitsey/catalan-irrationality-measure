@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.GenD.D58.Certified
+public import CatalanArchive.CatalanMeasure.GenD.D58.Banks160and640
 
 @[expose] public section
 

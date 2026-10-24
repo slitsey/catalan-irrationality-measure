@@ -1,5 +1,6 @@
 module
 
+public import CatalanArchive.CatalanMeasure.GenD.D58.Banks160and640
 public import CatalanArchive.CatalanMeasure.GenD.D58.SecondTrial
 public import CatalanMeasure.GenD.D58.Circle
 public import CatalanMeasure.GenD.D58.FirstTrialCert

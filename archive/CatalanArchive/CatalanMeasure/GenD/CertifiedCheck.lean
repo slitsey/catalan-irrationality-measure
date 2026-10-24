@@ -1,7 +1,7 @@
 module
 
+public import CatalanArchive.CatalanMeasure.GenD.D58.Banks160and640
 public import CatalanArchive.CatalanMeasure.GenD.D58.Bank592
-public import CatalanMeasure.GenD.D58.Certified
 
 /-! Axiom audit of the certificate-level final blocks. -/
 

@@ -8,7 +8,7 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 /-!
 # D58 = (58,9,3,5,3): scalar budgets of the bank `K590` (B = 590, witness `gi`)
 
-Same shape as `K160` / `K640` of `D58.Budget` (reference-unit ledger `w590/q/k160_gi_qual.out`,
+Instance of `GenD.Budget` (reference-unit ledger `w590/q/k160_gi_qual.out`,
 unit convention of `D58.Budget`); the data are those of the K = 160 witness `gi`
 (34 real tails and 41 complex points at `eps = 1/100`), qualified at `B = 590`:
 `x = 275547530000 / 467666483 = 589.19666...`, `B - x = 0.80334`.

@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.GenD.D58.Certified
+public import CatalanArchive.CatalanMeasure.GenD.D58.Banks160and640
 public import CatalanArchive.CatalanMeasure.GenD.D58.Cert.XCover
 public import CatalanArchive.CatalanMeasure.GenD.D58.Cert.YCover
 public import CatalanArchive.CatalanMeasure.GenD.D58.Cert.RCover

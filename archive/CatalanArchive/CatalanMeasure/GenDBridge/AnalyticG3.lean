@@ -1,5 +1,6 @@
 module
 
+public import CatalanArchive.CatalanMeasure.GenD.D58.Banks160and640
 public import CatalanMeasure.GenD.Analytic.DeltaSmall
 public import CatalanMeasure.GenD.D58.Final
 public import CatalanArchive.CatalanMeasure.Parametric.GapSmallness

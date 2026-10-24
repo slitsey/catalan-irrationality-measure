@@ -20,8 +20,8 @@ design-independent data; only the weights of the two fields change.  At `(58,9,3
 with the caps `MX1 = -57927/50000`, `MY1 = -132981/100000` (`F1 = MX1 + MY1`, `witness-final`).
 
 `firstTrial_D58` builds the contract from these two suprema (hypotheses `hrow`, `hcol`, to be
-discharged by the D58 first-trial cover certificate); `K160.firstTrial` / `K640.firstTrial` instantiate
-it for the two banks (the budget is `K.first_budget_log2`).
+discharged by the D58 first-trial cover certificate); a bank instantiates it with its budget
+`K.first_budget_log2`.
 -/
 
 namespace CatalanMeasure.GenD
@@ -92,22 +92,6 @@ def firstTrial_D58 {target cost : ℝ}
       have e3 : Lm = lamFirst * (5 / 29) := by norm_num [Lm, lamFirst]
       rw [e3] at h
       linarith only [h])
-
-/-- Bank K160 first-population contract. -/
-def K160.firstTrial
-    (hrow : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1,
-      firstRowFieldG (11 / 29) (3 / 29) (49 / 58) lamFirst (5 / 29) firstP firstV x ≤ MX1)
-    (hcol : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldG (9 / 58) (3 / 58) firstV s ≤ MY1) :
-    FirstTrialBounds Odd.design K160.target K160.firstCost :=
-  firstTrial_D58 hrow hcol K160.first_budget_log2
-
-/-- Bank K640 first-population contract. -/
-def K640.firstTrial
-    (hrow : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1,
-      firstRowFieldG (11 / 29) (3 / 29) (49 / 58) lamFirst (5 / 29) firstP firstV x ≤ MX1)
-    (hcol : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldG (9 / 58) (3 / 58) firstV s ≤ MY1) :
-    FirstTrialBounds Odd.design K640.target K640.firstCost :=
-  firstTrial_D58 hrow hcol K640.first_budget_log2
 
 end
 end D58

@@ -166,12 +166,6 @@ theorem circ_hcirc : GapCircleBound Odd.design (2 * (401 / 2500 : ℝ) / (1 + (4
     (by norm_num) (by norm_num [circCsq]) circE_le_exp
   simpa [circR] using this
 
-theorem circ_hwc160 : (52788 / 1000 : ℝ) < K160.rho - 58 * K160.secondCost := by
-  norm_num [K160.rho, K160.secondCost, wcap]
-
-theorem circ_hwc640 : (52788 / 1000 : ℝ) < K640.rho - 58 * K640.secondCost := by
-  norm_num [K640.rho, K640.secondCost, wcap]
-
 end
 end D58
 end CatalanMeasure.GenD

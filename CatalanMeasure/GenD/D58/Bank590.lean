@@ -1,7 +1,10 @@
 module
 
 public import CatalanMeasure.GenD.D58.Budget590
-public import CatalanMeasure.GenD.D58.Certified
+public import CatalanMeasure.GenD.D58.Final
+public import CatalanMeasure.GenD.Analytic.DeltaChain
+public import CatalanMeasure.GenD.Analytic.Instances
+public import CatalanMeasure.GenD.D58.C3.Cert
 public import CatalanMeasure.GenD.D58.FirstTrialCert
 public import CatalanMeasure.GenD.D58.Circle
 
@@ -11,7 +14,7 @@ public import CatalanMeasure.GenD.D58.Circle
 # D58, bank K590 (`B = 590`, witness `gi`): payments, decay rate, first-population contract
 and the certificate-level theorem
 
-Same assembly as `K640` (`Pay`, `Final`, `FirstTrial`, `FirstTrialCert`, `Certified`), instantiated
+Assembled from the generic `Final`, `FirstTrial`, `FirstTrialCert`, `Circle`, instantiated
 with the constants of `D58.Budget590` (the first-trial cover certificate `hrow_D58`, `hcol_D58` is
 shared: only the budget `K590.first_budget_log2` is new).
 -/
@@ -53,7 +56,7 @@ theorem measure_590_of_delta_small_K590
       delta_small := delta_small, eta_le := eta_le590, nonvanishing := nonvanishing_d58 c3 }
   simpa using h
 
-/-- Bank K590 first-population contract (cover certificate shared with K160 / K640). -/
+/-- Bank K590 first-population contract (cover certificate `hrow_D58`, `hcol_D58`). -/
 def K590.firstTrial
     (hrow : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1,
       firstRowFieldG (11 / 29) (3 / 29) (49 / 58) lamFirst (5 / 29) firstP firstV x ≤ MX1)

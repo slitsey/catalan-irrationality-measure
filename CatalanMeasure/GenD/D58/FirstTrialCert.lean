@@ -10,7 +10,7 @@ public import CatalanMeasure.GenD.D58.FirstCert.Sup
 
 `hrow` / `hcol` of `FirstTrial` follow from the D58 first-trial cover certificate (`FirstCert.row_sup`,
 `FirstCert.column_sup`: integer-root gaps and bracket value checks) via the field identification in
-`FirstBridge`.  `K160.firstTrialCert` and `K640.firstTrialCert` carry no hypotheses.
+`FirstBridge`.  `hrow_D58` and `hcol_D58` carry no hypotheses; each bank instantiates `firstTrial_D58` with them.
 -/
 
 namespace CatalanMeasure.GenD
@@ -36,14 +36,6 @@ theorem hcol_D58 : ∀ s ∈ Ioo (0 : ℝ) 1,
   have e : ((FirstCert.MY : ℚ) : ℝ) = MY1 := by norm_num [FirstCert.MY, MY1]
   rw [e] at h
   exact h
-
-/-- Bank K160 first-population contract, hypothesis-free. -/
-def K160.firstTrialCert : FirstTrialBounds Odd.design K160.target K160.firstCost :=
-  K160.firstTrial hrow_D58 hcol_D58
-
-/-- Bank K640 first-population contract, hypothesis-free. -/
-def K640.firstTrialCert : FirstTrialBounds Odd.design K640.target K640.firstCost :=
-  K640.firstTrial hrow_D58 hcol_D58
 
 end
 end D58
