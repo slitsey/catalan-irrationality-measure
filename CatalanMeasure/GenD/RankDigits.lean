@@ -156,7 +156,7 @@ theorem digits_vanish_S (D : DigitSeq p a L TQ TD TY e q d y) (h2 : (2 : ZMod p)
 `Qh_6(mu) = 0` on the first `e` residues. -/
 theorem digits_vanish_U6 (D : DigitSeq p a L TQ TD TY e q d y) (h2 : (2 : ZMod p) ≠ 0)
     {m0 m1 : ℕ} (hm1p : m1 ≤ p) (hm1a : p + m1 ≤ a + 1) (hL : 5 * p + m1 ≤ L)
-    (hTQ : TQ < 7 * p + m0) (hTY : TY < 6 * p + m0) (hTD : TD < 6 * p + m0)
+    (hTQ : TQ < 7 * p + m0) (hTY : TY < 6 * p + m0 + e) (hTD : TD < 6 * p + m0)
     (he : m0 + e ≤ m1)
     (hQ2 : ∀ mu, m0 ≤ mu → mu < m1 → q (2 * p + mu) = 0)
     (hQ3 : ∀ mu, m0 ≤ mu → mu < m1 → q (3 * p + mu) = 0)
