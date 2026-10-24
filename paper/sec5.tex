@@ -1,0 +1,226 @@
+\section{The real place}\label{sec:real}
+
+In this section we prove that $\Delta_N$ is small not only at $G$ but on an exponentially small
+interval around it.
+
+\begin{theorem}\label{thm:real}
+Put $\rho=259299/2500$ and $\eta_\infty=5993/3125$. For all large $N$,
+\[
+ |Q_N(x)|\le e^{-\eta_\infty N^2}\qquad\text{whenever }|x-G|\le e^{-\rho N}.
+\]
+\end{theorem}
+
+The proof has three parts. We first reduce the perturbation $\Delta_N(x)-\Delta_N(G)$ to
+determinants in which some columns of $\cA_N$ are replaced by values of the row functions at fixed
+points (\S\ref{ssec:quadrature}--\ref{ssec:andreief}). We then bound such determinants by OpenAI's
+energy method, extended to configurations with fewer free points (\S\ref{ssec:energy}). Finally we
+supply the trial sequences that the energy method needs and verify the resulting inequalities
+(\S\ref{ssec:trials}--\ref{ssec:cells}).
+
+\subsection{A quadrature formula for the coefficient of the constant}\label{ssec:quadrature}
+Let $\delta=x-G$. Then $\Delta_N(x)=\det(\cA_N+\delta\cL_N)$, and the question is how large the
+columns of $\cL_N$ are compared with those of $\cA_N$. By \eqref{eq:L} the entries of $\cL_N$ are linear
+functionals of the coefficients of the row polynomials. Since these polynomials have bounded degree,
+the functionals can be written exactly as finite combinations of point evaluations: if
+$\tau_1,\ldots,\tau_J$ are distinct points and $J$ exceeds the degree of the polynomials involved,
+Lagrange interpolation gives
+\begin{equation}\label{eq:quad}
+ \cL_N(r,k)=\sum_{a=1}^JA_r(\tau_a)\,\beta_{a,k},
+\end{equation}
+where the weights $\beta_{a,k}$ are the values of the same functionals on the Lagrange basis
+polynomials. This is a Gauss-type quadrature formula, exact for polynomials of the relevant degree.
+The point of the formula is that the columns of $\cL_N$ become combinations of point evaluations of the
+same row functions that define $\cA_N$, so that the perturbed determinant can again be treated by the
+energy method. The cost is the size of the weights.
+
+We take $J=18N$ and the nodes
+\[
+ t_{j,\pm}=\pm\sqrt{a^2+(1-a^2)(1+s_j)/2},\qquad T_{9N}(s_j)=0,\qquad
+ a=\frac{2g_0}{1+g_0^2},\quad g_0=\frac{401}{2500},
+\]
+that is, the roots of $P_N(t)=T_{9N}\bigl((2t^2-(1+a^2))/(1-a^2)\bigr)$. They lie in
+$(-1,-a)\cup(a,1)$. In the coordinate $x$ with $t=2x/(1+x^2)$ every node has $|x|>g_0$; this matters
+below, because the energy fields are larger near $x=0$.
+
+\begin{lemma}\label{lem:quadrature}
+After removal of the common factor of the rows, the weights in \eqref{eq:quad} satisfy
+\[
+ |\beta_{a,k}|\le108000N\,e^{17.913N}.
+\]
+\end{lemma}
+
+\begin{proof}
+At a root, the derivative identity for Chebyshev polynomials gives $|P_N'(t_{j,\pm})|\ge36Na/(1-a^2)$.
+The weight is a coefficient functional of the Lagrange polynomial, and every coefficient of a
+polynomial is bounded by its maximum modulus on a circle centered at the origin. On the circle
+$|z|=r$ with $r=1001/1000$, write $s=|\operatorname{Re}z|$. For $w=(2z^2-(1+a^2))/(1-a^2)$ one has
+$|T_{9N}(w)|\le(\Theta+\sqrt{\Theta^2-1})^{9N}$, where
+\[
+ \Theta(s)=\frac{\sqrt{(r^2+1)^2-4s^2}+\sqrt{(r^2+a^2)^2-4a^2s^2}}{1-a^2}
+\]
+is half the sum of the distances from $w$ to $\pm1$. The function $\Theta$ decreases in $s$, while the factor
+$|1-z|^2\le r^2+1+2s$ coming from the column filter increases. A cover of $[0,r]$ by $55$ intervals,
+with rational upper bounds for the square roots and logarithms at their endpoints, proves
+\[
+ 9\log\bigl(\Theta(s)+\sqrt{\Theta(s)^2-1}\bigr)+\log(r^2+1+2s)<17.913\qquad(0\le s\le r).
+\]
+Since $|z-t_{j,\pm}|\ge1/1000$ on the circle and $(1-a^2)/(36a)\le1$, the bound follows.
+\end{proof}
+
+The circle of radius $1.001$ instead of $1$ separates the circle from the nodes; on the unit circle itself
+the cancellation in the factor $(1-t)^N$ near $t=1$ is what keeps the bound small.
+
+\subsection{Column expansion and an identity of Andr\'eief type}\label{ssec:andreief}
+Expanding $\det(\cA_N+\delta\Phi\beta)$, where $\Phi(r,a)=A_r(\tau_a)$, multilinearly in the columns gives
+a sum over maps $f$ from the columns to $\{\varnothing,1,\ldots,J\}$ of
+$\prod_{f(k)\ne\varnothing}\delta\beta_{f(k),k}\det M_f$. Here $M_f$ is the matrix whose $k$-th column is the
+$k$-th column of $\cA_N$ if $f(k)=\varnothing$ and the vector $(A_r(\tau_{f(k)}))_r$ otherwise.
+
+\begin{lemma}\label{lem:expansion}
+If $|\beta_{a,k}|\le B$ and $|\det M_f|\le Mc^{m(f)}$ for every $f$, where $m(f)$ is the number of columns
+replaced, then
+\[
+ \bigl|\det(\cA_N+\delta\Phi\beta)-\det\cA_N\bigr|\le M\bigl((1+J|\delta|Bc)^{n}-1\bigr).
+\]
+\end{lemma}
+
+Each $M_f$ has $p=n-m$ columns that are integrals and $m$ columns that are point values. Andr\'eief's
+identity extends to this situation.
+
+\begin{lemma}\label{lem:andreief}
+Let $\mu,\nu$ be finite measures, $F_r$ $(r<p+m)$, $G_i$ $(i<p)$ and $K$ integrable functions, and let $B$
+be the matrix with $B(r,i)=\iint F_r(t)K(t,s)G_i(s)\,d\mu(t)\,d\nu(s)$ for $i<p$ and
+$B(r,p+j)=F_r(\tau'_j)$. Then
+\[
+ (p!)^2\det B=\int\!\!\int\det\bigl[F_r((t\Vert\tau')_c)\bigr]_{r,c}
+ \det[K(t_i,s_j)]_{i,j<p}\det[G_i(s_j)]_{j,i<p}\,d\mu^p(t)\,d\nu^p(s),
+\]
+where $t\Vert\tau'$ is the list of the $p$ variables followed by the $m$ fixed points.
+\end{lemma}
+
+\begin{proof}
+For $m=0$ this is Andr\'eief's identity applied twice \cite{Forrester2018Andreief}. In general expand
+$\det B$ multilinearly in its first $p$ columns, which introduces one pair of variables $(t_i,s_i)$ for
+each of them, and antisymmetrize first in the $t$ and then in the $s$ variables; the last $m$ columns are
+constant throughout.
+\end{proof}
+
+With $K(t,s)=1/(1-ts)$ the middle determinant is the Cauchy determinant, and the third is a
+generalized Vandermonde determinant $\prod_js_j^b(1-s_j)^q\det[s_j^{E_i}]$. For the latter we use the
+bound
+\begin{equation}\label{eq:genvand}
+ \bigl|\det[s_j^{E_i}]\bigr|\le\Bigl(\prod_j(1+s_j)\Bigr)^{n-p}\prod_{i<j}|s_i-s_j|,
+\end{equation}
+valid for distinct exponents $E_i<n$ and $s_j\in[0,1]$. It follows by multiplying the matrix by a
+unitriangular matrix built from the polynomial $\prod_j(X-s_j)$ and bounding the remaining $(n-p)\times(n-p)$
+determinant by the product of the $\ell^1$ norms of its columns. The quotient
+$\det[s_j^{E_i}]/\prod_{i<j}(s_j-s_i)$ is a Schur polynomial, so the bound is close to optimal.
+
+\subsection{The energy estimate with fixed points}\label{ssec:energy}
+OpenAI bounds the integrand in Andr\'eief's identity by the exponential of $n^2E$, where $E$ is a discrete
+logarithmic energy of the points $x_i$ and $s_j$ in the coordinate $t=2x/(1+x^2)$. The energy consists of
+an external field for each point, logarithmic interactions $\log|x_i-x_j|$, $\log(1-x_ix_j)$ and
+$\log|s_i-s_j|$ among points of the same kind, and an interaction $-\log(1-2x_is_j+x_i^2)$ between the two
+kinds. There are two cases, according to which of OpenAI's two bounds for the determinant of the row
+functions is used \cite[Props.~5.2, 5.3]{OpenAI2026}; in the second case the interaction among the $x_i$
+has weight $2$ instead of $1$.
+
+The energy is bounded from above by duality. Given trial sequences $u=(u_k)$ and $v=(v_k)$, one writes
+the interaction terms as quadratic forms in the moments $\frac1n\sum_iT_k(x_i)$ and
+$\frac1n\sum_js_j^k$ and completes the squares against $u$ and $v$. What remains is the sum of the norms
+$\|u\|^2$, $\|v\|^2$ and, for each point, a function of one variable,
+\[
+ X(x)=W_x(x)-2\kappa\,T(u,x)-S(v,x),\qquad Y(s)=W_s(s)+2\,T(v,s),
+\]
+where $W_x,W_s$ are the external fields, $\kappa\in\{1,2\}$ is the case, and $T(u,x)=\sum_ku_kT_k(x)/k$,
+$S(v,x)=\sum_kv_kx^k/k$ are the potentials of the trial sequences. If $X\le M_X$ and $Y\le M_Y$ on the whole
+domains, the energy of any configuration is at most a constant determined by $M_X$, $M_Y$ and the norms.
+In potential-theoretic terms the extremal configuration is described by an equilibrium measure for two
+interacting measures in an external field \cite{SaffTotik}, and the best trial sequences are its moments,
+as Carreira observed \cite{Carreira2026}; any trial sequences give a valid upper bound.
+
+When $m$ of the $n$ columns are point values, the configuration has only $p=n-m$ free points of each
+kind, while the normalization is still by $n$. The fixed points contribute through the determinant of the
+row functions evaluated at the concatenated list $t\Vert\tau'$. One checks that every step of OpenAI's
+argument remains valid uniformly in $p\le n$: the regularization of the logarithmic interactions, the
+diagonal corrections, and the completion of squares only involve sums over the points present. The
+missing points change the energy bound by an amount linear in $m$, which is the cost of a fixed column.
+
+For the parameters of Section~\ref{sec:twenty} this cost is controlled as follows. We use two pairs of
+trial sequences, one for each case. For each case the cost of a fixed column is at most $20c_\kappa N$
+in the exponent, where $c_\kappa$ is obtained by completing a square in the proportions $\alpha=m/n$ and
+$\tau\le\alpha$ of fixed points of the two kinds. For the second case the quantity to be bounded is
+\begin{equation}\label{eq:budget2}
+ h_0+(2.6\log2-F+R-c_2)\alpha-2\log2\,\alpha^2+(\log2-R-0.75)\tau-\log2\,\tau^2,
+\end{equation}
+with $0\le\tau\le\alpha\le1$, where $F$ is the bound for the sum of the two fields, $R$ is the bound for the
+field at the fixed points, and $h_0$ collects the constants. Here the fixed points are the quadrature
+nodes, at which $|x|>g_0$; this is why the bound $R$ for the field at the fixed points is needed only on
+$g_0\le|x|\le1$, where it is much better than on the whole interval. The expression \eqref{eq:budget2} is
+negative on its domain when $c_2=4.29033$, and the analogous expression for the first case is negative
+when $c_1=4.21$.
+
+Combining this with Lemma~\ref{lem:quadrature}, a determinant $M_f$ with $m$ fixed columns contributes at
+most $(540000N)^m e^{(20c_2+17.913)Nm}$ times the unperturbed bound; the factor $5^m$ comes from expanding
+the row functions at the fixed points in the second case. Lemma~\ref{lem:expansion} then gives,
+for $|\delta|\le e^{-\rho N}$ with $\rho=20c_2+17.913=259299/2500$, a factor $(1+O(N^2))^{20N}=e^{o(N^2)}$.
+This proves Theorem~\ref{thm:real}, given the numerical bounds of the next two subsections; the
+constant $\eta_\infty$ comes from
+\[
+ 400\bigl(U_*-\tfrac12\log2-\mathsf A\bigr)=400U_*-\frac{8795}{12}-242\log2>\frac{5993}{3125},
+\]
+where $U_*$ is the energy bound at the real place given below, $\frac12\log2$ is the normalization of
+the determinant, and $\mathsf A$ is the constant of Proposition~\ref{prop:denominators}.
+
+\subsection{The trial sequences}\label{ssec:trials}
+For the first case we use a trial sequence with $40$ Chebyshev coefficients and a finite number of
+geometric terms, with an additional multiplier $\lambda=1.68493357$ for the constraint that defines the
+case. For the second case we use trial sequences of the form
+\begin{equation}\label{eq:trial}
+ u_k=c_k+\operatorname{Re}\sum_jr_jz_j^k\qquad(k\ge1;\ c_k=0\text{ for }k>K),
+\end{equation}
+with $K=640$ Chebyshev coefficients in $2^{-40}\Z$ and $56$ geometric terms, $22$ of them with complex
+$z_j$ and complex $r_j$.
+
+The geometric terms have a simple meaning. A term $(z,r)$ contributes
+$-\frac12\operatorname{Re}\,r\log(1-2xz+z^2)$ to the potential $T(u,x)$. If $x_0+i\epsilon=\frac12(z+z^{-1})$
+then $1-2xz+z^2=2z(x_0+i\epsilon-x)$, so the term is, up to a constant, the logarithmic potential of a point
+charge of complex strength $r$ at $x_0+i\epsilon$ and its conjugate. The extremal measure of the energy
+problem has a gap in its support around $x=0$, of radius about $0.1$, and its potential has a
+logarithmic singularity at $x=0$ and square-root behaviour at the edges of the gap. A Chebyshev expansion
+converges slowly near such points. A charge at a small distance $\epsilon$ from them reproduces the local
+behaviour with one term. We place the complex charges at $x_0\in\{0,\pm0.03,\pm0.06,\pm0.09,\pm0.12,\pm0.16\}$
+with $\epsilon\in\{10^{-2},3\cdot10^{-3}\}$; the numbers $z_j$ are rationals with twelve decimals. The norms
+of the geometric terms have closed forms: two terms $(z_j,r_j)$, $(z_l,r_l)$ contribute
+$-\frac12\operatorname{Re}\bigl(r_jr_l\log(1-z_jz_l)+r_j\bar r_l\log(1-z_j\bar z_l)\bigr)$.
+
+Without the complex terms, the same $640$ coefficients and the $34$ real geometric terms give, in a
+numerical optimization, no exponent below $728.5$.
+
+\subsection{Verification of the bounds}\label{ssec:cells}
+We must bound three functions of one variable from above on their whole domains: the field $X$ on
+$[-1,1]$, the field $Y$ on $[0,1]$, and the field at the fixed points on $g_0\le|x|\le1$. With $x=\cos\theta$,
+each is a constant plus a cosine series with $640$ terms plus finitely many terms
+$\operatorname{Re}\,w\log(1-ae^{im\theta})$.
+
+We cover each domain by intervals $[x_c-h,x_c+h]$ whose endpoints are multiples of $2^{-40}$, and on
+each interval bound the function by its Taylor expansion at $x_c$. The polynomial part has degree $639$,
+and a global bound for its fifth derivative would force very short intervals. Instead we compute the
+derivatives of the polynomial part exactly at $x_c$ up to order $70$, and bound only the remainder beyond
+order $70$ by a single global constant, which enters multiplied by $h^{70}/70!$. The logarithmic terms are
+expanded to order $5$, with remainders bounded from the exact minimum of $|1-ae^{im\theta}|$ on the
+interval. A few intervals at $x=0$ and $x=\pm1$ treat the singular terms separately. The covers have $598$,
+$435$ and $366$ intervals. Each interval is checked by exact rational and integer arithmetic.
+
+The resulting bounds are
+\[
+ \sup X\le-\frac{97745957}{10^8},\qquad \sup Y\le-\frac{156655368}{10^8},\qquad
+ \sup_{g_0\le|x|\le1}R\le-\frac{5247033}{10^8},
+\]
+the norms satisfy $2\|u\|^2+\frac12\|v\|^2\le\frac{24149189}{31250000}$, and the first coefficient satisfies
+$u_1\ge9/50$, which is used near $x=0$. These give the energy bound $U_*=141027507/62500000$ at the real place.
+
+The trial data are fixed once and for all; the file containing them has SHA-256 digest
+\begin{center}
+\texttt{6a055ec808510b5ff836a819aebc837ea1593f3c96263318ac2688a59659af02}.
+\end{center}

@@ -1,0 +1,238 @@
+\section{Divisibility of the coefficients}\label{sec:content}
+
+\subsection{The principle}
+Proposition~\ref{prop:denominators} uses, at each prime, only the poles of the individual entries.
+In the arithmetic method of Hata and Rhin--Viola one gains further by showing that all the
+coefficients of the linear forms share a large common factor. In our setting the analogue is the
+following. Let $p$ be a prime and write $\cA^0_{N,p}$ for the reduction modulo $p$ of $p^2\cA^0_N$,
+the matrix at the constant term $X=0$. If its rank is at most $20N-e$, then by
+Lemma~\ref{lem:rank-valuation} the determinant $\Delta_N(z)$ gains a factor $p^e$ at every rational
+$z$ for which the reduction of $p^2(\cA^0_N+z\cL_N)$ equals $\cA^0_{N,p}$; in particular at every
+integer $z$.
+
+A gain at the integers alone would only improve the denominator of $\Delta_N(a/b)$ for integer
+arguments. What we need is a gain in every coefficient of $Q_N$, because these coefficients are what
+the integer $b^{\deg Q_N}Q_N(a/b)$ is built from. For the primes considered below this follows from
+a second observation. Write $Q_N=\sum_jc_{N,j}X^j$, and let $p^{40N-s}$ be the exact power of $p$ in
+$D_N$. The matrix $p^2\cL_N$ is $p$-integral, so
+\[
+ Q_N(X/p^2)=(18N)!\,\frac{D_N}{p^{40N}}\det\bigl(p^2\cA^0_N+X\,\cL_N\bigr)
+\]
+has coefficients divisible by $p^{-s}$, and hence $p^{2j-s}\mid c_{N,j}$. On the other hand, since
+$p^2\cL_N\equiv0\pmod p$, the reduction of $p^2(\cA^0_N+z\cL_N)$ at an integer $z$ is $\cA^0_{N,p}$, so a
+rank deficiency $e$ gives $v_p(\Delta_N(z))\ge e-40N$ and $p^{e-s}\mid Q_N(z)$ for every integer $z$.
+In each of the intervals below $e\le2p$, so every coefficient with $j\ge p$ is divisible by $p^{e-s}$.
+The remaining part $\sum_{j<p}c_{N,j}X^j$ has degree less than $p$, and its values at $0,1,\ldots,p-1$
+are divisible by $p^{e-s}$; since the Vandermonde matrix of these points is invertible modulo $p$, all
+its coefficients are divisible by $p^{e-s}$. Thus a rank deficiency $e$ of the single reduced matrix
+$\cA^0_{N,p}$ gives the common factor $p^{e-s}$ of all the coefficients of $Q_N$. In the first and
+third intervals $s=0$; in the second $s=(26N-3p)_+$.
+
+We prove three such rank deficiencies, for the primes in the intervals
+\[
+ \Bigl(\frac{52N}9,\frac{44N}7\Bigr),\qquad(8N,9N),\qquad\Bigl(4N,\frac{9N}2\Bigr).
+\]
+They are disjoint, and all their primes exceed $2N$. In each case the deficiency is proved by
+exhibiting explicit vectors in the left kernel of $\cA^0_{N,p}$. The tools are the same throughout:
+the identities \eqref{eq:cheb-p} for Chebyshev polynomials modulo $p$, the relation
+$(1-X)^p=1-X^p$, and a description of the residues of $p^2$ times the entries of the matrix in terms
+of the digits in base $p$ of the coefficients of the row polynomials, which we now recall.
+
+Fix $p$ and write the raw columns (before the finite difference filter) as $j=Jp+\ell$ with
+$0\le\ell<p$. For a vector $c\in\F_p^{20N}$ put
+\[
+ P_c=\sum_rc_rP_r,\qquad D_c=\sum_rc_rD_r,\qquad W=(1-X^2)^{(p-1)/2}.
+\]
+Grouping OpenAI's formula for the entries by digits shows that the residue of $p^2$ times the raw entry
+in column $j$, applied to $c$, is a fixed linear combination of the coefficients
+$(XWP_c)[vp+\ell]$ and $D_c[vp+\ell]$, $v\ge0$, with constants independent of $c$ and $\ell$. Here
+$F[k]$ denotes the coefficient of $X^k$ in $F$. A vector $c$ whose responses vanish on all raw columns
+in the range $[3N,24N)$ lies in the left kernel of the filtered matrix.
+
+\subsection{The primes in $(52N/9,44N/7)$}\label{ssec:content1}
+For all $N\ge6310886697782126553600$ and all primes $52N/9<p<44N/7$,
+\begin{equation}\label{eq:rank1}
+ \operatorname{rank}\cA^0_{N,p}\le20N-e_N(p),\qquad
+ e_N(p)=\max\Bigl(0,\min\Bigl(\Bigl\lfloor\frac{9p-52N}2\Bigr\rfloor,
+                  \Bigl\lfloor\frac{44N-7p}2\Bigr\rfloor\Bigr)\Bigr),
+\end{equation}
+The threshold on $N$ guarantees that no prime of the interval divides the denominators of the finitely many
+rational constants used in the construction below.
+
+Here the kernel vectors are built from rational differentials on the conic $x=(z+z^{-1})/2$,
+$s=(z-z^{-1})/2$. In this parametrization the source of each raw column is the coefficient of a
+Laurent expansion: with
+\[
+ \Phi(z)=\frac{z^{26N}(z-1)^{2N}}{(1+z^2)^{27N}},
+\]
+the raw entry in column $j=Jp+\ell$ is, up to a fixed factor, the residue at $z=0$ of
+$\Phi(z)\,x^\ell a_J(x)^p$, where $a_J$ is a fixed polynomial expression in OpenAI's moment coefficients of
+the column digit $J$. A row combination is encoded by a differential $(U+sV)\,dz/z$, and its response
+to the digit $J$ is the coefficient of $x^5$ in an explicit quadratic expression in $U$, $V$ and the
+moment polynomials. We use a basis of six regular differentials and one differential with a double
+pole at $z=0$, and five combinations of them whose responses to the digits $J=0,\ldots,4$ are known
+exactly; the $5\times7$ response matrix has rational entries and a nonzero $4\times4$ minor
+$46085/1769472$.
+
+For five polynomial inputs $I_i$ of degree less than $p$ we form, using the Frobenius map, the
+polynomial
+\[
+ K=(z-1)^p\,\mathcal T H_U+(z+1)^p\,\mathcal T H_V,\qquad
+ H_U=\sum_iU_i^pI_i,\quad H_V=\sum_iV_i^pI_i,
+\]
+where $\mathcal T$ is the substitution $x=(1+z^2)/(2z)$ cleared of denominators. Under a list of
+divisibility conditions on $H_U$ and $H_V$ at $x=0$ and $x=\pm1$, and one degree condition, $K$ is
+divisible by a fixed polynomial $T$ of large degree, and $K/T$ has degree less than $20N$; its
+coefficients form a row combination $c$. The map from the inputs to $c$ is injective: the involution
+$z\mapsto z^{-1}$ separates the two channels $U$ and $V$, and the Frobenius map separates the
+coefficients of the inputs.
+
+The responses of this row combination are computed directly from the identity
+\[
+ [x^{6p-1-\ell}]\bigl(H(x)^pI(x)\bigr)=[x^5]H\cdot[x^{p-1-\ell}]I\qquad(\deg I<p),
+\]
+which shows that the response at column $Jp+\ell$ is a fixed multiple of the coefficient of
+$x^{p-1-\ell}$ in the input. We take one input $F$ with $(x-1)^{p-N}\mid F$, whose coefficients
+$[x^{p-1-\ell}]F$ are the values $\omega(\ell)$ of a polynomial $\omega$ of degree less than $N$; the finite difference
+of order $N$ in the column filter annihilates them. The other inputs are chosen to satisfy the
+divisibility conditions at $x=0$, and their responses fall on raw columns outside the range
+$[3N,24N)$. Counting the dimension of the space of inputs against the number of linear conditions,
+separately for $p=6N+\delta$ with $\delta>0$ and for $p=6N-d$, gives a kernel of dimension at least
+$N-(7\delta+1)/2$ and $N-(9d+1)/2$ respectively. These are the two expressions in \eqref{eq:rank1}.
+
+\subsection{The primes in $(8N,9N)$}\label{ssec:content2}
+\begin{theorem}\label{thm:u3}
+Let $N\ge1$ and let $p$ be a prime with $8N<p<9N$. Then the left kernel of $\cA^0_{N,p}$ has dimension
+at least $18N-2p-1$.
+\end{theorem}
+
+The row polynomials of our determinant are $P_r=(1-X)^N\,\mathrm{rev}(T_{|m|})$ and
+$D_r=\operatorname{sgn}(m)(1-X)^N\,\mathrm{rev}(U_{|m|-1})$, where $m=r-2N$ and $\mathrm{rev}$ reverses
+the coefficients inside degree $26N-1$. Write $\nu=(p+1)/2$. The first ingredient is a reflection
+formula for Chebyshev polynomials modulo $p$.
+
+\begin{lemma}\label{lem:u3-reflect}
+Let $p$ be an odd prime. In $\F_p[X]$, for every integer $m$,
+\[
+ T_{p-m}=X^pT_m-(X^2-1)^{\nu}\,U_{m-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+Both sides satisfy the three-term recurrence in $m$, so it suffices to check $m=0$ and $m=1$. This
+needs \eqref{eq:cheb-p}. The second identity there follows from the Pell equation
+$T_n^2-(X^2-1)U_{n-1}^2=1$ at $n=p$, together with $(X^2-1)^p=X^{2p}-1$; one cancels $X^2-1$ and
+compares leading coefficients. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and $T_{p-1}=2XT_p-T_{p+1}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:u3}]
+Reflecting the identity of Lemma~\ref{lem:u3-reflect} at degree $p+26N$ gives, for each row,
+\[
+ (1-X^2)^\nu\,\mathrm{rev}(U_{m-1})-X\,\mathrm{rev}(T_m)=-X^{p+1}\,\mathrm{rev}(T_{p-m}),
+\]
+and the right side is divisible by $X^{24N}$ because $|p-m|\le p+2N$. Hence, for every $c$,
+\begin{equation}\label{eq:identityK}
+ X^{24N}\mid(1-X^2)^\nu D_c-XP_c .
+\end{equation}
+
+Let $V$ be the space of $c$ with $(1-X^2)^\nu\mid P_c$. Since $(1-X)^N$ divides every $P_r$, this is
+$\nu-N$ conditions at $X=1$ and $\nu$ conditions at $X=-1$, that is $p+1-N$ linear conditions. For
+$c\in V$ write $P_c=(1-X^2)^\nu Y$ and $\widetilde Q=XY$. Since $(1-X^2)^p=1-X^{2p}$ in characteristic $p$,
+\[
+ XWP_c=(1-X^{2p})\,\widetilde Q .
+\]
+The polynomial $P_c$ has no coefficients below $X^{8N}$ and none from $X^{27N}$ on, so $\widetilde Q$ is
+supported in degrees $[8N+1,27N-p-1]$, and dividing \eqref{eq:identityK} by the unit $(1-X^2)^\nu$ modulo
+$X^{24N}$ gives $D_c[k]=\widetilde Q[k]$ for $k<24N$.
+
+Now let $27N-3p\le\ell<24N-2p$. By the support of $\widetilde Q$, the base-$p$ digits of $XWP_c$ at
+the residue $\ell$ are $(0,\kappa,0,-\kappa,0,\ldots)$ with $\kappa=\widetilde Q[p+\ell]$, and those of $D_c$
+are $(0,\kappa,0,0,\ldots)$. So for $c\in V$ the response at every raw column $Jp+\ell$ in this range of
+residues is $\kappa$ times a constant depending only on $J$: these columns have rank at most one on $V$.
+
+For $p\in(8N,9N)$ the raw columns $j\in[3N,24N)$ with residue $\ell$ have $J\in\{1,2\}$ if
+$\ell<27N-3p$, $J\in\{0,1,2\}$ if $27N-3p\le\ell<24N-2p$, and $J\in\{0,1\}$ if $24N-2p\le\ell<p$.
+The number of linear conditions needed to make all responses vanish on $V$ is therefore
+\[
+ 2(27N-3p)+(p-3N)+2(3p-24N)=3N+p .
+\]
+Together with the $p+1-N$ conditions defining $V$ this is $2p+2N+1$ conditions, and the space of
+solutions has dimension at least $20N-(2p+2N+1)=18N-2p-1$.
+\end{proof}
+
+For these primes the normalizer has $p$-exponent $40N-(26N-3p)_+$, so after the rescaling $X\mapsto
+X/p^2$ one obtains $p^{e}\mid c_{N,j}$ for all $j$ with
+\[
+ e=e_N(p)=\min(p-8N-1,\;18N-2p-1)_+ .
+\]
+
+\subsection{The primes in $(4N,9N/2)$}\label{ssec:content3}
+\begin{theorem}\label{thm:u6}
+Let $N\ge1$ and let $p$ be a prime with $4N<p$ and $2p<9N$. Then the left kernel of $\cA^0_{N,p}$ has
+dimension at least $(p-4N-1)/2$.
+\end{theorem}
+
+Unlike Theorem~\ref{thm:u3}, where the conditions are imposed on the row polynomials, here the
+argument concerns a block of columns. Put $d=p-4N$, which is odd, and $e=(d+1)/2$; the hypothesis
+$2p<9N$ means $2d<N$. Write $S_c=\sum_rc_r\,\mathrm{rev}(T_{m_r})$ and
+$U_c=\sum_rc_r\,\mathrm{rev}(U_{m_r-1})$, so that $P_c=(1-X)^NS_c$, and put
+\[
+ \widehat Q_c=(X-1)^N\,XW\,(1-X)^NS_c,\qquad \widehat D_c=(X-1)^N(1-X)^NU_c .
+\]
+
+\begin{proof}
+\emph{An identity.} Over any commutative ring, $U_{m-1}T_n-T_mU_{n-1}=U_{m-n-1}$, since both sides
+satisfy the recurrence in $n$ and agree for $n=0,1$. In characteristic $p$ take $m=2p$ and use
+\eqref{eq:cheb-p}, $T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}$:
+\[
+ 2X^p(X^2-1)^{(p-1)/2}T_n-(2X^{2p}-1)U_{n-1}=U_{2p-n-1}.
+\]
+Reflecting at degree $2p+26N-1$ and using $p\ge4N$, the right side becomes divisible by $X^{24N}$.
+Summing over the rows with weights $c_r$ and multiplying by $(X-1)^N(1-X)^N$ gives
+\begin{equation}\label{eq:K6}
+ 2\,\widehat Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p]\qquad(i<24N).
+\end{equation}
+
+\emph{A block of columns.} Let $M=[p-7d,p-6d)$ and consider the $5d$ filtered columns
+$k(J,\mu)=Jp+\mu-4N$ for $1\le J\le5$ and $\mu\in M$. Each is the filter of order $N$ applied to raw
+columns $Jp+(\mu-N+v)$, $0\le v\le N$, which all have the same digit $J$ because $N<\mu<p$ (this is where
+$2d<N$ is used). Since the alternating binomial sum $\sum_v(-1)^v\binom Nv a_{m+v}$ is the coefficient of
+$X^{m+N}$ in $(X-1)^N\sum_ia_iX^i$, the response of the column $k(J,\mu)$ is a fixed linear
+combination of the coefficients $\widehat Q_c[up+\mu]$ and $\widehat D_c[up+\mu]$.
+
+\emph{Supports.} The polynomials $\widehat Q_c$ and $\widehat D_c$ have no coefficients up to $X^{8N}$,
+and $\deg\widehat Q_c\le28N+p-1$, $\deg\widehat D_c\le28N-1$. For $\mu\in M$ only the digits
+$u=2,\ldots,6$ of $\widehat Q_c$ and $u=2,\ldots,5$ of $\widehat D_c$ can be nonzero, and for these
+$u\le5$ the relation \eqref{eq:K6} expresses $\widehat D_c[up+\mu]$ through $\widehat Q_c$. Hence the block
+columns vanish on $c$ as soon as $\widehat Q_c[up+\mu]=0$ for $2\le u\le6$ and $\mu\in M$.
+
+\emph{A relation from the Frobenius map.} Since $(1-X)^p=1-X^p$ and $2N+\frac{p-1}2+e=p$,
+\[
+ (1-X)^e\,\widehat Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^NX(1+X)^{(p-1)/2}S_c .
+\]
+Comparing coefficients at $X^{up+\mu}$ and summing over $u=2,\ldots,6$, the right side telescopes to
+$Y_c[6p+\mu]-Y_c[p+\mu]$, which vanishes for $\mu\ge p-7d+e$. This gives $(d-1)/2$ linear relations among
+the numbers $\widehat Q_c[up+\mu]$, and they are triangular in $\mu$.
+
+\emph{Counting.} Impose on $c$ that the $20N-5d$ filtered columns outside the block vanish, that
+$\widehat Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$, and that $\widehat Q_c[6p+\mu]=0$ for the first $e$
+values of $\mu$. By the triangular relations the remaining coefficients $\widehat Q_c[6p+\mu]$ vanish
+too, so every block column vanishes. This is $20N-5d+4d+e=20N-(d-1)/2$ conditions, and the left kernel
+has dimension at least $(d-1)/2$.
+\end{proof}
+
+For these primes the normalizer has the full exponent $40N$, and the rank deficiency gives
+$p^{e_N(p)}\mid c_{N,j}$ for all $j$, with $e_N(p)=\lfloor(p-4N-1)/2\rfloor$.
+
+\subsection{The common factor}
+Let $\Omega_N$ be the product of $p^{e_N(p)}$ over the primes of the three intervals. All coefficients of
+$Q_N$ are divisible by $\Omega_N$, and so is $Q_N(a/b)$ after multiplication by $b^{18N}$. The exponents
+are $N$ times piecewise linear functions of $p/N$, up to $O(1)$: a function of area $16/63$ on
+$[52/9,44/7]$, the function $\max(0,\min(x-8,18-2x))$ of area $1/3$ on $[8,9]$, and $(x-4)/2$ of area
+$1/16$ on $[4,9/2]$. By \eqref{eq:weighted-pnt},
+\[
+ \log\Omega_N\ge(\chi-o(1))N^2,\qquad
+ \chi=\frac{507}{2000}+\frac{3331}{10000}+\frac{624}{10000}=0.649 ,
+\]
+where each fraction is slightly less than the corresponding area. All the primes involved exceed $2N$,
+so the factor $\Omega_N$ does not interfere with the prime squares used in Section~\ref{sec:proof}.

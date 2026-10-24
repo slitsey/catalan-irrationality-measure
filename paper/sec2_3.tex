@@ -1,0 +1,196 @@
+\section{OpenAI's construction}\label{sec:setup}
+
+We recall the construction of \cite{OpenAI2026} in the generality in which we use it. It depends on
+positive integers $n,b,q,g,h$ and $L,C,H,A$, all proportional to $N$; OpenAI's choice is
+$n=48N$, and ours is given in Section~\ref{sec:twenty}. For $0\le r<n$ the row polynomials are
+\begin{equation}\label{eq:rows}
+ P_r(t)=(1-t)^ht^{C-1}T_{|r-g|}(1/t),\qquad \deg P_r<H,
+\end{equation}
+together with companion polynomials $D_r$ built from $U_{|r-g|-1}$ \cite[(3)]{OpenAI2026}. Thus
+$P_r$ depends only on $|r-g|$. Put $f(t)=\sqrt{1-t^2}$ and $d\mu(t)=|t|\,dt/f(t)$ on $(-1,1)$, and
+\[
+ A_r(t)=P_r(t)-\frac32\,\mathbf 1_{\{t>0\}}\frac{f(t)}{t}D_r(t),\qquad
+ \psi_k(s)=s^{b+k}(1-s)^q .
+\]
+The determinant studied by OpenAI is that of the $n\times n$ matrix
+\begin{equation}\label{eq:matrix}
+ \cA_N(r,k)=\int_{-1}^1\int_0^1 A_r(t)\,\frac{\psi_k(s)}{1-ts}\,ds\,d\mu(t)
+ \qquad(0\le r,k<n).
+\end{equation}
+The factor $(1-s)^q$ in $\psi_k$ amounts to a finite difference of order $q$ applied to the columns.
+The entries are rational linear combinations of $1$ and $G$: there are rational matrices $\cA^0_N$
+and $\cL_N$ with
+\begin{equation}\label{eq:L}
+ \cA_N=\cA^0_N+G\,\cL_N,\qquad
+ \cL_N(r,k)=\sum_{v=0}^{q}(-1)^v\binom qv\sum_{i}[t^i]P_r\cdot4\,c_{(i-b-k-v)/2},
+\end{equation}
+where $c_l=4^{-l}\binom{2l}{l}$ for integers $l\ge0$ and $c_z=0$ otherwise
+\cite[Prop.~2.1 and (20)]{OpenAI2026}.
+
+OpenAI's proof has three parts, and we use all of them.
+
+\emph{The finite places.} For every rational $z$ and every prime $\ell$, OpenAI bounds
+$v_\ell\det(\cA^0_N+z\cL_N)$ from below in terms of $\ell$, $N$ and the denominator of $z$
+\cite[Prop.~2.2, \S3]{OpenAI2026}. The proof groups the coefficients of the row polynomials by their
+digits in base $\ell$ and uses the $\ell$-adic valuations of the moments of $\mu$ and of the
+numbers $c_l$.
+
+\emph{Nonvanishing.} For a large prime $p$ and $N=p$, the matrix $p^2(\cA^0_p+z\cL_p)$ has
+$p$-integral entries when $p\nmid\operatorname{den}z$, and its reduction modulo $p$ does not depend on
+$z$ and is invertible \cite[Prop.~4.1]{OpenAI2026}. Hence the determinant is nonzero and its
+$p$-adic valuation is known exactly. OpenAI states this under the hypothesis $G=z$, but the proof uses
+only the arithmetic of the rational matrix $\cA^0_p+z\cL_p$, and only the condition
+$p\nmid\operatorname{den}z$. This uniformity in $z$ is what makes a measure possible.
+
+\emph{The real place.} The entries \eqref{eq:matrix} are double integrals against the Cauchy kernel
+$1/(1-ts)$. By Andr\'eief's identity the determinant is an integral over $n$ points $t_i\in(-1,1)$ and
+$n$ points $s_j\in(0,1)$ of a product of three determinants, one of which is the Cauchy determinant
+$\det[1/(1-t_is_j)]$. After the change of variables $t=2x/(1+x^2)$, OpenAI bounds the integrand by the
+exponential of $n^2$ times a discrete logarithmic energy of the points $x_i$ and $s_j$
+\cite[\S5]{OpenAI2026}. The maximum of this energy is bounded by a dual argument: two trial sequences
+are chosen, two squares are completed, and the resulting functions of one variable are bounded above
+by an explicit computation \cite[Prop.~6.1, \S7]{OpenAI2026}. We describe this in
+Section~\ref{sec:real}, where we extend it.
+
+\section{The determinant of size $20N$}\label{sec:twenty}
+
+\subsection{The parameters}
+We use OpenAI's construction with
+\[
+ n=20N,\quad b=3N,\quad q=N,\quad g=2N,\quad h=N,\qquad
+ L=24N,\quad C=26N,\quad H=27N,\quad A=8N ,
+\]
+and write
+\[
+ \Delta_N(X)=\det(\cA^0_N+X\cL_N)\in\Q[X],
+\]
+so that $\Delta_N(G)=\det\cA_N$. These parameters were found by a search over OpenAI's family, scored
+by the margin between the constants at the real place and at the finite places; the search is not
+part of the proof.
+
+\subsection{The degree}
+\begin{lemma}\label{lem:degree}
+$\deg\Delta_N\le18N$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:L} the row $r$ of $\cL_N$ depends only on $P_r$, and hence only on $|r-g|$. So the rows
+$r$ and $2g-r$ of $\cL_N$ agree for $0\le r<g$. Subtracting row $r$ from row $2g-r$ for each $r<g$ does
+not change the determinant and makes $g$ rows of the new coefficient of $X$ vanish. A determinant
+$\det(B+XL')$ in which $L'$ has $n-g$ nonzero rows has degree at most $n-g=18N$ in $X$.
+\end{proof}
+
+\subsection{Rank deficiency and valuation}
+We use repeatedly the following elementary fact.
+
+\begin{lemma}\label{lem:rank-valuation}
+Let $M$ be an $n\times n$ matrix with entries in $\Z_{(p)}$ whose reduction modulo $p$ has rank at most
+$n-e$. Then $v_p(\det M)\ge e$.
+\end{lemma}
+
+\begin{proof}
+Factor the reduction through $\F_p^{n-e}$ and lift the two factors to integral matrices $U,V$, so that
+$M=UV+pE$ with $E$ integral at $p$. Expanding the determinant multilinearly in the columns, every term
+that uses more than $n-e$ columns of $UV$ vanishes, and every other term has at least $e$ factors $p$.
+\end{proof}
+
+\subsection{The denominators}
+For an odd prime $p$ with $27N<p^2$, the method of \cite[\S3]{OpenAI2026}, applied to the present
+parameters, gives
+\[
+ v_p\bigl(\Delta_N(z)\bigr)\ge-N\,\varphi(p/N)
+\]
+for every rational $z$ whose denominator is prime to $p$, where
+\[
+ \varphi(x)=\begin{cases}
+ 40&0\le x\le10,\\
+ 60-2x&10\le x\le12,\\
+ 36&12\le x\le27/2,\\
+ 63-2x&27/2\le x\le14,\\
+ 91-4x&14\le x\le16,\\
+ 75-3x&16\le x\le24,\\
+ 27-x&24\le x\le27,\\
+ 0&x\ge27.
+ \end{cases}
+\]
+For each range of $p/N$, the function $\varphi$ counts the columns whose entries have a pole at $p$, once
+the coefficients of the row polynomials are grouped by their digits in base $p$ and the column filter
+is taken into account. The bound holds for the determinant itself and not only for a majorant of it.
+
+Modulo $p$, some rows become linearly dependent, and by Lemma~\ref{lem:rank-valuation} this raises
+the valuation. For primes with $22N/3<p<26N/3$, three groups of rows satisfy an exact linear relation
+after reduction. The relation follows from the identities
+\begin{equation}\label{eq:cheb-p}
+ T_p(Y)=Y^p,\qquad U_{p-1}(Y)=(Y^2-1)^{(p-1)/2}\qquad\text{in }\F_p[Y],
+\end{equation}
+together with a rational identity between OpenAI's moment coefficients. This gives an additional
+saving $N\,\gamma(p/N)$, where
+\[
+ \gamma(x)=3(x-22/3)_+-6(x-8)_++3(x-26/3)_+
+\]
+is supported on $[22/3,26/3]$, where $\varphi=40$.
+
+We use the prime number theorem in the weighted form
+\begin{equation}\label{eq:weighted-pnt}
+ \frac1N\sum_{p}F(p/N)\log p\longrightarrow\int_0^\infty F(x)\,dx\qquad(N\to\infty),
+\end{equation}
+for bounded, Riemann integrable, compactly supported $F$. Since each prime contributes
+$N(\varphi-\gamma)(p/N)\log p$, the odd primes contribute
+\[
+ N^2\int_0^{27}(\varphi-\gamma)(x)\,dx=\frac{8795}{4800}(20N)^2
+\]
+to the logarithm of the common denominator, up to $o(N^2)$; the primes $p\le\sqrt{27N}$ contribute
+$o(N^2)$.
+
+At the prime $2$ the bound comes from the expansion of the determinant into minors. Its exponent is
+governed by a quadratic form in the numbers $m,\ell$ of columns of two exceptional types, and the
+identity
+\begin{multline*}
+ \tfrac32m^2+\tfrac12\ell^2-50Nm-26N\ell+520N^2+42N^2\\
+ =2(m-11N)^2+(20N-m-\ell)(6N+m)+\tfrac12(20N-m-\ell)^2
+\end{multline*}
+shows that this form is at least $-42N^2$ when $m,\ell\ge0$ and $m+\ell\le20N$. This gives the
+$2$-adic contribution $\frac{21}{200}\log2\cdot(20N)^2$.
+
+\begin{proposition}\label{prop:denominators}
+There are positive integers $D_N$ such that $D_N\Delta_N(i)\in\Z$ for every integer $i$, and, for
+every $\varepsilon>0$ and all large $N$,
+\[
+ \log D_N\le(\mathsf A+\varepsilon)(20N)^2,\qquad
+ \mathsf A=\frac{8795}{4800}+\frac{21}{200}\log2 .
+\]
+\end{proposition}
+
+\begin{proof}
+At an integer $z=i$ the local bounds above do not depend on $i$; at $p=2$ the bound is weakest at
+$z=0$. Let $D_N$ be the product of the primes raised to these exponents. The estimate for $\log D_N$
+is the sum of the contributions computed above.
+\end{proof}
+
+The polynomial $\Delta_N$ has degree at most $18N$ and takes values in $D_N^{-1}\Z$ at the
+integers. An integer-valued polynomial of degree $d$ has coefficients in $\frac1{d!}\Z$, so
+\begin{equation}\label{eq:QN}
+ Q_N=(18N)!\,D_N\,\Delta_N(X)\in\Z[X],\qquad \deg Q_N\le18N,
+\end{equation}
+and $\log(18N)!=o(N^2)$.
+
+\subsection{Nonvanishing}
+\begin{proposition}\label{prop:nonvanishing}
+For all large primes $p$ and every rational $z$ such that $pz$ has denominator prime to $p$,
+$\Delta_p(z)\ne0$. In particular $Q_p(a/b)\ne0$ whenever $a\in\Z$, $b\ge1$ and $p^2\nmid b$.
+\end{proposition}
+
+\begin{proof}
+For the present parameters OpenAI's reduction modulo $p$ involves a rational base matrix $B$ with $21$
+rows and $20$ columns, and the three $20\times20$ matrices with rows $B_r+\sigma B_{r+1}$, for
+$\sigma\in\{0,1,-1\}$, are invertible; this is checked by computing their inverses modulo the prime
+$1009$, which shows that their determinants are nonzero rational numbers.
+OpenAI's argument then shows that the reduction of $p^2(\cA^0_p+z\cL_p)$ modulo $p$ is invertible for
+all large primes $p$ when $p\nmid\operatorname{den}z$. If only $pz$ has denominator prime to $p$, the
+difference $p^2z\cL_p$ from the matrix at $z=0$ is still $p$-integral with zero reduction, because the
+numbers $c_l$ have denominators that are powers of $2$; so the reduction is again that of the matrix at
+$z=0$. If $p^2\nmid b$, then $p(a/b)$ has denominator prime to $p$.
+\end{proof}
+
+The computations modulo $1009$ certify the base matrices; the conclusion for all large primes is a
+theorem and not an extrapolation from finitely many cases.

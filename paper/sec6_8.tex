@@ -1,0 +1,152 @@
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+\subsection{The usual criterion}
+We first recall the standard way of passing from the three properties of the polynomials $Q_N$ to a
+measure, to explain where the remaining ideas enter.
+
+\begin{proposition}\label{prop:criterion}
+Let $\xi\in\R$, $d\in\N$ and $\eta,\rho>0$, and let $Q_p\in\Z[X]$ be polynomials, indexed by primes $p$,
+such that for all large $p$: $\deg Q_p\le dp$; $Q_p(a/b)\ne0$ whenever $p\nmid b$; and
+$|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$. Then for every $\varepsilon>0$,
+$\mu(\xi)\le(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)$ for every $c>1$.
+\end{proposition}
+
+\begin{proof}
+Let $|\xi-a/b|$ be small and $X=\max(d/\eta,c/\varepsilon)\log b$. By the prime number theorem
+$\theta((1+\varepsilon)X)-\theta(X)=\varepsilon X+o(X)>\log b$, so some prime $p\in(X,(1+\varepsilon)X]$ does not
+divide $b$. If $|\xi-a/b|\le b^{-(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)}$, then $|\xi-a/b|\le e^{-\rho p}$
+and the nonzero integer $b^{dp}Q_p(a/b)$ has absolute value at most $b^{dp}e^{-\eta p^2}<1$, since
+$p>X\ge(d/\eta)\log b$.
+\end{proof}
+
+The loss $\max(d/\eta,c/\varepsilon)$ instead of $d/\eta$ is the cost of finding a prime that does not divide
+$b$ in a short interval. We now remove it, using the two remaining properties of $Q_N$: the
+nonvanishing under $p^2\nmid b$ (Proposition~\ref{prop:nonvanishing}) and the divisibility of the
+coefficients by prime squares.
+
+\subsection{Prime squares in the coefficients}
+\begin{lemma}\label{lem:recycling}
+For all large $N$ and every prime $N<q\le2N$, the $j$-th coefficient of $Q_N$ is divisible by $q^{2j}$.
+\end{lemma}
+
+\begin{proof}
+For these primes the matrices $q^2\cA^0_N$ and $\cL_N$ are $q$-integral, and $q^{40N}$ divides $D_N$. The
+identity
+\[
+ Q_N(X/q^2)=(18N)!\,\frac{D_N}{q^{40N}}\det\bigl(q^2\cA^0_N+X\cL_N\bigr)
+\]
+shows that $Q_N(X/q^2)$ has $q$-integral coefficients; its $j$-th coefficient is $c_{N,j}/q^{2j}$.
+\end{proof}
+
+Consequently, if $B$ is a product of squares $q^2$ of distinct primes $N<q\le2N$ with $B\mid b$, then every
+term $c_{N,j}a^jb^{18N-j}$ of $b^{18N}Q_N(a/b)$ is divisible by $B^{18N}$, and
+\begin{equation}\label{eq:recycled}
+ 1\le\Bigl(\frac bB\Bigr)^{18N}\Bigl|\frac{Q_N(a/b)}{\Omega_N}\Bigr|\qquad\text{whenever }Q_N(a/b)\ne0 .
+\end{equation}
+Here we have also divided by the common factor $\Omega_N$ of Section~\ref{sec:content}, whose primes exceed
+$2N$ and therefore do not meet $B$.
+
+\subsection{The choice of the prime}
+Put
+\[
+ \rho=\frac{259299}{2500},\qquad
+ \eta=\eta_\infty+\chi=\frac{5993}{3125}+\frac{649}{1000}=\frac{64169}{25000},\qquad
+ k=\frac{728}{\rho}=\frac{1820000}{259299},\qquad\delta_0=10^{-7}.
+\]
+By Theorem~\ref{thm:real} and Section~\ref{sec:content}, the integer polynomials $\widetilde Q_N=Q_N/\Omega_N$
+satisfy $|\widetilde Q_N(x)|\le e^{-(\eta-o(1))N^2}$ for $|x-G|\le e^{-\rho N}$; their degree is at most
+$18N$, and they do not vanish at $a/b$ for $N=p$ prime with $p^2\nmid b$.
+
+Let $a/b$ be a rational number with $b$ large, put $L=\log b$, $U=kL$ and $V=(k-1)L$, and suppose
+$|G-a/b|\le b^{-728}$. By the prime number theorem, $(1-\delta_0)t\le\theta(t)\le(1+\delta_0)t$ for all large
+$t$. If every prime $p\in(V,U]$ had $p^2\mid b$, then $2(\theta(U)-\theta(V))\le L$; but
+\[
+ 2\bigl(\theta(U)-\theta(V)\bigr)\ge2L\bigl(1-\delta_0(2k-1)\bigr)>L .
+\]
+Let $p$ be the \emph{largest} prime in $(V,U]$ with $p^2\nmid b$. Every prime $q\in(p,U]$ has $q^2\mid b$, and
+$q\le U<2V<2p$ because $k>2$. Let $B$ be the product of these $q^2$, so that $\log B=2T$ with
+$T=\theta(U)-\theta(p)\ge U-p-2\delta_0U$.
+
+Since $\rho p\le\rho U=728L$, we have $|a/b-G|\le e^{-\rho p}$, and \eqref{eq:recycled} with $N=p$ gives
+$\eta p^2\le18p(L-2T)+o(p^2)$. Hence
+\[
+ \eta p\le18\bigl(L-2U+2p+4\delta_0U\bigr)+o(p).
+\]
+As $\eta<36$, the left side minus $36p$ decreases in $p$, and $p\le U=kL$ gives
+\[
+ \eta k\le18+72\delta_0k+o(1).
+\]
+But
+\[
+ \eta k-18-72\delta_0k=\frac{513512}{32412375}>0,
+\]
+a contradiction. This proves Theorem~\ref{thm:main}.
+
+The choice of the largest admissible prime is what makes the selection free: the primes of the interval
+that are not admissible have their squares in $b$, and these squares are recovered from the
+coefficients through Lemma~\ref{lem:recycling}. In the limit $\delta_0\to0$ the argument gives the exponent
+\[
+ \frac{18\rho}{\eta}=\frac{46673820}{64169}=727.357\ldots .
+\]
+
+\section{Limits of the method}\label{sec:limits}
+
+The exponent is determined by three numbers: the degree $18$, the margin $\eta$ and the perturbation
+exponent $\rho$. The margin is the sum of the difference between the real and the finite places and the
+contribution $\chi$ of the common factor. The perturbation exponent is the cost $20c_2$ of a fixed column
+plus the logarithmic size $17.913$ of the quadrature weights.
+
+Within the framework of Section~\ref{sec:real}, with the gap radius $g_0=401/2500$, the weight $17.913$ and the
+exponent $\chi=0.649$ of the common factor fixed, the integer $728$ is close to optimal. A weak dual certificate on $934$
+rational intervals, verified in interval arithmetic at $60$ and $80$ digits, shows that no pair of trial
+sequences gives an integer exponent $B\le726$ in this framework; its margin is $3.5\cdot10^{-6}$ at $B=726$
+and $-5.3\cdot10^{-6}$ at $B=727$, and finer subdivisions approach $726.5$. This computation is not part of
+the formal proof, and it says nothing about $\mu(G)$ itself. Further progress requires new arithmetic,
+which enlarges $\chi$ or reduces the degree, or a better treatment of the fixed columns, which reduces $\rho$.
+
+\section{Formalization}\label{sec:formal}
+
+All results of this paper are formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, on top of
+OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The development is available at
+\begin{center}
+\FormalizationLink.
+\end{center}
+The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
+written as the series $\sum_j(-1)^j/(2j+1)^2$; its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the command
+\lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
+\lean{Quot.sound}. The file \lean{comparator.json} is a configuration for \lean{lake comparator}
+\cite{Comparator} stating that \lean{Solution} proves the statement of \lean{Challenge} with these axioms
+only. We have not run Comparator, which requires Linux; the axiom check above was done with
+\lean{\#print axioms}.
+The prime number theorem is taken from the PNT+ project \cite{PNTPlus}.
+
+The proof combines conventional formal proofs with numerical certificates checked by the Lean kernel:
+the inverses of the base matrices modulo $1009$, the response matrices of Section~\ref{ssec:content1}, the
+cover of Lemma~\ref{lem:quadrature}, the trial sequences of Section~\ref{ssec:trials} and the covers of
+Section~\ref{ssec:cells}. All are exact rational or integer computations, decided by the kernel without
+compiled code. Large certificates are split into many small declarations with explicit intermediate
+values. Where a recurrence produces integers divisible by large powers of $2$, as the Chebyshev and Clenshaw
+recurrences do, the certificates run on the quotients by these powers, with one lemma relating the two. The
+interval arithmetic used to generate the trial data and the covers \cite{Arb} is not trusted: Lean
+rechecks every inequality.
+
+The parts of OpenAI's formalization that are used were converted to Lean's module system and ported to
+Lean \texttt{v4.35.0-rc2}; the repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
+
+\section*{Disclosure of AI use}
+
+The mathematics, the Lean formalization, the numerical computations and certificate generators, the
+literature search and the text of this paper were produced by AI systems at the request of the author, who
+posed the problem, directed the work, and is responsible for this paper. Claude Opus~5.5 and Claude
+Sonnet~5.5 (Anthropic) produced the measure framework and the perturbation estimate by quadrature
+(Section~\ref{sec:real}), the rank deficiencies of Theorems~\ref{thm:u3} and~\ref{thm:u6} with their
+consequences for the coefficients, the trial sequences with complex terms and the verification of
+Section~\ref{ssec:cells}, the final assembly, and the corresponding Lean proofs. OpenAI Codex produced the
+determinant of size $20N$ with its local arithmetic and nonvanishing, the energy estimates with fixed
+columns and the fields for the first case, the quadrature nodes avoiding the gap and the bound of
+Lemma~\ref{lem:quadrature}, the divisibility of the coefficients by prime squares and the choice of the
+largest admissible prime, the rank deficiency of Section~\ref{ssec:content1}, and the corresponding Lean
+proofs. The underlying irrationality proof and its formalization are OpenAI's \cite{OpenAI2026}.
+
+\subsection*{Acknowledgements}
+We thank the authors of Mathlib and of the PNT+ project, and OpenAI for making its formalization available.
