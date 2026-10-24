@@ -11,8 +11,7 @@ public import Mathlib.Tactic.NormNum.Prime
 /-!
 # D58: the final statement block (both banks)
 
-`measure_592_of_delta_small` (bank K160, `B = 592`) and `measure_590_of_delta_small` (bank K640,
-`B = 590`) are `measure_of_design` for the displaced design `(58, 9, 3, 5, 3)`: the payments of
+`measure_590_of_delta_small` (bank K640, `B = 590`) is `measure_of_design` for the displaced design `(58, 9, 3, 5, 3)`: the payments of
 `D58.Pay` (window parameter `w = 3/4`), the normalizer `Znorm` with its denominator growth
 `gD58` (odd profile `f58`, gain windows `segs`, 2-adic constant `2673/8`) and the decay rate
 `tΔ = (target - log 2 / 2) · 58²` supplied by the field/certificate layer.
@@ -47,38 +46,14 @@ theorem nonvanishing_d58 (c3 : C3) :
 theorem n0_sub_g0 : ((Odd.design.n0 - Odd.design.g0 : ℕ) : ℝ) = d0 := by
   norm_num [Odd.design, d0]
 
-/-- Decay rate of `Δ_N` implied by the bank K160 field target. -/
-def tDelta160 : ℝ := (K160.target - Real.log 2 / 2) * 58 ^ 2
-
 /-- Decay rate of `Δ_N` implied by the bank K640 field target. -/
 def tDelta640 : ℝ := (K640.target - Real.log 2 / 2) * 58 ^ 2
-
-theorem eta_le160 : K160.eta + chi < tDelta160 - gD58 := by
-  obtain ⟨hl, hh⟩ := log2_bounds
-  unfold tDelta160 gD58
-  norm_num [K160.eta, K160.etaRef, chi, chiRef, t, K160.target, lo, hi] at hl hh ⊢
-  linarith
 
 theorem eta_le640 : K640.eta + chi < tDelta640 - gD58 := by
   obtain ⟨hl, hh⟩ := log2_bounds
   unfold tDelta640 gD58
   norm_num [K640.eta, K640.etaRef, chi, chiRef, t, K640.target, lo, hi] at hl hh ⊢
   linarith
-
-/-- Bank K160: `B = 592`. -/
-theorem measure_592_of_delta_small
-    (delta_small : ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
-      |x - catalan| ≤ Real.exp (-(K160.rho * (N : ℝ))) →
-        |aeval x (Parametric.deltaPoly Odd.design N)| ≤
-          Real.exp (-((tDelta160 - ε) * (N : ℝ) ^ 2)))
-    (c3 : C3) :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(592 : ℝ)) < |catalan - (a : ℝ) / b| := by
-  have h := measure_of_design Odd.design
-    { B := 592, Z := Znorm, w := 3 / 4, ρ := K160.rho, η := K160.eta + chi, κ := K160.kappa,
-      δ := delta, pay := by rw [n0_sub_g0]; simpa [K160.B] using K160.pay_w,
-      gD := gD58, D_growth := fun ε hε => Znorm_growth hε, tΔ := tDelta160,
-      delta_small := delta_small, eta_le := eta_le160, nonvanishing := nonvanishing_d58 c3 }
-  simpa using h
 
 /-- Bank K640: `B = 590`. -/
 theorem measure_590_of_delta_small
