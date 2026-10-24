@@ -11,47 +11,35 @@
 \newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
 \newcommand{\FormalizationLink}{\url{\FormalizationURL}}
 
-% =====================================================================================
-% ONE-LINE SWITCH.  Every number that depends on the choice of the certificate is a macro
-% below, driven by \Bbank.
-%   \Bbank = 592 : certificate with 160 Chebyshev coefficients; threshold x = 590.7129
-%                  (K160 witness).
-%   \Bbank = 590 : witness "gi" (richer tail); threshold x = 589.19666.  The constants that
-%                  are not yet known for this witness print as [TBD] and must be filled in
-%                  in the \bswitch lines below before release.
-% =====================================================================================
-\newcommand{\Bbank}{592}
-\newcommand{\TBD}{\mbox{[TBD]}}
-\newcommand{\bswitch}[2]{\ifnum\Bbank=592 #1\else #2\fi}
-\newcommand{\Bx}{\bswitch{590.7129}{589.19666}}        % threshold x of the criterion
-\newcommand{\Rho}{\bswitch{301.53968}{\TBD}}            % perturbation exponent rho
-\newcommand{\Ctwo}{\bswitch{4.28881}{\TBD}}             % cost of a fixed column, second case
-\newcommand{\Cone}{\bswitch{4.0965}{\TBD}}              % cost of a fixed column, first case
-\newcommand{\Utarget}{\bswitch{2.255838062}{\TBD}}        % energy bound U
-\newcommand{\NormCap}{\bswitch{0.7736034335}{\TBD}}        % bound for 2|u|^2+|v|^2/2
-\newcommand{\SupX}{\bswitch{-0.96451119}{\TBD}}          % sup of the row field
-\newcommand{\SupY}{\bswitch{-1.57494994}{\TBD}}          % sup of the column field
-\newcommand{\FieldCap}{\bswitch{-2.53946113}{\TBD}}      % SupX + SupY
-\newcommand{\ResCap}{\bswitch{-0.06311641}{\TBD}}        % sup of the residual field
-\newcommand{\EtaInf}{\bswitch{7.917878}{\TBD}}          % real place minus denominators (no content)
-\newcommand{\EtaTot}{\bswitch{27.054833}{\TBD}}         % EtaInf + Chi
-\newcommand{\Kappa}{\bswitch{1.963257}{\TBD}}           % kappa = B/rho
-\newcommand{\Kcoef}{\bswitch{160}{\TBD}}                % number of Chebyshev coefficients
-\newcommand{\Ngeo}{\bswitch{56}{\TBD}}                  % geometric terms
-\newcommand{\Ncomplex}{\bswitch{22}{\TBD}}              % complex geometric terms
-\newcommand{\Nblocks}{\bswitch{48, 41 and 25}{\TBD}}    % blocks of the three covers
-\newcommand{\Ncells}{\bswitch{383, 323 and 194}{\TBD}}  % cells of the three covers
-\newcommand{\Mmargin}{\bswitch{2.986\cdot10^{-6}}{\TBD}}% slack of the objective
-\newcommand{\Disc}{\bswitch{1.647\cdot10^{-5}}{\TBD}}   % discriminant of the budget
-\newcommand{\DiscBound}{\bswitch{1.656\cdot10^{-5}}{\TBD}}
-\newcommand{\TDelta}{\bswitch{6422.7656}{\TBD}}         % n_0^2 (U - log 2 / 2)
-\newcommand{\EtaExact}{\bswitch{27.05695}{\TBD}}        % TDelta minus the denominator exponent
-\newcommand{\Blimit}{\bswitch{590.71}{\TBD}}            % d rho / eta
-\newcommand{\NCtwo}{\bswitch{248.75}{\TBD}}             % n_0 c_2
-\newcommand{\PayL}{\bswitch{53.00012}{\TBD}}            % d + 4 d delta kappa
-\newcommand{\PayR}{\bswitch{53.115}{\TBD}}              % eta kappa
-\newcommand{\Digest}{\bswitch{128cad5dace555faa174dc01c63b90c79781caafc24aaba6f87c51637851f605}{\TBD}}
-% (not certificate dependent)
+% Numerical constants of the certificate.
+\newcommand{\Bx}{589.19666}                             % threshold x of the criterion
+\newcommand{\Rho}{301.54258}                            % perturbation exponent rho
+\newcommand{\Ctwo}{4.28886}                             % cost of a fixed column, second case
+\newcommand{\Cone}{4.09661}                             % cost of a fixed column, first case
+\newcommand{\Utarget}{2.255858836}                      % energy bound U
+\newcommand{\NormCap}{0.7736205195}                     % bound for 2|u|^2+|v|^2/2
+\newcommand{\SupX}{-0.96450499}                         % sup of the row field
+\newcommand{\SupY}{-1.57499400}                         % sup of the column field
+\newcommand{\FieldCap}{-2.53949899}                     % SupX + SupY
+\newcommand{\ResCap}{-0.0631062}                        % sup of the residual field
+\newcommand{\EtaInf}{7.987762}                          % real place minus denominators (no content)
+\newcommand{\EtaTot}{27.124717}                         % EtaInf + Chi
+\newcommand{\Kappa}{1.956605}                           % kappa = B/rho
+\newcommand{\Kcoef}{160}                                % number of Chebyshev coefficients
+\newcommand{\Ngeo}{75}                                  % geometric terms
+\newcommand{\Ncomplex}{41}                              % complex geometric terms
+\newcommand{\Nblocks}{47, 38 and 23}                    % blocks of the three covers
+\newcommand{\Ncells}{373, 302 and 176}                  % cells of the three covers
+\newcommand{\Mmargin}{2.986\cdot10^{-6}}                % slack of the objective
+\newcommand{\Disc}{1.645\cdot10^{-5}}                   % discriminant of the budget
+\newcommand{\DiscBound}{1.656\cdot10^{-5}}
+\newcommand{\TDelta}{6422.8355}                         % n_0^2 (U - log 2 / 2)
+\newcommand{\EtaExact}{27.12683}                        % TDelta minus the denominator exponent
+\newcommand{\Blimit}{589.19}                            % d rho / eta
+\newcommand{\NCtwo}{248.75}                             % n_0 c_2
+\newcommand{\PayL}{53.00012}                            % d + 4 d delta kappa
+\newcommand{\PayR}{53.072}                              % eta kappa
+\newcommand{\Digest}{ff307ca0287dc5224e268202cb0b09776e933652acd2f2f879492af28d3e381d}
 \newcommand{\Chi}{19.136955}                            % rounded-down content area
 \newcommand{\Wcap}{52.788}                              % cover constant of the weights
 
@@ -94,8 +82,8 @@ logarithmic potentials, Gauss quadrature, formal verification}
 
 \begin{abstract}
 Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. Building on OpenAI's recent proof
-that $G$ is irrational, we prove that $|G-a/b|>b^{-\Bbank}$ for every integer $a$ and every
-sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $\Bbank$.
+that $G$ is irrational, we prove that $|G-a/b|>b^{-590}$ for every integer $a$ and every
+sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $590$.
 OpenAI's proof compares, for a determinant $\Delta$ whose entries are linear forms in $1$ and $G$,
 a lower bound coming from the denominators of $\Delta$ with an upper bound coming from an integral
 representation. The determinant depends on five integer parameters, a \emph{design}. We prove,
@@ -132,9 +120,9 @@ $\mu(\xi)=2$. An \emph{irrationality measure} is an explicit upper bound for $\m
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-\Bbank}.
+ \left|G-\frac ab\right|>b^{-590}.
 \]
-In particular $\mu(G)\le\Bbank$.
+In particular $\mu(G)\le590$.
 \end{theorem}
 
 The proof uses the prime number theorem. The theorem and every result in this paper have been
@@ -278,7 +266,7 @@ place minus the denominators without the gain is $\EtaInf$ and the gain from the
 $\Chi$ (rounded down from $35369/1848=19.13906\ldots$). Decimals are truncated; the constants of the
 formal proof are the exact rational numbers. The criterion gives the exponent
 $\Bx$ as the least $B$ allowed by its conditions
-(Section~\ref{sec:proof}); the integer $\Bbank$ is the exponent of Theorem~\ref{thm:main}, for which
+(Section~\ref{sec:proof}); the integer $590$ is the exponent of Theorem~\ref{thm:main}, for which
 all the conditions are verified in Lean with rational constants.
 
 \subsection{Organization and notation}
@@ -447,7 +435,7 @@ for all integers $a$ and all sufficiently large $b$.
 The conditions say, in the order of the proof of Section~\ref{sec:proof}, that the window of primes
 contains a prime not dividing $b$, that the primes of the window above the chosen one are recycled, and
 that the final inequality is contradictory. For the design $D$ one takes $d=53$, $\omega=3/4$,
-$\delta=2.9\cdot10^{-7}$ and $\kappa=B/\rho$ with $B=\Bbank$; the last condition then reads
+$\delta=2.9\cdot10^{-7}$ and $\kappa=B/\rho$ with $B=590$; the last condition then reads
 $B>x:=d\rho/(\eta-4d\delta)=\Bx$.
 
 \subsection{A reading of the exponent}

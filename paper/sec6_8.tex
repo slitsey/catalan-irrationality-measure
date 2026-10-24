@@ -46,7 +46,7 @@ Take the design $D=(58,9,3,5,3)$ and $d=53$ (the degree of $Q_N$ is at most $53N
 $Q_p$ of the proposition are the $Q_N$ with $N=p$), and
 \begin{gather*}
  \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac34,\quad \delta=2.9\cdot10^{-7},\\
- \kappa=\frac{\Bbank}{\rho}=\Kappa .
+ \kappa=\frac{590}{\rho}=\Kappa .
 \end{gather*}
 We check the hypotheses.
 \begin{itemize}
@@ -61,14 +61,14 @@ for $|x-G|\le e^{-\rho N}$ and large $N$,
  |Q_N(x)|\le\exp\bigl(-(\TDelta\ldots-6395.7087\ldots-3\varepsilon)N^2\bigr)\le e^{-\eta N^2}
 \]
 since $\eta=\EtaTot<\EtaExact\ldots$ is rounded down.
-\item The numerical conditions: $\rho\kappa=\Bbank$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa$;
+\item The numerical conditions: $\rho\kappa=590$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa$;
 $2(\omega-\delta(2\kappa-\omega))=1.49999\ldots>1$; and
 $d+4d\delta\kappa=\PayL\ldots<\eta\kappa=\PayR\ldots$.
 \end{itemize}
-Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-\Bbank}$ for all integers
+Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-590}$ for all integers
 $a$ and all sufficiently large $b$. This proves Theorem~\ref{thm:main}. The last condition is
-equivalent to $\Bbank>x=d\rho/(\eta-4d\delta)=\Bx$, and in the limit $\delta\to0$ the argument gives
-the exponent $d\rho/\eta=\Blimit\ldots$ for the constants above; the integer $\Bbank$ is the one for
+equivalent to $590>x=d\rho/(\eta-4d\delta)=\Bx$, and in the limit $\delta\to0$ the argument gives
+the exponent $d\rho/\eta=\Blimit\ldots$ for the constants above; the integer $590$ is the one for
 which all conditions are verified with rational constants.
 
 \section{Remarks on the method}\label{sec:remarks}
@@ -99,7 +99,7 @@ OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The develo
 The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
 written as the series $\sum_j(-1)^j/(2j+1)^2$; it is the theorem
 \begin{center}
-\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_\Bbank}
+\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_590}
 \end{center}
 and its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
 command \lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
@@ -143,14 +143,14 @@ the perturbation by the quadrature nodes (\lean{Prefactor}, \lean{AtomBase}, \le
 \lean{CircleCover}). \lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
 (\lean{WLog}, \lean{WLogSpec}), the residual field with a weight (\lean{ResW}), the shifted tables
 (\lean{PolyShift}) and the assembly of cells and blocks (\lean{CellLoc}, \lean{Assembly}).
-\item[The design $D$] \lean{D58/} holds the instance: \lean{Budget} (the constants of the certificate),
+\item[The design $D$] \lean{D58/} holds the instance: \lean{Budget590} (the constants of the certificate),
 \lean{Ramps}, \lean{Kap}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, \lean{Pay}, \lean{Final}
 (the design, the window list, the profile $f$, $\mathsf A_2=2673/8$, the growth of the denominator and
 the conditions of the criterion), \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
-\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), \lean{Cert/} (the second
+\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), \lean{Cert590/} (the second
 case: trial data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap),
-\lean{SecondTrial}, \lean{C3/} (the three inverses modulo $1009$), \lean{Certified} and \lean{Main}, which
-proves \lean{catalan\_irrationalityMeasure\_\Bbank} in the namespace \lean{CatalanMeasure.GenD.D58}.
+\lean{Bank590}, \lean{SecondTrial590}, \lean{C3/} (the three inverses modulo $1009$), \lean{Certified} and \lean{Main590}, which
+proves \lean{catalan\_irrationalityMeasure\_590} in the namespace \lean{CatalanMeasure.GenD.D58}.
 \end{description}
 The public theorem in \lean{Solution.lean} is a one-line wrapper of that theorem. The modules of
 OpenAI's formalization and the generic valuation theorems of the construction
