@@ -86,7 +86,7 @@ lemma thigh_6 : Covers c (WGm I r m) r (mkPiece 3 2 15 8 15 (-8) 72 12) :=
 
 include T in
 /-- piece 7: `D6`. -/
-lemma thigh_7 : Covers c (WGm I r m) r (mkPiece 15 8 2 1 0 0 6 1) :=
+lemma thigh_7 : Covers c (WGm I r m) r (mkPiece 15 8 4 1 0 0 6 1) :=
   covers_mkM c (BandP I 3 2 1 2) hband (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp hb
     obtain ⟨h5, hk1, hk2⟩ := hb
