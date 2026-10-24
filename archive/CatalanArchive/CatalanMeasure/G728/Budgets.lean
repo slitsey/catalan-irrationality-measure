@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.GapBudgets
+public import CatalanArchive.CatalanMeasure.Parametric.GapBudgets
 @[expose] public section
 
 /-!

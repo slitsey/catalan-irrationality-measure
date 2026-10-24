@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersBeta
 public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersNatural
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial OAI.InternalCatalan

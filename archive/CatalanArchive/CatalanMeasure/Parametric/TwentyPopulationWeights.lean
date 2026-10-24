@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyUniformEnergy
-public import CatalanMeasure.Parametric.TwentyRestrictedWeights
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyRestrictedWeights
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open OAI.InternalCatalan Set Finset

@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.GapWeights
-public import CatalanMeasure.GapCircle.Bound
+public import CatalanArchive.CatalanMeasure.GapCircle.Bound
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial OAI.InternalCatalan

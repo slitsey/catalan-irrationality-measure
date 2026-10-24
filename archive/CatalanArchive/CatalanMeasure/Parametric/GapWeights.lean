@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.GapQuadrature
-public import CatalanMeasure.Parametric.GapCircleCover
+public import CatalanArchive.CatalanMeasure.Parametric.GapCircleCover
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial Finset OAI.InternalCatalan

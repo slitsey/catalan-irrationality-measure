@@ -1,8 +1,8 @@
 module
 public import CatalanArchive.CatalanMeasure.G728.FinalGen
-public import CatalanMeasure.G728.Cert.XCover
-public import CatalanMeasure.G728.Cert.YCover
-public import CatalanMeasure.G728.Cert.RCover
+public import CatalanArchive.CatalanMeasure.G728.Cert.XCover
+public import CatalanArchive.CatalanMeasure.G728.Cert.YCover
+public import CatalanArchive.CatalanMeasure.G728.Cert.RCover
 @[expose] public section
 /-! The 728 bound: `FinalGen` applied to the three kernel-checked field sups. -/
 namespace CatalanMeasure.G728

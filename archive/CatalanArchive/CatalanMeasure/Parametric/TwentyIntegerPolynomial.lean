@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyDenominatorAsymptotic
-public import CatalanMeasure.Parametric.TwentyBase.Nonvanishing
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyBase.Nonvanishing
 public import CatalanMeasure.Parametric.Degree
 public import CatalanMeasure.IntegerValued
 public import CatalanMeasure.SquareNonvanishing

@@ -1,6 +1,6 @@
 module
 public import CatalanMeasure.Parametric.WeightedPopulationValue
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open OAI.InternalCatalan

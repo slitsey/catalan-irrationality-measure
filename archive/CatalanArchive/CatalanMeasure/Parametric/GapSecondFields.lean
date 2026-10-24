@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.FlexibleSecondEnergy
-public import CatalanMeasure.Parametric.GapBudgets
-public import CatalanMeasure.Parametric.StrongNearField
+public import CatalanArchive.CatalanMeasure.Parametric.GapBudgets
+public import CatalanArchive.CatalanMeasure.Parametric.StrongNearField
 public import CatalanArchive.CatalanMeasure.StrongTrial.Norms
 public import CatalanArchive.CatalanMeasure.StrongTrial.First
 public import CatalanArchive.CatalanMeasure.Cert.MarkedResidual

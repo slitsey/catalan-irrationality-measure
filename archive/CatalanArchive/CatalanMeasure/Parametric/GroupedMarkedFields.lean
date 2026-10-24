@@ -1,7 +1,7 @@
 module
 
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyGroupedTrialBounds
-public import CatalanMeasure.Parametric.FullIntervalFormula
+public import CatalanArchive.CatalanMeasure.Parametric.FullIntervalFormula
 
 /-!
 # Exact common-factor cancellation and finite-size near-field control

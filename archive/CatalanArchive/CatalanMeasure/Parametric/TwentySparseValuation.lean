@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 public import CatalanArchive.CatalanMeasure.Parametric.SparseCombinationRank
 public import CatalanArchive.CatalanMeasure.Parametric.SparseDeterminantValuation
 @[expose] public section

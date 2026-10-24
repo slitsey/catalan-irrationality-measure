@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyRestrictedWeights
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyRestrictedWeights
 public import CatalanArchive.CatalanMeasure.Parametric.TwentySparseValuation
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyGainPNT
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyTrialFields

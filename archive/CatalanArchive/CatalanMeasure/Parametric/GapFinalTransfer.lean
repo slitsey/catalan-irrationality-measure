@@ -1,8 +1,8 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.GapContentTransfer
 public import CatalanArchive.CatalanMeasure.Parametric.FlexibleSecondEnergy
-public import CatalanMeasure.Parametric.GapBudgets
-public import CatalanMeasure.Parametric.StrongNearField
+public import CatalanArchive.CatalanMeasure.Parametric.GapBudgets
+public import CatalanArchive.CatalanMeasure.Parametric.StrongNearField
 public import CatalanArchive.CatalanMeasure.Cert.MarkedResidual
 public import CatalanArchive.CatalanMeasure.Parametric.StrongFirstFields
 @[expose] public section

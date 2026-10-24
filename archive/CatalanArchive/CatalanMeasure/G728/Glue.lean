@@ -1,9 +1,9 @@
 module
 
 public import CatalanMeasure.G728.FieldsS
-public import CatalanMeasure.G728.Data
+public import CatalanArchive.CatalanMeasure.G728.Data
 public import CatalanArchive.CatalanMeasure.Parametric.FlexibleSecondEnergy
-public import CatalanMeasure.Parametric.StrongNearField
+public import CatalanArchive.CatalanMeasure.Parametric.StrongNearField
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyCorrectedFields
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyPhysicalCertifiedFields
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyGroupedPhysicalFields

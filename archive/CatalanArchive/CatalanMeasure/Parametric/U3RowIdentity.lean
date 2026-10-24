@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.U3ChebyshevFrobenius
 public import CatalanMeasure.Parametric.CoefficientBounds
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 @[expose] public section
 
 /-!

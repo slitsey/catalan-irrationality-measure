@@ -1,6 +1,6 @@
 module
 public import CatalanMeasure.Parametric.PopulationPhysicalValue
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 public import CatalanMeasure.Cert.ShiftedFields
 @[expose] public section
 namespace OAI.InternalCatalan

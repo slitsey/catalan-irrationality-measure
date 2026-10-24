@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.GapNodal
+public import CatalanArchive.CatalanMeasure.Parametric.GapNodal
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial Polynomial.Chebyshev Finset OAI.InternalCatalan

@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.GapFinalTransfer
 public import CatalanArchive.CatalanMeasure.Parametric.StrongFirstFields
-public import CatalanMeasure.FirstStrongTrial.Sup
+public import CatalanArchive.CatalanMeasure.FirstStrongTrial.Sup
 @[expose] public section
 /-! The first-trial field bounds, shared by the final assemblies. -/
 namespace CatalanMeasure.Parametric

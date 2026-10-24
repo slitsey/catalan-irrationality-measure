@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.FullIntervalFormula
+public import CatalanArchive.CatalanMeasure.Parametric.FullIntervalFormula
 #print axioms CatalanMeasure.Parametric.filteredCatalanCoeff_full_weights
 #print axioms CatalanMeasure.Parametric.chebX_even_ne_zero
 #print axioms CatalanMeasure.Parametric.twenty_full_weight_formula

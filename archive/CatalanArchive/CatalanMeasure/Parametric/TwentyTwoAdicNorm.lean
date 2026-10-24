@@ -2,7 +2,7 @@ module
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import CatalanMeasure.Parametric.TwoAdicCoefficientEntryBounds
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyTwoAdicSelectors
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial OAI.InternalCatalan

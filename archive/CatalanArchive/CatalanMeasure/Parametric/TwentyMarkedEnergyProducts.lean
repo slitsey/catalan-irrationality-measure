@@ -2,7 +2,7 @@ module
 
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyFullFirstEnergy
 public import CatalanArchive.CatalanMeasure.Parametric.GroupedPhysicalProduct
-public import CatalanMeasure.Parametric.FullIntervalFormula
+public import CatalanArchive.CatalanMeasure.Parametric.FullIntervalFormula
 public import CatalanMeasure.Parametric.PopulationProductPositive
 
 @[expose] public section

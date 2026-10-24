@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.FlexibleFirstEnergy
-public import CatalanMeasure.FirstStrongTrial.Norms
+public import CatalanArchive.CatalanMeasure.FirstStrongTrial.Norms
 public import CatalanMeasure.FirstStrongTrial.First
 @[expose] public section
 namespace CatalanMeasure.Parametric

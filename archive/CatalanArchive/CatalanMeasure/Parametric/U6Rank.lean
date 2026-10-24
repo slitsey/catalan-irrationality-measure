@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.U6Digits
 public import CatalanMeasure.Parametric.SecondaryTentFilteredResponse
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 @[expose] public section
 
 namespace CatalanMeasure.Parametric

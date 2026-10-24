@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.FlexibleAtomCost
-public import CatalanMeasure.Parametric.GapNodes
+public import CatalanArchive.CatalanMeasure.Parametric.GapNodes
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial OAI.InternalCatalan Set Finset MeasureTheory Matrix Filter

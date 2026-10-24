@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.G728.Main
 public import CatalanArchive.CatalanMeasure.G728.Glue
-public import CatalanMeasure.G728.Norm
+public import CatalanArchive.CatalanMeasure.G728.Norm
 public import CatalanArchive.CatalanMeasure.Parametric.GapFirst
 public import CatalanArchive.CatalanMeasure.Parametric.CombinedContent
 @[expose] public section

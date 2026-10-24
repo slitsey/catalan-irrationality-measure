@@ -1,7 +1,7 @@
 module
 public import CatalanMeasure.Parametric.PairedPrimeColumns
 public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentReconstruction
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 
 /-!
 # Actual secondary-tent source as fixed Frobenius coefficient pairings

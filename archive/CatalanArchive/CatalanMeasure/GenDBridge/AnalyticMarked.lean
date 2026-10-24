@@ -6,7 +6,7 @@ public import CatalanMeasure.GenD.Analytic.FullInterval
 public import CatalanArchive.CatalanMeasure.GenDBridge.Analytic
 public import CatalanArchive.CatalanMeasure.Parametric.GapAtomCost
 public import CatalanArchive.CatalanMeasure.Parametric.MarkedAtomsDegeneracy
-public import CatalanMeasure.Parametric.FullIntervalFormula
+public import CatalanArchive.CatalanMeasure.Parametric.FullIntervalFormula
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyMarkedSecondProduct
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyWeightedIntegrand
 

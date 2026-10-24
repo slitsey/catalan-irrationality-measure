@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyPrimeGain
-public import CatalanMeasure.Parametric.TwentyParameters
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyParameters
 public import OAI.NumberTheory.Catalan.Arithmetic.OddPrimeLossNormalization
 @[expose] public section
 namespace CatalanMeasure.Parametric
