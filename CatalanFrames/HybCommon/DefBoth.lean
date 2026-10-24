@@ -9,6 +9,7 @@ public import CatalanCore.Arith.Hybrid.BorderC7
 public import CatalanCore.Arith.Hybrid.BorderDef
 public import CatalanCore.Arith.Hybrid.DefGKBorder
 
+public import CatalanCore.Arith.Hybrid.DefBoth
 @[expose] public section
 
 /-!
@@ -16,8 +17,8 @@ public import CatalanCore.Arith.Hybrid.DefGKBorder
 
 `DefBothG I r T δ` is `DefHypT` (member 1) and `DefHypTop` (member 2, bordered) with the same `δ`.
 Every rank-route window (E both classes, B, C5, C7) gives a `DefBothG` family from its rank witness
-(`defBoth_of_wit`), and the five windows add (they are pairwise disjoint).  GK is not bordered and is
-not part of this family.
+(`defBoth_of_wit`), and the five windows add (they are pairwise disjoint).  The rank-route windows share the witness constructor; GK uses the separate
+bordered Schur interface below.
 -/
 
 open Finset Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanCore.Rect
@@ -28,21 +29,17 @@ variable {Fr : Frame}
 
 /-- Member-1 and member-2 deficit hypotheses together. -/
 def DefBothG (I : HybInst Fr) (r : ℕ) (T δ : ℕ → ℕ) : Prop :=
-  DefHypT I r (r / 8) T δ ∧ DefHypTop I r (r / 8) T δ
+  DefBoth I r (r / 8) T δ
 
 lemma DefBothG.mono_T {I : HybInst Fr} {r : ℕ} {T T' δ : ℕ → ℕ} (h : DefBothG I r T δ)
     (hle : ∀ p, p.Prime → p < Bnd I r (r / 8) → T p ≤ T' p) : DefBothG I r T' δ :=
-  ⟨h.1.mono_T hle, h.2.mono_T hle⟩
+  DefBoth.mono_T h hle
 
 lemma DefBothG.add {I : HybInst Fr} {r : ℕ} {T δ₁ δ₂ : ℕ → ℕ} (h1 : DefBothG I r T δ₁)
     (h2 : DefBothG I r T δ₂)
     (hdisj : ∀ p, p.Prime → p < Bnd I r (r / 8) → δ₁ p = 0 ∨ δ₂ p = 0) :
-    DefBothG I r T (fun p => δ₁ p + δ₂ p) := by
-  refine ⟨?_, h1.2.add h2.2 hdisj⟩
-  intro p hp hb
-  rcases hdisj p hp hb with h | h
-  · simp only [h, zero_add]; exact h2.1 p hp hb
-  · simp only [h, add_zero]; exact h1.1 p hp hb
+    DefBothG I r T (fun p => δ₁ p + δ₂ p) :=
+  DefBoth.add h1 h2 hdisj
 
 /-- **A `DefBothG` family from rank witnesses.** -/
 theorem defBoth_of_wit (I : HybInst Fr) (r : ℕ) [I.DiagOK r (r / 8)] (T δ : ℕ → ℕ)
@@ -50,14 +47,8 @@ theorem defBoth_of_wit (I : HybInst Fr) (r : ℕ) [I.DiagOK r (r / 8)] (T δ : �
     (hδ : ∀ p, ¬ W p → δ p = 0)
     (hW : ∀ p : ℕ, p.Prime → W p → ∀ [Fact p.Prime], ∃ u v : Fin r ⊕ Fin (r / 8) → ℕ,
       HasRankWit Fr p r (r / 8) u v (δ p) ∧ ∑ a, u a + ∑ b, v b ≤ T p)
-    (hδT : ∀ p, p.Prime → p < Bnd I r (r / 8) → W p → δ p ≤ T p) : DefBothG I r T δ := by
-  refine ⟨?_, defHypTop_of_wit I r (r / 8) T δ hT W hδ hW⟩
-  refine defHypT_of_local I r (r / 8) T δ hT W hδ ?_
-  intro p hp hb hWp
-  refine ⟨hδT p hp hb hWp, fun [Fact p.Prime] => ?_⟩
-  obtain ⟨u, v, hw, hle⟩ := hW p hp hWp
-  exact hw.gle.mono (by omega)
-
+    (hδT : ∀ p, p.Prime → p < Bnd I r (r / 8) → W p → δ p ≤ T p) : DefBothG I r T δ :=
+  CatalanCore.Arith.Hybrid.defBoth_of_wit I r (r / 8) T δ hT W hδ hW hδT
 /-! ### The five windows -/
 
 /-- The five deficits. -/

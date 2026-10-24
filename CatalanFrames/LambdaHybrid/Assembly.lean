@@ -2,7 +2,7 @@ module
 
 public import CatalanFrames.Lambda.HybInst
 public import CatalanFrames.Lambda.Const
-public import CatalanFrames.LambdaHybrid.NV.FinalNV
+public import CatalanCore.NV.Hybrid.FinalNV
 public import CatalanFrames.LambdaHybrid.NV.LamData
 public import CatalanCore.Rect.PairNV
 public import CatalanCore.Rect.PairBridge
