@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.G728.Scaled
+public import CatalanMeasure.CellCert.Scaled
 
 @[expose] public section
 
@@ -15,7 +15,7 @@ lemmas are private there and are re-proved here, they are a few lines each).
 
 open OAI.InternalCatalan Polynomial
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 theorem trialSeqS_succ (cs : List ℤ) (tail : List TailQ) (k : ℕ) :
@@ -183,4 +183,4 @@ theorem trialSeqS_power_hasSum (cs : List ℤ) {tail : List TailQ} (h : tailsInD
   rw [trialSeqS_succ, finCoeffS_succ]
   ring
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

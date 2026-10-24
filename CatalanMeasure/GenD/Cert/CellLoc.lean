@@ -1,11 +1,11 @@
 module
 
-public import CatalanMeasure.G728.Cell
+public import CatalanMeasure.CellCert.Cell
 
 @[expose] public section
 
 open Set Nat CatalanMeasure.Cert
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 set_option maxRecDepth 100000
 theorem ptZ_localL (D : PolyData) (hD : D.Ok) (cc hh : ℤ) (m L : ℕ) (MGL : ℤ)
     (hMGL : ∀ y : ℝ, |y - (cc : ℝ) / TT| ≤ (hh : ℝ) / TT → (SC : ℝ) * |ptZ D.Z (m + L) y| ≤ (MGL : ℝ))
@@ -397,7 +397,7 @@ theorem block_sup (D : PolyData) (hD : D.Ok) (cB HB cc hh : ℤ) (m' LB : ℕ) (
     exact_mod_cast hBB
   linarith
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
 
-#print axioms CatalanMeasure.G728.block_sup
-#print axioms CatalanMeasure.G728.cellVal_soundL
+#print axioms CatalanMeasure.CellCert.block_sup
+#print axioms CatalanMeasure.CellCert.cellVal_soundL

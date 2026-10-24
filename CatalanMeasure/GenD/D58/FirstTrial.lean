@@ -26,7 +26,7 @@ discharged by the D58 first-trial cover certificate); a bank instantiates it wit
 
 namespace CatalanMeasure.GenD
 namespace D58
-open Set Filter OAI.InternalCatalan CatalanMeasure.Cert CatalanMeasure.G728
+open Set Filter OAI.InternalCatalan CatalanMeasure.Cert CatalanMeasure.CellCert
 open CatalanMeasure.GenD.Analytic
 noncomputable section
 

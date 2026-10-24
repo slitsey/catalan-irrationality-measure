@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.G728.CellW
+public import CatalanMeasure.CellCert.CellW
 @[expose] public section
 /-!
 # One-value pieces for the cell lists
@@ -8,7 +8,7 @@ The kernel's cost of evaluating many polynomial values inside one `decide +kerne
 faster than linearly (the whole term graph is retained).  These lemmas assemble the lists `AL`
 and `fhL` of a cell from one kernel-checked equation per entry.
 -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 
 theorem map_range_succ_shift {α : Type} (f : ℕ → α) (s L : ℕ) :
     (List.range (L + 1)).map (fun k => f (s + k)) =
@@ -48,4 +48,4 @@ theorem fhL_of_from {N : ℕ} {poles : List PoleR} {cc : ℤ} {V : List ℤ} {m 
   unfold fhL fhFrom
   simp
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

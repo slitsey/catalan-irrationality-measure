@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.G728.ScaledSeries
+public import CatalanMeasure.CellCert.ScaledSeries
 public import CatalanMeasure.LogFieldStability
 public import CatalanMeasure.Cert.ShiftedFields
 
@@ -23,7 +23,7 @@ Peeled versions `rowFieldGP`/`colFieldGP` remove the singular logarithm terms
 open OAI.InternalCatalan Set Filter
 open scoped Topology
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 noncomputable section
 
@@ -236,4 +236,4 @@ theorem resFieldS_continuousOn {Pc : List ℤ} {P : List TailQ} (hP : tailsInDis
   resFieldG_continuousOn (trialSeqS_summable hP).1
 
 end
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

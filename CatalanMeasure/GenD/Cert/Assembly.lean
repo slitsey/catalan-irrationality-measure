@@ -2,12 +2,12 @@ module
 
 public import CatalanMeasure.GenD.Cert.CellLoc
 public import CatalanMeasure.GenD.Cert.PolyShift
-public import CatalanMeasure.G728.CellSound
+public import CatalanMeasure.CellCert.CellSound
 
 @[expose] public section
 
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert
 set_option maxRecDepth 100000
 
@@ -105,14 +105,14 @@ theorem field_le_of_blocks (F : ℝ → ℝ) (S : ℕ → Spec) (D : PolyData) (
   obtain ⟨hct, hloc⟩ := blockOK_cell S D hD m LT MGL cap hMGL b (hbs b hbmem) c hcb
   exact cellValP_soundL F (S c.2.2) D hD m b.L b.BB (hsound c hc) cap c.1 c.2.1 (hloc) hct x hcx (hxp c hc)
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
 
-#print axioms CatalanMeasure.G728.cellValP_soundL
-#print axioms CatalanMeasure.G728.blockOK_cell
-#print axioms CatalanMeasure.G728.field_le_of_blocks
+#print axioms CatalanMeasure.CellCert.cellValP_soundL
+#print axioms CatalanMeasure.CellCert.blockOK_cell
+#print axioms CatalanMeasure.CellCert.field_le_of_blocks
 
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert
 set_option maxRecDepth 100000
 
@@ -164,8 +164,8 @@ theorem blockOK_ofS (S : ℕ → Spec) (D : PolyDataS) (m LT : ℕ) (MGL : ℤ) 
   intro c hc
   exact hcells c hc
   
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
 
-#print axioms CatalanMeasure.G728.cellT_none_of_piecesS
-#print axioms CatalanMeasure.G728.cellT_some_of_piecesS
-#print axioms CatalanMeasure.G728.blockOK_ofS
+#print axioms CatalanMeasure.CellCert.cellT_none_of_piecesS
+#print axioms CatalanMeasure.CellCert.cellT_some_of_piecesS
+#print axioms CatalanMeasure.CellCert.blockOK_ofS

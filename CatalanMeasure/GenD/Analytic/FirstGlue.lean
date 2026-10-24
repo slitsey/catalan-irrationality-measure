@@ -20,7 +20,7 @@ The finite-`N` corrections are `1/(n0 N)` times the fixed logs `3/2 log(1+x²) -
 namespace CatalanMeasure.GenD
 namespace Analytic
 
-open CatalanMeasure.Parametric CatalanMeasure.G728 OAI.InternalCatalan Filter Set
+open CatalanMeasure.Parametric CatalanMeasure.CellCert OAI.InternalCatalan Filter Set
 open scoped Topology BigOperators
 
 noncomputable section

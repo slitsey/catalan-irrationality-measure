@@ -14,7 +14,7 @@ public import CatalanMeasure.GenD.D58.FirstCert.Data
 
 namespace CatalanMeasure.GenD
 namespace D58
-open Set OAI.InternalCatalan CatalanMeasure.Cert CatalanMeasure.G728
+open Set OAI.InternalCatalan CatalanMeasure.Cert CatalanMeasure.CellCert
 open CatalanMeasure.GenD.Analytic
 noncomputable section
 

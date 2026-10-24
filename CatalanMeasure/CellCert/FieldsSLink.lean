@@ -1,7 +1,7 @@
 module
 
-public import CatalanMeasure.G728.FieldsS
-public import CatalanMeasure.G728.Tower
+public import CatalanMeasure.CellCert.FieldsS
+public import CatalanMeasure.CellCert.Tower
 
 @[expose] public section
 
@@ -19,7 +19,7 @@ The polynomial part is a parameter: `Z` is an integer list with
 
 open OAI.InternalCatalan Polynomial Set
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 noncomputable section
 
@@ -275,4 +275,4 @@ theorem resFieldS_hasDerivAt {Pc : List ℤ} {P : List TailQ}
   ring
 
 end
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

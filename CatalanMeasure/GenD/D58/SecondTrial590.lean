@@ -20,7 +20,7 @@ summability, `MX + MY = K590.fieldCap`, `2 ‖u‖² + ‖v‖² / 2 ≤ K590.no
 
 namespace CatalanMeasure.GenD
 namespace D58
-open Set Filter CatalanMeasure.Parametric OAI.InternalCatalan CatalanMeasure.G728
+open Set Filter CatalanMeasure.Parametric OAI.InternalCatalan CatalanMeasure.CellCert
 open scoped Topology
 noncomputable section
 

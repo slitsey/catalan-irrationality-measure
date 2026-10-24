@@ -1,8 +1,8 @@
 module
-public import CatalanMeasure.G728.Cell
+public import CatalanMeasure.CellCert.Cell
 public import CatalanMeasure.Cert.FieldEval
 @[expose] public section
-/-! # Peeled cells and cover theorems (G728)
+/-! # Peeled cells and cover theorems
 
 * A *peeled* cell handles a cell that touches a logarithmic singularity `w log |x - p|` of the field:
   `F = Freg + w log|x-p|` where `Freg` has the pole `p` removed from its pole list.  The cell check is
@@ -10,7 +10,7 @@ public import CatalanMeasure.Cert.FieldEval
 * A *typed cell* `(cc, hh, t)` selects a `Spec` (enclosure `ev`, pole list, optional peel) by its type `t`.
 * `coverFrom` checks that a list of typed cells covers `[L/2^40, ghi]`; `field_le_of_cells` is the
   pointwise sup theorem. -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert OAI.InternalCatalan
 set_option maxRecDepth 100000
 
@@ -239,4 +239,4 @@ theorem field_le_of_cells (F : ℝ → ℝ) (S : ℕ → Spec) (D : PolyData) (h
   exact cellValP_sound F (S c.2.2) D hD m L MGL hMGL (hsound c hc) cap c.1 c.2.1 (hcells c hc) x hcx
     (hxp c hc)
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

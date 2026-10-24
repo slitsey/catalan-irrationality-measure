@@ -1,14 +1,14 @@
 module
 
-public import CatalanMeasure.G728.EvalS
-public import CatalanMeasure.G728.FieldsSLink
+public import CatalanMeasure.CellCert.EvalS
+public import CatalanMeasure.CellCert.FieldsSLink
 
 @[expose] public section
 
 /-!
 # The residual field with a weight parameter
 
-`G728.resFieldG`, `G728.resPoles` and `G728.resTermsS` hard-code the residual weight `9/10`
+`CellCert.resFieldG`, `CellCert.resPoles` and `CellCert.resTermsS` hard-code the residual weight `9/10`
 (the 728 design).  Here the weight `ρ` (`= d0/n0`; `53/58` for the design (58,9,3,5,3)) is a
 parameter: `resFieldW ρ u = -ρ log(1+x²) - 2 T(u)` (the same function as `Analytic.resFieldGen ρ u`),
 its log terms `resTermsW ρ`, its derivative poles `resPolesW ρ`, and the derivative link.
@@ -16,7 +16,7 @@ its log terms `resTermsW ρ`, its derivative poles `resPolesW ρ`, and the deriv
 
 open OAI.InternalCatalan Polynomial Set
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 noncomputable section
 
@@ -71,4 +71,4 @@ theorem resFieldW_hasDerivAt (ρ : ℚ) {Pc : List ℤ} {P : List TailQ}
   ring
 
 end
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

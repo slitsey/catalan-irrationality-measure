@@ -1,7 +1,7 @@
 module
 
-public import CatalanMeasure.G728.FieldsS
-public import CatalanMeasure.G728.IntEval
+public import CatalanMeasure.CellCert.FieldsS
+public import CatalanMeasure.CellCert.IntEval
 
 @[expose] public section
 
@@ -16,7 +16,7 @@ for a rational `c` with `|c| ≤ 1`.  The ~115 logarithm terms of the tails go t
 
 open OAI.InternalCatalan Polynomial
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 /-! ### logarithm terms -/
@@ -299,4 +299,4 @@ theorem resApproxS_le {Pc : List ℤ} {P : List TailQ} (hP : tailsInDisk P = tru
   have := (abs_le.mp (resApproxS_spec hP h hc)).2
   linarith
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

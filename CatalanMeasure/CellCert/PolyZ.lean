@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.G728.FieldsSLink
+public import CatalanMeasure.CellCert.FieldsSLink
 
 @[expose] public section
 
@@ -17,7 +17,7 @@ one-off identity `D.Z = rowZ Pc Vc` is then a `decide +kernel` on lists of integ
 
 open Polynomial
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 /-! ### integer list polynomials -/
@@ -217,4 +217,4 @@ theorem resZ_spec (Pc : List ℤ) (x : ℝ) : -2 * finUR Pc x = ptZ (resZ Pc) 0 
   push_cast
   ring
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

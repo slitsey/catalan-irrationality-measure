@@ -1,8 +1,8 @@
 module
 
-public import CatalanMeasure.G728.Cover
-public import CatalanMeasure.G728.EvalS
-public import CatalanMeasure.G728.FieldsSLink
+public import CatalanMeasure.CellCert.Cover
+public import CatalanMeasure.CellCert.EvalS
+public import CatalanMeasure.CellCert.FieldsSLink
 
 @[expose] public section
 
@@ -18,7 +18,7 @@ tails not at the origin), nonnegative log weights, and the polynomial identity f
 
 open OAI.InternalCatalan Polynomial Set
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 noncomputable section
 
@@ -204,4 +204,4 @@ theorem resSpecS_sound {Pc : List ℤ} {P : List TailQ} (hP : tailsInDisk P = tr
     simp [resSpecS] at hpr
 
 end
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

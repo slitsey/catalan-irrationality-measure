@@ -1,14 +1,14 @@
 module
-public import CatalanMeasure.G728.Tower
+public import CatalanMeasure.CellCert.Tower
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 @[expose] public section
-/-! # Sound Taylor value cells (G728)
+/-! # Sound Taylor value cells
 
 Generalised from `Pilot7.GapBridge4`, `Pilot729.Val`: `cellVal_sound` gives `F x ≤ cap` on a whole cell
 from the centre enclosure `ev`, the literal level tables of `PolyData` (2-adic rescaling `lam`), and a
 global Chebyshev-T l1 constant `MG` for the `m`-th derivative of the polynomial part. -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert
 set_option maxRecDepth 100000
 
@@ -1006,4 +1006,4 @@ theorem poly_sup_of (Z : List ℤ) (m : ℕ) (Bs : List ℤ) (MG : ℤ) (N' : �
     mul_le_mul_of_nonneg_right h1 hS.le
   nlinarith [h2R, h4, hp2]
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

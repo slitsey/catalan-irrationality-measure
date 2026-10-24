@@ -1,12 +1,12 @@
 module
 
-public import CatalanMeasure.G728.CellW
-public import CatalanMeasure.G728.CellPieces
+public import CatalanMeasure.CellCert.CellW
+public import CatalanMeasure.CellCert.CellPieces
 
 @[expose] public section
 
 open Set Nat CatalanMeasure.Cert
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 set_option maxRecDepth 100000
 
 /-! # 2-adically normalised level tables (R8)
@@ -130,8 +130,8 @@ theorem poly_sup_of_sh (Z : List ℤ) (m : ℕ) (Bs : List ℤ) (MG : ℤ) (t N'
   rw [mul_div_assoc', div_le_iff₀ (by norm_num : (0 : ℝ) < 1099511627776)]
   nlinarith [h2R, h3, hp2, hS, mul_le_mul_of_nonneg_left h3 hS.le]
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
 
-#print axioms CatalanMeasure.G728.poly_sup_of_sh
-#print axioms CatalanMeasure.G728.PolyDataS.toD_ok
-#print axioms CatalanMeasure.G728.polyValsD_toD
+#print axioms CatalanMeasure.CellCert.poly_sup_of_sh
+#print axioms CatalanMeasure.CellCert.PolyDataS.toD_ok
+#print axioms CatalanMeasure.CellCert.polyValsD_toD

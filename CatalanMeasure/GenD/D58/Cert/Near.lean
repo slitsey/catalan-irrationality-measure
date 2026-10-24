@@ -1,7 +1,7 @@
 module
 
 public import CatalanMeasure.Cert.FieldEval
-public import CatalanMeasure.G728.Scaled
+public import CatalanMeasure.CellCert.Scaled
 public import CatalanMeasure.GenD.D58.Cert.Data
 public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
@@ -18,7 +18,7 @@ with a box check `[381/500, 153/200]` evaluated by `sumLogs`.
 -/
 
 namespace CatalanMeasure.GenD.D58.Cert
-open CatalanMeasure.G728 CatalanMeasure.Cert OAI.InternalCatalan Set
+open CatalanMeasure.CellCert CatalanMeasure.Cert OAI.InternalCatalan Set
 noncomputable section
 
 def nearBase58 (y : ℝ) : ℝ :=

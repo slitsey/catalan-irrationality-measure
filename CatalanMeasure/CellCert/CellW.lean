@@ -1,12 +1,12 @@
 module
-public import CatalanMeasure.G728.Cover
+public import CatalanMeasure.CellCert.Cover
 @[expose] public section
-/-! # Cell checks as small pieces with literal witnesses (G728)
+/-! # Cell checks as small pieces with literal witnesses
 
 The monolithic `cellVal ... = true` is replaced, per cell, by independent small kernel theorems:
 `evLe` (centre enclosure `v + e ≤ U`), `fhL = FH`, `AL = AA`, `MpoleV = Mp`, and `cellFin` (guards and the final
 integer inequality on the literal witnesses).  `cellVal_of_pieces` assembles them. -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert OAI.InternalCatalan
 set_option maxRecDepth 100000
 
@@ -152,4 +152,4 @@ theorem ok_append {α : Type*} {p : α → Bool} {l1 l2 : List α} (h1 : ∀ c �
   · exact h1 c h
   · exact h2 c h
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

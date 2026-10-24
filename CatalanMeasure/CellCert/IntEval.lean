@@ -20,7 +20,7 @@ enclosure of width `2^-128`.
 
 open Polynomial
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 /-- `lcm(1..n)` -/
@@ -278,4 +278,4 @@ theorem finSEnc_spec (cs : List ℤ) (c : ℚ) :
   rw [← finS_value]
   exact encDiv_spec _ (evalDen_pos cs c)
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

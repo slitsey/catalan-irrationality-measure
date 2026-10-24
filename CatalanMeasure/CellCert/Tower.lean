@@ -15,11 +15,11 @@ public import CatalanMeasure.Cert.ListPoly
 public import CatalanMeasure.Cert.FieldDeriv
 public import CatalanMeasure.Cert.ShiftedFields
 @[expose] public section
-/-! # Taylor-cell tower (G728): derivative towers, exact pole towers, `ptZ`/`ftZ`, row poles.
+/-! # Taylor-cell tower: derivative towers, exact pole towers, `ptZ`/`ftZ`, row poles.
 
 Generalised from the pilot (`Pilot7.BridgeLib`, `Pilot729.{Tower,Val,RowLink}`): the polynomial part of the
 derivative is `Z(x) / 2^40` (not `/10^8`), and there is no bound on `Z.length`. -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Set Nat CatalanMeasure.Cert OAI.InternalCatalan
 
 /-! ### Taylor theorem with remainder for a derivative tower (derivatives on the open interval only) -/
@@ -639,4 +639,4 @@ theorem tailS_pole (t : TailQ) (ht : ‖(TailQ.toC t).1‖ < 1) (hz : t.zr ≠ 0
 def rowPoles (R : RowWeights) (P V : List TailQ) : List PoleR :=
   [⟨R.alpha, 0, 0, 0⟩, ⟨R.beta, 0, 1, 0⟩, ⟨-2 * R.gamma, 0, 0, 1⟩] ++ P.map poleP ++ V.map poleOfTailS
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

@@ -15,7 +15,7 @@ syntax "-" num : rawint
 syntax (name := rawIntsStx) "raw_ints% " "[" rawint,* "]" : term
 
 public meta section
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open Lean Elab Term
 
 def rawIntExpr : Int → Expr
@@ -33,5 +33,5 @@ def rawIntExpr : Int → Expr
     acc := mkApp3 (Lean.mkConst ``List.cons [Level.zero]) int (rawIntExpr z) acc
   return acc
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
 end

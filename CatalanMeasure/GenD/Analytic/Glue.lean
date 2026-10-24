@@ -2,14 +2,14 @@ module
 
 public import CatalanMeasure.GenD.Analytic.Second
 public import CatalanMeasure.GenD.Analytic.CommonField
-public import CatalanMeasure.G728.FieldsS
+public import CatalanMeasure.CellCert.FieldsS
 
 @[expose] public section
 
 /-!
 # Analytic layer: from the three field suprema to `SecondTrialBounds` (design-generic)
 
-Generic form of `G728.secondTrialOfFieldsS`.  For an arbitrary admissible `P = ⟨n0,b0,q0,g0,h0⟩`
+Generic form of `CellCert.secondTrialOfFieldsS`.  For an arbitrary admissible `P = ⟨n0,b0,q0,g0,h0⟩`
 the three certificate suprema (row, column, residual) are statements about the scale-free fields
 * `rowFieldG α β γ u v`  with `α = A0/n0`, `β = 2 h0/n0`, `γ = H0/n0`
   (`A0 = b0+q0+2g0`, `H0 = n0+b0+q0+g0+h0`),
@@ -23,7 +23,7 @@ The finite-`N` corrections are exactly those of the old glue (`1/(n0 N)` times f
 namespace CatalanMeasure.GenD
 namespace Analytic
 
-open CatalanMeasure.Parametric CatalanMeasure.G728 OAI.InternalCatalan Filter Set
+open CatalanMeasure.Parametric CatalanMeasure.CellCert OAI.InternalCatalan Filter Set
 open scoped Topology BigOperators
 
 noncomputable section

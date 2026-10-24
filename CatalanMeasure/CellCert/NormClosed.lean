@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.G728.Scaled
+public import CatalanMeasure.CellCert.Scaled
 public import CatalanMeasure.Cert.Norm
 public import CatalanMeasure.Cert.SplitNorm
 
@@ -22,7 +22,7 @@ finite part and the log part be certified by many small `decide +kernel` checks.
 
 open OAI.InternalCatalan
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 /-! ### Horner evaluation of the cross term -/
@@ -284,4 +284,4 @@ theorem normSq_le_of_shards {cs : List ℤ} {tail : List TailQ} (hd : tailsInDis
   have hf := (Rat.cast_le (K := ℝ)).2 hfin
   linarith
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

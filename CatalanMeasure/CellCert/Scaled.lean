@@ -14,7 +14,7 @@ tails are the same `TailQ` data.
 
 open OAI.InternalCatalan
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert
 
 /-- The finite coefficient `cs[k-1] / 2^40` (and `0` at `k = 0`). -/
@@ -73,4 +73,4 @@ theorem trialSeqS_summable {cs : List ℤ} {tail : List TailQ} (h : tailsInDisk 
   rw [← mul_add]
   exact mul_le_mul_of_nonneg_left (trialSeqS_abs_le cs tail k) (Nat.cast_nonneg k)
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

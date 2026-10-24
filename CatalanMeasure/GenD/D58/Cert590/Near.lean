@@ -11,7 +11,7 @@ public import CatalanMeasure.GenD.D58.Cert590.Data
 -/
 
 namespace CatalanMeasure.GenD.D58.Cert590
-open CatalanMeasure.G728 CatalanMeasure.Cert OAI.InternalCatalan Set
+open CatalanMeasure.CellCert CatalanMeasure.Cert OAI.InternalCatalan Set
 noncomputable section
 
 theorem firstQ_data : (9 / 50 : ℚ) ≤ Cert.firstQ Pc P := by

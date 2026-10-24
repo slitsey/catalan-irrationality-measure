@@ -2,7 +2,7 @@ module
 
 public import Mathlib.Analysis.Real.Pi.Bounds
 public import Mathlib.Analysis.Complex.ExponentialBounds
-public import CatalanMeasure.G728.EvalS
+public import CatalanMeasure.CellCert.EvalS
 
 @[expose] public section
 
@@ -670,8 +670,8 @@ def sumLogsW : List LogTerm → Option (ℚ × ℚ)
   | [] => some (0, 0)
   | t :: l =>
     match wTermA t, sumLogsW l with
-    | some (q, e0), some (v, e) => some ((CatalanMeasure.G728.encDiv q.num q.den).1 + v,
-        e0 + (CatalanMeasure.G728.encDiv q.num q.den).2 + e)
+    | some (q, e0), some (v, e) => some ((CatalanMeasure.CellCert.encDiv q.num q.den).1 + v,
+        e0 + (CatalanMeasure.CellCert.encDiv q.num q.den).2 + e)
     | _, _ => none
 
 theorem sumLogsW_spec {l : List LogTerm} {v e : ℚ}
@@ -689,7 +689,7 @@ theorem sumLogsW_spec {l : List LogTerm} {v e : ℚ}
       obtain ⟨rfl, rfl⟩ := h
       have h1 := wTerm_spec hq
       have h2 := ih hl
-      have h3 := CatalanMeasure.G728.encDiv_spec q.num q.den_pos
+      have h3 := CatalanMeasure.CellCert.encDiv_spec q.num q.den_pos
       have hq' : ((q.num : ℝ) / (q.den : ℝ)) = (q : ℝ) := by rw [Rat.cast_def]
       rw [hq'] at h3
       simp only [List.map_cons, List.sum_cons]
@@ -1266,8 +1266,8 @@ def sumLogsWI : List LogTerm → Option (ℚ × ℚ)
   | [] => some (0, 0)
   | t :: l =>
     match wTermAI t, sumLogsWI l with
-    | some (q, e0), some (v, e) => some ((CatalanMeasure.G728.encDiv q.num q.den).1 + v,
-        e0 + (CatalanMeasure.G728.encDiv q.num q.den).2 + e)
+    | some (q, e0), some (v, e) => some ((CatalanMeasure.CellCert.encDiv q.num q.den).1 + v,
+        e0 + (CatalanMeasure.CellCert.encDiv q.num q.den).2 + e)
     | _, _ => none
 
 theorem sumLogsWI_spec {l : List LogTerm} {v e : ℚ}
@@ -1285,7 +1285,7 @@ theorem sumLogsWI_spec {l : List LogTerm} {v e : ℚ}
       obtain ⟨rfl, rfl⟩ := h
       have h1 := wTermI_spec hq
       have h2 := ih hl
-      have h3 := CatalanMeasure.G728.encDiv_spec q.num q.den_pos
+      have h3 := CatalanMeasure.CellCert.encDiv_spec q.num q.den_pos
       have hq' : ((q.num : ℝ) / (q.den : ℝ)) = (q : ℝ) := by rw [Rat.cast_def]
       rw [hq'] at h3
       simp only [List.map_cons, List.sum_cons]

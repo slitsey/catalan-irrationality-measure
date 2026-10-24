@@ -163,8 +163,8 @@ repository.
     estimates with fixed columns and the first trial; the quadrature nodes and the weight bound;
     the divisibility of the coefficients by prime squares and the choice of the largest admissible
     prime; the rank-deficiency argument by antisymmetric row combinations;
-  - for `L(2, χ₋₃)`: the valuation-one reduction, bounded-deletion transfer, the periodic content
-    profile, the quarter border with characteristic-zero selection, the analytic certificate and
+  - for `L(2, χ₋₃)`: the valuation-one reduction, the quarter
+    border with characteristic-zero selection, the analytic certificate and
     the saving at small primes;
   - for `G ± 5π²/48`: the uniform rescaled-core argument with its finite interval profile;
   - the repository infrastructure, the corresponding Lean proofs and paper text.

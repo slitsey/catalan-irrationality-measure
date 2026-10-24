@@ -1,6 +1,6 @@
 module
-public import CatalanMeasure.G728.Cell
-public import CatalanMeasure.G728.PolyZ
+public import CatalanMeasure.CellCert.Cell
+public import CatalanMeasure.CellCert.PolyZ
 @[expose] public section
 /-!
 # 2-adically normalised Clenshaw recursion
@@ -10,7 +10,7 @@ index 64 every literal is a multiple of `2 ^ 64`. The kernel hashes `Nat` litera
 so these all collide and the chunk checks slow down by about 20×. `uClenN` runs the same recursion on
 `v_j = a_j / 2 ^ j` (no doubling), and `uClen_shl` recovers `uClen` as `shl 2` of it.
 -/
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 
 def uStepN (c : ℤ) (s : List ℤ × List ℤ) : List ℤ × List ℤ := (zAdd [c] (zSub (0 :: s.1) s.2), s.1)
 
@@ -121,4 +121,4 @@ theorem shl_eq_mapIdx (lam : ℕ) (l : List ℤ) :
 theorem shl_two_eq_mapIdx (l : List ℤ) :
     shl 2 l = l.mapIdx (fun k b => ((2 ^ k : ℕ) : ℤ) * b) := shl_eq_mapIdx 2 l
 
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert

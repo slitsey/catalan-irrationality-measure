@@ -2,11 +2,11 @@ module
 
 public import CatalanMeasure.GenD.Cert.WLog
 public import CatalanMeasure.GenD.Cert.ResW
-public import CatalanMeasure.G728.CellSound
+public import CatalanMeasure.CellCert.CellSound
 
 @[expose] public section
 
-namespace CatalanMeasure.G728
+namespace CatalanMeasure.CellCert
 open CatalanMeasure.Cert OAI.InternalCatalan Polynomial Set
 noncomputable section
 
@@ -244,4 +244,4 @@ theorem resSpecW_sound (ρ : ℚ) {Pc : List ℤ} {P : List TailQ} (hP : tailsIn
 
 
 end
-end CatalanMeasure.G728
+end CatalanMeasure.CellCert
