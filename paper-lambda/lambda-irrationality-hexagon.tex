@@ -2062,17 +2062,7 @@ system and ported to the current toolchain; the repository's README and provenan
 
 \section*{Disclosure of AI use}
 
-The mathematics, proofs, Lean formalization and text were produced by AI systems at the request of the author, who posed the problem,
-directed the work, and is responsible for this submission. Claude Opus~5.5 and Claude Sonnet~5.5 (Anthropic), working in a series of
-conversations, produced the rectangular frames, the content bounds and rank deficits, the nonvanishing argument and the decay certificates,
-the second-level deficit at non-clean primes with its weighted congruence, the frames with shifts $\frac13$ and $\frac23$ for $L(2,\chi_{-3})\pm\frac23\zeta(2)$ (tropical content, characteristic-zero nonvanishing, decay transfer and the final statements), the decay estimate with the slope of the contour rays as a parameter, and the certificate with atoms placed on the support of an extremal dual measure,
-with their proofs and Lean formalization; the numerical computations and the certificate generators; the literature search; and the text.
-OpenAI Codex produced the repository infrastructure, vendored formalizations and certificate tooling of the companion project \cite{Litsey2026},
-which this work reuses; for $L(2,\chi_{-3})$, the valuation-one reduction, the quarter border with characteristic-zero selection,
-the analytic certificate and the saving at small primes;
-and the uniform rescaled-core argument for $G\pm5\pi^2/48$ with its finite interval profile. Codex also produced the Lean formalization
-and the corresponding text for these parts.
-The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
+The mathematics, the Lean formalization, the certificate generators and the text of this paper were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for this paper: Claude Opus~5.5, Claude Sonnet~5.5 and Claude Haiku~5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for $G$ and its Lean formalization are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal
 verification in Lean is intended as an independent check of every step of the argument above.

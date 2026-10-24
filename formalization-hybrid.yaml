@@ -85,26 +85,15 @@ sources:
 automation:
   methods:
     - method: agent
-      models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
-      framework: "Claude Code desktop with native Windows shell and file tools, coordinating subagents"
+      models: ["Claude Opus 5.5", "Claude Sonnet 5.5", "Claude Haiku 5.5"]
+      framework: "Claude Code"
       tool_setup: >-
-        Claude agents produced the mathematics and the Lean development: the rectangular frames, the
-        thirds frames for L(2, chi_{-3}) -/+ pi^2/9, content
-        bounds and rank deficits, nonvanishing, the second-level deficit at non-clean primes with its
-        weighted congruence, the decay estimate with the slope of the contour rays as a parameter, and
-        the certificate with atoms on the support of an extremal dual measure (decide +kernel, no
-        native_decide), using Python, Lean 4, Lake and Mathlib. The human author posed
-        the problem, directed the work and checked the outcome.
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
     - method: agent
-      models: ["OpenAI Codex"]
-      framework: "Codex desktop with shell tools and parallel mathematical agents"
+      models: ["GPT-6.1 Sol (OpenAI)"]
+      framework: "Codex"
       tool_setup: >-
-        Codex developed the valuation-one reduction and bounded-deletion transfer, the uniform
-        rescaled-core deficit with its certified rational prime profile, the conductor-three periodic
-        content profile with integral diagonal perturbation and principal-minor transfer, the
-        characteristic-zero one-node selector, the quarter-border content profile with sixteen periodic
-        D1 strips, and the kernel-checked 1600-atom analytic witness for L(2, chi_{-3}), with their
-        generic Lean modules and export checks.
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
   notes: >-
     The shared library CatalanCore and the certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.

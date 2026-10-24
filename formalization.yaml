@@ -117,26 +117,15 @@ status:
 automation:
   methods:
     - method: agent
-      models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
-      framework: "Claude Code with shell and file tools"
+      models: ["Claude Opus 5.5", "Claude Sonnet 5.5", "Claude Haiku 5.5"]
+      framework: "Claude Code"
       tool_setup: >-
-        Claude produced the measure framework for arbitrary designs and the
-        perturbation estimate by quadrature, the closed-form rank deficiencies on
-        the windows of primes with their consequences for the coefficients, the
-        trial sequences with complex geometric terms, their verification on cells
-        and the K = 160 certificate of the design (58,9,3,5,3), the final
-        assembly, the module conversion, the corresponding Lean proofs and the
-        companion paper, using Python, Lean 4, Lake and Mathlib.
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
     - method: agent
-      models: ["OpenAI Codex (GPT-6)"]
-      framework: "Codex desktop with shell and file tools"
+      models: ["GPT-6.1 Sol (OpenAI)"]
+      framework: "Codex"
       tool_setup: >-
-        Codex produced the determinant with its local arithmetic and
-        nonvanishing, the energy estimates with fixed columns and the first trial,
-        the quadrature nodes and the weight bound, the divisibility of the
-        coefficients by prime squares and the choice of the largest admissible
-        prime, the rank deficiency by antisymmetric row combinations, and the
-        corresponding Lean proofs and certificate generators.
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
   spend_usd: "subscription-based"
   notes: >-
     Both systems worked at the request of the human author, who posed the problem,

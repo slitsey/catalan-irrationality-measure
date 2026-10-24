@@ -141,33 +141,7 @@ The numerical checks can use several GiB per Lean process; use a small worker co
 
 ## Authorship and use of AI
 
-The mathematics, Lean development, certificate generators and papers were produced by AI systems at
-the request of Sean Litsey, who posed the problems, directed the work and is responsible for this
-repository.
-
-- **Claude Opus 5.5 and Claude Sonnet 5.5 (Anthropic)** produced:
-  - for `G`: the measure framework for arbitrary designs and the perturbation estimate by
-    quadrature; the closed-form rank deficiencies on the windows of primes with their consequences
-    for the coefficients; the trial sequences with complex geometric terms, their verification on
-    cells and the K = 160 certificate of the design (58, 9, 3, 5, 3); the final assembly; and the
-    module conversion of OpenAI's formalization;
-  - for `G ± 5π²/48` and `L(2, χ₋₃)`: the rectangular frames, the content bounds and rank deficits,
-    the nonvanishing argument and the decay certificates; the second-level deficit at non-clean
-    primes; the decay estimate with the slope of the contour rays as a parameter, and the
-    certificate with atoms placed on the support of an extremal dual measure;
-  - for `L(2, χ₋₃) ± π²/9`: the thirds frames, their content tables and the transfer of the
-    nonvanishing and decay arguments;
-  - the corresponding Lean proofs and the two papers.
-- **OpenAI Codex** produced:
-  - for `G`: the determinant with its local arithmetic and nonvanishing; the energy
-    estimates with fixed columns and the first trial; the quadrature nodes and the weight bound;
-    the divisibility of the coefficients by prime squares and the choice of the largest admissible
-    prime; the rank-deficiency argument by antisymmetric row combinations;
-  - for `L(2, χ₋₃)`: the valuation-one reduction, the quarter
-    border with characteristic-zero selection, the analytic certificate and
-    the saving at small primes;
-  - for `G ± 5π²/48`: the uniform rescaled-core argument with its finite interval profile;
-  - the repository infrastructure, the corresponding Lean proofs and paper text.
+The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's.
 
 The vendored code is OpenAI's (see above).
 
