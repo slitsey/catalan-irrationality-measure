@@ -28,7 +28,8 @@ theorem gapCircleBound_p20 :
   have hK : (((design.n0 - design.g0) * N) + 1) / 2 = 9 * N := by
     change ((20 - 2) * N + 1) / 2 = 9 * N
     omega
-  rw [hK]
+  rw [hK, show gapPolyK (interpolationGap : ℝ) (9 * N) = gapPolynomial (interpolationGap : ℝ) N from rfl,
+    one_mul]
   have := GapCircle.circle_bound N z hz
   have e : design.h N + design.q N = 2 * N := by
     simp only [Parameters.h, Parameters.q, design, twenty]; ring

@@ -5,6 +5,7 @@ public import CatalanMeasure.GenD.P20.Budget
 public import CatalanMeasure.GenD.TrialScale
 public import CatalanMeasure.FirstStrongTrial.NormP
 public import CatalanMeasure.FirstStrongTrial.NormV
+public import CatalanMeasure.FirstStrongTrial.First
 public import CatalanMeasure.FirstStrongTrial.Sup
 
 @[expose] public section
@@ -19,7 +20,7 @@ shifted fields are the generic scale-free first fields at the P20 weights by unf
 
 namespace CatalanMeasure.GenD
 namespace P20
-open Set Filter OAI.InternalCatalan CatalanMeasure.Cert
+open Set Filter OAI.InternalCatalan CatalanMeasure.Cert CatalanMeasure.G728
 open CatalanMeasure.GenD.Analytic
 noncomputable section
 

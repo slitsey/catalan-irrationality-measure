@@ -79,7 +79,6 @@ theorem second_residual_sup : ∀ x ∈ Icc (-1 : ℝ) 1, (401 / 2500 : ℝ) ≤
       resFieldS G728.Pc G728.P x := by
     unfold Analytic.resFieldGen resFieldS resFieldG secondU
     rw [gRes_p20]
-    norm_num
   rw [e]
   have e2 : ((G728.MR : ℚ) : ℝ) = residualCap := by norm_num [G728.MR, residualCap]
   linarith
