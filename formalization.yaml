@@ -69,12 +69,12 @@ sources:
   - title: "General designs and an irrationality exponent for Catalan's constant"
     authors:
       - "Marcos Costa Santos Carreira"
-    id: "doi:10.5281/zenodo.23326325"
+    id: "doi:10.5281/zenodo.23532239"
     type: preprint
     location: "https://github.com/MarcosCarreira/catalan-designs"
     relationship: background
     note: >-
-      Five-parameter determinant designs, the bound mu(G) < 2715 and a
+      Five-parameter determinant designs, the bound mu(G) < 2294 and a
       two-measure equilibrium formulation of the real-place constant; cited in
       the companion paper. No code or theorem from that work is imported.
     author_endorsement: not-contacted

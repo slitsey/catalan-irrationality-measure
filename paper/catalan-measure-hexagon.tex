@@ -119,7 +119,13 @@ from Salikhov's integrals \cite{Salikhov08} with an additional arithmetic saving
 Since September 2026 a series of new results in this area has appeared, several of them obtained with
 AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, and Liu, Jiang and
 Zhang proved $\mu(\log r)=2$ for every rational $r>0$, $r\ne1$ \cite{LiuJiangZhang26}. Giraudin lowered
-the bound for $\mu(\zeta(2))$ below $5.0193784$ \cite{Giraudin26}. Fauzan announced a proof that $\zeta(5)$
+the bounds for $\mu(\zeta(2))$ and $\mu(\zeta(3))$ to $5.0193784$ and $5.5138800$ by applying the
+Rhin--Viola method at new integral directions \cite{Giraudin26,Giraudin26z3}. Leibtag, Barkan, Kalisch,
+Weinbaum, Shalyt and Kaminer \cite{LBKWSK26} showed that the classical constructions are
+one-dimensional trajectories in conservative matrix fields, and by searching over other trajectories
+obtained $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Prellberg \cite{Prellberg26} proved that
+$\mathrm{Li}_2(-1/4)$, $\mathrm{Li}_2(1/5)$ and $\mathrm{Li}_2(-1/3)$ are irrational with the integrals of
+Rhin--Viola and Viola--Zudilin. Fauzan announced a proof that $\zeta(5)$
 is irrational, using Hankel determinants \cite{Fauzan2026}, and Lai combined this method with simultaneous
 approximations to show that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent over $\Q$
 \cite{Lai2026}. Several of these arguments, like the present one, use determinants of large size rather
@@ -133,7 +139,9 @@ function; $G=\beta(2)$ is not singled out. Zudilin \cite{Zudilin2003} found an A
 recurrence for $G$ whose solutions give linear forms that converge to zero, but too slowly to prove
 irrationality, and \cite{Zudilin02Cheb,KrattRivoal08,KrattZudilin19,Zudilin19Survey} describe
 related constructions and their limits. Eskandari, Murty and Nemoto \cite{EMN2025} interpret linear forms
-in Catalan's constant through mixed motives.
+in Catalan's constant through mixed motives. Leibtag et al.\ \cite{LBKWSK26} found further Ap\'ery-like
+approximations to $G$ in their matrix fields; the best they report falls just short of proving
+irrationality.
 
 OpenAI's argument \cite{OpenAI2026} has a different shape. Instead of a sequence of linear forms it
 uses a determinant $\Delta$ of size $48N$ whose entries are rational linear combinations of $1$ and
@@ -149,8 +157,9 @@ $N=p$ is proved separately by reduction modulo $p$.
 
 The first irrationality measure for $G$ was obtained by Jha \cite{Jha2026}, who proved
 $\mu(G)\le10^8$. Carreira \cite{Carreira2026} studied general five-parameter determinant designs,
-reported $\mu(G)<2715$ for one of them, and formulated the best real-place constant of the method as
-an equilibrium problem for two measures. Eskandari \cite{Eskandari2026} studies rational
+obtained $\mu(G)<2294$ for one of them, and formulated the best real-place constant of the method as
+an equilibrium problem for two measures; in \cite{Carreira2026b} he records attempts to carry the
+method to $\beta(4)$. Eskandari \cite{Eskandari2026} studies rational
 approximations to $G$ from another point of view. For $L(2,\chi_{-3})$, Calegari, Dimitrov and Tang
 proved linear independence of $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ \cite{CDT2024}, and their
 holonomy bounds give $\mu(L(2,\chi_{-3}))\le24781$ \cite[Thm.~5.1]{CDT2025}. A companion paper
@@ -1085,10 +1094,16 @@ Frank Calegari, Vesselin Dimitrov, and Yunqing Tang, \emph{The linear
   approximation}, 2025, Theorem 5.1 gives $\mu(L(2,\chi_{-3}))\le 24781$,
   \href{https://arxiv.org/abs/2510.04156}{arXiv:2510.04156}.
 
+\bibitem{Carreira2026b}
+Marcos Costa Santos~Carreira, \emph{Determinant constructions for the
+  {D}irichlet beta value at four}, Preprint, 9 October 2026,
+  \href{https://doi.org/10.5281/zenodo.23326647}{doi:10.5281/zenodo.23326647},
+  2026.
+
 \bibitem{Carreira2026}
-Marcos Costa Santos~Carreira, \emph{General designs and an irrationality
-  exponent for {C}atalan's constant}, Preprint v1, October 12, 2026,
-  \href{https://doi.org/10.5281/zenodo.23326325}{doi:10.5281/zenodo.23326325};
+\bysame, \emph{General designs and an irrationality exponent for {C}atalan's
+  constant}, Preprint, 9 October 2026, revised 21 October 2026,
+  \href{https://doi.org/10.5281/zenodo.23532239}{doi:10.5281/zenodo.23532239};
   sources at \url{https://github.com/MarcosCarreira/catalan-designs}, 2026.
 
 \bibitem{Lean4}
@@ -1121,6 +1136,11 @@ Peter~J. Forrester, \emph{Meet {A}ndr\'eief, {B}ordeaux 1886, and {A}ndreev,
 David~Niedbala Giraudin, \emph{A new upper bound for the irrationality exponent
   of {$\zeta(2)$}}, 2026, Preprint, 2 October 2026,
   \href{https://arxiv.org/abs/2610.02912}{arXiv:2610.02912}.
+
+\bibitem{Giraudin26z3}
+\bysame, \emph{A new upper bound for the irrationality exponent of
+  {$\zeta(3)$}}, 2026, Preprint, 22 September 2026,
+  \href{https://arxiv.org/abs/2609.26980}{arXiv:2609.26980}.
 
 \bibitem{Hata93}
 Masayoshi Hata, \emph{Rational approximations to {$\pi$} and some other
@@ -1158,6 +1178,12 @@ Li~Lai, \emph{The linear independence of {$1$}, {$\zeta(3)$}, and
   statement}, \url{https://github.com/leanprover/comparator}, 2026, Software;
   accessed October 2026.
 
+\bibitem{LBKWSK26}
+Elyasheev Leibtag, Hila Barkan, Rotem Kalisch, Shachar Weinbaum, Michael
+  Shalyt, and Ido Kaminer, \emph{New directions in irrationality}, 2026,
+  Preprint, 20 October 2026,
+  \href{https://arxiv.org/abs/2610.27799}{arXiv:2610.27799}.
+
 \bibitem{Litsey2026b}
 Sean Litsey, \emph{Irrationality measures for {$G\pm5\pi^2/48$} and
   {$L(2,\chi_{-3})$}}, Hexagon preprint hexagon:2610.00401,
@@ -1186,6 +1212,12 @@ Raffaele Marcovecchio, \emph{The {R}hin--{V}iola method for {$\log 2$}}, Acta
   September 24, 2026, released October 6, 2026,
   \url{https://github.com/openai/math/tree/main/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026},
   2026.
+
+\bibitem{Prellberg26}
+Thomas Prellberg, \emph{Three irrationality results for the dilogarithm:
+  {R}hin--{V}iola and {V}iola--{Z}udilin constructions at {$-1/4$}, {$1/5$},
+  and {$-1/3$}}, 2026, Preprint, 7 September 2026,
+  \href{https://arxiv.org/abs/2609.06895}{arXiv:2609.06895}.
 
 \bibitem{RhinViola96}
 Georges Rhin and Carlo Viola, \emph{On a permutation group related to

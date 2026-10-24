@@ -30,7 +30,7 @@ The proofs build on OpenAI's proof that `G` is irrational and on its Lean formal
 ([openai/math](https://github.com/openai/math); preprint dated September 24, 2026, released
 October 6, 2026). Other bounds in the literature:
 - R. K. Jha proved `μ(G) ≤ 10^8` independently ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
-- M. C. S. Carreira reports `μ(G) < 2715` with another determinant design ([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)).
+- M. C. S. Carreira obtains `μ(G) < 2294` with another determinant design ([doi:10.5281/zenodo.23532239](https://doi.org/10.5281/zenodo.23532239)).
 - For `L(2, χ₋₃)`, Calegari, Dimitrov and Tang give 24781 (arXiv:2510.04156, Theorem 5.1).
 
 ## What to read
