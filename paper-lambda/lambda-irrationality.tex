@@ -106,7 +106,7 @@ Every result is formalized in Lean~4, with no unproved steps and only the standa
 %% =====================================================================
 \section{Introduction}\label{sec:intro}
 
-OpenAI \cite{OpenAI2026} recently proved that Catalan's constant
+In October 2026 OpenAI \cite{OpenAI2026} proved that Catalan's constant
 \[
  G=\sum_{j=0}^\infty\frac{(-1)^j}{(2j+1)^2}=0.91596\,55941\ldots
 \]
@@ -119,12 +119,12 @@ In the present paper we study a different, much smaller, family of determinants:
 L\"owner matrices of digamma differences, attached to the numbers
 \[
 \begin{gathered}
- \lambda=\frac G2-\frac{5\pi^2}{96},\qquad \lambda'=\frac G2+\frac{5\pi^2}{96},\qquad
+ \lambda_-=\frac G2-\frac{5\pi^2}{96},\qquad \lambda_+=\frac G2+\frac{5\pi^2}{96},\qquad
  \frac14L(2,\chi_{-3}),\\
  L(2,\chi_{-3})=\sum_{k\ge0}\Bigl(\frac1{(3k+1)^2}-\frac1{(3k+2)^2}\Bigr)=0.78130\,24128\ldots
 \end{gathered}
 \]
-Thus $G-5\pi^2/48=2\lambda$, $G+5\pi^2/48=2\lambda'$, and $\lambda+\lambda'=G$.
+Thus $G-5\pi^2/48=2\lambda_-$, $G+5\pi^2/48=2\lambda_+$, and $\lambda_-+\lambda_+=G$.
 
 Recall that the \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the
 infimum of the $\mu$ such that $|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all
@@ -167,7 +167,8 @@ Theorem~\ref{thm:main} improves this to $14.35$.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
-\cite{Beukers79}) have been joined by recent preprints. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, improving
+\cite{Beukers79}) have been joined, since September 2026, by a series of new results, several of them
+obtained with AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, improving
 the bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log a)=2$ for
 every rational $a>0$, $a\ne1$, and for nonzero rational combinations of such logarithms \cite{LiuJiangZhang26}. Giraudin
 \cite{Giraudin26} lowered the bound for $\mu(\zeta(2))$ to below $5.0193784$. Fauzan \cite{Fauzan2026} announced a proof that
@@ -214,8 +215,8 @@ $F$ as a Stieltjes or contour integral exhibits $\Lw_F$ as a Gram matrix of Cauc
 We take three digamma differences, with integer nodes:
 \begin{equation}\label{eq:frames}
 \begin{gathered}
- F_\lambda(z)=\psi(z+1)-\psi(z+\tfrac34),\quad \omega=\tfrac1{16},\quad \xi=\lambda:=\tfrac G2-\tfrac{5\pi^2}{96},\\
- F_{\lambda'}(z)=\psi(z+1)-\psi(z+\tfrac14),\quad \omega=-\tfrac1{16},\quad \xi=\lambda':=\tfrac G2+\tfrac{5\pi^2}{96},\\
+ F_{\lambda_-}(z)=\psi(z+1)-\psi(z+\tfrac34),\quad \omega=\tfrac1{16},\quad \xi=\lambda_-:=\tfrac G2-\tfrac{5\pi^2}{96},\\
+ F_{\lambda_+}(z)=\psi(z+1)-\psi(z+\tfrac14),\quad \omega=-\tfrac1{16},\quad \xi=\lambda_+:=\tfrac G2+\tfrac{5\pi^2}{96},\\
  F_{\chi}(z)=-\tfrac13\psi(z+\tfrac13)+\tfrac12\psi(z+\tfrac12)-\tfrac16\psi(z+1),\\
  \omega=-\tfrac16,\quad \xi=\tfrac14L(2,\chi_{-3}).
 \end{gathered}
@@ -250,7 +251,7 @@ so that $R=C\sqcup X'$ and $Q=C\sqcup Y'$ (a second ``member'' adds one more com
 determinant $P(x)=\det\Phi(x)$ still has degree $\le r$ (or $r+1$), so the integrality loss
 $|R\cap Q|\log q$ is that of $r$ nodes, but the matrix has size $r+m$ and its decay is that of a
 configuration of $(1+\alpha)r$ nodes, $\alpha=m/r$. The content grows too, but less: the extra rows and
-columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants become (for $\lambda$)
+columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants become (for $\lambda_-$)
 \[
 \begin{gathered}
  \Lambda=\LamNew\quad(\text{square frame: }313/105=2.98095),\\ D=\Dnew\quad(\text{square frame: }3.1114),
@@ -268,7 +269,7 @@ maximum of $\sum_aW_{a\sigma(a)}$ over bijections $\sigma:R\to Q$. By LP duality
 $u_a,v_b$ with $W_{ab}\le u_a+v_b$ certify $\tau_p\le\sum u_a+\sum v_b$. We give explicit potentials for
 every prime power $p^e$ (they depend only on $p^e/r$ and on $p\bmod 4$ or $p\bmod 6$), and sum over primes
 with the prime number theorem in arithmetic progressions. This gives a ``tropical'' content
-$\Lambda_{\rm trop}=3.74993$ for $\lambda$.
+$\Lambda_{\rm trop}=3.74993$ for $\lambda_-$.
 
 The tropical bound is not sharp. If $(u,v)$ is an optimal dual solution, the scaled matrix
 $B=p^{u}\Phi p^{v}$ has entries in the valuation ring $\cO$ of $v$, and
@@ -316,7 +317,7 @@ determinant is an $\ell$-adic unit times powers of $\theta+c$ with $1\le c<\ell$
 
 Because the pair of members is available for every $S$ in a range, the prime $\ell$ can be chosen
 \emph{after} the size $r$, anywhere in an interval $[\frac32r,4r]$. This removes the cost of locating $\ell$
-from the exponent (for $\lambda$ and $\lambda'$), and the final exponent is simply $c/\eta$.
+from the exponent (for $\lambda_-$ and $\lambda_+$), and the final exponent is simply $c/\eta$.
 
 \subsection{New idea 4: decay through an energy certificate}
 Moving Hermite's contour to two rays in the left half-plane writes $\omega\,\Lw_F[R,Q]$ as a Gram matrix
@@ -331,7 +332,7 @@ from below by comparing with a \emph{certificate measure} $\sigma$ (point masses
 coordinates, placed where an optimal dual measure is supported) through a regularised kernel $-\frac12\log(|z-w|^2+\rho^2)$, which is conditionally positive
 definite on finite sums by an elementary argument (Frullani's integral and Gaussian sums). Everything left is
 a finite list of inequalities between explicit functions on boxes, which we verify in interval arithmetic
-inside Lean. For $\lambda$ and $\lambda'$ the contour rays have slope $\frac52$ and $\rho=1/4096$ (Section~\ref{ssec:slope-cert}).
+inside Lean. For $\lambda_-$ and $\lambda_+$ the contour rays have slope $\frac52$ and $\rho=1/4096$ (Section~\ref{ssec:slope-cert}).
 The same argument bounds every principal minor along the common block, so the determinant stays
 small at every point within $e^{-cr}$ of $\xi$.
 
@@ -341,8 +342,8 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
  \mu(\xi)\le c\Bigl(\frac1\eta+g\,s\Bigr),
 \]
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
-is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
-$\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
+is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda_-$ and
+$\lambda_+$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
 $\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$ the members are tied to the prime. Section~\ref{sec:minor-nv} proves nonvanishing for a family
 with bounded common low-node deletions; this permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$,
 so the term $gs$ again disappears. Section~\ref{sec:chi3-quarter} adds a quarter border through characteristic-zero selection,
@@ -379,9 +380,9 @@ Theorem~\ref{thm:main}.
 For the three functions of \eqref{eq:frames} the kernel $M$ of \eqref{eq:shift} is as follows; here
 $0\le a<b$ are integers and $M[b,a]=M[a,b]$.
 \begin{align*}
- \lambda:&\quad M[a,b]=-\frac1{b-a}\sum_{k=a+1}^{b}\frac1{16k(4k-1)},\\
+ \lambda_-:&\quad M[a,b]=-\frac1{b-a}\sum_{k=a+1}^{b}\frac1{16k(4k-1)},\\
  &\quad M[a,a]=-\sum_{k=1}^{a}\Bigl(\frac1{16k^2}-\frac1{(4k-1)^2}\Bigr);\\
- \lambda':&\quad M[a,b]=\frac1{b-a}\sum_{k=a+1}^{b}\frac3{16k(4k-3)},\\
+ \lambda_+:&\quad M[a,b]=\frac1{b-a}\sum_{k=a+1}^{b}\frac3{16k(4k-3)},\\
  &\quad M[a,a]=-\sum_{k=1}^{a}\Bigl(\frac1{(4k-3)^2}-\frac1{16k^2}\Bigr);\\
  \chi:&\quad M[a,b]=\frac1{6(b-a)}\sum_{k=a+1}^{b}d(k),\\
  &\quad M[a,a]=-\sum_{k=1}^{a}\delta(k),
@@ -395,15 +396,15 @@ $\omega$ and $\xi$ as in \eqref{eq:frames}.
 \end{lemma}
 \begin{proof}
 From $\psi(w+1)-\psi(w)=1/w$ one gets $F(k)-F(k-1)$ as an explicit rational function of $k$; for instance
-$F_\lambda(k)-F_\lambda(k-1)=\frac1k-\frac1{k-1/4}=-\frac1{k(4k-1)}$, and telescoping gives the off-diagonal
-entries. Similarly $\psi'(w+1)-\psi'(w)=-1/w^2$ gives $F'(a)-F'(0)$. Finally $\omega\,F'(0)=\xi$: for $\lambda$,
-$\frac1{16}(\psi'(1)-\psi'(\frac34))=\frac1{16}(\frac{\pi^2}6-\pi^2+8G)=\lambda$; for $\lambda'$ use
+$F_{\lambda_-}(k)-F_{\lambda_-}(k-1)=\frac1k-\frac1{k-1/4}=-\frac1{k(4k-1)}$, and telescoping gives the off-diagonal
+entries. Similarly $\psi'(w+1)-\psi'(w)=-1/w^2$ gives $F'(a)-F'(0)$. Finally $\omega\,F'(0)=\xi$: for $\lambda_-$,
+$\frac1{16}(\psi'(1)-\psi'(\frac34))=\frac1{16}(\frac{\pi^2}6-\pi^2+8G)=\lambda_-$; for $\lambda_+$ use
 $\psi'(\frac14)=\pi^2+8G$; for $\chi$ use $\psi'(\frac12)=\frac{\pi^2}2$ and
 $\psi'(\frac13)=\frac{2\pi^2}3+\frac92L(2,\chi_{-3})$, which give
 $-\frac16F_\chi'(0)=\sum_{k\ge1}\delta(k)=\frac14L(2,\chi_{-3})$.
 \end{proof}
 
-Note that $2\lambda=G-5\pi^2/48$, $2\lambda'=G+5\pi^2/48$ and $4\xi_\chi=L(2,\chi_{-3})$, and
+Note that $2\lambda_-=G-5\pi^2/48$, $2\lambda_+=G+5\pi^2/48$ and $4\xi_\chi=L(2,\chi_{-3})$, and
 $\mu(a\xi+b)=\mu(\xi)$ for rational $a\ne0$, $b$. So Theorem~\ref{thm:main} is a statement about the three
 numbers $\xi$.
 
@@ -422,7 +423,7 @@ a square matrix of size $|C|+m$, and $P_{\mathcal G}(x)=\det\Phi_{\mathcal G}(x)
 
 By Lemma~\ref{lem:loewner}, $\Phi_{\mathcal G}(\xi+t)=\omega\,\Lw_F[R,Q]+t\,E_{R,Q}$ for real $t$. The geometry
 with $m=0$, $e=0$ is the square L\"owner matrix of size $r$. We use \emph{admissible} geometries, with
-$m\approx r/8$: for $\lambda,\lambda'$ the condition is $r\le8m\le r+8$, and for $L(2,\chi_{-3})$ it is
+$m\approx r/8$: for $\lambda_-,\lambda_+$ the condition is $r\le8m\le r+8$, and for $L(2,\chi_{-3})$ it is
 $r\le8m\le r+9$ (the extra unit is needed to find a pair of members for every prime $\ell\equiv1\pmod6$; see
 \S\ref{sec:proof}). All $o(1)$ terms below are uniform over admissible geometries as $r\to\infty$.
 
@@ -453,10 +454,10 @@ For admissible geometries of scale $r$,
 \[
  \log\den P_{\mathcal G}\le(\Lambda+o(1))\,r^2,
 \]
-where $\Lambda=\LamNew$ for $\lambda$ and $\lambda'$, and $\Lambda=2159207/645120=3.346985\ldots$ for $L(2,\chi_{-3})$.
+where $\Lambda=\LamNew$ for $\lambda_-$ and $\lambda_+$, and $\Lambda=2159207/645120=3.346985\ldots$ for $L(2,\chi_{-3})$.
 \end{theorem}
 
-We give the details for $\lambda$ and indicate the changes for $\lambda'$ and for $L(2,\chi_{-3})$ at the end.
+We give the details for $\lambda_-$ and indicate the changes for $\lambda_+$ and for $L(2,\chi_{-3})$ at the end.
 
 \subsection{Gauss valuations and assignment problems}
 Fix a prime $p$. Let $\cO\subset\Q(x)$ be the localisation of $\Z_{(p)}[x]$ at the prime ideal $(p)$; it is a
@@ -574,7 +575,7 @@ $B\bmod p$ has a block structure governed by the singular indices $k\in S_p$ bel
 blocks on which the leading coefficients ($\operatorname{lead}_{-1}$ of the partial sums of
 $1/(4k(4k-1))$ and $\operatorname{lead}_{-2}$ of the diagonal sums) are constant.
 
-\begin{theorem}[rank deficits for $\lambda$]\label{thm:deficits}
+\begin{theorem}[rank deficits for $\lambda_-$]\label{thm:deficits}
 Let $\mathcal G=\mathcal G(r,m,e)$ be admissible and $r$ large. Then $v_p(\den P_{\mathcal G})\le\tau_p-\delta_p+O(1)$,
 with $\delta_p$ as follows, for all primes $p$ except $p\in\{139,1009\}$:
 \begin{center}
@@ -645,7 +646,7 @@ there. With the prime number theorem in progressions, the total saving is
 \]
 (the three terms come from the first row, the next three rows, and the last row of the table). Hence
 \[
- \Lambda_\lambda\le\Lambda_{\rm trop}(\tfrac18)-0.0465412=3.7033935\ldots\le3.70343 .
+ \Lambda_{\lambda_-}\le\Lambda_{\rm trop}(\tfrac18)-0.0465412=3.7033935\ldots\le3.70343 .
 \]
 (The formal proof uses the slightly coarser rational value $3.7034204$, from a truncation of the sawtooth term.)
 This is the intermediate content constant before the additional savings of Section~\ref{sec:uniform-deficit},
@@ -661,9 +662,9 @@ $2w=O(1)$. For the low-band deficit, which is proved through integrality of the 
 and column are rescaled by $p^w$ so that the same core argument applies, with one unit of slack.
 
 \subsection{The mirror constant and $L(2,\chi_{-3})$}
-For $\lambda'$ the singular indices are those $k$ with $p\mid k(4k-3)$; the two residue classes modulo $4$ exchange
+For $\lambda_+$ the singular indices are those $k$ with $p\mid k(4k-3)$; the two residue classes modulo $4$ exchange
 their roles. The tropical law is the same function $\Lambda_{\rm trop}$, the deficits are the same with the classes
-swapped, and $\Lambda_{\lambda'}=\Lambda_\lambda$. The formal proof uses one generic content theorem with the offset
+swapped, and $\Lambda_{\lambda_+}=\Lambda_{\lambda_-}$. The formal proof uses one generic content theorem with the offset
 ($1$ or $3$) as a parameter.
 
 For $L(2,\chi_{-3})$ the singular indices are those $k$ with $p\mid k(3k-2)(2k-1)$, and the relevant classes of
@@ -683,7 +684,7 @@ tested ($r=256$ and $r=1024$).
 
 \section{Nonvanishing modulo a prime}\label{sec:nonvanishing}
 
-This section follows the formal proof. We treat $\lambda$ in detail; $\lambda'$ and $L(2,\chi_{-3})$ are in
+This section follows the formal proof. We treat $\lambda_-$ in detail; $\lambda_+$ and $L(2,\chi_{-3})$ are in
 \S\ref{ssec:nvother}. Throughout, $\ell\equiv3\pmod4$ is a prime, $K=(\ell+1)/4$, and $\mathcal G_e=\mathcal G(r,m,e)$,
 $e\in\{0,1\}$, is the pair of members of a scale $r$, with
 \begin{equation}\label{eq:nvrange}
@@ -1023,7 +1024,7 @@ Since $u(m,n-1,n)$ is good by the induction hypothesis (as $n\ge n-1$), so is $u
 $S\ge n$. All bases stay in $[1,B]$ and all constants have prime factors at most $B$. This proves Theorem~\ref{thm:good}. \qed
 
 \subsection{The mirror constant and $L(2,\chi_{-3})$}\label{ssec:nvother}
-\emph{The mirror constant.} For $\lambda'$ one takes primes $\ell\equiv1\pmod4$ and $K=(\ell+3)/4$. The only $\ell$-singular
+\emph{The mirror constant.} For $\lambda_+$ one takes primes $\ell\equiv1\pmod4$ and $K=(\ell+3)/4$. The only $\ell$-singular
 factor is again $4K-3=\ell$, and the reduction gives the same pair of bordered matrices (with the opposite sign of the
 shift). Everything else is unchanged.
 
@@ -1078,12 +1079,12 @@ For admissible geometries of scale $r$ and real $t$ with $|t|\le e^{-cr}$,
 \[
 \begin{gathered}
  |P_{\mathcal G}(\xi+t)|\le\exp\bigl(-(D-o(1))r^2\bigr),\\
- (D,c)=\begin{cases}(\Dnew,\ \cnew)&\text{for }\lambda,\lambda',\\ (3.7251,\ 6.6510)&\text{for }L(2,\chi_{-3}).\end{cases}
+ (D,c)=\begin{cases}(\Dnew,\ \cnew)&\text{for }\lambda_-,\lambda_+,\\ (3.7251,\ 6.6510)&\text{for }L(2,\chi_{-3}).\end{cases}
 \end{gathered}
 \]
 \end{theorem}
 
-We describe the proof for $\lambda$; the other two cases differ only in the reflection formula and the certificate
+We describe the proof for $\lambda_-$; the other two cases differ only in the reflection formula and the certificate
 data.
 
 \subsection{A contour representation}
@@ -1095,7 +1096,7 @@ half-plane and $O(1/|z|)$ there, and
  E(z)=-\pi\bigl[\cot\pi z+\cot(\tfrac\pi4-\pi z)\bigr]
 \]
 is $1$-periodic with $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ for $|y|\ge1$. Let $N_0=\lfloor\frac7{50}r\rfloor$, $x^*=-N_0-\frac38$, and let
-$s_0$ be the slope parameter, $s_0=\frac52$ for $\lambda,\lambda'$ and $s_0=3$ for $L(2,\chi_{-3})$, and let
+$s_0$ be the slope parameter, $s_0=\frac52$ for $\lambda_-,\lambda_+$ and $s_0=3$ for $L(2,\chi_{-3})$, and let
 $\Gamma$ be the two rays $x^*+u(-1\pm s_0i)$, $u\ge0$. Moving the contour to $\Gamma$ picks up the residues of $F$ at the
 $2N_0$ poles $-(j+\frac34)$ (residue $+1$) and $-(j+1)$ (residue $-1$), $j<N_0$; the part of the integrand with $\tilde F$
 integrates to $0$ over $\Gamma$. Hence, for all integers $a,b\ge0$,
@@ -1135,7 +1136,7 @@ of mass $1+\alpha$. Its logarithmic energy has the closed form
 \end{multline*}
 
 \subsection{The energy certificate}
-Fix $\rho$ ($\rho=1/4096$ for $\lambda,\lambda'$ and $\rho=1/1024$ or $1/2048$ for $L(2,\chi_{-3})$) and the regularised kernel $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)\le-\log|z-w|$.
+Fix $\rho$ ($\rho=1/4096$ for $\lambda_-,\lambda_+$ and $\rho=1/1024$ or $1/2048$ for $L(2,\chi_{-3})$) and the regularised kernel $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)\le-\log|z-w|$.
 
 \begin{lemma}[conditional positive definiteness]\label{lem:cpd}
 For points $p_1,\dots,p_N\in\C$ and real weights $q_\alpha$ with $\sum q_\alpha=0$,
@@ -1171,7 +1172,7 @@ above from its closed form and monotonicity. Then
 \]
 
 \begin{proposition}[certified constants]\label{prop:cert}
-For $\lambda$ and $\lambda'$ there is a measure $\sigma$ with $\NatomsNew$ atoms with dyadic coordinates and masses, and $\rho=1/4096$, for which
+For $\lambda_-$ and $\lambda_+$ there is a measure $\sigma$ with $\NatomsNew$ atoms with dyadic coordinates and masses, and $\rho=1/4096$, for which
 \[
 \begin{gathered}
  m'\ge\mpNew,\quad S_{\rm cert}\ge-\ScertNew,\quad (1+\alpha)^2I_\rho(\sigma)\le\IsigNew,\\ g_{\min}\ge-\gminNew,\quad
@@ -1184,10 +1185,10 @@ and $c\le6.6510$.
 
 All the inequalities are verified by the Lean kernel (\S\ref{sec:lean}); the data were generated with
 interval arithmetic in Arb \cite{Arb} and then checked independently in Lean with rational arithmetic.
-The certificate for $\lambda$ and $\lambda'$ is described in the next subsection.
+The certificate for $\lambda_-$ and $\lambda_+$ is described in the next subsection.
 
 \subsection{Dual-guided atoms and steeper rays}\label{ssec:slope-cert}
-Two choices distinguish the certificate for $\lambda$ and $\lambda'$.
+Two choices distinguish the certificate for $\lambda_-$ and $\lambda_+$.
 
 \emph{The slope.} Nothing in the contour argument requires slope $3$. The bound $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ holds on any pair of
 rays $x^*+u(-1\pm s_0i)$ with $s_0\ge1$, and the Gram representation \eqref{eq:gram} is unchanged. The slope enters the certificate only through the box cover
@@ -1227,18 +1228,18 @@ contour argument and the Andr\'eief bound are as above, with poles at $-(j+\frac
 certificate for $F_\chi$ (a measure $\sigma_\chi$ of $699$ atoms, $\rho=1/2048$) gives lower bounds for the square-frame
 function $g_\chi=U^{\sigma_\chi}_\rho-U^{\tau}+(1-\kappa_0)\pi|\Im s|$ on rays, segment and line. The hybrid certificate is
 \[
- \sigma_{\rm h}=\frac{\sigma_\chi+\lambda}{9/8},\qquad
- \lambda=\sum_{k=0}^{31}\frac1{256}\,\delta_{t_k},\qquad t_k=1+\frac k{128}-\frac1{2048},
+ \sigma_{\rm h}=\frac{\sigma_\chi+\varpi}{9/8},\qquad
+ \varpi=\sum_{k=0}^{31}\frac1{256}\,\delta_{t_k},\qquad t_k=1+\frac k{128}-\frac1{2048},
 \]
-so that $\lambda$ has mass $\frac18$ and represents the extra density $\frac12\mathrm{Leb}|_{[1,5/4]}$; the atom $t_k$ sits at the
+so that $\varpi$ has mass $\frac18$ and represents the extra density $\frac12\mathrm{Leb}|_{[1,5/4]}$; the atom $t_k$ sits at the
 left end $a_k=1+k/128$ of the $k$-th cell, shifted left by $\rho$. The function of the hybrid frame splits as
-$g_{\rm h}=g_\chi+h$ with $h=U^{\lambda}_\rho-U^{\rm ex}$, where $U^{\rm ex}$ is the potential of $\frac12\mathrm{Leb}|_{[1,5/4]}$.
+$g_{\rm h}=g_\chi+h$ with $h=U^{\varpi}_\rho-U^{\rm ex}$, where $U^{\rm ex}$ is the potential of $\frac12\mathrm{Leb}|_{[1,5/4]}$.
 For $u$ in the $k$-th cell and $\Re s+\rho\le a_k$ one has
 $(\Re s-t_k)^2+\rho^2\le(\Re s-u)^2$, hence $k_\rho(s,t_k)\ge-\log|s-u|$ on the cell, and integrating over the cells gives
 $h(s)\ge0$ whenever $\Re s\le1-\rho$. On the short real interval $[1-\rho,1]$ only the first cell is affected, and an elementary
 bound for $\int_0^\epsilon-\log v\,dv$ gives $h\ge0$ there too. Therefore every lower bound of the square-frame certificate holds for
 $g_{\rm h}$, and only the energy $I_\rho(\sigma_{\rm h})$ is new: it consists of the energy of $\sigma_\chi$, the cross terms
-($699\times32$ logarithms) and the self-energy of $\lambda$ ($32^2$ logarithms), summed exactly in rational interval
+($699\times32$ logarithms) and the self-energy of $\lambda_-$ ($32^2$ logarithms), summed exactly in rational interval
 arithmetic. The result is $D\ge3.7251$ (the computed value is $3.725194$) and $c\le6.6510$; with $64$ extra atoms instead of
 $32$ one would gain only $0.0008$ in $D$.
 
@@ -1261,7 +1262,7 @@ $(r,m+1)$ with one column node moved by one place, at an energy cost $O(r)$.
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
 \subsection{$G\pm5\pi^2/48$}
-Let $\xi=\lambda$ (the case $\lambda'$ is identical, with primes $\ell\equiv1\pmod 4$). Let
+Let $\xi=\lambda_-$ (the case $\lambda_+$ is identical, with primes $\ell\equiv1\pmod 4$). Let
 $\eta=D-\Lambda\ge\Dnew-\LamNew=\etanew$, let $\nu>c/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put
 $L=\log q$. Choose $\delta>0$ with $\nu>c(1+\delta)/\eta$, let $r=\lceil(1+\delta)L/\eta\rceil$ and choose $m$ with
 $r\le8m\le r+8$.
@@ -1277,11 +1278,11 @@ $P_{\mathcal G_e}(p/q)\ne0$, where $\mathcal G_e=\mathcal G(r,m,e)$.
 By Theorems~\ref{thm:content} and~\ref{thm:decay},
 $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2}=e^{-(\eta-o(1))r^2}$.
 
-\emph{Contradiction.} Comparing, $(\eta-o(1))r^2\le(r+1)L$; but $\eta r\ge(1+\delta)L$. Hence $\mu(\lambda)\le c/\eta$, and
+\emph{Contradiction.} Comparing, $(\eta-o(1))r^2\le(r+1)L$; but $\eta r\ge(1+\delta)L$. Hence $\mu(\lambda_-)\le c/\eta$, and
 \[
  \frac c\eta\le\frac{\cnew}{\Dnew-\LamNew}=\MuLamExact\ldots<\MuLam .
 \]
-Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
+Since $G-5\pi^2/48=2\lambda_-$ and $G+5\pi^2/48=2\lambda_+$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
 \subsection{$L(2,\chi_{-3})$}
 Use Section~\ref{sec:chi3-quarter} with at most one common-node deletion, and put
@@ -1310,7 +1311,7 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 \end{remark}
 
 \begin{remark}[where the constants enter]
-For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
+For $\lambda_-$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
 \S\ref{sec:content}, the uniform rescaled-core deficit of Section~\ref{sec:uniform-deficit} and the next-level deficit of Section~\ref{sec:next-level} determine $\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
 $S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
 For $L(2,\chi_{-3})$, bounded low-node deletion removes the prime-location cost, and characteristic-zero selection allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
@@ -1339,13 +1340,13 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
  \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
 \item \lean{longCell_rowLocal}, \lean{kind3_rowLocal} and \lean{lam_both_eps_merged}, \lean{mir_both_eps_merged}: the next-level deficit of Section~\ref{sec:next-level} on a long cell, its binding to the prime profile and the resulting content bound;
-\item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda$ with the certificate of \S\ref{ssec:slope-cert}; the decay engine in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
+\item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda_-$ with the certificate of \S\ref{ssec:slope-cert}; the decay engine in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
 \item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
  the bounded-deletion nonvanishing argument of Section~\ref{sec:minor-nv};
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
 \item \lean{hyb_primal_false} and \lean{primal_pair}: the end of the nonvanishing chain and Lemma~\ref{lem:primal};
 \item \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $L(2,\chi_{-3})$;
-\item \lean{profile_both_eps}, \lean{p6_content}: Theorem~\ref{thm:content} for $\lambda$ and $L(2,\chi_{-3})$.
+\item \lean{profile_both_eps}, \lean{p6_content}: Theorem~\ref{thm:content} for $\lambda_-$ and $L(2,\chi_{-3})$.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}, and the command \texttt{\#print axioms} reports only the
 three standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The file
