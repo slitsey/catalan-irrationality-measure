@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.G728.Final
+public import CatalanMeasure.GenD.P20.Main
