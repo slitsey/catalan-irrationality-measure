@@ -1,6 +1,7 @@
 module
 
 public import CatalanMeasure.GenD.Recycled
+public import CatalanMeasure.GenD.PayW
 public import CatalanMeasure.GenD.Interface
 public import CatalanMeasure.Parametric.RealEvaluation
 
@@ -28,11 +29,6 @@ open Polynomial Filter Real CatalanMeasure.Parametric OAI.InternalCatalan
 open scoped Topology Nat
 
 noncomputable section
-
-/-- Payment hypotheses of the window criterion, in the design's own unit. -/
-def PayW (w d0 ρ η κ δ B : ℝ) : Prop :=
-  ρ * κ = B ∧ 0 < η ∧ 0 < ρ ∧ 0 < w ∧ 2 * w < κ ∧ 0 < δ ∧
-    1 < 2 * (w - δ * (2 * κ - w)) ∧ η < 2 * d0 ∧ d0 + 4 * d0 * δ * κ < η * κ
 
 /-- `((m N)!)` is `exp(o(N²))`. -/
 theorem factorial_mul_le_exp (m : ℕ) (hm : 0 < m) {ε : ℝ} (hε : 0 < ε) :
