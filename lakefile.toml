@@ -56,7 +56,7 @@ name = "CatalanLambda"
 roots = ["CatalanLambda"]
 globs = ["CatalanLambda.+"]
 
-# Hybrid headlines: mu(G - 5 pi^2/48) <= 38.35, mu(G + 5 pi^2/48) <= 38.35, mu(L(2, chi_{-3})) <= 23.82.
+# Hybrid headlines: mu(G - 5 pi^2/48) <= 32.44, mu(G + 5 pi^2/48) <= 32.44, mu(L(2, chi_{-3})) <= 14.35, mu(L(2, chi_{-3}) +- pi^2/9) <= 10.91.
 [[lean_lib]]
 name = "ChallengeHybrid"
 roots = ["ChallengeHybrid"]

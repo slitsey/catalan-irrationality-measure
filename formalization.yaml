@@ -5,22 +5,24 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G-a/b| > b^(-728) for every integer a and all sufficiently large b, so the
-    irrationality exponent of G is at most 728. The proof uses OpenAI's
-    determinant construction with a determinant of size 20N whose value is a
-    polynomial of degree at most 18N in the constant. A Gauss-type quadrature
-    formula and an Andreief identity with fixed points bound the determinant on
-    an interval of length exp(-rho N) around G, with rho = 259299/2500. Rank
-    deficiencies of the reduced matrix modulo the primes in (52N/9, 44N/7),
-    (8N, 9N) and (4N, 9N/2), proved with Chebyshev identities in characteristic p,
-    make every coefficient divisible by a common factor of logarithm at least
-    0.649 N^2. Prime squares in the denominator are recovered from the
-    coefficients, and the largest admissible prime is chosen. The energy
-    estimate uses trial sequences with complex geometric terms, verified on
-    cells with an exact local Taylor expansion. The margin is eta = 64169/25000
-    and the limiting exponent is 18 rho / eta = 727.357... Denominator and
-    content asymptotics and the choice of the prime use the prime number
-    theorem. All numerical bounds are ordinary kernel-checked rational proofs.
+    |G-a/b| > b^(-590) for every integer a and all sufficiently large b, so the
+    irrationality exponent of G is at most 590. The proof uses OpenAI's
+    determinant construction for an arbitrary design of five integer parameters,
+    here (58,9,3,5,3), with a determinant of size 58N whose value is a polynomial
+    of degree 53N in the constant. A Gauss-type quadrature formula with 53N nodes
+    and an Andreief identity with fixed points bound the determinant on an
+    interval of length exp(-rho N) around G, with rho = 301.54258... Closed-form
+    rank deficiencies of the reduced matrix modulo the primes 12N < p <= 26N,
+    proved with antisymmetric row combinations, a reflection of Chebyshev
+    polynomials modulo p and Frobenius relations, make the coefficients divisible
+    by prime powers, a gain of 35369/1848 in units of N^2. The energy estimate
+    uses trial sequences with 160 Chebyshev coefficients and 75 geometric terms,
+    41 of them complex, verified on cells with an exact local Taylor expansion.
+    The decay rate is eta = 27.124717..., and the criterion with a free lower end
+    of the window of primes gives the limiting exponent 53 rho / eta = 589.19...
+    Denominator and content asymptotics and the choice of the prime use the prime
+    number theorem. All numerical bounds are ordinary kernel-checked rational
+    proofs.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -97,9 +99,9 @@ related_formalizations:
 status:
   scope: >-
     The statement in Challenge.lean, with Catalan's constant written as a series,
-    is fully proved in Solution.lean by CatalanMeasure.G728.catalan_irrationalityMeasure_728.
+    is fully proved in Solution.lean by CatalanMeasure.GenD.D58.catalan_irrationalityMeasure_590.
     Every lemma of the companion paper used for this theorem is formalized,
-    including the degree and denominator bounds, the nonvanishing, the three rank
+    including the degree and denominator bounds, the nonvanishing, the four rank
     deficiencies and the divisibility of the coefficients, the quadrature
     perturbation estimate, the energy bounds and their numerical certificates, and
     the final choice of the prime. The prime number theorem comes from the PNT+
@@ -118,21 +120,22 @@ automation:
       models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
       framework: "Claude Code with shell and file tools"
       tool_setup: >-
-        Claude produced the measure framework and the perturbation estimate by
-        quadrature, the rank deficiencies at the primes in (8N, 9N) and (4N, 9N/2)
-        with their consequences for the coefficients, the trial sequences with
-        complex geometric terms and their verification on cells, the final
+        Claude produced the measure framework for arbitrary designs and the
+        perturbation estimate by quadrature, the closed-form rank deficiencies on
+        the windows of primes with their consequences for the coefficients, the
+        trial sequences with complex geometric terms, their verification on cells
+        and the K = 160 certificate of the design (58,9,3,5,3), the final
         assembly, the module conversion, the corresponding Lean proofs and the
         companion paper, using Python, Lean 4, Lake and Mathlib.
     - method: agent
       models: ["OpenAI Codex (GPT-6)"]
       framework: "Codex desktop with shell and file tools"
       tool_setup: >-
-        Codex produced the determinant of size 20N with its local arithmetic and
+        Codex produced the determinant with its local arithmetic and
         nonvanishing, the energy estimates with fixed columns and the first trial,
         the quadrature nodes and the weight bound, the divisibility of the
         coefficients by prime squares and the choice of the largest admissible
-        prime, the rank deficiency at the primes in (52N/9, 44N/7), and the
+        prime, the rank deficiency by antisymmetric row combinations, and the
         corresponding Lean proofs and certificate generators.
   spend_usd: "subscription-based"
   notes: >-
@@ -158,10 +161,10 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_728"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_590"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-728) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-590) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; the
