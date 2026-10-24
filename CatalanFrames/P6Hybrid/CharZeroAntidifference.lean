@@ -1,6 +1,6 @@
 module
 
-public import CatalanCore.Rect.CharZeroNV.Interpolation
+public import CatalanFrames.P6Hybrid.CharZeroInstance
 
 @[expose] public section
 
@@ -16,42 +16,10 @@ namespace CatalanFrames.P6Hybrid.CharZeroNV
 
 variable {K : Type*} [Field K] [CharZero K]
 
-noncomputable def incrementDen : K[X] :=
-  216 * (X + 1) * (X + C (1 / 3)) * (X + C (1 / 2))
+noncomputable abbrev incrementDen : K[X] := CharZeroInstance.incrementDen
 
-theorem isolatedPole : IsolatedIntegerPole (incrementDen : K[X]) (1 - X) where
-  pole := by simp [incrementDen]
-  residue := by norm_num
-  nonneg n := by
-    have hn : (n : K) + 1 ≠ 0 := by exact_mod_cast (show (n : ℤ) + 1 ≠ 0 by omega)
-    have h3 : (n : K) + 1 / 3 ≠ 0 := by
-      intro hz
-      have hz' : (3 : K) * n + 1 = 0 := by linear_combination 3 * hz
-      have : (3 : ℤ) * n + 1 = 0 := by exact_mod_cast hz'
-      omega
-    have h2 : (n : K) + 1 / 2 ≠ 0 := by
-      intro hz
-      have hz' : (2 : K) * n + 1 = 0 := by linear_combination 2 * hz
-      have : (2 : ℤ) * n + 1 = 0 := by exact_mod_cast hz'
-      omega
-    simpa [incrementDen] using mul_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num : (216 : K) ≠ 0) hn) h3) h2
-  negative n := by
-    have hn : -((n : K) + 2) + 1 ≠ 0 := by
-      intro hz
-      have : (n : K) + 1 = 0 := by linear_combination -hz
-      have : (n : ℤ) + 1 = 0 := by exact_mod_cast this
-      omega
-    have h3 : -((n : K) + 2) + 1 / 3 ≠ 0 := by
-      intro hz
-      have hz' : (3 : K) * n + 5 = 0 := by linear_combination -3 * hz
-      have : (3 : ℤ) * n + 5 = 0 := by exact_mod_cast hz'
-      omega
-    have h2 : -((n : K) + 2) + 1 / 2 ≠ 0 := by
-      intro hz
-      have hz' : (2 : K) * n + 3 = 0 := by linear_combination -2 * hz
-      have : (2 : ℤ) * n + 3 = 0 := by exact_mod_cast hz'
-      omega
-    simpa [incrementDen] using mul_ne_zero (mul_ne_zero (mul_ne_zero (by norm_num : (216 : K) ≠ 0) hn) h3) h2
+theorem isolatedPole : IsolatedIntegerPole (incrementDen : K[X]) (1 - X) :=
+  CharZeroInstance.isolatedPole
 
 theorem no_rational_antidifference (a b : K[X]) (hb : b ≠ 0) :
     incrementDen * (shift a * b - a * shift b) ≠ (1 - X) * b * shift b :=
@@ -61,7 +29,7 @@ noncomputable def data (U : K) : IncrementData (incrementDen : K[X]) (1 - X) :=
   quotientData incrementDen (1 - X) isolatedPole.nonneg U
 
 theorem den_degree : (incrementDen : K[X]).natDegree ≤ 3 := by
-  unfold incrementDen
+  unfold incrementDen CharZeroInstance.incrementDen
   compute_degree
 
 /-- The degree drop forced by a putative two-dimensional hybrid kernel is
