@@ -11,6 +11,50 @@
 \newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
 \newcommand{\FormalizationLink}{\url{\FormalizationURL}}
 
+% =====================================================================================
+% ONE-LINE SWITCH.  Every number that depends on the choice of the certificate is a macro
+% below, driven by \Bbank.
+%   \Bbank = 592 : certificate with 160 Chebyshev coefficients; threshold x = 590.7129
+%                  (K160 witness).
+%   \Bbank = 590 : witness "gi" (richer tail); threshold x = 589.19666.  The constants that
+%                  are not yet known for this witness print as [TBD] and must be filled in
+%                  in the \bswitch lines below before release.
+% =====================================================================================
+\newcommand{\Bbank}{592}
+\newcommand{\TBD}{\mbox{[TBD]}}
+\newcommand{\bswitch}[2]{\ifnum\Bbank=592 #1\else #2\fi}
+\newcommand{\Bx}{\bswitch{590.7129}{589.19666}}        % threshold x of the criterion
+\newcommand{\Rho}{\bswitch{301.53968}{\TBD}}            % perturbation exponent rho
+\newcommand{\Ctwo}{\bswitch{4.28881}{\TBD}}             % cost of a fixed column, second case
+\newcommand{\Cone}{\bswitch{4.0965}{\TBD}}              % cost of a fixed column, first case
+\newcommand{\Utarget}{\bswitch{2.255838062}{\TBD}}        % energy bound U
+\newcommand{\NormCap}{\bswitch{0.7736034335}{\TBD}}        % bound for 2|u|^2+|v|^2/2
+\newcommand{\SupX}{\bswitch{-0.96451119}{\TBD}}          % sup of the row field
+\newcommand{\SupY}{\bswitch{-1.57494994}{\TBD}}          % sup of the column field
+\newcommand{\FieldCap}{\bswitch{-2.53946113}{\TBD}}      % SupX + SupY
+\newcommand{\ResCap}{\bswitch{-0.06311641}{\TBD}}        % sup of the residual field
+\newcommand{\EtaInf}{\bswitch{7.917878}{\TBD}}          % real place minus denominators (no content)
+\newcommand{\EtaTot}{\bswitch{27.054833}{\TBD}}         % EtaInf + Chi
+\newcommand{\Kappa}{\bswitch{1.963257}{\TBD}}           % kappa = B/rho
+\newcommand{\Kcoef}{\bswitch{160}{\TBD}}                % number of Chebyshev coefficients
+\newcommand{\Ngeo}{\bswitch{56}{\TBD}}                  % geometric terms
+\newcommand{\Ncomplex}{\bswitch{22}{\TBD}}              % complex geometric terms
+\newcommand{\Nblocks}{\bswitch{48, 41 and 25}{\TBD}}    % blocks of the three covers
+\newcommand{\Ncells}{\bswitch{383, 323 and 194}{\TBD}}  % cells of the three covers
+\newcommand{\Mmargin}{\bswitch{2.986\cdot10^{-6}}{\TBD}}% slack of the objective
+\newcommand{\Disc}{\bswitch{1.647\cdot10^{-5}}{\TBD}}   % discriminant of the budget
+\newcommand{\DiscBound}{\bswitch{1.656\cdot10^{-5}}{\TBD}}
+\newcommand{\TDelta}{\bswitch{6422.7656}{\TBD}}         % n_0^2 (U - log 2 / 2)
+\newcommand{\EtaExact}{\bswitch{27.05695}{\TBD}}        % TDelta minus the denominator exponent
+\newcommand{\Blimit}{\bswitch{590.71}{\TBD}}            % d rho / eta
+\newcommand{\NCtwo}{\bswitch{248.75}{\TBD}}             % n_0 c_2
+\newcommand{\PayL}{\bswitch{53.00012}{\TBD}}            % d + 4 d delta kappa
+\newcommand{\PayR}{\bswitch{53.115}{\TBD}}              % eta kappa
+\newcommand{\Digest}{\bswitch{128cad5dace555faa174dc01c63b90c79781caafc24aaba6f87c51637851f605}{\TBD}}
+% (not certificate dependent)
+\newcommand{\Chi}{19.136955}                            % rounded-down content area
+\newcommand{\Wcap}{52.788}                              % cover constant of the weights
+
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -31,6 +75,7 @@
 \newcommand{\cR}{\mathcal R}
 \newcommand{\cA}{\mathcal A}
 \newcommand{\cL}{\mathcal L}
+\newcommand{\rev}{\operatorname{rev}}
 \newcommand{\lean}[1]{\texttt{#1}}
 
 \begin{document}
@@ -40,31 +85,27 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 23, 2026}
+\date{October 24, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 31A15, 68V20}
 
-\keywords{Catalan's constant, irrationality measure, determinants, logarithmic potentials,
-Gauss quadrature, formal verification}
+\keywords{Catalan's constant, irrationality measure, determinants, rank of reductions modulo p,
+logarithmic potentials, Gauss quadrature, formal verification}
 
 \begin{abstract}
 Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. Building on OpenAI's recent proof
-that $G$ is irrational, we prove that $|G-a/b|>b^{-728}$ for every integer $a$ and every
-sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $728$.
-The irrationality proof compares, for a determinant $\Delta$ whose entries are linear forms in
-$1$ and $G$, a lower bound coming from the denominators of $\Delta$ with an upper bound coming from an
-integral representation. To obtain a measure we regard the determinant as a polynomial
-$\Delta_N(X)$ in the constant and bound it, not only at $X=G$, but on an exponentially small
-neighbourhood of $G$. We control the derivative of the determinant through a Gauss quadrature formula,
-which turns the perturbation into point evaluations of the row functions, and an identity of
-Andr\'eief type with fixed points. We use a determinant of size $20N$ rather than
-$48N$, and we show that every coefficient of the resulting integer polynomial is divisible by
-large powers of the primes in three intervals, by proving rank deficiencies of the reduced
-matrix modulo these primes with Chebyshev identities in characteristic $p$. Prime squares in the
-denominator of a rational approximation are recovered from the coefficients, which removes the
-cost of selecting a good prime. The energy estimates at the real place use trial potentials with
-complex poles placed near the edges of the support of the extremal measure. All steps are formalized
-in the Lean proof assistant, with only the standard axioms.
+that $G$ is irrational, we prove that $|G-a/b|>b^{-\Bbank}$ for every integer $a$ and every
+sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $\Bbank$.
+OpenAI's proof compares, for a determinant $\Delta$ whose entries are linear forms in $1$ and $G$,
+a lower bound coming from the denominators of $\Delta$ with an upper bound coming from an integral
+representation. The determinant depends on five integer parameters, a \emph{design}. We prove,
+for an arbitrary design, that the reduction modulo $p$ of the matrix of rational parts has a
+large kernel for every prime $p$ in four explicit windows, with closed formulas in the five
+parameters, and that the denominator of the determinant is smaller at $p$ by the dimension of this
+kernel. With the design $(58,9,3,5,3)$, a Gauss quadrature formula and an identity of Andr\'eief type
+with fixed points, which bound the determinant on an exponentially small neighbourhood of $G$, and a
+criterion with a free lower end of the window of primes, this gives the measure. All steps are
+formalized in the Lean proof assistant, with only the standard axioms.
 \end{abstract}
 
 \maketitle
@@ -91,16 +132,16 @@ $\mu(\xi)=2$. An \emph{irrationality measure} is an explicit upper bound for $\m
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-728}.
+ \left|G-\frac ab\right|>b^{-\Bbank}.
 \]
-In particular $\mu(G)\le728$.
+In particular $\mu(G)\le\Bbank$.
 \end{theorem}
 
 The proof uses the prime number theorem. The theorem and every result in this paper have been
 verified in the Lean~4 proof assistant on top of OpenAI's formalization, with no unproved steps and
 only the standard axioms (Section~\ref{sec:formal}).
 
-\subsection{Previous results}
+\subsection{Background and related results}
 Irrationality proofs for the values of $L$-functions at integers follow, almost without exception,
 the pattern of Ap\'ery's proof for $\zeta(3)$ \cite{Apery79}. One constructs integer linear forms
 $q_n\xi-p_n$ that tend to zero, with $q_n\ne0$, faster than the growth of their coefficients would allow
@@ -147,118 +188,286 @@ OpenAI's argument \cite{OpenAI2026} has a different shape. Instead of a sequence
 uses a determinant $\Delta$ of size $48N$ whose entries are rational linear combinations of $1$ and
 $G$. Determinants of linear forms were used for irrationality in Zudilin's determinantal approach
 \cite{Zudilin}; here the entries are double integrals against the Cauchy kernel $1/(1-ts)$. If $G$
-were rational, the
-denominators of the entries would give a lower bound $|\Delta|\ge e^{-(\mathsf A+o(1))n^2}$ with
-$n=48N$. An integral representation, of the kind that appears in random matrix theory through
-Andr\'eief's identity \cite{Forrester2018Andreief}, gives the upper bound
-$|\Delta|\le e^{-(\mathsf U+o(1))n^2}$, and an energy estimate shows $\mathsf U>\mathsf A$. The margin is
-small: $\mathsf U-\mathsf A\approx1.3\cdot10^{-4}$. The nonvanishing of $\Delta$ along the primes
-$N=p$ is proved separately by reduction modulo $p$.
+were rational, the denominators of the entries would give a lower bound
+$|\Delta|\ge e^{-(\mathsf A+o(1))n^2}$ with $n=48N$. An integral representation, of the kind that
+appears in random matrix theory through Andr\'eief's identity \cite{Forrester2018Andreief}, gives the
+upper bound $|\Delta|\le e^{-(\mathsf U+o(1))n^2}$, and an energy estimate shows $\mathsf U>\mathsf A$.
+The margin is small: $\mathsf U-\mathsf A\approx1.3\cdot10^{-4}$. The nonvanishing of $\Delta$ along the
+primes $N=p$ is proved separately by reduction modulo $p$.
 
 The first irrationality measure for $G$ was obtained by Jha \cite{Jha2026}, who proved
-$\mu(G)\le10^8$. Carreira \cite{Carreira2026} studied general five-parameter determinant designs,
-obtained $\mu(G)<2294$ for one of them, and formulated the best real-place constant of the method as
-an equilibrium problem for two measures; in \cite{Carreira2026b} he records attempts to carry the
-method to $\beta(4)$. Eskandari \cite{Eskandari2026} studies rational
+$\mu(G)\le10^8$. Carreira \cite{Carreira2026} treated the five integer parameters of the construction
+as free, stated conditions under which OpenAI's argument goes through for general parameters, and
+obtained $\mu(G)<2294$ in the revised version of his note; he also formulated the best real-place
+constant of the method as an equilibrium problem for two measures, and in \cite{Carreira2026b} he
+records attempts to carry the method to $\beta(4)$. His bound is the closest to ours, and the
+comparison is instructive. The determinants are of the same kind. Carreira makes the determinant
+small near $G$ by bounding all its minors, as Jha does; here a quadrature formula for the coefficient of
+the constant is used instead (Section~\ref{sec:real}). And the present paper uses, for every prime $p$
+in an interval of length about $14N$, the rank of the reduction of the matrix modulo $p$; this lowers
+the denominator of the determinant by more than twice the margin that remains between the real and the
+finite places without it (Section~\ref{sec:intro-ideas}). Eskandari \cite{Eskandari2026} studies rational
 approximations to $G$ from another point of view. For $L(2,\chi_{-3})$, Calegari, Dimitrov and Tang
 proved linear independence of $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ \cite{CDT2024}, and their
 holonomy bounds give $\mu(L(2,\chi_{-3}))\le24781$ \cite[Thm.~5.1]{CDT2025}. A companion paper
 \cite{Litsey2026b} proves measures for $G\pm5\pi^2/48$ and $L(2,\chi_{-3})$ with a related method.
 
+\subsection{What a measure requires}\label{sec:intro-need}
+Write $\Delta_N(X)$ for the determinant regarded as a polynomial in the constant, so that
+$\Delta_N(G)$ is OpenAI's determinant. Three properties of the integer polynomials $Q_N$ obtained
+from $\Delta_N$ by clearing denominators turn the comparison of OpenAI into a measure.
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Smallness on a neighbourhood of $G$.} The upper bound must hold not only at $X=G$, but for
+all $X$ with $|X-G|\le e^{-\rho N}$, and the exponent $\rho$ enters the final bound linearly.
+\item \emph{Uniform nonvanishing.} $Q_p(a/b)\ne0$ for primes $p\nmid b$ (here $p^2\nmid b$), in place
+of $Q_p(G)\ne0$.
+\item \emph{Arithmetic.} The integer $b^{\deg Q_N}Q_N(a/b)$ is nonzero, hence at least $1$ in absolute
+value; the smaller the denominator of $\Delta_N$ and the smaller its degree, the stronger the
+conclusion. The prime $p$ must be chosen not dividing $b$, and a naive choice costs a factor.
+\end{enumerate}
+With the degree $d$ of $Q_N$ in $X$, the decay rate $\eta$ of $Q_N$ (normalised by $N^2$) and $\rho$, the
+conclusion is $\mu(G)\le d\rho/\eta$ (Proposition~\ref{prop:criterion}). Everything below serves to make
+$d$ and $\rho$ small and $\eta$ large for a design.
 
-\subsection{Outline of the proof}
-Section~\ref{sec:overview} explains the method and the new ideas without technicalities.
-Section~\ref{sec:setup} recalls OpenAI's construction, and Section~\ref{sec:twenty} defines the
-determinant of size $20N$ and proves its degree bound, its denominator bound and its nonvanishing.
-Section~\ref{sec:content} proves the divisibility of the coefficients, and Section~\ref{sec:real}
-contains the estimates at the real place. Section~\ref{sec:proof} proves Theorem~\ref{thm:main},
-Section~\ref{sec:limits} discusses the limits of the method, and Section~\ref{sec:formal} describes
-the formalization; the disclosure of AI use follows it.
+\subsection{New ideas}\label{sec:intro-ideas}
+\begin{enumerate}[label=\arabic*.,wide]
+\item \emph{All designs at once.} The determinant has five integer parameters
+$(n_0,b_0,q_0,g_0,h_0)$, a \emph{design}, and every argument below is carried out for an arbitrary
+design, with the parameters as symbols: the degree $n-g$, the denominators at all primes, the rank
+deficiencies, the nonvanishing and the real-place budgets. A design is then data. We use
+$(58,9,3,5,3)$, so that $n=58N$, $b=9N$, $q=3N$, $g=5N$, $h=3N$ and the degree is $53N$.
 
-\subsection{Notation and conventions}
+\item \emph{Rank of the reduction modulo $p$, in closed form.} Let $\nu_N(p)$ be the dimension of the
+kernel (on the left) of the reduction modulo $p$ of $p^2$ times the matrix of rational parts. We prove
+four lower bounds for $\nu_N(p)$ (Theorem~\ref{thm:content}), each a piecewise linear function of $p$
+with coefficients that are linear in the five parameters, each on its own explicit window of primes:
+antisymmetric combinations of rows centred at $g$, $g+p$ and $g+2p$ (Theorem~\ref{thm:T});
+a reflection of Chebyshev polynomials modulo $p$ (Theorem~\ref{thm:U}); and two block arguments on
+columns, using Frobenius relations $(1-X)^p=1-X^p$ for the coefficients of the row polynomials
+(Theorems~\ref{thm:U6} and~\ref{thm:S}). They are proved from one digit formula for the entries
+modulo $p$ (Lemma~\ref{lem:digits}). For $(58,9,3,5,3)$ they cover the primes $12N<p\le26N$.
+
+\item \emph{One bound per prime.} At a prime $p$ the valuation of $\Delta_N(z)$ is at least
+$\nu_N(p)-2n$ for every $z$ that is $p$-integral (Proposition~\ref{prop:valuation}); the denominator
+of the determinant is therefore divided by $p^{\nu_N(p)}$, and the best of the four bounds is used
+once. No separate common factor of the coefficients is needed: integer-valuedness of $\Delta_N$ at
+the integers already makes the coefficients of $Q_N$ divisible by what is gained
+(Proposition~\ref{prop:denominators}). The gain is $\int\kappa(x)\,dx=35369/1848$ in units of $N^2$.
+
+\item \emph{Perturbation by quadrature with an odd number of nodes.} The smallness on a neighbourhood
+of $G$ is obtained from a Gauss-type quadrature formula for the coefficient of the constant, with
+$d_0N=53N$ nodes (an odd number for odd $N$) kept at a distance from the origin, and an identity of
+Andr\'eief type with fixed points (Section~\ref{sec:real}).
+
+\item \emph{Trial potentials with complex poles.} The energy estimate at the real place uses trial
+sequences whose generating functions are logarithmic potentials of point charges at complex points
+close to the edges of the support of the extremal measure, and a near-field estimate at the first
+Chebyshev coefficient (Section~\ref{sec:real}).
+
+\item \emph{A criterion with a free lower end of the window.} In the choice of the prime, the window
+of candidates is $(V,U]$ with $U=\kappa\log b$ and $V=(\kappa-\omega)\log b$, and the natural choice
+$\omega=1$ requires $\kappa>2$. We prove the criterion for every $\omega\in(0,1]$ with the hypothesis
+$\kappa>2\omega$ (Proposition~\ref{prop:criterion}); the design above has $\kappa=\Kappa$ and uses
+$\omega=3/4$.
+\end{enumerate}
+
+\subsection{The constants}
+For the design $(58,9,3,5,3)$, in the unit $N$ with $n=58N$: the degree of $Q_N$ is $d=53N$; the
+perturbation exponent is $\rho=\Rho$; the decay rate of $Q_N$ is $\eta=\EtaTot$, of which the real
+place minus the denominators without the gain is $\EtaInf$ and the gain from the rank deficiencies is
+$\Chi$ (rounded down from $35369/1848=19.13906\ldots$). Decimals are truncated; the constants of the
+formal proof are the exact rational numbers. The criterion gives the exponent
+$\Bx$ as the least $B$ allowed by its conditions
+(Section~\ref{sec:proof}); the integer $\Bbank$ is the exponent of Theorem~\ref{thm:main}, for which
+all the conditions are verified in Lean with rational constants.
+
+\subsection{Organization and notation}
+Section~\ref{sec:overview} sets up designs and states the rank deficiencies, the valuations, the
+denominators and the criterion, which are the new ideas in precise form. Section~\ref{sec:setup}
+recalls OpenAI's construction for a design and proves the degree, the denominators and the
+nonvanishing. Section~\ref{sec:content} proves the rank deficiencies. Section~\ref{sec:real} contains
+the estimates at the real place, Section~\ref{sec:proof} proves Theorem~\ref{thm:main}, and
+Section~\ref{sec:remarks} makes remarks on the method. Section~\ref{sec:formal} describes the
+formalization; the disclosure of AI use follows it.
+
 We use the notation of OpenAI's paper \cite{OpenAI2026} for the construction and refer to it for
 details; citations of the form \cite[Prop.~2.1]{OpenAI2026} point to its numbered statements. We
 write $\log$ for the natural logarithm, $v_p$ for the $p$-adic valuation, $\theta(x)=\sum_{p\le x}\log p$
-for Chebyshev's function, $T_k$ and $U_k$ for the Chebyshev polynomials of the first and second kind,
-and $y_+=\max(y,0)$.
+for Chebyshev's function, $T_k$ and $U_k$ for the Chebyshev polynomials of the first and second kind
+(with $U_{-1}=0$ and $T_{-k}=T_k$, $U_{-k-1}=-U_{k-1}$), $[X^k]F$ or $F[k]$ for the coefficient of $X^k$
+in a polynomial $F$, $y_+=\max(y,0)$, and $\operatorname{rev}_E F(X)=X^EF(1/X)$ for the reversal of a
+polynomial of degree at most $E$.
 
-\section{Overview of the method and of the new ideas}\label{sec:overview}
+\section{Designs, rank deficiencies and the exponent}\label{sec:overview}
 
-\subsection{From irrationality to a measure}
-Write OpenAI's matrix as $\cA_N=\cA^0_N+G\,\cL_N$ with rational matrices $\cA^0_N$ and $\cL_N$, and put
-$\Delta_N(X)=\det(\cA^0_N+X\cL_N)$, a polynomial in the constant. A symmetry of the rows of $\cL_N$ gives
-a degree bound $\deg\Delta_N\le dN$, and multiplication by a common denominator and a factorial gives an
-integer polynomial $Q_N$.
+\subsection{Designs}
+A \emph{design} is a quintuple $(n_0,b_0,q_0,g_0,h_0)$ of integers with $n_0,b_0,q_0,h_0\ge1$,
+$g_0\ge0$ and $2g_0<n_0$. For $N\ge1$ we write
+\begin{gather*}
+ n=n_0N,\quad b=b_0N,\quad q=q_0N,\quad g=g_0N,\quad h=h_0N,\\
+ L=n+b+q,\quad C=L+g,\quad H=C+h,\quad A=b+q+2g ,
+\end{gather*}
+and $d_0=n_0-g_0$. OpenAI's choice is the design $(48,7,4,4,2)$. We work throughout with
+\begin{gather*}
+ D=(58,9,3,5,3):\quad n=58N,\quad b=9N,\quad q=3N,\quad g=5N,\quad h=3N,\\
+ L=70N,\quad C=75N,\quad H=78N,\quad A=22N,
+\end{gather*}
+and $d_0=53$. The construction of OpenAI's determinant for a design is recalled in
+Section~\ref{sec:setup}; it yields an $n\times n$ matrix $\cA_N=\cA^0_N+G\cL_N$ with rational matrices
+$\cA^0_N$ and $\cL_N$, and the polynomial $\Delta_N(X)=\det(\cA^0_N+X\cL_N)$ of degree at most $n-g$
+(Lemma~\ref{lem:degree}). The search that led to $D$ among designs, scored by the exponent of
+Proposition~\ref{prop:criterion}, is not part of the proof.
 
-Two things are needed to turn OpenAI's argument into a measure. First, the hypothesis $G=a/b$ must be
-replaced by a rational approximation: the determinant must be small not only at $X=G$ but at every $X$
-within $e^{-\rho N}$ of $G$, for some constant $\rho$. Second, the nonvanishing at a rational point
-$a/b$ must hold uniformly, along primes $p$ not dividing $b$, and the denominator bound must be uniform
-in $a/b$. Given these, a standard argument (Proposition~\ref{prop:criterion}) gives $\mu(G)\le d\rho/\eta$
-up to a factor coming from the choice of the prime, where $\eta N^2$ is the margin between the two
-bounds. Making $\rho$ small and $\eta$ large is the content of the paper.
+\subsection{Rank deficiencies}
+For an odd prime $p$ with $H<p^2$ the entries of $p^2\cA^0_N$ are $p$-integral (Lemma~\ref{lem:digits});
+let $\cA^0_{N,p}$ be its reduction modulo $p$, and let $\nu_N(p)$ be the dimension of its left kernel, that
+is $n$ minus its rank. Write $\Lambda=g+q+h$ and $e=(p+1)/2-q-h$.
 
-We use OpenAI's construction with different parameters, which gives a determinant of size $20N$ and
-degree at most $18N$ (Section~\ref{sec:twenty}). Its denominators are computed exactly at every prime,
-including the contribution of linear relations among the rows modulo $p$, and its nonvanishing is
-proved by reduction modulo $p$ under the weaker hypothesis $p^2\nmid b$.
-
-\subsection{New idea 1: a perturbation bound by quadrature}
-To bound $\Delta_N(x)-\Delta_N(G)$ for $x$ near $G$, we write the matrix $\cL_N$ by an exact Gauss-type
-quadrature formula as a combination of point evaluations of the row functions
-(Lemma~\ref{lem:quadrature}). Expanding the determinant column by column gives mixed determinants in
-which some columns are integrals and others are point values. An identity of Andr\'eief type with
-fixed points (Lemma~\ref{lem:andreief}) writes each of them as an integral over fewer variables, and the
-energy method bounds the integrand. The quadrature weights are bounded on a circle slightly larger than
-the unit circle, with nodes chosen away from the point where the energy fields are largest. This gives a
-perturbation exponent $\rho$ of the size of the constants in the energy estimate.
-
-\subsection{New idea 2: divisibility of all coefficients}
-The core of the arithmetic is that every coefficient of $Q_N$ is divisible by a power of each prime
-$p$ in three intervals, $(52N/9,44N/7)$, $(8N,9N)$ and $(4N,9N/2)$, given by the rank deficiency of the
-reduced matrix $p^2\cA^0_N\bmod p$ (Section~\ref{sec:content}). We prove these rank deficiencies with
-identities for Chebyshev polynomials in characteristic $p$, such as $T_p=X^p$ and
-$U_{p-1}=(X^2-1)^{(p-1)/2}$, and their consequences for the digits in base $p$ of the row polynomials.
-By the prime number theorem the common factor has logarithm at least $0.649N^2$, which is added to
-the margin $\eta$. This is in the spirit of the arithmetic method of Hata and Rhin--Viola, but the
-common factor comes from linear algebra modulo $p$ rather than from a group of symmetries.
-
-\subsection{New idea 3: prime squares in the denominator}
-The polynomial $Q_N(X/q^2)$ is still integral at the primes $N<q\le2N$, so $q^{2j}$ divides the $j$-th
-coefficient of $Q_N$. If $b$ is divisible by the squares of many such primes, the integer
-$b^{\deg Q_N}Q_N(a/b)$ is divisible by their product. Choosing the \emph{largest} prime $p$ with
-$p^2\nmid b$ in a suitable interval, every larger prime of the interval has its square dividing $b$, and
-its contribution is recovered from the coefficients (Section~\ref{sec:proof}). This removes the loss
-usually caused by the choice of the prime.
-
-\subsection{New idea 4: trial potentials with complex poles}
-The energy estimate needs explicit trial sequences, whose generating functions are potentials. The
-extremal measure of the energy problem has a gap around $x=0$ in its support; near the edges of the
-gap, and near $x=0$, Chebyshev expansions converge slowly. We add terms $\operatorname{Re}\,r\log(1-2xz+z^2)$,
-which are logarithmic potentials of point charges at complex points close to these edges
-(Section~\ref{sec:real}). The resulting fields are bounded above on their whole domains by a verified
-computation on intervals, with an exact local Taylor expansion of the polynomial part.
-
-\subsection{The deduction}
-Combining these, the degree is $d=18$, the margin is $\eta=64169/25000$ and the perturbation exponent
-is $\rho=259299/2500$. Since the choice of the prime costs nothing, the exponent is the limit
+\begin{theorem}\label{thm:content}
+Let $D$ be a design, $N\ge1$, and $p$ an odd prime with $H<p^2$. Then $\nu_N(p)$ is at least each of the
+following quantities, whenever the stated conditions hold; negative values are replaced by $0$.
+\begin{enumerate}[label=(\alph*)]
+\item (Theorem~\ref{thm:T}) If $2g<p$, $H\le4p$ and $D_T=\min(g,\,n-1-g-2p,\,C-3p)\ge1$:
 \[
- \mu(G)\le\frac{18\rho}{\eta}=\frac{46673820}{64169}=727.357\ldots,
+ D_T-(n+q+g+h-3p)_+ .
 \]
-which gives Theorem~\ref{thm:main}.
+\item (Theorem~\ref{thm:U}) If $2h\le p+1$, $L\le3p\le H$, $n+q+g+h\le3p$ and $2p\le n+q$:
+\[
+ \min(n,\,2p+2g+1)-g-2p-1 .
+\]
+\item (Theorem~\ref{thm:U6}) If $e\ge0$, $n\le4p+2g+1$, $L\le6p$ and $b+q\le p+\mu_0$, with
+$\mu_0=\max(q,H+q-6p)$:
+\[
+ \min\Bigl(\frac{p-1}2-g,\ n+b+q+h-\frac{11p+1}2\Bigr).
+\]
+\item (Theorem~\ref{thm:S}) If $e\ge0$ and $n\le4p+2g+1$: $m_1-m_0-e$, with
+\[
+ m_0=\max(b+q,\,L+\Lambda-4p),\qquad m_1=\min(p,\,L-3p,\,b+q+2g+1).
+\]
+\end{enumerate}
+\end{theorem}
 
-\subsection{Formal verification}
-Every step, including the arithmetic of the denominators, the rank deficiencies, the energy estimates
-and their numerical bounds, and the prime number theorem, is formalized in Lean~4 with Mathlib
-\cite{Lean4,Mathlib} on top of OpenAI's formalization. The written proofs below are at the level of a
-research article; for long computations we point to the formal proof, which is the basis for the
-correctness of Theorem~\ref{thm:main}.
+These are the statements of the Lean theorems \lean{t\_rank}, \lean{u\_rank}, \lean{u6\_rank\_closed} and
+\lean{s\_rank} (the last two in the form $m_1-m_0-e$ and its closed form), proved for every
+admissible design. For $D$ they combine, for $12N<p\le26N$ and up to the loss of one unit at the
+integer rounding, into the following function $\kappa$ of $x=p/N$ (units of $N$); on each cell the
+value is the largest of the bounds that apply.
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+interval of $x$ & $\kappa(x)$ & bound \\
+\midrule
+$(12,13]$ & $x/2-5$ & (c), $(p-1)/2-g$ \\
+$(13,\,146/11]$ & $73-11x/2$ & (c), $n+b+q+h-(11p+1)/2$ \\
+$(50/3,\,69/4]$ & $9x/2-75$ & (d), $(9p-2C)/2$ \\
+$(69/4,\,35/2]$ & $x/2-6$ & (d), $(p-1)/2+h-b$ \\
+$(35/2,\,128/7]$ & $64-7x/2$ & (d), $(2(n+q+h)-7p)/2$ \\
+$(64/3,\,23]$ & $3x-64$ & (a), $3p-(n+q+h)$ \\
+$(23,\,24]$ & $5$ & (a) up to $x=70/3$, then (b); in both the cap $g$ \\
+$(24,\,26]$ & $53-2x$ & (b), $n-g-2p$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+and $\kappa=0$ elsewhere. The area of $\kappa$ is
+\[
+ \int_0^\infty\kappa(x)\,dx=\frac54+\frac9{44}+\frac{49}{64}+\frac{43}{64}+\frac{121}{112}+\frac{25}6+5+6
+ =\frac{35369}{1848}=19.13906\ldots
+\]
+The families (a)--(d) come from different arguments, and the kernels they produce are not shown to be
+independent; at a prime the best bound is used once, never the sum.
 
-\section{OpenAI's construction}\label{sec:setup}
+\subsection{Valuations, denominators and the exponent}
+The rank deficiencies enter through the following statement, which is the finite-place input.
 
-We recall the construction of \cite{OpenAI2026} in the generality in which we use it. It depends on
-positive integers $n,b,q,g,h$ and $L,C,H,A$, all proportional to $N$; OpenAI's choice is
-$n=48N$, and ours is given in Section~\ref{sec:twenty}. For $0\le r<n$ the row polynomials are
+\begin{proposition}\label{prop:valuation}
+Let $p$ be an odd prime with $H<p^2$ and let $z\in\Q$ have denominator prime to $p$. Then
+$p^2(\cA^0_N+z\cL_N)$ has $p$-integral entries, its reduction modulo $p$ equals $\cA^0_{N,p}$, and
+\[
+ v_p\bigl(\Delta_N(z)\bigr)\ge\nu_N(p)-2n .
+\]
+\end{proposition}
+
+At the other primes there are the valuation bounds of OpenAI's method (Section~\ref{sec:setup}), and
+at $2$ a bound from the expansion into minors. They combine to the denominators.
+
+\begin{proposition}\label{prop:denominators}
+For the design $D$ there are positive integers $D_N$ such that $D_N\Delta_N(i)\in\Z$ for every integer
+$i$, such that $q^{2n}\mid D_N$ for every prime $N<q\le2N$, and such that for every $\varepsilon>0$ and
+all large $N$
+\[
+ \log D_N\le(\mathsf A+\varepsilon)N^2,\qquad
+ \mathsf A=\frac{2673}8\log2+116+\frac{24269}4-\frac{35369}{1848}=6395.7087\ldots
+\]
+\end{proposition}
+
+Here $2673/8\,\log2$ is the contribution of the prime $2$, and $116+24269/4$ is the area of the
+piecewise linear function that bounds the poles at the odd primes (Section~\ref{sec:setup}); the last
+term is the gain $\int\kappa$ of Theorem~\ref{thm:content}.
+
+At the real place we prove the following in Section~\ref{sec:real}. Put
+\begin{equation}\label{eq:rho-def}
+ \rho=n_0c_2+w,\qquad \rho=\Rho\ \text{ for }D,
+\end{equation}
+where $c_2=\Ctwo$ is the cost of a fixed column in the energy estimate and $w=52.7887$ is the logarithmic
+size of the weights of the quadrature formula.
+
+\begin{theorem}\label{thm:real}
+Let $U=\Utarget$. For all large $N$ and all real $x$ with $|x-G|\le e^{-\rho N}$,
+\[
+ |\Delta_N(x)|\le\exp\bigl(-(n_0^2(U-\tfrac12\log2)-\varepsilon)N^2\bigr),\qquad n_0=58 .
+\]
+\end{theorem}
+
+Since $n_0^2(U-\frac12\log2)=\TDelta\ldots$ and $\mathsf A=6395.7087\ldots$, the polynomial
+$Q_N=(d_0N)!\,D_N\Delta_N$ has integer coefficients, degree at most $d_0N$, and
+\[
+ |Q_N(x)|\le e^{-\eta N^2}\qquad(|x-G|\le e^{-\rho N}),\qquad \eta=\EtaTot ,
+\]
+where $\eta$ is a rational number slightly below $n_0^2(U-\frac12\log2)-\mathsf A=\EtaExact\ldots$ The two
+remaining properties of Section~\ref{sec:intro-need} are the nonvanishing of $Q_p(a/b)$ for $p^2\nmid b$
+(Proposition~\ref{prop:nonvanishing}) and the divisibility of the $i$-th coefficient of $Q_N$ by $q^{2i}$
+for $N<q\le2N$ (Lemma~\ref{lem:recycling}), which come from the denominators and are what is used to
+choose the prime. The criterion is the following.
+
+\begin{proposition}\label{prop:criterion}
+Let $\xi\in\R$, $d\in\N$, and let $\eta,\rho,\kappa,\delta,\omega>0$ satisfy
+\[
+ \omega\le1,\quad 2\omega<\kappa,\quad \eta<2d,\quad 1<2\bigl(\omega-\delta(2\kappa-\omega)\bigr),\quad
+ d+4d\delta\kappa<\eta\kappa .
+\]
+Let $Q_p\in\Z[X]$ ($p$ prime) satisfy, for all large $p$: $\deg Q_p\le dp$; $Q_p(a/b)\ne0$ whenever
+$a\in\Z$, $b\ge1$, $p^2\nmid b$; $q^{2i}$ divides the $i$-th coefficient of $Q_p$ for all primes
+$p<q\le2p$ and $i\le dp$; and $|Q_p(x)|\le e^{-\eta p^2}$ for $|x-\xi|\le e^{-\rho p}$. Then
+\[
+ |\xi-a/b|>b^{-\rho\kappa}
+\]
+for all integers $a$ and all sufficiently large $b$.
+\end{proposition}
+
+The conditions say, in the order of the proof of Section~\ref{sec:proof}, that the window of primes
+contains a prime not dividing $b$, that the primes of the window above the chosen one are recycled, and
+that the final inequality is contradictory. For the design $D$ one takes $d=53$, $\omega=3/4$,
+$\delta=2.9\cdot10^{-7}$ and $\kappa=B/\rho$ with $B=\Bbank$; the last condition then reads
+$B>x:=d\rho/(\eta-4d\delta)=\Bx$.
+
+\subsection{A reading of the exponent}
+The criterion shows that, for a fixed design, the bound is $d\rho/\eta$ in the limit, and that its three
+ingredients come from three different places: the degree $d=n-g$ from the construction, the decay rate
+$\eta$ from the real place, the denominators and the rank deficiencies, and the perturbation exponent
+$\rho$ from the quadrature. The rank deficiencies matter because $\eta$ is a small difference of two
+large numbers, $\TDelta$ and $6395.71$; the gain $19.14$ is more than two thirds of $\eta=\EtaTot$.
+
+\section{OpenAI's construction for a design}\label{sec:setup}
+
+We recall the construction of \cite{OpenAI2026} in the generality in which we use it, and we prove for an
+arbitrary design the degree bound, the bounds for the denominators at the finite places and the
+nonvanishing at the primes $N=p$. Carreira \cite{Carreira2026} checks that the argument of OpenAI goes
+through for designs satisfying a few conditions; we need the same for the finite places and, in addition,
+for the entries modulo $p^2$.
+
+\subsection{The determinant}
+Let $D=(n_0,b_0,q_0,g_0,h_0)$ be a design, with the notation of Section~\ref{sec:overview}. For $0\le r<n$
+the row polynomials are
 \begin{equation}\label{eq:rows}
  P_r(t)=(1-t)^ht^{C-1}T_{|r-g|}(1/t),\qquad \deg P_r<H,
 \end{equation}
@@ -281,59 +490,29 @@ and $\cL_N$ with
  \cL_N(r,k)=\sum_{v=0}^{q}(-1)^v\binom qv\sum_{i}[t^i]P_r\cdot4\,c_{(i-b-k-v)/2},
 \end{equation}
 where $c_l=4^{-l}\binom{2l}{l}$ for integers $l\ge0$ and $c_z=0$ otherwise
-\cite[Prop.~2.1 and (20)]{OpenAI2026}.
-
-OpenAI's proof has three parts, and we use all of them.
-
-\emph{The finite places.} For every rational $z$ and every prime $\ell$, OpenAI bounds
-$v_\ell\det(\cA^0_N+z\cL_N)$ from below in terms of $\ell$, $N$ and the denominator of $z$
-\cite[Prop.~2.2, \S3]{OpenAI2026}. The proof groups the coefficients of the row polynomials by their
-digits in base $\ell$ and uses the $\ell$-adic valuations of the moments of $\mu$ and of the
-numbers $c_l$.
-
-\emph{Nonvanishing.} For a large prime $p$ and $N=p$, the matrix $p^2(\cA^0_p+z\cL_p)$ has
-$p$-integral entries when $p\nmid\operatorname{den}z$, and its reduction modulo $p$ does not depend on
-$z$ and is invertible \cite[Prop.~4.1]{OpenAI2026}. Hence the determinant is nonzero and its
-$p$-adic valuation is known exactly. OpenAI states this under the hypothesis $G=z$, but the proof uses
-only the arithmetic of the rational matrix $\cA^0_p+z\cL_p$, and only the condition
-$p\nmid\operatorname{den}z$. This uniformity in $z$ is what makes a measure possible.
-
-\emph{The real place.} The entries \eqref{eq:matrix} are double integrals against the Cauchy kernel
-$1/(1-ts)$. By Andr\'eief's identity the determinant is an integral over $n$ points $t_i\in(-1,1)$ and
-$n$ points $s_j\in(0,1)$ of a product of three determinants, one of which is the Cauchy determinant
-$\det[1/(1-t_is_j)]$. After the change of variables $t=2x/(1+x^2)$, OpenAI bounds the integrand by the
-exponential of $n^2$ times a discrete logarithmic energy of the points $x_i$ and $s_j$
-\cite[\S5]{OpenAI2026}. The maximum of this energy is bounded by a dual argument: two trial sequences
-are chosen, two squares are completed, and the resulting functions of one variable are bounded above
-by an explicit computation \cite[Prop.~6.1, \S7]{OpenAI2026}. We describe this in
-Section~\ref{sec:real}, where we extend it.
-
-\section{The determinant of size $20N$}\label{sec:twenty}
-
-\subsection{The parameters}
-We use OpenAI's construction with
-\[
- n=20N,\quad b=3N,\quad q=N,\quad g=2N,\quad h=N,\qquad
- L=24N,\quad C=26N,\quad H=27N,\quad A=8N ,
-\]
-and write
-\[
- \Delta_N(X)=\det(\cA^0_N+X\cL_N)\in\Q[X],
-\]
-so that $\Delta_N(G)=\det\cA_N$. These parameters were found by a search over OpenAI's family, scored
-by the margin between the constants at the real place and at the finite places; the search is not
-part of the proof.
+\cite[Prop.~2.1 and (20)]{OpenAI2026}. The rational part is
+\begin{equation}\label{eq:rational-part}
+ \begin{gathered}
+ \cA^0_N(r,k)=\sum_{v=0}^q(-1)^v\binom qv R(r,b+k+v),\\
+ R(r,j)=\sum_{i<H}P_r[i]\,M(i,j)-\frac32\sum_{i<H}D_r[i]\,Z(i,j)
+ \end{gathered}
+\end{equation}
+with rational numbers $M(i,j)$ (moments of $\mu$ against the Cauchy kernel) and $Z(i,j)$, where
+$Z(i,i)=-\sum_{k\le i}k^{-2}$ and $Z(i,j)=(H_i-H_j)/(i-j)$ for $i\ne j$, $H_i=\sum_{k\le i}1/k$
+\cite[Prop.~2.1]{OpenAI2026}. The design enters \eqref{eq:rational-part} only through the integer
+coefficients $P_r[i],D_r[i]$ and the range of $j$, which is $[b,L)$. Put
+$\Delta_N(X)=\det(\cA^0_N+X\cL_N)\in\Q[X]$, so that $\Delta_N(G)=\det\cA_N$.
 
 \subsection{The degree}
 \begin{lemma}\label{lem:degree}
-$\deg\Delta_N\le18N$.
+$\deg\Delta_N\le n-g$.
 \end{lemma}
 
 \begin{proof}
 By \eqref{eq:L} the row $r$ of $\cL_N$ depends only on $P_r$, and hence only on $|r-g|$. So the rows
-$r$ and $2g-r$ of $\cL_N$ agree for $0\le r<g$. Subtracting row $r$ from row $2g-r$ for each $r<g$ does
-not change the determinant and makes $g$ rows of the new coefficient of $X$ vanish. A determinant
-$\det(B+XL')$ in which $L'$ has $n-g$ nonzero rows has degree at most $n-g=18N$ in $X$.
+$r$ and $2g-r$ of $\cL_N$ agree for $0\le r<g$, and $2g-r\le n-1$ because $2g<n$. Subtracting row $r$ from
+row $2g-r$ for each $r<g$ does not change the determinant and makes $g$ rows of the new coefficient of
+$X$ vanish. A determinant $\det(B+XL')$ in which $L'$ has $n-g$ nonzero rows has degree at most $n-g$ in $X$.
 \end{proof}
 
 \subsection{Rank deficiency and valuation}
@@ -350,221 +529,301 @@ $M=UV+pE$ with $E$ integral at $p$. Expanding the determinant multilinearly in t
 that uses more than $n-e$ columns of $UV$ vanishes, and every other term has at least $e$ factors $p$.
 \end{proof}
 
-\subsection{The denominators}
-For an odd prime $p$ with $27N<p^2$, the method of \cite[\S3]{OpenAI2026}, applied to the present
-parameters, gives
+\subsection{The digit formula}
+The reduction of $p^2\cA^0_N$ modulo $p$ is described by the digits in base $p$ of the coefficients of the
+row polynomials. This is the one place where the arithmetic of the moments enters; it is design-free.
+For an odd prime $p$ and $c\in\F_p^n$ put
 \[
- v_p\bigl(\Delta_N(z)\bigr)\ge-N\,\varphi(p/N)
+ P_c=\sum_rc_rP_r,\qquad D_c=\sum_rc_rD_r,\qquad W=(1-X^2)^{(p-1)/2},
 \]
-for every rational $z$ whose denominator is prime to $p$, where
+(reading the $P_r,D_r$ as polynomials in $X$), and let $F[k]$ denote the coefficient of $X^k$.
+
+\begin{lemma}[digit formula]\label{lem:digits}
+Let $p$ be an odd prime with $H<p^2$, let $0\le j<H$, and write $j=Jp+\ell$ with $0\le\ell<p$. Then
+$p^2R(r,j)$ is $p$-integral for every row $r$, and for every $c\in\Z^n$
 \[
- \varphi(x)=\begin{cases}
- 40&0\le x\le10,\\
- 60-2x&10\le x\le12,\\
- 36&12\le x\le27/2,\\
- 63-2x&27/2\le x\le14,\\
- 91-4x&14\le x\le16,\\
- 75-3x&16\le x\le24,\\
- 27-x&24\le x\le27,\\
- 0&x\ge27.
+ p^2\sum_rc_rR(r,j)\equiv\sum_{u\ge0}\Bigl(\alpha_{u,J}\,(XWP_c)[up+\ell]+\beta_{u,J}\,D_c[up+\ell]\Bigr)
+ \pmod p ,
+\]
+where $\alpha_{u,J}=M(u-1,J)$ and $\beta_{u,J}=-\tfrac32Z(u,J)$ are $p$-integral numbers that do not depend on
+$c$, on $\ell$ or on the design.
+\end{lemma}
+
+\begin{proof}
+Two facts about the numbers $M$ and $Z$ are needed, for $0\le i,j<p^2$. Write $j=Jp+\ell$ and let
+$\varrho\in[0,p)$ be the residue of $j-i-1$ modulo $p$, $u=(i+1+\varrho-\ell)/p$. First, $p^2M(i,j)$ is
+$p$-integral and $p^2M(i,j)\equiv W[\varrho]\,M(u-1,J)\pmod p$; this is the digit reduction of the moments in
+\cite[\S3]{OpenAI2026}, obtained from the $p$-adic analysis of their recursions, and it does not involve a design.
+Second, $p^2Z(i,j)$ is $p$-integral and is congruent to $Z(\lfloor i/p\rfloor,J)$ if $i\equiv j\pmod p$ and to
+$0$ otherwise. For the second, write $i'=\lfloor i/p\rfloor$. Since $i<p^2$, $H_i=p^{-1}H_{i'}+S_i$ and
+$H^{(2)}_i=p^{-2}H^{(2)}_{i'}+S'_i$ with $S_i,S'_i$ $p$-integral, which gives the case $i=j$. If $i\not\equiv j$,
+then $p^2Z(i,j)=p\cdot pZ(i,j)\equiv0$. If $i\equiv j$, $i\ne j$, then $i-j=(i'-J)p$, and the integers
+$k\in(j,i]$ prime to $p$ form $i'-J$ complete systems of residues modulo $p$, so that
+$\sum_k1/k\equiv(i'-J)\sum_{r=1}^{p-1}1/r\equiv0\pmod p$; hence $H_i-H_j\equiv(H_{i'}-H_J)/p$ and
+$p^2Z(i,j)\equiv Z(i',J)$.
+
+Now use \eqref{eq:rational-part}. By the first fact the part $\sum_iF[i]\,p^2M(i,j)$ with $F=P_c$ is
+$\sum_iF[i]\,W[\varrho(i)]\,M(u(i)-1,J)$. For fixed $u$ the indices with $u(i)=u$ are those for which
+$\varrho=up+\ell-1-i$ lies in $[0,p-1]$, and $W$ has degree $p-1$, so the sum over these $i$ is
+$(XFW)[up+\ell]$; this gives the $\alpha$-terms. By the second fact the part with $D_c$ is
+$\sum_{i\equiv\ell}D_c[i]\,Z(\lfloor i/p\rfloor,J)=\sum_uZ(u,J)D_c[up+\ell]$, which gives the $\beta$-terms.
+The $p$-integrality of $M(u-1,J)$ and $Z(u,J)$ for $u,J<p$ is part of the first and second facts.
+\end{proof}
+
+For the filtered columns we use the following form. Let $0\le k<n$, $s=b+k$, $J=\lfloor s/p\rfloor$ and
+$\mu=(s\bmod p)+q$. If $\mu<p$, the $q+1$ raw columns $s,\dots,s+q$ that enter column $k$ have the same
+digit $J$ and residues $(s\bmod p)+v<p$. Since
+$\sum_{v=0}^q(-1)^v\binom qvF[t+v]=[X^{t+q}]\bigl((X-1)^qF\bigr)$ for every polynomial $F$,
+Lemma~\ref{lem:digits} gives
+\begin{equation}\label{eq:filtered-digits}
+ p^2\sum_rc_r\cA^0_N(r,k)\equiv\sum_{u\ge0}\Bigl(\alpha_{u,J}\,Q_c[up+\mu]+\beta_{u,J}\,\widehat D_c[up+\mu]\Bigr),
+\end{equation}
+where $Q_c=(X-1)^q\,XWP_c$ and $\widehat D_c=(X-1)^qD_c$. A combination $c$ whose responses vanish on all
+raw columns in $[b,L)$ lies in the left kernel of $\cA^0_{N,p}$, and a combination whose responses on the
+columns outside a set vanish and which kills the set by \eqref{eq:filtered-digits} does as well.
+
+\subsection{Integrality and the valuation at $p$}
+\begin{proof}[Proof of Proposition~\ref{prop:valuation}]
+By Lemma~\ref{lem:digits} the entries of $p^2\cA^0_N$ are $p$-integral, since the filter is an integer
+combination of raw columns with $j<L\le H$. The entries of $\cL_N$ are $p$-integral for odd $p$, since
+$P_r[i]\in\Z$ and $c_l\in\Z[1/2]$, so $p^2\cL_N\equiv0\pmod{p^2}$ and, for $z$ with denominator prime to
+$p$, $p^2(\cA^0_N+z\cL_N)$ has $p$-integral entries with the same reduction as $p^2\cA^0_N$. By
+Lemma~\ref{lem:rank-valuation} the determinant of the latter has valuation at least $\nu_N(p)$, and
+$\det\bigl(p^2(\cA^0_N+z\cL_N)\bigr)=p^{2n}\Delta_N(z)$.
+\end{proof}
+
+\subsection{The denominators}
+Let $p$ be an odd prime with $H<p^2$ and $p\le H$. The method of \cite[\S3]{OpenAI2026}, applied to a
+design, bounds from below the valuation of $\Delta_N(z)$ for every $z$ with denominator prime to $p$ by
+$-\ell_N(p)$, where $\ell_N(p)$ counts the columns whose entries have a pole at $p$, once the coefficients of
+the row polynomials are grouped by their digits in base $p$ and the column filter is taken into account. It
+is given by two formulas, in which all differences are truncated at $0$. For $2p\le H$,
+\[
+ \ell_N(p)=2n-\Bigl(\min\bigl(p,\,L-p,\,A\bigr)-\max\bigl(b,\,H-2p\bigr)-q\Bigr),
+\]
+and for $H<2p\le2H$, with $R=(L-b)-(\min(A,L-p)-b)-(\min(p,L)-\max(b,H-p))$,
+$P'=\min(A,L-p)-b$ and $E'=\min(b,H-p)-(L-p)$,
+\[
+ \ell_N(p)=\min\bigl(2n,\ n+R,\ 2R+P'+E'\bigr).
+\]
+These are the exponents of the generic valuation theorems in the formalization; for the primes that
+interest us they are the same as in OpenAI's paper for its design. For the design $D$ the function
+$\ell_N(p)=Nf(p/N)$ is piecewise linear in $x=p/N$ ($\lfloor\cdot\rfloor$ rounding aside):
+\[
+ f(x)=\begin{cases}
+ 116&x\le59/2,\\
+ 175-2x&59/2\le x\le69/2,\\
+ 106&69/2\le x\le39,\\
+ 184-2x&39\le x\le81/2,\\
+ 265-4x&81/2\le x\le48,\\
+ 217-3x&48\le x\le69,\\
+ 148-2x&69\le x\le70,\\
+ 78-x&70\le x\le78,
  \end{cases}
 \]
-For each range of $p/N$, the function $\varphi$ counts the columns whose entries have a pole at $p$, once
-the coefficients of the row polynomials are grouped by their digits in base $p$ and the column filter
-is taken into account. The bound holds for the determinant itself and not only for a majorant of it.
+and $f=0$ for $x\ge78$, since for $p>H$ the matrix $\cA^0_N+z\cL_N$ is $p$-integral. Its integral over
+$[1,78]$ is $24269/4$, and $f=116=2\cdot58$ on $[0,1]$. Note that $f(x)=2n_0$ for $x\le59/2$, which
+contains all the primes in $(N,2N]$ and, in particular, the whole range $[12,26]$ of the rank
+deficiencies of Theorem~\ref{thm:content}; there the bound of Proposition~\ref{prop:valuation} improves
+$-\ell_N(p)=-2n$ to $\nu_N(p)-2n$.
 
-Modulo $p$, some rows become linearly dependent, and by Lemma~\ref{lem:rank-valuation} this raises
-the valuation. For primes with $22N/3<p<26N/3$, three groups of rows satisfy an exact linear relation
-after reduction. The relation follows from the identities
-\begin{equation}\label{eq:cheb-p}
- T_p(Y)=Y^p,\qquad U_{p-1}(Y)=(Y^2-1)^{(p-1)/2}\qquad\text{in }\F_p[Y],
-\end{equation}
-together with a rational identity between OpenAI's moment coefficients. This gives an additional
-saving $N\,\gamma(p/N)$, where
+The primes $p\le\sqrt H$ are not covered by these bounds. For them we use the cruder bound
+$6n\log_pH$ for the exponent, which contributes $O(\sqrt N\,N\log N)=o(N^2)$ in total.
+
+\subsection{The prime $2$}
+At $p=2$ the entries are not integral and the bound comes from the expansion of the determinant into
+minors, in the manner of \cite[\S3]{OpenAI2026}. Its exponent is governed by a quadratic form in the
+numbers $m,\ell$ of columns of two exceptional types, which is
 \[
- \gamma(x)=3(x-22/3)_+-6(x-8)_++3(x-26/3)_+
+ \tfrac32m^2+\tfrac12\ell^2-(H+C-b)\,m-C\,\ell+Cn ,
 \]
-is supported on $[22/3,26/3]$, where $\varphi=40$.
+and the following identity shows that it is at least $-\mathsf A_2$ whenever $m,\ell\ge0$,
+$m+\ell\le n$ and $C\ge n$, where
+\begin{equation}\label{eq:A2}
+ \mathsf A_2=\frac{(n+H-b)^2}8-\frac{n^2}2 .
+\end{equation}
+With $s=n-m-l$ and $m_*=(n+H-b)/4$,
+\[
+ \tfrac32m^2+\tfrac12\ell^2-(H+C-b)m-C\ell+Cn+\mathsf A_2
+ =2(m-m_*)^2+s\,(C-n+m)+\tfrac12s^2\ge0 .
+\]
+This gives a $2$-adic bound $v_2(\Delta_N(i))\ge-\mathsf A_2-O(N\log N)$, uniform in the integer $i$. For $D$,
+$\mathsf A_2=(58+78-9)^2/8-58^2/2=2673/8$ in units of $N^2$.
 
-We use the prime number theorem in the weighted form
+\subsection{The common denominator}
+\begin{proof}[Proof of Proposition~\ref{prop:denominators}]
+Let $\kappa_N(p)$ be the largest of the bounds of Theorem~\ref{thm:content} that apply at $p$ (and $0$ if
+none does), for primes $p\le H$ with $H<p^2$, and put $e_N(p)=\min\bigl(\ell_N(p),\,2n-\kappa_N(p)\bigr)$. For the
+primes with $p^2\le H$ use the crude bound above, for $p=2$ the $2$-adic bound, and let $D_N$ be the
+product of $p^{e_N(p)}$ over $p\le H$. By Proposition~\ref{prop:valuation} and the bounds of this section,
+$v_p(\Delta_N(i))\ge-e_N(p)$ for every integer $i\ge0$ and every $p$ (for $p>H$ the matrix is
+$p$-integral), so $D_N\Delta_N(i)\in\Z$. A prime $q\in(N,2N]$ has $\kappa_N(q)=0$, since no window
+contains it, and $\ell_N(q)=2n$, so $q^{2n}\mid D_N$ (here $N\ge79$ guarantees $q>\sqrt H$).
+
+For the size of $D_N$, the sum of $\ell_N(p)\log p$ over the odd primes is, by the prime number theorem in
+the weighted form
 \begin{equation}\label{eq:weighted-pnt}
  \frac1N\sum_{p}F(p/N)\log p\longrightarrow\int_0^\infty F(x)\,dx\qquad(N\to\infty),
 \end{equation}
-for bounded, Riemann integrable, compactly supported $F$. Since each prime contributes
-$N(\varphi-\gamma)(p/N)\log p$, the odd primes contribute
-\[
- N^2\int_0^{27}(\varphi-\gamma)(x)\,dx=\frac{8795}{4800}(20N)^2
-\]
-to the logarithm of the common denominator, up to $o(N^2)$; the primes $p\le\sqrt{27N}$ contribute
-$o(N^2)$.
-
-At the prime $2$ the bound comes from the expansion of the determinant into minors. Its exponent is
-governed by a quadratic form in the numbers $m,\ell$ of columns of two exceptional types, and the
-identity
-\begin{multline*}
- \tfrac32m^2+\tfrac12\ell^2-50Nm-26N\ell+520N^2+42N^2\\
- =2(m-11N)^2+(20N-m-\ell)(6N+m)+\tfrac12(20N-m-\ell)^2
-\end{multline*}
-shows that this form is at least $-42N^2$ when $m,\ell\ge0$ and $m+\ell\le20N$. This gives the
-$2$-adic contribution $\frac{21}{200}\log2\cdot(20N)^2$.
-
-\begin{proposition}\label{prop:denominators}
-There are positive integers $D_N$ such that $D_N\Delta_N(i)\in\Z$ for every integer $i$, and, for
-every $\varepsilon>0$ and all large $N$,
-\[
- \log D_N\le(\mathsf A+\varepsilon)(20N)^2,\qquad
- \mathsf A=\frac{8795}{4800}+\frac{21}{200}\log2 .
-\]
-\end{proposition}
-
-\begin{proof}
-At an integer $z=i$ the local bounds above do not depend on $i$; at $p=2$ the bound is weakest at
-$z=0$. Let $D_N$ be the product of the primes raised to these exponents. The estimate for $\log D_N$
-is the sum of the contributions computed above.
+for bounded, Riemann integrable, compactly supported $F$, equal to $N^2\int_0^{78}f(x)\,dx+o(N^2)$ with
+$\int_0^{78}f=116+24269/4$. The primes with $\kappa_N(p)>0$ lie in $(12N,26N]$ and have
+$\ell_N(p)=116N$, so their exponent is $116N-\kappa_N(p)$; the sum of $\kappa_N(p)\log p$ is
+$N^2\int\kappa+o(N^2)$ by \eqref{eq:weighted-pnt}. The $2$-adic part contributes
+$\mathsf A_2\log2\,N^2+o(N^2)$.
 \end{proof}
 
-The polynomial $\Delta_N$ has degree at most $18N$ and takes values in $D_N^{-1}\Z$ at the
-integers. An integer-valued polynomial of degree $d$ has coefficients in $\frac1{d!}\Z$, so
+The polynomial $\Delta_N$ has degree at most $n-g=d_0N$ and takes values in $D_N^{-1}\Z$ at the
+integers. An integer-valued polynomial of degree $m$ has coefficients in $\frac1{m!}\Z$ (Newton's
+interpolation formula), so
 \begin{equation}\label{eq:QN}
- Q_N=(18N)!\,D_N\,\Delta_N(X)\in\Z[X],\qquad \deg Q_N\le18N,
+ Q_N=(d_0N)!\,D_N\,\Delta_N(X)\in\Z[X],\qquad \deg Q_N\le d_0N,
 \end{equation}
-and $\log(18N)!=o(N^2)$.
+and $\log(d_0N)!=o(N^2)$. In this way the gain from the rank deficiencies enters through the integer
+polynomial itself, and not through a separate common factor of its coefficients.
+
+\begin{lemma}\label{lem:recycling}
+For all large $N$ and every prime $N<q\le2N$, the $j$-th coefficient of $Q_N$ is divisible by $q^{2j}$.
+\end{lemma}
+
+\begin{proof}
+For these primes the matrices $q^2\cA^0_N$ and $\cL_N$ are $q$-integral by Lemma~\ref{lem:digits}, and
+$q^{2n}$ divides $D_N$. The identity
+\[
+ Q_N(X/q^2)=(d_0N)!\,\frac{D_N}{q^{2n}}\det\bigl(q^2\cA^0_N+X\cL_N\bigr)
+\]
+shows that $Q_N(X/q^2)$ has $q$-integral coefficients; its $j$-th coefficient is $c_{N,j}/q^{2j}$.
+\end{proof}
 
 \subsection{Nonvanishing}
 \begin{proposition}\label{prop:nonvanishing}
-For all large primes $p$ and every rational $z$ such that $pz$ has denominator prime to $p$,
-$\Delta_p(z)\ne0$. In particular $Q_p(a/b)\ne0$ whenever $a\in\Z$, $b\ge1$ and $p^2\nmid b$.
+Let $D$ be a design and suppose that the three $n_0\times n_0$ matrices $B_\sigma$, $\sigma\in\{0,1,-1\}$,
+defined below, are invertible. Then for all large primes $p$ and every rational $z$ such that $pz$ has
+denominator prime to $p$, $\Delta_p(z)\ne0$. In particular $\Delta_p(a/b)\ne0$ whenever $a\in\Z$, $b\ge1$
+and $p^2\nmid b$.
 \end{proposition}
 
+The matrices are those of OpenAI's reduction modulo $p$ at $N=p$, with the design in place of $48$: let
+$B$ be the rational $(n_0+1)\times n_0$ matrix of the entries of the filtered rational part at $N=1$ for
+the rows $0,\dots,n_0$ (the row $n_0$ is an auxiliary row), and let $B_\sigma$ have rows
+$B_r+\sigma B_{r+1}$, $0\le r<n_0$. For the design $D$, $B$ has $59$ rows and $58$ columns.
+
 \begin{proof}
-For the present parameters OpenAI's reduction modulo $p$ involves a rational base matrix $B$ with $21$
-rows and $20$ columns, and the three $20\times20$ matrices with rows $B_r+\sigma B_{r+1}$, for
-$\sigma\in\{0,1,-1\}$, are invertible; this is checked by computing their inverses modulo the prime
-$1009$, which shows that their determinants are nonzero rational numbers.
-OpenAI's argument then shows that the reduction of $p^2(\cA^0_p+z\cL_p)$ modulo $p$ is invertible for
-all large primes $p$ when $p\nmid\operatorname{den}z$. If only $pz$ has denominator prime to $p$, the
-difference $p^2z\cL_p$ from the matrix at $z=0$ is still $p$-integral with zero reduction, because the
-numbers $c_l$ have denominators that are powers of $2$; so the reduction is again that of the matrix at
-$z=0$. If $p^2\nmid b$, then $p(a/b)$ has denominator prime to $p$.
+Let $p>4H_0$, with $H_0=H/N=78$, so that $H=H_0p<p^2/4$, and let $p$ be prime to the numerators and denominators
+of the entries of $B$ and of the three determinants. In the construction at $N=p$ write the row index
+$r=pr_0+i$ with $0\le r_0<n_0$ and $0\le i<p$. Since $q=q_0p$, $C=C_0p$, $h=h_0p$, $g=g_0p$, the Frobenius
+relation $(1-t)^{p}\equiv1-t^p$ expresses the row polynomials modulo $p$ through those of the design at
+$N=1$ and the successor row $r_0+1$; this is where the auxiliary row enters, and it is valid for rows on
+both sides of $g$ because the polynomials are defined through $T_{r-g}$ and $U_{r-g-1}$ for signed
+indices. The filter satisfies $s^{b_0p+k}(1-s)^{q_0p}=s^{\ell}(s^p)^{b_0+k_0}(1-s^p)^{q_0}$ in $\F_p[s]$, so
+the filtered columns of one residue class use the raw columns $b_0+k_0,\dots,b_0+k_0+q_0$ of the design at
+$N=1$ and never change the residue. By \cite[Lemma~3.1 and eqs.~(31), (35), (36)]{OpenAI2026}, which
+need only $H<p^2/4$, the reduction of $p^2\cA^0_p$ modulo $p$ is then, after ordering the rows by $(i,r_0)$ and
+the columns by $(\ell,k_0)$, the matrix $a^{\mathsf T}\otimes B_0+b^{\mathsf T}\otimes B_1$, where $a,b$ are the
+fixed $p\times p$ matrices of OpenAI's identity (51), with $\det a=2^{-p(p-1)/2}$. The permutation
+matrix $\Pi$ in this decomposition has the eigenvalue $0$ once and $\pm1$ each $(p-1)/2$ times, and
+therefore
+\[
+ \det=(\det a)^{n_0}\,\det B_0\;\det(B_0+B_1)^{(p-1)/2}\det(B_0-B_1)^{(p-1)/2}\ne0
+\]
+in $\F_p$. Hence $p^{2n}\Delta_p(0)$ is a $p$-adic unit. For $z$ with $pz$ of denominator prime to $p$, the
+difference $p^2z\cL_p=p\,(pz)\,\cL_p$ is $p$-integral with zero reduction (the entries of $\cL_p$ are
+$p$-integral), so the reduction of $p^2(\cA^0_p+z\cL_p)$ is the same invertible matrix and
+$v_p(\Delta_p(z))=-2n$. If $p^2\nmid b$, then $p(a/b)$ has denominator prime to $p$.
 \end{proof}
 
-The computations modulo $1009$ certify the base matrices; the conclusion for all large primes is a
-theorem and not an extrapolation from finitely many cases.
-\section{Divisibility of the coefficients}\label{sec:content}
+For the design $D$ the invertibility of $B_0$, $B_0+B_1$ and $B_0-B_1$ is certified by exhibiting their
+inverses modulo the prime $1009$, which exceeds $H_0=78$ so that every denominator of $B$ is a unit
+there; the three determinants are then nonzero rational numbers. The computation modulo $1009$ certifies
+the base matrices; the conclusion for all large primes is a theorem and not an extrapolation from
+finitely many primes. Nothing in the proof uses the proportions of the design except $2g<n$, and $H<p^2/4$.
+\section{Rank deficiencies modulo $p$}\label{sec:content}
 
-\subsection{The principle}
-Proposition~\ref{prop:denominators} uses, at each prime, only the poles of the individual entries.
-In the arithmetic method of Hata and Rhin--Viola one gains further by showing that all the
-coefficients of the linear forms share a large common factor. In our setting the analogue is the
-following. Let $p$ be a prime and write $\cA^0_{N,p}$ for the reduction modulo $p$ of $p^2\cA^0_N$,
-the matrix at the constant term $X=0$. If its rank is at most $20N-e$, then by
-Lemma~\ref{lem:rank-valuation} the determinant $\Delta_N(z)$ gains a factor $p^e$ at every rational
-$z$ for which the reduction of $p^2(\cA^0_N+z\cL_N)$ equals $\cA^0_{N,p}$; in particular at every
-integer $z$.
-
-A gain at the integers alone would only improve the denominator of $\Delta_N(a/b)$ for integer
-arguments. What we need is a gain in every coefficient of $Q_N$, because these coefficients are what
-the integer $b^{\deg Q_N}Q_N(a/b)$ is built from. For the primes considered below this follows from
-a second observation. Write $Q_N=\sum_jc_{N,j}X^j$, and let $p^{40N-s}$ be the exact power of $p$ in
-$D_N$. The matrix $p^2\cL_N$ is $p$-integral, so
-\[
- Q_N(X/p^2)=(18N)!\,\frac{D_N}{p^{40N}}\det\bigl(p^2\cA^0_N+X\,\cL_N\bigr)
-\]
-has coefficients divisible by $p^{-s}$, and hence $p^{2j-s}\mid c_{N,j}$. On the other hand, since
-$p^2\cL_N\equiv0\pmod p$, the reduction of $p^2(\cA^0_N+z\cL_N)$ at an integer $z$ is $\cA^0_{N,p}$, so a
-rank deficiency $e$ gives $v_p(\Delta_N(z))\ge e-40N$ and $p^{e-s}\mid Q_N(z)$ for every integer $z$.
-In each of the intervals below $e\le2p$, so every coefficient with $j\ge p$ is divisible by $p^{e-s}$.
-The remaining part $\sum_{j<p}c_{N,j}X^j$ has degree less than $p$, and its values at $0,1,\ldots,p-1$
-are divisible by $p^{e-s}$; since the Vandermonde matrix of these points is invertible modulo $p$, all
-its coefficients are divisible by $p^{e-s}$. Thus a rank deficiency $e$ of the single reduced matrix
-$\cA^0_{N,p}$ gives the common factor $p^{e-s}$ of all the coefficients of $Q_N$. In the first and
-third intervals $s=0$; in the second $s=(26N-3p)_+$.
-
-We prove three such rank deficiencies, for the primes in the intervals
-\[
- \Bigl(\frac{52N}9,\frac{44N}7\Bigr),\qquad(8N,9N),\qquad\Bigl(4N,\frac{9N}2\Bigr).
-\]
-They are disjoint, and all their primes exceed $2N$. In each case the deficiency is proved by
-exhibiting explicit vectors in the left kernel of $\cA^0_{N,p}$. The tools are the same throughout:
-the identities \eqref{eq:cheb-p} for Chebyshev polynomials modulo $p$, the relation
-$(1-X)^p=1-X^p$, and a description of the residues of $p^2$ times the entries of the matrix in terms
-of the digits in base $p$ of the coefficients of the row polynomials, which we now recall.
-
-Fix $p$ and write the raw columns (before the finite difference filter) as $j=Jp+\ell$ with
-$0\le\ell<p$. For a vector $c\in\F_p^{20N}$ put
-\[
- P_c=\sum_rc_rP_r,\qquad D_c=\sum_rc_rD_r,\qquad W=(1-X^2)^{(p-1)/2}.
-\]
-Grouping OpenAI's formula for the entries by digits shows that the residue of $p^2$ times the raw entry
-in column $j$, applied to $c$, is a fixed linear combination of the coefficients
-$(XWP_c)[vp+\ell]$ and $D_c[vp+\ell]$, $v\ge0$, with constants independent of $c$ and $\ell$. Here
-$F[k]$ denotes the coefficient of $X^k$ in $F$. A vector $c$ whose responses vanish on all raw columns
-in the range $[3N,24N)$ lies in the left kernel of the filtered matrix.
-
-\subsection{The primes in $(52N/9,44N/7)$}\label{ssec:content1}
-For all $N\ge6310886697782126553600$ and all primes $52N/9<p<44N/7$,
-\begin{equation}\label{eq:rank1}
- \operatorname{rank}\cA^0_{N,p}\le20N-e_N(p),\qquad
- e_N(p)=\max\Bigl(0,\min\Bigl(\Bigl\lfloor\frac{9p-52N}2\Bigr\rfloor,
-                  \Bigl\lfloor\frac{44N-7p}2\Bigr\rfloor\Bigr)\Bigr),
+In this section we prove Theorem~\ref{thm:content}. The principle is that of the arithmetic method of Hata
+and Rhin--Viola, in the form that suits a determinant: if the reduction modulo $p$ of $p^2\cA^0_N$ has
+rank at most $n-e$, then by Lemma~\ref{lem:rank-valuation} and Proposition~\ref{prop:valuation} the
+determinant $\Delta_N(z)$ gains a factor $p^e$ at every $z$ with denominator prime to $p$, in
+particular at every integer. The gain is in the denominator, and by \eqref{eq:QN} it is passed on to
+the coefficients of $Q_N$. We therefore need lower bounds for the dimension of the left kernel of
+$\cA^0_{N,p}$, that is, explicit row combinations $c\in\F_p^n$ with $c^{\mathsf T}\cA^0_{N,p}=0$. The
+tools are the same throughout: the identities for Chebyshev polynomials in characteristic $p$
+\begin{equation}\label{eq:cheb-p}
+ \begin{gathered}
+ T_p=X^p,\qquad U_{p-1}=(X^2-1)^{(p-1)/2},\\
+ T_{kp}=T_k(X^p),\qquad U_{kp-1}=(X^2-1)^{(p-1)/2}\,U_{k-1}(X^p)
+ \end{gathered}
 \end{equation}
-The threshold on $N$ guarantees that no prime of the interval divides the denominators of the finitely many
-rational constants used in the construction below.
+in $\F_p[X]$ (the last two follow from $T_{kp}=T_k\circ T_p$ and $U_{kp-1}=(U_{k-1}\circ T_p)\,U_{p-1}$), the relation
+$(1-X)^p=1-X^p$, and the digit formula \eqref{eq:filtered-digits}.
 
-Here the kernel vectors are built from rational differentials on the conic $x=(z+z^{-1})/2$,
-$s=(z-z^{-1})/2$. In this parametrization the source of each raw column is the coefficient of a
-Laurent expansion: with
+\subsection{Setting}
+Fix a design, an integer $N\ge1$ and an odd prime $p$ with $H<p^2$. For $0\le r<n$ put $m_r=r-g$, so that
+$-g\le m_r\le n-1-g$, and $n-1-g\ge g$. In the notation of \eqref{eq:rows},
 \[
- \Phi(z)=\frac{z^{26N}(z-1)^{2N}}{(1+z^2)^{27N}},
+ P_r=(1-X)^h\operatorname{rev}_{C-1}T_{m_r},\qquad D_r=(1-X)^h\operatorname{rev}_{C-1}U_{m_r-1},
 \]
-the raw entry in column $j=Jp+\ell$ is, up to a fixed factor, the residue at $z=0$ of
-$\Phi(z)\,x^\ell a_J(x)^p$, where $a_J$ is a fixed polynomial expression in OpenAI's moment coefficients of
-the column digit $J$. A row combination is encoded by a differential $(U+sV)\,dz/z$, and its response
-to the digit $J$ is the coefficient of $x^5$ in an explicit quadratic expression in $U$, $V$ and the
-moment polynomials. We use a basis of six regular differentials and one differential with a double
-pole at $z=0$, and five combinations of them whose responses to the digits $J=0,\ldots,4$ are known
-exactly; the $5\times7$ response matrix has rational entries and a nonzero $4\times4$ minor
-$46085/1769472$.
-
-For five polynomial inputs $I_i$ of degree less than $p$ we form, using the Frobenius map, the
-polynomial
+where $T_{-m}=T_m$ and $U_{-m-1}=-U_{m-1}$, so that $D_g=0$. For $c\in\F_p^n$ write
+$S_c=\sum_rc_r\operatorname{rev}_{C-1}T_{m_r}$ and $U_c=\sum_rc_r\operatorname{rev}_{C-1}U_{m_r-1}$, so that $P_c=(1-X)^hS_c$
+and $D_c=(1-X)^hU_c$. The lowest degree of $\operatorname{rev}_{C-1}T_m$ is at least $C-1-|m|\ge a:=A=b+q+2g$, and that of
+$\operatorname{rev}_{C-1}U_{m-1}$ is at least $a+1$. Put
 \[
- K=(z-1)^p\,\mathcal T H_U+(z+1)^p\,\mathcal T H_V,\qquad
- H_U=\sum_iU_i^pI_i,\quad H_V=\sum_iV_i^pI_i,
+ Q_c=(X-1)^q\,XWP_c,\qquad \widehat D_c=(X-1)^qD_c,\qquad W=(1-X^2)^{(p-1)/2},
 \]
-where $\mathcal T$ is the substitution $x=(1+z^2)/(2z)$ cleared of denominators. Under a list of
-divisibility conditions on $H_U$ and $H_V$ at $x=0$ and $x=\pm1$, and one degree condition, $K$ is
-divisible by a fixed polynomial $T$ of large degree, and $K/T$ has degree less than $20N$; its
-coefficients form a row combination $c$. The map from the inputs to $c$ is injective: the involution
-$z\mapsto z^{-1}$ separates the two channels $U$ and $V$, and the Frobenius map separates the
-coefficients of the inputs.
+so that, with $\Lambda=g+q+h$, $Q_c$ has its coefficients in $[a+1,\,L+\Lambda+p-1]$ and $\widehat D_c$ in
+$[a+1,\,L+\Lambda-1]$. Recall that a vector $c$ lies in the left kernel of $\cA^0_{N,p}$ as soon as the
+right side of \eqref{eq:filtered-digits} vanishes for every filtered column $k$ (for the columns with a
+carry among the $q+1$ raw columns one splits the sum over the raw columns at the carry; we shall not need
+this case).
 
-The responses of this row combination are computed directly from the identity
-\[
- [x^{6p-1-\ell}]\bigl(H(x)^pI(x)\bigr)=[x^5]H\cdot[x^{p-1-\ell}]I\qquad(\deg I<p),
-\]
-which shows that the response at column $Jp+\ell$ is a fixed multiple of the coefficient of
-$x^{p-1-\ell}$ in the input. We take one input $F$ with $(x-1)^{p-N}\mid F$, whose coefficients
-$[x^{p-1-\ell}]F$ are the values $\omega(\ell)$ of a polynomial $\omega$ of degree less than $N$; the finite difference
-of order $N$ in the column filter annihilates them. The other inputs are chosen to satisfy the
-divisibility conditions at $x=0$, and their responses fall on raw columns outside the range
-$[3N,24N)$. Counting the dimension of the space of inputs against the number of linear conditions,
-separately for $p=6N+\delta$ with $\delta>0$ and for $p=6N-d$, gives a kernel of dimension at least
-$N-(7\delta+1)/2$ and $N-(9d+1)/2$ respectively. These are the two expressions in \eqref{eq:rank1}.
-
-\subsection{The primes in $(8N,9N)$}\label{ssec:content2}
-\begin{theorem}\label{thm:u3}
-Let $N\ge1$ and let $p$ be a prime with $8N<p<9N$. Then the left kernel of $\cA^0_{N,p}$ has dimension
-at least $18N-2p-1$.
+\subsection{Antisymmetric combinations of rows}
+\begin{theorem}\label{thm:T}
+Let $2g<p$, $H\le4p$ and $D_T=\min(g,\,n-1-g-2p,\,C-3p)\ge1$. Then
+$\nu_N(p)\ge D_T-(n+q+g+h-3p)_+$.
 \end{theorem}
 
-The row polynomials of our determinant are $P_r=(1-X)^N\,\mathrm{rev}(T_{|m|})$ and
-$D_r=\operatorname{sgn}(m)(1-X)^N\,\mathrm{rev}(U_{|m|-1})$, where $m=r-2N$ and $\mathrm{rev}$ reverses
-the coefficients inside degree $26N-1$. Write $\nu=(p+1)/2$. The first ingredient is a reflection
-formula for Chebyshev polynomials modulo $p$.
+The rows used are the differences of rows placed symmetrically about the three centres $g$, $g+p$ and
+$g+2p$.
+
+\begin{proof}
+For $1\le d\le D_T$ and $k=0,1,2$ let $\delta_k(d)=e_{g+kp+d}-e_{g+kp-d}\in\F_p^n$. These rows exist because
+$d\le g$ and $g+2p+d\le n-1$, and the $3D_T$ vectors $\delta_k(d)$ are linearly independent, since their supports
+are disjoint: the supports lie in the intervals $[kp,kp+2g]$ of row indices, which are disjoint because
+$2g<p$. The row $g+kp\pm d$ has $m=kp\pm d$. By $T_{a+b}-T_{a-b}=2(X^2-1)U_{a-1}U_{b-1}$ and
+$U_{a+b-1}-U_{a-b-1}=2T_aU_{b-1}$ together with \eqref{eq:cheb-p},
+\begin{align*}
+ T_{kp+d}-T_{kp-d}&=2(X^2-1)^{(p+1)/2}\,U_{k-1}(X^p)\,U_{d-1},\\
+ U_{kp+d-1}-U_{kp-d-1}&=2\,T_k(X^p)\,U_{d-1}.
+\end{align*}
+Put $R_d=2(1-X)^hX^{C-d}\operatorname{rev}_{d-1}U_{d-1}$, the value of $D_{\delta_0(d)}$. Reversing at degree $C-1$,
+and using that $\operatorname{rev}_{kp}(T_k(X^p))=(\operatorname{rev}_kT_k)(X^p)$, one finds, with $T_0=1$, $T_1=X$ and
+$T_2=2X^2-1$,
+\[
+ D_{\delta_1(d)}=X^{-p}R_d,\qquad D_{\delta_2(d)}=2X^{-2p}R_d-R_d,
+\]
+\begin{gather*}
+ XWP_{\delta_0(d)}=0,\qquad XWP_{\delta_1(d)}=X^{-p}R_d-X^pR_d,\\
+ XWP_{\delta_2(d)}=2X^{-2p}R_d-2R_d .
+\end{gather*}
+The polynomial $R_d$ is supported in degrees $[C-d,H-1]$, which lies in $[3p,4p)$ because $d\le C-3p$ and
+$H\le4p$. So at each residue $\ell$ it has a single base-$p$ digit $\varrho_\ell(d)$, in position $u=3$.
+For $x=(x_0,x_1,x_2)\in\F_p^3$ the response of the combination $\sum_kx_k\delta_k(d)$ at the raw column
+$Jp+\ell$ is therefore, by Lemma~\ref{lem:digits}, $\varrho_\ell(d)\,f_J(x)$ with
+\[
+ f_J(x)=x_0\beta_{3,J}+x_1(\alpha_{2,J}-\alpha_{4,J}+\beta_{2,J})+x_2(2\alpha_{1,J}-2\alpha_{3,J}+2\beta_{1,J}-\beta_{3,J}),
+\]
+which depends neither on $d$ nor on $\ell$. The raw columns with $J\ge3$ do not meet the support, since
+$3p+\ell\ge C-d\ge C-g=L$. Choose $x^*\ne0$ with $f_1(x^*)=f_2(x^*)=0$; this is two linear equations in three
+unknowns. For $c=\sum_ds_d\sum_kx^*_k\delta_k(d)$ the responses at the columns with $J=1,2$ vanish, and the
+columns with $J=0$, which have $\ell\ge b$, respond by $f_0(x^*)\sum_ds_d\varrho_\ell(d)$, the coefficient
+of $X^{3p+\ell}$ in $\sum_ds_dR_d$. These are at most $(H-3p-b)_+=(n+q+g+h-3p)_+$ linear conditions on
+$s=(s_d)$. The map $s\mapsto c$ is injective, so the solutions form a space of dimension at least
+$D_T-(n+q+g+h-3p)_+$ in the left kernel.
+\end{proof}
+
+\subsection{A reflection of Chebyshev polynomials}
+The first ingredient of the next theorem is a reflection formula modulo $p$.
 
 \begin{lemma}\label{lem:u3-reflect}
-Let $p$ be an odd prime. In $\F_p[X]$, for every integer $m$,
+Let $p$ be an odd prime and $\nu=(p+1)/2$. In $\F_p[X]$, for every integer $m$,
 \[
  T_{p-m}=X^pT_m-(X^2-1)^{\nu}\,U_{m-1}.
 \]
@@ -572,135 +831,203 @@ Let $p$ be an odd prime. In $\F_p[X]$, for every integer $m$,
 
 \begin{proof}
 Both sides satisfy the three-term recurrence in $m$, so it suffices to check $m=0$ and $m=1$. This
-needs \eqref{eq:cheb-p}. The second identity there follows from the Pell equation
-$T_n^2-(X^2-1)U_{n-1}^2=1$ at $n=p$, together with $(X^2-1)^p=X^{2p}-1$; one cancels $X^2-1$ and
-compares leading coefficients. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and $T_{p-1}=2XT_p-T_{p+1}$.
+needs \eqref{eq:cheb-p}. For $m=0$ it is $T_p=X^p$. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and
+$T_{p-1}=2XT_p-T_{p+1}$.
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:u3}]
-Reflecting the identity of Lemma~\ref{lem:u3-reflect} at degree $p+26N$ gives, for each row,
+\begin{theorem}\label{thm:U}
+Let $2h\le p+1$, $L\le3p\le H$, $n+q+g+h\le3p$ and $2p\le n+q$, and put $n^*=\min(n,2p+2g+1)$. Then
+$\nu_N(p)\ge n^*-g-2p-1$.
+\end{theorem}
+
+\begin{proof}
+We restrict $c$ to the rows $r<n^*$, so that $m_r\le n^*-1-g\le2p+g$. Applying Lemma~\ref{lem:u3-reflect}
+with $m=m_r$ and reflecting at degree $p+C-1$ gives, for every such row,
 \[
- (1-X^2)^\nu\,\mathrm{rev}(U_{m-1})-X\,\mathrm{rev}(T_m)=-X^{p+1}\,\mathrm{rev}(T_{p-m}),
+ (1-X^2)^\nu\operatorname{rev}_{C-1}U_{m-1}-X\operatorname{rev}_{C-1}T_m=-X^{p+1}\operatorname{rev}_{C-1}T_{p-m},
 \]
-and the right side is divisible by $X^{24N}$ because $|p-m|\le p+2N$. Hence, for every $c$,
+and the right side is divisible by $X^{p+C-|p-m|}$, hence by $X^L$ since $|p-m|\le p+g=p+C-L$. Multiplying
+by $(1-X)^h$ and summing, for every $c$ supported on these rows
 \begin{equation}\label{eq:identityK}
- X^{24N}\mid(1-X^2)^\nu D_c-XP_c .
+ X^L\mid(1-X^2)^\nu D_c-XP_c .
 \end{equation}
 
-Let $V$ be the space of $c$ with $(1-X^2)^\nu\mid P_c$. Since $(1-X)^N$ divides every $P_r$, this is
-$\nu-N$ conditions at $X=1$ and $\nu$ conditions at $X=-1$, that is $p+1-N$ linear conditions. For
-$c\in V$ write $P_c=(1-X^2)^\nu Y$ and $\widetilde Q=XY$. Since $(1-X^2)^p=1-X^{2p}$ in characteristic $p$,
+Let $V$ be the space of such $c$ with $(1-X^2)^\nu\mid P_c$. Since $(1-X)^h$ divides every $P_r$, this is
+$\nu-h$ conditions at $X=1$ and $\nu$ conditions at $X=-1$, that is, at most $p+1-h$ linear conditions.
+For $c\in V$ write $P_c=(1-X^2)^\nu Y$ and $\widetilde Q=XY$. Since $(1-X^2)^p=1-X^{2p}$,
 \[
  XWP_c=(1-X^{2p})\,\widetilde Q .
 \]
-The polynomial $P_c$ has no coefficients below $X^{8N}$ and none from $X^{27N}$ on, so $\widetilde Q$ is
-supported in degrees $[8N+1,27N-p-1]$, and dividing \eqref{eq:identityK} by the unit $(1-X^2)^\nu$ modulo
-$X^{24N}$ gives $D_c[k]=\widetilde Q[k]$ for $k<24N$.
+The polynomial $P_c$ has no coefficients below $X^{A^*}$, $A^*=C-n^*+g$, and none from $X^H$ on, so
+$\widetilde Q$ is supported in $[A^*+1,\,H-p-1]$; and dividing \eqref{eq:identityK} by the unit
+$(1-X^2)^\nu$ modulo $X^L$ gives $D_c[k]=\widetilde Q[k]$ for $k<L$.
 
-Now let $27N-3p\le\ell<24N-2p$. By the support of $\widetilde Q$, the base-$p$ digits of $XWP_c$ at
-the residue $\ell$ are $(0,\kappa,0,-\kappa,0,\ldots)$ with $\kappa=\widetilde Q[p+\ell]$, and those of $D_c$
-are $(0,\kappa,0,0,\ldots)$. So for $c\in V$ the response at every raw column $Jp+\ell$ in this range of
-residues is $\kappa$ times a constant depending only on $J$: these columns have rank at most one on $V$.
+Now let $H-3p\le\ell<L-2p$. The inequality $L-2p\le A^*+1$ is equivalent to $n^*\le2p+2g+1$, and
+$L-2p\le p$ since $L\le3p$. By the supports, $\widetilde Q[\ell]=0$, $\widetilde Q[2p+\ell]=0$ and
+$\widetilde Q[3p+\ell]=0$, and $D_c[3p+\ell]=0$ because $3p+\ell\ge H$. So with
+$\varkappa=\widetilde Q[p+\ell]$ the base-$p$ digits of $XWP_c$ at the residue $\ell$ are
+$(0,\varkappa,0,-\varkappa,0,\dots)$ and those of $D_c$ are $(0,\varkappa,0,0,\dots)$. Hence, by
+Lemma~\ref{lem:digits}, the response at every raw column $Jp+\ell$ with such an $\ell$ is $\varkappa$ times
+a constant depending on $J$ only: on $V$ these columns, which have $J\in\{0,1,2\}$, span a space of
+dimension at most one for each residue $\ell$.
 
-For $p\in(8N,9N)$ the raw columns $j\in[3N,24N)$ with residue $\ell$ have $J\in\{1,2\}$ if
-$\ell<27N-3p$, $J\in\{0,1,2\}$ if $27N-3p\le\ell<24N-2p$, and $J\in\{0,1\}$ if $24N-2p\le\ell<p$.
-The number of linear conditions needed to make all responses vanish on $V$ is therefore
-\[
- 2(27N-3p)+(p-3N)+2(3p-24N)=3N+p .
-\]
-Together with the $p+1-N$ conditions defining $V$ this is $2p+2N+1$ conditions, and the space of
-solutions has dimension at least $20N-(2p+2N+1)=18N-2p-1$.
+Put $\ell_0=H-3p$ and $\ell_1=L-2p$; the hypotheses give $\ell_0\le b\le\ell_1$. For $\ell_0\le\ell<b$ the raw
+columns $j\in[b,L)$ with this residue have $J\in\{1,2\}$, and for $b\le\ell<\ell_1$ they have
+$J\in\{0,1,2\}$. So the saving is $2\ell_1-\ell_0-b$, and the number of linear conditions needed to make all
+responses on the $n+q=L-b$ raw columns vanish on $V$ is
+$(p+1-h)+(n+q)-(2\ell_1-\ell_0-b)$. Substituting $\ell_1=L-2p$, $\ell_0=H-3p$ this is $2p+1+g$. The space of
+solutions in the span of $n^*$ rows has dimension at least $n^*-g-2p-1$.
 \end{proof}
 
-For these primes the normalizer has $p$-exponent $40N-(26N-3p)_+$, so after the rescaling $X\mapsto
-X/p^2$ one obtains $p^{e}\mid c_{N,j}$ for all $j$ with
+\subsection{A block of columns: the digits $1$ to $5$}
+\begin{theorem}\label{thm:U6}
+Let $e=(p+1)/2-q-h\ge0$, $n\le4p+2g+1$, $L\le6p$, and put $\mu_0=\max(q,H+q-6p)$, $\mu_1=L-5p$. Assume
+$b+q\le p+\mu_0$. Then $\nu_N(p)\ge\mu_1-\mu_0-e$, that is
 \[
- e=e_N(p)=\min(p-8N-1,\;18N-2p-1)_+ .
+ \nu_N(p)\ge\min\Bigl(\frac{p-1}2-g,\ n+b+q+h-\frac{11p+1}2\Bigr).
 \]
-
-\subsection{The primes in $(4N,9N/2)$}\label{ssec:content3}
-\begin{theorem}\label{thm:u6}
-Let $N\ge1$ and let $p$ be a prime with $4N<p$ and $2p<9N$. Then the left kernel of $\cA^0_{N,p}$ has
-dimension at least $(p-4N-1)/2$.
+The first term is the minimum if $6p\le H$ and the second if $6p\ge H$.
 \end{theorem}
 
-Unlike Theorem~\ref{thm:u3}, where the conditions are imposed on the row polynomials, here the
-argument concerns a block of columns. Put $d=p-4N$, which is odd, and $e=(d+1)/2$; the hypothesis
-$2p<9N$ means $2d<N$. Write $S_c=\sum_rc_r\,\mathrm{rev}(T_{m_r})$ and
-$U_c=\sum_rc_r\,\mathrm{rev}(U_{m_r-1})$, so that $P_c=(1-X)^NS_c$, and put
-\[
- \widehat Q_c=(X-1)^N\,XW\,(1-X)^NS_c,\qquad \widehat D_c=(X-1)^N(1-X)^NU_c .
-\]
+Unlike Theorems~\ref{thm:T} and~\ref{thm:U}, where the conditions are imposed on the rows, the argument
+concerns a block of columns. We first need an identity.
+
+\begin{lemma}\label{lem:K6}
+In $\F_p[X]$, for every integer $k$, $2X^p(X^2-1)^{(p-1)/2}T_k-(2X^{2p}-1)U_{k-1}=U_{2p-k-1}$. If
+$n\le4p+2g+1$, then for every $c$, $X^L\mid 2XWS_c-(2-X^{2p})U_c$, and consequently
+\begin{equation}\label{eq:K6}
+ 2\,Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p]\qquad(i<L).
+\end{equation}
+\end{lemma}
 
 \begin{proof}
-\emph{An identity.} Over any commutative ring, $U_{m-1}T_n-T_mU_{n-1}=U_{m-n-1}$, since both sides
-satisfy the recurrence in $n$ and agree for $n=0,1$. In characteristic $p$ take $m=2p$ and use
-\eqref{eq:cheb-p}, $T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}$:
-\[
- 2X^p(X^2-1)^{(p-1)/2}T_n-(2X^{2p}-1)U_{n-1}=U_{2p-n-1}.
-\]
-Reflecting at degree $2p+26N-1$ and using $p\ge4N$, the right side becomes divisible by $X^{24N}$.
-Summing over the rows with weights $c_r$ and multiplying by $(X-1)^N(1-X)^N$ gives
-\begin{equation}\label{eq:K6}
- 2\,\widehat Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p]\qquad(i<24N).
-\end{equation}
-
-\emph{A block of columns.} Let $M=[p-7d,p-6d)$ and consider the $5d$ filtered columns
-$k(J,\mu)=Jp+\mu-4N$ for $1\le J\le5$ and $\mu\in M$. Each is the filter of order $N$ applied to raw
-columns $Jp+(\mu-N+v)$, $0\le v\le N$, which all have the same digit $J$ because $N<\mu<p$ (this is where
-$2d<N$ is used). Since the alternating binomial sum $\sum_v(-1)^v\binom Nv a_{m+v}$ is the coefficient of
-$X^{m+N}$ in $(X-1)^N\sum_ia_iX^i$, the response of the column $k(J,\mu)$ is a fixed linear
-combination of the coefficients $\widehat Q_c[up+\mu]$ and $\widehat D_c[up+\mu]$.
-
-\emph{Supports.} The polynomials $\widehat Q_c$ and $\widehat D_c$ have no coefficients up to $X^{8N}$,
-and $\deg\widehat Q_c\le28N+p-1$, $\deg\widehat D_c\le28N-1$. For $\mu\in M$ only the digits
-$u=2,\ldots,6$ of $\widehat Q_c$ and $u=2,\ldots,5$ of $\widehat D_c$ can be nonzero, and for these
-$u\le5$ the relation \eqref{eq:K6} expresses $\widehat D_c[up+\mu]$ through $\widehat Q_c$. Hence the block
-columns vanish on $c$ as soon as $\widehat Q_c[up+\mu]=0$ for $2\le u\le6$ and $\mu\in M$.
-
-\emph{A relation from the Frobenius map.} Since $(1-X)^p=1-X^p$ and $2N+\frac{p-1}2+e=p$,
-\[
- (1-X)^e\,\widehat Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^NX(1+X)^{(p-1)/2}S_c .
-\]
-Comparing coefficients at $X^{up+\mu}$ and summing over $u=2,\ldots,6$, the right side telescopes to
-$Y_c[6p+\mu]-Y_c[p+\mu]$, which vanishes for $\mu\ge p-7d+e$. This gives $(d-1)/2$ linear relations among
-the numbers $\widehat Q_c[up+\mu]$, and they are triangular in $\mu$.
-
-\emph{Counting.} Impose on $c$ that the $20N-5d$ filtered columns outside the block vanish, that
-$\widehat Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$, and that $\widehat Q_c[6p+\mu]=0$ for the first $e$
-values of $\mu$. By the triangular relations the remaining coefficients $\widehat Q_c[6p+\mu]$ vanish
-too, so every block column vanishes. This is $20N-5d+4d+e=20N-(d-1)/2$ conditions, and the left kernel
-has dimension at least $(d-1)/2$.
+For all integers $m,k$ one has $U_{m-1}T_k-T_mU_{k-1}=U_{m-k-1}$, since both sides satisfy the same
+recurrence in $k$ and agree for $k=0,1$. Take $m=2p$ and use \eqref{eq:cheb-p}:
+$T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}=2X^p(X^2-1)^{(p-1)/2}$. Reflecting at degree $2p+C-1$, the first
+term becomes $2XW\operatorname{rev}_{C-1}T_k$, the second $(2-X^{2p})\operatorname{rev}_{C-1}U_{k-1}$, and the
+right side $X^{2p+C-1}U_{2p-k-1}(1/X)$. For $k=m_r\ge-g$ this is divisible by $X^{C+k}$, hence by $X^L$, if
+$2p-k-1\ge0$; and if $2p-k-1<0$ it has degree $k-2p-1$ and is divisible by $X^{4p+C-k}$, hence by $X^L$ when
+$k\le4p+g$, which holds because $k\le n-1-g\le4p+g$. Summing with weights $c_r$ and multiplying by
+$(X-1)^q(1-X)^h$ gives \eqref{eq:K6}.
 \end{proof}
 
-For these primes the normalizer has the full exponent $40N$, and the rank deficiency gives
-$p^{e_N(p)}\mid c_{N,j}$ for all $j$, with $e_N(p)=\lfloor(p-4N-1)/2\rfloor$.
+\begin{proof}[Proof of Theorem~\ref{thm:U6}]
+Let $M=[\mu_0,\mu_1)$ and $w=\mu_1-\mu_0$; we may assume $w>e$. The block consists of the filtered columns
+$k(J,\mu)=Jp+\mu-(b+q)$ for $1\le J\le5$ and $\mu\in M$. These indices are non-negative by the hypothesis
+$b+q\le p+\mu_0$, and smaller than $n$ because $5p+\mu_1-1=L-1$; so there are $5w$ of them. As $\mu<p$, formula
+\eqref{eq:filtered-digits} applies: the response of $c$ at $k(J,\mu)$ is
+$\sum_u\alpha_{u,J}Q_c[up+\mu]+\beta_{u,J}\widehat D_c[up+\mu]$.
 
-\subsection{The common factor}
-Let $\Omega_N$ be the product of $p^{e_N(p)}$ over the primes of the three intervals. All coefficients of
-$Q_N$ are divisible by $\Omega_N$, and so is $Q_N(a/b)$ after multiplication by $b^{18N}$. The exponents
-are $N$ times piecewise linear functions of $p/N$, up to $O(1)$: a function of area $16/63$ on
-$[52/9,44/7]$, the function $\max(0,\min(x-8,18-2x))$ of area $1/3$ on $[8,9]$, and $(x-4)/2$ of area
-$1/16$ on $[4,9/2]$. By \eqref{eq:weighted-pnt},
+\emph{Supports.} For $\mu\in M$ we have $p+\mu\le p+\mu_1-1=L-4p-1\le a$ by $n\le4p+2g+1$, so the digits
+$u=0,1$ of $Q_c$ and $\widehat D_c$ vanish. From $\mu_0\ge H+q-6p=L+\Lambda-6p$ we get that the digits $u\ge6$ of
+$\widehat D_c$ and $u\ge7$ of $Q_c$ vanish. For $u\le5$ we have $up+\mu\le L-1$, so \eqref{eq:K6} applies.
+
+\emph{From $Q$ to $\widehat D$.} For $u=2,\dots,5$, \eqref{eq:K6} gives
+$\widehat D_c[up+\mu]=Q_c[up+\mu]+\tfrac12\widehat D_c[(u-2)p+\mu]$, and for $u=2,3$ the last index is at most $a$,
+so the term vanishes. Hence if $Q_c[up+\mu]=0$ for $u=2,\dots,5$ and all $\mu\in M$, then by induction
+$\widehat D_c[up+\mu]=0$ for $u=2,\dots,5$, and all digits of $\widehat D_c$ in $M$ vanish.
+
+\emph{A relation from the Frobenius map.} We have
+$Q_c=(-1)^qX(1-X)^{q+h+(p-1)/2}(1+X)^{(p-1)/2}S_c$, and $q+h+(p-1)/2+e=p$. Since $(1-X)^p=1-X^p$,
 \[
- \log\Omega_N\ge(\chi-o(1))N^2,\qquad
- \chi=\frac{507}{2000}+\frac{3331}{10000}+\frac{624}{10000}=0.649 ,
+ (1-X)^e\,Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^qX(1+X)^{(p-1)/2}S_c,
 \]
-where each fraction is slightly less than the corresponding area. All the primes involved exceed $2N$,
-so the factor $\Omega_N$ does not interfere with the prime squares used in Section~\ref{sec:proof}.
-\section{The real place}\label{sec:real}
-
-In this section we prove that $\Delta_N$ is small not only at $G$ but on an exponentially small
-interval around it.
-
-\begin{theorem}\label{thm:real}
-Put $\rho=259299/2500$ and $\eta_\infty=5993/3125$. For all large $N$,
+and $Y_c$ is supported in $[a+1,\,C+(p-1)/2]$. Comparing the coefficients at $up+\mu$, subtracting the
+coefficient at $(u-1)p+\mu$, and summing over $u=2,\dots,6$, the right side telescopes to
+$Y_c[6p+\mu]-Y_c[p+\mu]$, which vanishes for $\mu\ge\mu_0+e$: the second term because $p+\mu\le a$, the
+first because $6p+\mu\ge H+q+e=C+(p+1)/2>\deg Y_c$. So, if $Q_c[up+\mu']=0$ for $u=2,\dots,5$ and all
+$\mu'\in M$, then
 \[
- |Q_N(x)|\le e^{-\eta_\infty N^2}\qquad\text{whenever }|x-G|\le e^{-\rho N}.
+ \sum_{t=0}^e(-1)^t\binom et\,Q_c[6p+\mu-t]=0\qquad(\mu_0+e\le\mu<\mu_1).
 \]
+This is a recurrence with unit leading coefficient: if $Q_c[6p+\mu]=0$ for the first $e$ values
+$\mu=\mu_0,\dots,\mu_0+e-1$, then it vanishes for all $\mu\in M$.
+
+\emph{Counting.} Impose on $c$ that the $n-5w$ filtered columns outside the block vanish, that
+$Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$ ($4w$ conditions), and that $Q_c[6p+\mu]=0$ for the first $e$
+values of $\mu$. By the three steps above all the responses of the block columns vanish. These are at
+most $n-5w+4w+e=n-(w-e)$ linear conditions, so the left kernel has dimension at least $w-e$. Finally,
+$w-e$ equals $\mu_1-q-e=n+b+q+h-(11p+1)/2$ if $\mu_0=q$ and $(p-1)/2-g$ if $\mu_0=H+q-6p$.
+\end{proof}
+
+\subsection{The second window}
+\begin{theorem}\label{thm:S}
+Let $e=(p+1)/2-q-h\ge0$ and $n\le4p+2g+1$, and put
+\[
+ m_0=\max(b+q,\,L+\Lambda-4p),\qquad m_1=\min(p,\,L-3p,\,a+1),\qquad a=b+q+2g .
+\]
+Then $\nu_N(p)\ge m_1-m_0-e$.
 \end{theorem}
 
-The proof has three parts. We first reduce the perturbation $\Delta_N(x)-\Delta_N(G)$ to
+\begin{proof}
+Let $M=[m_0,m_1)$ and $w=m_1-m_0>e$. For $\mu\in M$ we have $\mu\le a$, so the digit $u=0$ of $Q_c$ and
+$\widehat D_c$ vanishes; $\mu\ge L+\Lambda-4p$ gives that the digits $u\ge4$ of $\widehat D_c$ and $u\ge5$ of
+$Q_c$ vanish; and $3p+\mu<L$, so that \eqref{eq:K6} gives, with $D_i=\widehat D_c[ip+\mu]$ and
+$Q_i=Q_c[ip+\mu]$,
+\[
+ Q_1=D_1,\qquad Q_2=D_2,\qquad Q_3=D_3-\tfrac12D_1 .
+\]
+So every response of the filtered matrix at a column with residue $\mu\in M$ is a combination of the four
+functionals $D_1(\mu),D_2(\mu),D_3(\mu),Q_4(\mu)$ of $c$. For $\mu\in M$ the columns $k=\mu-(b+q)$,
+$p+\mu-(b+q)$, $2p+\mu-(b+q)$ and $3p+\mu-(b+q)$ exist, since $b+q\le\mu<p$ and $3p+\mu<L$. So there are at least
+$4w$ block columns, and their rows lie in the span $F$ of the $4w$ functionals.
+
+We find $w-e$ linear relations among these functionals. As in the proof of Theorem~\ref{thm:U6},
+$(1-X)^eQ_c=(1-X^p)Y_c$ with $Y_c$ a polynomial. Put $\sigma(\ell)=\sum_{u\ge0}Q_c[up+\ell]$ and sum the
+coefficients of this identity over the residue class of $\mu\ge e$ modulo $p$. The right side gives
+$\sum_u\bigl(Y_c[up+\mu]-Y_c[(u-1)p+\mu]\bigr)=0$, since $Y_c$ is a polynomial, and the left side gives
+$\sum_{t=0}^e(-1)^t\binom et\sigma(\mu-t)$. For $\mu\in M$ with $\mu-e\ge m_0$ all $\mu-t$ lie in $M$, and there
+$\sigma=Q_1+Q_2+Q_3+Q_4=D_1+D_2+D_3-\tfrac12D_1+Q_4$. So
+\[
+ \sum_{t=0}^e(-1)^t\binom et\bigl(\tfrac12D_1+D_2+D_3+Q_4\bigr)(\mu-t)=0\qquad(m_0+e\le\mu<m_1),
+\]
+and these $w-e$ relations are independent, since $Q_4(\mu)$ occurs with coefficient $1$ in the one for $\mu$
+and only with lower arguments in the others. Hence $\dim F\le4w-(w-e)$, and the rank of the matrix is at most
+$(n-4w)+3w+e=n-(w-e)$.
+\end{proof}
+
+The proof does not use a determinant or a lower bound for $N$. Unlike the proof of Theorem~\ref{thm:U6}, the
+telescoping here is over all digits, so no vanishing of $Y_c$ at the ends is needed.
+
+\subsection{The function $\kappa$ for the design $D$}
+For $D$, $L=70N$, $H=78N$, $a=22N$, $\Lambda=11N$ and $q+h=6N$. Writing $x=p/N$, one checks the hypotheses of
+the theorems on the intervals of the table of Section~\ref{sec:overview}. The hypotheses
+$e\ge0$ and $n\le4p+2g+1$ both read $x\ge12$, and $L\le6p$ reads $x\ge35/3$; so Theorems~\ref{thm:U6}
+and~\ref{thm:S} apply for $x\ge12$. For $12\le x\le13$ one has $\mu_0=H+q-6p=81N-6p$, so the first branch
+of Theorem~\ref{thm:U6} applies, and for $x\ge13$ one has $\mu_0=3N$ and the second branch, which is positive
+until $x=146/11$. In Theorem~\ref{thm:S}, $m_1=p$ for $x\le35/2$ and $m_1=70N-3p$ above, and
+$m_0=81N-4p$ for $x\le69/4$ and $12N$ above; the value $m_1-m_0-e$ is $9x/2-75$, $x/2-6$ and
+$64-7x/2$ on the three intervals $(50/3,69/4]$, $(69/4,35/2]$, $(35/2,128/7]$, and it is non-positive
+outside $(50/3,128/7)$. Theorem~\ref{thm:T} applies for $x>10$ and $x\ge39/2$, and
+$D_T=\min(5N,52N-1-2p,75N-3p)$; it gives $3p-(n+q+h)=3x-64$ up to $x=23$ and the cap $g=5N$ up to
+$x=70/3$. From $x=70/3$ the hypotheses of Theorem~\ref{thm:U} hold up to $x=26$ (they read
+$3p\ge L$, $3p\le H$, $2p\le n+q$ and $2h\le p+1$), and give $\min(n,2p+2g+1)-g-2p-1$, which is $5N$ for
+$x\le24$ and $53N-2p-1$ above. In each case the value of the theorem is the value in the table minus at
+most one unit, from the integer rounding. At a prime the largest of the values that apply is used.
+The area of $\kappa$ is the sum of the areas of the eight cells, which are listed in
+Section~\ref{sec:overview}.
+
+\begin{remark}
+Numerical computations of the exact rank of $\cA^0_{N,p}$ for several designs and primes show that the
+bounds of Theorem~\ref{thm:content} are attained in the windows where they were tested, and that other
+families add kernel where the windows overlap. These computations are not part of the proof. An upper bound
+for the nullity is not proved, and none is needed.
+\end{remark}
+\section{The real place}\label{sec:real}
+
+In this section we prove that $\Delta_N$ is small not only at $G$ but on an exponentially small interval
+around it. The statement is Theorem~\ref{thm:real}: for all large $N$ and $|x-G|\le e^{-\rho N}$,
+\[
+ |\Delta_N(x)|\le\exp\bigl(-(n_0^2(U-\tfrac12\log2)-\varepsilon)N^2\bigr),\qquad \rho=n_0c_2+w .
+\]
+Here again the design is a parameter. We write $\alpha_A=A/n=(b_0+q_0+2g_0)/n_0$,
+$\beta_h=2h_0/n_0$, $\gamma_H=H/n=(n_0+b_0+q_0+g_0+h_0)/n_0$, $\gamma_d=d_0/n_0=(n_0-g_0)/n_0$,
+and
+\[
+ c_{07}=1-\frac{b_0+q_0+g_0}{n_0},\qquad c_{26}=3-\frac{b_0+q_0+2g_0}{n_0}.
+\]
+For $D$ these are $\alpha_A=11/29$, $\beta_h=3/29$, $\gamma_H=39/29$, $\gamma_d=53/58$, $c_{07}=41/58$ and
+$c_{26}=76/29$. The proof has three parts. We first reduce the perturbation $\Delta_N(x)-\Delta_N(G)$ to
 determinants in which some columns of $\cA_N$ are replaced by values of the row functions at fixed
 points (\S\ref{ssec:quadrature}--\ref{ssec:andreief}). We then bound such determinants by OpenAI's
 energy method, extended to configurations with fewer free points (\S\ref{ssec:energy}). Finally we
@@ -712,8 +1039,8 @@ Let $\delta=x-G$. Then $\Delta_N(x)=\det(\cA_N+\delta\cL_N)$, and the question i
 columns of $\cL_N$ are compared with those of $\cA_N$. By \eqref{eq:L} the entries of $\cL_N$ are linear
 functionals of the coefficients of the row polynomials. Since these polynomials have bounded degree,
 the functionals can be written exactly as finite combinations of point evaluations: if
-$\tau_1,\ldots,\tau_J$ are distinct points and $J$ exceeds the degree of the polynomials involved,
-Lagrange interpolation gives
+$\tau_1,\ldots,\tau_J$ are distinct points and $J$ is at least the number of degrees of freedom of the
+rows, Lagrange interpolation gives
 \begin{equation}\label{eq:quad}
  \cL_N(r,k)=\sum_{a=1}^JA_r(\tau_a)\,\beta_{a,k},
 \end{equation}
@@ -723,42 +1050,50 @@ The point of the formula is that the columns of $\cL_N$ become combinations of p
 same row functions that define $\cA_N$, so that the perturbed determinant can again be treated by the
 energy method. The cost is the size of the weights.
 
-We take $J=18N$ and the nodes
+We take $J=d_0N=53N$ nodes. Put $g_*=401/2500$ and $a_*=2g_*/(1+g_*^2)=2005000/6410801$, and let
+$K=\lceil J/2\rceil$. The nodes are the points
 \[
- t_{j,\pm}=\pm\sqrt{a^2+(1-a^2)(1+s_j)/2},\qquad T_{9N}(s_j)=0,\qquad
- a=\frac{2g_0}{1+g_0^2},\quad g_0=\frac{401}{2500},
+ t_{j,\pm}=\pm\sqrt{a_*^2+(1-a_*^2)(1+s_j)/2},\qquad T_K(s_j)=0,
 \]
-that is, the roots of $P_N(t)=T_{9N}\bigl((2t^2-(1+a^2))/(1-a^2)\bigr)$. They lie in
-$(-1,-a)\cup(a,1)$. In the coordinate $x$ with $t=2x/(1+x^2)$ every node has $|x|>g_0$; this matters
-below, because the energy fields are larger near $x=0$.
+that is, the roots of $T_K\bigl((2t^2-(1+a_*^2))/(1-a_*^2)\bigr)$; we keep all $K$ positive roots and
+the first $J-K$ negative ones, so that for odd $J$ exactly one root is dropped. They lie in
+$(-1,-a_*)\cup(a_*,1)$. In the coordinate $x$ with $t=2x/(1+x^2)$ every node has $|x|>g_*$; this matters
+below, because the energy fields are larger near $x=0$. Dropping a root changes the nodal polynomial by a
+linear factor, and the derivative bound, the circle bound and the degree of the Chebyshev polynomial by
+constant factors only, so an odd number of nodes costs nothing in the exponent. This is needed here,
+since $d_0=53$ is odd and $J=53N$ is odd for odd $N$.
 
 \begin{lemma}\label{lem:quadrature}
-After removal of the common factor of the rows, the weights in \eqref{eq:quad} satisfy
+After removal of the common factor of the rows, the weights in \eqref{eq:quad} satisfy, for every
+$w>\Wcap$ and all large $N$,
 \[
- |\beta_{a,k}|\le108000N\,e^{17.913N}.
+ |\beta_{a,k}|\le108000N\,e^{wN}.
 \]
 \end{lemma}
 
 \begin{proof}
-At a root, the derivative identity for Chebyshev polynomials gives $|P_N'(t_{j,\pm})|\ge36Na/(1-a^2)$.
-The weight is a coefficient functional of the Lagrange polynomial, and every coefficient of a
-polynomial is bounded by its maximum modulus on a circle centered at the origin. On the circle
-$|z|=r$ with $r=1001/1000$, write $s=|\operatorname{Re}z|$. For $w=(2z^2-(1+a^2))/(1-a^2)$ one has
-$|T_{9N}(w)|\le(\Theta+\sqrt{\Theta^2-1})^{9N}$, where
+At a root, the derivative identity for Chebyshev polynomials bounds $|P_J'(t_{j,\pm})|$ from below by a
+constant multiple of $N a_*/(1-a_*^2)$, up to the dropped factor. The weight is a coefficient
+functional of the Lagrange polynomial, and every coefficient of a polynomial is bounded by its maximum
+modulus on a circle centred at the origin. On the circle $|z|=r$ with $r=1001/1000$, write $s=|\operatorname{Re}z|$.
+For $\omega=(2z^2-(1+a_*^2))/(1-a_*^2)$ one has $|T_K(\omega)|\le(\Theta+\sqrt{\Theta^2-1})^K$, where
 \[
- \Theta(s)=\frac{\sqrt{(r^2+1)^2-4s^2}+\sqrt{(r^2+a^2)^2-4a^2s^2}}{1-a^2}
+ \Theta(s)=\frac{\sqrt{(r^2+1)^2-4s^2}+\sqrt{(r^2+a_*^2)^2-4a_*^2s^2}}{1-a_*^2}
 \]
-is half the sum of the distances from $w$ to $\pm1$. The function $\Theta$ decreases in $s$, while the factor
-$|1-z|^2\le r^2+1+2s$ coming from the column filter increases. A cover of $[0,r]$ by $55$ intervals,
-with rational upper bounds for the square roots and logarithms at their endpoints, proves
+is half the sum of the distances from $\omega$ to $\pm1$. The function $\Theta$ decreases in $s$, while the
+factor $|1-z|^{q_0+h_0}\le(r^2+1+2s)^{N(q_0+h_0)/2}$ coming from the column filter and from the common
+factor of the rows increases. A cover of $[0,r]$ by $42$ intervals, with rational upper bounds for the
+square roots at their endpoints, proves, with $d_0=53$ and $q_0+h_0=6$,
 \[
- 9\log\bigl(\Theta(s)+\sqrt{\Theta(s)^2-1}\bigr)+\log(r^2+1+2s)<17.913\qquad(0\le s\le r).
+ \frac{d_0}2\log\bigl(\Theta(s)+\sqrt{\Theta(s)^2-1}\bigr)+\frac{q_0+h_0}2\log(r^2+1+2s)<\Wcap\qquad(0\le s\le r),
 \]
-Since $|z-t_{j,\pm}|\ge1/1000$ on the circle and $(1-a^2)/(36a)\le1$, the bound follows.
+the supremum being $52.7849$ at $s\approx0.125$. The cover is done on the square of this inequality
+raised to the power $N$, so that no logarithm is evaluated and the odd value of $d_0N$ costs only a
+factor. Since $|z-t_{j,\pm}|\ge1/1000$ on the circle, the lemma follows.
 \end{proof}
 
 The circle of radius $1.001$ instead of $1$ separates the circle from the nodes; on the unit circle itself
-the cancellation in the factor $(1-t)^N$ near $t=1$ is what keeps the bound small.
+the cancellation in the factor $(1-t)^h$ near $t=1$ is what keeps the bound small.
 
 \subsection{Column expansion and an identity of Andr\'eief type}\label{ssec:andreief}
 Expanding $\det(\cA_N+\delta\Phi\beta)$, where $\Phi(r,a)=A_r(\tau_a)$, multilinearly in the columns gives
@@ -781,10 +1116,10 @@ identity extends to this situation.
 Let $\mu,\nu$ be finite measures, $F_r$ $(r<p+m)$, $G_i$ $(i<p)$ and $K$ integrable functions, and let $B$
 be the matrix with $B(r,i)=\iint F_r(t)K(t,s)G_i(s)\,d\mu(t)\,d\nu(s)$ for $i<p$ and
 $B(r,p+j)=F_r(\tau'_j)$. Then
-\[
- (p!)^2\det B=\int\!\!\int\det\bigl[F_r((t\Vert\tau')_c)\bigr]_{r,c}
- \det[K(t_i,s_j)]_{i,j<p}\det[G_i(s_j)]_{j,i<p}\,d\mu^p(t)\,d\nu^p(s),
-\]
+\begin{multline*}
+ (p!)^2\det B=\int\!\!\int\det\bigl[F_r((t\Vert\tau')_c)\bigr]_{r,c}\\
+ \cdot\det[K(t_i,s_j)]_{i,j<p}\det[G_i(s_j)]_{j,i<p}\,d\mu^p(t)\,d\nu^p(s),
+\end{multline*}
 where $t\Vert\tau'$ is the list of the $p$ variables followed by the $m$ fixed points.
 \end{lemma}
 
@@ -813,212 +1148,249 @@ an external field for each point, logarithmic interactions $\log|x_i-x_j|$, $\lo
 $\log|s_i-s_j|$ among points of the same kind, and an interaction $-\log(1-2x_is_j+x_i^2)$ between the two
 kinds. There are two cases, according to which of OpenAI's two bounds for the determinant of the row
 functions is used \cite[Props.~5.2, 5.3]{OpenAI2026}; in the second case the interaction among the $x_i$
-has weight $2$ instead of $1$.
+has weight $2$ instead of $1$, and in the first the row field acquires a term with a multiplier
+$\lambda_1$ for the constraint that defines the case.
 
 The energy is bounded from above by duality. Given trial sequences $u=(u_k)$ and $v=(v_k)$, one writes
 the interaction terms as quadratic forms in the moments $\frac1n\sum_iT_k(x_i)$ and
 $\frac1n\sum_js_j^k$ and completes the squares against $u$ and $v$. What remains is the sum of the norms
-$\|u\|^2$, $\|v\|^2$ and, for each point, a function of one variable,
+$\|u\|^2=\sum_ku_k^2/k$, $\|v\|^2$ and, for each point, a function of one variable. With
+$\mathsf T(u,x)=\sum_ku_kT_k(x)/k$ and $\mathsf S(v,x)=\sum_kv_kx^k/k$ these are, in the second case,
+\begin{align*}
+ X(x)&=\alpha_A\log|x|+\beta_h\log(1-x)-\gamma_H\log(1+x^2)-4\mathsf T(u,x)-\mathsf S(v,x),\\
+ Y(s)&=\tfrac{b_0}{n_0}\log s+\tfrac{q_0}{n_0}\log(1-s)+2\mathsf T(v,s),
+\end{align*}
+and in the first case
+\begin{multline*}
+ X_1(x)=\alpha_A\log|x|+\beta_h\log(1-x)-(\gamma_H-\tfrac12)\log(1+x^2)\\
+ +\lambda_1\bigl(\tfrac{2g_0}{n_0}-\tfrac{2x^2}{1+x^2}\bigr)
+ -2\mathsf T(p,x)-\mathsf S(v,x),
+\end{multline*}
+with the same $Y$ (for the first case the trial sequence for the first variables is called $p$).
+If $X\le M_X$ and $Y\le M_Y$ on the whole domains, the energy of any configuration is at most a
+constant determined by $M_X$, $M_Y$ and the norms. In potential-theoretic terms the extremal
+configuration is described by an equilibrium measure for two interacting measures in an external
+field \cite{SaffTotik}, and the best trial sequences are its moments, as Carreira observed
+\cite{Carreira2026}; any trial sequences give a valid upper bound.
+
+When $m$ of the $n$ columns are point values, the configuration has only $n-m$ free points of each kind,
+while the normalization is still by $n$. The fixed points contribute through the determinant of the row
+functions evaluated at the concatenated list $t\Vert\tau'$. The fixed points are of two kinds: $a$ of
+them are quadrature nodes, with $|x|>g_*$, and $b'$ of them are points $y\in(0,1)$; the numbers of free
+points, of the first kind and of the second kind add up to $n$, and we put $\alpha=(a+b')/n$ and
+$\tau=b'/n$. The missing free points change
+the energy bound by an amount linear in $m$, which is the cost of a fixed column. Every step of OpenAI's
+argument remains valid uniformly in the number of free points: the regularization of the logarithmic
+interactions, the diagonal corrections, and the completion of squares only involve sums over the points
+present. For the fixed points of the first kind the relevant field is the residual field
 \[
- X(x)=W_x(x)-2\kappa\,T(u,x)-S(v,x),\qquad Y(s)=W_s(s)+2\,T(v,s),
+ R(x)=-\gamma_d\log(1+x^2)-2\mathsf T(u,x),\qquad g_*\le|x|\le1,
 \]
-where $W_x,W_s$ are the external fields, $\kappa\in\{1,2\}$ is the case, and $T(u,x)=\sum_ku_kT_k(x)/k$,
-$S(v,x)=\sum_kv_kx^k/k$ are the potentials of the trial sequences. If $X\le M_X$ and $Y\le M_Y$ on the whole
-domains, the energy of any configuration is at most a constant determined by $M_X$, $M_Y$ and the norms.
-In potential-theoretic terms the extremal configuration is described by an equilibrium measure for two
-interacting measures in an external field \cite{SaffTotik}, and the best trial sequences are its moments,
-as Carreira observed \cite{Carreira2026}; any trial sequences give a valid upper bound.
-
-When $m$ of the $n$ columns are point values, the configuration has only $p=n-m$ free points of each
-kind, while the normalization is still by $n$. The fixed points contribute through the determinant of the
-row functions evaluated at the concatenated list $t\Vert\tau'$. One checks that every step of OpenAI's
-argument remains valid uniformly in $p\le n$: the regularization of the logarithmic interactions, the
-diagonal corrections, and the completion of squares only involve sums over the points present. The
-missing points change the energy bound by an amount linear in $m$, which is the cost of a fixed column.
-
-For the parameters of Section~\ref{sec:twenty} this cost is controlled as follows. We use two pairs of
-trial sequences, one for each case. For each case the cost of a fixed column is at most $20c_\kappa N$
-in the exponent, where $c_\kappa$ is obtained by completing a square in the proportions $\alpha=m/n$ and
-$\tau\le\alpha$ of fixed points of the two kinds. For the second case the quantity to be bounded is
-\begin{equation}\label{eq:budget2}
- h_0+(2.6\log2-F+R-c_2)\alpha-2\log2\,\alpha^2+(\log2-R-0.75)\tau-\log2\,\tau^2,
-\end{equation}
-with $0\le\tau\le\alpha\le1$, where $F$ is the bound for the sum of the two fields, $R$ is the bound for the
-field at the fixed points, and $h_0$ collects the constants. Here the fixed points are the quadrature
-nodes, at which $|x|>g_0$; this is why the bound $R$ for the field at the fixed points is needed only on
-$g_0\le|x|\le1$, where it is much better than on the whole interval. The expression \eqref{eq:budget2} is
-negative on its domain when $c_2=4.29033$, and the analogous expression for the first case is negative
-when $c_1=4.21$.
-
-Combining this with Lemma~\ref{lem:quadrature}, a determinant $M_f$ with $m$ fixed columns contributes at
-most $(540000N)^m e^{(20c_2+17.913)Nm}$ times the unperturbed bound; the factor $5^m$ comes from expanding
-the row functions at the fixed points in the second case. Lemma~\ref{lem:expansion} then gives,
-for $|\delta|\le e^{-\rho N}$ with $\rho=20c_2+17.913=259299/2500$, a factor $(1+O(N^2))^{20N}=e^{o(N^2)}$.
-This proves Theorem~\ref{thm:real}, given the numerical bounds of the next two subsections; the
-constant $\eta_\infty$ comes from
+and for those of the second kind it is
 \[
- 400\bigl(U_*-\tfrac12\log2-\mathsf A\bigr)=400U_*-\frac{8795}{12}-242\log2>\frac{5993}{3125},
+ N(y)=-\gamma_d\log(1+y^2)+\frac{n_0-2g_0-1}{n_0}\log y-u_1y,\qquad0<y<1,
 \]
-where $U_*$ is the energy bound at the real place given below, $\frac12\log2$ is the normalization of
-the determinant, and $\mathsf A$ is the constant of Proposition~\ref{prop:denominators}.
+where $u_1$ is the first coefficient of $u$; the coefficient $(n_0-2g_0-1)/n_0$ is a lower bound, valid for
+all $N\ge1$, of $(n-1-2g)/n$.
 
-\subsection{The trial sequences}\label{ssec:trials}
-For the first case we use a trial sequence with $40$ Chebyshev coefficients and a finite number of
-geometric terms, with an additional multiplier $\lambda=1.68493357$ for the constraint that defines the
-case. For the second case we use trial sequences of the form
-\begin{equation}\label{eq:trial}
- u_k=c_k+\operatorname{Re}\sum_jr_jz_j^k\qquad(k\ge1;\ c_k=0\text{ for }k>K),
-\end{equation}
-with $K=640$ Chebyshev coefficients in $2^{-40}\Z$ and $56$ geometric terms, $22$ of them with complex
-$z_j$ and complex $r_j$.
-
-The geometric terms have a simple meaning. A term $(z,r)$ contributes
-$-\frac12\operatorname{Re}\,r\log(1-2xz+z^2)$ to the potential $T(u,x)$. If $x_0+i\epsilon=\frac12(z+z^{-1})$
-then $1-2xz+z^2=2z(x_0+i\epsilon-x)$, so the term is, up to a constant, the logarithmic potential of a point
-charge of complex strength $r$ at $x_0+i\epsilon$ and its conjugate. The extremal measure of the energy
-problem has a gap in its support around $x=0$, of radius about $0.1$, and its potential has a
-logarithmic singularity at $x=0$ and square-root behaviour at the edges of the gap. A Chebyshev expansion
-converges slowly near such points. A charge at a small distance $\epsilon$ from them reproduces the local
-behaviour with one term. We place the complex charges at $x_0\in\{0,\pm0.03,\pm0.06,\pm0.09,\pm0.12,\pm0.16\}$
-with $\epsilon\in\{10^{-2},3\cdot10^{-3}\}$; the numbers $z_j$ are rationals with twelve decimals. The norms
-of the geometric terms have closed forms: two terms $(z_j,r_j)$, $(z_l,r_l)$ contribute
-$-\frac12\operatorname{Re}\bigl(r_jr_l\log(1-z_jz_l)+r_j\bar r_l\log(1-z_j\bar z_l)\bigr)$.
-
-Without the complex terms, the same $640$ coefficients and the $34$ real geometric terms give, in a
-numerical optimization, no exponent below $728.5$.
-
-\subsection{Verification of the bounds}\label{ssec:cells}
-We must bound three functions of one variable from above on their whole domains: the field $X$ on
-$[-1,1]$, the field $Y$ on $[0,1]$, and the field at the fixed points on $g_0\le|x|\le1$. With $x=\cos\theta$,
-each is a constant plus a cosine series with $640$ terms plus finitely many terms
-$\operatorname{Re}\,w\log(1-ae^{im\theta})$.
-
-We cover each domain by intervals $[x_c-h,x_c+h]$ whose endpoints are multiples of $2^{-40}$, and on
-each interval bound the function by its Taylor expansion at $x_c$. The polynomial part has degree $639$,
-and a global bound for its fifth derivative would force very short intervals. Instead we compute the
-derivatives of the polynomial part exactly at $x_c$ up to order $70$, and bound only the remainder beyond
-order $70$ by a single global constant, which enters multiplied by $h^{70}/70!$. The logarithmic terms are
-expanded to order $5$, with remainders bounded from the exact minimum of $|1-ae^{im\theta}|$ on the
-interval. A few intervals at $x=0$ and $x=\pm1$ treat the singular terms separately. The covers have $598$,
-$435$ and $366$ intervals. Each interval is checked by exact rational and integer arithmetic.
-
-The resulting bounds are
+\begin{lemma}[budget, second case]\label{lem:budget2}
+Let $\ell=\log2$, and let $\mathcal N,\Phi,\mathcal R,\mathcal N_c$ and $c_2$ be real numbers, with $m\ge0$,
+such that
 \[
- \sup X\le-\frac{97745957}{10^8},\qquad \sup Y\le-\frac{156655368}{10^8},\qquad
- \sup_{g_0\le|x|\le1}R\le-\frac{5247033}{10^8},
+ \mathcal N+\Phi+U-c_{07}\ell\le-m,\qquad(c_{26}\ell-\Phi+\mathcal R-c_2)^2\le8\ell m,\qquad
+ \ell-\mathcal R+\mathcal N_c\le0 .
 \]
-the norms satisfy $2\|u\|^2+\frac12\|v\|^2\le\frac{24149189}{31250000}$, and the first coefficient satisfies
-$u_1\ge9/50$, which is used near $x=0$. These give the energy bound $U_*=141027507/62500000$ at the real place.
-
-The trial data are fixed once and for all; the file containing them has SHA-256 digest
-\begin{center}
-\texttt{6a055ec808510b5ff836a819aebc837ea1593f3c96263318ac2688a59659af02}.
-\end{center}
-\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
-
-\subsection{The usual criterion}
-We first recall the standard way of passing from the three properties of the polynomials $Q_N$ to a
-measure, to explain where the remaining ideas enter.
-
-\begin{proposition}\label{prop:criterion}
-Let $\xi\in\R$, $d\in\N$ and $\eta,\rho>0$, and let $Q_p\in\Z[X]$ be polynomials, indexed by primes $p$,
-such that for all large $p$: $\deg Q_p\le dp$; $Q_p(a/b)\ne0$ whenever $p\nmid b$; and
-$|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$. Then for every $\varepsilon>0$,
-$\mu(\xi)\le(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)$ for every $c>1$.
-\end{proposition}
-
-\begin{proof}
-Let $|\xi-a/b|$ be small and $X=\max(d/\eta,c/\varepsilon)\log b$. By the prime number theorem
-$\theta((1+\varepsilon)X)-\theta(X)=\varepsilon X+o(X)>\log b$, so some prime $p\in(X,(1+\varepsilon)X]$ does not
-divide $b$. If $|\xi-a/b|\le b^{-(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)}$, then $|\xi-a/b|\le e^{-\rho p}$
-and the nonzero integer $b^{dp}Q_p(a/b)$ has absolute value at most $b^{dp}e^{-\eta p^2}<1$, since
-$p>X\ge(d/\eta)\log b$.
-\end{proof}
-
-The loss $\max(d/\eta,c/\varepsilon)$ instead of $d/\eta$ is the cost of finding a prime that does not divide
-$b$ in a short interval. We now remove it, using the two remaining properties of $Q_N$: the
-nonvanishing under $p^2\nmid b$ (Proposition~\ref{prop:nonvanishing}) and the divisibility of the
-coefficients by prime squares.
-
-\subsection{Prime squares in the coefficients}
-\begin{lemma}\label{lem:recycling}
-For all large $N$ and every prime $N<q\le2N$, the $j$-th coefficient of $Q_N$ is divisible by $q^{2j}$.
+Then for all $\alpha,\tau\ge0$
+\begin{multline*}
+ \bigl(-(c_{07}-\tfrac12)+(c_{26}-1)\alpha-\alpha^2+\tau-\tau^2\bigr)\ell+\mathcal N+(1-\alpha)\Phi+\alpha(1-\alpha)\ell\\
+ +(\alpha-\tau)\mathcal R+\tau\mathcal N_c\le-U+\tfrac12\ell+c_2\alpha .
+\end{multline*}
 \end{lemma}
 
 \begin{proof}
-For these primes the matrices $q^2\cA^0_N$ and $\cL_N$ are $q$-integral, and $q^{40N}$ divides $D_N$. The
-identity
-\[
- Q_N(X/q^2)=(18N)!\,\frac{D_N}{q^{40N}}\det\bigl(q^2\cA^0_N+X\cL_N\bigr)
-\]
-shows that $Q_N(X/q^2)$ has $q$-integral coefficients; its $j$-th coefficient is $c_{N,j}/q^{2j}$.
+Subtracting the right side from the left gives
+$(\mathcal N+\Phi+U-c_{07}\ell)+\alpha(c_{26}\ell-\Phi+\mathcal R-c_2)-2\ell\alpha^2
++\tau(\ell-\mathcal R+\mathcal N_c)-\ell\tau^2$. The last two terms are non-positive by the third hypothesis,
+and the first three form a concave quadratic in $\alpha$ with non-positive discriminant, since
+$A+s\alpha-2\ell\alpha^2\le0$ for all $\alpha$ as soon as $s^2+8\ell A\le0$.
 \end{proof}
 
-Consequently, if $B$ is a product of squares $q^2$ of distinct primes $N<q\le2N$ with $B\mid b$, then every
-term $c_{N,j}a^jb^{18N-j}$ of $b^{18N}Q_N(a/b)$ is divisible by $B^{18N}$, and
-\begin{equation}\label{eq:recycled}
- 1\le\Bigl(\frac bB\Bigr)^{18N}\Bigl|\frac{Q_N(a/b)}{\Omega_N}\Bigr|\qquad\text{whenever }Q_N(a/b)\ne0 .
+The lemma is applied with $\mathcal N$ a bound for $2\|u\|^2+\frac12\|v\|^2$, $\Phi=M_X+M_Y$, $\mathcal R$ a
+bound for the supremum of $R$ and $\mathcal N_c$ a bound for the supremum of $N$. The analogue for the first
+case has no fixed points of the second kind, and its polynomial in $\alpha$ is
+\begin{multline*}
+ \bigl(-(c_{07}-\tfrac12)+(c_{26}-1)\alpha-\alpha^2\bigr)\ell+n_1+(1-\alpha)F_1+\alpha(1-\alpha)\ell\\
+ +\alpha\lambda_1\tfrac{2g_0}{n_0}\le-U+\tfrac12\ell+c_1\alpha,
+\end{multline*}
+with $n_1$ a bound for the norms of the first trial and $F_1=M_{X_1}+M_Y$; it holds for all real
+$\alpha$ when its discriminant is non-positive and $c_1\le c_{26}\ell-F_1+\lambda_1\tfrac{2g_0}{n_0}$ (so that
+it also holds for $\alpha<0$).
+
+Combining the energy bounds with Lemma~\ref{lem:quadrature}, a determinant $M_f$ with $m$ fixed columns
+contributes at most $(5\cdot108000N)^me^{(n_0c+w)Nm}$ times the unperturbed bound, where $c=\max(c_1,c_2)$;
+the factor $5^m$ comes from expanding the row functions at the fixed points in the second case.
+Lemma~\ref{lem:expansion} then gives, for $|\delta|\le e^{-\rho N}$ with $\rho=n_0c_2+w$, a factor
+$(1+O(N^2))^{n}=e^{o(N^2)}$ (here $w$ is any number above $\Wcap$ and $c=c_2$). The unperturbed bound is
+$\exp\bigl(n_0^2N^2(-U+\frac12\log2+\varepsilon)\bigr)$. This proves Theorem~\ref{thm:real}, given the
+numerical bounds of the next two subsections.
+
+\subsection{The trial sequences}\label{ssec:trials}
+For the first case we use a trial sequence with $40$ Chebyshev coefficients and a finite number of
+geometric terms, with the multiplier $\lambda_1=1.68493357$. For the second case we use trial sequences
+of the form
+\begin{equation}\label{eq:trial}
+ u_k=c_k+\operatorname{Re}\sum_jr_jz_j^k\qquad(k\ge1;\ c_k=0\text{ for }k>K),
 \end{equation}
-Here we have also divided by the common factor $\Omega_N$ of Section~\ref{sec:content}, whose primes exceed
-$2N$ and therefore do not meet $B$.
+with $K=\Kcoef$ Chebyshev coefficients, dyadic rationals, and $\Ngeo$ geometric terms, $\Ncomplex$ of them with
+complex $z_j$ and complex $r_j$.
 
-\subsection{The choice of the prime}
-Put
+The geometric terms have a simple meaning. Since $\sum_{k\ge1}z^kT_k(x)/k=-\frac12\log(1-2xz+z^2)$, a term
+$(z,r)$ contributes $-\frac12\operatorname{Re}\,r\log(1-2xz+z^2)$ to the potential $\mathsf T(u,x)$. If
+$x_0+i\epsilon=\frac12(z+z^{-1})$ then $1-2xz+z^2=2z(x_0+i\epsilon-x)$, so the term is, up to a constant, the
+logarithmic potential of a point charge of complex strength $r$ at $x_0+i\epsilon$ and its conjugate. The
+extremal measure of the energy problem has a gap in its support around $x=0$, and its potential has a
+logarithmic singularity at $x=0$ and square-root behaviour at the edges of the gap. A Chebyshev expansion
+converges slowly near such points. A charge at a small distance $\epsilon$ from them reproduces the local
+behaviour with one term. We place the complex charges at
+$x_0\in\{0,\pm0.03,\pm0.06,\pm0.09,\pm0.12,\pm0.16\}$ with $\epsilon\in\{10^{-2},3\cdot10^{-3}\}$, and
+the real terms at points $\pm z$ with $z$ increasing from $0.8$ to $0.999997$; the numbers $z_j$ are
+rationals with at most twelve decimals. The norms of the geometric terms have closed forms: two terms $(z_j,r_j)$,
+$(z_l,r_l)$ contribute
+$-\frac12\operatorname{Re}\bigl(r_jr_l\log(1-z_jz_l)+r_j\bar r_l\log(1-z_j\bar z_l)\bigr)$ to $\|u\|^2$.
+
+\subsection{Verification of the bounds}\label{ssec:cells}
+We must bound three functions of one variable from above on their whole domains: the field $X$ on
+$[-1,1]$, the field $Y$ on $[0,1]$, and the residual field $R$ on $g_*\le|x|\le1$. With $x=\cos\theta$,
+each is a constant plus a cosine series with $K$ terms plus finitely many terms
+$\operatorname{Re}\,w\log(1-ae^{im\theta})$.
+
+We cover each domain by cells $[x_c-h,x_c+h]$ whose endpoints are multiples of $2^{-40}$, and on
+each cell bound the function by its Taylor expansion at $x_c$. The cells are grouped in blocks. The
+polynomial part has degree $K-1$, and a global bound for its fifth derivative would force very short cells.
+Instead, for each block the derivatives of the polynomial part are computed exactly at the centre of the
+block up to order $70$, and the remainder beyond order $70$ is bounded by a single constant for the block,
+which enters multiplied by $h^{70}/70!$; the Taylor expansion at the centre of a cell is obtained from
+that of the block by an exact shift. The logarithmic terms are expanded to order $5$, with remainders
+bounded from the exact minimum of $|1-ae^{im\theta}|$ on the cell. A few cells at $x=0$ and $x=\pm1$ treat
+the singular terms separately. The covers of $X$, $Y$ and $R$ have \Nblocks{} blocks and \Ncells{} cells, respectively.
+Each cell is checked by exact rational and integer arithmetic.
+
+The resulting bounds are
 \[
- \rho=\frac{259299}{2500},\qquad
- \eta=\eta_\infty+\chi=\frac{5993}{3125}+\frac{649}{1000}=\frac{64169}{25000},\qquad
- k=\frac{728}{\rho}=\frac{1820000}{259299},\qquad\delta_0=10^{-7}.
+ \sup X\le\SupX,\quad \sup Y\le\SupY,\quad
+ \sup_{g_*\le|x|\le1}R\le\ResCap,
 \]
-By Theorem~\ref{thm:real} and Section~\ref{sec:content}, the integer polynomials $\widetilde Q_N=Q_N/\Omega_N$
-satisfy $|\widetilde Q_N(x)|\le e^{-(\eta-o(1))N^2}$ for $|x-G|\le e^{-\rho N}$; their degree is at most
-$18N$, and they do not vanish at $a/b$ for $N=p$ prime with $p^2\nmid b$.
+so that $M_X+M_Y=\FieldCap$; the norms satisfy $2\|u\|^2+\frac12\|v\|^2\le\NormCap$; and the first
+coefficient satisfies $u_1\ge9/50$, which is used near $x=0$. For the near points, a one-variable
+estimate shows that
+$\sup_{0<y<1}N(y)\le-77/100$ for $u_1\ge9/50$, with the weight $47/58$ in $N(y)$; the true supremum is
+about $-0.7758$. For the first case, with the weights $(\alpha_A,\beta_h,\gamma_H-\frac12,\lambda_1,2g_0/n_0)=(11/29,3/29,49/58,\lambda_1,5/29)$,
+the bounds $\sup X_1\le-1.15854$ and $\sup Y\le-1.32981$ are obtained by isolating the zeros of the
+numerators of the derivatives, which are polynomials with integer coefficients, and bounding the values
+between them; the norm bound is $n_1=0.67761$.
 
-Let $a/b$ be a rational number with $b$ large, put $L=\log b$, $U=kL$ and $V=(k-1)L$, and suppose
-$|G-a/b|\le b^{-728}$. By the prime number theorem, $(1-\delta_0)t\le\theta(t)\le(1+\delta_0)t$ for all large
-$t$. If every prime $p\in(V,U]$ had $p^2\mid b$, then $2(\theta(U)-\theta(V))\le L$; but
+With $c_{07}=41/58$, $c_{26}=76/29$ and $U=\Utarget$, the hypotheses of Lemma~\ref{lem:budget2} hold with
+\begin{gather*}
+ m=\Mmargin,\qquad \ell-\mathcal R+\mathcal N_c\le-0.0137,\\
+ (c_{26}\ell-\Phi+\mathcal R-c_2)^2\le\Disc\le8\ell m=\DiscBound,
+\end{gather*}
+with $c_2=\Ctwo$; for the first case $c_1=\Cone<c_2$ is admissible. This gives the cost $c_2$ of a fixed
+column, and $\rho=58c_2+w=\Rho$ for $w=2.9\cdot18.203=52.7887$ ($>\Wcap$). The decay rate in
+Theorem~\ref{thm:real} is $n_0^2(U-\frac12\log2)=\TDelta\ldots$ The trial data are fixed once and for
+all; the file containing them has SHA-256 digest
+\begin{center}
+{\footnotesize\texttt{\Digest}}.
+\end{center}
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+\subsection{The criterion}
+We prove Proposition~\ref{prop:criterion}. Its proof shows where each of the three properties of
+$Q_N$ enters: the nonvanishing and the smallness are used once at the end, and the divisibility by prime
+squares is what makes the choice of the prime free.
+
+\begin{proof}[Proof of Proposition~\ref{prop:criterion}]
+Let $a/b$ be a rational number with $b$ large, put $L=\log b$, $U=\kappa L$ and $V=(\kappa-\omega)L$, and
+suppose $|\xi-a/b|\le b^{-\rho\kappa}$. By the prime number theorem, $(1-\delta)t\le\theta(t)\le(1+\delta)t$
+for all large $t$, and $V\to\infty$ with $b$. If every prime $p\in(V,U]$ had $p^2\mid b$, then
+$2(\theta(U)-\theta(V))\le\log b=L$; but
 \[
- 2\bigl(\theta(U)-\theta(V)\bigr)\ge2L\bigl(1-\delta_0(2k-1)\bigr)>L .
+ 2\bigl(\theta(U)-\theta(V)\bigr)\ge2L\bigl((1-\delta)\kappa-(1+\delta)(\kappa-\omega)\bigr)
+ =2L\bigl(\omega-\delta(2\kappa-\omega)\bigr)>L ,
 \]
-Let $p$ be the \emph{largest} prime in $(V,U]$ with $p^2\nmid b$. Every prime $q\in(p,U]$ has $q^2\mid b$, and
-$q\le U<2V<2p$ because $k>2$. Let $B$ be the product of these $q^2$, so that $\log B=2T$ with
-$T=\theta(U)-\theta(p)\ge U-p-2\delta_0U$.
+by the fourth hypothesis. So there are primes in $(V,U]$ whose squares do not divide $b$. Let $p$ be the
+\emph{largest} one. Every prime $q\in(p,U]$ has $q^2\mid b$, and $q\le U<2V<2p$ because $2\omega<\kappa$.
+Let $B$ be the product of these $q^2$; then $B\mid b$ and $\log B=2(\theta(U)-\theta(p))$.
 
-Since $\rho p\le\rho U=728L$, we have $|a/b-G|\le e^{-\rho p}$, and \eqref{eq:recycled} with $N=p$ gives
-$\eta p^2\le18p(L-2T)+o(p^2)$. Hence
+Every term $c_ia^ib^{dp-i}$ of the integer $b^{dp}Q_p(a/b)=\sum_ic_ia^ib^{dp-i}$ is divisible by $q^{2dp}$ for each
+of these $q$: $q^{2i}$ divides $c_i$ by hypothesis, and $q^2\mid b$ gives $q^{2(dp-i)}\mid b^{dp-i}$. So $B^{dp}$
+divides the integer. Since $Q_p(a/b)\ne0$ (as $p^2\nmid b$), $b^{dp}Q_p(a/b)/B^{dp}$ is a nonzero integer, and
+\begin{equation}\label{eq:recycled}
+ 1\le\Bigl(\frac bB\Bigr)^{dp}\,|Q_p(a/b)| .
+\end{equation}
+Since $\rho p\le\rho U=\rho\kappa L$, we have $|a/b-\xi|\le e^{-\rho p}$, so $|Q_p(a/b)|\le e^{-\eta p^2}$ and
+\eqref{eq:recycled} gives $\eta p^2\le dp\bigl(L-2(\theta(U)-\theta(p))\bigr)$, that is,
 \[
- \eta p\le18\bigl(L-2U+2p+4\delta_0U\bigr)+o(p).
+ \eta p\le d\bigl(L-2(\theta(U)-\theta(p))\bigr)\le d\bigl(L-2U+2p+4\delta U\bigr),
 \]
-As $\eta<36$, the left side minus $36p$ decreases in $p$, and $p\le U=kL$ gives
+using $\theta(U)\ge(1-\delta)U$ and $\theta(p)\le(1+\delta)p\le(1+\delta)U$ in the form
+$\theta(U)-\theta(p)\ge U-p-2\delta U$. Hence $(\eta-2d)p\le dL-2dU+4d\delta U$. As $\eta<2d$ and $p\le U$,
+the left side is at least $(\eta-2d)U$, so $\eta U\le dL+4d\delta U$, that is, $\eta\kappa\le d+4d\delta\kappa$,
+which contradicts the last hypothesis.
+\end{proof}
+
+The choice of the largest admissible prime is what makes the selection free: the primes of the window
+that are not admissible have their squares in $b$, and these squares are recovered from the coefficients
+through the divisibility hypothesis. A cruder choice, of any prime in a short interval that does not
+divide $b$, loses a factor. The free lower end $V=(\kappa-\omega)L$ is what allows $\kappa<2$: the condition $q\le U<2p$ for the recycled
+primes needs only $U<2V$.
+
+\subsection{The hypotheses for the design $D$}
+Take the design $D=(58,9,3,5,3)$ and $d=53$ (the degree of $Q_N$ is at most $53N$, and the polynomials
+$Q_p$ of the proposition are the $Q_N$ with $N=p$), and
+\begin{gather*}
+ \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac34,\quad \delta=2.9\cdot10^{-7},\\
+ \kappa=\frac{\Bbank}{\rho}=\Kappa .
+\end{gather*}
+We check the hypotheses.
+\begin{itemize}
+\item $\deg Q_N\le53N$ by \eqref{eq:QN} and Lemma~\ref{lem:degree}.
+\item The nonvanishing: by Proposition~\ref{prop:nonvanishing}, $\Delta_p(a/b)\ne0$ for large $p$ with
+$p^2\nmid b$, hence $Q_p(a/b)\ne0$.
+\item The divisibility: by Lemma~\ref{lem:recycling}, $q^{2i}$ divides the $i$-th coefficient of $Q_p$ for all
+primes $p<q\le2p$.
+\item The smallness: by Theorem~\ref{thm:real}, Proposition~\ref{prop:denominators} and $\log(53N)!=o(N^2)$,
+for $|x-G|\le e^{-\rho N}$ and large $N$,
 \[
- \eta k\le18+72\delta_0k+o(1).
+ |Q_N(x)|\le\exp\bigl(-(\TDelta\ldots-6395.7087\ldots-3\varepsilon)N^2\bigr)\le e^{-\eta N^2}
 \]
-But
-\[
- \eta k-18-72\delta_0k=\frac{513512}{32412375}>0,
-\]
-a contradiction. This proves Theorem~\ref{thm:main}.
+since $\eta=\EtaTot<\EtaExact\ldots$ is rounded down.
+\item The numerical conditions: $\rho\kappa=\Bbank$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa$;
+$2(\omega-\delta(2\kappa-\omega))=1.49999\ldots>1$; and
+$d+4d\delta\kappa=\PayL\ldots<\eta\kappa=\PayR\ldots$.
+\end{itemize}
+Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-\Bbank}$ for all integers
+$a$ and all sufficiently large $b$. This proves Theorem~\ref{thm:main}. The last condition is
+equivalent to $\Bbank>x=d\rho/(\eta-4d\delta)=\Bx$, and in the limit $\delta\to0$ the argument gives
+the exponent $d\rho/\eta=\Blimit\ldots$ for the constants above; the integer $\Bbank$ is the one for
+which all conditions are verified with rational constants.
 
-The choice of the largest admissible prime is what makes the selection free: the primes of the interval
-that are not admissible have their squares in $b$, and these squares are recovered from the
-coefficients through Lemma~\ref{lem:recycling}. In the limit $\delta_0\to0$ the argument gives the exponent
-\[
- \frac{18\rho}{\eta}=\frac{46673820}{64169}=727.357\ldots .
-\]
+\section{Remarks on the method}\label{sec:remarks}
 
-\section{Limits of the method}\label{sec:limits}
+The exponent $d\rho/\eta$ has three ingredients. The degree $d=n-g$ and the perturbation exponent
+$\rho=n_0c_2+w$ come from the construction and from the quadrature: of $\rho=\Rho$, the cost of fixed
+columns $n_0c_2$ is $\NCtwo$ and the logarithmic size of the weights is $52.79$. The decay rate $\eta$ is
+a small difference of two large numbers, the energy at the real place, $\TDelta$, and the exponent of the
+denominators, $6395.71$, and the rank deficiencies of Theorem~\ref{thm:content} contribute $19.14$ of the
+$\EtaTot$. Since the exponent is inversely proportional to $\eta$, an additional gain of $0.01$ in the area
+of $\kappa$ lowers it by about $0.22$.
 
-The exponent is determined by three numbers: the degree $18$, the margin $\eta$ and the perturbation
-exponent $\rho$. The margin is the sum of the difference between the real and the finite places and the
-contribution $\chi$ of the common factor. The perturbation exponent is the cost $20c_2$ of a fixed column
-plus the logarithmic size $17.913$ of the quadrature weights.
-
-Within the framework of Section~\ref{sec:real}, with the gap radius $g_0=401/2500$, the weight $17.913$ and the
-exponent $\chi=0.649$ of the common factor fixed, the integer $728$ is close to optimal. A weak dual certificate on $934$
-rational intervals, verified in interval arithmetic at $60$ and $80$ digits, shows that no pair of trial
-sequences gives an integer exponent $B\le726$ in this framework; its margin is $3.5\cdot10^{-6}$ at $B=726$
-and $-5.3\cdot10^{-6}$ at $B=727$, and finer subdivisions approach $726.5$. This computation is not part of
-the formal proof, and it says nothing about $\mu(G)$ itself. Further progress requires new arithmetic,
-which enlarges $\chi$ or reduces the degree, or a better treatment of the fixed columns, which reduces $\rho$.
+All four theorems of Section~\ref{sec:content} are lower bounds for the nullity, and the proofs give the
+kernel vectors explicitly. They are proved for every design, and so are the other arguments of the paper; a
+different design changes $d$, $\rho$ and $\eta$ together, and we make no claim that $D$ is optimal. In
+particular the bound $\kappa$ of Theorem~\ref{thm:content} does not use any relation between different
+families, and at a prime where windows overlap the exact nullity is larger than each bound. An upper bound
+for the nullity, or a proof that the kernels of two families are independent, would increase $\eta$ without
+changing anything else.
 
 \section{Formalization}\label{sec:formal}
 
@@ -1028,41 +1400,109 @@ OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The develo
 \FormalizationLink.
 \end{center}
 The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
-written as the series $\sum_j(-1)^j/(2j+1)^2$; its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the command
-\lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
+written as the series $\sum_j(-1)^j/(2j+1)^2$; it is the theorem
+\begin{center}
+\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_\Bbank}
+\end{center}
+and its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
+command \lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound}. The file \lean{comparator.json} is a configuration for \lean{lake comparator}
 \cite{Comparator} stating that \lean{Solution} proves the statement of \lean{Challenge} with these axioms
-only. We have not run Comparator, which requires Linux; the axiom check above was done with
-\lean{\#print axioms}.
-The prime number theorem is taken from the PNT+ project \cite{PNTPlus}.
+only. The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The parts of OpenAI's
+formalization that are used were converted to Lean's module system and ported to a recent Lean release; the
+repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
 
+\subsection{Module layout}
+Everything specific to this paper is in the directory \lean{GenD} of \lean{CatalanMeasure}. Its design is that of the paper:
+a design is data, the generic modules prove every statement for an arbitrary design, and the instance
+files contain numerals only.
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Generic layer] \lean{PL} (piecewise linear profiles, their areas) and \lean{PrimeGrowth} (the
+weighted prime number theorem \eqref{eq:weighted-pnt} for ramp profiles; one exponent per prime);
+\lean{Budget} (the scalar inequalities of Lemma~\ref{lem:budget2} and its analogue for the first case, and the
+conditions of the criterion), \lean{PayW} and \lean{Recycled} (Proposition~\ref{prop:criterion} with the free
+window end); \lean{Final} (the structure \lean{DesignData} and the theorem \lean{measure\_of\_design}, which
+contain no numeral).
+\item[Denominators] \lean{OddProfile} (the valuations $\ell_N(p)$ for the lower and upper pools),
+\lean{TwoAdic} (the bound \eqref{eq:A2}), \lean{DenomExp}, \lean{DenomGrowth}, \lean{DenomGrowth2},
+\lean{Denominator} and \lean{Normalizer} (the common denominator, $Q_N$, the divisibility of
+Lemma~\ref{lem:recycling}).
+\item[Rank deficiencies] \lean{Interface} (the nullity, the four families and \lean{famKap\_le\_nullity}),
+\lean{RankCommon}, \lean{RankK6}, \lean{RankDigits}, \lean{RankFam}, \lean{RankFilt}, \lean{RankSeq},
+\lean{RankBlock} (the shared layers: Chebyshev reflection, identity \eqref{eq:K6}, the digit formula in
+filtered form, the block framework), and \lean{RankT}, \lean{RankU}, \lean{RankUCore}, \lean{RankU6},
+\lean{RankS} for Theorems~\ref{thm:T}--\ref{thm:S}; \lean{KapHelpers} turns the comparison with a window list
+into linear arithmetic.
+\item[Nonvanishing] \lean{Nonvanishing} (Proposition~\ref{prop:nonvanishing} from the three base matrices),
+and the residue-table certificates \lean{CertMod}, \lean{ResBase}, \lean{ResCheck}, \lean{ResInv},
+\lean{ResRec}.
+\item[Real place] \lean{Analytic/} (28 modules): the constants and fields of a design (\lean{Const},
+\lean{Fields}, \lean{CommonField}), the first-case and second-case contracts (\lean{First},
+\lean{FirstGlue}, \lean{Second}, \lean{Glue}), the grouped products over the fixed points (\lean{GroupedProduct},
+\lean{MarkedSheet}, \lean{MarkedSheetOn}, \lean{MarkedMixedMajorant}, \lean{MarkedSecond}), the prefactor,
+the perturbation by the quadrature nodes (\lean{Prefactor}, \lean{AtomBase}, \lean{WeightedAtom},
+\lean{DeltaSmall}, \lean{DeltaChain}), and the nodes and the weight bounds for any number of nodes
+(\lean{GapNodes}, \lean{GapNodal}, \lean{GapWeights}, \lean{FullWeights}, \lean{GapCircleGen},
+\lean{CircleCover}). \lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
+(\lean{WLog}, \lean{WLogSpec}), the residual field with a weight (\lean{ResW}), the shifted tables
+(\lean{PolyShift}) and the assembly of cells and blocks (\lean{CellLoc}, \lean{Assembly}).
+\item[The design $D$] \lean{D58/} holds the instance: \lean{Budget} (the constants of the certificate),
+\lean{Ramps}, \lean{Kap}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, \lean{Pay}, \lean{Final}
+(the design, the window list, the profile $f$, $\mathsf A_2=2673/8$, the growth of the denominator and
+the conditions of the criterion), \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
+\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), \lean{Cert/} (the second
+case: trial data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap),
+\lean{SecondTrial}, \lean{C3/} (the three inverses modulo $1009$), \lean{Certified} and \lean{Main}, which
+proves \lean{catalan\_irrationalityMeasure\_\Bbank} in the namespace \lean{CatalanMeasure.GenD.D58}.
+\end{description}
+The public theorem in \lean{Solution.lean} is a one-line wrapper of that theorem. The modules of
+OpenAI's formalization and the generic valuation theorems of the construction
+(\lean{CatalanMeasure/Parametric}) are used as they are.
+
+\subsection{Certificates}
 The proof combines conventional formal proofs with numerical certificates checked by the Lean kernel:
-the inverses of the base matrices modulo $1009$, the response matrices of Section~\ref{ssec:content1}, the
-cover of Lemma~\ref{lem:quadrature}, the trial sequences of Section~\ref{ssec:trials} and the covers of
-Section~\ref{ssec:cells}. All are exact rational or integer computations, decided by the kernel without
-compiled code. Large certificates are split into many small declarations with explicit intermediate
-values. Where a recurrence produces integers divisible by large powers of $2$, as the Chebyshev and Clenshaw
-recurrences do, the certificates run on the quotients by these powers, with one lemma relating the two. The
-interval arithmetic used to generate the trial data and the covers \cite{Arb} is not trusted: Lean
-rechecks every inequality.
-
-The parts of OpenAI's formalization that are used were converted to Lean's module system and ported to
-Lean \texttt{v4.35.0-rc2}; the repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
+the inverses of the base matrices modulo $1009$, the cover of Lemma~\ref{lem:quadrature}, the trial
+sequences of Section~\ref{ssec:trials} and the covers of Section~\ref{ssec:cells}. All are exact rational or
+integer computations, decided by the kernel without compiled code. The interval arithmetic used to
+generate the trial data and the covers \cite{Arb} is not trusted: Lean rechecks every inequality. Four
+devices keep the certificates small enough for the kernel.
+\begin{itemize}
+\item \emph{Shared Taylor bounds.} The cells of a cover are grouped in blocks. For each block the
+derivatives of the polynomial part of the field are evaluated once, exactly, at the centre of the block,
+together with one bound for the remainder of the expansion; every cell of the block obtains its expansion
+by an exact shift, instead of repeating the evaluation of a polynomial with $\Kcoef$ coefficients.
+\item \emph{Accuracy per term from a shared table of nodes.} The logarithms are evaluated by the series
+$\log\frac{1+x}{1-x}=2x\sum_i x^{2i}/(2i+1)$ with an explicit geometric tail, and the number of terms is
+chosen for each logarithmic term separately from a table of nodes shared by all the cells, instead of
+one accuracy for the whole sum.
+\item \emph{Residue recurrences.} The tables of the moments $M(i,j)$ and $Z(i,j)$ modulo $1009$ are not
+computed from the rational numbers. They are generated by the one-step recurrences that define these
+numbers, once proved correct, and the kernel checks the recurrence, the filtered rows against the
+row polynomials and the products of the matrices with their claimed inverses, row by row, in natural
+numbers.
+\item \emph{$2$-adic normalisation.} Where a recurrence produces integers divisible by large powers of
+$2$, as the Chebyshev and Clenshaw recurrences do, the tables store the quotients by these powers, with
+one lemma relating the two; this also avoids integers that the kernel's hashing of literals treats as
+equal.
+\end{itemize}
 
 \section*{Disclosure of AI use}
 
 The mathematics, the Lean formalization, the numerical computations and certificate generators, the
 literature search and the text of this paper were produced by AI systems at the request of the author, who
-posed the problem, directed the work, and is responsible for this paper. Claude Opus~5.5 and Claude
-Sonnet~5.5 (Anthropic) produced the measure framework and the perturbation estimate by quadrature
-(Section~\ref{sec:real}), the rank deficiencies of Theorems~\ref{thm:u3} and~\ref{thm:u6} with their
-consequences for the coefficients, the trial sequences with complex terms and the verification of
-Section~\ref{ssec:cells}, the final assembly, and the corresponding Lean proofs. OpenAI Codex produced the
-determinant of size $20N$ with its local arithmetic and nonvanishing, the energy estimates with fixed
-columns and the fields for the first case, the quadrature nodes avoiding the gap and the bound of
-Lemma~\ref{lem:quadrature}, the divisibility of the coefficients by prime squares and the choice of the
-largest admissible prime, the rank deficiency of Section~\ref{ssec:content1}, and the corresponding Lean
-proofs. The underlying irrationality proof and its formalization are OpenAI's \cite{OpenAI2026}.
+posed the problem, directed the work, and is responsible for this paper. By component: Claude
+(Opus~5.5 and Sonnet~5.5, Anthropic) produced the treatment of an arbitrary design (the degree, the
+denominators at all primes and the nonvanishing, Section~\ref{sec:setup}), the digit formula and the rank
+deficiencies of Theorems~\ref{thm:T}, \ref{thm:U}, \ref{thm:U6} and~\ref{thm:S}, the passage from the
+nullity to the denominators, the criterion with a free lower end of the window, the perturbation estimate
+by quadrature with an odd number of nodes, the trial sequences with complex terms and the verification of
+Section~\ref{ssec:cells}, the choice of the design and the final assembly, together with the corresponding
+Lean proofs and the generic layer of Section~\ref{sec:formal}. OpenAI Codex produced the energy estimates with
+fixed columns and the fields of the first case, the identity of Andr\'eief type with fixed points, the
+bound for the weights of Lemma~\ref{lem:quadrature}, the divisibility of the coefficients by prime squares
+and the choice of the largest admissible prime, with the corresponding Lean proofs for one particular
+choice of the parameters, which Claude generalised. The underlying irrationality proof and its
+formalization are OpenAI's \cite{OpenAI2026}.
 
 \subsection*{Acknowledgements}
 We thank the authors of Mathlib and of the PNT+ project, and OpenAI for making its formalization available.

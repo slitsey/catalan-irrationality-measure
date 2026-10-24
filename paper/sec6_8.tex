@@ -1,108 +1,93 @@
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
-\subsection{The usual criterion}
-We first recall the standard way of passing from the three properties of the polynomials $Q_N$ to a
-measure, to explain where the remaining ideas enter.
+\subsection{The criterion}
+We prove Proposition~\ref{prop:criterion}. Its proof shows where each of the three properties of
+$Q_N$ enters: the nonvanishing and the smallness are used once at the end, and the divisibility by prime
+squares is what makes the choice of the prime free.
 
-\begin{proposition}\label{prop:criterion}
-Let $\xi\in\R$, $d\in\N$ and $\eta,\rho>0$, and let $Q_p\in\Z[X]$ be polynomials, indexed by primes $p$,
-such that for all large $p$: $\deg Q_p\le dp$; $Q_p(a/b)\ne0$ whenever $p\nmid b$; and
-$|Q_p(x)|\le e^{-\eta p^2}$ whenever $|x-\xi|\le e^{-\rho p}$. Then for every $\varepsilon>0$,
-$\mu(\xi)\le(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)$ for every $c>1$.
-\end{proposition}
-
-\begin{proof}
-Let $|\xi-a/b|$ be small and $X=\max(d/\eta,c/\varepsilon)\log b$. By the prime number theorem
-$\theta((1+\varepsilon)X)-\theta(X)=\varepsilon X+o(X)>\log b$, so some prime $p\in(X,(1+\varepsilon)X]$ does not
-divide $b$. If $|\xi-a/b|\le b^{-(1+\varepsilon)\rho\max(d/\eta,c/\varepsilon)}$, then $|\xi-a/b|\le e^{-\rho p}$
-and the nonzero integer $b^{dp}Q_p(a/b)$ has absolute value at most $b^{dp}e^{-\eta p^2}<1$, since
-$p>X\ge(d/\eta)\log b$.
-\end{proof}
-
-The loss $\max(d/\eta,c/\varepsilon)$ instead of $d/\eta$ is the cost of finding a prime that does not divide
-$b$ in a short interval. We now remove it, using the two remaining properties of $Q_N$: the
-nonvanishing under $p^2\nmid b$ (Proposition~\ref{prop:nonvanishing}) and the divisibility of the
-coefficients by prime squares.
-
-\subsection{Prime squares in the coefficients}
-\begin{lemma}\label{lem:recycling}
-For all large $N$ and every prime $N<q\le2N$, the $j$-th coefficient of $Q_N$ is divisible by $q^{2j}$.
-\end{lemma}
-
-\begin{proof}
-For these primes the matrices $q^2\cA^0_N$ and $\cL_N$ are $q$-integral, and $q^{40N}$ divides $D_N$. The
-identity
+\begin{proof}[Proof of Proposition~\ref{prop:criterion}]
+Let $a/b$ be a rational number with $b$ large, put $L=\log b$, $U=\kappa L$ and $V=(\kappa-\omega)L$, and
+suppose $|\xi-a/b|\le b^{-\rho\kappa}$. By the prime number theorem, $(1-\delta)t\le\theta(t)\le(1+\delta)t$
+for all large $t$, and $V\to\infty$ with $b$. If every prime $p\in(V,U]$ had $p^2\mid b$, then
+$2(\theta(U)-\theta(V))\le\log b=L$; but
 \[
- Q_N(X/q^2)=(18N)!\,\frac{D_N}{q^{40N}}\det\bigl(q^2\cA^0_N+X\cL_N\bigr)
+ 2\bigl(\theta(U)-\theta(V)\bigr)\ge2L\bigl((1-\delta)\kappa-(1+\delta)(\kappa-\omega)\bigr)
+ =2L\bigl(\omega-\delta(2\kappa-\omega)\bigr)>L ,
 \]
-shows that $Q_N(X/q^2)$ has $q$-integral coefficients; its $j$-th coefficient is $c_{N,j}/q^{2j}$.
-\end{proof}
+by the fourth hypothesis. So there are primes in $(V,U]$ whose squares do not divide $b$. Let $p$ be the
+\emph{largest} one. Every prime $q\in(p,U]$ has $q^2\mid b$, and $q\le U<2V<2p$ because $2\omega<\kappa$.
+Let $B$ be the product of these $q^2$; then $B\mid b$ and $\log B=2(\theta(U)-\theta(p))$.
 
-Consequently, if $B$ is a product of squares $q^2$ of distinct primes $N<q\le2N$ with $B\mid b$, then every
-term $c_{N,j}a^jb^{18N-j}$ of $b^{18N}Q_N(a/b)$ is divisible by $B^{18N}$, and
+Every term $c_ia^ib^{dp-i}$ of the integer $b^{dp}Q_p(a/b)=\sum_ic_ia^ib^{dp-i}$ is divisible by $q^{2dp}$ for each
+of these $q$: $q^{2i}$ divides $c_i$ by hypothesis, and $q^2\mid b$ gives $q^{2(dp-i)}\mid b^{dp-i}$. So $B^{dp}$
+divides the integer. Since $Q_p(a/b)\ne0$ (as $p^2\nmid b$), $b^{dp}Q_p(a/b)/B^{dp}$ is a nonzero integer, and
 \begin{equation}\label{eq:recycled}
- 1\le\Bigl(\frac bB\Bigr)^{18N}\Bigl|\frac{Q_N(a/b)}{\Omega_N}\Bigr|\qquad\text{whenever }Q_N(a/b)\ne0 .
+ 1\le\Bigl(\frac bB\Bigr)^{dp}\,|Q_p(a/b)| .
 \end{equation}
-Here we have also divided by the common factor $\Omega_N$ of Section~\ref{sec:content}, whose primes exceed
-$2N$ and therefore do not meet $B$.
-
-\subsection{The choice of the prime}
-Put
+Since $\rho p\le\rho U=\rho\kappa L$, we have $|a/b-\xi|\le e^{-\rho p}$, so $|Q_p(a/b)|\le e^{-\eta p^2}$ and
+\eqref{eq:recycled} gives $\eta p^2\le dp\bigl(L-2(\theta(U)-\theta(p))\bigr)$, that is,
 \[
- \rho=\frac{259299}{2500},\qquad
- \eta=\eta_\infty+\chi=\frac{5993}{3125}+\frac{649}{1000}=\frac{64169}{25000},\qquad
- k=\frac{728}{\rho}=\frac{1820000}{259299},\qquad\delta_0=10^{-7}.
+ \eta p\le d\bigl(L-2(\theta(U)-\theta(p))\bigr)\le d\bigl(L-2U+2p+4\delta U\bigr),
 \]
-By Theorem~\ref{thm:real} and Section~\ref{sec:content}, the integer polynomials $\widetilde Q_N=Q_N/\Omega_N$
-satisfy $|\widetilde Q_N(x)|\le e^{-(\eta-o(1))N^2}$ for $|x-G|\le e^{-\rho N}$; their degree is at most
-$18N$, and they do not vanish at $a/b$ for $N=p$ prime with $p^2\nmid b$.
+using $\theta(U)\ge(1-\delta)U$ and $\theta(p)\le(1+\delta)p\le(1+\delta)U$ in the form
+$\theta(U)-\theta(p)\ge U-p-2\delta U$. Hence $(\eta-2d)p\le dL-2dU+4d\delta U$. As $\eta<2d$ and $p\le U$,
+the left side is at least $(\eta-2d)U$, so $\eta U\le dL+4d\delta U$, that is, $\eta\kappa\le d+4d\delta\kappa$,
+which contradicts the last hypothesis.
+\end{proof}
 
-Let $a/b$ be a rational number with $b$ large, put $L=\log b$, $U=kL$ and $V=(k-1)L$, and suppose
-$|G-a/b|\le b^{-728}$. By the prime number theorem, $(1-\delta_0)t\le\theta(t)\le(1+\delta_0)t$ for all large
-$t$. If every prime $p\in(V,U]$ had $p^2\mid b$, then $2(\theta(U)-\theta(V))\le L$; but
+The choice of the largest admissible prime is what makes the selection free: the primes of the window
+that are not admissible have their squares in $b$, and these squares are recovered from the coefficients
+through the divisibility hypothesis. A cruder choice, of any prime in a short interval that does not
+divide $b$, loses a factor. The free lower end $V=(\kappa-\omega)L$ is what allows $\kappa<2$: the condition $q\le U<2p$ for the recycled
+primes needs only $U<2V$.
+
+\subsection{The hypotheses for the design $D$}
+Take the design $D=(58,9,3,5,3)$ and $d=53$ (the degree of $Q_N$ is at most $53N$, and the polynomials
+$Q_p$ of the proposition are the $Q_N$ with $N=p$), and
+\begin{gather*}
+ \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac34,\quad \delta=2.9\cdot10^{-7},\\
+ \kappa=\frac{\Bbank}{\rho}=\Kappa .
+\end{gather*}
+We check the hypotheses.
+\begin{itemize}
+\item $\deg Q_N\le53N$ by \eqref{eq:QN} and Lemma~\ref{lem:degree}.
+\item The nonvanishing: by Proposition~\ref{prop:nonvanishing}, $\Delta_p(a/b)\ne0$ for large $p$ with
+$p^2\nmid b$, hence $Q_p(a/b)\ne0$.
+\item The divisibility: by Lemma~\ref{lem:recycling}, $q^{2i}$ divides the $i$-th coefficient of $Q_p$ for all
+primes $p<q\le2p$.
+\item The smallness: by Theorem~\ref{thm:real}, Proposition~\ref{prop:denominators} and $\log(53N)!=o(N^2)$,
+for $|x-G|\le e^{-\rho N}$ and large $N$,
 \[
- 2\bigl(\theta(U)-\theta(V)\bigr)\ge2L\bigl(1-\delta_0(2k-1)\bigr)>L .
+ |Q_N(x)|\le\exp\bigl(-(\TDelta\ldots-6395.7087\ldots-3\varepsilon)N^2\bigr)\le e^{-\eta N^2}
 \]
-Let $p$ be the \emph{largest} prime in $(V,U]$ with $p^2\nmid b$. Every prime $q\in(p,U]$ has $q^2\mid b$, and
-$q\le U<2V<2p$ because $k>2$. Let $B$ be the product of these $q^2$, so that $\log B=2T$ with
-$T=\theta(U)-\theta(p)\ge U-p-2\delta_0U$.
+since $\eta=\EtaTot<\EtaExact\ldots$ is rounded down.
+\item The numerical conditions: $\rho\kappa=\Bbank$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa$;
+$2(\omega-\delta(2\kappa-\omega))=1.49999\ldots>1$; and
+$d+4d\delta\kappa=\PayL\ldots<\eta\kappa=\PayR\ldots$.
+\end{itemize}
+Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-\Bbank}$ for all integers
+$a$ and all sufficiently large $b$. This proves Theorem~\ref{thm:main}. The last condition is
+equivalent to $\Bbank>x=d\rho/(\eta-4d\delta)=\Bx$, and in the limit $\delta\to0$ the argument gives
+the exponent $d\rho/\eta=\Blimit\ldots$ for the constants above; the integer $\Bbank$ is the one for
+which all conditions are verified with rational constants.
 
-Since $\rho p\le\rho U=728L$, we have $|a/b-G|\le e^{-\rho p}$, and \eqref{eq:recycled} with $N=p$ gives
-$\eta p^2\le18p(L-2T)+o(p^2)$. Hence
-\[
- \eta p\le18\bigl(L-2U+2p+4\delta_0U\bigr)+o(p).
-\]
-As $\eta<36$, the left side minus $36p$ decreases in $p$, and $p\le U=kL$ gives
-\[
- \eta k\le18+72\delta_0k+o(1).
-\]
-But
-\[
- \eta k-18-72\delta_0k=\frac{513512}{32412375}>0,
-\]
-a contradiction. This proves Theorem~\ref{thm:main}.
+\section{Remarks on the method}\label{sec:remarks}
 
-The choice of the largest admissible prime is what makes the selection free: the primes of the interval
-that are not admissible have their squares in $b$, and these squares are recovered from the
-coefficients through Lemma~\ref{lem:recycling}. In the limit $\delta_0\to0$ the argument gives the exponent
-\[
- \frac{18\rho}{\eta}=\frac{46673820}{64169}=727.357\ldots .
-\]
+The exponent $d\rho/\eta$ has three ingredients. The degree $d=n-g$ and the perturbation exponent
+$\rho=n_0c_2+w$ come from the construction and from the quadrature: of $\rho=\Rho$, the cost of fixed
+columns $n_0c_2$ is $\NCtwo$ and the logarithmic size of the weights is $52.79$. The decay rate $\eta$ is
+a small difference of two large numbers, the energy at the real place, $\TDelta$, and the exponent of the
+denominators, $6395.71$, and the rank deficiencies of Theorem~\ref{thm:content} contribute $19.14$ of the
+$\EtaTot$. Since the exponent is inversely proportional to $\eta$, an additional gain of $0.01$ in the area
+of $\kappa$ lowers it by about $0.22$.
 
-\section{Limits of the method}\label{sec:limits}
-
-The exponent is determined by three numbers: the degree $18$, the margin $\eta$ and the perturbation
-exponent $\rho$. The margin is the sum of the difference between the real and the finite places and the
-contribution $\chi$ of the common factor. The perturbation exponent is the cost $20c_2$ of a fixed column
-plus the logarithmic size $17.913$ of the quadrature weights.
-
-Within the framework of Section~\ref{sec:real}, with the gap radius $g_0=401/2500$, the weight $17.913$ and the
-exponent $\chi=0.649$ of the common factor fixed, the integer $728$ is close to optimal. A weak dual certificate on $934$
-rational intervals, verified in interval arithmetic at $60$ and $80$ digits, shows that no pair of trial
-sequences gives an integer exponent $B\le726$ in this framework; its margin is $3.5\cdot10^{-6}$ at $B=726$
-and $-5.3\cdot10^{-6}$ at $B=727$, and finer subdivisions approach $726.5$. This computation is not part of
-the formal proof, and it says nothing about $\mu(G)$ itself. Further progress requires new arithmetic,
-which enlarges $\chi$ or reduces the degree, or a better treatment of the fixed columns, which reduces $\rho$.
+All four theorems of Section~\ref{sec:content} are lower bounds for the nullity, and the proofs give the
+kernel vectors explicitly. They are proved for every design, and so are the other arguments of the paper; a
+different design changes $d$, $\rho$ and $\eta$ together, and we make no claim that $D$ is optimal. In
+particular the bound $\kappa$ of Theorem~\ref{thm:content} does not use any relation between different
+families, and at a prime where windows overlap the exact nullity is larger than each bound. An upper bound
+for the nullity, or a proof that the kernels of two families are independent, would increase $\eta$ without
+changing anything else.
 
 \section{Formalization}\label{sec:formal}
 
@@ -112,41 +97,109 @@ OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The develo
 \FormalizationLink.
 \end{center}
 The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
-written as the series $\sum_j(-1)^j/(2j+1)^2$; its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the command
-\lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
+written as the series $\sum_j(-1)^j/(2j+1)^2$; it is the theorem
+\begin{center}
+\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_\Bbank}
+\end{center}
+and its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
+command \lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound}. The file \lean{comparator.json} is a configuration for \lean{lake comparator}
 \cite{Comparator} stating that \lean{Solution} proves the statement of \lean{Challenge} with these axioms
-only. We have not run Comparator, which requires Linux; the axiom check above was done with
-\lean{\#print axioms}.
-The prime number theorem is taken from the PNT+ project \cite{PNTPlus}.
+only. The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The parts of OpenAI's
+formalization that are used were converted to Lean's module system and ported to a recent Lean release; the
+repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
 
+\subsection{Module layout}
+Everything specific to this paper is in the directory \lean{GenD} of \lean{CatalanMeasure}. Its design is that of the paper:
+a design is data, the generic modules prove every statement for an arbitrary design, and the instance
+files contain numerals only.
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Generic layer] \lean{PL} (piecewise linear profiles, their areas) and \lean{PrimeGrowth} (the
+weighted prime number theorem \eqref{eq:weighted-pnt} for ramp profiles; one exponent per prime);
+\lean{Budget} (the scalar inequalities of Lemma~\ref{lem:budget2} and its analogue for the first case, and the
+conditions of the criterion), \lean{PayW} and \lean{Recycled} (Proposition~\ref{prop:criterion} with the free
+window end); \lean{Final} (the structure \lean{DesignData} and the theorem \lean{measure\_of\_design}, which
+contain no numeral).
+\item[Denominators] \lean{OddProfile} (the valuations $\ell_N(p)$ for the lower and upper pools),
+\lean{TwoAdic} (the bound \eqref{eq:A2}), \lean{DenomExp}, \lean{DenomGrowth}, \lean{DenomGrowth2},
+\lean{Denominator} and \lean{Normalizer} (the common denominator, $Q_N$, the divisibility of
+Lemma~\ref{lem:recycling}).
+\item[Rank deficiencies] \lean{Interface} (the nullity, the four families and \lean{famKap\_le\_nullity}),
+\lean{RankCommon}, \lean{RankK6}, \lean{RankDigits}, \lean{RankFam}, \lean{RankFilt}, \lean{RankSeq},
+\lean{RankBlock} (the shared layers: Chebyshev reflection, identity \eqref{eq:K6}, the digit formula in
+filtered form, the block framework), and \lean{RankT}, \lean{RankU}, \lean{RankUCore}, \lean{RankU6},
+\lean{RankS} for Theorems~\ref{thm:T}--\ref{thm:S}; \lean{KapHelpers} turns the comparison with a window list
+into linear arithmetic.
+\item[Nonvanishing] \lean{Nonvanishing} (Proposition~\ref{prop:nonvanishing} from the three base matrices),
+and the residue-table certificates \lean{CertMod}, \lean{ResBase}, \lean{ResCheck}, \lean{ResInv},
+\lean{ResRec}.
+\item[Real place] \lean{Analytic/} (28 modules): the constants and fields of a design (\lean{Const},
+\lean{Fields}, \lean{CommonField}), the first-case and second-case contracts (\lean{First},
+\lean{FirstGlue}, \lean{Second}, \lean{Glue}), the grouped products over the fixed points (\lean{GroupedProduct},
+\lean{MarkedSheet}, \lean{MarkedSheetOn}, \lean{MarkedMixedMajorant}, \lean{MarkedSecond}), the prefactor,
+the perturbation by the quadrature nodes (\lean{Prefactor}, \lean{AtomBase}, \lean{WeightedAtom},
+\lean{DeltaSmall}, \lean{DeltaChain}), and the nodes and the weight bounds for any number of nodes
+(\lean{GapNodes}, \lean{GapNodal}, \lean{GapWeights}, \lean{FullWeights}, \lean{GapCircleGen},
+\lean{CircleCover}). \lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
+(\lean{WLog}, \lean{WLogSpec}), the residual field with a weight (\lean{ResW}), the shifted tables
+(\lean{PolyShift}) and the assembly of cells and blocks (\lean{CellLoc}, \lean{Assembly}).
+\item[The design $D$] \lean{D58/} holds the instance: \lean{Budget} (the constants of the certificate),
+\lean{Ramps}, \lean{Kap}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, \lean{Pay}, \lean{Final}
+(the design, the window list, the profile $f$, $\mathsf A_2=2673/8$, the growth of the denominator and
+the conditions of the criterion), \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
+\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), \lean{Cert/} (the second
+case: trial data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap),
+\lean{SecondTrial}, \lean{C3/} (the three inverses modulo $1009$), \lean{Certified} and \lean{Main}, which
+proves \lean{catalan\_irrationalityMeasure\_\Bbank} in the namespace \lean{CatalanMeasure.GenD.D58}.
+\end{description}
+The public theorem in \lean{Solution.lean} is a one-line wrapper of that theorem. The modules of
+OpenAI's formalization and the generic valuation theorems of the construction
+(\lean{CatalanMeasure/Parametric}) are used as they are.
+
+\subsection{Certificates}
 The proof combines conventional formal proofs with numerical certificates checked by the Lean kernel:
-the inverses of the base matrices modulo $1009$, the response matrices of Section~\ref{ssec:content1}, the
-cover of Lemma~\ref{lem:quadrature}, the trial sequences of Section~\ref{ssec:trials} and the covers of
-Section~\ref{ssec:cells}. All are exact rational or integer computations, decided by the kernel without
-compiled code. Large certificates are split into many small declarations with explicit intermediate
-values. Where a recurrence produces integers divisible by large powers of $2$, as the Chebyshev and Clenshaw
-recurrences do, the certificates run on the quotients by these powers, with one lemma relating the two. The
-interval arithmetic used to generate the trial data and the covers \cite{Arb} is not trusted: Lean
-rechecks every inequality.
-
-The parts of OpenAI's formalization that are used were converted to Lean's module system and ported to
-Lean \texttt{v4.35.0-rc2}; the repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
+the inverses of the base matrices modulo $1009$, the cover of Lemma~\ref{lem:quadrature}, the trial
+sequences of Section~\ref{ssec:trials} and the covers of Section~\ref{ssec:cells}. All are exact rational or
+integer computations, decided by the kernel without compiled code. The interval arithmetic used to
+generate the trial data and the covers \cite{Arb} is not trusted: Lean rechecks every inequality. Four
+devices keep the certificates small enough for the kernel.
+\begin{itemize}
+\item \emph{Shared Taylor bounds.} The cells of a cover are grouped in blocks. For each block the
+derivatives of the polynomial part of the field are evaluated once, exactly, at the centre of the block,
+together with one bound for the remainder of the expansion; every cell of the block obtains its expansion
+by an exact shift, instead of repeating the evaluation of a polynomial with $\Kcoef$ coefficients.
+\item \emph{Accuracy per term from a shared table of nodes.} The logarithms are evaluated by the series
+$\log\frac{1+x}{1-x}=2x\sum_i x^{2i}/(2i+1)$ with an explicit geometric tail, and the number of terms is
+chosen for each logarithmic term separately from a table of nodes shared by all the cells, instead of
+one accuracy for the whole sum.
+\item \emph{Residue recurrences.} The tables of the moments $M(i,j)$ and $Z(i,j)$ modulo $1009$ are not
+computed from the rational numbers. They are generated by the one-step recurrences that define these
+numbers, once proved correct, and the kernel checks the recurrence, the filtered rows against the
+row polynomials and the products of the matrices with their claimed inverses, row by row, in natural
+numbers.
+\item \emph{$2$-adic normalisation.} Where a recurrence produces integers divisible by large powers of
+$2$, as the Chebyshev and Clenshaw recurrences do, the tables store the quotients by these powers, with
+one lemma relating the two; this also avoids integers that the kernel's hashing of literals treats as
+equal.
+\end{itemize}
 
 \section*{Disclosure of AI use}
 
 The mathematics, the Lean formalization, the numerical computations and certificate generators, the
 literature search and the text of this paper were produced by AI systems at the request of the author, who
-posed the problem, directed the work, and is responsible for this paper. Claude Opus~5.5 and Claude
-Sonnet~5.5 (Anthropic) produced the measure framework and the perturbation estimate by quadrature
-(Section~\ref{sec:real}), the rank deficiencies of Theorems~\ref{thm:u3} and~\ref{thm:u6} with their
-consequences for the coefficients, the trial sequences with complex terms and the verification of
-Section~\ref{ssec:cells}, the final assembly, and the corresponding Lean proofs. OpenAI Codex produced the
-determinant of size $20N$ with its local arithmetic and nonvanishing, the energy estimates with fixed
-columns and the fields for the first case, the quadrature nodes avoiding the gap and the bound of
-Lemma~\ref{lem:quadrature}, the divisibility of the coefficients by prime squares and the choice of the
-largest admissible prime, the rank deficiency of Section~\ref{ssec:content1}, and the corresponding Lean
-proofs. The underlying irrationality proof and its formalization are OpenAI's \cite{OpenAI2026}.
+posed the problem, directed the work, and is responsible for this paper. By component: Claude
+(Opus~5.5 and Sonnet~5.5, Anthropic) produced the treatment of an arbitrary design (the degree, the
+denominators at all primes and the nonvanishing, Section~\ref{sec:setup}), the digit formula and the rank
+deficiencies of Theorems~\ref{thm:T}, \ref{thm:U}, \ref{thm:U6} and~\ref{thm:S}, the passage from the
+nullity to the denominators, the criterion with a free lower end of the window, the perturbation estimate
+by quadrature with an odd number of nodes, the trial sequences with complex terms and the verification of
+Section~\ref{ssec:cells}, the choice of the design and the final assembly, together with the corresponding
+Lean proofs and the generic layer of Section~\ref{sec:formal}. OpenAI Codex produced the energy estimates with
+fixed columns and the fields of the first case, the identity of Andr\'eief type with fixed points, the
+bound for the weights of Lemma~\ref{lem:quadrature}, the divisibility of the coefficients by prime squares
+and the choice of the largest admissible prime, with the corresponding Lean proofs for one particular
+choice of the parameters, which Claude generalised. The underlying irrationality proof and its
+formalization are OpenAI's \cite{OpenAI2026}.
 
 \subsection*{Acknowledgements}
 We thank the authors of Mathlib and of the PNT+ project, and OpenAI for making its formalization available.

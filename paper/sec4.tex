@@ -1,118 +1,91 @@
-\section{Divisibility of the coefficients}\label{sec:content}
+\section{Rank deficiencies modulo $p$}\label{sec:content}
 
-\subsection{The principle}
-Proposition~\ref{prop:denominators} uses, at each prime, only the poles of the individual entries.
-In the arithmetic method of Hata and Rhin--Viola one gains further by showing that all the
-coefficients of the linear forms share a large common factor. In our setting the analogue is the
-following. Let $p$ be a prime and write $\cA^0_{N,p}$ for the reduction modulo $p$ of $p^2\cA^0_N$,
-the matrix at the constant term $X=0$. If its rank is at most $20N-e$, then by
-Lemma~\ref{lem:rank-valuation} the determinant $\Delta_N(z)$ gains a factor $p^e$ at every rational
-$z$ for which the reduction of $p^2(\cA^0_N+z\cL_N)$ equals $\cA^0_{N,p}$; in particular at every
-integer $z$.
-
-A gain at the integers alone would only improve the denominator of $\Delta_N(a/b)$ for integer
-arguments. What we need is a gain in every coefficient of $Q_N$, because these coefficients are what
-the integer $b^{\deg Q_N}Q_N(a/b)$ is built from. For the primes considered below this follows from
-a second observation. Write $Q_N=\sum_jc_{N,j}X^j$, and let $p^{40N-s}$ be the exact power of $p$ in
-$D_N$. The matrix $p^2\cL_N$ is $p$-integral, so
-\[
- Q_N(X/p^2)=(18N)!\,\frac{D_N}{p^{40N}}\det\bigl(p^2\cA^0_N+X\,\cL_N\bigr)
-\]
-has coefficients divisible by $p^{-s}$, and hence $p^{2j-s}\mid c_{N,j}$. On the other hand, since
-$p^2\cL_N\equiv0\pmod p$, the reduction of $p^2(\cA^0_N+z\cL_N)$ at an integer $z$ is $\cA^0_{N,p}$, so a
-rank deficiency $e$ gives $v_p(\Delta_N(z))\ge e-40N$ and $p^{e-s}\mid Q_N(z)$ for every integer $z$.
-In each of the intervals below $e\le2p$, so every coefficient with $j\ge p$ is divisible by $p^{e-s}$.
-The remaining part $\sum_{j<p}c_{N,j}X^j$ has degree less than $p$, and its values at $0,1,\ldots,p-1$
-are divisible by $p^{e-s}$; since the Vandermonde matrix of these points is invertible modulo $p$, all
-its coefficients are divisible by $p^{e-s}$. Thus a rank deficiency $e$ of the single reduced matrix
-$\cA^0_{N,p}$ gives the common factor $p^{e-s}$ of all the coefficients of $Q_N$. In the first and
-third intervals $s=0$; in the second $s=(26N-3p)_+$.
-
-We prove three such rank deficiencies, for the primes in the intervals
-\[
- \Bigl(\frac{52N}9,\frac{44N}7\Bigr),\qquad(8N,9N),\qquad\Bigl(4N,\frac{9N}2\Bigr).
-\]
-They are disjoint, and all their primes exceed $2N$. In each case the deficiency is proved by
-exhibiting explicit vectors in the left kernel of $\cA^0_{N,p}$. The tools are the same throughout:
-the identities \eqref{eq:cheb-p} for Chebyshev polynomials modulo $p$, the relation
-$(1-X)^p=1-X^p$, and a description of the residues of $p^2$ times the entries of the matrix in terms
-of the digits in base $p$ of the coefficients of the row polynomials, which we now recall.
-
-Fix $p$ and write the raw columns (before the finite difference filter) as $j=Jp+\ell$ with
-$0\le\ell<p$. For a vector $c\in\F_p^{20N}$ put
-\[
- P_c=\sum_rc_rP_r,\qquad D_c=\sum_rc_rD_r,\qquad W=(1-X^2)^{(p-1)/2}.
-\]
-Grouping OpenAI's formula for the entries by digits shows that the residue of $p^2$ times the raw entry
-in column $j$, applied to $c$, is a fixed linear combination of the coefficients
-$(XWP_c)[vp+\ell]$ and $D_c[vp+\ell]$, $v\ge0$, with constants independent of $c$ and $\ell$. Here
-$F[k]$ denotes the coefficient of $X^k$ in $F$. A vector $c$ whose responses vanish on all raw columns
-in the range $[3N,24N)$ lies in the left kernel of the filtered matrix.
-
-\subsection{The primes in $(52N/9,44N/7)$}\label{ssec:content1}
-For all $N\ge6310886697782126553600$ and all primes $52N/9<p<44N/7$,
-\begin{equation}\label{eq:rank1}
- \operatorname{rank}\cA^0_{N,p}\le20N-e_N(p),\qquad
- e_N(p)=\max\Bigl(0,\min\Bigl(\Bigl\lfloor\frac{9p-52N}2\Bigr\rfloor,
-                  \Bigl\lfloor\frac{44N-7p}2\Bigr\rfloor\Bigr)\Bigr),
+In this section we prove Theorem~\ref{thm:content}. The principle is that of the arithmetic method of Hata
+and Rhin--Viola, in the form that suits a determinant: if the reduction modulo $p$ of $p^2\cA^0_N$ has
+rank at most $n-e$, then by Lemma~\ref{lem:rank-valuation} and Proposition~\ref{prop:valuation} the
+determinant $\Delta_N(z)$ gains a factor $p^e$ at every $z$ with denominator prime to $p$, in
+particular at every integer. The gain is in the denominator, and by \eqref{eq:QN} it is passed on to
+the coefficients of $Q_N$. We therefore need lower bounds for the dimension of the left kernel of
+$\cA^0_{N,p}$, that is, explicit row combinations $c\in\F_p^n$ with $c^{\mathsf T}\cA^0_{N,p}=0$. The
+tools are the same throughout: the identities for Chebyshev polynomials in characteristic $p$
+\begin{equation}\label{eq:cheb-p}
+ \begin{gathered}
+ T_p=X^p,\qquad U_{p-1}=(X^2-1)^{(p-1)/2},\\
+ T_{kp}=T_k(X^p),\qquad U_{kp-1}=(X^2-1)^{(p-1)/2}\,U_{k-1}(X^p)
+ \end{gathered}
 \end{equation}
-The threshold on $N$ guarantees that no prime of the interval divides the denominators of the finitely many
-rational constants used in the construction below.
+in $\F_p[X]$ (the last two follow from $T_{kp}=T_k\circ T_p$ and $U_{kp-1}=(U_{k-1}\circ T_p)\,U_{p-1}$), the relation
+$(1-X)^p=1-X^p$, and the digit formula \eqref{eq:filtered-digits}.
 
-Here the kernel vectors are built from rational differentials on the conic $x=(z+z^{-1})/2$,
-$s=(z-z^{-1})/2$. In this parametrization the source of each raw column is the coefficient of a
-Laurent expansion: with
+\subsection{Setting}
+Fix a design, an integer $N\ge1$ and an odd prime $p$ with $H<p^2$. For $0\le r<n$ put $m_r=r-g$, so that
+$-g\le m_r\le n-1-g$, and $n-1-g\ge g$. In the notation of \eqref{eq:rows},
 \[
- \Phi(z)=\frac{z^{26N}(z-1)^{2N}}{(1+z^2)^{27N}},
+ P_r=(1-X)^h\operatorname{rev}_{C-1}T_{m_r},\qquad D_r=(1-X)^h\operatorname{rev}_{C-1}U_{m_r-1},
 \]
-the raw entry in column $j=Jp+\ell$ is, up to a fixed factor, the residue at $z=0$ of
-$\Phi(z)\,x^\ell a_J(x)^p$, where $a_J$ is a fixed polynomial expression in OpenAI's moment coefficients of
-the column digit $J$. A row combination is encoded by a differential $(U+sV)\,dz/z$, and its response
-to the digit $J$ is the coefficient of $x^5$ in an explicit quadratic expression in $U$, $V$ and the
-moment polynomials. We use a basis of six regular differentials and one differential with a double
-pole at $z=0$, and five combinations of them whose responses to the digits $J=0,\ldots,4$ are known
-exactly; the $5\times7$ response matrix has rational entries and a nonzero $4\times4$ minor
-$46085/1769472$.
-
-For five polynomial inputs $I_i$ of degree less than $p$ we form, using the Frobenius map, the
-polynomial
+where $T_{-m}=T_m$ and $U_{-m-1}=-U_{m-1}$, so that $D_g=0$. For $c\in\F_p^n$ write
+$S_c=\sum_rc_r\operatorname{rev}_{C-1}T_{m_r}$ and $U_c=\sum_rc_r\operatorname{rev}_{C-1}U_{m_r-1}$, so that $P_c=(1-X)^hS_c$
+and $D_c=(1-X)^hU_c$. The lowest degree of $\operatorname{rev}_{C-1}T_m$ is at least $C-1-|m|\ge a:=A=b+q+2g$, and that of
+$\operatorname{rev}_{C-1}U_{m-1}$ is at least $a+1$. Put
 \[
- K=(z-1)^p\,\mathcal T H_U+(z+1)^p\,\mathcal T H_V,\qquad
- H_U=\sum_iU_i^pI_i,\quad H_V=\sum_iV_i^pI_i,
+ Q_c=(X-1)^q\,XWP_c,\qquad \widehat D_c=(X-1)^qD_c,\qquad W=(1-X^2)^{(p-1)/2},
 \]
-where $\mathcal T$ is the substitution $x=(1+z^2)/(2z)$ cleared of denominators. Under a list of
-divisibility conditions on $H_U$ and $H_V$ at $x=0$ and $x=\pm1$, and one degree condition, $K$ is
-divisible by a fixed polynomial $T$ of large degree, and $K/T$ has degree less than $20N$; its
-coefficients form a row combination $c$. The map from the inputs to $c$ is injective: the involution
-$z\mapsto z^{-1}$ separates the two channels $U$ and $V$, and the Frobenius map separates the
-coefficients of the inputs.
+so that, with $\Lambda=g+q+h$, $Q_c$ has its coefficients in $[a+1,\,L+\Lambda+p-1]$ and $\widehat D_c$ in
+$[a+1,\,L+\Lambda-1]$. Recall that a vector $c$ lies in the left kernel of $\cA^0_{N,p}$ as soon as the
+right side of \eqref{eq:filtered-digits} vanishes for every filtered column $k$ (for the columns with a
+carry among the $q+1$ raw columns one splits the sum over the raw columns at the carry; we shall not need
+this case).
 
-The responses of this row combination are computed directly from the identity
-\[
- [x^{6p-1-\ell}]\bigl(H(x)^pI(x)\bigr)=[x^5]H\cdot[x^{p-1-\ell}]I\qquad(\deg I<p),
-\]
-which shows that the response at column $Jp+\ell$ is a fixed multiple of the coefficient of
-$x^{p-1-\ell}$ in the input. We take one input $F$ with $(x-1)^{p-N}\mid F$, whose coefficients
-$[x^{p-1-\ell}]F$ are the values $\omega(\ell)$ of a polynomial $\omega$ of degree less than $N$; the finite difference
-of order $N$ in the column filter annihilates them. The other inputs are chosen to satisfy the
-divisibility conditions at $x=0$, and their responses fall on raw columns outside the range
-$[3N,24N)$. Counting the dimension of the space of inputs against the number of linear conditions,
-separately for $p=6N+\delta$ with $\delta>0$ and for $p=6N-d$, gives a kernel of dimension at least
-$N-(7\delta+1)/2$ and $N-(9d+1)/2$ respectively. These are the two expressions in \eqref{eq:rank1}.
-
-\subsection{The primes in $(8N,9N)$}\label{ssec:content2}
-\begin{theorem}\label{thm:u3}
-Let $N\ge1$ and let $p$ be a prime with $8N<p<9N$. Then the left kernel of $\cA^0_{N,p}$ has dimension
-at least $18N-2p-1$.
+\subsection{Antisymmetric combinations of rows}
+\begin{theorem}\label{thm:T}
+Let $2g<p$, $H\le4p$ and $D_T=\min(g,\,n-1-g-2p,\,C-3p)\ge1$. Then
+$\nu_N(p)\ge D_T-(n+q+g+h-3p)_+$.
 \end{theorem}
 
-The row polynomials of our determinant are $P_r=(1-X)^N\,\mathrm{rev}(T_{|m|})$ and
-$D_r=\operatorname{sgn}(m)(1-X)^N\,\mathrm{rev}(U_{|m|-1})$, where $m=r-2N$ and $\mathrm{rev}$ reverses
-the coefficients inside degree $26N-1$. Write $\nu=(p+1)/2$. The first ingredient is a reflection
-formula for Chebyshev polynomials modulo $p$.
+The rows used are the differences of rows placed symmetrically about the three centres $g$, $g+p$ and
+$g+2p$.
+
+\begin{proof}
+For $1\le d\le D_T$ and $k=0,1,2$ let $\delta_k(d)=e_{g+kp+d}-e_{g+kp-d}\in\F_p^n$. These rows exist because
+$d\le g$ and $g+2p+d\le n-1$, and the $3D_T$ vectors $\delta_k(d)$ are linearly independent, since their supports
+are disjoint: the supports lie in the intervals $[kp,kp+2g]$ of row indices, which are disjoint because
+$2g<p$. The row $g+kp\pm d$ has $m=kp\pm d$. By $T_{a+b}-T_{a-b}=2(X^2-1)U_{a-1}U_{b-1}$ and
+$U_{a+b-1}-U_{a-b-1}=2T_aU_{b-1}$ together with \eqref{eq:cheb-p},
+\begin{align*}
+ T_{kp+d}-T_{kp-d}&=2(X^2-1)^{(p+1)/2}\,U_{k-1}(X^p)\,U_{d-1},\\
+ U_{kp+d-1}-U_{kp-d-1}&=2\,T_k(X^p)\,U_{d-1}.
+\end{align*}
+Put $R_d=2(1-X)^hX^{C-d}\operatorname{rev}_{d-1}U_{d-1}$, the value of $D_{\delta_0(d)}$. Reversing at degree $C-1$,
+and using that $\operatorname{rev}_{kp}(T_k(X^p))=(\operatorname{rev}_kT_k)(X^p)$, one finds, with $T_0=1$, $T_1=X$ and
+$T_2=2X^2-1$,
+\[
+ D_{\delta_1(d)}=X^{-p}R_d,\qquad D_{\delta_2(d)}=2X^{-2p}R_d-R_d,
+\]
+\begin{gather*}
+ XWP_{\delta_0(d)}=0,\qquad XWP_{\delta_1(d)}=X^{-p}R_d-X^pR_d,\\
+ XWP_{\delta_2(d)}=2X^{-2p}R_d-2R_d .
+\end{gather*}
+The polynomial $R_d$ is supported in degrees $[C-d,H-1]$, which lies in $[3p,4p)$ because $d\le C-3p$ and
+$H\le4p$. So at each residue $\ell$ it has a single base-$p$ digit $\varrho_\ell(d)$, in position $u=3$.
+For $x=(x_0,x_1,x_2)\in\F_p^3$ the response of the combination $\sum_kx_k\delta_k(d)$ at the raw column
+$Jp+\ell$ is therefore, by Lemma~\ref{lem:digits}, $\varrho_\ell(d)\,f_J(x)$ with
+\[
+ f_J(x)=x_0\beta_{3,J}+x_1(\alpha_{2,J}-\alpha_{4,J}+\beta_{2,J})+x_2(2\alpha_{1,J}-2\alpha_{3,J}+2\beta_{1,J}-\beta_{3,J}),
+\]
+which depends neither on $d$ nor on $\ell$. The raw columns with $J\ge3$ do not meet the support, since
+$3p+\ell\ge C-d\ge C-g=L$. Choose $x^*\ne0$ with $f_1(x^*)=f_2(x^*)=0$; this is two linear equations in three
+unknowns. For $c=\sum_ds_d\sum_kx^*_k\delta_k(d)$ the responses at the columns with $J=1,2$ vanish, and the
+columns with $J=0$, which have $\ell\ge b$, respond by $f_0(x^*)\sum_ds_d\varrho_\ell(d)$, the coefficient
+of $X^{3p+\ell}$ in $\sum_ds_dR_d$. These are at most $(H-3p-b)_+=(n+q+g+h-3p)_+$ linear conditions on
+$s=(s_d)$. The map $s\mapsto c$ is injective, so the solutions form a space of dimension at least
+$D_T-(n+q+g+h-3p)_+$ in the left kernel.
+\end{proof}
+
+\subsection{A reflection of Chebyshev polynomials}
+The first ingredient of the next theorem is a reflection formula modulo $p$.
 
 \begin{lemma}\label{lem:u3-reflect}
-Let $p$ be an odd prime. In $\F_p[X]$, for every integer $m$,
+Let $p$ be an odd prime and $\nu=(p+1)/2$. In $\F_p[X]$, for every integer $m$,
 \[
  T_{p-m}=X^pT_m-(X^2-1)^{\nu}\,U_{m-1}.
 \]
@@ -120,119 +93,185 @@ Let $p$ be an odd prime. In $\F_p[X]$, for every integer $m$,
 
 \begin{proof}
 Both sides satisfy the three-term recurrence in $m$, so it suffices to check $m=0$ and $m=1$. This
-needs \eqref{eq:cheb-p}. The second identity there follows from the Pell equation
-$T_n^2-(X^2-1)U_{n-1}^2=1$ at $n=p$, together with $(X^2-1)^p=X^{2p}-1$; one cancels $X^2-1$ and
-compares leading coefficients. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and $T_{p-1}=2XT_p-T_{p+1}$.
+needs \eqref{eq:cheb-p}. For $m=0$ it is $T_p=X^p$. For $m=1$ use $T_{p+1}=XT_p+(X^2-1)U_{p-1}$ and
+$T_{p-1}=2XT_p-T_{p+1}$.
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:u3}]
-Reflecting the identity of Lemma~\ref{lem:u3-reflect} at degree $p+26N$ gives, for each row,
+\begin{theorem}\label{thm:U}
+Let $2h\le p+1$, $L\le3p\le H$, $n+q+g+h\le3p$ and $2p\le n+q$, and put $n^*=\min(n,2p+2g+1)$. Then
+$\nu_N(p)\ge n^*-g-2p-1$.
+\end{theorem}
+
+\begin{proof}
+We restrict $c$ to the rows $r<n^*$, so that $m_r\le n^*-1-g\le2p+g$. Applying Lemma~\ref{lem:u3-reflect}
+with $m=m_r$ and reflecting at degree $p+C-1$ gives, for every such row,
 \[
- (1-X^2)^\nu\,\mathrm{rev}(U_{m-1})-X\,\mathrm{rev}(T_m)=-X^{p+1}\,\mathrm{rev}(T_{p-m}),
+ (1-X^2)^\nu\operatorname{rev}_{C-1}U_{m-1}-X\operatorname{rev}_{C-1}T_m=-X^{p+1}\operatorname{rev}_{C-1}T_{p-m},
 \]
-and the right side is divisible by $X^{24N}$ because $|p-m|\le p+2N$. Hence, for every $c$,
+and the right side is divisible by $X^{p+C-|p-m|}$, hence by $X^L$ since $|p-m|\le p+g=p+C-L$. Multiplying
+by $(1-X)^h$ and summing, for every $c$ supported on these rows
 \begin{equation}\label{eq:identityK}
- X^{24N}\mid(1-X^2)^\nu D_c-XP_c .
+ X^L\mid(1-X^2)^\nu D_c-XP_c .
 \end{equation}
 
-Let $V$ be the space of $c$ with $(1-X^2)^\nu\mid P_c$. Since $(1-X)^N$ divides every $P_r$, this is
-$\nu-N$ conditions at $X=1$ and $\nu$ conditions at $X=-1$, that is $p+1-N$ linear conditions. For
-$c\in V$ write $P_c=(1-X^2)^\nu Y$ and $\widetilde Q=XY$. Since $(1-X^2)^p=1-X^{2p}$ in characteristic $p$,
+Let $V$ be the space of such $c$ with $(1-X^2)^\nu\mid P_c$. Since $(1-X)^h$ divides every $P_r$, this is
+$\nu-h$ conditions at $X=1$ and $\nu$ conditions at $X=-1$, that is, at most $p+1-h$ linear conditions.
+For $c\in V$ write $P_c=(1-X^2)^\nu Y$ and $\widetilde Q=XY$. Since $(1-X^2)^p=1-X^{2p}$,
 \[
  XWP_c=(1-X^{2p})\,\widetilde Q .
 \]
-The polynomial $P_c$ has no coefficients below $X^{8N}$ and none from $X^{27N}$ on, so $\widetilde Q$ is
-supported in degrees $[8N+1,27N-p-1]$, and dividing \eqref{eq:identityK} by the unit $(1-X^2)^\nu$ modulo
-$X^{24N}$ gives $D_c[k]=\widetilde Q[k]$ for $k<24N$.
+The polynomial $P_c$ has no coefficients below $X^{A^*}$, $A^*=C-n^*+g$, and none from $X^H$ on, so
+$\widetilde Q$ is supported in $[A^*+1,\,H-p-1]$; and dividing \eqref{eq:identityK} by the unit
+$(1-X^2)^\nu$ modulo $X^L$ gives $D_c[k]=\widetilde Q[k]$ for $k<L$.
 
-Now let $27N-3p\le\ell<24N-2p$. By the support of $\widetilde Q$, the base-$p$ digits of $XWP_c$ at
-the residue $\ell$ are $(0,\kappa,0,-\kappa,0,\ldots)$ with $\kappa=\widetilde Q[p+\ell]$, and those of $D_c$
-are $(0,\kappa,0,0,\ldots)$. So for $c\in V$ the response at every raw column $Jp+\ell$ in this range of
-residues is $\kappa$ times a constant depending only on $J$: these columns have rank at most one on $V$.
+Now let $H-3p\le\ell<L-2p$. The inequality $L-2p\le A^*+1$ is equivalent to $n^*\le2p+2g+1$, and
+$L-2p\le p$ since $L\le3p$. By the supports, $\widetilde Q[\ell]=0$, $\widetilde Q[2p+\ell]=0$ and
+$\widetilde Q[3p+\ell]=0$, and $D_c[3p+\ell]=0$ because $3p+\ell\ge H$. So with
+$\varkappa=\widetilde Q[p+\ell]$ the base-$p$ digits of $XWP_c$ at the residue $\ell$ are
+$(0,\varkappa,0,-\varkappa,0,\dots)$ and those of $D_c$ are $(0,\varkappa,0,0,\dots)$. Hence, by
+Lemma~\ref{lem:digits}, the response at every raw column $Jp+\ell$ with such an $\ell$ is $\varkappa$ times
+a constant depending on $J$ only: on $V$ these columns, which have $J\in\{0,1,2\}$, span a space of
+dimension at most one for each residue $\ell$.
 
-For $p\in(8N,9N)$ the raw columns $j\in[3N,24N)$ with residue $\ell$ have $J\in\{1,2\}$ if
-$\ell<27N-3p$, $J\in\{0,1,2\}$ if $27N-3p\le\ell<24N-2p$, and $J\in\{0,1\}$ if $24N-2p\le\ell<p$.
-The number of linear conditions needed to make all responses vanish on $V$ is therefore
-\[
- 2(27N-3p)+(p-3N)+2(3p-24N)=3N+p .
-\]
-Together with the $p+1-N$ conditions defining $V$ this is $2p+2N+1$ conditions, and the space of
-solutions has dimension at least $20N-(2p+2N+1)=18N-2p-1$.
+Put $\ell_0=H-3p$ and $\ell_1=L-2p$; the hypotheses give $\ell_0\le b\le\ell_1$. For $\ell_0\le\ell<b$ the raw
+columns $j\in[b,L)$ with this residue have $J\in\{1,2\}$, and for $b\le\ell<\ell_1$ they have
+$J\in\{0,1,2\}$. So the saving is $2\ell_1-\ell_0-b$, and the number of linear conditions needed to make all
+responses on the $n+q=L-b$ raw columns vanish on $V$ is
+$(p+1-h)+(n+q)-(2\ell_1-\ell_0-b)$. Substituting $\ell_1=L-2p$, $\ell_0=H-3p$ this is $2p+1+g$. The space of
+solutions in the span of $n^*$ rows has dimension at least $n^*-g-2p-1$.
 \end{proof}
 
-For these primes the normalizer has $p$-exponent $40N-(26N-3p)_+$, so after the rescaling $X\mapsto
-X/p^2$ one obtains $p^{e}\mid c_{N,j}$ for all $j$ with
+\subsection{A block of columns: the digits $1$ to $5$}
+\begin{theorem}\label{thm:U6}
+Let $e=(p+1)/2-q-h\ge0$, $n\le4p+2g+1$, $L\le6p$, and put $\mu_0=\max(q,H+q-6p)$, $\mu_1=L-5p$. Assume
+$b+q\le p+\mu_0$. Then $\nu_N(p)\ge\mu_1-\mu_0-e$, that is
 \[
- e=e_N(p)=\min(p-8N-1,\;18N-2p-1)_+ .
+ \nu_N(p)\ge\min\Bigl(\frac{p-1}2-g,\ n+b+q+h-\frac{11p+1}2\Bigr).
 \]
-
-\subsection{The primes in $(4N,9N/2)$}\label{ssec:content3}
-\begin{theorem}\label{thm:u6}
-Let $N\ge1$ and let $p$ be a prime with $4N<p$ and $2p<9N$. Then the left kernel of $\cA^0_{N,p}$ has
-dimension at least $(p-4N-1)/2$.
+The first term is the minimum if $6p\le H$ and the second if $6p\ge H$.
 \end{theorem}
 
-Unlike Theorem~\ref{thm:u3}, where the conditions are imposed on the row polynomials, here the
-argument concerns a block of columns. Put $d=p-4N$, which is odd, and $e=(d+1)/2$; the hypothesis
-$2p<9N$ means $2d<N$. Write $S_c=\sum_rc_r\,\mathrm{rev}(T_{m_r})$ and
-$U_c=\sum_rc_r\,\mathrm{rev}(U_{m_r-1})$, so that $P_c=(1-X)^NS_c$, and put
-\[
- \widehat Q_c=(X-1)^N\,XW\,(1-X)^NS_c,\qquad \widehat D_c=(X-1)^N(1-X)^NU_c .
-\]
+Unlike Theorems~\ref{thm:T} and~\ref{thm:U}, where the conditions are imposed on the rows, the argument
+concerns a block of columns. We first need an identity.
+
+\begin{lemma}\label{lem:K6}
+In $\F_p[X]$, for every integer $k$, $2X^p(X^2-1)^{(p-1)/2}T_k-(2X^{2p}-1)U_{k-1}=U_{2p-k-1}$. If
+$n\le4p+2g+1$, then for every $c$, $X^L\mid 2XWS_c-(2-X^{2p})U_c$, and consequently
+\begin{equation}\label{eq:K6}
+ 2\,Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p]\qquad(i<L).
+\end{equation}
+\end{lemma}
 
 \begin{proof}
-\emph{An identity.} Over any commutative ring, $U_{m-1}T_n-T_mU_{n-1}=U_{m-n-1}$, since both sides
-satisfy the recurrence in $n$ and agree for $n=0,1$. In characteristic $p$ take $m=2p$ and use
-\eqref{eq:cheb-p}, $T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}$:
-\[
- 2X^p(X^2-1)^{(p-1)/2}T_n-(2X^{2p}-1)U_{n-1}=U_{2p-n-1}.
-\]
-Reflecting at degree $2p+26N-1$ and using $p\ge4N$, the right side becomes divisible by $X^{24N}$.
-Summing over the rows with weights $c_r$ and multiplying by $(X-1)^N(1-X)^N$ gives
-\begin{equation}\label{eq:K6}
- 2\,\widehat Q_c[i]=2\,\widehat D_c[i]-\widehat D_c[i-2p]\qquad(i<24N).
-\end{equation}
-
-\emph{A block of columns.} Let $M=[p-7d,p-6d)$ and consider the $5d$ filtered columns
-$k(J,\mu)=Jp+\mu-4N$ for $1\le J\le5$ and $\mu\in M$. Each is the filter of order $N$ applied to raw
-columns $Jp+(\mu-N+v)$, $0\le v\le N$, which all have the same digit $J$ because $N<\mu<p$ (this is where
-$2d<N$ is used). Since the alternating binomial sum $\sum_v(-1)^v\binom Nv a_{m+v}$ is the coefficient of
-$X^{m+N}$ in $(X-1)^N\sum_ia_iX^i$, the response of the column $k(J,\mu)$ is a fixed linear
-combination of the coefficients $\widehat Q_c[up+\mu]$ and $\widehat D_c[up+\mu]$.
-
-\emph{Supports.} The polynomials $\widehat Q_c$ and $\widehat D_c$ have no coefficients up to $X^{8N}$,
-and $\deg\widehat Q_c\le28N+p-1$, $\deg\widehat D_c\le28N-1$. For $\mu\in M$ only the digits
-$u=2,\ldots,6$ of $\widehat Q_c$ and $u=2,\ldots,5$ of $\widehat D_c$ can be nonzero, and for these
-$u\le5$ the relation \eqref{eq:K6} expresses $\widehat D_c[up+\mu]$ through $\widehat Q_c$. Hence the block
-columns vanish on $c$ as soon as $\widehat Q_c[up+\mu]=0$ for $2\le u\le6$ and $\mu\in M$.
-
-\emph{A relation from the Frobenius map.} Since $(1-X)^p=1-X^p$ and $2N+\frac{p-1}2+e=p$,
-\[
- (1-X)^e\,\widehat Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^NX(1+X)^{(p-1)/2}S_c .
-\]
-Comparing coefficients at $X^{up+\mu}$ and summing over $u=2,\ldots,6$, the right side telescopes to
-$Y_c[6p+\mu]-Y_c[p+\mu]$, which vanishes for $\mu\ge p-7d+e$. This gives $(d-1)/2$ linear relations among
-the numbers $\widehat Q_c[up+\mu]$, and they are triangular in $\mu$.
-
-\emph{Counting.} Impose on $c$ that the $20N-5d$ filtered columns outside the block vanish, that
-$\widehat Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$, and that $\widehat Q_c[6p+\mu]=0$ for the first $e$
-values of $\mu$. By the triangular relations the remaining coefficients $\widehat Q_c[6p+\mu]$ vanish
-too, so every block column vanishes. This is $20N-5d+4d+e=20N-(d-1)/2$ conditions, and the left kernel
-has dimension at least $(d-1)/2$.
+For all integers $m,k$ one has $U_{m-1}T_k-T_mU_{k-1}=U_{m-k-1}$, since both sides satisfy the same
+recurrence in $k$ and agree for $k=0,1$. Take $m=2p$ and use \eqref{eq:cheb-p}:
+$T_{2p}=2X^{2p}-1$ and $U_{2p-1}=2T_pU_{p-1}=2X^p(X^2-1)^{(p-1)/2}$. Reflecting at degree $2p+C-1$, the first
+term becomes $2XW\operatorname{rev}_{C-1}T_k$, the second $(2-X^{2p})\operatorname{rev}_{C-1}U_{k-1}$, and the
+right side $X^{2p+C-1}U_{2p-k-1}(1/X)$. For $k=m_r\ge-g$ this is divisible by $X^{C+k}$, hence by $X^L$, if
+$2p-k-1\ge0$; and if $2p-k-1<0$ it has degree $k-2p-1$ and is divisible by $X^{4p+C-k}$, hence by $X^L$ when
+$k\le4p+g$, which holds because $k\le n-1-g\le4p+g$. Summing with weights $c_r$ and multiplying by
+$(X-1)^q(1-X)^h$ gives \eqref{eq:K6}.
 \end{proof}
 
-For these primes the normalizer has the full exponent $40N$, and the rank deficiency gives
-$p^{e_N(p)}\mid c_{N,j}$ for all $j$, with $e_N(p)=\lfloor(p-4N-1)/2\rfloor$.
+\begin{proof}[Proof of Theorem~\ref{thm:U6}]
+Let $M=[\mu_0,\mu_1)$ and $w=\mu_1-\mu_0$; we may assume $w>e$. The block consists of the filtered columns
+$k(J,\mu)=Jp+\mu-(b+q)$ for $1\le J\le5$ and $\mu\in M$. These indices are non-negative by the hypothesis
+$b+q\le p+\mu_0$, and smaller than $n$ because $5p+\mu_1-1=L-1$; so there are $5w$ of them. As $\mu<p$, formula
+\eqref{eq:filtered-digits} applies: the response of $c$ at $k(J,\mu)$ is
+$\sum_u\alpha_{u,J}Q_c[up+\mu]+\beta_{u,J}\widehat D_c[up+\mu]$.
 
-\subsection{The common factor}
-Let $\Omega_N$ be the product of $p^{e_N(p)}$ over the primes of the three intervals. All coefficients of
-$Q_N$ are divisible by $\Omega_N$, and so is $Q_N(a/b)$ after multiplication by $b^{18N}$. The exponents
-are $N$ times piecewise linear functions of $p/N$, up to $O(1)$: a function of area $16/63$ on
-$[52/9,44/7]$, the function $\max(0,\min(x-8,18-2x))$ of area $1/3$ on $[8,9]$, and $(x-4)/2$ of area
-$1/16$ on $[4,9/2]$. By \eqref{eq:weighted-pnt},
+\emph{Supports.} For $\mu\in M$ we have $p+\mu\le p+\mu_1-1=L-4p-1\le a$ by $n\le4p+2g+1$, so the digits
+$u=0,1$ of $Q_c$ and $\widehat D_c$ vanish. From $\mu_0\ge H+q-6p=L+\Lambda-6p$ we get that the digits $u\ge6$ of
+$\widehat D_c$ and $u\ge7$ of $Q_c$ vanish. For $u\le5$ we have $up+\mu\le L-1$, so \eqref{eq:K6} applies.
+
+\emph{From $Q$ to $\widehat D$.} For $u=2,\dots,5$, \eqref{eq:K6} gives
+$\widehat D_c[up+\mu]=Q_c[up+\mu]+\tfrac12\widehat D_c[(u-2)p+\mu]$, and for $u=2,3$ the last index is at most $a$,
+so the term vanishes. Hence if $Q_c[up+\mu]=0$ for $u=2,\dots,5$ and all $\mu\in M$, then by induction
+$\widehat D_c[up+\mu]=0$ for $u=2,\dots,5$, and all digits of $\widehat D_c$ in $M$ vanish.
+
+\emph{A relation from the Frobenius map.} We have
+$Q_c=(-1)^qX(1-X)^{q+h+(p-1)/2}(1+X)^{(p-1)/2}S_c$, and $q+h+(p-1)/2+e=p$. Since $(1-X)^p=1-X^p$,
 \[
- \log\Omega_N\ge(\chi-o(1))N^2,\qquad
- \chi=\frac{507}{2000}+\frac{3331}{10000}+\frac{624}{10000}=0.649 ,
+ (1-X)^e\,Q_c=(1-X^p)\,Y_c,\qquad Y_c=(-1)^qX(1+X)^{(p-1)/2}S_c,
 \]
-where each fraction is slightly less than the corresponding area. All the primes involved exceed $2N$,
-so the factor $\Omega_N$ does not interfere with the prime squares used in Section~\ref{sec:proof}.
+and $Y_c$ is supported in $[a+1,\,C+(p-1)/2]$. Comparing the coefficients at $up+\mu$, subtracting the
+coefficient at $(u-1)p+\mu$, and summing over $u=2,\dots,6$, the right side telescopes to
+$Y_c[6p+\mu]-Y_c[p+\mu]$, which vanishes for $\mu\ge\mu_0+e$: the second term because $p+\mu\le a$, the
+first because $6p+\mu\ge H+q+e=C+(p+1)/2>\deg Y_c$. So, if $Q_c[up+\mu']=0$ for $u=2,\dots,5$ and all
+$\mu'\in M$, then
+\[
+ \sum_{t=0}^e(-1)^t\binom et\,Q_c[6p+\mu-t]=0\qquad(\mu_0+e\le\mu<\mu_1).
+\]
+This is a recurrence with unit leading coefficient: if $Q_c[6p+\mu]=0$ for the first $e$ values
+$\mu=\mu_0,\dots,\mu_0+e-1$, then it vanishes for all $\mu\in M$.
+
+\emph{Counting.} Impose on $c$ that the $n-5w$ filtered columns outside the block vanish, that
+$Q_c[up+\mu]=0$ for $2\le u\le5$ and $\mu\in M$ ($4w$ conditions), and that $Q_c[6p+\mu]=0$ for the first $e$
+values of $\mu$. By the three steps above all the responses of the block columns vanish. These are at
+most $n-5w+4w+e=n-(w-e)$ linear conditions, so the left kernel has dimension at least $w-e$. Finally,
+$w-e$ equals $\mu_1-q-e=n+b+q+h-(11p+1)/2$ if $\mu_0=q$ and $(p-1)/2-g$ if $\mu_0=H+q-6p$.
+\end{proof}
+
+\subsection{The second window}
+\begin{theorem}\label{thm:S}
+Let $e=(p+1)/2-q-h\ge0$ and $n\le4p+2g+1$, and put
+\[
+ m_0=\max(b+q,\,L+\Lambda-4p),\qquad m_1=\min(p,\,L-3p,\,a+1),\qquad a=b+q+2g .
+\]
+Then $\nu_N(p)\ge m_1-m_0-e$.
+\end{theorem}
+
+\begin{proof}
+Let $M=[m_0,m_1)$ and $w=m_1-m_0>e$. For $\mu\in M$ we have $\mu\le a$, so the digit $u=0$ of $Q_c$ and
+$\widehat D_c$ vanishes; $\mu\ge L+\Lambda-4p$ gives that the digits $u\ge4$ of $\widehat D_c$ and $u\ge5$ of
+$Q_c$ vanish; and $3p+\mu<L$, so that \eqref{eq:K6} gives, with $D_i=\widehat D_c[ip+\mu]$ and
+$Q_i=Q_c[ip+\mu]$,
+\[
+ Q_1=D_1,\qquad Q_2=D_2,\qquad Q_3=D_3-\tfrac12D_1 .
+\]
+So every response of the filtered matrix at a column with residue $\mu\in M$ is a combination of the four
+functionals $D_1(\mu),D_2(\mu),D_3(\mu),Q_4(\mu)$ of $c$. For $\mu\in M$ the columns $k=\mu-(b+q)$,
+$p+\mu-(b+q)$, $2p+\mu-(b+q)$ and $3p+\mu-(b+q)$ exist, since $b+q\le\mu<p$ and $3p+\mu<L$. So there are at least
+$4w$ block columns, and their rows lie in the span $F$ of the $4w$ functionals.
+
+We find $w-e$ linear relations among these functionals. As in the proof of Theorem~\ref{thm:U6},
+$(1-X)^eQ_c=(1-X^p)Y_c$ with $Y_c$ a polynomial. Put $\sigma(\ell)=\sum_{u\ge0}Q_c[up+\ell]$ and sum the
+coefficients of this identity over the residue class of $\mu\ge e$ modulo $p$. The right side gives
+$\sum_u\bigl(Y_c[up+\mu]-Y_c[(u-1)p+\mu]\bigr)=0$, since $Y_c$ is a polynomial, and the left side gives
+$\sum_{t=0}^e(-1)^t\binom et\sigma(\mu-t)$. For $\mu\in M$ with $\mu-e\ge m_0$ all $\mu-t$ lie in $M$, and there
+$\sigma=Q_1+Q_2+Q_3+Q_4=D_1+D_2+D_3-\tfrac12D_1+Q_4$. So
+\[
+ \sum_{t=0}^e(-1)^t\binom et\bigl(\tfrac12D_1+D_2+D_3+Q_4\bigr)(\mu-t)=0\qquad(m_0+e\le\mu<m_1),
+\]
+and these $w-e$ relations are independent, since $Q_4(\mu)$ occurs with coefficient $1$ in the one for $\mu$
+and only with lower arguments in the others. Hence $\dim F\le4w-(w-e)$, and the rank of the matrix is at most
+$(n-4w)+3w+e=n-(w-e)$.
+\end{proof}
+
+The proof does not use a determinant or a lower bound for $N$. Unlike the proof of Theorem~\ref{thm:U6}, the
+telescoping here is over all digits, so no vanishing of $Y_c$ at the ends is needed.
+
+\subsection{The function $\kappa$ for the design $D$}
+For $D$, $L=70N$, $H=78N$, $a=22N$, $\Lambda=11N$ and $q+h=6N$. Writing $x=p/N$, one checks the hypotheses of
+the theorems on the intervals of the table of Section~\ref{sec:overview}. The hypotheses
+$e\ge0$ and $n\le4p+2g+1$ both read $x\ge12$, and $L\le6p$ reads $x\ge35/3$; so Theorems~\ref{thm:U6}
+and~\ref{thm:S} apply for $x\ge12$. For $12\le x\le13$ one has $\mu_0=H+q-6p=81N-6p$, so the first branch
+of Theorem~\ref{thm:U6} applies, and for $x\ge13$ one has $\mu_0=3N$ and the second branch, which is positive
+until $x=146/11$. In Theorem~\ref{thm:S}, $m_1=p$ for $x\le35/2$ and $m_1=70N-3p$ above, and
+$m_0=81N-4p$ for $x\le69/4$ and $12N$ above; the value $m_1-m_0-e$ is $9x/2-75$, $x/2-6$ and
+$64-7x/2$ on the three intervals $(50/3,69/4]$, $(69/4,35/2]$, $(35/2,128/7]$, and it is non-positive
+outside $(50/3,128/7)$. Theorem~\ref{thm:T} applies for $x>10$ and $x\ge39/2$, and
+$D_T=\min(5N,52N-1-2p,75N-3p)$; it gives $3p-(n+q+h)=3x-64$ up to $x=23$ and the cap $g=5N$ up to
+$x=70/3$. From $x=70/3$ the hypotheses of Theorem~\ref{thm:U} hold up to $x=26$ (they read
+$3p\ge L$, $3p\le H$, $2p\le n+q$ and $2h\le p+1$), and give $\min(n,2p+2g+1)-g-2p-1$, which is $5N$ for
+$x\le24$ and $53N-2p-1$ above. In each case the value of the theorem is the value in the table minus at
+most one unit, from the integer rounding. At a prime the largest of the values that apply is used.
+The area of $\kappa$ is the sum of the areas of the eight cells, which are listed in
+Section~\ref{sec:overview}.
+
+\begin{remark}
+Numerical computations of the exact rank of $\cA^0_{N,p}$ for several designs and primes show that the
+bounds of Theorem~\ref{thm:content} are attained in the windows where they were tested, and that other
+families add kernel where the windows overlap. These computations are not part of the proof. An upper bound
+for the nullity is not proved, and none is needed.
+\end{remark}
