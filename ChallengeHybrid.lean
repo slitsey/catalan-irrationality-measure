@@ -9,7 +9,8 @@ public section
 
 /-!
 The strongest hybrid measure statements, with constants written as series:
-`G - 5π²/48` and `G + 5π²/48` have exponent 32.44; `L(2, χ₋₃)` has exponent 14.35.
+`G - 5π²/48` and `G + 5π²/48` have exponent 32.44; `L(2, χ₋₃)` has exponent 14.35;
+`L(2, χ₋₃) + π²/9` and `L(2, χ₋₃) - π²/9` have exponent 10.91.
 For every positive error in the exponent, the bound holds at all sufficiently
 large coprime denominators.
 -/
@@ -35,6 +36,20 @@ theorem chi3_hybrid_measure_1435 :
       (q : ℝ) ^ (-(((287/20 : ℚ) : ℝ) + e)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
           - (p : ℝ) / q| := by
+  sorry
+
+theorem chi3_plus_pi2_hybrid_measure_1091 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((1091 / 100 : ℚ) : ℝ) + e)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          + Real.pi ^ 2 / 9) - (p : ℝ) / q| := by
+  sorry
+
+theorem chi3_minus_pi2_hybrid_measure_1091 :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((1091 / 100 : ℚ) : ℝ) + e)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
+          - Real.pi ^ 2 / 9) - (p : ℝ) / q| := by
   sorry
 
 end CatalanHybridChallenge
