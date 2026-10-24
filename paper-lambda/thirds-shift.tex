@@ -1,0 +1,201 @@
+% Section: L(2,chi_{-3}) +- (2/3) zeta(2) by digamma differences with shifts 1/3 and 2/3.
+% Included from lambda-irrationality.tex; uses \LamThirds, \DThirds etc. defined there.
+\section{The numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$}\label{sec:thirds}
+
+The functions of \eqref{eq:frames} are differences of two digamma functions whose arguments differ by a rational
+shift, and the shift decides which constant appears: the shifts $\frac14$ and $\frac34$ produce $G$ together with a
+multiple of $\pi^2$, and the shifts $\frac13$ and $\frac23$ produce $L(2,\chi_{-3})$ together with a multiple of $\pi^2$.
+In this section we carry the method over to the second pair. Since $\pi^2=6\zeta(2)$, the numbers obtained are
+$L(2,\chi_{-3})\pm\frac23\zeta(2)=L(2,\chi_{-3})\pm\pi^2/9$, and we prove Theorem~\ref{thm:thirds}. The three estimates
+of Section~\ref{sec:overview} are needed again. The content is computed with the same dual certificates as in
+Section~\ref{sec:content}, now evaluated at the zeros of $k(3k-2)$ and $k(3k-1)$ modulo a prime power, which lie near
+$q/3$ and $2q/3$. Nonvanishing is obtained by the characteristic-zero argument of
+Section~\ref{sec:chi3-quarter}, and needs no condition on primes at all. The decay estimate of
+Section~\ref{sec:decay} is used without change.
+
+\subsection{Frames and kernels}
+Let $s\in\{\frac13,\frac23\}$ and put
+\[
+ F_s(z)=\psi(z+1)-\psi(z+s),\qquad \omega=\tfrac19 .
+\]
+Write $L=L(2,\chi_{-3})$. From $\psi'(\tfrac13)=9\sum_{k\ge0}(3k+1)^{-2}$, $\psi'(\tfrac23)=9\sum_{k\ge0}(3k+2)^{-2}$ and
+$\sum_{n\ge1}n^{-2}=\pi^2/6$ one gets
+\begin{equation}\label{eq:trigamma-thirds}
+ \psi'(\tfrac13)=\frac{2\pi^2}3+\frac92L,\qquad \psi'(\tfrac23)=\frac{2\pi^2}3-\frac92L,
+\end{equation}
+(the sum of the two is $\pi^2/\sin^2(\pi/3)=4\pi^2/3$, and their difference is $9L$). As $\psi'(1)=\pi^2/6$,
+\begin{equation}\label{eq:xi-thirds}
+ \xi_{1/3}:=\omega F_{1/3}'(0)=-\frac12\Bigl(L+\frac{\pi^2}9\Bigr),\qquad
+ \xi_{2/3}:=\omega F_{2/3}'(0)=\frac12\Bigl(L-\frac{\pi^2}9\Bigr).
+\end{equation}
+Both are rational affine images of the numbers of Theorem~\ref{thm:thirds}, and $\mu(a\xi+b)=\mu(\xi)$ for rational
+$a\ne0$ and $b$.
+
+Put $e=2$ for $s=\frac13$ and $e=1$ for $s=\frac23$, so that $k-1+s=(3k-e)/3$. From $\psi(w+1)-\psi(w)=1/w$,
+\[
+\begin{gathered}
+ F_s(k)-F_s(k-1)=\frac1k-\frac3{3k-e}=-\frac{e}{k(3k-e)},\\
+ F_s'(k)-F_s'(k-1)=-\frac1{k^2}+\frac9{(3k-e)^2},
+\end{gathered}
+\]
+and telescoping gives, exactly as in Lemma~\ref{lem:loewner}, the identity \eqref{eq:shift} for all finite sets
+$R,Q\subset\Z_{\ge0}$ with $\omega\Lw_{F_s}[R,Q]=M[R,Q]+\xi_sE_{R,Q}$ and the symmetric rational kernel
+\[
+\begin{gathered}
+ M[a,b]=-\frac{e}{9(b-a)}\sum_{k=a+1}^{b}\frac1{k(3k-e)}\quad(a<b),\\
+ M[a,a]=-\frac19\sum_{k=1}^{a}\Bigl(\frac1{k^2}-\frac9{(3k-e)^2}\Bigr).
+\end{gathered}
+\]
+The geometries are those of Section~\ref{sec:construction}: the common block $C=[0,r)$ and the interleaved borders $X',Y'$ of $m$
+nodes with
+\begin{equation}\label{eq:thirds-adm}
+ r\le 8m\le r+9 ,
+\end{equation}
+that is $m=\frac r8+O(1)$, $\alpha=\frac18$. For $J\subseteq C$ let $\Phi_J(x)$ be the matrix with rows $J\sqcup X'$ and
+columns $J\sqcup Y'$, entries $M[a,b]$, and $x$ added on the diagonal cells $a=b\in J$; put $P_J(x)=\det\Phi_J(x)$. The
+members used are $J=C$ and the sets $J=C\setminus\{c\}$ with one common node removed, as in Section~\ref{sec:chi3-quarter}.
+
+\subsection{Content}
+\begin{theorem}[content]\label{thm:content-thirds}
+Let $s\in\{\frac13,\frac23\}$ and let $r,m$ satisfy \eqref{eq:thirds-adm}. For every $J\subseteq C$ with $|C\setminus J|\le1$ there is a
+positive integer $d_{r,m}$, independent of $J$, with $d_{r,m}P_J\in\Z[x]$ and
+\[
+ \log d_{r,m}\le(\LamThirds+o(1))\,r^2 ,
+\]
+uniformly in $m$.
+\end{theorem}
+
+The entries of $M$ have denominators dividing $k(3k-e)$ and $b-a$, so, for a prime $p\ge5$, the valuation analysis of
+\S\ref{sec:content} applies with the polynomial $k(4k-1)$ replaced by $\Phi(k)=k(3k-e)$. For a prime power $q=p^f$
+the set $S_q=\{k\ge1:q\mid\Phi(k)\}$ consists of the classes $k\equiv0$ and $k\equiv k_q\pmod q$, where $k_q\in(0,q)$ solves
+$3k_q=e+j_qq$ with $j_q\in\{1,2\}$. Thus $k_q/q$ is, up to $O(1/q)$, equal to $\frac13$ or $\frac23$ according to the class
+of $q$ modulo $3$: $j_q=1$ if $q\equiv1\pmod3$ and $e=2$, or if $q\equiv2\pmod3$ and $e=1$, and $j_q=2$ otherwise.
+The ultrametric inequality gives the level majorant $w^{(q)}$ of \S\ref{sec:content} (the argument there uses only that
+$S_q$ consists of the classes $0$ and $k_q$, and that at most one of $k$ and $3k-e$ is divisible by $p$),
+and Proposition~\ref{prop:dual} bounds the assignment value $\tau(w^{(q)})$ by an explicit function of $r$, $m$, $q$ and $k_q$ only. We
+do not repeat the potentials. We checked the resulting bound against the Hungarian algorithm for $(r,m)\in\{(40,5),(48,6),(56,7),(64,8)\}$ and all
+primes $q\le5(r+2m)$, with equality in every case; this check is not part of the formal proof.
+
+Put $\theta=q/r$. For $\theta\le\frac14=2\alpha$ the bound is the same as for the shifts $\frac14,\frac34$,
+since it does not involve $k_q$; its integral is $\frac12+\frac1{32}+\frac{\log2}{32}$. For $\theta>\frac14$ it is piecewise linear
+in $\theta$, with the following pieces, which are the minima of the explicit potentials of Proposition~\ref{prop:dual}
+on each range:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+ & $k_q\approx q/3$ & $k_q\approx 2q/3$\\
+\midrule
+ & $\theta\in(\tfrac14,\tfrac{27}{32}]$:\ $\tfrac{17}8$ & $\theta\in(\tfrac14,\tfrac{27}{40}]$:\ $\tfrac{17}8$\\
+ & $(\tfrac{27}{32},\tfrac{15}{16}]$:\ $\tfrac{13}4-\tfrac43\theta$ & $(\tfrac{27}{40},\tfrac34]$:\ $\tfrac{13}4-\tfrac53\theta$\\
+ & $(\tfrac{15}{16},1]$:\ $\tfrac92-\tfrac83\theta$ & $(\tfrac34,1]$:\ $\tfrac92-\tfrac{10}3\theta$\\
+ & $(1,\tfrac54]$:\ $\tfrac72-\tfrac53\theta$ & $(1,\tfrac54]$:\ $\tfrac72-\tfrac73\theta$\\
+ & $(\tfrac54,3]$:\ $\tfrac94-\tfrac23\theta$ & $(\tfrac54,\tfrac32]$:\ $\tfrac94-\tfrac43\theta$\\
+ & $(3,\tfrac{15}4]$:\ $\tfrac54-\tfrac13\theta$ & $(\tfrac32,\tfrac{15}8]$:\ $\tfrac54-\tfrac23\theta$\\
+\midrule
+ integral over $\theta>\frac14$ & $\frac{1809}{512}$ & $\frac{1167}{640}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+and the bound vanishes beyond the last piece. By the prime number theorem in arithmetic progressions modulo $3$ (we use
+the classes modulo $6$), primes with $k_q\approx q/3$ and with $k_q\approx 2q/3$ have density $\frac12$ each, so that
+\[
+\begin{gathered}
+ \sum_p\tau_p\log p\le(\Lambda_{\rm trop}+o(1))r^2,\\
+ \Lambda_{\rm trop}=\frac12\Bigl(\frac{1809}{512}+\frac{1167}{640}\Bigr)+\frac12+\frac1{32}+\frac{\log2}{32}
+ =\frac{16433}{5120}+\frac{\log2}{32}=3.23123\ldots
+\end{gathered}
+\]
+The primes $2$ and $3$, the prime powers with $f\ge2$ and the finitely many exceptional primes contribute $o(r^2)$,
+as in \S\ref{sec:content}; the contributions of the removal of one common node and of the rounding of $m$ are $O(r\log r)$. The two
+kernels give the same $\Lambda_{\rm trop}$ because their sets of classes, $\{\frac13,\frac23\}$ with density $\frac12$ each, coincide.
+(Computed with exact rational arithmetic for several $\alpha\le\frac18$, the same procedure gives
+$\Lambda_{\rm trop}(\alpha)=\frac{103}{40}+\frac{179}{40}\alpha+(\frac{77}{16}+2\log2)\alpha^2$, whose value at $\alpha=\frac18$ is the number above;
+only the value at $\alpha=\frac18$ is used.) In the formal proof the piecewise linear majorants are rational, with a small additive allowance for the
+rounding of $m$ and of the residue classes; their total is $3.2312582\ldots$, and we state the content as $\LamThirds=\frac{32313}{10000}$.
+This proves Theorem~\ref{thm:content-thirds}. We have not looked for rank deficits (\S\ref{sec:content}) for these two
+numbers, so $\LamThirds$ is the tropical bound only.
+
+\subsection{Nonvanishing}
+For these frames nonvanishing is unconditional and is obtained by the characteristic-zero argument of
+Section~\ref{sec:chi3-quarter}, which we recall in the form needed.
+
+\begin{theorem}\label{thm:thirds-nv}
+Let $s\in\{\frac13,\frac23\}$. For every $r\ge1$, $m\ge0$ and $x\in\Q$ there is a set $I\subseteq C=[0,r)$ with $|I|\le1$ such that
+$P_{C\setminus I}(x)\ne0$.
+\end{theorem}
+
+\begin{proof}
+The proof of Theorem~\ref{thm:chi3-charzero-selection} uses the frame only through the prefix increments of the
+divided differences and of the diagonal. For $F_s$ they are
+\[
+\begin{gathered}
+ f_{i+1}-f_i=\delta_s(i),\qquad e_{i+1}-e_i=-\delta_s'(i),\\
+ \delta_s(z)=\frac19\Bigl(\frac1{z+1}-\frac1{z+s}\Bigr)=\frac{s-1}{9(z+1)(z+s)},
+\end{gathered}
+\]
+that is, $\delta_s=A/D$ with $A$ constant and $D=(z+1)(z+s)$ quadratic, instead of the cubic denominator of the frame $F_\chi$. The interpolation
+argument for the kernels of the full determinant, the count of zeros of the discrete Wronskian (of degree at most $2n-3$, against $2n-2$ prescribed zeros), and the selection of a common node at which
+both adjugate factors are nonzero, are therefore unchanged. The one fact on which the conclusion rests is that $\delta_s$ has no rational
+antidifference: the simple pole at $z=-1$ is isolated in its class modulo $\Z$, because the other pole $z=-s$ satisfies $-s\notin-1+\Z$ for
+$0<s<1$. Hence the denominator cleared from an antidifference would have a root propagating indefinitely in one direction, contradicting finite degree.
+\end{proof}
+
+No prime $\ell$ enters, so there is no condition on a window of primes, in contrast with the nonvanishing of
+Section~\ref{sec:nonvanishing}, and no condition on $q$ beyond $x=p/q$ being rational.
+
+\subsection{Decay}
+The reflection formula $\psi(w)=\psi(1-w)-\pi\cot\pi w$ gives $F_s=\tilde F_s+E_s$ with
+\[
+ \tilde F_s(z)=\psi(-z)-\psi(1-s-z),\qquad E_s(z)=\pi\bigl[\cot\pi(z+s)-\cot\pi z\bigr].
+\]
+Here $\tilde F_s$ is analytic in the left half-plane and $O(1/|z|)$ there, and $E_s$ is $1$-periodic with
+$|E_s(x+iy)|\le C_se^{-2\pi|y|}$ for $|y|\ge1$. The poles of $F_s$ are at $-(j+1)$ with residue $-1$ and at $-(j+s)$ with residue $+1$, $j\ge0$. This is
+the situation of \S\ref{sec:decay}, with the pole $-(j+\frac34)$ replaced by $-(j+s)$. Moving the contour of Hermite's formula to the rays
+$x^*+u(-1\pm\frac52i)$ with $x^*$ at distance at least $\frac13$ from every pole gives the Gram representation \eqref{eq:gram} with atoms at
+the $2N_0$ poles, $N_0=\lfloor\frac7{50}r\rfloor$. The Andr\'eief bound and the comparison with the logarithmic potential of
+$\nu_{1/8}$ involve the measure $m$ only through the macroscopic density of its atoms (two unit masses per unit length on $[-\frac7{50}r,0]$) and through the
+decay rate $e^{-2\pi|y|}$ of the density on the rays. The offset $s$ changes the position of the atoms within unit
+cells, an $O(1)$ shift, and the constant $C_s$; both only affect the $o(1)$ terms. The certificate of \S\ref{ssec:slope-cert} (slope $\frac52$, $\rho=1/4096$) is therefore valid unchanged, and so are its
+constants. We obtain the following.
+
+\begin{theorem}[decay and window]\label{thm:decay-thirds}
+For $s\in\{\frac13,\frac23\}$, admissible geometries \eqref{eq:thirds-adm}, every $J\subseteq C$ with $|C\setminus J|\le1$ and real $t$ with
+$|t|\le e^{-cr}$,
+\[
+\begin{gathered}
+ |P_J(\xi_s+t)|\le\exp\bigl(-(D-o(1))r^2\bigr),\\
+ D=\DThirds,\quad c=\cThirds=\tfrac{18386549}{2500000}.
+\end{gathered}
+\]
+\end{theorem}
+These are the constants of Theorem~\ref{thm:decay} for $G\pm5\pi^2/48$: the decay estimate depends on the offset $s$ only through the
+$o(1)$ terms. Removing one common node costs $e^{O(r)}$, as in the node-removal paragraph of \S\ref{sec:decay}.
+
+\subsection{Proof of Theorem~\ref{thm:thirds}}
+Let $\xi=\xi_s$ and
+\[
+\begin{gathered}
+ \eta=D-\Lambda=\DThirds-\LamThirds=\EtaThirds,\\
+ \frac c\eta=\frac{\cThirds}{\DThirds-\LamThirds}=\MuThirdsExact\ldots<\MuThirds .
+\end{gathered}
+\]
+Let $\nu>c/\eta$ and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put $L_q=\log q$, choose $\delta>0$ with $c(1+\delta)/\eta<\nu$, set
+$r=\lceil(1+\delta)L_q/\eta\rceil$ and choose $m$ with \eqref{eq:thirds-adm}. By Theorem~\ref{thm:thirds-nv} with $x=p/q$ some member $P_J$ with
+$|C\setminus J|\le1$ satisfies $P_J(p/q)\ne0$. Since $d_{r,m}P_J$ has integer coefficients and degree at most $r$, $|d_{r,m}P_J(p/q)|\ge q^{-r}$. On the other hand, with
+$t=p/q-\xi$ we have $|t|<e^{-\nu L_q}\le e^{-cr}$, and Theorems~\ref{thm:content-thirds} and~\ref{thm:decay-thirds} give
+\[
+ q^{-r}\le|d_{r,m}P_J(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2}=e^{-(\eta-o(1))r^2}.
+\]
+Hence $(\eta-o(1))r^2\le rL_q$, contradicting $\eta r\ge(1+\delta)L_q$. So $\mu(\xi_s)\le c/\eta<\MuThirds$. In detail,
+$\eta=3.90557-3.2313=0.67427$ and
+\[
+ \frac{7.3546196}{3.90557-3.2313}=10.9075\ldots<10.91 .
+\]
+By \eqref{eq:xi-thirds}, $L+\pi^2/9=-2\xi_{1/3}$ and $L-\pi^2/9=2\xi_{2/3}$. Since $\mu$ is invariant under rational affine maps, this proves Theorem~\ref{thm:thirds}.\qed
+
+\begin{remark}
+In the formal deduction the nonvanishing is stated for prime intervals in the class $1$ modulo $6$ with the bad primes $\ell^2\mid q$, because this is the
+general interface of the measure theorem; for the common-node minors of Theorem~\ref{thm:thirds-nv} it holds at every degree, so this interface imposes only the numerical
+condition $D-\Lambda<1$, satisfied with $\eta=0.67427$. It plays no role in the argument above.
+\end{remark}
