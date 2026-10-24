@@ -1,6 +1,7 @@
 module
 
 public import CatalanFrames.HybGen.ClassBand
+public import CatalanCore.Arith.Hybrid.PeriodicPrefix
 public import CatalanFrames.HybCommon.Pieces
 
 @[expose] public section
@@ -29,128 +30,112 @@ lemma d1m_0 : Covers c (WGm I r m) r (mkPiece 1 68 1 64 17 64 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 8 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 8) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_1 : Covers c (WGm I r m) r (mkPiece 1 64 1 60 19 (-64) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 7 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 7) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_2 : Covers c (WGm I r m) r (mkPiece 1 60 1 56 17 56 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 7 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 7) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_3 : Covers c (WGm I r m) r (mkPiece 1 56 1 52 19 (-56) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 6 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 6) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_4 : Covers c (WGm I r m) r (mkPiece 1 52 1 48 17 48 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 6 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 6) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_5 : Covers c (WGm I r m) r (mkPiece 1 48 1 44 19 (-48) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 5 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 5) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_6 : Covers c (WGm I r m) r (mkPiece 1 44 1 40 17 40 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 5 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 5) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_7 : Covers c (WGm I r m) r (mkPiece 1 40 1 36 19 (-40) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 4 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 4) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_8 : Covers c (WGm I r m) r (mkPiece 1 36 1 32 17 32 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 4 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 4) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_9 : Covers c (WGm I r m) r (mkPiece 1 32 1 28 19 (-32) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 3 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 3) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_10 : Covers c (WGm I r m) r (mkPiece 1 28 1 24 17 24 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 3 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 3) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_11 : Covers c (WGm I r m) r (mkPiece 1 24 1 20 19 (-24) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 2 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 2) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_12 : Covers c (WGm I r m) r (mkPiece 1 20 1 16 17 16 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 2 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 2) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_13 : Covers c (WGm I r m) r (mkPiece 1 16 1 12 19 (-16) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 1 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 1) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_14 : Covers c (WGm I r m) r (mkPiece 1 12 1 8 17 8 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 1 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_right (n := 1) (U := 9) hp.pos (by omega) (by omega) hb
     omega)
 
 lemma d1m_15 : Covers c (WGm I r m) r (mkPiece 1 8 1 4 19 (-8) 320 8) :=
   covers_mkM c (fun p => p ≠ 2) hc2 (XGm I r m) r _ _ _ _ _ _ _ _ (by norm_num) (by
     intro p hs ht hp h2
     have hb := XGm_D1x I r m p hp h2
-    have hd := dist_ge p m 0 hp.pos (by omega)
-    generalize m % p = s0 at hb hd
+    have hk := periodic_left (n := 0) (L := 0) hp.pos (by omega) (by omega) hb
     omega)
 
 theorem ld1_covers : ∀ P ∈ ld1, Covers c (WGm I r m) r P := by

@@ -2,8 +2,9 @@ module
 
 public import CatalanFrames.HybCommon.Pieces
 public import CatalanFrames.HybCommon.Numer
-public import CatalanCore.Arith.Hybrid.D1Exact
+public import CatalanCore.Arith.Hybrid.PeriodicPrefix
 public import CatalanCore.Arith.Hybrid.Values
+public import CatalanFrames.HybGen.TropM
 
 @[expose] public section
 
@@ -34,7 +35,7 @@ structure TropFacts (I : HybInst Fr) (o : ℕ) : Prop
   kq1 : ∀ p, p.Prime → 5 ≤ p → p % 4 = 4 - o → I.cd.kq p = (p + o) / 4
 
 /-- The level-1 tropical value of the hybrid at `(r, ⌊r/8⌋)` and the prime `p`. -/
-noncomputable def XG (I : HybInst Fr) (r p : ℕ) : ℕ := tropVal (HW I.lev p r (r / 8))
+noncomputable def XG (I : HybInst Fr) (r p : ℕ) : ℕ := HybGen.XGm I r (r / 8) p
 
 /-- The weight function of the summation. -/
 noncomputable def WG (I : HybInst Fr) (r p : ℕ) : ℝ := (XG I r p : ℝ)
@@ -71,29 +72,21 @@ lemma XG_kq_le (p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) : I.cd.kq p ≤ p := by
 
 lemma XG_D2 (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hl : r / 4 < p) (hu : p ≤ r) :
     ∃ u L : ℕ, I.cd.kq p + p ≤ u + r ∧ u ≤ r ∧ L ≤ u ∧ L ≤ 2 * (r / 8) ∧
-      XG I r p ≤ 2 * (r - u) + 2 * (r / 8) + L := by
-  obtain ⟨hq, hb⟩ := T.good p hp h5
-  have hk : I.cd.kq p ≤ r := (XG_kq_le T p hp h5).trans hu
-  exact val_D2 p r (r / 8) (I.cd.kq p) (lev := I.lev) hp.one_lt.le
-    (fun c hc => T.high p c hp.one_lt.le hc) (by omega) hu hk
-    (fun c => T.zero_iff p c hq hb)
+      XG I r p ≤ 2 * (r - u) + 2 * (r / 8) + L :=
+  HybGen.XGm_D2 T.toLevelFacts r (r / 8) p hp h5 (by omega) hu
+    ((XG_kq_le T p hp h5).trans hu)
 
 lemma XG_D45 (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hr : r < p) :
-    XG I r p ≤ 2 * (r - I.cd.kq p) + 2 * (r / 8) + (2 * (r / 8) - (p - r)) := by
-  obtain ⟨hq, hb⟩ := T.good p hp h5
-  exact val_D45 p r (r / 8) (I.cd.kq p) (lev := I.lev) hr (by omega)
-    (fun c => T.zero_iff p c hq hb)
+    XG I r p ≤ 2 * (r - I.cd.kq p) + 2 * (r / 8) + (2 * (r / 8) - (p - r)) :=
+  HybGen.XGm_D45 T.toLevelFacts r (r / 8) p hp h5 hr (by omega)
 
 lemma XG_D6 (r p : ℕ) (hp : p.Prime) (h5 : 5 ≤ p) (hN : r + 2 * (r / 8) ≤ p)
-    (hk : r ≤ I.cd.kq p) : XG I r p ≤ 2 * (r / 8) - (I.cd.kq p - r) := by
-  obtain ⟨hq, hb⟩ := T.good p hp h5
-  exact val_D6 p r (r / 8) (I.cd.kq p) (lev := I.lev) hN hk
-    (fun c => T.zero_iff p c hq hb)
+    (hk : r ≤ I.cd.kq p) : XG I r p ≤ 2 * (r / 8) - (I.cd.kq p - r) :=
+  HybGen.XGm_D6 T.toLevelFacts r (r / 8) p hp h5 hN hk
 
 lemma XG_D1x (r p : ℕ) (hp : p.Prime) (h2 : p ≠ 2) :
-    XG I r p ≤ 2 * r + 2 * (r / 8) - min ((r / 8) % p) (p - (r / 8) % p) := by
-  have hodd : p % 2 = 1 := by have := hp.eq_two_or_odd; omega
-  exact val_D1x p r (lev := I.lev) hodd hp.pos (r / 8)
+    XG I r p ≤ 2 * r + 2 * (r / 8) - min ((r / 8) % p) (p - (r / 8) % p) :=
+  HybGen.XGm_D1x I r (r / 8) p hp h2
 
 lemma mod_j1 {p : ℕ} (hc : (p : ZMod 4) = cJ1 o) : p % 4 = 4 - o := by
   rcases T.ho with rfl | rfl
@@ -250,9 +243,7 @@ theorem d1g_0 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 8 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 8) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (64) 320 (by norm_num) (by omega)
 
 theorem d1g_1 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -262,9 +253,7 @@ theorem d1g_1 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 7 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 7) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-64) 320 (by norm_num) (by omega)
 
 theorem d1g_2 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -274,9 +263,7 @@ theorem d1g_2 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 7 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 7) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (56) 320 (by norm_num) (by omega)
 
 theorem d1g_3 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -286,9 +273,7 @@ theorem d1g_3 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 6 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 6) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-56) 320 (by norm_num) (by omega)
 
 theorem d1g_4 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -298,9 +283,7 @@ theorem d1g_4 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 6 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 6) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (48) 320 (by norm_num) (by omega)
 
 theorem d1g_5 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -310,9 +293,7 @@ theorem d1g_5 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 5 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 5) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-48) 320 (by norm_num) (by omega)
 
 theorem d1g_6 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -322,9 +303,7 @@ theorem d1g_6 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 5 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 5) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (40) 320 (by norm_num) (by omega)
 
 theorem d1g_7 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -334,9 +313,7 @@ theorem d1g_7 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 4 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 4) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-40) 320 (by norm_num) (by omega)
 
 theorem d1g_8 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -346,9 +323,7 @@ theorem d1g_8 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 4 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 4) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (32) 320 (by norm_num) (by omega)
 
 theorem d1g_9 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -358,9 +333,7 @@ theorem d1g_9 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : �
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 3 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 3) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-32) 320 (by norm_num) (by omega)
 
 theorem d1g_10 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -370,9 +343,7 @@ theorem d1g_10 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 3 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 3) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (24) 320 (by norm_num) (by omega)
 
 theorem d1g_11 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -382,9 +353,7 @@ theorem d1g_11 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 2 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 2) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-24) 320 (by norm_num) (by omega)
 
 theorem d1g_12 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -394,9 +363,7 @@ theorem d1g_12 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 2 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 2) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (16) 320 (by norm_num) (by omega)
 
 theorem d1g_13 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -406,9 +373,7 @@ theorem d1g_13 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 1 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 1) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-16) 320 (by norm_num) (by omega)
 
 theorem d1g_14 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -418,9 +383,7 @@ theorem d1g_14 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 1 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_right (n := 1) (U := 0) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 17 (8) 320 (by norm_num) (by omega)
 
 theorem d1g_15 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : ℕ) :
@@ -430,9 +393,7 @@ theorem d1g_15 (T : TropFacts I o) (c : ZMod 4) (hc2 : (2 : ZMod 4) ≠ c) (r : 
   have h2 : p ≠ 2 := by
     rintro rfl; exact hc2 (by simpa using hc)
   have hb := XG_D1x T r p hp h2
-  have hd := dist_ge p (r / 8) 0 hp.pos
-  generalize (r / 8) % p = s0 at hb hd
-  show (XG I r p : ℝ) ≤ _
+  have hk := periodic_left (n := 0) (L := 7) hp.pos (by omega) (by omega) hb
   exact real_of_int_bound 8 19 (-8) 320 (by norm_num) (by omega)
 
 end Covers

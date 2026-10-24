@@ -4,6 +4,7 @@ public import CatalanFrames.HybCommon.Numer
 public import CatalanFrames.HybCommon.TropT
 public import CatalanFrames.HybCommon.Pieces
 
+public import CatalanFrames.HybGen.FamilySum
 @[expose] public section
 
 /-!
@@ -163,12 +164,21 @@ lemma WTG_covers_l3x (T : TropFacts I o) (r : ℕ) (hr4 : 400≤r) :
 theorem class1_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ1 o) (WTG I o r) 0 (5 * r) ≤
       (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l3x) / 2 + ε) := by
-  have h := class_total (M := 4) (isUnit_cJ1 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
-    (by norm_num) l3x l3x_chain hε
-  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
-  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (WTG_covers_l3x T r hr4)
-  rw [l3x_end, floor_frac] at this
-  simpa [tot4] using this
+  have h := HybGen.class_sum_of_family (isUnit_cJ1 T.ho)
+    (fun _ _ : ℕ => True) (fun r _ => WTG I o r) (9/4) (1/68) 0
+    (by norm_num) (by norm_num) l3x l3x_chain
+    (by
+      filter_upwards [eventually_ge_atTop 16] with r hr16
+      intro _ _ p hp _ _
+      simpa using WTG_prefix T r p hr16)
+    (by
+      filter_upwards [eventually_ge_atTop 400] with r hr
+      intro _ _
+      exact WTG_covers_l3x T r hr) hε
+  filter_upwards [h] with r hr
+  have hh := hr 0 trivial
+  rw [l3x_end, floor_frac] at hh
+  simpa [tot4] using hh
 
 lemma WTG_covers_l1x (T : TropFacts I o) (r : ℕ) (hr4 : 400≤r) :
     ∀ P∈l1x, Covers (cJ3 o) (WTG I o r) r P := by
@@ -201,12 +211,21 @@ lemma WTG_covers_l1x (T : TropFacts I o) (r : ℕ) (hr4 : 400≤r) :
 theorem class3_totalG (T : TropFacts I o) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, clsSum 4 (cJ3 o) (WTG I o r) 0 (5 * r / 3) ≤
       (r : ℝ) ^ 2 * (((9 / 4 : ℝ) * (1 / 68) + listInt l1x) / 2 + ε) := by
-  have h := class_total (M := 4) (isUnit_cJ3 T.ho) (α0 := 9 / 4) (t1 := 1 / 68) (by norm_num)
-    (by norm_num) l1x l1x_chain hε
-  filter_upwards [h, eventually_ge_atTop 400] with r hr hr4
-  have := hr (WTG I o r) (fun p _ _ _ => WTG_prefix T r p (by omega)) (WTG_covers_l1x T r hr4)
-  rw [l1x_end, floor_frac] at this
-  simpa [tot4] using this
+  have h := HybGen.class_sum_of_family (isUnit_cJ3 T.ho)
+    (fun _ _ : ℕ => True) (fun r _ => WTG I o r) (9/4) (1/68) 0
+    (by norm_num) (by norm_num) l1x l1x_chain
+    (by
+      filter_upwards [eventually_ge_atTop 16] with r hr16
+      intro _ _ p hp _ _
+      simpa using WTG_prefix T r p hr16)
+    (by
+      filter_upwards [eventually_ge_atTop 400] with r hr
+      intro _ _
+      exact WTG_covers_l1x T r hr) hε
+  filter_upwards [h] with r hr
+  have hh := hr 0 trivial
+  rw [l1x_end, floor_frac] at hh
+  simpa [tot4] using hh
 
 /-- **The content bound for the glued deficit family (before the deficit sums).** -/
 theorem logDhybT_le_weight {Lc cm : ℕ} (T : TropFacts I o) (B : BadInfo I Lc cm)

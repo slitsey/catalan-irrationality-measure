@@ -1,5 +1,7 @@
 module
-public import CatalanFrames.P6Hybrid.Pieces
+public import CatalanFrames.P6Hybrid.ClassData
+public import CatalanFrames.P6Hybrid.ZDual
+public import CatalanFrames.P6Hybrid.Reduce
 @[expose] public section
 open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames.HybCommon CatalanFrames.P6
 namespace CatalanFrames.P6Hybrid.Quarter

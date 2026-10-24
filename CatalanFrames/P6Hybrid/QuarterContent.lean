@@ -1,6 +1,7 @@
 module
 public import CatalanFrames.P6Hybrid.QuarterPieces
 public import CatalanCore.Rect.MinorContent
+public import CatalanFrames.HybGen.FamilySum
 @[expose] public section
 open Finset Filter CatalanCore CatalanCore.Rect CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames.HybCommon CatalanFrames.P6
 namespace CatalanFrames.P6Hybrid.Quarter
@@ -39,27 +40,34 @@ theorem class1_total {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
       clsSum 6 1 (fun p => (W r m p : ℝ)) 0 (9*r) ≤
         (r : ℝ)^2 * ((581/128+ε/4)/2+ε/4) := by
-  have h := class_total (M := 6) (c := 1) (by decide) (α0 := 5/2+ε) (t1 := 1/4)
-    (by positivity) (by norm_num) lp1 lp1_chain (ε := ε/4) (by positivity)
-  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2/ε⌉₊] with r hr hr100 hre
-  intro m ha
-  have he : 2 ≤ ε*(r : ℝ) := by
-    have h1 := Nat.le_ceil (2/ε)
-    have h2 : 2/ε ≤ (r : ℝ) := h1.trans (by exact_mod_cast hre)
-    rwa [div_le_iff₀ hε, mul_comm] at h2
-  have hh := hr (fun p => (W r m p : ℝ)) (by
-    intro p _ _ _
-    exact prefix_real ha he) (by
-    intro P hP
+  have hpref : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m → ∀ p,
+      p ≤ ⌊(1/4 : ℝ)*r⌋₊ → p.Prime → (p : ZMod 6)=1 →
+      (W r m p : ℝ) ≤ (5/2 : ℝ)*r+2 := by
+    apply Filter.Eventually.of_forall
+    intro r m ha p _ _ _
+    have hW : W r m p ≤ 2*r+2*m := by unfold W Hb; split_ifs <;> omega
+    have hR : (W r m p : ℝ) ≤ (2*r+2*m : ℕ) := by exact_mod_cast hW
+    have hmR : (4*m : ℝ) ≤ r+3 := by exact_mod_cast ha.2
+    push_cast at hR
+    nlinarith
+  have hcov : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
+      ∀ P ∈ lp1, Covers (1 : ZMod 6) (fun p => (W r m p : ℝ)) r P := by
+    filter_upwards [eventually_ge_atTop 100] with r hr100
+    intro m ha P hP
     simp only [lp1, List.mem_cons, List.mem_nil_iff, or_false] at hP
     rcases hP with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-    exacts [c1_1 ha.1 ha.2 hr100, c1_2 ha.1 ha.2 hr100, c1_3 ha.1 ha.2 hr100, c1_4 ha.1 ha.2 hr100, c1_5 ha.1 ha.2 hr100, c1_6 ha.1 ha.2 hr100, c1_7 ha.1 ha.2 hr100, c1_8 ha.1 ha.2 hr100, c1_9 ha.1 ha.2 hr100])
+    exacts [c1_1 ha.1 ha.2 hr100, c1_2 ha.1 ha.2 hr100, c1_3 ha.1 ha.2 hr100, c1_4 ha.1 ha.2 hr100, c1_5 ha.1 ha.2 hr100, c1_6 ha.1 ha.2 hr100, c1_7 ha.1 ha.2 hr100, c1_8 ha.1 ha.2 hr100, c1_9 ha.1 ha.2 hr100]
+  have h := HybGen.class_sum_of_family (c := (1 : ZMod 6)) (by decide) Adm
+    (fun r m p => (W r m p : ℝ)) (5/2) (1/4) 2 (by norm_num) (by norm_num)
+    lp1 lp1_chain hpref hcov (ε := ε/4) (by positivity)
+  filter_upwards [h] with r hr
+  intro m ha
+  have hh := hr m ha
   rw [lp1_end, floor_frac] at hh
-  have e : (Nat.totient 6 : ℝ) = 2 := by rw [show Nat.totient 6 = 2 by decide]; norm_num
-  have e2 : (5/2+ε)*(1/4)+listInt lp1 = 581/128+ε/4 := by
-    have := lp1_int; linarith
-  rw [e, e2] at hh
-  simpa using hh
+  have ht : (Nat.totient 6 : ℝ)=2 := by rw [show Nat.totient 6 = 2 by decide]; norm_num
+  rw [ht, lp1_int] at hh
+  simp only [Nat.div_one] at hh
+  nlinarith [mul_nonneg hε.le (sq_nonneg (r : ℝ))]
 
 noncomputable def lp5 : List Piece :=
   [mkPiece 1 4 1 2 11 (-4) 100 4, mkPiece 1 2 3 4 9 (0) 100 4, mkPiece 3 4 5 6 9 (0) 100 4, mkPiece 5 6 1 1 7 (-3) 100 2, mkPiece 1 1 3 2 4 (-2) 100 1, mkPiece 3 2 2 1 5 (-2) 100 2, mkPiece 2 1 3 1 3 (-1) 100 2, mkPiece 3 1 9 1 0 (0) 100 1]
@@ -75,27 +83,34 @@ theorem class5_total {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
       clsSum 6 5 (fun p => (W r m p : ℝ)) 0 (9*r) ≤
         (r : ℝ)^2 * ((355/96+ε/4)/2+ε/4) := by
-  have h := class_total (M := 6) (c := 5) (by decide) (α0 := 5/2+ε) (t1 := 1/4)
-    (by positivity) (by norm_num) lp5 lp5_chain (ε := ε/4) (by positivity)
-  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2/ε⌉₊] with r hr hr100 hre
-  intro m ha
-  have he : 2 ≤ ε*(r : ℝ) := by
-    have h1 := Nat.le_ceil (2/ε)
-    have h2 : 2/ε ≤ (r : ℝ) := h1.trans (by exact_mod_cast hre)
-    rwa [div_le_iff₀ hε, mul_comm] at h2
-  have hh := hr (fun p => (W r m p : ℝ)) (by
-    intro p _ _ _
-    exact prefix_real ha he) (by
-    intro P hP
+  have hpref : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m → ∀ p,
+      p ≤ ⌊(1/4 : ℝ)*r⌋₊ → p.Prime → (p : ZMod 6)=5 →
+      (W r m p : ℝ) ≤ (5/2 : ℝ)*r+2 := by
+    apply Filter.Eventually.of_forall
+    intro r m ha p _ _ _
+    have hW : W r m p ≤ 2*r+2*m := by unfold W Hb; split_ifs <;> omega
+    have hR : (W r m p : ℝ) ≤ (2*r+2*m : ℕ) := by exact_mod_cast hW
+    have hmR : (4*m : ℝ) ≤ r+3 := by exact_mod_cast ha.2
+    push_cast at hR
+    nlinarith
+  have hcov : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
+      ∀ P ∈ lp5, Covers (5 : ZMod 6) (fun p => (W r m p : ℝ)) r P := by
+    filter_upwards [eventually_ge_atTop 100] with r hr100
+    intro m ha P hP
     simp only [lp5, List.mem_cons, List.mem_nil_iff, or_false] at hP
     rcases hP with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-    exacts [c5_1 ha.1 ha.2 hr100, c5_2 ha.1 ha.2 hr100, c5_3 ha.1 ha.2 hr100, c5_4 ha.1 ha.2 hr100, c5_5 ha.1 ha.2 hr100, c5_6 ha.1 ha.2 hr100, c5_7 ha.1 ha.2 hr100, c5_8 ha.1 ha.2 hr100])
+    exacts [c5_1 ha.1 ha.2 hr100, c5_2 ha.1 ha.2 hr100, c5_3 ha.1 ha.2 hr100, c5_4 ha.1 ha.2 hr100, c5_5 ha.1 ha.2 hr100, c5_6 ha.1 ha.2 hr100, c5_7 ha.1 ha.2 hr100, c5_8 ha.1 ha.2 hr100]
+  have h := HybGen.class_sum_of_family (c := (5 : ZMod 6)) (by decide) Adm
+    (fun r m p => (W r m p : ℝ)) (5/2) (1/4) 2 (by norm_num) (by norm_num)
+    lp5 lp5_chain hpref hcov (ε := ε/4) (by positivity)
+  filter_upwards [h] with r hr
+  intro m ha
+  have hh := hr m ha
   rw [lp5_end, floor_frac] at hh
-  have e : (Nat.totient 6 : ℝ) = 2 := by rw [show Nat.totient 6 = 2 by decide]; norm_num
-  have e2 : (5/2+ε)*(1/4)+listInt lp5 = 355/96+ε/4 := by
-    have := lp5_int; linarith
-  rw [e, e2] at hh
-  simpa using hh
+  have ht : (Nat.totient 6 : ℝ)=2 := by rw [show Nat.totient 6 = 2 by decide]; norm_num
+  rw [ht, lp5_int] at hh
+  simp only [Nat.div_one] at hh
+  nlinarith [mul_nonneg hε.le (sq_nonneg (r : ℝ))]
 
 theorem hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
     ∑ c ∈ ({1,5} : Finset (ZMod 6)), clsSum 6 c (fun p => (W r m p : ℝ)) 0 (9*r) ≤

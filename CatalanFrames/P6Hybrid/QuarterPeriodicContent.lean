@@ -1,28 +1,28 @@
 module
 public import CatalanFrames.P6Hybrid.QuarterContent
 public import CatalanCore.Arith.Hybrid.D1QuarterPrefix
+public import CatalanFrames.HybGen.Periodic
+public import CatalanFrames.HybCommon.Pieces
 @[expose] public section
 open Finset Filter CatalanCore CatalanCore.Rect CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanFrames.HybCommon CatalanFrames.P6
 namespace CatalanFrames.P6Hybrid.Quarter.Periodic
 
 /-- The same tropical weight, retaining the exact periodic D1 prefix. -/
 def Wsharp (r m p : ℕ) : ℕ :=
-  if p % 6 = 1 ∨ p % 6 = 5 then
-    min (Quarter.W r m p) (2*r+2*m-min (m%p) (p-m%p))
-  else Quarter.W r m p
+  HybGen.periodicRefine (fun p => p%6=1 ∨ p%6=5)
+    (fun _ _ p => p) (fun _ m _ => m) Quarter.W r m p
 
-lemma sharp_le (r m p : ℕ) : Wsharp r m p ≤ Quarter.W r m p := by
-  unfold Wsharp; split_ifs <;> omega
-
+lemma sharp_le (r m p : ℕ) : Wsharp r m p ≤ Quarter.W r m p :=
+  HybGen.periodicRefine_le _ _ _ _ r m p
 lemma sharp_exact (r m p : ℕ) (hc : p%6=1 ∨ p%6=5) :
-    Wsharp r m p ≤ 2*r+2*m-min (m%p) (p-m%p) := by
-  simp only [Wsharp, if_pos hc]
-  exact Nat.min_le_right _ _
+    Wsharp r m p ≤ 2*r+2*m-min (m%p) (p-m%p) :=
+  HybGen.periodicRefine_exact _ _ _ r m p hc
 
 lemma trop_sharp {r m p : ℕ} (hp : p.Prime) (hr : 16 ≤ r) :
     tropVal (HW (p6Inst r m).lev p r m) ≤ Wsharp r m p := by
   have hW := Quarter.trop_le (m := m) hp hr
-  unfold Wsharp
+  unfold Wsharp HybGen.periodicRefine
+  dsimp only
   split_ifs with hc
   · have ho : p%2=1 := by omega
     have h := val_D1x (lev := (p6Inst r m).lev) p r ho hp.pos m
@@ -32,9 +32,7 @@ lemma trop_sharp {r m p : ℕ} (hp : p.Prime) (hr : 16 ≤ r) :
 private lemma covers_sharp {c : ZMod 6} {r m : ℕ} {P : Piece}
     (h : Covers c (fun p => (Quarter.W r m p : ℝ)) r P) :
     Covers c (fun p => (Wsharp r m p : ℝ)) r P := by
-  intro p hlo hhi hp hc
-  have hle : (Wsharp r m p : ℝ) ≤ (Quarter.W r m p : ℝ) := by exact_mod_cast sharp_le r m p
-  exact hle.trans (h p hlo hhi hp hc)
+  exact HybGen.covers_periodicRefine _ _ _ h
 
 /-- One summation argument serves both residue classes and every old tail table. -/
 private theorem class_refined (c : ZMod 6) (hc : IsUnit c)
@@ -51,36 +49,45 @@ private theorem class_refined (c : ZMod 6) (hc : IsUnit c)
   have hch : Chain (1/68) ((quarterD1Prefix 16) ++ l) := by
     rw [chain_append, quarterD1Prefix16_end]
     exact ⟨quarterD1Prefix16_chain, hchain⟩
-  have h := class_total (M := 6) hc (α0 := 5/2+ε) (t1 := 1/68)
-    (by positivity) (by norm_num) ((quarterD1Prefix 16) ++ l) hch
-    (ε := ε/4) (by positivity)
-  filter_upwards [h, eventually_ge_atTop 100, eventually_ge_atTop ⌈2/ε⌉₊] with r hr hr100 hre
-  intro m ha
-  have he : 2 ≤ ε*(r : ℝ) := by
-    have h1 := Nat.le_ceil (2/ε)
-    have h2 : 2/ε ≤ (r : ℝ) := h1.trans (by exact_mod_cast hre)
-    rwa [div_le_iff₀ hε, mul_comm] at h2
-  have hh := hr (fun p => (Wsharp r m p : ℝ)) (by
-    intro p _ _ _
-    have hle : (Wsharp r m p : ℝ) ≤ (Quarter.W r m p : ℝ) := by exact_mod_cast sharp_le r m p
-    exact hle.trans (prefix_real ha he)) (by
-    intro P hP
+  have hpref : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m → ∀ p,
+      p ≤ ⌊(1/68 : ℝ)*r⌋₊ → p.Prime → (p : ZMod 6)=c →
+      (Wsharp r m p : ℝ) ≤ (5/2 : ℝ)*r+2 := by
+    apply Filter.Eventually.of_forall
+    intro r m ha p _ _ _
+    have hW : Quarter.W r m p ≤ 2*r+2*m := by
+      unfold Quarter.W Hb; split_ifs <;> omega
+    have hle := (sharp_le r m p).trans hW
+    have hleR : (Wsharp r m p : ℝ) ≤ (2*r+2*m : ℕ) := by exact_mod_cast hle
+    have hmR : (4*m : ℝ) ≤ r+3 := by exact_mod_cast ha.2
+    push_cast at hleR
+    nlinarith
+  have hcov : ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
+      ∀ P ∈ quarterD1Prefix 16 ++ l, Covers c (fun p => (Wsharp r m p : ℝ)) r P := by
+    filter_upwards [eventually_ge_atTop 100] with r hr100
+    intro m ha P hP
     rcases List.mem_append.mp hP with hP | hP
     · exact quarterD1Prefix_covers ha.1 ha.2
         (fun p _ hpc => sharp_exact r m p (hgood p hpc)) 16 P hP
-    · exact covers_sharp (hcovers ha hr100 P hP))
-  have heq : lastEnd (1/68) ((quarterD1Prefix 16) ++ l) = 9 := by
+    · exact covers_sharp (hcovers ha hr100 P hP)
+  have h := HybGen.class_sum_of_family hc Adm (fun r m p => (Wsharp r m p : ℝ))
+    (5/2) (1/68) 2 (by norm_num) (by norm_num) (quarterD1Prefix 16 ++ l)
+    hch hpref hcov (ε := ε/4) (by positivity)
+  filter_upwards [h] with r hr
+  intro m ha
+  have hh := hr m ha
+  have heq : lastEnd (1/68) (quarterD1Prefix 16 ++ l) = 9 := by
     rw [lastEnd_append, quarterD1Prefix16_end, hend]
   have hfloor : ⌊(9 : ℝ)*(r : ℝ)⌋₊=9*r := by
     rw [show (9 : ℝ)*(r : ℝ)=((9*r : ℕ) : ℝ) by push_cast; ring, Nat.floor_natCast]
   rw [heq, hfloor] at hh
-  have htot : (Nat.totient 6 : ℝ) = 2 := by
-    rw [show Nat.totient 6 = 2 by decide]; norm_num
-  have hi : (5/2+ε)*(1/68)+listInt ((quarterD1Prefix 16) ++ l)=I-(3163/768-339258406689121/82516315939200)+ε/68 := by
+  have htot : (Nat.totient 6 : ℝ) = 2 := by rw [show Nat.totient 6 = 2 by decide]; norm_num
+  have hi : (5/2 : ℝ)*(1/68)+listInt (quarterD1Prefix 16 ++ l)=
+      I-(3163/768-339258406689121/82516315939200) := by
     rw [listInt_append]
     linarith [quarterD1Prefix16_integral]
   rw [htot, hi] at hh
-  simpa using hh
+  have hs := sq_nonneg (r : ℝ)
+  nlinarith
 
 private lemma covers_one {r m : ℕ} (ha : Adm r m) (hr : 100 ≤ r) :
     ∀ P ∈ lp1, Covers (1 : ZMod 6) (fun p => (Quarter.W r m p : ℝ)) r P := by
@@ -114,7 +121,7 @@ theorem hsum : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →
   rw [Finset.sum_pair (by decide : (1 : ZMod 6) ≠ 5)]
   have ha1 := hr1 m ha
   have ha5 := hr5 m ha
-  nlinarith [sq_nonneg (r : ℝ)]
+  nlinarith [mul_nonneg hε.le (sq_nonneg (r : ℝ))]
 
 /-- Improved estimate of the SAME full denominator, including all bad and higher-power costs. -/
 theorem log_content : ∀ ε > 0, ∀ᶠ r : ℕ in atTop, ∀ m, Adm r m →

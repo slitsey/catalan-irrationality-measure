@@ -2,6 +2,7 @@ module
 public import CatalanCore.Arith.Hybrid.PiecePatch
 public import CatalanFrames.HybCommon.DeficitProfile.Family
 public import CatalanFrames.HybCommon.LogDhybT
+public import CatalanFrames.HybGen.FamilySum
 @[expose] public section
 open Finset Filter Classical CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid
 namespace CatalanFrames.HybCommon
@@ -67,27 +68,41 @@ theorem profileWeight_prefix (I : HybInst Fr) (o r p : ℕ) (hp : p≤⌊(1/68 :
 theorem profileWeight_class1 {I : HybInst Fr} {o : ℕ} (T : TropFacts I o) {ε : ℝ} (hε : 0<ε) :
     ∀ᶠr : ℕ in atTop, clsSum 4 (cJ1 o) (profileWeight I o r) 0 (5*r)≤
       (r : ℝ)^2 * (((9/4 : ℝ)*(1/68)+listInt l3x)/2+ε) := by
-  have h := class_total (M := 4) (isUnit_cJ1 T.ho) (α0 := 9/4) (t1 := 1/68)
-    (by norm_num) (by norm_num) l3x l3x_chain hε
-  filter_upwards [h,eventually_ge_atTop 400] with r hr hr400
-  have hh := hr (profileWeight I o r) (by
-    intro p hp hprime hc
-    rw [profileWeight_prefix I o r p hp]
-    exact WTG_prefix T r p (by omega)) (profileWeight_covers1 T r hr400)
-  rw [l3x_end,floor_frac] at hh
+  have h := HybGen.class_sum_of_family (isUnit_cJ1 T.ho)
+    (fun _ _ : ℕ => True) (fun r _ => profileWeight I o r) (9/4) (1/68) 0
+    (by norm_num) (by norm_num) l3x l3x_chain
+    (by
+      filter_upwards [eventually_ge_atTop 16] with r hr16
+      intro _ _ p hp _ _
+      rw [profileWeight_prefix I o r p hp]
+      simpa using WTG_prefix T r p hr16)
+    (by
+      filter_upwards [eventually_ge_atTop 400] with r hr
+      intro _ _
+      exact profileWeight_covers1 T r hr) hε
+  filter_upwards [h] with r hr
+  have hh := hr 0 trivial
+  rw [l3x_end, floor_frac] at hh
   simpa [tot4] using hh
 
 theorem profileWeight_class3 {I : HybInst Fr} {o : ℕ} (T : TropFacts I o) {ε : ℝ} (hε : 0<ε) :
     ∀ᶠr : ℕ in atTop, clsSum 4 (cJ3 o) (profileWeight I o r) 0 (5*r/3)≤
       (r : ℝ)^2 * (((9/4 : ℝ)*(1/68)+listInt l1x)/2+ε) := by
-  have h := class_total (M := 4) (isUnit_cJ3 T.ho) (α0 := 9/4) (t1 := 1/68)
-    (by norm_num) (by norm_num) l1x l1x_chain hε
-  filter_upwards [h,eventually_ge_atTop 400] with r hr hr400
-  have hh := hr (profileWeight I o r) (by
-    intro p hp hprime hc
-    rw [profileWeight_prefix I o r p hp]
-    exact WTG_prefix T r p (by omega)) (profileWeight_covers3 T r hr400)
-  rw [l1x_end,floor_frac] at hh
+  have h := HybGen.class_sum_of_family (isUnit_cJ3 T.ho)
+    (fun _ _ : ℕ => True) (fun r _ => profileWeight I o r) (9/4) (1/68) 0
+    (by norm_num) (by norm_num) l1x l1x_chain
+    (by
+      filter_upwards [eventually_ge_atTop 16] with r hr16
+      intro _ _ p hp _ _
+      rw [profileWeight_prefix I o r p hp]
+      simpa using WTG_prefix T r p hr16)
+    (by
+      filter_upwards [eventually_ge_atTop 400] with r hr
+      intro _ _
+      exact profileWeight_covers3 T r hr) hε
+  filter_upwards [h] with r hr
+  have hh := hr 0 trivial
+  rw [l1x_end, floor_frac] at hh
   simpa [tot4] using hh
 
 theorem profileSupport_lower {L : List DeficitRow} (hD : RowData L) {o r p : ℕ}

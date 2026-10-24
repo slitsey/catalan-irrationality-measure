@@ -1,7 +1,7 @@
 module
 
 public import CatalanFrames.LambdaMirrorHybrid.MirData
-public import CatalanFrames.LambdaHybrid.NV.FinalNV
+public import CatalanCore.NV.Hybrid.FinalNV
 
 /-!
 # Mirror hybrid nonvanishing (`λ' = G/2 + 5π²/96`, `ℓ = 4K - 3`)

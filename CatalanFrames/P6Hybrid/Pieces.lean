@@ -4,6 +4,7 @@ public import CatalanFrames.P6Hybrid.ZDual
 public import CatalanFrames.P6Hybrid.Reduce
 public import CatalanFrames.HybCommon.Pieces
 
+public import CatalanFrames.P6Hybrid.ClassData
 @[expose] public section
 
 /-!
@@ -19,24 +20,6 @@ open Finset Filter CatalanCore CatalanCore.Arith CatalanCore.Arith.Hybrid Catala
   CatalanFrames.P6
 
 namespace CatalanFrames.P6Hybrid
-
-lemma covers_mk (c : ZMod 6) (cn : ℕ) (hcn : ∀ p : ℕ, (p : ZMod 6) = c → p % 6 = cn)
-    (wf : ℕ → ℕ) (r sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
-    (h : ∀ p : ℕ, sn * r / sd < p → p ≤ tn * r / td → p % 6 = cn →
-      D * (wf p : ℤ) ≤ A * r + B * p + E) :
-    Covers c (fun p => (wf p : ℝ)) r (mkPiece sn sd tn td A B E D) := by
-  intro p hs ht _ hpc
-  rw [floor_mk_s] at hs
-  rw [floor_mk_t] at ht
-  exact real_of_int_bound D A B E hD (h p hs ht (hcn p hpc))
-
-lemma cls_one {p : ℕ} (h : (p : ZMod 6) = 1) : p % 6 = 1 := by
-  have := (ZMod.natCast_eq_natCast_iff' p 1 6).mp (by simpa using h)
-  omega
-
-lemma cls_five {p : ℕ} (h : (p : ZMod 6) = 5) : p % 6 = 5 := by
-  have := (ZMod.natCast_eq_natCast_iff' p 5 6).mp (by simpa using h)
-  omega
 
 macro "wn_omega" : tactic =>
   `(tactic| (intro p hs ht hc; have hk := kq6_cases p; unfold Wn Sv Hb; split_ifs <;> omega))
