@@ -11,7 +11,7 @@ public import Mathlib.Tactic.NormNum.Prime
 /-!
 # D58: the final statement block (both banks)
 
-`measure_592_of_certificates` (bank K160, `B = 592`) and `measure_590_of_certificates` (bank K640,
+`measure_592_of_delta_small` (bank K160, `B = 592`) and `measure_590_of_delta_small` (bank K640,
 `B = 590`) are `measure_of_design` for the displaced design `(58, 9, 3, 5, 3)`: the payments of
 `D58.Pay` (window parameter `w = 3/4`), the normalizer `Znorm` with its denominator growth
 `gD58` (odd profile `f58`, gain windows `segs`, 2-adic constant `2673/8`) and the decay rate
@@ -66,7 +66,7 @@ theorem eta_le640 : K640.eta + chi < tDelta640 - gD58 := by
   linarith
 
 /-- Bank K160: `B = 592`. -/
-theorem measure_592_of_certificates
+theorem measure_592_of_delta_small
     (delta_small : ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(K160.rho * (N : ℝ))) →
         |aeval x (Parametric.deltaPoly Odd.design N)| ≤
@@ -81,7 +81,7 @@ theorem measure_592_of_certificates
   simpa using h
 
 /-- Bank K640: `B = 590`. -/
-theorem measure_590_of_certificates
+theorem measure_590_of_delta_small
     (delta_small : ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
       |x - catalan| ≤ Real.exp (-(K640.rho * (N : ℝ))) →
         |aeval x (Parametric.deltaPoly Odd.design N)| ≤

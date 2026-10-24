@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.GenD.Analytic.SheetBase
+public import CatalanMeasure.GenD.Analytic.MarkedSheet
 
 @[expose] public section
 

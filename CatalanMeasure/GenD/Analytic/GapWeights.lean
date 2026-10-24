@@ -1,6 +1,7 @@
 module
 
 public import CatalanMeasure.GenD.Analytic.GapNodal
+public import CatalanMeasure.GenD.Analytic.FullInterval
 public import CatalanMeasure.Parametric.RestrictedWeights
 public import CatalanMeasure.Parametric.PolynomialFunctional
 
@@ -40,11 +41,6 @@ def GapWeightBounds (P : Parameters) (tau : ∀ N : ℕ, Fin ((P.n0 - P.g0) * N)
   ∀ᶠ N : ℕ in Filter.atTop, ∀ (k : ℕ) (a : Fin ((P.n0 - P.g0) * N)),
     |(rowCommonFactor P N).eval (tau N a)| * |restrictedWeight P N k (tau N) a| ≤
       108000 * N * Real.exp (w * N)
-
-theorem rowCommonFactor_eval_ne_zero_of (P : Parameters) (N : ℕ) {t : ℝ}
-    (ht0 : t ≠ 0) (ht1 : t ≠ 1) : (rowCommonFactor P N).eval t ≠ 0 := by
-  simp only [rowCommonFactor, eval_mul, eval_pow, eval_X, eval_sub, eval_one]
-  exact mul_ne_zero (pow_ne_zero _ ht0) (pow_ne_zero _ (sub_ne_zero.mpr ht1.symm))
 
 /-- A cardinal polynomial times its nodal derivative and linear denominator
 recovers any nonzero scalar multiple of the full nodal polynomial. -/

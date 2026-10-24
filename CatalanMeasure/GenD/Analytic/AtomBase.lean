@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.GenD.Analytic.SheetBase
+public import CatalanMeasure.GenD.Analytic.MarkedSheet
 public import CatalanMeasure.GenD.Analytic.Prefactor
 public import CatalanMeasure.Parametric.RealIntegral
 public import CatalanMeasure.JointDetExpansion

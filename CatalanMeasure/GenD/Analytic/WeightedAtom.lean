@@ -1,7 +1,7 @@
 module
 
 public import CatalanMeasure.GenD.Analytic.AtomBase
-public import CatalanMeasure.GenD.Analytic.MarkedMixed
+public import CatalanMeasure.GenD.Analytic.MarkedMixedMajorant
 public import CatalanMeasure.Parametric.MarkedAtomAlmostEverywhere
 public import CatalanMeasure.Lemma6
 
