@@ -1,11 +1,12 @@
 module
 
 public import CatalanFrames.HybGen.D1Prefix
+public import CatalanFrames.HybGen.FamilySum
 
 @[expose] public section
 
 /-!
-# From covers to a class sum
+# Fixed eighth-window compatibility instance of generic family summation
 
 `class_sum_of_tables`: for a list `ll` of pieces chained from `1/68`, covered for every admissible
 `(r, m)` (window `r ≤ 8m ≤ r + 9`), the class sum of `WGm` up to `⌊lastEnd * r⌋` is at most
@@ -31,33 +32,22 @@ theorem class_sum_of_tables {M : ℕ} [NeZero M] {c : ZMod M} (hc : IsUnit c) (I
     ∀ᶠ r : ℕ in atTop, ∀ m : ℕ, r ≤ 8 * m → 8 * m ≤ r + 9 →
       clsSum M c (WGm I r m) 0 ⌊lastEnd (1 / 68) ll * r⌋₊ ≤
         (r : ℝ) ^ 2 * ((9 / 4 * (1 / 68) + listInt ll) / (M.totient : ℝ) + ε) := by
-  have h := class_total (M := M) hc (α0 := 9 / 4 + ε) (t1 := 1 / 68) (by positivity)
-    (by norm_num) ll hl (ε := ε / 2) (by positivity)
-  have hφ : (1 : ℝ) ≤ (M.totient : ℝ) := by
-    exact_mod_cast Nat.totient_pos.mpr (Nat.pos_of_ne_zero (NeZero.ne M))
-  filter_upwards [h, eventually_ge_atTop 400, eventually_ge_atTop ⌈3 / ε⌉₊] with r hr h400 hre
+  have hwin : ∀ r m : ℕ, (r ≤ 8*m ∧ 8*m ≤ r+9) →
+      (m : ℝ) ≤ (1/8 : ℝ)*r+9/8 := by
+    intro r m hm
+    have hh : (8*m : ℝ) ≤ r+9 := by exact_mod_cast hm.2
+    push_cast at hh
+    linarith
+  have hcovers : ∀ᶠ r : ℕ in atTop, ∀ m, (r ≤ 8*m ∧ 8*m ≤ r+9) →
+      ∀ P ∈ ll, Covers c (WGm I r m) r P := by
+    filter_upwards [eventually_ge_atTop 400] with r hr
+    intro m hm
+    exact hcov r m hm.1 hm.2 hr
+  have h := class_sum_of_affine_window hc I (fun r m => r ≤ 8*m ∧ 8*m ≤ r+9)
+    (1/8) (9/8) (1/68) (by norm_num) (by norm_num) hwin ll hl hcovers hε
+  filter_upwards [h] with r hr
   intro m hm1 hm2
-  have he : 3 ≤ ε * (r : ℝ) := by
-    have h1 := Nat.le_ceil (3 / ε)
-    have h2 : 3 / ε ≤ (r : ℝ) := h1.trans (by exact_mod_cast hre)
-    rwa [div_le_iff₀ hε, mul_comm] at h2
-  have hm2' : (8 * m : ℝ) ≤ r + 9 := by exact_mod_cast hm2
-  have hh := hr (WGm I r m) (by
-    intro p _ _ _
-    have h1 : (XGm I r m p : ℝ) ≤ ((2 * (r + m) : ℕ) : ℝ) := by exact_mod_cast XGm_D1 I r m p
-    push_cast at h1
-    show (XGm I r m p : ℝ) ≤ _
-    nlinarith) (hcov r m hm1 hm2 h400)
-  refine hh.trans ?_
-  apply mul_le_mul_of_nonneg_left _ (sq_nonneg _)
-  have e1 : (9 / 4 + ε) * (1 / 68) = 9 / 4 * (1 / 68) + ε / 68 := by ring
-  rw [e1]
-  have e2 : (9 / 4 * (1 / 68) + ε / 68 + listInt ll) / (M.totient : ℝ) =
-      (9 / 4 * (1 / 68) + listInt ll) / (M.totient : ℝ) + ε / 68 / (M.totient : ℝ) := by
-    field_simp; ring
-  rw [e2]
-  have e3 : ε / 68 / (M.totient : ℝ) ≤ ε / 68 := div_le_self (by positivity) hφ
-  linarith
+  convert hr m ⟨hm1,hm2⟩ using 1 <;> norm_num
 
 end CatalanFrames.HybGen
 

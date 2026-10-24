@@ -1,5 +1,6 @@
 module
 public import CatalanCore.Arith.Hybrid.D1Quarter
+public import CatalanCore.Arith.Hybrid.PeriodicPrefix
 @[expose] public section
 open Finset
 namespace CatalanCore.Arith.Hybrid
@@ -20,13 +21,8 @@ private lemma left_key {r m p n x : ℕ} (hp : 0<p)
     4*x+4*((n+1)*p)≤11*r+100 := by
   have hnp : n*p≤m := by nlinarith
   have hhalf : 2*(n*p)+p≤2*m := by nlinarith
-  have hd := dist_ge p m n hp hnp
-  have hs : (n+1)*p=n*p+p := by ring
-  rw [hs] at hd ⊢
-  have hm : m%p≤m := Nat.mod_le _ _
-  generalize n*p=k at *
-  generalize m%p=s0 at *
-  omega
+  have hk := periodic_left (L := 0) hp hnp hhalf hw
+  nlinarith
 
 private lemma right_key {r m p n x : ℕ} (hp : 0<p)
     (hm1 : r≤4*m) (hm2 : 4*m≤r+3)
@@ -35,13 +31,9 @@ private lemma right_key {r m p n x : ℕ} (hp : 0<p)
     4*x≤9*r+4*(n*p)+100 := by
   have hnp : n*p≤m := by nlinarith
   have hhalf : 4*m≤4*(n*p)+2*p+2 := by nlinarith
-  have hd := dist_ge p m n hp hnp
-  have hs : (n+1)*p=n*p+p := by ring
-  rw [hs] at hd
-  have hm : m%p≤m := Nat.mod_le _ _
-  generalize n*p=k at *
-  generalize m%p=s0 at *
-  omega
+  have hhalf' : 2*m ≤ 2*(n*p)+p+2*3 := by omega
+  have hk := periodic_right (U := 3) hp hnp hhalf' hw
+  nlinarith
 
 /-- A single proof covers every strip, modulus, residue and node level. -/
 theorem quarterD1Pair_covers {M : ℕ} {c : ZMod M} {r m : ℕ} {w : ℕ→ℕ}
