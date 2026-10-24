@@ -3,6 +3,7 @@ module
 public import CatalanMeasure.GenD.D58.Final
 public import CatalanMeasure.GenD.Analytic.DeltaChain
 public import CatalanMeasure.GenD.Analytic.Instances
+public import CatalanMeasure.GenD.D58.C3.Cert
 
 @[expose] public section
 
@@ -23,7 +24,7 @@ Remaining hypotheses (nothing else):
                        here from `K160.second_budget_log2` / `K640.second_budget_log2`;
 * gap and cover        `g`, and the circle certificate `GapCircleBound` (constants `rc, C, wc`)
                        with `wc < K.rho - 58 K.secondCost`;
-* `c3`                 the residue determinants modulo 1009.
+* (none: C3 is discharged by `C3.c3_d58`)
 -/
 
 namespace CatalanMeasure.GenD
@@ -77,7 +78,7 @@ theorem measure_592_of_certificates
     (column_sup : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldG (9 / 58) (3 / 58) v s ≤ MY)
     (residual_sup : ∀ x ∈ Icc (-1 : ℝ) 1, g ≤ |x| →
       Analytic.resFieldGen (53 / 58) u x ≤ K160.residualCap)
-    (c3 : C3) :
+    :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(592 : ℝ)) < |catalan - (a : ℝ) / b| := by
   have S : Analytic.SecondFieldCert Odd.design K160.target K160.residualCap nearCap
       K160.secondCost (fun x => g ≤ |x|) :=
@@ -94,7 +95,7 @@ theorem measure_592_of_certificates
       residual_sup := fun x hx hg => by
         rw [Analytic.Instances.d58_gRes]; exact residual_sup x hx hg,
       budget := fun ha ht => K160.second_budget_gen ha ht }
-  refine measure_592_of_delta_small ?_ c3
+  refine measure_592_of_delta_small ?_ C3.c3_d58
   intro ε hε
   exact Analytic.delta_small_of_certificates Odd.design_admissible hg0 hg1 ha4 hr1 hr2 hcirc
     (w := K160.rho - 58 * K160.secondCost) hwc F S
@@ -123,7 +124,7 @@ theorem measure_590_of_certificates
     (column_sup : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldG (9 / 58) (3 / 58) v s ≤ MY)
     (residual_sup : ∀ x ∈ Icc (-1 : ℝ) 1, g ≤ |x| →
       Analytic.resFieldGen (53 / 58) u x ≤ K640.residualCap)
-    (c3 : C3) :
+    :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(590 : ℝ)) < |catalan - (a : ℝ) / b| := by
   have S : Analytic.SecondFieldCert Odd.design K640.target K640.residualCap nearCap
       K640.secondCost (fun x => g ≤ |x|) :=
@@ -140,7 +141,7 @@ theorem measure_590_of_certificates
       residual_sup := fun x hx hg => by
         rw [Analytic.Instances.d58_gRes]; exact residual_sup x hx hg,
       budget := fun ha ht => K640.second_budget_gen ha ht }
-  refine measure_590_of_delta_small ?_ c3
+  refine measure_590_of_delta_small ?_ C3.c3_d58
   intro ε hε
   exact Analytic.delta_small_of_certificates Odd.design_admissible hg0 hg1 ha4 hr1 hr2 hcirc
     (w := K640.rho - 58 * K640.secondCost) hwc F S

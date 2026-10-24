@@ -18,5 +18,5 @@ public import CatalanMeasure.GenD.D58.Final
 #print axioms CatalanMeasure.GenD.D58.eta_le640
 #print axioms CatalanMeasure.GenD.D58.K160.pay_w
 #print axioms CatalanMeasure.GenD.D58.K640.pay_w
-#print axioms CatalanMeasure.GenD.D58.measure_592_of_certificates
-#print axioms CatalanMeasure.GenD.D58.measure_590_of_certificates
+#print axioms CatalanMeasure.GenD.D58.measure_592_of_delta_small
+#print axioms CatalanMeasure.GenD.D58.measure_590_of_delta_small
