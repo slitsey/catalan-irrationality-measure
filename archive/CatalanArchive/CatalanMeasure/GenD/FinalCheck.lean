@@ -1,5 +1,6 @@
 module
 
+public import CatalanArchive.CatalanMeasure.GenD.D58.Bank592
 public import CatalanMeasure.GenD.D58.Final
 
 /-! Axiom audit of the generic layer and the D58 instance (PE). -/

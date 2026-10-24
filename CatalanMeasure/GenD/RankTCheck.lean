@@ -1,6 +1,6 @@
 module
 public import CatalanMeasure.GenD.RankT
-public import CatalanArchive.CatalanMeasure.GenD.RankUCheck
+public import CatalanMeasure.GenD.RankUCheck
 @[expose] public section
 
 /-!

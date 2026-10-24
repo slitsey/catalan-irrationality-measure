@@ -1,8 +1,8 @@
 module
 
 public import CatalanMeasure.GenD.Analytic.GapWeights
-public import CatalanArchive.CatalanMeasure.GenD.Analytic.FullWeights
-public import CatalanArchive.CatalanMeasure.GenD.Analytic.CircleCover
+public import CatalanMeasure.GenD.Analytic.FullWeights
+public import CatalanMeasure.GenD.Analytic.CircleCover
 
 /-! Axiom audit of the group-4 analytic layer (nodes, weight bounds, circle cover). -/
 
