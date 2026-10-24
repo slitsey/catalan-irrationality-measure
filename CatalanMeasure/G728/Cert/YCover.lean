@@ -33,7 +33,7 @@ theorem cellsY_ok : ∀ c ∈ cellsY, cellT (colSpecS C Vc V) D_Y 5 65 MGL_Y MY 
 theorem sound_Y (t : ℕ) : (colSpecS C Vc V t).Sound D_Y (colFieldS C Vc V) := colSpecS_sound C tailsV V_nonzero D_Y hZ_Y (by norm_num [C]) (by norm_num [C]) t
 theorem peel_pt_Y (t : ℕ) (pr : ℚ × ℚ) (h : colPeel C t = some pr) : pr.2 = 0 ∨ pr.2 = 1 := by
   unfold colPeel at h
-  split at h <;> simp_all
+  split at h <;> first | (cases h; simp) | simp_all
 theorem cover_Y : coverFrom 1 0 cellsY = true := by decide +kernel
 theorem column_sup : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldS C Vc V s ≤ MY := by
   intro x hx

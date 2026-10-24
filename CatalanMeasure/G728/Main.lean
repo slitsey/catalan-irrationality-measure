@@ -5,7 +5,7 @@ public import CatalanMeasure.Parametric.GapFinalTransfer
 @[expose] public section
 
 /-!
-# The 728 and 2183 irrationality-measure bounds, modulo the second-trial bounds
+# The 728 irrationality-measure bound, modulo the second-trial bounds
 
 The second-trial data enters as the abstract hypothesis `D`; the first trial is the old
 `FirstStrongTrial` retargeted to `target728`.
@@ -78,38 +78,6 @@ theorem measure_728_of_bounds (hU : U6Content)
     (χ := chi728) (ρ := rho728) (η := eta728) (κ := kappa728) (δ := delta728)
     hgrowth (atom_point728 F D) eta_lt728 hg hr hk hd hw hl hp
   rwa [hrk] at h
-
-theorem measure_2183_of_bounds (hU : U6Content)
-    (F : FirstTrialBoundsAt target728 strongFirstCost)
-    (D : SecondTrialBoundsOn target728 residual728 (-(3/4:ℝ)) secondCost728 gapAtomDomain) :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(2183 : ℝ)) < |catalan - (a : ℝ) / b| := by
-  obtain ⟨c, hc, hdiv, _hcop, hgrowth⟩ := hU
-  obtain ⟨-, -, -, hr, -, -, -, -, -, -, hcheb⟩ := payments728
-  rw [chi_eq728] at hgrowth
-  obtain ⟨P₀, hnz, hsmall⟩ := content_hypotheses_on twentyGapNodes gapAtomDomain
-    (fun N => (twenty_gap_nodes_properties N).1)
-    (fun N i => ((twenty_gap_nodes_properties N).2 i).1) gap_nodes_nonzero
-    (fun N i => ((twenty_gap_nodes_properties N).2 i).2) target728 c hc hdiv
-    (χ := chi728) (ρ := rho728) (η := eta728)
-    hgrowth (atom_point728 F D) eta_lt728
-  have hnz' : ∀ p, P₀ ≤ p → p.Prime → ∀ (a : ℤ) (b : ℕ),
-      0 < b → ¬ p ∣ b → aeval ((a : ℝ) / b) (twentyContentIntPoly c p) ≠ 0 := by
-    intro p hp hprime a b hb hpb
-    exact hnz p hp hprime a b hb
-      (fun h => hpb (dvd_trans (show p ∣ p ^ 2 from ⟨p, by ring⟩) h))
-  have hdeg : ∀ p, (twentyContentIntPoly c p).natDegree ≤ 18 * p := by
-    intro p
-    exact (coefficientContentQuotient_natDegree (twentyMeasureIntPoly p)
-      (hc p) (hdiv p)).le.trans (twentyMeasureIntPoly_natDegree_le p)
-  have hh := CatalanMeasure.irrationality_measure_of_polynomials catalan 18
-    (η := eta728 + chi728) (ρ := rho728)
-    (by norm_num [eta728, chi728]) hr (twentyContentIntPoly c) P₀ hdeg hnz' hsmall
-  simp only [Nat.cast_ofNat] at hh
-  filter_upwards [hh, eventually_ge_atTop (2 : ℕ)] with b hb hb2 a
-  have hb1 : (1 : ℝ) ≤ b := by exact_mod_cast (show 1 ≤ b by omega)
-  exact lt_of_le_of_lt
-    (Real.rpow_le_rpow_of_exponent_le hb1 (by linarith only [hcheb])) (hb a)
 
 end
 end CatalanMeasure.G728

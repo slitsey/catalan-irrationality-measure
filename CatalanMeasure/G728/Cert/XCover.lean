@@ -40,7 +40,7 @@ theorem sound_X (t : ℕ) : (rowSpecS R Pc Vc P V t).Sound D_X (rowFieldS R Pc V
 theorem TT_real_X : ((TT : ℤ) : ℝ) = 1099511627776 := by unfold TT; norm_num
 theorem peel_pt_X (t : ℕ) (pr : ℚ × ℚ) (h : rowPeel R t = some pr) : pr.2 = 0 ∨ pr.2 = 1 := by
   unfold rowPeel at h
-  split at h <;> simp_all
+  split at h <;> first | (cases h; simp) | simp_all
 theorem cover_X_neg : coverFrom 0 (-1099511627776) cellsX = true := by decide +kernel
 theorem cover_X_pos : coverFrom 1 0 cellsX = true := by decide +kernel
 theorem row_sup : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1, rowFieldS R Pc Vc P V x ≤ MX := by

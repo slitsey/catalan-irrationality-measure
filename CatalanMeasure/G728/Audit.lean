@@ -45,6 +45,5 @@ theorem audit_constants :
 #print axioms payments728
 #print axioms audit_constants
 #print axioms measure_728_of_bounds
-#print axioms measure_2183_of_bounds
 
 end CatalanMeasure.G728

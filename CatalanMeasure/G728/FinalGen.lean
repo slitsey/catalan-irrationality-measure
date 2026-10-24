@@ -2,17 +2,17 @@ module
 public import CatalanMeasure.G728.Main
 public import CatalanMeasure.G728.Glue
 public import CatalanMeasure.G728.Norm
-public import CatalanMeasure.Parametric.GapMain
-public import CatalanMeasure.Parametric.U6Main
+public import CatalanMeasure.Parametric.GapFirst
+public import CatalanMeasure.Parametric.CombinedContent
 @[expose] public section
 /-! Final assembly, generic in the three field sup facts (so it can be checked before the certificates). -/
 namespace CatalanMeasure.G728
 open CatalanMeasure.Parametric CatalanMeasure.Cert OAI.InternalCatalan Filter Set
 
-def firstTrial728' : FirstTrialBoundsAt target728 strongFirstCost :=
+noncomputable def firstTrial728' : FirstTrialBoundsAt target728 strongFirstCost :=
   retarget728 gapFirstTrial (by rfl) (by rfl) (by rfl)
 
-def secondTrial728
+noncomputable def secondTrial728
     (row : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1, rowFieldS R Pc Vc P V x ≤ (MX : ℝ))
     (col : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldS C Vc V s ≤ (MY : ℝ))
     (res : ∀ x ∈ Icc (-1 : ℝ) 1, (401 / 2500 : ℝ) ≤ |x| → resFieldS Pc P x ≤ (MR : ℝ)) :
@@ -39,12 +39,5 @@ theorem measure_728_of_sups
     (res : ∀ x ∈ Icc (-1 : ℝ) 1, (401 / 2500 : ℝ) ≤ |x| → resFieldS Pc P x ≤ (MR : ℝ)) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(728 : ℝ)) < |catalan - (a : ℝ) / b| :=
   measure_728_of_bounds u6_combined_content firstTrial728' (secondTrial728 row col res)
-
-theorem measure_2183_of_sups
-    (row : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1, rowFieldS R Pc Vc P V x ≤ (MX : ℝ))
-    (col : ∀ s ∈ Ioo (0 : ℝ) 1, colFieldS C Vc V s ≤ (MY : ℝ))
-    (res : ∀ x ∈ Icc (-1 : ℝ) 1, (401 / 2500 : ℝ) ≤ |x| → resFieldS Pc P x ≤ (MR : ℝ)) :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(2183 : ℝ)) < |catalan - (a : ℝ) / b| :=
-  measure_2183_of_bounds u6_combined_content firstTrial728' (secondTrial728 row col res)
 
 end CatalanMeasure.G728

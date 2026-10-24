@@ -1,16 +1,14 @@
 module
 public import CatalanMeasure.Parametric.GapFinalTransfer
 public import CatalanMeasure.Parametric.GapActualWeights
-public import CatalanMeasure.FirstStrongTrial.Sup
+public import CatalanMeasure.Parametric.GapFirst
+public import CatalanMeasure.Parametric.GapSecondFields
 public import CatalanMeasure.StrongTrial.Sup
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open OAI.InternalCatalan Filter
 open scoped Topology
 noncomputable section
-
-def gapFirstTrial : FirstTrialBoundsAt strongTarget strongFirstCost :=
-  strongFirstTrialOfFields FirstStrongTrial.row_sup FirstStrongTrial.column_sup
 
 def gapSecondTrial :
     SecondTrialBoundsOn strongTarget gapResidualCap (-(3/4:ℝ)) gapSecondCost gapAtomDomain :=
