@@ -9,14 +9,14 @@ public section
 /-!
 Catalan's constant is written as the series below.
 For every sufficiently large denominator b and every integer numerator a,
-|G - a/b| > b^(-728). Denominator and content asymptotics use PNT.
+|G - a/b| > b^(-592). Denominator and content asymptotics use PNT.
 -/
 
 namespace CatalanIrrationalityMeasure
 
-theorem catalan_irrationalityMeasure_728 :
+theorem catalan_irrationalityMeasure_592 :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(728 : ℝ)) <
+      (b : ℝ) ^ (-(592 : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   sorry
 
