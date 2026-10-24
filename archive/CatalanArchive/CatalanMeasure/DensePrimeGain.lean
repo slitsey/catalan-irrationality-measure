@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.SparsePrimeGain
+public import CatalanArchive.CatalanMeasure.SparsePrimeGain
 @[expose] public section
 namespace CatalanMeasure
 open Real MeasureTheory

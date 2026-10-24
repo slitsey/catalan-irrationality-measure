@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Cert.MarkedResidual
+public import CatalanArchive.CatalanMeasure.Cert.MarkedResidual
 @[expose] public section
 namespace CatalanMeasure.Cert
 open OAI.InternalCatalan Set

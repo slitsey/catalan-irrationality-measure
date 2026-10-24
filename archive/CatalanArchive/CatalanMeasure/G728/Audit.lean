@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.G728.Main
+public import CatalanArchive.CatalanMeasure.G728.Main
 @[expose] public section
 
 /-!

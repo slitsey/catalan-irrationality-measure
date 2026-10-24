@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyOddNormalization
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyOddNormalization
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.paramRawEntryRat_eq_upper_pool_inverse
 #print axioms CatalanMeasure.Parametric.paramUpperInverseCoeff_den_ne_zero

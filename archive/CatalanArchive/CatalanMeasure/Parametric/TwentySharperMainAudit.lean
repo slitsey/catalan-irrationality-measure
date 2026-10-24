@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.Parametric.TwentySharperMain
+public import CatalanArchive.CatalanMeasure.Parametric.TwentySharperMain
 
 #print axioms CatalanMeasure.Parametric.twenty_measure_sharper_eta_lt
 #print axioms CatalanMeasure.Parametric.catalan_irrationalityMeasure_1095

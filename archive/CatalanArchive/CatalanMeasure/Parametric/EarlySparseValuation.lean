@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SparseCombinationRank
+public import CatalanArchive.CatalanMeasure.Parametric.SparseCombinationRank
 public import CatalanArchive.CatalanMeasure.Parametric.BaselineBridge
 @[expose] public section
 namespace CatalanMeasure.Parametric

@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRankContent
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRankContent
 #print axioms CatalanMeasure.Parametric.scaledResidueMatrix_add_integral
 #print axioms CatalanMeasure.Parametric.int_prime_pow_dvd_of_normalized_valuation
 #print axioms CatalanMeasure.Parametric.twentyDenomExp_secondary_flat

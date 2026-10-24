@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.GapMain
-public import CatalanMeasure.Parametric.SecondaryTentMain
-public import CatalanMeasure.Parametric.U3PrimeGrowth
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentMain
+public import CatalanArchive.CatalanMeasure.Parametric.U3PrimeGrowth
 @[expose] public section
 
 /-!

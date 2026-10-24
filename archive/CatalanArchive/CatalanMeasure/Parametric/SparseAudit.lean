@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SparseDeterminantValuation
+public import CatalanArchive.CatalanMeasure.Parametric.SparseDeterminantValuation
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.residue_factorization_valuation_lower
 #print axioms CatalanMeasure.Parametric.chebyshev_T_difference

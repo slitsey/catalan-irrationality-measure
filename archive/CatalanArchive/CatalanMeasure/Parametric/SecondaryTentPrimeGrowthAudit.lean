@@ -1,5 +1,5 @@
 module
-import CatalanMeasure.Parametric.SecondaryTentPrimeGrowthWindow
+import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentPrimeGrowthWindow
 #print axioms CatalanMeasure.Parametric.integral_secondaryTentProfile
 #print axioms CatalanMeasure.Parametric.secondaryTentProfile_weighted_tendsto
 #print axioms CatalanMeasure.Parametric.secondaryTentExponent_rounding

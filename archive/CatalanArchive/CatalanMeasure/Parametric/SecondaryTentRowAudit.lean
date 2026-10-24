@@ -1,7 +1,7 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRowInputInjective
-public import CatalanMeasure.Parametric.SecondaryTentRowFlags
-public import CatalanMeasure.Parametric.SecondaryTentRowDegree
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowInputInjective
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowFlags
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowDegree
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_rowHom_eval₂

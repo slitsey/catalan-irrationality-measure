@@ -1,4 +1,4 @@
 module
-public import CatalanMeasure.Parametric.TwentyGroupedConstants
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyGroupedConstants
 #print axioms CatalanMeasure.Parametric.twenty_grouped_constant_relation
 #print axioms CatalanMeasure.Parametric.twenty_grouped_constant_le

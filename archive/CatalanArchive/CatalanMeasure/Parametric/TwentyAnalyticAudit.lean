@@ -1,10 +1,10 @@
 module
-public import CatalanMeasure.Parametric.TwentyFixedCorrectedFields
-public import CatalanMeasure.Parametric.TwentyRegularization
-public import CatalanMeasure.Parametric.TwentyEndpointBudgets
-public import CatalanMeasure.Parametric.TwentyUniformEnergy
-public import CatalanMeasure.Parametric.TwentyPopulationWeights
-public import CatalanMeasure.Parametric.TwentyWeightedIntegrand
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyFixedCorrectedFields
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyRegularization
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyEndpointBudgets
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyUniformEnergy
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyPopulationWeights
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyWeightedIntegrand
 @[expose] public section
 #print axioms CatalanMeasure.Cert.shiftedRowField_corrected_eventually
 #print axioms CatalanMeasure.Cert.shiftedColumnField_corrected_eventually

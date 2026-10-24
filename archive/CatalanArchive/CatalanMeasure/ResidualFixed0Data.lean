@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Cert.ResidualField
+public import CatalanArchive.CatalanMeasure.Cert.ResidualField
 @[expose] public section
 namespace CatalanMeasure.ResidualFixed0
 open CatalanMeasure.Cert

@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentMain
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentMain
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_source_quotient_actual_response
 #print axioms CatalanMeasure.Parametric.secondaryTent_parameter_actual_bulk_response

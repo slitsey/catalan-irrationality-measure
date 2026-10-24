@@ -1,6 +1,6 @@
 module
 public import CatalanMeasure.Parametric.SecondaryTentFilteredResponse
-public import CatalanMeasure.Parametric.SecondaryTentReconstruction
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentReconstruction
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_constraints_finrank

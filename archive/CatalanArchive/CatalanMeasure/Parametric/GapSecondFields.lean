@@ -1,10 +1,10 @@
 module
-public import CatalanMeasure.Parametric.FlexibleSecondEnergy
+public import CatalanArchive.CatalanMeasure.Parametric.FlexibleSecondEnergy
 public import CatalanMeasure.Parametric.GapBudgets
 public import CatalanMeasure.Parametric.StrongNearField
 public import CatalanArchive.CatalanMeasure.StrongTrial.Norms
 public import CatalanArchive.CatalanMeasure.StrongTrial.First
-public import CatalanMeasure.Cert.MarkedResidual
+public import CatalanArchive.CatalanMeasure.Cert.MarkedResidual
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open OAI.InternalCatalan CatalanMeasure.Cert Set Filter

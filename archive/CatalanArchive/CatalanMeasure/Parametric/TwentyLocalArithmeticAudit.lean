@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.TwentyTwoAdicAudit
-public import CatalanMeasure.Parametric.TwentyOddWeightedLimit
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyOddWeightedLimit
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.twenty_combined_determinant_odd_profile
 #print axioms CatalanMeasure.Parametric.integral_twentyCombinedOddLoss

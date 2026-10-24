@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyDenominatorAsymptotic
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyDenominatorAsymptotic
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.twenty_integer_determinant_valuation
 #print axioms CatalanMeasure.Parametric.twenty_den_dvd_denomBound

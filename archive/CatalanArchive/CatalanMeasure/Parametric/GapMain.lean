@@ -1,7 +1,7 @@
 module
-public import CatalanMeasure.Parametric.GapFinalTransfer
-public import CatalanMeasure.Parametric.GapActualWeights
-public import CatalanMeasure.Parametric.GapFirst
+public import CatalanArchive.CatalanMeasure.Parametric.GapFinalTransfer
+public import CatalanArchive.CatalanMeasure.Parametric.GapActualWeights
+public import CatalanArchive.CatalanMeasure.Parametric.GapFirst
 public import CatalanArchive.CatalanMeasure.Parametric.GapSecondFields
 public import CatalanArchive.CatalanMeasure.StrongTrial.Sup
 @[expose] public section

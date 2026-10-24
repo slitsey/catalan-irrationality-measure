@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.Parametric.TwentyCostMain
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyCostMain
 
 @[expose] public section
 

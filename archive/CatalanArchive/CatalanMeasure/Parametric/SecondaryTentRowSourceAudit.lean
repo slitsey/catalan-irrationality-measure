@@ -1,6 +1,6 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRowSeedPair
-public import CatalanMeasure.Parametric.SecondaryTentRowReflection
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowSeedPair
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowReflection
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_t_junction

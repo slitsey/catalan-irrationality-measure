@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.Parametric.TwentyMarkedIntegrand
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyMarkedIntegrand
 
 #print axioms CatalanMeasure.Parametric.marked_laurent_hadamard
 #print axioms CatalanMeasure.Parametric.twenty_first_marked_product_eventually

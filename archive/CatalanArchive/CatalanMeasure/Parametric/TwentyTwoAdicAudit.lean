@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyTwoAdicValuation
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyTwoAdicValuation
 public import CatalanMeasure.Parametric.OddLogBounds
 @[expose] public section
 namespace CatalanMeasure.Parametric

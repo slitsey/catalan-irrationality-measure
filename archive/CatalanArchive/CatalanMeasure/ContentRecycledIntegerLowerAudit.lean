@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.ContentRecycledIntegerLower
+public import CatalanArchive.CatalanMeasure.ContentRecycledIntegerLower
 
 @[expose] public section
 

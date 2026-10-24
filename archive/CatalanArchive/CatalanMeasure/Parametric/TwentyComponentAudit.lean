@@ -1,11 +1,11 @@
 module
 public import CatalanMeasure.Parametric.TwentyRestrictedWeights
-public import CatalanMeasure.Parametric.TwentySparseValuation
-public import CatalanMeasure.Parametric.TwentyGainPNT
-public import CatalanMeasure.Parametric.TwentyTrialFields
-public import CatalanMeasure.Parametric.TwentyBudgets
-public import CatalanMeasure.Parametric.TwentyResidualTransfer
-public import CatalanMeasure.Parametric.TwentyTwoAdicBudget
+public import CatalanArchive.CatalanMeasure.Parametric.TwentySparseValuation
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyGainPNT
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyTrialFields
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyBudgets
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyResidualTransfer
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyTwoAdicBudget
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.TwentyCircle.twentyCircle_ineq
 #print axioms CatalanMeasure.Parametric.twenty_norm_restricted_filtered_basis_le

@@ -1,6 +1,6 @@
 module
 public import CatalanArchive.CatalanMeasure.StrongTrial.Data
-public import CatalanMeasure.Cert.MarkedResidual
+public import CatalanArchive.CatalanMeasure.Cert.MarkedResidual
 @[expose] public section
 namespace CatalanMeasure.StrongTrial
 open CatalanMeasure.Cert OAI.InternalCatalan

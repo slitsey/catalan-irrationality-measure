@@ -1,6 +1,6 @@
 module
 
-public import CatalanMeasure.Parametric.TwentyContentTransfer
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyContentTransfer
 
 @[expose] public section
 

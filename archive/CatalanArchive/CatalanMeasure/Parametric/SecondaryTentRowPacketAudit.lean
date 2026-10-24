@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRowNaturalPacket
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowNaturalPacket
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_row_natural_P_degree

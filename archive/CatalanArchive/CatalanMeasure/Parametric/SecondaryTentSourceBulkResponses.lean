@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentSourceModularTrace
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentSourceModularTrace
 
 /-! Clean actual-source bulk responses of the five fixed seeds. -/
 @[expose] public section

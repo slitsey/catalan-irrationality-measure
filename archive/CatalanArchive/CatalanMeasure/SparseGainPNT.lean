@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.SparsePrimeGain
+public import CatalanArchive.CatalanMeasure.SparsePrimeGain
 public import OAI.NumberTheory.Catalan.Arithmetic.OddPrimeLossNormalization
 @[expose] public section
 namespace CatalanMeasure

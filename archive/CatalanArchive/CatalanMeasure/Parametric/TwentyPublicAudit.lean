@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.TwentyMain
+public import CatalanArchive.CatalanMeasure.Parametric.TwentyMain
 @[expose] public section
 #print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_spec
 #print axioms CatalanMeasure.Parametric.twentyMeasureIntPoly_nonvanishing

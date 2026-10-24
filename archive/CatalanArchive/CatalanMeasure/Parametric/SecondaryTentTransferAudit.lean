@@ -1,6 +1,6 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentMeasureTransfer
-public import CatalanMeasure.Parametric.SecondaryTentFixedSeeds
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentMeasureTransfer
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentFixedSeeds
 
 #print axioms CatalanMeasure.Parametric.coeff_prime_dvd_of_eval_and_tail
 #print axioms CatalanMeasure.Parametric.coeff_prime_pow_dvd_of_eval_and_tail

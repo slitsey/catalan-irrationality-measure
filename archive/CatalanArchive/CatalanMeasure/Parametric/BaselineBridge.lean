@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SparseDeterminantValuation
+public import CatalanArchive.CatalanMeasure.Parametric.SparseDeterminantValuation
 @[expose] public section
 namespace CatalanMeasure.Parametric
 open Polynomial OAI.InternalCatalan

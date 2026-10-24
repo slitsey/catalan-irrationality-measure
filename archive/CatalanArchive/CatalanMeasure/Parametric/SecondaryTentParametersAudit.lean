@@ -1,7 +1,7 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentParametersGeometry
-public import CatalanMeasure.Parametric.SecondaryTentParametersResponseSupport
-public import CatalanMeasure.Parametric.SecondaryTentParametersFilteredRank
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersGeometry
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersResponseSupport
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersFilteredRank
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_reversed_power_coeff
 #print axioms CatalanMeasure.Parametric.secondaryTent_response_input_coeff

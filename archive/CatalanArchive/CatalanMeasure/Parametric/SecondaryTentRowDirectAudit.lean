@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRowActualCoefficients
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowActualCoefficients
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_row_divisor_dvd

@@ -1,6 +1,6 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentRowSourceRational
-public import CatalanMeasure.Parametric.SecondaryTentParametersNatural
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentRowSourceRational
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentParametersNatural
 @[expose] public section
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_inputs_coefficients_roundtrip

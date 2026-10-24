@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentSourceSectors
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentSourceSectors
 
 /-! Elementary rational coordinates of the actual source substitution. -/
 @[expose] public section

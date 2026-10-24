@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.Parametric.SecondaryTentSourceSymbol
+public import CatalanArchive.CatalanMeasure.Parametric.SecondaryTentSourceSymbol
 
 #print axioms CatalanMeasure.Parametric.secondaryTent_source_sample_coefficient
 #print axioms CatalanMeasure.Parametric.secondaryTent_source_sample_frobenius

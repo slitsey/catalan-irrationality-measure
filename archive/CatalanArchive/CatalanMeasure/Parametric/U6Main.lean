@@ -1,7 +1,7 @@
 module
 public import CatalanArchive.CatalanMeasure.Parametric.U3Main
-public import CatalanMeasure.Parametric.CombinedContent
-public import CatalanMeasure.Parametric.U6PrimeGrowth
+public import CatalanArchive.CatalanMeasure.Parametric.CombinedContent
+public import CatalanArchive.CatalanMeasure.Parametric.U6PrimeGrowth
 @[expose] public section
 
 /-!
