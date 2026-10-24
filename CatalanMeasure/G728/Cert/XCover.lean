@@ -26,7 +26,7 @@ public import CatalanMeasure.G728.Cert.XCells23
 public import CatalanMeasure.G728.Cert.XZ
 public import CatalanMeasure.G728.Cert.XMG
 public import CatalanMeasure.G728.CellSound
-public import CatalanMeasure.G728.Glue
+public import CatalanMeasure.G728.Facts
 @[expose] public section
 namespace CatalanMeasure.G728
 open Set

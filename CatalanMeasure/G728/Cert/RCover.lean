@@ -17,7 +17,7 @@ public import CatalanMeasure.G728.Cert.RCells14
 public import CatalanMeasure.G728.Cert.RZ
 public import CatalanMeasure.G728.Cert.RMG
 public import CatalanMeasure.G728.CellSound
-public import CatalanMeasure.G728.Glue
+public import CatalanMeasure.G728.Facts
 @[expose] public section
 namespace CatalanMeasure.G728
 open Set

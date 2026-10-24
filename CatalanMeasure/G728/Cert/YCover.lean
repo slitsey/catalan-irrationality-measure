@@ -20,7 +20,7 @@ public import CatalanMeasure.G728.Cert.YCells17
 public import CatalanMeasure.G728.Cert.YZ
 public import CatalanMeasure.G728.Cert.YMG
 public import CatalanMeasure.G728.CellSound
-public import CatalanMeasure.G728.Glue
+public import CatalanMeasure.G728.Facts
 @[expose] public section
 namespace CatalanMeasure.G728
 open Set
