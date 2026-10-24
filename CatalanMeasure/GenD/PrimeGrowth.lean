@@ -201,6 +201,22 @@ theorem growth_segExp (l : List Seg)
     (fun s hs => ⟨(hgood s hs).1, (hgood s hs).2.1, (hgood s hs).2.2,
       fun _ _ _ _ h1 h2 => segExp_ge hs h1 h2⟩) hord hT hc
 
+/-! ### Windows given by profiles with closed-form areas -/
+
+/-- Windows `(a, b, f)` carrying a piecewise-linear profile `f`. -/
+def profSegs (l : List (ℝ × ℝ × PL.Prof)) : List Seg :=
+  l.map fun t => ⟨t.1, t.2.1, t.2.2.eval⟩
+
+theorem totalArea_profSegs (l : List (ℝ × ℝ × PL.Prof)) (h : ∀ t ∈ l, t.1 ≤ t.2.1) :
+    totalArea (profSegs l) = (l.map fun t => t.2.2.area t.1 t.2.1).sum := by
+  unfold totalArea profSegs
+  rw [List.map_map]
+  congr 1
+  apply List.map_congr_left
+  intro t ht
+  simp only [Function.comp_apply, Seg.area]
+  exact t.2.2.integral_eval (h t ht)
+
 /-- The logarithm of a content product is the exponent-weighted prime sum. -/
 theorem log_prod_pow (T : Finset ℕ) (hT : ∀ p ∈ T, p.Prime) (e : ℕ → ℕ) :
     Real.log (((∏ p ∈ T, p ^ e p : ℕ) : ℝ)) = ∑ p ∈ T, (e p : ℝ) * Real.log p := by
