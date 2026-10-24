@@ -6,6 +6,8 @@ public import CatalanMeasure.Parametric.FlexibleSecondEnergy
 public import CatalanMeasure.Parametric.FlexibleFirstEnergy
 public import CatalanMeasure.G728.Glue
 public import CatalanMeasure.GenD.Analytic.Glue
+public import CatalanMeasure.GenD.Analytic.GroupedProduct
+public import CatalanMeasure.Parametric.FlexibleGroupedProduct
 public import CatalanMeasure.Parametric.TwentyGroupedPhysicalFields
 public import CatalanMeasure.Parametric.TwentyPhysicalConstants
 public import CatalanMeasure.Parametric.TwentyGroupedConstants
@@ -242,6 +244,26 @@ def secondTrialOfFieldsS_via_generic {target residual cost normCap fieldCap : �
         rw [gC0_twenty, gC1_twenty]
         have h := budget ha ht
         linarith only [h]))
+
+
+theorem groupedProduct_twenty : groupedProduct twenty = groupedPhysicalProduct twenty := rfl
+
+/-- The old `grouped_marked_product_on`, re-derived from the generic `grouped_marked_product`. -/
+theorem grouped_marked_product_on_via_generic {target residual nearCap cost : ℝ} {G : ℝ → Prop}
+    (D : SecondTrialBoundsOn target residual nearCap cost G) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ N : ℕ in atTop, ∀ (r a b : ℕ), r + a + b = twenty.n N →
+      ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
+      (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
+      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, G (x i)) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
+      Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
+      groupedPhysicalProduct twenty N z x y s ≤
+        Real.exp ((20 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          (20 * cost) * N * (a + b)) := by
+  have h := grouped_marked_product twenty_admissible (secondToGen D) hε
+  have h20 : ((twenty.n0 : ℕ) : ℝ) = 20 := by simp [twenty]
+  rw [h20] at h
+  exact h
 
 end
 end Bridge
