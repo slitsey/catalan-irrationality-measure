@@ -19,15 +19,8 @@ open CatalanCore CatalanCore.Rect CatalanCore.Cert.SigmaHybS
 namespace CatalanFrames.Thirds
 
 theorem certS_hybCertData :
-    HybCertData certS (1 / 8) 2 (17024457 / 10 ^ 7) (390557 / 100000) 2 where
-  hα := by norm_num
-  hg := hg_hybS
-  hw0 := fun k => wtH_nonneg k
-  hRc := by norm_num
-  hc := cH_norm
-  hInu := CatalanCore.Cert.SigmaHyb.Inu_le
-  hD := D_le'
-  hcc := by norm_num [certS]
+    HybCertData certS (1 / 8) 2 (17024457 / 10 ^ 7) (390557 / 100000) 2 :=
+  Data.certified
 
 /-- **M8.** Any `DecayOKs' (5/2)` frame with `d = 2`: decay of the common-minor family. -/
 theorem hasDecay_commonMinorFam_certS {Fr : Frame} (hFr : Fr.DecayOKs' (5 / 2 : ℝ))

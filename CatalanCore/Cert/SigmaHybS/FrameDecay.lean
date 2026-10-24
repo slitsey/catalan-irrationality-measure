@@ -1,7 +1,7 @@
 module
 
 public import CatalanCore.Cert.SigmaHybS.Final
-public import CatalanCore.Decay.Rect.DecayTop
+public import CatalanCore.Cert.SigmaHybS.Data
 
 @[expose] public section
 
@@ -21,35 +21,27 @@ open CatalanCore
 
 /-- Legacy frame hypotheses give the slope-`5/2` ones when `δ0 ≥ 1/10` (`1 ≤ 4 · (5/2) · δ0`). -/
 theorem decayOKs_of_legacy {Fr : Frame} (h : Fr.DecayOK') (hδ : (1 : ℚ) / 10 ≤ Fr.δ0) :
-    Fr.DecayOKs' (5 / 2 : ℝ) where
-  contour := h.contour
-  slope := ⟨by norm_num, by norm_num, by
+    Fr.DecayOKs' (5 / 2 : ℝ) :=
+  h.atSlope ⟨by norm_num, by norm_num, by
     have := (Rat.cast_le (K := ℝ)).2 hδ
     push_cast at this
     linarith⟩
-  atomRange := h.atomRange
-  norm_ge := h.norm_ge
 
 /-- The slightly smaller exponent `D = 3.90557` of the certificate (`Dof = 3.9055710002…`). -/
-theorem D_le' : (390557 / 100000 : ℚ) ≤ certS.Dof 2 (1 / 8) (17024457 / 10 ^ 7) := by
-  unfold CatalanCore.Cert.CertCoreGs.Dof certS
-  simp only [SBASE, IBOUNDS, MPRAY, SVAL]
-  norm_num
+theorem D_le' : (390557 / 100000 : ℚ) ≤ certS.Dof 2 (1 / 8) (17024457 / 10 ^ 7) := Data.D_le
 
 /-- **Frame-generic hybrid decay, member 1.** -/
 theorem hybS_decay {Fr : Frame} (hFr : Fr.DecayOKs' (5 / 2 : ℝ)) (hd : Fr.d = 2) :
     HasDecay (hybridFamUp Fr (1 / 8 : ℚ)) (((390557 / 100000 : ℚ)) : ℝ)
       (((18386549 / 2500000 : ℚ)) : ℝ) :=
-  decay_of_certG_rect_slope (sl := (5 / 2 : ℝ)) (Fr := Fr) hFr certS (α := 1 / 8)
-    (by norm_num) hg_hybS (fun k => wtH_nonneg k) (Rc := 2) (by norm_num) cH_norm
-    CatalanCore.Cert.SigmaHyb.Inu_le (by rw [hd]; exact D_le')
+  Data.certified.hybridDecay hFr hd
 
 /-- **Frame-generic hybrid decay, member 2.** -/
 theorem hybS_mem2_decay {Fr : Frame} (hFr : Fr.DecayOKs' (5 / 2 : ℝ)) (hd : Fr.d = 2) :
     Rect.Mem2Decay Fr (((390557 / 100000 : ℚ)) : ℝ) (((18386549 / 2500000 : ℚ)) : ℝ) :=
-  mem2Decay_of_certG_rect_slope (sl := (5 / 2 : ℝ)) (Fr := Fr) hFr certS hg_hybS
-    (fun k => wtH_nonneg k) (Rc := 2) (by norm_num) cH_norm
-    CatalanCore.Cert.SigmaHyb.Inu_le (by rw [hd]; exact D_le') (by norm_num [certS])
+  mem2Decay_of_certG_rect_slope hFr certS Data.certified.hg
+    Data.certified.hw0 Data.certified.hRc Data.certified.hc
+    Data.certified.hInu (by rw [hd]; exact Data.certified.hD) Data.certified.hcc
 
 #print axioms hybS_decay
 #print axioms hybS_mem2_decay
