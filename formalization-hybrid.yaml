@@ -3,14 +3,15 @@
 version: "v0.4"
 
 project:
-  name: "Irrationality measures for G - 5 pi^2/48, G + 5 pi^2/48 and L(2, chi_{-3}) (hybrid frames)"
+  name: "Irrationality measures for G - 5 pi^2/48, G + 5 pi^2/48 and L(2, chi_{-3})"
   description: >-
     For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 32.44
     and mu(G + 5 pi^2/48) <= 32.44, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
     we prove mu(L(2, chi_{-3})) <= 14.35: for every e > 0, all large q and all p coprime to q,
-    |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
-    frames of the modular engine CatalanCore, characteristic-zero and ell-adic nonvanishing
-    argument, Cauchy-determinant decay and kernel-checked rational certificates.
+    |x - p/q| > q^(-(E+e)). The proofs use rectangular, bordered Loewner matrices of digamma
+    differences (library CatalanCore), nonvanishing modulo a prime and by characteristic-zero
+    selection, decay from Cauchy determinants and Andreief's identity, and kernel-checked
+    rational certificates.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -76,10 +77,11 @@ automation:
       models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
       framework: "Claude Code desktop with native Windows shell and file tools, coordinating subagents"
       tool_setup: >-
-        Claude agents produced the mathematics and the Lean development: the hybrid frames, content
+        Claude agents produced the mathematics and the Lean development: the rectangular frames, content
         bounds and rank deficits, nonvanishing, the second-level deficit at non-clean primes with its
-        weighted congruence, the slope-parametrised decay engine and the dual-guided slope-5/2 certificate
-        (decide +kernel, no native_decide), using Python, Lean 4, Lake and Mathlib. The human author posed
+        weighted congruence, the decay estimate with the slope of the contour rays as a parameter, and
+        the certificate with atoms on the support of an extremal dual measure (decide +kernel, no
+        native_decide), using Python, Lean 4, Lake and Mathlib. The human author posed
         the problem, directed the work and checked the outcome.
     - method: agent
       models: ["OpenAI Codex"]
@@ -92,7 +94,7 @@ automation:
         D1 strips, and the kernel-checked 1600-atom analytic witness for L(2, chi_{-3}), with their
         generic Lean modules and export checks.
   notes: >-
-    The shared modular engine (CatalanCore) and certificate tooling are described in
+    The shared library CatalanCore and the certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.
 
 acknowledgements: >-

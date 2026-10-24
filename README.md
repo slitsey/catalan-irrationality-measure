@@ -1,220 +1,109 @@
-# An irrationality measure for Catalan's constant
+# Irrationality measures for Catalan's constant and related constants
 
-A Lean 4 formalization of the following theorem.
+A Lean 4 formalization of four irrationality measures. Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be
+Catalan's constant and `L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)`.
 
-> **Theorem.** Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be Catalan's constant. For every integer
-> `a` and every sufficiently large integer `b`,
+> **Theorem.**
 >
-> `|G - a/b| > b^(-740)`.
->
-> So the irrationality exponent of `G` is at most `740`. Denominator asymptotics,
-> coefficient content and final prime selection use the prime number theorem.
+> - μ(G) ≤ 728;
+> - μ(G − 5π²/48) ≤ 32.44;
+> - μ(G + 5π²/48) ≤ 32.44;
+> - μ(L(2, χ₋₃)) ≤ 14.35.
 
-The proof builds on [OpenAI's proof](https://github.com/openai/math) that `G` is irrational and
-on its Lean formalization. The companion paper, S. Litsey, *An irrationality measure for
-Catalan's constant* (2026), has revised LaTeX source and PDF in [`paper/`](paper/). The earlier 8127 version was
-Hexagon preprint `hexagon:2610.00187v1`; this repository update does not upload a new preprint version. R. K. Jha proved earlier, independently, the weaker bound
-`μ(G) ≤ 10^8` ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
-Related work by M. C. S. Carreira reports `μ(G) < 2715` using another determinant design
-([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)); the paper now compares it.
+For `G` this means `|G − a/b| > b^(-728)` for every integer `a` and every sufficiently large
+integer `b`. For the other three constants `x` with exponent `E` it means: for every `e > 0`,
+`|x − p/q| > q^(-(E+e))` for all large `q` and all `p` coprime to `q`.
 
-## Companion result: G ± 5π²/48 and L(2, χ₋₃)
+All four proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
+`Classical.choice`.
 
-The repository also contains a second, fully formalized result:
+## Papers
 
-- μ(G − 5π²/48) ≤ 32.44;
-- μ(G + 5π²/48) ≤ 32.44;
-- μ(L(2, χ₋₃)) ≤ 14.35.
+- S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX source and PDF in
+  [`paper/`](paper/) (`catalan-measure-hexagon.tex` is the single-file version), Hexagon preprint
+  `hexagon:2610.00187`.
+- S. Litsey, *Irrationality measures for G ± 5π²/48 and L(2, χ₋₃)* (2026): LaTeX source and PDF in
+  [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file version),
+  Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
 
-The previous best measure for L(2, χ₋₃) was 24781 (Calegari–Dimitrov–Tang, arXiv:2510.04156, Theorem 5.1).
-
-- Statements: [`ChallengeHybrid.lean`](ChallengeHybrid.lean) (Mathlib only).
-- Proofs: [`SolutionHybrid.lean`](SolutionHybrid.lean), built on the libraries `CatalanCore/` and `CatalanFrames/`.
-- Axioms are `propext`, `Quot.sound` and `Classical.choice`. Configuration: [`comparator-hybrid.json`](comparator-hybrid.json) and [`formalization-hybrid.yaml`](formalization-hybrid.yaml).
-- The 32.44 bounds add a next-level Smith deficit at non-clean primes (a weighted Cauchy-type congruence on overfull long cells) and a decay certificate with contour rays of slope 5/2, ρ = 1/4096 and dual-guided atoms (D ≥ 3.90557, c ≤ 7.3546). Lean theorems: `lam_hybrid_measure_3244` and `mir_hybrid_measure_3244`. The content constant is Λ ≤ 2015079667893797/547747200000000 < 3.67885. The earlier 34.74 improvements reuse the existing decay and nonvanishing proofs. A generic monic rescaling, translated-chain cancellation, weighted border, and kernel-checked 61-row prime profile improve the content constant to 3.68274.
-- The 14.35 improvement uses the same characteristic-zero selector, at most one common-node deletion and a quarter border. Sixteen periodic D1 strips give Λ = 339258406689121/82516315939200. A kernel-checked 1600-atom witness, with positive-real support and redistributed ray nodes, gives D ≥ 4.633628 and c = 7.49256; c/(D − Λ) is approximately 14.347571379. Shared content, selection and decay interfaces are reused. The exact witness and budget are in [`paper-lambda/certificates/`](paper-lambda/certificates/).
-- Paper: Hexagon preprint [`hexagon:2610.00401v1`](https://hexagonmath.org/2610.00401v1); PDF and source in [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file upload version). The LaTeX sources were updated on October 23, 2026 and state the 32.44 and 14.35 bounds in the abstract, main theorem and detailed argument. They are prepared as v2 of `hexagon:2610.00401`, which is not yet uploaded.
-- Older square-frame results are archived under `archive/CatalanArchive/` (built per module; configs in `archive/legacy-configs/`).
+The proofs build on OpenAI's proof that `G` is irrational and on its Lean formalization
+([openai/math](https://github.com/openai/math); preprint dated September 24, 2026, released
+October 6, 2026). Other bounds in the literature:
+- R. K. Jha proved `μ(G) ≤ 10^8` independently ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
+- M. C. S. Carreira reports `μ(G) < 2715` with another determinant design ([doi:10.5281/zenodo.23326325](https://doi.org/10.5281/zenodo.23326325)).
+- For `L(2, χ₋₃)`, Calegari, Dimitrov and Tang give 24781 (arXiv:2510.04156, Theorem 5.1).
 
 ## What to read
 
-- [`Challenge.lean`](Challenge.lean) states the strongest bound using Mathlib only, with Catalan's
-  constant written out as a series. This is the whole trusted statement surface.
-- [`Solution.lean`](Solution.lean) proves them from the development.
-- [`comparator.json`](comparator.json) tells `lake comparator` to check that `Solution` proves
-  exactly the statements of `Challenge`, using only `propext`, `Quot.sound` and
-  `Classical.choice`.
-- [`formalization.yaml`](formalization.yaml) records provenance, authorship, automation and
-  scope.
-
-The current `740` / `2220` bounds add a sixth coefficient-content window (Lemma U6) to the
-`759` / `2276` development. For `N >= 1` and every prime `p` with `4N < p` and `2p < 9N`,
-the rank of the reduced scaled base matrix is at most `20N - (p - 4N - 1)/2`
-(`CatalanMeasure.Parametric.u6_canonical_rank`). The proof is column-side rather than
-row-side. Put `d = p - 4N` (odd, with `2d < N`). Identity K6,
-`2 X W S_c - (2 - X^(2p)) U_c = 0 (mod X^(24N))` for every row combination `c` (from the
-integer identity `U_{m-1} T_n - T_m U_{n-1} = U_{m-n-1}` with `m = 2p`, together with
-`T_p = X^p` and `U_{p-1} = (X^2-1)^((p-1)/2)` in characteristic `p`), lets every filtered
-column of a block of `5d` columns be written as a constant combination of the digits
-`(X-1)^N X W (1-X)^N S_c` at positions `u p + mu`, `u = 2..6`. The Frobenius law
-`(1-X)^e Q = (1-X^p) Y`, `e = (d+1)/2`, makes `(d-1)/2` of these digits redundant by a
-telescoping class-sum identity. Constraining the `20N - 5d` remaining columns and the other
-`4d + e` digits therefore costs `20N - (d-1)/2` conditions, which forces the whole block to
-vanish. For `4N < p < 9N/2` the canonical normalizer already has `p`-exponent `40N`, so the
-content exponent is `(p - 4N - 1)/2` (a profile `(x-4)/2` of area `1/16` on `[4, 9/2]`) and
-adds `624/10000` to the gap: `eta = 505079/200000`, `rho = 519037/5000`,
-`kappa = 3700000/519037`, `rho * kappa = 740`; the limiting exponent is
-`373706640/505079 = 739.897...` and the Chebyshev exponent `1121119920/505079 = 2219.69...`.
-The derivation and formalization of Lemma U6 are due to Claude (Anthropic) working with
-Sean Litsey.
-
-The `759` / `2276` bounds add one earlier coefficient-content lemma (Lemma U3) to the
-`878` / `2632` development below. For `N >= 1` and every prime `p` with `8N < p < 9N`, the
-nullity of the reduced scaled base matrix is at least `18N - 2p - 1`
-(`CatalanMeasure.Parametric.u3_canonical_rank`). The proof restricts to the flag subspace
-`{c : (1-X^2)^((p+1)/2) | P_c}` (`p + 1 - N` linear conditions), proves identity K
-`D_c = Q~_c` below degree `24N` from the Chebyshev Frobenius reflection identity
-`T_{p-m} = X^p T_m - (X^2-1)^((p+1)/2) U_{m-1}` in characteristic `p`, shows that the raw
-columns in the residue window `27N-3p <= l < 24N-2p` have rank at most one, and counts
-`2p + 2N + 1` conditions in total. The resulting content exponent
-`min(p-8N-1, 18N-2p-1)^+` over the primes in `(8N, 9N)` (a tent of area `1/3`) adds
-`3331/10000` to the gap: `eta = 492599/200000`, `rho = 519037/5000`,
-`kappa = 3795000/519037`, `rho * kappa = 759`; the limiting exponent is
-`373706640/492599 = 758.64...` and the Chebyshev exponent `1121119920/492599 = 2275.93...`.
-The derivation of Lemma U3 is due to Claude (Anthropic) working with Sean Litsey.
-
-The `878` / `2632` development retains the admissible tuple `(20,3,1,2,1)`, degree `18N`,
-the actual denominator estimates, secondary content tent and coefficientwise
-recycling. Exact supplied first40/second160 trials give target `2.2563367`.
-Central-gap interpolation with physical gap `401/2500` and transformed gap
-`2005000/6410801` gives residual cap `-0.0524` on the marked domain; its
-global near-field cap is `-0.75`. The first and second marked row costs are
-`84.2Nm` and `85.8944Nm`. An actual 55-piece circle proof gives joint
-coefficient-functional weight exponent `17.913`. Thus `rho = 519037/5000`
-and the content-adjusted gap is `eta = 425979/200000`. The limiting recycled
-exponent is `41522960/47331 < 878`; Chebyshev final selection gives
-`41522960/15777 < 2632`.
-
-All numerical bounds are ordinary kernel-checked rational certificates.
-A generic Descartes root budget and disjoint-bracket exhaustion use five
-coarse counts and 241 opposite-sign brackets to cover the X/Y critical
-points. Field values and the restricted residual intervals are separately
-checked. The immutable trial inputs and hashes are recorded in
-[`scripts/certgen/gap878/`](scripts/certgen/gap878/); the authoritative
-proof data are the Lean source literals.
-
-The retained 955/2864 checkpoint uses the admissible determinant tuple `(20,3,1,2,1)`:
-the matrix has `20N` rows and its polynomial has degree at most `18N`. Actual
-physical column-pool valuations and sparse residue relations give odd-prime
-cost `8795/4800`; the actual two-adic smoothing/minor proof gives
-`(21/200) log 2`. Four exact field certificates and a separate treatment of free
-and fixed populations prove dual target `U = 2.256085`. Full-interval
-quadrature, genuine P-only marked atoms and grouped sheet estimates yield
-perturbation exponent `rho = 538/5`, including the critical-radius binomial
-factor. The new coefficient theorem proves `q^(2j) | coeff_j Q_N` for
-`N < q <= 2N`. Recycling all later bad-prime squares while choosing the
-largest good prime gives 1091 after retaining the already certified gap
-`eta = 1.7755` and sharpening the existing first-population quadratic.
-Its row cost is now `89.6Nm`; the joint atom weights add `18Nm`.
-A further explicit full-row residue construction gives nullity at least
-`max(0,min(floor((9p-52N)/2),floor((44N-7p)/2)))`. Its compatible extra
-coefficient content has logarithmic rate `16/63` and preserves coefficient
-recycling. Using rate `507/2000` raises the available gap to `2.029`, giving
-the retained **955** theorem. Its literal raw-source, row support, injectivity,
-constraint dimension, coefficient-content and PNT bridges all pass the main kernel.
-`TwentyCostMain` retains the earlier 1091 result.
-The earlier 1095 theorem with radius 108, the 1099 theorem with `eta = 1.77`, and the
-1281/3662 checkpoint, remain in their original verified modules.
-
-The 740/2220, 759/2276, 878/2632 and retained 955/2864 bounds pass Lean's main kernel and standard-axiom audits. Independent-kernel
-and comparator acceptance remain pending; CI optimization is deferred. The earlier
-48-row construction and its 1981/5391 result remain as verified historical modules.
-
-## Structure of the proof
-
-| Directory or file | Content |
+| File | Content |
 |---|---|
-| `CatalanMeasure/Parametric/U6Main.lean`, `U6Audit.lean` | current unconditional 740 / 2220 endpoints |
-| `CatalanMeasure/Parametric/U6Chebyshev.lean`, `U6Identity.lean`, `U6Block.lean`, `U6Digits.lean`, `U6Rank.lean` | Lemma U6: doubled Chebyshev identity, identity K6, Frobenius class-sum law, block column responses and canonical rank bound |
-| `CatalanMeasure/Parametric/U6Content.lean`, `U6PrimeGrowth.lean` | rank to coefficient content for `4N < p < 9N/2` and the area-`1/16` prime sum |
-| `CatalanMeasure/Parametric/U3Main.lean`, `U3Audit.lean` | retained unconditional 759 / 2276 endpoints |
-| `CatalanMeasure/Parametric/U3ChebyshevFrobenius.lean`, `U3RowIdentity.lean`, `U3Combination.lean`, `U3Digits.lean`, `U3Rank.lean` | Lemma U3: Frobenius reflection identity, identity K, flag subspace, digit response and canonical rank bound |
-| `CatalanMeasure/Parametric/U3Content.lean`, `U3PrimeGrowth.lean` | nullity to coefficient content for `8N < p < 9N` and the area-`1/3` prime sum |
-| `CatalanMeasure/Parametric/GapMain.lean`, `GapFinalTransfer.lean` | retained unconditional 878 / 2632 endpoints |
-| `CatalanMeasure/FirstStrongTrial/`, `StrongTrial/` | supplied trial norms, field values and root-coverage certificates |
-| `CatalanMeasure/Parametric/GapNodal.lean`, `GapQuadrature.lean`, `GapAtomCost.lean` | exact gap nodes, marked support and coefficient selection |
-| `CatalanMeasure/GapCircle/`, `Parametric/GapActualWeights.lean` | actual circle and coefficient-functional weights |
-| `CatalanMeasure/Cert/DescartesBudget.lean`, `RootBracket.lean`, `IntegerHorner.lean`, `RootBudgetCover.lean` | ordinary-kernel root counts, bracket signs and coverage |
-| `CatalanMeasure/Parametric/SecondaryTentMain.lean`, `SecondaryTentMeasureTransfer.lean` | retained 955 bound from the uniform secondary coefficient-content tent |
-| `CatalanMeasure/Parametric/SecondaryTentChebyshev.lean` | alternate final-selection criterion: exact exponent `5810400/2029 < 2864`, retaining PNT-backed denominator and content estimates |
-| `CatalanMeasure/Parametric/SecondaryTentParameters*.lean`, `SecondaryTentRow*.lean`, `SecondaryTentSource*.lean` | concrete full-row construction, exact source compatibility, flags, injection and filtered rank. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\SecondaryTentParametersAudit.lean`, `Parametric\SecondaryTentRowAudit.lean`, `Parametric\SecondaryTentRowDirectAudit.lean`, `Parametric\SecondaryTentRowPacketAudit.lean`, `Parametric\SecondaryTentRowRationalAudit.lean`, `Parametric\SecondaryTentRowSourceAudit.lean`, `Parametric\SecondaryTentSourceAudit.lean`, `Parametric\SecondaryTentSourceBridgeAudit.lean`, `Parametric\SecondaryTentSourceBulkResponses.lean`, `Parametric\SecondaryTentSourceGeometry.lean`. |
-| `CatalanMeasure/Parametric/TwentyCostMain.lean`, `TwentyFirstCost.lean`, `TwentyAtomCost.lean`, `TwentyCostPerturbation.lean` | retained 1091 bound with cost-parametric marked-atom estimates and the sharper certified gap |
-| `CatalanMeasure/Parametric/TwentySharperMain.lean`, `TwentyRecycledMain.lean` | retained 1095 and 1099 bounds combining full-interval perturbation and coefficient recycling |
-| `CatalanMeasure/Parametric/TwentyMain.lean`, `TwentyIntegerPolynomial.lean` | retained 1281/3662 bounds, integer polynomial of degree at most 18N and prime-index nonvanishing |
-| `CatalanMeasure/Parametric/TwentyCoefficientDivisibility.lean`, `CatalanMeasure/RecycledIntegerLower.lean`, `RecycledPNTWindow.lean` | coefficientwise prime-square divisibility, strengthened integer lower bound, largest-good-prime criterion |
-| `CatalanMeasure/Parametric/MarkedSheet*.lean`, `TwentyMarked*.lean`, `TwentyFullAtomDeterminants.lean`, `TwentyFullPerturbation.lean`, `CatalanMeasure/MixedArbitraryAtoms.lean` | original P-only full-interval atoms, marked Hadamard and grouped estimates, atomless mixed integration, exp(-108N) perturbation. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\MarkedSheetExpansionAudit.lean`, `Parametric\TwentyMarkedIntegrandAudit.lean`. |
-| `CatalanMeasure/Parametric/TwentyDenominators.lean`, `TwentyDenominatorAsymptotic.lean`, `TwentyTwoAdic*.lean`, `TwentyCombinedOddLoss.lean` | actual determinant valuations, exact integrated odd-prime cost, common denominator and PNT growth. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\TwentyTwoAdicAudit.lean`. |
-| `CatalanMeasure/TwentyTrial/`, `Parametric/TwentyUniformEnergy.lean`, `TwentyWeightedIntegrand.lean` | four kernel-checked endpoint trials and uniform free/fixed population estimates |
-| `CatalanMeasure/JointDetExpansion.lean`, `WeightedMixedAndreief.lean`, `Parametric/TwentyPerturbation.lean` | joint atom weights, actual determinant integration and perturbation on exp(-120N) disks |
-| `CatalanMeasure/DeltaPoly.lean`, `Degree.lean` | OpenAI's determinant as a polynomial `Δ_N(X)` in the constant; `deg Δ_N ≤ 44N` |
-| `CatalanMeasure/Denominators.lean`, `IntegerValued.lean`, `Integrality.lean` | a common denominator `D_N` for `Δ_N` at integers, with `log D_N ≤ (A + ε) n²`; integer-valued polynomials; `Q_N = (44N)! D_N Δ_N ∈ ℤ[X]` |
-| `CatalanMeasure/Nonvanishing.lean` | `Δ_p(a/b) ≠ 0` for large primes `p ∤ b` |
-| `CatalanMeasure/PrimeWindow.lean`, `Criterion.lean`, `PNTWindow.lean`, `Main.lean` | the irrationality-measure criterion, with Chebyshev and prime-number-theorem prime windows |
-| `CatalanMeasure/Quadrature.lean`, `ChebyshevNodes.lean` | quadrature formula for the coefficient of the constant, at the roots of `T_J` moved to `[-1, 0]` |
-| `CatalanMeasure/QuadCircle.lean` | the quadrature weights bounded through the unit circle: `|β| ≤ 8 J² K^N` with `K = 95 · 10^46` |
-| `CatalanMeasure/DetExpansion.lean` | column expansion of `det(A + δΦβ)` |
-| `CatalanMeasure/MixedAndreief.lean` | Andréief's identity with fixed point columns |
-| `CatalanMeasure/GenVandermonde.lean`, `GenVandermondeSharp.lean` | `|det[s_l^{E_i}]| ≤ 2^{p(n-p)} |V(s)|` for nodes in `[0, 1]` |
-| `CatalanMeasure/PinMajorant.lean`, `PinDampedDual.lean`, `PinSupDual.lean` | pointwise bound for the mixed integrands; OpenAI's energy dual for `p ≤ n` points |
-| `CatalanMeasure/Cert/` | general lemmas for kernel-checked bounds on the energy trial fields: computable polynomials, root exclusion (Descartes), logarithm approximations, field values, derivatives, closed-form norms |
-| `CatalanMeasure/Dual/`, `CatalanMeasure/DualTwo.lean` | a new certificate for the second case of OpenAI's energy dual (generated data and kernel checks): real-place constant `U = 2.29180925 - (log 2)/2` |
-| `archive/CatalanArchive/CatalanMeasure/SharpBarrier.lean` | OpenAI's own certificate read to seven digits (`U = 2.2910468 - (log 2)/2`); not needed for the final theorems |
-| `CatalanMeasure/Lemma6.lean` | the original perturbation estimate with `ρ = 404.25`, and the historical 8127/23168 bounds |
-| `CatalanMeasure/VandermondeProduct.lean`, `WeightedMajorant.lean` | retain `∏(1+s)` in the mixed determinant bound |
-| `CatalanMeasure/WeightedEnergy.lean`, `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo/` | two fixed weighted endpoint certificates and their quadratic mass bound. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `WeightedBounds.lean`, `WeightedCaseOne.lean`, `WeightedDualTwo\AQ.lean`, `WeightedDualTwo\ChecksX0.lean`, `WeightedDualTwo\ChecksX1.lean`, `WeightedDualTwo\ChecksX2.lean`, `WeightedDualTwo\ChecksX3.lean`, `WeightedDualTwo\ChecksX4.lean`, `WeightedDualTwo\ChecksX5.lean`, `WeightedDualTwo\ChecksX6.lean`, `WeightedDualTwo\ChecksX7.lean`, `WeightedDualTwo\ChecksX8.lean`, `WeightedDualTwo\ChecksY0.lean`, `WeightedDualTwo\ChecksY1.lean`, `WeightedDualTwo\ChecksY2.lean`, `WeightedDualTwo\ChecksY3.lean`, `WeightedDualTwo\ChecksY4.lean`, `WeightedDualTwo\ChecksY5.lean`, `WeightedDualTwo\Data.lean`, `WeightedDualTwo\IntegerData.lean`, `WeightedDualTwo\Norms.lean`, `WeightedDualTwo\Sup.lean`. |
-| `archive/CatalanArchive/CatalanMeasure/WeightedLemma6.lean` | perturbation with `ρ = 392.5`, and the 7891/22494 bounds |
-| `archive/CatalanArchive/CatalanMeasure/FixedNodes.lean`, `FixedNodeMajorant.lean`, `FixedNodeLemma6.lean` | retain the fixed-node decay by a quartic inequality; perturbation with `ρ = 370.4`, yielding 7447/21228 |
-| `archive/CatalanArchive/CatalanMeasure/SeparateFixedNodes.lean`, `SeparateFixedMajorant.lean`, `SeparateBounds.lean`, `SeparateLemma6.lean` | separate the two fixed-node caps, sharpen the quadratic case-one margin; perturbation with `ρ = 366.3`, yielding the historical 7364/20993 checkpoint |
-| `CatalanMeasure/SquareNonvanishing.lean`, `SquarePNTWindow.lean`, `SquareMain.lean` | nonvanishing when p² does not divide the denominator; halves the PNT prime-window surcharge, yielding 7181/20993. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `SquareMain.lean`. |
-| `CatalanMeasure/Parametric/Sparse*.lean`, `ChebyshevPrime.lean`, `FiveSourceElimination.lean` | uniform sparse prime-row dependencies and determinant valuation savings; the earlier proposed-parameter experiments remain separate from the selected twenty-row proof. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric\SparseAudit.lean`. |
-| `CatalanMeasure/SparsePrimeGain.lean`, `SparseGainPNT.lean`, `SparseDenominators.lean`, `SparseDenominatorGrowth.lean`, `SparseMain.lean` | exact gain integral, improved common denominator, and the historical 2742/7675 bounds. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `SparseDenominatorGrowth.lean`, `SparseDenominators.lean`, `SparseGainPNT.lean`, `SparseMain.lean`. |
-| `CatalanMeasure/Parametric/EarlySparseValuation.lean`, `ResidueRank.lean`, `SparseCombinationRank.lean` | actual residue rank and early-window determinant saving, with explicit injective row-combination maps. Archived (under `archive/CatalanArchive/CatalanMeasure/`): `Parametric/EarlySparseValuation.lean`. |
-| `archive/CatalanArchive/CatalanMeasure/DensePrimeGain.lean`, `DenseGainPNT.lean`, `DenseDenominators.lean`, `DenseDenominatorGrowth.lean`, `DenseMain.lean` | gain integral 20/3, denominator saving 5/1728, and the 1981/5391 bounds |
-| `OAI/` | the parts of OpenAI's formalization that are used (vendored; see below) |
-| `PrimeNumberTheoremAnd/` | the files OpenAI adds to PrimeNumberTheoremAnd (vendored; see below) |
+| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean) | the four statements, using Mathlib only, with the constants written as series. This is the whole trusted statement surface |
+| [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean) | their proofs |
+| [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json) | configurations for `lake comparator`, stating that each `Solution` proves exactly the statements of its `Challenge` with the three permitted axioms. Comparator has not yet been run on them (it requires Linux); the axiom check was done with `#print axioms` |
+| [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml) | provenance, authorship, automation and scope |
 
-## Archive
+## The bound for G
 
-The Lean files for the historical theorems (the earlier bounds such as 1981/5391, 2742/7675
-and 7181/20993, and their audits and certificates), which the current published bounds no longer
-import, now live under `archive/CatalanArchive/CatalanMeasure/`. They are not part of the default
-build, but remain buildable with
+OpenAI's construction is used with a determinant of size `20N`, whose value is a polynomial of
+degree at most `18N` in the constant. A Gauss-type quadrature formula and an Andréief identity with
+fixed points bound this polynomial on an interval of length `exp(−ρN)` around `G`, with
+`ρ = 259299/2500`. Rank deficiencies of the reduced matrix modulo the primes in `(52N/9, 44N/7)`,
+`(8N, 9N)` and `(4N, 9N/2)`, proved with Chebyshev identities in characteristic `p`, make every
+coefficient divisible by a common factor of logarithm at least `0.649 N²`. Prime squares in the
+denominator of a rational approximation are recovered from the coefficients, and the largest
+admissible prime is chosen. The energy estimate uses trial sequences with 640 Chebyshev
+coefficients and 56 geometric terms, 22 of them complex: logarithmic potentials of point charges
+placed near the edges of the support of the extremal measure. Their fields are bounded on cells with
+an exact local Taylor expansion. The margin is `η = 64169/25000`, and the limiting exponent is
+`18ρ/η = 46673820/64169 = 727.357…`.
 
-```text
-lake build Archive
-```
+The Lean development is in `CatalanMeasure/G728/` (cells, norms, budgets, final assembly) and
+`CatalanMeasure/Parametric/` (the determinant of size `20N`, rank deficiencies, divisibility of the
+coefficients and the choice of the prime).
 
-The archived modules are named `CatalanArchive.CatalanMeasure.*` (Lake cannot share the
-`CatalanMeasure` namespace between two source directories, and Mathlib owns the `Archive.*` prefix); their declarations keep their
-original names. The main tree never imports the archive.
+## The bounds for G ± 5π²/48 and L(2, χ₋₃)
+
+These proofs use rectangular Löwner matrices of digamma differences, in the libraries `CatalanCore/`
+and `CatalanFrames/`, with nonvanishing proved modulo a prime or by characteristic-zero selection,
+and decay proved with Cauchy determinants and Andréief's identity.
+
+- **G ± 5π²/48 (32.44).** The content constant is bounded by `p`-adic assignment problems, rank
+  deficits modulo `p`, a uniform rescaled-core deficit and a second-level deficit at primes where
+  the leading block is not clean: `Λ ≤ 2015079667893797/547747200000000 < 3.67885`. The decay
+  certificate has contour rays of slope 5/2, `ρ = 1/4096` and atoms placed on the support of an
+  extremal dual measure (`D ≥ 3.90557`, `c ≤ 7.3546`). Lean theorems: `lam_hybrid_measure_3244`,
+  `mir_hybrid_measure_3244`.
+- **L(2, χ₋₃) (14.35).** Characteristic-zero selection with at most one common-node deletion
+  allows a quarter border. With the saving at small primes, the content constant is
+  `Λ = 339258406689121/82516315939200`. A kernel-checked certificate with 1600 atoms gives
+  `D ≥ 4.633628` and `c = 7.49256`, so `c/(D − Λ) = 14.3475713…`. Lean theorem:
+  `chi3_hybrid_measure_1435`. The exact certificate data are in
+  [`paper-lambda/certificates/`](paper-lambda/certificates/).
+
+## Kernel-checked certificates
+
+All numerical bounds are ordinary kernel-checked rational and integer certificates
+(`decide +kernel`; no `native_decide`). Large certificates are split into many small declarations
+with explicit intermediate values, chained by general lemmas. Integer recurrences whose values are
+divisible by large powers of 2 (the Clenshaw and Chebyshev recurrences in
+`CatalanMeasure/G728/ZNorm.lean` and `MGNorm.lean`) are checked on the quotients by those powers,
+with one lemma relating the two. The generators are in [`scripts/`](scripts/); the authoritative
+proof data are the Lean source literals.
 
 ## Vendored code
 
-Palomar requires Lean v4.35.0-rc2 or later, and every file a submission imports must use Lean's
-module system. OpenAI's repository is pinned to Lean v4.34.1 and does not use modules, so it
-cannot be imported directly. The 478 original files of OpenAI's formalization vendored for this development (from
-commit `fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb` of
+Palomar requires Lean v4.35.0-rc2 or later, and every imported file must use Lean's module
+system. OpenAI's repository is pinned to Lean v4.34.1 and does not use modules, so the 479 files of
+OpenAI's formalization used here (from commit `fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb` of
 [openai/math](https://github.com/openai/math)) and the 10 files that OpenAI adds to
-PrimeNumberTheoremAnd are therefore copied here. Each was converted mechanically to a module (a
-`module` header, `public import`s, `@[expose] public section`) and adjusted where needed for
-the newer Lean and Mathlib (see [`PORTING.md`](PORTING.md)). In 37 point-evaluation files of
-OpenAI's second-barrier certificate the comparison constants were sharpened from five to seven
-digits (the computations themselves are unchanged; see `NOTICE` and `archive/CatalanArchive/CatalanMeasure/SharpBarrier.lean`).
-The generic determinant lemmas were subsequently moved without mathematical changes to
-`RealDeterminantCore.lean`, bringing the OAI directory to 479 files. Generic denominator lemmas
-were copied into `CatalanMeasure/Cert/DenominatorBounds.lean` to avoid importing the superseded
-second-case certificate into the main proof. Otherwise their mathematical content is unchanged. Licences and attributions are in [`NOTICE`](NOTICE); all of this code is under the
-Apache License 2.0.
+PrimeNumberTheoremAnd are copied into `OAI/` and `PrimeNumberTheoremAnd/`. Each was converted to a
+module and adjusted for the newer Lean and Mathlib (see [`PORTING.md`](PORTING.md)). In 37
+point-evaluation files of OpenAI's certificate the comparison constants are given to seven digits
+(the computations are unchanged; see `NOTICE`). Licences and attributions are in
+[`NOTICE`](NOTICE); all of this code is under the Apache License 2.0.
+
+The directory `archive/` holds Lean modules that the four theorems do not import. It is not part of
+the default build and is not used by any proof above.
 
 ## Building and checking
 
@@ -223,33 +112,43 @@ You need [elan](https://github.com/leanprover/elan) and several GiB of free disk
 ```text
 lake exe cache get
 python3 scripts/check-lean-sources.py
-lake build            # default targets; `lake build Archive` builds the historical theorems
+lake build
 ruby scripts/validate-formalization.rb
 ./scripts/verify-comparator.sh
 ```
 
-The exact numerical checks are resource-intensive and can use several GiB per Lean process;
-use a small worker count (for example `LEAN_NUM_THREADS=2`) on memory-constrained machines.
-Independent-kernel replay can take substantially longer than compilation; the CI diagnostic
-workflow records its timings. The generator for these files is in
-[`scripts/certgen/`](scripts/certgen/). The comparator script needs Linux and `bwrap` (bubblewrap).
+The numerical checks can use several GiB per Lean process; use a small worker count (for example
+`LEAN_NUM_THREADS=2`) on memory-constrained machines. The comparator script needs Linux and `bwrap`
+(bubblewrap).
 
 ## Authorship and use of AI
 
-The original mathematics, Lean development, module conversion and companion paper were
-produced by Claude Opus 5.5 (Anthropic) at the request of Sean Litsey. The weighted Vandermonde
-refinement, endpoint certificates, separate fixed-node decay inequalities, quadratic case refinement, integer certificate soundness proofs, square-denominator nonvanishing and prime-window refinement, the twenty-row parameter family, full free/fixed population energy, actual local arithmetic and corresponding paper revisions were
-developed with OpenAI Codex at his request. The full-interval marked-sheet
-assembly, critical-radius perturbation, coefficient recycling and largest-good-prime
-criterion giving 1099 were also developed with Codex. The later cost refinement,
-secondary content tent, supplied trials, central-gap interpolation, actual
-circle weights, root-budget certificates and 878/2632 assembly were developed
-with Codex at his request. Lemma U3, its formalization, the content transfer to the primes
-in `(8N, 9N)` and the 759/2276 assembly were developed by Claude (Anthropic) working with
-Sean Litsey, on top of the Codex pipeline; so were Lemma U6, its formalization, the content
-transfer to the primes in `(4N, 9N/2)` and the 740/2220 assembly. Sean Litsey posed the problem,
-directed the work, and is responsible for this repository. The vendored code is OpenAI's (see
-above).
+The mathematics, Lean development, certificate generators and papers were produced by AI systems at
+the request of Sean Litsey, who posed the problems, directed the work and is responsible for this
+repository.
+
+- **Claude Opus 5.5 and Claude Sonnet 5.5 (Anthropic)** produced:
+  - for `G`: the measure framework and the perturbation estimate by quadrature; the rank
+    deficiencies at the primes in `(8N, 9N)` and `(4N, 9N/2)` with their consequences for the
+    coefficients; the trial sequences with complex geometric terms and their verification on cells;
+    the final assembly; and the module conversion of OpenAI's formalization;
+  - for `G ± 5π²/48` and `L(2, χ₋₃)`: the rectangular frames, the content bounds and rank deficits,
+    the nonvanishing argument and the decay certificates; the second-level deficit at non-clean
+    primes; the decay estimate with the slope of the contour rays as a parameter, and the
+    certificate with atoms placed on the support of an extremal dual measure;
+  - the corresponding Lean proofs and the two papers.
+- **OpenAI Codex** produced:
+  - for `G`: the determinant of size `20N` with its local arithmetic and nonvanishing; the energy
+    estimates with fixed columns and the first trial; the quadrature nodes and the weight bound;
+    the divisibility of the coefficients by prime squares and the choice of the largest admissible
+    prime; the rank deficiency at the primes in `(52N/9, 44N/7)`;
+  - for `L(2, χ₋₃)`: the valuation-one reduction, bounded-deletion transfer, the periodic content
+    profile, the quarter border with characteristic-zero selection, the analytic certificate and
+    the saving at small primes;
+  - for `G ± 5π²/48`: the uniform rescaled-core argument with its finite interval profile;
+  - the repository infrastructure, the corresponding Lean proofs and paper text.
+
+The vendored code is OpenAI's (see above).
 
 ## Submission
 
@@ -259,39 +158,3 @@ Submissions to the registry go through the form at https://submit.palomar-regist
 ## Licence
 
 Apache License 2.0; see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
-
-## Lean structure and maintenance
-
-The uniform matrix and interval arguments live in `CatalanCore/Arith/Hybrid/`.
-The finite rational profile and its prime summation live in
-`CatalanFrames/HybCommon/DeficitProfile/`; the lambda and mirror `UniformFinal`
-modules only instantiate the shared content theorem and existing measure assembly.
-The old constant-weight and content interfaces remain corollaries of the generalized proofs.
-
-The arithmetic deduplication pass routes both clean-prime classes and both members through
-the uniform rescaled-core argument. The active `SolutionHybrid` dependency closure uses
-7 of the 24 `DefGK` modules: 17 legacy table/proof modules leave that proof path. Their import targets remain available for compatibility.
-The sharper C5/C7 estimates are retained. The existing bordered allowance `2*topW`
-is preserved by a shared incidence theorem, including the polynomial corner.
-
-Generic reduction geometry and `ModData3` now live in `CatalanCore/NV/`.
-The old frame modules reexport their names, constructors and projections.
-`ValOneFrame` now has 10 local dependencies, all in Core, instead of 18 including
-9 frame modules. The public roots export only the four strongest bounds: 740, 34.74,
-34.74 and 14.35. Historical corollaries remain internal to the proof libraries where needed.
-
-Further maintenance can treat the older E tables, canonical-G certificate helper duplicates,
-and archive target organization separately. This pass certifies the changed arithmetic and
-its consumers without rebuilding Mathlib or the legacy Catalan-measure development.
-
-The P6 arithmetic now instantiates a shared periodic-pole interface. Principal common-core
-restrictions follow by integral diagonal perturbation and determinant differences; no deletion
-penalty is needed. The exact 26-window content gain is `11983/645120`, giving the checked
-earlier 17.60 theorem with the existing decay and selector certificates. The new quarter-border files reuse these interfaces with characteristic-zero selection and a fresh analytic certificate. The old shift chain lemmas
-are thin wrappers over the same interface, and prime-product denominator clearing is shared.
-
-The attempted non-clean second-level improvement is recorded in
-[`research/nonclean-next-level/`](research/nonclean-next-level/README.md).
-Its moment, pole-model, Cauchy-basis and determinant ingredients are checked in
-`CatalanCore.Arith.Hybrid.NextLevelAudit`. The actual uniform weighted-entry identity and
-free-long-residue geometry remain open. The conditional 34.00 forecast is not a public theorem.

@@ -5,30 +5,22 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G-a/b| > b^(-740) for every integer a and all sufficiently large b.
-    Chebyshev final prime selection gives exponent 2220; the earlier 759, 2276,
-    878 and 2632 bounds remain proved. Lemma U6 (rank of the reduced scaled
-    base matrix at most 20N-(p-4N-1)/2 for primes 4N < p < 9N/2, proved from
-    the doubled Chebyshev Frobenius identity K6, a Frobenius class-sum law and
-    a column-block count) adds content of area 1/16 and, together with U3,
-    gives eta = 505079/200000. Lemma U3 (nullity of the reduced scaled base
-    matrix at least 18N-2p-1 for primes 8N < p < 9N, proved from a Chebyshev
-    Frobenius reflection identity and a flag-subspace count) adds content of
-    area 1/3 and gives eta = 492599/200000. Denominator and
-    coefficient-content asymptotics still use PNT. The admissible tuple
-    (20,3,1,2,1), matrix size 20N, polynomial degree at most 18N, actual
-    prime-column valuations and secondary coefficient-content tent are retained.
-    Supplied exact first40/second160 trials give target 2.2563367. Central-gap
-    interpolation with physical gap 401/2500 gives marked row costs 84.2Nm and
-    85.8944Nm. Actual circle/functional price 17.913 yields rho = 519037/5000.
-    Compatible content rate 507/2000 gives eta = 425979/200000 and limiting
-    recycled exponent 41522960/47331 < 878. Coefficientwise prime-square
-    recycling and own-prime nonvanishing are preserved. Five coarse Descartes
-    budgets and 241 opposite-sign brackets exhaust the X/Y critical points;
-    point values and restricted residual certificates are separately checked.
-    Previous 955/2864, 1091, 1095, 1099 and earlier verified checkpoints remain.
-    The development builds on OpenAI's formalization; all certificate bounds
-    are converted to ordinary kernel-checked rational proofs.
+    |G-a/b| > b^(-728) for every integer a and all sufficiently large b, so the
+    irrationality exponent of G is at most 728. The proof uses OpenAI's
+    determinant construction with a determinant of size 20N whose value is a
+    polynomial of degree at most 18N in the constant. A Gauss-type quadrature
+    formula and an Andreief identity with fixed points bound the determinant on
+    an interval of length exp(-rho N) around G, with rho = 259299/2500. Rank
+    deficiencies of the reduced matrix modulo the primes in (52N/9, 44N/7),
+    (8N, 9N) and (4N, 9N/2), proved with Chebyshev identities in characteristic p,
+    make every coefficient divisible by a common factor of logarithm at least
+    0.649 N^2. Prime squares in the denominator are recovered from the
+    coefficients, and the largest admissible prime is chosen. The energy
+    estimate uses trial sequences with complex geometric terms, verified on
+    cells with an exact local Taylor expansion. The margin is eta = 64169/25000
+    and the limiting exponent is 18 rho / eta = 727.357... Denominator and
+    content asymptotics and the choice of the prime use the prime number
+    theorem. All numerical bounds are ordinary kernel-checked rational proofs.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -40,15 +32,14 @@ classification:
   msc2020: ["11J82", "11J72"]
 
 sources:
-  - title: "An irrationality measure for Catalan's constant: |G - a/b| > b^(-740) for all large b"
+  - title: "An irrationality measure for Catalan's constant"
     type: original-proof
     relationship: other
     note: >-
-      The result is first presented together with this formalization, in the
-      companion paper by S. Litsey, "An irrationality measure for Catalan's
-      constant" (2026), whose arguments the Lean development follows. The repository
-      contains the revised 740 paper; Hexagon preprint hexagon:2610.00187v1 is the
-      earlier 8127 version, and this revision has not been uploaded there.
+      The companion paper by S. Litsey (2026), whose arguments the Lean
+      development follows. LaTeX source and PDF are in paper/
+      (catalan-measure-hexagon.tex is the single-file version); Hexagon preprint
+      hexagon:2610.00187.
   - title: "Catalan's constant is irrational"
     authors:
       - "OpenAI"
@@ -57,11 +48,11 @@ sources:
     location: "https://github.com/openai/math"
     relationship: other
     note: >-
-      Supplies the determinant, the local estimates, the nonvanishing argument,
-      the real-place sheet bounds and the certified energy dual on which the
-      measure is built. Its Lean formalization is vendored in OAI/ (see NOTICE);
-      the comparison constants of 37 certificate files are sharpened.
-      The irrationality measure itself is not in that work.
+      Preprint dated September 24, 2026, released October 6, 2026. Supplies the
+      determinant construction, the local estimates, the nonvanishing argument and
+      the energy method at the real place on which the measure is built. Its Lean
+      formalization is vendored in OAI/ (see NOTICE). The irrationality measure
+      itself is not in that work.
     license: "Apache-2.0"
     author_endorsement: not-contacted
   - title: "A finite irrationality measure for Catalan's constant"
@@ -72,10 +63,9 @@ sources:
     location: "https://doi.org/10.5281/zenodo.23237269"
     relationship: background
     note: >-
-      Earlier and independent proof of the weaker bound mu(G) <= 10^8, also
-      formalized in Lean on top of OpenAI's work. Not used in this proof.
+      Independent proof of mu(G) <= 10^8, also formalized in Lean on top of
+      OpenAI's work. Not used in this proof.
     author_endorsement: not-contacted
-
   - title: "General designs and an irrationality exponent for Catalan's constant"
     authors:
       - "Marcos Costa Santos Carreira"
@@ -84,25 +74,20 @@ sources:
     location: "https://github.com/MarcosCarreira/catalan-designs"
     relationship: background
     note: >-
-      Marcos Costa Santos Carreira's five-parameter determinant designs, bound
-      mu(G) < 2715, partial-population minor bounds and two-measure equilibrium
-      formulation are credited and compared in the companion paper. The cited
-      version is v1, October9,2026. No code or theorem from that work is
-      imported into this formalization.
+      Five-parameter determinant designs, the bound mu(G) < 2715 and a
+      two-measure equilibrium formulation of the real-place constant; cited in
+      the companion paper. No code or theorem from that work is imported.
     author_endorsement: not-contacted
 
 related_formalizations:
   - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan"
     relationship: builds-on
     note: >-
-      OpenAI's formalization of the irrationality of Catalan's constant. The
-      478 original files of it (and 10 files OpenAI added to
-      PrimeNumberTheoremAnd) are vendored here, mechanically converted to Lean's
-      module system and moved from Lean v4.34.1 to v4.35.0-rc2. Apart from
-      sharper comparison constants in 37 certificate files, their
-      mathematical content is unchanged. Generic determinant lemmas were moved
-      unchanged to a new RealDeterminantCore file (479 OAI files in total), and
-      generic denominator lemmas were copied out to remove unused certificate imports.
+      OpenAI's formalization of the irrationality of Catalan's constant. The files
+      used here (479 in OAI/, and 10 files OpenAI added to PrimeNumberTheoremAnd)
+      are vendored, converted to Lean's module system and ported from Lean v4.34.1
+      to v4.35.0-rc2. Apart from comparison constants given to seven digits in 37
+      certificate files, their mathematical content is unchanged.
   - id: "https://github.com/rohitkrjha/catalan-measure"
     relationship: independent
     note: >-
@@ -111,17 +96,18 @@ related_formalizations:
 
 status:
   scope: >-
-    All advertised statements are fully proved, with Catalan's constant
-    written out as the series in Challenge.lean. Every lemma of the companion
-    paper is formalized, including the actual central-gap perturbation with
-    rho = 519037/5000 in Parametric/GapMain and
-    the irrationality-measure criterion. The prime number theorem used in the
-    largest-good-prime and secondary prime-content steps comes from the PNT+
-    project through OpenAI's vendored formalization and compatibility additions. The paper's
-    remarks about the limits of the method are not formalized. The solution
-    development has no sorry; Challenge retains statement-template holes.
-    The public 740 axiom report contains only propext,
-    Classical.choice and Quot.sound; no additional axioms are introduced.
+    The statement in Challenge.lean, with Catalan's constant written as a series,
+    is fully proved in Solution.lean by CatalanMeasure.G728.catalan_irrationalityMeasure_728.
+    Every lemma of the companion paper used for this theorem is formalized,
+    including the degree and denominator bounds, the nonvanishing, the three rank
+    deficiencies and the divisibility of the coefficients, the quadrature
+    perturbation estimate, the energy bounds and their numerical certificates, and
+    the final choice of the prime. The prime number theorem comes from the PNT+
+    project through OpenAI's vendored formalization. The paper's remarks on the
+    limits of the method are not formalized. The solution has no sorry and no
+    native_decide; #print axioms reports only propext, Classical.choice and
+    Quot.sound. comparator.json configures lake comparator for this statement;
+    Comparator has not been run (it requires Linux).
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -130,60 +116,33 @@ automation:
   methods:
     - method: agent
       models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
-      framework: "Claude agentic workspace (cloud Linux container with shell and file tools)"
+      framework: "Claude Code with shell and file tools"
       tool_setup: >-
-        The AI model produced the mathematics, all Lean code, the module
-        conversion and the companion paper, using Lean 4, Lake and Mathlib from
-        the command line. The human author posed the problem, directed the
-        work and checked the outcome.
-      cost:
-        wall_time: "about two days of elapsed time"
-        spend_usd: "subscription-based"
-        hardware: "cloud container with 2 CPU cores and 8 GB RAM"
-      prompting_notes: >-
-        High-level instructions only, for example to upgrade OpenAI's
-        irrationality proof to an irrationality measure, to prove the
-        perturbation lemma in Lean without sorry, and to prepare the result
-        for Palomar.
+        Claude produced the measure framework and the perturbation estimate by
+        quadrature, the rank deficiencies at the primes in (8N, 9N) and (4N, 9N/2)
+        with their consequences for the coefficients, the trial sequences with
+        complex geometric terms and their verification on cells, the final
+        assembly, the module conversion, the corresponding Lean proofs and the
+        companion paper, using Python, Lean 4, Lake and Mathlib.
     - method: agent
       models: ["OpenAI Codex (GPT-6)"]
-      framework: "Codex desktop with native Windows shell and file tools"
+      framework: "Codex desktop with shell and file tools"
       tool_setup: >-
-        Numerical screening with Python, NumPy and SciPy; exact rational certificate
-        generation; Lean and Lake on the pinned toolchain; direct independent-kernel
-        diagnostics; LaTeX compilation and PDF rendering. New certificates use
-        decide +kernel, without native_decide or additional axioms.
-      prompting_notes: >-
-        The author requested assessment of Claude's research handoff, investigation
-        of ideas 1 and 4, formalization of a tighter bound, a revised paper, and
-        resolution of CI issues for Palomar submission.
+        Codex produced the determinant of size 20N with its local arithmetic and
+        nonvanishing, the energy estimates with fixed columns and the first trial,
+        the quadrature nodes and the weight bound, the divisibility of the
+        coefficients by prime squares and the choice of the largest admissible
+        prime, the rank deficiency at the primes in (52N/9, 44N/7), and the
+        corresponding Lean proofs and certificate generators.
   spend_usd: "subscription-based"
   notes: >-
-    The original mathematical and formal content was produced by Claude Opus 5.5.
-    The weighted Vandermonde refinement, fixed-node decay bound, and paper revision were developed with OpenAI
-    Codex, along with the square-denominator nonvanishing, prime-window refinement,
-    and uniform sparse prime-row dependencies, injective combined-row kernel embeddings,
-    and denominator saving, followed by the twenty-row determinant, actual local arithmetic,
-    four certified population endpoints, joint atom estimates, full-interval marked-sheet bounds and rho108 perturbation,
-    followed by coefficient recycling, largest-good-prime selection, and the
-    cost-parametric sharper first-population quadratic giving rho107.6, and the
-    uniform secondary-content tent and complete actual source/row formalization
-    giving955, and the Chebyshev final-selection corollary with exact exponent
-    5810400/2029 < 2864. The supplied-trial refinement, generalized first and
-    second population budgets, central-gap nodes, exact circle weights and
-    ordinary-kernel root-budget coverage give the 878/2632 endpoints. Lemma U3,
-    its Lean formalization, the content transfer to primes in (8N, 9N) and the
-    759/2276 assembly, and likewise Lemma U6, its formalization, the content
-    transfer to primes in (4N, 9N/2) and the current 740/2220 assembly, were
-    derived and formalized by Claude (Anthropic) working with the human author.
-    Both worked at the request of the human author, who is responsible for the submission.
-    The public 740 statement and the internal proof checkpoints pass the main Lean kernel and standard-axiom
-    audits. Independent-kernel and Comparator acceptance remain pending; the author
-    deferred CI and Palomar optimization until bound-reduction research stalls.
+    Both systems worked at the request of the human author, who posed the problem,
+    directed the work and is responsible for the submission. New certificates use
+    decide +kernel, without native_decide or additional axioms.
 
 fidelity:
   divergences: >-
-    None known. The Lean statements are the paper's Theorem 1.1 in the form
+    None known. The Lean statement is the paper's Theorem 1.1 in the form
     "for all sufficiently large b and all integers a" (Filter.atTop), which is
     the definition of an irrationality-measure bound.
 
@@ -191,18 +150,18 @@ review:
   status: "self-assessed"
   reviewers: []
   notes: >-
-    The statements in Challenge.lean were checked against the companion paper.
-    Every constant in the paper was recomputed against the Lean development.
-    No independent human review has been performed.
+    The statement in Challenge.lean was checked against the companion paper, and
+    the constants, definitions and hypotheses stated in the paper were checked
+    against the Lean development. No independent human review has been performed.
 
 alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
-    - source: "Litsey (2026), Theorem 1.1, first statement"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_740"
+    - source: "Litsey (2026), Theorem 1.1"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_728"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-740) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-728) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; the
