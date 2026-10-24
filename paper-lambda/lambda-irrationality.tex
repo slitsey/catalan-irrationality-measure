@@ -95,7 +95,7 @@ Darboux transformations. For $L(2,\chi_{-3})$, a finite-field interpolation argu
 removing at most three common low nodes gives nonvanishing at a fixed scale throughout a prime interval. We bound their size with Andr\'eief's identity and a certified lower bound for a
 discrete logarithmic energy.
 Two new ingredients lower the exponent for $G\pm5\pi^2/48$: a second-level $p$-adic saving at primes
-where the leading block is not clean, and a decay certificate with dual-guided atoms and steeper contour rays.
+where the leading block is not clean, and a decay certificate whose atoms are placed on the support of an extremal dual measure, with steeper contour rays.
 
 Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
 \end{abstract}
@@ -167,7 +167,7 @@ Theorem~\ref{thm:main} improves this to $14.35$.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
-\cite{Beukers79}) have been joined, since September 2026, by a series of new results, several of them
+\cite{Apery79,Beukers79}) have been joined, since September 2026, by a series of new results, several of them
 obtained with AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, improving
 the bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log a)=2$ for
 every rational $a>0$, $a\ne1$, and for nonzero rational combinations of such logarithms \cite{LiuJiangZhang26}. Giraudin
@@ -190,8 +190,9 @@ irrationality of $\zeta(3)$ by Liu, Zhang and Zhi \cite{LZZ25}.
 \subsection{Outline of the proof}
 Section~\ref{sec:overview} explains the construction and the new ideas without technicalities, and states the
 general deduction. Sections~\ref{sec:construction}--\ref{sec:decay} give the construction and the three estimates
-(denominator, nonvanishing, decay); Section~\ref{sec:proof} deduces Theorem~\ref{thm:main}.
-Section~\ref{sec:lean} describes the formalization, and the disclosure of AI use follows it.
+(denominator, nonvanishing, decay); Section~\ref{sec:proof} deduces Theorem~\ref{thm:main}, and
+Section~\ref{sec:limits} discusses the limits of the method. Section~\ref{sec:lean} describes the
+formalization, and the disclosure of AI use follows it.
 
 \subsection{Notation and conventions}
 $\psi=\Gamma'/\Gamma$ is the digamma function; $v_p$ is the $p$-adic valuation; for $P\in\Q[x]$,
@@ -239,7 +240,7 @@ Three estimates are therefore needed: an upper bound for the \emph{content} $\lo
 for $|P(x)|$ near $\xi$ (the \emph{decay}), and \emph{nonvanishing} of $P(p/q)$ for a size that can be
 chosen in terms of $q$. We use rectangular geometries, with $R\neq Q$, and all three estimates are new for these constants.
 
-\subsection{New idea 1: rectangular (hybrid) frames}
+\subsection{New idea 1: rectangular frames}
 We take a long common block $C$ of $r$ nodes, which carries the variable $x$, and two short interleaved
 blocks of $m\approx r/8$ nodes,
 \[
@@ -251,13 +252,11 @@ so that $R=C\sqcup X'$ and $Q=C\sqcup Y'$ (a second ``member'' adds one more com
 determinant $P(x)=\det\Phi(x)$ still has degree $\le r$ (or $r+1$), so the integrality loss
 $|R\cap Q|\log q$ is that of $r$ nodes, but the matrix has size $r+m$ and its decay is that of a
 configuration of $(1+\alpha)r$ nodes, $\alpha=m/r$. The content grows too, but less: the extra rows and
-columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants become (for $\lambda_-$)
+columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants are (for $\lambda_-$)
 \[
-\begin{gathered}
- \Lambda=\LamNew\quad(\text{square frame: }313/105=2.98095),\\ D=\Dnew\quad(\text{square frame: }3.1114),
-\end{gathered}
+ \Lambda=\LamNew,\qquad D=\Dnew,
 \]
-and the margin $\eta=D-\Lambda$ rises from $0.1304$ to $\etanew$. The interleaving of $X'$ and $Y'$ is
+and the margin is $\eta=D-\Lambda=\etanew$, larger than for the square matrix. The interleaving of $X'$ and $Y'$ is
 essential: it keeps the two Cauchy determinants in Andr\'eief's formula comparable (\S\ref{sec:decay}) and
 it gives the reduction modulo $\ell$ the bordered structure of \S\ref{sec:nonvanishing}.
 
@@ -347,7 +346,7 @@ $\lambda_+$ the size can be chosen independently of $\ell$, so the term $gs$ dis
 $\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$ the members are tied to the prime. Section~\ref{sec:minor-nv} proves nonvanishing for a family
 with bounded common low-node deletions; this permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$,
 so the term $gs$ again disappears. Section~\ref{sec:chi3-quarter} adds a quarter border through characteristic-zero selection,
-an analytic certificate and the periodic D1 saving, giving
+an analytic certificate and the saving at small primes, giving
 $\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=339258406689121/82516315939200$.
 
 \begin{center}
@@ -1187,13 +1186,13 @@ All the inequalities are verified by the Lean kernel (\S\ref{sec:lean}); the dat
 interval arithmetic in Arb \cite{Arb} and then checked independently in Lean with rational arithmetic.
 The certificate for $\lambda_-$ and $\lambda_+$ is described in the next subsection.
 
-\subsection{Dual-guided atoms and steeper rays}\label{ssec:slope-cert}
+\subsection{Placement of the atoms and steeper rays}\label{ssec:slope-cert}
 Two choices distinguish the certificate for $\lambda_-$ and $\lambda_+$.
 
 \emph{The slope.} Nothing in the contour argument requires slope $3$. The bound $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ holds on any pair of
 rays $x^*+u(-1\pm s_0i)$ with $s_0\ge1$, and the Gram representation \eqref{eq:gram} is unchanged. The slope enters the certificate only through the box cover
 of the rays (a) and the tail bound beyond $u=\frac32$. The vertical coordinate on a box is $s_0u\in[s_0u_1,s_0u_2]$. With the other parameters
-fixed, a scan over $s_0\in\{\frac94,\frac52,\frac{11}4\}$ gives the best ratio at $s_0=\frac52$. The decay engine takes $s_0$ as a parameter.
+fixed, a scan over $s_0\in\{\frac94,\frac52,\frac{11}4\}$ gives the best ratio at $s_0=\frac52$. The decay estimate is proved with $s_0$ as a parameter.
 Its exponent formula does not depend on $s_0$; only the certified constants $m'$, $g_{\min}$ and $c$ do.
 
 \emph{The atoms.} The measure $\sigma$ has $150$ atoms on the segment $[-\frac7{50},0]$, $600$ conjugate pairs on the rays and $300$ atoms on the line
@@ -1209,12 +1208,11 @@ and the remaining ones by a first-order Taylor expansion. The covers have $29\,7
 The lower bounds in Lean are $10^{-5}$ below the interval values $m'$ and $g_{\min}$. This allowance lets far atoms be
 grouped and costs only $4\cdot10^{-5}$ in $D$.
 
-\begin{remark}[limits of this certificate]
+\begin{remark}[limits of this certificate]\label{rem:certlimit}
 Weak duality bounds every certificate of this form from below. If $\mu$ is a probability measure on the support of $m$, then any admissible function $g$ satisfies an
 inequality in the integrals $\int g\,d\mu$, and an exact rational dual $\mu$ proves a lower bound for the exponent $c/\eta$ that holds for all
-$\sigma$. For $s_0=\frac52$, $\rho\ge1/4096$, $\alpha=\frac18$ and the content $\LamMid$, a rational dual measure with $3076$ atoms on the rays
-(verified in directed interval arithmetic with $192$ bits) shows that the exponent cannot be below $32.85$. This computation is not part of the Lean development.
-The certificate of Proposition~\ref{prop:cert} is within $0.1$ of this floor at the content $\LamMid$. Smaller $\rho$ needs proportionally more atoms.
+$\sigma$. Such dual measures show how close a given certificate is to the best possible one of the same form; they are not part of the
+proof. Smaller $\rho$ needs proportionally more atoms.
 \end{remark}
 
 \subsection{The certificate for $L(2,\chi_{-3})$}\label{ssec:chicert}
@@ -1226,13 +1224,13 @@ $F_\chi=\tilde F_\chi+E_\chi$ with
 which is $1$-periodic and, because the weights $\frac13-\frac12+\frac16$ sum to zero, decays like $e^{-2\pi|\Im z|}$. The
 contour argument and the Andr\'eief bound are as above, with poles at $-(j+\frac13)$, $-(j+\frac12)$, $-(j+1)$. The square-frame
 certificate for $F_\chi$ (a measure $\sigma_\chi$ of $699$ atoms, $\rho=1/2048$) gives lower bounds for the square-frame
-function $g_\chi=U^{\sigma_\chi}_\rho-U^{\tau}+(1-\kappa_0)\pi|\Im s|$ on rays, segment and line. The hybrid certificate is
+function $g_\chi=U^{\sigma_\chi}_\rho-U^{\tau}+(1-\kappa_0)\pi|\Im s|$ on rays, segment and line. The certificate for the rectangular frame is
 \[
  \sigma_{\rm h}=\frac{\sigma_\chi+\varpi}{9/8},\qquad
  \varpi=\sum_{k=0}^{31}\frac1{256}\,\delta_{t_k},\qquad t_k=1+\frac k{128}-\frac1{2048},
 \]
 so that $\varpi$ has mass $\frac18$ and represents the extra density $\frac12\mathrm{Leb}|_{[1,5/4]}$; the atom $t_k$ sits at the
-left end $a_k=1+k/128$ of the $k$-th cell, shifted left by $\rho$. The function of the hybrid frame splits as
+left end $a_k=1+k/128$ of the $k$-th cell, shifted left by $\rho$. The function of the rectangular frame splits as
 $g_{\rm h}=g_\chi+h$ with $h=U^{\varpi}_\rho-U^{\rm ex}$, where $U^{\rm ex}$ is the potential of $\frac12\mathrm{Leb}|_{[1,5/4]}$.
 For $u$ in the $k$-th cell and $\Re s+\rho\le a_k$ one has
 $(\Re s-t_k)^2+\rho^2\le(\Re s-u)^2$, hence $k_\rho(s,t_k)\ge-\log|s-u|$ on the cell, and integrating over the cells gives
@@ -1310,12 +1308,23 @@ is that the lower bound for the form comes from an arithmetic nonvanishing state
 from an analytic asymptotic, and that the size $r$ of the determinant is chosen in terms of $q$.
 \end{remark}
 
-\begin{remark}[where the constants enter]
-For $\lambda_-$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
-\S\ref{sec:content}, the uniform rescaled-core deficit of Section~\ref{sec:uniform-deficit} and the next-level deficit of Section~\ref{sec:next-level} determine $\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
-$S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
-For $L(2,\chi_{-3})$, bounded low-node deletion removes the prime-location cost, and characteristic-zero selection allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
-\end{remark}
+%% =====================================================================
+\section{Limits of the method}\label{sec:limits}
+
+The exponents are determined by three constants: the content $\Lambda$, the decay $D$ and the window
+constant $c$, through $c/(D-\Lambda)$. For $\lambda_-$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the
+third decimal of $D$ matters. The rank deficits of \S\ref{sec:content}, the uniform rescaled-core deficit of
+Section~\ref{sec:uniform-deficit} and the next-level deficit of Section~\ref{sec:next-level} determine
+$\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. The free choice of $\ell$
+(Theorem~\ref{thm:nv} for all $S$ in a range) removes the term $c\,g\,s$ of the deduction, which would
+otherwise be about $5.1$.
+
+For $L(2,\chi_{-3})$, bounded low-node deletion removes the cost of locating a prime, and characteristic-zero
+selection allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio
+$14.3475713785\ldots$. At this geometry, reducing the number of deleted nodes further would not change the
+leading decay or content constants. Further progress requires a smaller content constant, through new rank
+deficits, or a larger decay constant, through a better treatment of the energy problem; weak duality
+(Remark~\ref{rem:certlimit}) measures how much a certificate of the present form can still gain.
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -1340,7 +1349,7 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
  \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
 \item \lean{longCell_rowLocal}, \lean{kind3_rowLocal} and \lean{lam_both_eps_merged}, \lean{mir_both_eps_merged}: the next-level deficit of Section~\ref{sec:next-level} on a long cell, its binding to the prime profile and the resulting content bound;
-\item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda_-$ with the certificate of \S\ref{ssec:slope-cert}; the decay engine in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
+\item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda_-$ with the certificate of \S\ref{ssec:slope-cert}; the decay estimate in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
 \item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
  the bounded-deletion nonvanishing argument of Section~\ref{sec:minor-nv};
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
@@ -1350,7 +1359,7 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}, and the command \texttt{\#print axioms} reports only the
 three standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The file
-\lean{comparator-hybrid.json} is a configuration for \lean{lake comparator} stating that \lean{SolutionHybrid} proves the statements of
+\lean{comparator-hybrid.json} is a configuration for \texttt{lake comparator} stating that \lean{SolutionHybrid} proves the statements of
 \lean{ChallengeHybrid} with these axioms only. We have not run Comparator, which requires Linux; the axiom check above was done with
 \texttt{\#print axioms}. The prime number theorem in arithmetic progressions (moduli $4$ and $6$)
 enters the content asymptotics and the selection of the prime $\ell$. The formal source for it is the PNT+ project
@@ -1388,17 +1397,20 @@ system and ported to the current toolchain; the repository's README and provenan
 The mathematics, proofs, Lean formalization and text were produced by AI systems at the request of the author, who posed the problem,
 directed the work, and is responsible for this submission. Claude Opus~5.5 and Claude Sonnet~5.5 (Anthropic), working in a series of
 conversations, produced the rectangular frames, the content bounds and rank deficits, the nonvanishing argument and the decay certificates,
-the second-level deficit at non-clean primes with its weighted congruence, the slope-parametrised decay engine and the dual-guided certificate,
+the second-level deficit at non-clean primes with its weighted congruence, the decay estimate with the slope of the contour rays as a parameter, and the certificate with atoms placed on the support of an extremal dual measure,
 with their proofs and Lean formalization; the numerical computations and the certificate generators; the literature search; and the text.
 OpenAI Codex produced the repository infrastructure, vendored formalizations and certificate tooling of the companion project \cite{Litsey2026},
 which this work reuses; for $L(2,\chi_{-3})$, the valuation-one reduction, the periodic content profile, the finite-field corank argument,
-bounded-deletion transfer, the quarter border with characteristic-zero selection, the analytic certificate and the periodic D1 saving;
+bounded-deletion transfer, the quarter border with characteristic-zero selection, the analytic certificate and the saving at small primes;
 and the uniform rescaled-core argument for $G\pm5\pi^2/48$ with its finite interval profile. Codex also produced the Lean formalization
 and the corresponding text for these parts.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal
 verification in Lean is intended as an independent check of every step of the argument above.
+
+\subsection*{Acknowledgements}
+We thank the authors of Mathlib and of the PNT+ project, and OpenAI for making its formalization available.
 
 \bibliographystyle{amsplain}
 \bibliography{refs}

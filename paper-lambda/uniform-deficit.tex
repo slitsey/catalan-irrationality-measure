@@ -30,9 +30,10 @@ This remains valid when the constant matrix $M$ is singular.  The single
 Gauss unit $\det Q$ and its adjugate suffice to express all inverse
 entries; separate denominators for individual residue blocks are unnecessary.
 
-Let $T$ be the Schur matrix left after eliminating $C$.  If every
-assignment in its $m\times m$ zone matrix has total entry price at most
-$\tau$, with $v_G(T_{zy})\ge-w_{zy}$, then the determinant expansion gives
+Let $T$ be the Schur matrix left after eliminating $C$, and let $w_{zy}\ge0$ be
+integers with $v_G(T_{zy})\ge-w_{zy}$. If every assignment in the $m\times m$
+zone matrix has total weight $\sum w_{z\sigma(z)}$ at most $\tau$, then the
+determinant expansion gives
 \[
  v_G\bigl(F(x/p^2)\bigr)\ge-2r-\tau.
 \]
@@ -72,8 +73,9 @@ the three order $-1$ correction sums are
 \]
 The first two cancel termwise, and the last vanishes by interchanging
 $u,v$.  The direct order $-1$ entry also vanishes since $L(y)=L(z)$.
-This proves integrality within the selected class.  Between distinct
-residues the price is at most $1$; equal residues have price at most $2$.
+This proves integrality within the selected class. Between distinct
+residues the Schur entry has denominator exponent at most $1$, and between
+equal residues at most $2$.
 No specialization at $x=0$ or additional spectral hypothesis enters this
 calculation.
 
@@ -96,108 +98,102 @@ interpreting its length as zero when its left endpoint exceeds its right
 endpoint.  Since $b\le r+p$, a node in $J$ has no other zone node of the
 same residue.  In the high range take $J=[a,b)$.
 Assign potential $0$ to every row or column node in $J$, and potential
-$1$ to every other zone node.  Two nodes in $J$ have integral Schur
-entry, a mixed pair has price at most $1$, and an outside pair has price
-at most $2$.  Therefore this is a feasible dual and
+$1$ to every other zone node. Two nodes in $J$ have an integral Schur
+entry; a Schur entry between a node of $J$ and a node outside $J$ has
+denominator exponent at most $1$, and one between two nodes outside $J$ has
+denominator exponent at most $2$. Therefore these potentials are a feasible
+dual for the assignment problem of Lemma~\ref{lem:trop}, and
 \[
  \tau\le2m-|J|.
 \]
-This elementary certificate replaces class-count and parity calculations.
+This single interval replaces the counting of residue classes and parities
+in Section~\ref{sec:content}.
 
-The second member adds one row and column to the remaining Schur matrix.
-Every new incident entry, including its rescaled polynomial corner, has
-price at most $2$.  An assignment uses at most two such incidences;
-extending the remaining partial assignment gives a total additional
-price at most $4$.  Thus both members satisfy the common coefficient
-bound
+The second member adds one row and one column to the Schur matrix. Every new
+entry, including the rescaled diagonal entry, has denominator exponent at
+most $2$. An assignment uses at most two of the new entries, so the bound
+increases by at most $4$. Thus both members satisfy
 \[
- \operatorname{denexp}_p F_i\le2r+2m-|J|+4\qquad(i=1,2).
+ \operatorname{denexp}_p F_i\le2r+2m-|J|+4\qquad(i=1,2),
 \]
-The constant $4$ is retained in the integer deficit, rather than silently
-discarded before summation.
+where $\operatorname{denexp}_p F$ is the largest power of $p$ in the
+denominators of the coefficients of $F$. The constant $4$ is kept in the
+deficit below.
 
-\paragraph{Baseline and finite profile.}
-Let $T_{\rm old}$ be the exponent used for the already banked estimates.
-Only on the new profile windows enlarge it to
+\paragraph{The deficit.}
+Let $T_4$ be the bound for the denominator exponent at $p$ used in
+Section~\ref{sec:content}, after the rank deficits of Theorem~\ref{thm:deficits}.
+In the ranges of primes considered here we compare it with
 \[
- T_*=\max(T_{\rm old},B_0),\qquad
- B_0=\begin{cases}2r+3m-p,&m<p<2m,\\2r+m,&p>2m.\end{cases}
+ B_0=\begin{cases}2r+3m-p,&m<p<2m,\\2r+m,&p>2m;\end{cases}
 \]
-The existing affine majorants already cover these values with their
-existing constant slack; their leading integral is unchanged.  This
-comparison requires no equality between $B_0$ and a tropical optimum.
-The resulting nonnegative integer deficits are
+the affine bounds of Section~\ref{sec:content} already give $T_4\le B_0+O(1)$
+there, so the tropical integral is unchanged. The bound just proved gives the
+nonnegative integer deficit
 \[
  \delta_p=\begin{cases}
  (m+|J|-p-4)_+,&m<p<2m,\\
  (|J|-m-4)_+,&p>2m.
  \end{cases}
 \]
-Outside the new windows set the new deficit to zero.  Retain all old
-E, B, C5, C7, and clean GK estimates: this rescaling is not asserted to
-reproduce their sharper savings.
+We use $\delta_p$ only at primes where the rank deficits of
+Theorem~\ref{thm:deficits} give no saving, so that the two savings are never
+added at the same prime; elsewhere the new deficit is set to zero.
 
-Here is a compact specification of the complete rational certificate.
-Write $u=p/r$, $A=A_4/4$, $B=B_4/4$.  In the low range put
+\paragraph{The profile.}
+Write $u=p/r$, $A=A_4/4$ and $B=B_4/4$. The deficit is bounded below by
+$r f(p/r)-8$, where $f$ is a function of $u$ that is affine on each of finitely
+many intervals. On each interval the inequality to be checked is, in the range
+$m<p<2m$,
 \[
  \begin{gathered}a_0=\max(1,Au),\qquad b_0=\min(5/4,Bu,1+u),\\
- f(u)\le\min(1/8-u+b_0-a_0,\ b_0-9/8).\end{gathered}
+ f(u)\le\min(1/8-u+b_0-a_0,\ b_0-9/8),\end{gathered}
 \]
-In the high range the corresponding certificate is
+and in the range $p>2m$,
 \[
  f(u)\le\min(5/4,Bu)-\max(1,Au)-1/8.
 \]
-For an affine $f$, each assertion reduces to finitely many affine
-endpoint inequalities: nine in the low case and four in the high case.
-The certificate contains 37 low rows, 20 nonclean rows below $u=3/5$,
-and four missing upper rows.  In addition to the affine inequalities,
-it checks consecutive pole numerators, the residue class, nonnegativity,
-and pairwise disjointness within each prime class.
+For affine $f$ each of these reduces to finitely many inequalities at the
+endpoints: nine in the first range and four in the second. There are $61$
+intervals: $37$ in the range $m<p<2m$, $20$ for non-clean primes with $u<3/5$,
+and $4$ further intervals listed below. For each interval one also checks that
+$A_4$ and $B_4$ are consecutive singular cuts, the residue class of $p$, that
+$f\ge0$, and that the intervals of one class of primes are disjoint.
 
-Every raw interval $[s,t]$ is replaced once and for all by
-\[
- [s+\eta,t-\eta],\qquad \eta=10^{-7}.
-\]
-This fixed trimming leaves a strict margin at all old-window boundaries.
-For either offset the active rows eventually avoid every banked deficit
-window; this is a finite rational range check.  In particular there is
-no addition of two deficits at the same prime.  The exact integer
-implementation also guards the new deficit by the vanishing of the old
-one.  The guard holds throughout every trimmed profile window for all
-sufficiently large $r$.
-
-Replacing $m$ by $r/8$ and the cuts by $A_4p/4,B_4p/4$ changes interval
-endpoints by bounded amounts.  The explicit rounding bounds yield,
-uniformly over all rows,
+Each interval $[s,t]$ is shrunk to $[s+\eta,t-\eta]$ with $\eta=10^{-7}$. This
+leaves a strict margin at the boundaries of the windows of
+Theorem~\ref{thm:deficits}, and a finite check shows that for all large $r$
+the shrunk intervals avoid those windows; this is how the two savings are kept
+apart. Replacing $m$ by $r/8$ and the cuts by $A_4p/4$, $B_4p/4$ moves the
+endpoints by bounded amounts, and the explicit rounding bounds give, uniformly,
 \[
  \delta_p\ge r f(p/r)-8.
 \]
-Both offsets use the same rational profile.  Its tag $c=1$ selects
-$p\equiv4-o\pmod4$, and its tag $c=3$ selects $p\equiv o\pmod4$;
-thus the mirror exchanges the two prime classes without changing their
-integrated contribution.
+Both offsets use the same profile: the class $c=1$ corresponds to
+$p\equiv4-o\pmod4$ and $c=3$ to $p\equiv o\pmod4$, so passing from $\lambda_-$ to
+$\lambda_+$ exchanges the two classes of primes without changing their
+contribution.
 
 \paragraph{Prime summation and the final constants.}
-For a row $f(u)=\alpha+\beta u$ on a trimmed interval $[s,t]$, the prime
-number theorem in progressions gives the quadratic contribution
+For an affine piece $f(u)=\alpha+\beta u$ on $[s,t]$, the prime number theorem in
+progressions gives the contribution
 \[
  \frac12\int_s^t f(u)\,du
- =\frac12\left(\alpha(t-s)+\frac\beta2(t^2-s^2)\right).
+ =\frac12\left(\alpha(t-s)+\frac\beta2(t^2-s^2)\right)
 \]
-The constant loss $8$ contributes only $O(r)$ to the logarithmically
-weighted prime sum.  The finite sum uses the same prime range as the
-old denominator bound.  The untrimmed contributions are
+to the coefficient of $r^2$; the constant $8$ contributes only $O(r)$. Before
+shrinking, the three groups of intervals contribute
 {\renewcommand{\arraystretch}{1.8}
 \[
 \begin{array}{c|c|c}
-\text{group}&\text{number of rows}&\text{gain}\\\hline
+\text{primes}&\text{intervals}&\text{contribution}\\\hline
 m<p<2m&37&\frac{14667950664797}{5028641371353600}\simeq0.0029168814\\
-\text{nonclean}&20&\frac{160166243}{12415603200}\simeq0.0129003996\\
-\text{upper windows}&4&\frac{109}{22400}\simeq0.0048660714
+\text{non-clean}&20&\frac{160166243}{12415603200}\simeq0.0129003996\\
+\text{upper}&4&\frac{109}{22400}\simeq0.0048660714
 \end{array}
 \]
 }
-The four upper affine profiles, in tag order, are
+The four upper affine pieces are
 {\renewcommand{\arraystretch}{1.8}
 \[
 \begin{array}{c|c|c}
@@ -209,24 +205,25 @@ c&u\text{-interval}&f(u)\\\hline
 \end{array}
 \]
 }
-The 61-row sum after the fixed trimming is exactly
+After shrinking, the total of the $61$ pieces is exactly
 \[
  \Delta_\eta=
  \frac{4420349242147094110541}{213717258282528000000000}
- =0.0206831646525407\ldots.
+ =0.0206831646525407\ldots,
 \]
-The trimming loss is less than $1.879\times10^{-7}$.
-Starting from the banked content constant
+and the shrinking costs less than $1.879\times10^{-7}$. The content constant
+of Section~\ref{sec:content}, in the rational form used in the formal proof, is
 \[
- \begin{aligned}\Lambda_{\rm old}&=\frac{24729491161}{6665218560}-\frac1{448}-\frac1{576}-\frac1{352}
+ \begin{aligned}\Lambda_4&=\frac{24729491161}{6665218560}-\frac1{448}-\frac1{576}-\frac1{352}
 \\ &=\frac{320572813}{86561280}=3.7034204323226274\ldots,\end{aligned}
 \]
-the new quadratic content constant is at most
+and the new content constant is at most
 \[
- \Lambda_{\rm old}-\Delta_\eta
+ \Lambda_4-\Delta_\eta
  =3.6827372676700867\ldots
  \ <\ \frac{184137}{50000}=3.68274.
 \]
-This is the content constant $\LamMid$ used in the next section. It uses no gain for $p<m$.
-The argument above is first-order: it never uses a Smith coefficient beyond the first. Section~\ref{sec:next-level}
-adds the second level at non-clean primes.
+This is the content constant $\LamMid$ used in the next section; it uses no
+saving at primes $p<m$. The argument is first-order: it uses only the first
+Smith coefficient. Section~\ref{sec:next-level} adds the second level at
+non-clean primes.

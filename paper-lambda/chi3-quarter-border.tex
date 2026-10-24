@@ -58,12 +58,13 @@ vanish by degree and root count. The left and right barycentric maps land in the
 \end{proof}
 
 \subsection{The uniform arithmetic profile}
-The existing $H$ and $Z$ duals suffice; no new local valuation identity is
-needed. At a prime $p$, put $u=p/r$. Use the $H$ bound always, and the
-minimum of the $H$ and $Z$ bounds when $r+2m\le2p$, the proved domain of
-the latter. For the two unit classes modulo $6$, the resulting continuum
-coarse profiles $w_1,w_5$ have the following pieces. Endpoints can be assigned
-to either neighboring piece since the functions agree there.
+No new local valuation identity is needed: the two explicit dual certificates of
+Section~\ref{sec:content} for $L(2,\chi_{-3})$ (the residue-class certificate and the
+certificate in which only row potentials are raised) suffice. At a prime $p$ put $u=p/r$.
+We always use the first certificate, and the smaller of the two bounds when $r+2m\le2p$,
+the range in which the second is proved. For the two classes of primes modulo $6$ this
+gives the piecewise linear profiles $w_1,w_5$ below; at a common endpoint the two
+neighbouring pieces agree.
 \[
 \begin{array}{c|c|c}
 \text{class}&\text{interval for }u&w(u)\\\hline
@@ -82,65 +83,57 @@ to either neighboring piece since the functions agree there.
 5 &[2,3]&3/2-u/2
 \end{array}
 \]
-Both profiles are zero beyond their last nonzero interval. Their exact
-integrals are $581/128$ and $355/96$. The prime number theorem in the two
-classes gives
+Both profiles vanish beyond their last interval. Their integrals are $581/128$ and $355/96$,
+and the prime number theorem in the two classes gives
 \[
  \Lambda_0=\frac12\left(\frac{581}{128}+\frac{355}{96}\right)
          =\frac{3163}{768}.
 \]
-The finite-size proof uses affine covers with a fixed additive allowance
-for rounding $m$ and the residue endpoints. The generic prime summation
-retains every higher-prime-power and bad-prime cost. The original
-entrywise tropical denominator clears every principal restriction, so
-this coarse bound holds for the one-deletion family.
+For finite $r$ the proof uses affine bounds with a fixed additive allowance for the rounding
+of $m$ and of the residue endpoints; the contributions of prime powers and of the finitely
+many excluded primes are kept, and they are $o(r^2)$. The entrywise denominator clears every
+principal restriction, so this bound holds for the whole family with one deletion.
 
-\paragraph{Retaining the periodic D1 saving.}
-For odd primes $p\le m$, the coarse level-one tropical profile discards the existing exact bound
+\paragraph{Small primes.}
+For odd primes $p\le m$ the profile above ignores the bound
 \[
- v_p^{\rm trop}\le 2r+2m-\min(m\bmod p,p-m\bmod p).
+ v_p(\operatorname{den})\le 2r+2m-\min(m\bmod p,\;p-m\bmod p),
 \]
-It holds at every node level. One formula treats every nearest-multiple strip.
-For each integer $n\ge1$, on $m/(n+1)<p<m/n$ retain
-\[
- \min\{m-np,(n+1)p-m\}.
-\]
-The two affine pieces meet at $p=2m/(2n+1)$ and have integral
+which holds at every level of the nodes and comes from the distance of $m$ to the nearest
+multiple of $p$. On each interval $m/(n+1)<p<m/n$, $n\ge1$, it gives the additional saving
+$\min\{m-np,(n+1)p-m\}$. The two affine pieces meet at $p=2m/(2n+1)$, and
 \[
  \int_{m/(n+1)}^{m/n}\min\{m-np,(n+1)p-m\}\,dp
  =\frac{m^2}{2n(n+1)(2n+1)}.
 \]
-Use the first sixteen strips, leaving the coarse bound below $m/17$.
-The weighted prime number theorem in the two unit classes modulo $6$
-gives the same denominator estimate with
+Using the intervals with $n\le16$, the prime number theorem in the two classes modulo $6$
+gives the content constant
 \[
  \Lambda_{16}=\Lambda_0-\frac1{16}
        \sum_{n=1}^{16}\frac1{2n(n+1)(2n+1)}
  =\frac{339258406689121}{82516315939200}.
 \]
-A single finite-size argument covers both pieces for every $n$, with a
-fixed additive rounding allowance. All bad-prime and higher-power
-charges remain included. The same denominator clears every retained
-common minor, so the family and selector are unchanged. The generic
-proof is \texttt{D1QuarterPrefix}; its P6 adapter is
-\texttt{Quarter.Periodic.hasContent}.
-\subsection{The new analytic certificate}
-The existing rectangular decay engine is instantiated with
-$\alpha=1/4$ and a rational probability measure on $1600$ atoms: $200$ negative real
-atoms, $200$ positive real atoms and $600$ conjugate pairs. Its regularization radius is
-$1/2048$; all support points have modulus at most $16$. The certified
-function is
+The finite-size argument is the same for every $n$, with a fixed additive rounding allowance.
+The same denominator clears every principal restriction, so the family of determinants and
+the selection of Theorem~\ref{thm:chi3-charzero-selection} are unchanged.
+
+\subsection{The analytic certificate}
+The decay estimate of Section~\ref{sec:decay} is applied with $\alpha=1/4$ and a rational
+probability measure $\sigma$ on $1600$ atoms: $200$ negative real atoms, $200$ positive real
+atoms and $600$ conjugate pairs, with regularization radius $1/2048$ and all atoms of modulus
+at most $16$. The function to be bounded is
 \[
  g(s)=\frac54 U^\sigma(s)-U^{\nu_{1/4}}(s)
-                 +\frac{999}{1000}\pi|\operatorname{Im}s|.
+                 +\frac{999}{1000}\pi|\operatorname{Im}s|,
 \]
-The interval-potential identity
+and the identity
 \[
  U^{\nu_{1/4}}(s)=\frac12U^\tau(s)
        +\frac34U^\tau(2s/3)-\frac34\log(3/2)
 \]
-reuses the existing pointwise potential bounds. The finite cells,
-far-field Taylor bounds, continuum tails and pair-energy sums give
+reduces the potential of the node distribution to the potential $U^\tau$ already bounded in
+Section~\ref{sec:decay}. The bounds on cells, the Taylor bounds far from the nodes, the tails
+of the continuous parts and the sums over pairs of atoms give
 \begin{gather*}
  m'=\frac{231169}{100000},\qquad
  g_{\min}=-\frac{143459}{100000},\qquad
@@ -148,18 +141,12 @@ far-field Taylor bounds, continuum tails and pair-energy sums give
  I^\sigma\le\frac{1808029}{1000000},\qquad
  I^\nu\ge\frac{184428}{100000}.
 \end{gather*}
-Thus $D\ge1158407/250000=4.633628$ and
-$c=93657/12500=7.49256$ are valid. Bounded deletion changes
-only a linear term, absorbed by the existing asymptotic decay theorem.
-Theorem~\ref{thm:chi3-charzero-selection} supplies the pinned interface
-on the unit-width interval $(1,2)$; the existing square-divisibility
-prime rule has $s=1$. Since $D-\Lambda<1$, the pinned measure criterion
-applies without a prime-location surcharge and gives
+Hence $D\ge1158407/250000=4.633628$ and $c=93657/12500=7.49256$. Omitting one common node
+changes the energy only by a term linear in $r$, which is absorbed in the $o(r^2)$ error. By
+Theorem~\ref{thm:chi3-charzero-selection} a retained determinant does not vanish at any rational
+point, so no prime has to be chosen, and the deduction of Section~\ref{sec:proof} gives
 \[
  \mu\bigl(L(2,\chi_{-3})\bigr)
  \le\frac{93657/12500}{1158407/250000-\Lambda_{16}}
  =14.3475713785\ldots<14.35.
 \]
-The public statement is $14.35$. The certificate uses the shared
-content, common-minor decay and pinned measure interfaces; no new
-global determinant engine is introduced.
