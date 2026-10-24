@@ -21,7 +21,7 @@ theorem p6_minor_decay (d : ℕ) :
     push_cast
     constructor <;> linarith
   have h := hasDecay_commonMinorFam (Fr := p6Frame)
-    CatalanCore.Cert.Sigma300.p6_decayOK CatalanCore.Cert.SigmaP6H.certP6H
+    CatalanCore.Cert.Sigma300.p6_decayOK.toDecayOKs' CatalanCore.Cert.SigmaP6H.certP6H
     (α := 1 / 8) (by norm_num) (a := 9 / 8) (by norm_num)
     CatalanCore.Cert.SigmaP6H.hg_P6 CatalanCore.Cert.SigmaP6H.wtH_nonneg
     (Rc := 4) (by norm_num) CatalanCore.Cert.SigmaP6H.cH_norm

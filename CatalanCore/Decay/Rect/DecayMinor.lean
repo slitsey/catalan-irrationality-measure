@@ -10,11 +10,13 @@ open CatalanLambda.Decay (Usig Utau Irho cexpr)
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay Rect
 
 /-- Bounded common deletions retain the exact same certified leading constants. -/
 theorem decay_common_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -56,7 +58,7 @@ theorem decay_common_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K
   linarith
 
 theorem hasDecay_commonMinorFam {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α) {a : ℝ} (ha : 0 ≤ a)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)

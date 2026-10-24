@@ -16,24 +16,26 @@ open Finset
 open CatalanLambda.Decay (gfun Usig Utau Irho cexpr nodeC rmask rmask_cases sum_mask rayPt)
 
 namespace CatalanCore
+
+variable {sl : ℝ}
 namespace Frame
 
 open Decay
 
 variable {Fr : Frame}
 
-/-- Ray points, scaled by `1/h`, are of the form of the certified ray `-r0 + δ + u(-1 ± 3i)`. -/
-theorem ray_point_gG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (F : Cert.CertCoreG K ρ ε c m) (hxs : (0 : ℚ) < Fr.xs)
+/-- Ray points, scaled by `1/h`, are of the form of the certified ray `-r0 + δ + u(-1 ± sl i)`. -/
+theorem ray_point_gG (hsl : 0 < sl) {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
+    (F : Cert.CertCoreGs sl K ρ ε c m) (hxs : (0 : ℚ) < Fr.xs)
     {h : ℕ} (hh : 0 < h) {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * h⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * h) {θ : ℝ}
-    (hθ : θ = phiR ∨ θ = -phiR) {r : ℝ} (hr : 0 < r) :
+    (hθ : θ = (phiS sl) ∨ θ = -(phiS sl)) {r : ℝ} (hr : 0 < r) :
     (F.mprime : ℝ) ≤ F.g (rayPt (Fr.xstar N0) θ r / h) := by
   have hh' : (0 : ℝ) < h := by exact_mod_cast hh
   have hr0 : (0 : ℝ) < F.r0 := by exact_mod_cast F.r0_pos
   have hxs' : (0 : ℝ) < Fr.xs := by exact_mod_cast hxs
   have hn0 : (0 : ℝ) ≤ Fr.n0off := Nat.cast_nonneg _
-  have hs10 : (0 : ℝ) < Real.sqrt 10 := by positivity
+  have hs10 : (0 : ℝ) < Real.sqrt (1 + sl ^ 2) := Real.sqrt_pos.2 (by positivity)
   have hN1 : ((N0 : ℝ) + Fr.n0off) ≤ F.r0 * h := by
     have := Nat.floor_le (show (0 : ℝ) ≤ F.r0 * h by positivity)
     rw [← hN0] at this
@@ -44,46 +46,46 @@ theorem ray_point_gG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → 
     rw [← hN0] at this
     push_cast at this
     exact this
-  set u : ℝ := r / (Real.sqrt 10 * h) with hu
+  set u : ℝ := r / (Real.sqrt (1 + sl ^ 2) * h) with hu
   set δ : ℝ := F.r0 - ((N0 : ℝ) + Fr.xs) / h with hδ
   have hu0 : 0 ≤ u := by positivity
   have hδb : |δ| ≤ F.W := by
     have e : δ = ((F.r0 : ℝ) * h - N0 - Fr.xs) / h := by rw [hδ]; field_simp; ring
     rw [e, abs_div, abs_of_pos hh', div_le_iff₀ hh', abs_le]
     constructor <;> linarith
-  have hz : rayPt (Fr.xstar N0) θ r / h = ⟨-(F.r0 : ℝ) + δ - u, (if θ = phiR then 3 else -3) * u⟩ := by
+  have hz : rayPt (Fr.xstar N0) θ r / h = ⟨-(F.r0 : ℝ) + δ - u, (if θ = (phiS sl) then sl else -sl) * u⟩ := by
     apply Complex.ext
     · rw [Complex.div_natCast_re, CatalanLambda.Decay.rayPt_re]
-      have hc : Real.cos θ = -(1 / Real.sqrt 10) := by
+      have hc : Real.cos θ = -(1 / Real.sqrt (1 + sl ^ 2)) := by
         rcases hθ with e | e
-        · rw [e, cos_phiR]
-        · rw [e, Real.cos_neg, cos_phiR]
+        · rw [e, cos_phiS]
+        · rw [e, Real.cos_neg, cos_phiS]
       rw [hc]; unfold xstar; simp only [hδ, hu]; field_simp; ring
     · rw [Complex.div_natCast_im, CatalanLambda.Decay.rayPt_im]
       rcases hθ with e | e
-      · rw [e, sin_phiR, if_pos rfl]; simp only [hu]; field_simp
-      · have : θ ≠ phiR := by
+      · rw [e, sin_phiS, if_pos rfl]; simp only [hu]; field_simp
+      · have : θ ≠ (phiS sl) := by
           intro e2; rw [e] at e2
-          have := phiR_gt; have := Real.pi_pos
-          unfold phiR at e2
-          have := Real.arctan_lt_pi_div_two 3
-          have := Real.arctan_pos.2 (show (0:ℝ) < 3 by norm_num)
+          have := phiS_gt sl; have := Real.pi_pos
+          unfold phiS at e2
+          have := Real.arctan_lt_pi_div_two sl
+          have := Real.arctan_pos.2 hsl
           linarith
-        rw [e, Real.sin_neg, sin_phiR, if_neg (by rwa [← e])]; simp only [hu]; field_simp
+        rw [e, Real.sin_neg, sin_phiS, if_neg (by rwa [← e])]; simp only [hu]; field_simp
   rw [hz]
   split_ifs with hp
-  · exact F.ray_g_ge hu0 hδb
-  · have := F.ray_g_ge' hu0 hδb
+  · exact F.ray_g_ge hsl.le hu0 hδb
+  · have := F.ray_g_ge' hsl.le hu0 hδb
     simpa using this
 
 /-- **Lemma B** (finite-cell version, general frame): for distinct free points, each an atom or a
 ray point, `k m′ + h d Sbase - d Γ ≤ ∑_l g(z_l / h)`. -/
 theorem lemmaBG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK) (F : Cert.CertCoreG K ρ ε c m)
+    (hFr : Fr.DecayOKs sl) (F : Cert.CertCoreGs sl K ρ ε c m)
     {h k : ℕ} (hh : 0 < h) {N0 : ℕ} (hN0 : N0 + Fr.n0off = ⌊(F.r0 : ℝ) * h⌋₊)
     (hW : (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * h) (z : Fin k → ℂ)
     (hzi : Function.Injective z)
-    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay N0 (z l)) :
+    (hz : ∀ l, Fr.IsAtom N0 (z l) ∨ Fr.IsRay sl N0 (z l)) :
     (k : ℝ) * F.mprime + h * (Fr.d * F.Sbase)
         - Fr.d * ∑ i, max ((F.mprime : ℝ) - F.segG i) 0
       ≤ ∑ l, F.g (z l / h) := by
@@ -125,11 +127,11 @@ theorem lemmaBG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
       rw [← e] at hs
       rw [e] at hs
       linarith
-    · have hr : Fr.IsRay N0 (z l) := (hz l).resolve_left ha
+    · have hr : Fr.IsRay sl N0 (z l) := (hz l).resolve_left ha
       obtain ⟨r, hr0', θ, hθ, hzl⟩ := hr
       simp only [hμ, if_neg ha, add_zero]
       rw [hzl]
-      exact ray_point_gG F hxs hh hN0 hW hθ hr0'
+      exact ray_point_gG hFr.slope.pos F hxs hh hN0 hW hθ hr0'
   have hsumpt : (k : ℝ) * F.mprime + ∑ l, μ l ≤ ∑ l, F.g (z l / h) := by
     have := Finset.sum_le_sum (s := univ) (fun l _ => hpt l)
     rw [Finset.sum_add_distrib] at this

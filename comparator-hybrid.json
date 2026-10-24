@@ -2,8 +2,8 @@
   "challenge_module": "ChallengeHybrid",
   "solution_module": "SolutionHybrid",
   "theorem_names": [
-    "CatalanHybridChallenge.lam_hybrid_measure_3474",
-    "CatalanHybridChallenge.mir_hybrid_measure_3474",
+    "CatalanHybridChallenge.lam_hybrid_measure_3244",
+    "CatalanHybridChallenge.mir_hybrid_measure_3244",
     "CatalanHybridChallenge.chi3_hybrid_measure_1435"
   ],
   "definition_names": [],

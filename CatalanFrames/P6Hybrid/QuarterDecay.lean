@@ -22,7 +22,7 @@ theorem decay : HasDecay family (1158407/250000) (93657/12500) := by
       CatalanCore.Decay.Jfun (((1/4 : ℚ)) : ℝ) := by
     convert Inu_le using 1 <;> norm_num
   have h := hasDecay_commonMinorFam (Fr := p6Frame)
-    CatalanCore.Cert.Sigma300.p6_decayOK certQ
+    CatalanCore.Cert.Sigma300.p6_decayOK.toDecayOKs' certQ
     (α := 1/4) (by norm_num) (a := 3/4) (by norm_num)
     hg_Q mQ_nonneg (Rc := 16) (by norm_num) cQ_norm
     hInu D_le (by rw [certQ_ccert]; norm_num) 1

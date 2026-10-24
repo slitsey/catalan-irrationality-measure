@@ -22,10 +22,12 @@ open CatalanLambda.Decay (Usig Utau Irho cexpr)
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay
 
 theorem eventually_goodG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} (Fr : Frame)
-    (F : Cert.CertCoreG K ρ ε c wt) :
+    (F : Cert.CertCoreGs sl K ρ ε c wt) :
     ∀ᶠ r : ℕ in atTop, Fr.n0off ≤ ⌊(F.r0 : ℝ) * r⌋₊ ∧
       (Fr.n0off : ℝ) + 1 + (Fr.xs : ℝ) ≤ (F.W : ℝ) * r := by
   have hr0 : (0 : ℝ) < F.r0 := by exact_mod_cast F.r0_pos
@@ -43,19 +45,19 @@ theorem eventually_goodG {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K
 
 set_option maxHeartbeats 4000000 in
 theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α) {w : ℝ} (hw : 1 ≤ w)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α) {w : ℝ} (hw : 1 ≤ w)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
     {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu) :
     ∃ e m0 κ B0 : ℝ, 0 < e ∧ e < 1 ∧ 0 < m0 ∧ m0 ≤ Fr.xs ∧ (∀ i, m0 ≤ Fr.μ i) ∧ κ = Real.log (4 * (1 + 1 / m0)) ∧
-      B0 = Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1 ∧
+      B0 = Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1 ∧
       ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m : ℕ, N₀ ≤ r → (α : ℝ) * r ≤ m → (m : ℝ) ≤ α * r + w →
         1 ≤ r ∧ (((⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off : ℕ)) : ℝ) ≤ (F.r0 : ℝ) * r ∧
         (∃ T0 : ℝ,
           (∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
             (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-            Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+            Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
               (T0 + r * (((r : ℝ) + m) - k) * (F.ccert : ℝ))
               (fun i => xnode r (s i)) (fun i => ynode r (s i))) ∧
           T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * ((F.r0 : ℝ) * r) + B0) + r * Real.log 2
@@ -63,7 +65,7 @@ theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
         ((m : ℝ) + 1 ≤ α * r + w → ∃ T1 : ℝ,
           (∀ (k : ℕ) (s : Fin k → Fin (r + m + 1)), Function.Injective s →
             (∀ b : Fin (r + m + 1), r ≤ (b : ℕ) → ∃ i, s i = b) →
-            Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+            Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
               (T1 + r * (((r : ℝ) + m + 1) - k) * (F.ccert : ℝ))
               (fun i => xnode r (s i)) (fun i => ynode r (s i))) ∧
           T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * ((F.r0 : ℝ) * r) + B0) + κ)
@@ -89,20 +91,20 @@ theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
   have hA0 : 0 ≤ A0 := by rw [hA0def]; have := F.hρ; positivity
   have hCl0 : 0 ≤ Cl := by rw [hClDef]; exact le_max_right _ _
   obtain ⟨B0, hB0def⟩ : ∃ B0 : ℝ, B0 = Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-      + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1 := ⟨_, rfl⟩
+      + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1 := ⟨_, rfl⟩
   have hAp := Frame.Aco_pos hFr.contour
-  have hbe := Frame.betaE_pos he0
+  have hbe := Frame.betaE_pos hFr.slope.pos he0
   have hW0 := Fr.Wabs_nonneg
   have hB01 : 1 ≤ B0 := by
     rw [hB0def]
     have : (0 : ℝ) ≤ Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ := by positivity
-    have : (0 : ℝ) ≤ 2 * (Fr.Aco ^ e / Frame.betaE e) := by positivity
+    have : (0 : ℝ) ≤ 2 * (Fr.Aco ^ e / Frame.betaE sl e) := by positivity
     linarith
   obtain ⟨L0, hL0def⟩ : ∃ L0 : ℝ, L0 = Real.log (Fr.Wabs * F.r0 + B0) := ⟨_, rfl⟩
   have hDreal : (D : ℝ) ≤ 2 * ((1 + (α : ℝ)) * F.mprime + Fr.d * F.Sbase)
       - (1 + (α : ℝ)) ^ 2 * F.Ibound + Inu := by
     have h1 : ((D : ℚ) : ℝ) ≤ ((F.Dof Fr.d α Inu : ℚ) : ℝ) := by exact_mod_cast hD
-    unfold Cert.CertCoreG.Dof at h1
+    unfold Cert.CertCoreGs.Dof at h1
     push_cast at h1
     exact h1
   obtain ⟨κ, hκdef⟩ : ∃ κ : ℝ, κ = Real.log (4 * (1 + 1 / m0)) := ⟨_, rfl⟩
@@ -152,11 +154,11 @@ theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       + RerrRW w Γd A0 ρ m0 Cl α r m := ⟨_, rfl⟩
   have hEn : ∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
       (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-      Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+      Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
         (T0 + r * (((r : ℝ) + m) - k) * (F.ccert : ℝ))
         (fun i => xnode r (s i)) (fun i => ynode r (s i)) := by
     intro k s hs hkeep x hxi hx hre q hq
-    have h := energy_rectW (Fr := Fr) hFr.toDecayOK F (α := (α : ℝ)) hαR hw hg hw0 hRc hc hrpos hmpos
+    have h := energy_rectW (Fr := Fr) hFr.toDecayOKs F (α := (α : ℝ)) hαR hw hg hw0 hRc hc hrpos hmpos
       hαr hαr' hN0 hgood2 hm0 x hxi hx hre s hs hkeep he0 heε (hr2 r hr2') q
       (Cl := max (Real.log Fr.Aco) 0) (le_max_right _ _) hq
     have hT0' : T0 = -(2 * r * ((r : ℝ) + m) * F.mprime + 2 * (r : ℝ) ^ 2 * (Fr.d * F.Sbase)
@@ -187,11 +189,11 @@ theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
       + Alow r (m + 1)) + RerrRW w Γd A0 ρ m0 Cl α r (m + 1) := ⟨_, rfl⟩
   have hEn1 : ∀ (k : ℕ) (s : Fin k → Fin (r + m + 1)), Function.Injective s →
       (∀ b : Fin (r + m + 1), r ≤ (b : ℕ) → ∃ i, s i = b) →
-      Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+      Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
         (T1 + r * (((r : ℝ) + m + 1) - k) * (F.ccert : ℝ))
         (fun i => xnode r (s i)) (fun i => ynode r (s i)) := by
     intro k s hs hkeep x hxi hx hre q hq
-    have h := energy_rectW (Fr := Fr) hFr.toDecayOK F (α := (α : ℝ)) hαR hw hg hw0 hRc hc hrpos
+    have h := energy_rectW (Fr := Fr) hFr.toDecayOKs F (α := (α : ℝ)) hαR hw hg hw0 hRc hc hrpos
       (Nat.succ_pos m) hαr1 hαr1' hN0 hgood2 hm0 x hxi hx hre s hs hkeep he0 heε (hr2 r hr2') q
       (Cl := max (Real.log Fr.Aco) 0) (le_max_right _ _) hq
     have hT1' : T1 = -(2 * r * ((r : ℝ) + ((m + 1 : ℕ) : ℝ)) * F.mprime
@@ -215,19 +217,19 @@ theorem decay_coreW {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → 
 
 /-- The window-`1` case of `decay_coreW`. -/
 theorem decay_core {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
     {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu) :
     ∃ e m0 κ B0 : ℝ, 0 < e ∧ e < 1 ∧ 0 < m0 ∧ m0 ≤ Fr.xs ∧ (∀ i, m0 ≤ Fr.μ i) ∧ κ = Real.log (4 * (1 + 1 / m0)) ∧
-      B0 = Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1 ∧
+      B0 = Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊ + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1 ∧
       ∀ δ > 0, ∃ N₀ : ℕ, ∀ r m : ℕ, N₀ ≤ r → (α : ℝ) * r ≤ m → (m : ℝ) ≤ α * r + 1 →
         1 ≤ r ∧ (((⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off : ℕ)) : ℝ) ≤ (F.r0 : ℝ) * r ∧
         (∃ T0 : ℝ,
           (∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
             (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-            Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+            Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
               (T0 + r * (((r : ℝ) + m) - k) * (F.ccert : ℝ))
               (fun i => xnode r (s i)) (fun i => ynode r (s i))) ∧
           T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * ((F.r0 : ℝ) * r) + B0) + r * Real.log 2
@@ -235,7 +237,7 @@ theorem decay_core {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → �
         ((m : ℝ) + 1 ≤ α * r + 1 → ∃ T1 : ℝ,
           (∀ (k : ℕ) (s : Fin k → Fin (r + m + 1)), Function.Injective s →
             (∀ b : Fin (r + m + 1), r ≤ (b : ℕ) → ∃ i, s i = b) →
-            Frame.RectEnergy Fr (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
+            Frame.RectEnergy Fr sl (⌊(F.r0 : ℝ) * r⌋₊ - Fr.n0off) k e m0 (max (Real.log Fr.Aco) 0)
               (T1 + r * (((r : ℝ) + m + 1) - k) * (F.ccert : ℝ))
               (fun i => xnode r (s i)) (fun i => ynode r (s i))) ∧
           T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * ((F.r0 : ℝ) * r) + B0) + κ)

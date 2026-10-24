@@ -1,9 +1,9 @@
-% Periodic content improvement; existing decay and nonvanishing are retained.
+% Periodic content for the conductor-three frame.
 \section{Periodic content for the conductor-three frame}\label{sec:chi-periodic}
 
-The translated-chain argument also applies to the $\chi$ frame. It improves
-the content estimate without changing the node family, the decay certificate,
-or the nonvanishing theorem of Section~\ref{sec:minor-nv}.
+The translated-chain argument also applies to the $\chi$ frame. It sharpens
+the content estimate for the node family, decay certificate and nonvanishing
+theorem of Section~\ref{sec:minor-nv}.
 
 \begin{proposition}\label{prop:chi-periodic-local}
 Let $p\ge5$ be prime, $p>2m$, and $p^2>3(r+2m)$. Suppose a cut-free
@@ -128,13 +128,7 @@ Subtracting this from the base content constant yields
    =\frac{2159207}{645120}=3.346985057\ldots .
 \end{equation}
 Proposition~\ref{prop:chi-periodic-local} makes this content estimate
-uniform in $J$. The existing $D=3.7251$, $c=6.6510$ and prime interval
-of width $2/5$ therefore give
-\[
- \frac{c}{D-\Lambda_\chi}
-   =\frac{536336640}{30491189}=17.589889328\ldots<17.60,
- \qquad D-\Lambda_\chi<\frac25.
-\]
+uniform in $J$.
 The periodic entry interface, cleared cancellation, integral perturbation
-and principal-minor transfer, finite profile, prime summation and final
-measure assembly are kernel checked in Lean.
+and principal-minor transfer, finite profile and prime summation are
+kernel checked in Lean.

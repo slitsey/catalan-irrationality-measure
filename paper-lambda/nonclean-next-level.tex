@@ -1,0 +1,112 @@
+% Next-level (second-order) deficit at primes with a non-clean long cell.
+\section{A next-level deficit at non-clean primes}\label{sec:next-level}
+
+Section~\ref{sec:uniform-deficit} proves that the Schur complement of the zone is integral inside one cell and
+prices the rest by an assignment dual. This is a first-order statement. At a prime for which a long cell is
+overfull but does not contain the whole zone, the next Smith coefficient carries additional factors of $p$. We
+prove this here. It lowers the content constant from $\LamMid$ to $\LamNew$.
+
+\subsection{Setting and statement}
+Keep the notation of Section~\ref{sec:uniform-deficit}: $C=[0,r)$, $N=r+2m$, $Z=[r,N)$, an offset $o\in\{1,3\}$ and a prime $p\ge13$
+with $p>2m$ and $4(N+1)<p^2$. The zone rows are $r+2i$ and the zone columns are $r+2j+1$, for $0\le i,j<m$.
+The singular residues $0$ and $h\equiv(cp+o)/4\pmod p$ cut $\Z/p\Z$ into two arcs. Call the arc with $(p\pm o)/4$ residues \emph{short} and the other \emph{long}.
+A \emph{cell} is a maximal interval of integers in $Z$ that contains no cut. It is \emph{long} if its residues lie in the long arc. Let $J$ be a long cell and put
+\[
+ \sigma=|J|-m .
+\]
+The cell is \emph{overfull} if $\sigma>0$. It is \emph{clean} if it contains the whole zone, that is, if $|J|=2m$.
+Let $S$ be the set of residues in the short arc, and let $b$ be the number of residues in $S$ that are not residues of zone nodes.
+
+\begin{theorem}[next-level deficit]\label{thm:nextlevel}
+Let $J$ be an overfull long cell that is not clean. Then both members $F_1,F_2$ of the pair satisfy
+\[
+ \operatorname{denexp}_pF_i\le 2r+m-\min\bigl(m,\ \sigma+(\sigma-b)_+\bigr)+O(1),
+\]
+where $(t)_+=\max(t,0)$ and the implied constant is absolute.
+\end{theorem}
+
+The bound of Section~\ref{sec:uniform-deficit} is $2r+m-\sigma+O(1)$. The new term is $(\sigma-b)_+$. The truncation at $m$ reflects only that valuations
+of the determinant are integers bounded by the size of the zone. A clean cell gets no new saving.
+
+\subsection{The weighted congruence}
+Write the normalized symmetric matrix $R$ of Section~\ref{sec:uniform-deficit} with the factor $n=16$ and set $Y=U/p^2$, so that $U$ is the monic variable. We work with
+the Gauss valuation $v_G$ of $\Q(U)$ for the prime $p$. Its residue field is $\F_p(U)$.
+Split the unscaled prefix sums of the pole data as $F=F_{\rm pole}+F_{\rm reg}$ by keeping the terms whose denominators are divisible by $p$ in the first part, and put $L=pF_{\rm pole}$.
+Under $4N<p^2$ every pole denominator has at most one factor $p$, so $L$ and the scaled squared prefix are integral.
+
+For a residue $c$ let $Q_c=UI+p^2R_{\rm pol}$ be the matrix on the core chain $\{k\in C:k\equiv c\}$, where $R_{\rm pol}$ is the Loewner matrix of the pole part. Its entries are Gauss integral
+and its determinant is monic in $U$. So $\det Q_c$ is a Gauss unit and $Q_c^{-1}$ is Gauss integral. This uses the formal variable $U$ and needs no specialization.
+
+Fix a zone row $z$ and a zone column $y$ in the cell $J$, with distinct residues. Then $y-z$ is a unit. Let $g=Q_z^{-1}b$, where $b=p^2R_{\rm pol}(\text{chain},z)$, and put
+\[
+ A=L(z)-\sum_ig_iL_i,\qquad B=1-\sum_ig_i ,
+\]
+the sums running over the chain of $z$. For every residue $c$ put $u_c=A\mathbf 1-BL_c$ and
+\[
+ \gamma(c)=u_c^{\top}Q_c^{-1}u_c .
+\]
+Let $\gamma_J$ be the value of $\gamma$ at the chain of the source $z$.
+
+\begin{proposition}[weighted congruence]\label{prop:weighted}
+Let $T$ be the Schur complement of the zone after elimination of $C$. For zone nodes $z,y$ in the cell $J$ with distinct residues, $T_{zy}$ is Gauss integral, and modulo $p$
+\[
+ T_{zy}\equiv\sum_{c\not\equiv z,y}\frac{w(c)}{(c-z)(c-y)},\qquad
+ w(c)=\frac{\gamma_J-\gamma(c)}{n^2}+\varepsilon\frac{B^2}{n}\,\mathbf 1_S(c),
+\]
+where $\varepsilon$ is a unit constant depending only on the offset.
+\end{proposition}
+
+\begin{proof}[Sketch]
+Write $M_c=R_{CC}+(U/p^2)I$ for the core block and $r_z=R(z,C)$, $c_y=R(C,y)$. With $G_z,G_y$ the extensions of $g$ by zero off the chains of $z$ and $y$, the Schur entry is exactly
+\[
+ T_{zy}=\Delta_{zy}-(r_z-G_z^{\top}M_c)M_c^{-1}(c_y-M_cG_y),
+\]
+where $\Delta_{zy}=R_{zy}-G_z^{\top}c_y-r_zG_y+G_z^{\top}M_cG_y$. The chains of $z$ and $y$ are transported to each other by the translation $y-z$, since no cut lies between them.
+The exact commutator identities
+$n(t_i-t_j)(Q_z)_{ij}=L_j-L_i$ and $nt_ib_i=L(z)-L_i$, with $t_i=(\text{node}_i-z)/p$, show that $Q_z(ntg)=u$. Therefore $\gamma=n(BJ-AI)$ with $I=-\sum t_ig_i$ and $J=-\sum t_iL_ig_i$.
+Reducing the cross terms chain by chain, with the block structure of $M_c$ by residue, gives the displayed sum. The part with $\gamma_J-\gamma(c)$ comes from the pole prefix.
+The part with $\mathbf 1_S$ comes from the regular prefix, which is periodic modulo $p$ and equals an explicit cyclic sum on the short arc.
+\end{proof}
+
+\subsection{Long residues carry no weight}
+Let $c$ be a long residue. Then $w(c)=0$ in each of the following cases.
+\begin{enumerate}[label=(\alph*)]
+\item $c$ is not a residue of a zone node. The chain of $c$ has the same endpoint data as the chain of $z$, including the case that crosses $r\bmod p$, and the response is unchanged: $\gamma(c)=\gamma_J$.
+\item $c$ is the residue of a zone node in the cell $J$. Chain transport inside the cell gives $\gamma(c)=\gamma_J$ again.
+\item $c$ is the residue of a zone node outside $J$. Here $\gamma(c)$ may differ from $\gamma_J$. But we may project: the Cauchy kernels supported on $J$ vanish at such a residue.
+\end{enumerate}
+Hence, after projection, the sum in Proposition~\ref{prop:weighted} runs over the $b$ short residues not occupied by the zone. The remaining weights are arbitrary.
+
+\subsection{From the congruence to the valuation}
+Let $W$ be the reduction modulo $p$ of the leading coefficient of $pT$ on the rows and columns of $J$. By Proposition~\ref{prop:weighted}, after the projection of the previous paragraph,
+$W$ is a sum of at most $b$ rank-one matrices $w(c)\,k_c(z)k_c(y)$, where $k_c(z)=1/(c-z)$. So $\operatorname{rank}W\le b$.
+
+The first-order argument of Section~\ref{sec:uniform-deficit} shows that $\det(pT)$ has valuation at least $\sigma$.
+The two-level determinant lemma gives more. If $\sigma$ units come from vanishing leading coefficients and the next coefficient matrix has rank at most $b$,
+then every unit of corank beyond $b$ gives one more factor of $p$. Hence
+\[
+ v_G\det(pT)\ge\sigma+(\sigma-b)_+ .
+\]
+The lemma does not assume that the leading corank is exact, and it does not assume that the Cauchy coefficients are nonzero.
+
+\emph{The second member.} The matrix of $F_2$ has one more common node $q=N$ with the same formal diagonal variable. Since $0<q-z\le2m<p$, the residue of $q$ differs from every zone residue.
+It changes exactly one chain response, $\gamma(q\bmod p)$. The reduction $W$ changes by one outer product, so its rank grows by at most one. The new core node has determinant valuation $-2$.
+The total fixed loss is at most $3$. The same bound for the leading block gives $v_G\ge\sigma+(\sigma-b-1)_+$ for the second member. This proves Theorem~\ref{thm:nextlevel}.
+
+\subsection{Summation}
+Put $u=p/r$ and $m=\lfloor r/8\rfloor$. The relevant primes have $u\in(\frac14,\frac35)$, so that $p>2m$. For a prime class $c\in\{1,3\}$ and a given $u$, the new deficit is
+\[
+ f_{\rm new}(u)=\max_J\min\bigl(\tfrac18,\ \sigma_J+(\sigma_J-b_J)_+\bigr),
+\]
+the maximum over overfull, non-clean long cells $J$ at $u$, with lengths and $b$ scaled by $r$. This function is piecewise affine.
+We merge it with the 61 rows of Section~\ref{sec:uniform-deficit} by a pointwise maximum, so that no deficit is added twice at one prime. Each endpoint of each row is trimmed by $10^{-7}$.
+Both offsets give the same profile with the two prime classes exchanged. The prime number theorem in progressions gives the quadratic contribution $\frac12\int f\,du$ as in Section~\ref{sec:uniform-deficit}.
+The integral over the merged profile exceeds that of the 61 rows by at least $\GainNew$. Hence
+\[
+ \Lambda\le\LamMid-\GainNew\le\LamNew .
+\]
+This is Theorem~\ref{thm:content} for $\lambda$ and $\lambda'$.
+
+\begin{remark}
+The argument covers only overfull long cells, with $z$ and $y$ in one pole interval. Cells that contain the whole zone are excluded, and we claim no saving there.
+\end{remark}

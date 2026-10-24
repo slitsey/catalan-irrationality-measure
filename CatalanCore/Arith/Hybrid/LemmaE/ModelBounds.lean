@@ -7,15 +7,6 @@ open Matrix Polynomial
 namespace CatalanCore.Arith.Hybrid.LemmaE
 variable {p : ℕ} [Fact p.Prime] {I Z : Type} [Fintype I] [DecidableEq I]
   [Fintype Z] [DecidableEq Z]
-lemma gn_sum_le_const {J : Type*} (s : Finset J) (f : J → ℚ[X]) (b : ℝ)
-    (hb : 0 ≤ b) (hf : ∀ j∈s, gn p (f j) ≤ b) : gn p (∑ j∈s,f j) ≤ b := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa [gn_zero] using hb
-  | insert j s hj ih =>
-    rw [Finset.sum_insert hj]
-    exact (gn_add_le _ _).trans (max_le (hf j (by simp))
-      (ih (fun k hk => hf k (by simp [hk]))))
 lemma row_residual_bound (A A0 : Matrix I I ℚ[X]) (C C0 Sr : Matrix Z I ℚ[X])
     (h : ℚ[X]) (hh : Int1 p h) (hs : ∀ z i,Int1 p (Sr z i))
     (he : Sr*A0=h • C0) (b : ℝ) (hb : 0 ≤ b)

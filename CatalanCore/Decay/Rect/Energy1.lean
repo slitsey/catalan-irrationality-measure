@@ -21,6 +21,8 @@ open CatalanLambda.Decay
 
 namespace CatalanCore.Decay
 
+variable {sl : ℝ}
+
 /-- The energy of a point family `σ` against a node family `ω`. -/
 noncomputable def Esc {k : ℕ} (σ ω : Fin k → ℂ) : ℝ :=
   ∑ l, ∑ l', elog (σ l) (σ l') + ∑ i, ∑ i', elog (ω i) (ω i')
@@ -117,10 +119,10 @@ theorem Usig_ge {K : ℕ} {ρ : ℝ} (hρ : 0 < ρ) (c : Fin K → ℂ) (wt : Fi
     _ ≤ _ := Finset.sum_le_sum (fun k _ => mul_le_mul_of_nonneg_left (key k) (hw0 k))
 
 /-- Free points (atoms and ray points) are controlled by their imaginary part. -/
-theorem free_norm_le {Fr : Frame} (hxs : (0 : ℝ) ≤ Fr.xs)
+theorem free_norm_le {Fr : Frame} (hsl : 1 ≤ sl) (hxs : (0 : ℝ) ≤ Fr.xs)
     (hAR : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off)
     {N0 : ℕ} {T : ℝ} (hT : (N0 : ℝ) + Fr.n0off ≤ T) {z : ℂ}
-    (hz : Fr.IsAtom N0 z ∨ Fr.IsRay N0 z) :
+    (hz : Fr.IsAtom N0 z ∨ Fr.IsRay sl N0 z) :
     ‖z‖ ≤ T + Fr.xs + 2 * |z.im| := by
   rcases hz with ha | hr
   · obtain ⟨p, hp, rfl⟩ := ha
@@ -132,13 +134,13 @@ theorem free_norm_le {Fr : Frame} (hxs : (0 : ℝ) ≤ Fr.xs)
     rw [abs_of_nonpos (by linarith)]
     linarith
   · obtain ⟨u, hu, θ, hθ, rfl⟩ := hr
-    have hs10 : (0 : ℝ) < Real.sqrt 10 := by positivity
-    have hs6 : Real.sqrt 10 ≤ 6 := Real.sqrt_le_iff.2 ⟨by norm_num, by norm_num⟩
+    have hs10 : (0 : ℝ) < Real.sqrt (1 + sl ^ 2) := Real.sqrt_pos.2 (by positivity)
+    have hs6 : Real.sqrt (1 + sl ^ 2) ≤ 2 * sl := Real.sqrt_le_iff.2 ⟨by linarith, by nlinarith⟩
     have hsin : (1 : ℝ) / 2 ≤ |Real.sin θ| := by
-      have : |Real.sin θ| = 3 / Real.sqrt 10 := by
+      have : |Real.sin θ| = sl / Real.sqrt (1 + sl ^ 2) := by
         rcases hθ with e | e
-        · rw [e, sin_phiR, abs_of_pos (by positivity)]
-        · rw [e, Real.sin_neg, abs_neg, sin_phiR, abs_of_pos (by positivity)]
+        · rw [e, sin_phiS, abs_of_pos (div_pos (by linarith) hs10)]
+        · rw [e, Real.sin_neg, abs_neg, sin_phiS, abs_of_pos (div_pos (by linarith) hs10)]
       rw [this, le_div_iff₀ hs10]
       linarith
     have him : |(rayPt (Fr.xstar N0) θ u).im| = u * |Real.sin θ| := by

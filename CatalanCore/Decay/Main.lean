@@ -20,6 +20,7 @@ open Polynomial Filter
 
 namespace CatalanCore
 
+
 namespace Frame
 
 variable (Fr : Frame)
@@ -54,7 +55,7 @@ theorem decay_of_cert {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K →
     rw [Cert.CertCore.Dof_square] at h1
     push_cast at h1
     exact h1
-  obtain ⟨h₀, H⟩ := Frame.window_liminf hFr F hD' hm0 hm0xs hm0μ hδ
+  obtain ⟨h₀, H⟩ := Frame.window_liminf hFr.toDecayOKs' F hD' hm0 hm0xs hm0μ hδ
   refine ⟨h₀, fun n _ hn t ht => ?_⟩
   have := H n hn t ht
   have e := Frame.aeval_Ppoly_eq_det Fr n t

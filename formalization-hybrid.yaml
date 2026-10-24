@@ -5,13 +5,12 @@ version: "v0.4"
 project:
   name: "Irrationality measures for G - 5 pi^2/48, G + 5 pi^2/48 and L(2, chi_{-3}) (hybrid frames)"
   description: >-
-    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 34.74
-    and mu(G + 5 pi^2/48) <= 34.74, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
+    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 32.44
+    and mu(G + 5 pi^2/48) <= 32.44, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
     we prove mu(L(2, chi_{-3})) <= 14.35: for every e > 0, all large q and all p coprime to q,
     |x - p/q| > q^(-(E+e)). The proofs use the hybrid (rectangular, bordered) Loewner-matrix
     frames of the modular engine CatalanCore, characteristic-zero and ell-adic nonvanishing
-    argument, Cauchy-determinant decay and kernel-checked rational certificates. They supersede
-    the square-frame bounds 77.28/78/79 and 31 (archived under archive/).
+    argument, Cauchy-determinant decay and kernel-checked rational certificates.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -33,7 +32,8 @@ related_formalizations:
 status:
   scope: >-
     All three advertised statements are fully proved (SolutionHybrid.lean, via
-    lam_hyb_measure_uniform, mir_hyb_measure_uniform and CatalanFrames.P6Hybrid.Quarter.chi3_measure). No sorry and
+    CatalanFrames.LambdaHybrid.lam_hyb_measure_final2, CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final2
+    and CatalanFrames.P6Hybrid.Quarter.chi3_measure). No sorry and
     no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -42,7 +42,7 @@ status:
 fidelity:
   divergences: >-
     None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 1737/50 and 287/20 as rationals cast to R.
+    to q (IsCoprime p q) and q >= q0, with E = 811/25 and 287/20 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -51,12 +51,12 @@ review:
 alignment:
   namespace: "CatalanHybridChallenge"
   statements:
-    - source: "Litsey (2026), uniform hybrid measure for G - 5 pi^2/48, exponent 34.74"
-      lean: "CatalanHybridChallenge.lam_hybrid_measure_3474"
+    - source: "Litsey (2026), hybrid measure for G - 5 pi^2/48, exponent 32.44"
+      lean: "CatalanHybridChallenge.lam_hybrid_measure_3244"
       module: "ChallengeHybrid"
       status: proved
-    - source: "Litsey (2026), uniform hybrid measure for G + 5 pi^2/48, exponent 34.74"
-      lean: "CatalanHybridChallenge.mir_hybrid_measure_3474"
+    - source: "Litsey (2026), hybrid measure for G + 5 pi^2/48, exponent 32.44"
+      lean: "CatalanHybridChallenge.mir_hybrid_measure_3244"
       module: "ChallengeHybrid"
       status: proved
     - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.35"
@@ -76,18 +76,21 @@ automation:
       models: ["Claude Opus 5.5 (Anthropic)", "Claude Sonnet 5.5 (Anthropic)"]
       framework: "Claude Code desktop with native Windows shell and file tools, coordinating subagents"
       tool_setup: >-
-        Claude agents produced the mathematics and the Lean development, including the
-        kernel-checked numerical certificate (decide +kernel, no native_decide), using Python,
-        Lean 4, Lake and Mathlib. The human author posed the problem, directed the work and
-        checked the outcome.
+        Claude agents produced the mathematics and the Lean development: the hybrid frames, content
+        bounds and rank deficits, nonvanishing, the second-level deficit at non-clean primes with its
+        weighted congruence, the slope-parametrised decay engine and the dual-guided slope-5/2 certificate
+        (decide +kernel, no native_decide), using Python, Lean 4, Lake and Mathlib. The human author posed
+        the problem, directed the work and checked the outcome.
     - method: agent
       models: ["OpenAI Codex"]
       framework: "Codex desktop with shell tools and parallel mathematical agents"
       tool_setup: >-
-        Codex developed the valuation-one and bounded-deletion improvement to 18.50,
-        its generic Lean modules, paper additions and export checks. Codex subsequently proved the
-        uniform rescaled-core deficit and certified rational prime profile giving both 34.74 bounds,
-        reusing the existing decay and nonvanishing modules. The conductor-three periodic content extension, integral diagonal perturbation and principal-minor transfer, and a checked 26-row profile gave 17.60 for L(2, chi_{-3}). A characteristic-zero one-node selector, a quarter-border content profile and a 600-atom analytic certificate gave 15.50. Retaining four periodic D1 pieces first gave 15.30. One generic nearest-multiple estimate now retains sixteen strips; a fixed 1200-atom witness checked by the existing analytic engine strengthened the same family to 14.9972. Matched-objective witness optimization then added positive-real support and redistributed ray nodes; the existing kernel checker certifies one 1600-atom witness giving 14.35, with the same geometry, arithmetic and selector.
+        Codex developed the valuation-one reduction and bounded-deletion transfer, the uniform
+        rescaled-core deficit with its certified rational prime profile, the conductor-three periodic
+        content profile with integral diagonal perturbation and principal-minor transfer, the
+        characteristic-zero one-node selector, the quarter-border content profile with sixteen periodic
+        D1 strips, and the kernel-checked 1600-atom analytic witness for L(2, chi_{-3}), with their
+        generic Lean modules and export checks.
   notes: >-
     The shared modular engine (CatalanCore) and certificate tooling are described in
     archive/legacy-configs/formalization-lambda.yaml.

@@ -5,33 +5,37 @@ public import Mathlib.Analysis.Real.Pi.Bounds
 public import Mathlib.NumberTheory.Real.Irrational
 public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
-import CatalanFrames.LambdaHybrid.UniformFinal
-import CatalanFrames.LambdaMirrorHybrid.UniformFinal
+import CatalanFrames.LambdaHybrid.FinalS
+import CatalanFrames.LambdaMirrorHybrid.FinalS
+import CatalanCore.Measure.Scaling
 import CatalanFrames.P6Hybrid.QuarterDecay
 
 public section
 
 /-!
-Proofs of the three strongest statements in `ChallengeHybrid.lean`.
-The shared uniform profile gives both 34.74 bounds; periodic content and
+Proofs of the strongest statements in `ChallengeHybrid.lean`.
+The slope-5/2 decay certificate with the merged non-clean content profile gives both 32.44
+bounds (`lam_hybrid_measure_3244`, `mir_hybrid_measure_3244`); periodic content and
 characteristic-zero selection with a quarter border give 14.35. `MeasureLBAt` unfolds to the displayed statements.
 -/
 
 namespace CatalanHybridChallenge
 
-theorem lam_hybrid_measure_3474 :
+open CatalanCore
+
+theorem lam_hybrid_measure_3244 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((811 / 25 : ℚ) : ℝ) + e)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48)
           - (p : ℝ) / q| :=
-  CatalanFrames.LambdaHybrid.lam_hyb_measure_uniform
+  CatalanFrames.LambdaHybrid.lam_hyb_measure_final2
 
-theorem mir_hybrid_measure_3474 :
+theorem mir_hybrid_measure_3244 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1737 / 50 : ℚ) : ℝ) + e)) <
+      (q : ℝ) ^ (-(((811 / 25 : ℚ) : ℝ) + e)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
           - (p : ℝ) / q| :=
-  CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_uniform
+  CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final2
 
 theorem chi3_hybrid_measure_1435 :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
@@ -40,8 +44,8 @@ theorem chi3_hybrid_measure_1435 :
           - (p : ℝ) / q| :=
   CatalanFrames.P6Hybrid.Quarter.chi3_measure
 
-#print axioms lam_hybrid_measure_3474
-#print axioms mir_hybrid_measure_3474
+#print axioms lam_hybrid_measure_3244
+#print axioms mir_hybrid_measure_3244
 #print axioms chi3_hybrid_measure_1435
 
 end CatalanHybridChallenge

@@ -19,6 +19,7 @@ open Finset Filter Topology
 
 namespace CatalanCore
 
+
 lemma tendsto_log_div_nat : Tendsto (fun h : ℕ => Real.log h / h) atTop (𝓝 0) := by
   have := Real.tendsto_pow_log_div_mul_add_atTop 1 0 1 one_ne_zero
   simp only [pow_one, one_mul, add_zero] at this
@@ -100,7 +101,7 @@ theorem eventually_good {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K �
 
 /-- Theorem N for a principal submatrix indexed by a finset of `Fin h`. -/
 theorem minor_bound {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK') (F : Cert.CertCore K ρ ε c m) {D : ℝ}
+    (hFr : Fr.DecayOKs' 3) (F : Cert.CertCore K ρ ε c m) {D : ℝ}
     (hD : D ≤ 2 * ((F.mprime : ℝ) + Fr.d * F.Sbase) - F.Ibound + 3 / 2)
     {m0 : ℝ} (hm0 : 0 < m0) (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i)
     {h : ℕ} (hh : 0 < h) (hg : Good Fr F h)
@@ -121,7 +122,7 @@ theorem minor_bound {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → �
 /-- **Window corollary.**  For `h` good and `|t| ≤ e^{-c_cert h}`,
 `|det(T + t I)| ≤ exp(-h² D + E(h) + h log 2)`. -/
 theorem window {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK') (F : Cert.CertCore K ρ ε c m) {D : ℝ}
+    (hFr : Fr.DecayOKs' 3) (F : Cert.CertCore K ρ ε c m) {D : ℝ}
     (hD : D ≤ 2 * ((F.mprime : ℝ) + Fr.d * F.Sbase) - F.Ibound + 3 / 2)
     {m0 : ℝ} (hm0 : 0 < m0) (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i)
     {h : ℕ} (hh : 0 < h) (hg : Good Fr F h)
@@ -185,8 +186,8 @@ theorem Eerr_bound {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → �
     (hC : Fr.ContourOK) (F : Cert.CertCore K ρ ε c m) {m0 : ℝ} (hm0 : 0 < m0) :
     ∃ C : ℝ, ∀ h : ℕ, 1 ≤ h → 0 ≤ Eerr Fr F m0 h ∧ Eerr Fr F m0 h ≤ h * C + 5 * h * Real.log h := by
   have hA := Aco_pos hC
-  have hb := betaE_pos F.hε0
-  set cE : ℝ := 2 * (Fr.Aco ^ ε / betaE ε) with hcE
+  have hb := betaE_pos (show (0:ℝ) < 3 by norm_num) F.hε0
+  set cE : ℝ := 2 * (Fr.Aco ^ ε / betaE 3 ε) with hcE
   have hcE0 : 0 ≤ cE := by positivity
   have hr0 : (0 : ℝ) < F.r0 := by exact_mod_cast F.r0_pos
   have hW0 := Fr.Wabs_nonneg
@@ -267,7 +268,7 @@ theorem Eerr_div_tendsto {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K 
 /-- **Liminf form of the window corollary.**  For every `δ > 0` there is `h₀` such that for all
 `h ≥ h₀` and all `|t| ≤ e^{-c_cert h}`: `|det(T_h + t I)| ≤ exp(-(D - δ) h²)`. -/
 theorem window_liminf {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {m : Fin K → ℝ}
-    (hFr : Fr.DecayOK') (F : Cert.CertCore K ρ ε c m) {D : ℝ}
+    (hFr : Fr.DecayOKs' 3) (F : Cert.CertCore K ρ ε c m) {D : ℝ}
     (hD : D ≤ 2 * ((F.mprime : ℝ) + Fr.d * F.Sbase) - F.Ibound + 3 / 2)
     {m0 : ℝ} (hm0 : 0 < m0) (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i)
     {δ : ℝ} (hδ : 0 < δ) :

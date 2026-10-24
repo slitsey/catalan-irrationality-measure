@@ -40,6 +40,25 @@
 \newcommand{\Lw}{\mathsf L}          % Loewner matrix
 \newcommand{\cO}{\mathcal O}
 
+% ---------------------------------------------------------------------------
+% Constants of the result for G -/+ 5pi^2/48. Change them here only.
+% The exponent is c/(D-Lambda); the displayed values are consistent with each other.
+\newcommand{\MuLam}{32.44}              % stated bound
+\newcommand{\MuLamExact}{32.4392}       % c/(D-Lambda), truncated upward
+\newcommand{\LamNew}{3.67885}           % content constant (Lambda); Lean: 2015079667893797/547747200000000 = 3.6788498
+\newcommand{\LamNewFrac}{\frac{2015079667893797}{547747200000000}}
+\newcommand{\GainNew}{0.00389}          % gain of the next-level deficit (28980811/7449361920 = 0.0038904)
+\newcommand{\LamMid}{3.68274}          % content before the next-level deficit (184137/50000)
+\newcommand{\Dnew}{3.90557}             % decay constant D (390557/100000)
+\newcommand{\cnew}{7.3546}              % window constant c (18386549/2500000 = 7.3546196)
+\newcommand{\etanew}{0.22672}           % eta = D - Lambda
+\newcommand{\mpNew}{2.1711}             % m' (54279/25000 = 2.17116)
+\newcommand{\gminNew}{1.5061}           % -g_min (7530749/5000000 = 1.50615)
+\newcommand{\ScertNew}{0.12573}         % -S_cert
+\newcommand{\IsigNew}{2.43054}          % (1+alpha)^2 I_rho(sigma)
+\newcommand{\NatomsNew}{1650}           % atoms of the certificate measure
+% ---------------------------------------------------------------------------
+
 \begin{document}
 
 \title{Irrationality measures for $G\pm5\pi^2/48$ and $L(2,\chi_{-3})$}
@@ -47,7 +66,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 20, 2026}
+\date{October 23, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -60,8 +79,8 @@ Building on OpenAI's determinant method for the irrationality of Catalan's const
 $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \[
 \begin{gathered}
- \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le 34.74,\qquad
- \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le 34.74,\\
+ \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le \MuLam,\qquad
+ \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le \MuLam,\\
  \mu\bigl(L(2,\chi_{-3})\bigr)\le 14.35 ,
 \end{gathered}
 \]
@@ -75,6 +94,8 @@ modulo a prime by reducing it to bordered Krylov determinants, which we evaluate
 Darboux transformations. For $L(2,\chi_{-3})$, a finite-field interpolation argument bounds the corank by three;
 removing at most three common low nodes gives nonvanishing at a fixed scale throughout a prime interval. We bound their size with Andr\'eief's identity and a certified lower bound for a
 discrete logarithmic energy.
+Two new ingredients lower the exponent for $G\pm5\pi^2/48$: a second-level $p$-adic saving at primes
+where the leading block is not clean, and a decay certificate with dual-guided atoms and steeper contour rays.
 
 Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
 \end{abstract}
@@ -113,16 +134,16 @@ sufficiently large $b$.
 For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
 \[
 \begin{gathered}
- \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\qquad
- \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-34.74-\varepsilon},\\
+ \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\qquad
+ \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\\
  \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-14.35-\varepsilon}.
 \end{gathered}
 \]
-In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le34.74$ and
+In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le\MuLam$ and
 $\mu(L(2,\chi_{-3}))\le14.35$.
 \end{theorem}
 
-The computed values of the exponents are $34.738$ and $14.3475713785\ldots$. Theorem~\ref{thm:main}, together with every
+The computed values of the exponents are $\MuLamExact$ and $14.3475713785\ldots$. Theorem~\ref{thm:main}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -232,10 +253,10 @@ configuration of $(1+\alpha)r$ nodes, $\alpha=m/r$. The content grows too, but l
 columns never meet the diagonal. With $\alpha=\frac18$ the content and decay constants become (for $\lambda$)
 \[
 \begin{gathered}
- \Lambda=3.68274\quad(\text{square frame: }313/105=2.98095),\\ D=3.9028\quad(\text{square frame: }3.1114),
+ \Lambda=\LamNew\quad(\text{square frame: }313/105=2.98095),\\ D=\Dnew\quad(\text{square frame: }3.1114),
 \end{gathered}
 \]
-and the margin $\eta=D-\Lambda$ rises from $0.1304$ to $0.2201$. The interleaving of $X'$ and $Y'$ is
+and the margin $\eta=D-\Lambda$ rises from $0.1304$ to $\etanew$. The interleaving of $X'$ and $Y'$ is
 essential: it keeps the two Cauchy determinants in Andr\'eief's formula comparable (\S\ref{sec:decay}) and
 it gives the reduction modulo $\ell$ the bordered structure of \S\ref{sec:nonvanishing}.
 
@@ -255,10 +276,12 @@ $v(\det\Phi)=-\tau_p+v(\det B)\ge-\tau_p+\corank(B\bmod p)$. So every unit of co
 $B$ modulo $p$ over $\F_p(x)$ saves one factor of $p$. We compute this corank in several ranges of primes,
 using the block structure of the reduction (residue classes modulo $p$), Schur complements, the identity
 $H_{p-1-n}\equiv H_n\pmod p$ for harmonic numbers, an antisymmetry of Cauchy-type sums, and the
-Frobenius--K\"onig theorem. The savings lower the content from $3.74993$ to $3.70343$; with the decay constant below this
-lowers the exponent from about $50.0$ to $38.35$.
+Frobenius--K\"onig theorem. The savings lower the content from $3.74993$ to $3.70343$.
 The uniform rescaled-core argument of Section~\ref{sec:uniform-deficit} adds the missing
-interval savings without changing the determinant family, giving content $3.68274$ and exponent $34.74$.
+interval savings without changing the determinant family, giving content $\LamMid$.
+Finally, Section~\ref{sec:next-level} shows that at primes where the leading block is not clean the saving has a second level:
+the next Smith coefficient is a weighted Cauchy-type matrix of small rank, which adds further factors of $p$.
+This lowers the content to $\LamNew$.
 
 \subsection{New idea 3: nonvanishing through a commuting Jacobi matrix}
 Fix a prime $\ell$ in a suitable residue class with $\ell\nmid q$. After scaling by $\ell$ the rows and columns
@@ -304,11 +327,12 @@ small density on the rays). Andr\'eief's identity with two families of functions
 \]
 where $\mathsf C_R,\mathsf C_Q$ are Cauchy determinants. Taking logarithms turns the integrand into a discrete
 logarithmic energy of the free points $z_i$ against the nodes in an external field. We bound this energy
-from below by comparing with a \emph{certificate measure} $\sigma$ (a few hundred point masses with dyadic
-coordinates) through a regularised kernel $-\frac12\log(|z-w|^2+\rho^2)$, which is conditionally positive
+from below by comparing with a \emph{certificate measure} $\sigma$ (point masses with dyadic
+coordinates, placed where an optimal dual measure is supported) through a regularised kernel $-\frac12\log(|z-w|^2+\rho^2)$, which is conditionally positive
 definite on finite sums by an elementary argument (Frullani's integral and Gaussian sums). Everything left is
 a finite list of inequalities between explicit functions on boxes, which we verify in interval arithmetic
-inside Lean. The same argument bounds every principal minor along the common block, so the determinant stays
+inside Lean. For $\lambda$ and $\lambda'$ the contour rays have slope $\frac52$ and $\rho=1/4096$ (Section~\ref{ssec:slope-cert}).
+The same argument bounds every principal minor along the common block, so the determinant stays
 small at every point within $e^{-cr}$ of $\xi$.
 
 \subsection{The deduction}
@@ -319,11 +343,10 @@ Write $\eta=D-\Lambda$. The three estimates are combined in \S\ref{sec:proof}; t
 where $c$ is the window constant of the decay estimate, $g=\lim r/\ell$ for the sizes at which nonvanishing
 is proved, and $s$ is the relative length of the interval in which $\ell$ must be found. For $\lambda$ and
 $\lambda'$ the size can be chosen independently of $\ell$, so the term $gs$ disappears and
-$\mu\le7.6444/0.22006<34.74$. For $L(2,\chi_{-3})$, the original pair family gives
-$6.6510\,(1/0.35954+0.8)<23.82$. Section~\ref{sec:minor-nv} replaces it by a family with at most three
-common low-node deletions. This permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$;
-the term $gs$ disappears, giving $\mu\le6.6510/(3.7251-2159207/645120)<17.60$.
-Section~\ref{sec:chi3-quarter} then permits a quarter border through characteristic-zero selection, supplies an analytic certificate and retains a periodic D1 saving, giving
+$\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$ the members are tied to the prime. Section~\ref{sec:minor-nv} proves nonvanishing for a family
+with bounded common low-node deletions; this permits a fixed scale across a prime interval and needs only $\ell^2\nmid q$,
+so the term $gs$ again disappears. Section~\ref{sec:chi3-quarter} adds a quarter border through characteristic-zero selection,
+an analytic certificate and the periodic D1 saving, giving
 $\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=339258406689121/82516315939200$.
 
 \begin{center}
@@ -332,8 +355,8 @@ $\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=33
 \toprule
 constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ & exponent\\
 \midrule
-$G-5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
-$G+5\pi^2/48$ & $3.68274$ & $3.9028$ & $7.6444$ & $0.22006$ & $0$ & $34.738$\\
+$G-5\pi^2/48$ & $\LamNew$ & $\Dnew$ & $\cnew$ & $\etanew$ & $0$ & $\MuLamExact$\\
+$G+5\pi^2/48$ & $\LamNew$ & $\Dnew$ & $\cnew$ & $\etanew$ & $0$ & $\MuLamExact$\\
 $L(2,\chi_{-3})$ & $\Lambda_{16}$ & $4.633628$ & $7.49256$ & $0.535196$ & $0$ & $14.997127$\\
 \bottomrule
 \end{tabular}}
@@ -430,7 +453,7 @@ For admissible geometries of scale $r$,
 \[
  \log\den P_{\mathcal G}\le(\Lambda+o(1))\,r^2,
 \]
-where $\Lambda=3.68274$ for $\lambda$ and $\lambda'$, and $\Lambda=2159207/645120=3.346985\ldots$ for $L(2,\chi_{-3})$.
+where $\Lambda=\LamNew$ for $\lambda$ and $\lambda'$, and $\Lambda=2159207/645120=3.346985\ldots$ for $L(2,\chi_{-3})$.
 \end{theorem}
 
 We give the details for $\lambda$ and indicate the changes for $\lambda'$ and for $L(2,\chi_{-3})$ at the end.
@@ -654,16 +677,14 @@ $\Lambda_{\chi,\mathrm{base}}=\frac{10339}{3072}$. The per-prime bound agrees wi
 tested ($r=256$ and $r=1024$).
 
 %% =====================================================================
-
-% Begin uniform-deficit
 \section{A uniform rescaled-core deficit}
 \label{sec:uniform-deficit}
 
-We retain the determinant family and the previously established clean-prime
-estimates.  A common rescaled-core argument supplies three additional,
+The determinant family and the clean-prime estimates are those of
+Section~\ref{sec:content}.  A common rescaled-core argument supplies three additional,
 disjoint groups of prime windows.  The gain comes from a first-order
 cancellation and an elementary assignment dual; no assertion about a Smith
-normal form or the optimality of the previous tropical bound is required.
+normal form or the optimality of the tropical bound is required.
 The argument applies to both offsets $o\in\{1,3\}$.
 
 \paragraph{Monic rescaling.}
@@ -885,26 +906,127 @@ the new quadratic content constant is at most
  =3.6827372676700867\ldots
  \ <\ \frac{184137}{50000}=3.68274.
 \]
-In the existing measure conversion take $D=3.9028$ and $c=7.6444$.
-The rational inequalities
+This is the content constant $\LamMid$ used in the next section. It uses no gain for $p<m$.
+The argument above is first-order: it never uses a Smith coefficient beyond the first. Section~\ref{sec:next-level}
+adds the second level at non-clean primes.
+% Next-level (second-order) deficit at primes with a non-clean long cell.
+\section{A next-level deficit at non-clean primes}\label{sec:next-level}
+
+Section~\ref{sec:uniform-deficit} proves that the Schur complement of the zone is integral inside one cell and
+prices the rest by an assignment dual. This is a first-order statement. At a prime for which a long cell is
+overfull but does not contain the whole zone, the next Smith coefficient carries additional factors of $p$. We
+prove this here. It lowers the content constant from $\LamMid$ to $\LamNew$.
+
+\subsection{Setting and statement}
+Keep the notation of Section~\ref{sec:uniform-deficit}: $C=[0,r)$, $N=r+2m$, $Z=[r,N)$, an offset $o\in\{1,3\}$ and a prime $p\ge13$
+with $p>2m$ and $4(N+1)<p^2$. The zone rows are $r+2i$ and the zone columns are $r+2j+1$, for $0\le i,j<m$.
+The singular residues $0$ and $h\equiv(cp+o)/4\pmod p$ cut $\Z/p\Z$ into two arcs. Call the arc with $(p\pm o)/4$ residues \emph{short} and the other \emph{long}.
+A \emph{cell} is a maximal interval of integers in $Z$ that contains no cut. It is \emph{long} if its residues lie in the long arc. Let $J$ be a long cell and put
 \[
- \frac{c}{D-3.68274}<\frac{1737}{50}=34.74,
- \qquad D-3.68274>0
+ \sigma=|J|-m .
 \]
-give $\mu(G\pm5\pi^2/48)\le34.74$ by the existing measure conversion.  This improvement
-uses no claimed new gain for $p<m$ and no unproved higher-order Smith
-factorization.
+The cell is \emph{overfull} if $\sigma>0$. It is \emph{clean} if it contains the whole zone, that is, if $|J|=2m$.
+Let $S$ be the set of residues in the short arc, and let $b$ be the number of residues in $S$ that are not residues of zone nodes.
 
-% End uniform-deficit
+\begin{theorem}[next-level deficit]\label{thm:nextlevel}
+Let $J$ be an overfull long cell that is not clean. Then both members $F_1,F_2$ of the pair satisfy
+\[
+ \operatorname{denexp}_pF_i\le 2r+m-\min\bigl(m,\ \sigma+(\sigma-b)_+\bigr)+O(1),
+\]
+where $(t)_+=\max(t,0)$ and the implied constant is absolute.
+\end{theorem}
 
+The bound of Section~\ref{sec:uniform-deficit} is $2r+m-\sigma+O(1)$. The new term is $(\sigma-b)_+$. The truncation at $m$ reflects only that valuations
+of the determinant are integers bounded by the size of the zone. A clean cell gets no new saving.
 
-% Begin chi3-periodic-content
-% Periodic content improvement; existing decay and nonvanishing are retained.
+\subsection{The weighted congruence}
+Write the normalized symmetric matrix $R$ of Section~\ref{sec:uniform-deficit} with the factor $n=16$ and set $Y=U/p^2$, so that $U$ is the monic variable. We work with
+the Gauss valuation $v_G$ of $\Q(U)$ for the prime $p$. Its residue field is $\F_p(U)$.
+Split the unscaled prefix sums of the pole data as $F=F_{\rm pole}+F_{\rm reg}$ by keeping the terms whose denominators are divisible by $p$ in the first part, and put $L=pF_{\rm pole}$.
+Under $4N<p^2$ every pole denominator has at most one factor $p$, so $L$ and the scaled squared prefix are integral.
+
+For a residue $c$ let $Q_c=UI+p^2R_{\rm pol}$ be the matrix on the core chain $\{k\in C:k\equiv c\}$, where $R_{\rm pol}$ is the Loewner matrix of the pole part. Its entries are Gauss integral
+and its determinant is monic in $U$. So $\det Q_c$ is a Gauss unit and $Q_c^{-1}$ is Gauss integral. This uses the formal variable $U$ and needs no specialization.
+
+Fix a zone row $z$ and a zone column $y$ in the cell $J$, with distinct residues. Then $y-z$ is a unit. Let $g=Q_z^{-1}b$, where $b=p^2R_{\rm pol}(\text{chain},z)$, and put
+\[
+ A=L(z)-\sum_ig_iL_i,\qquad B=1-\sum_ig_i ,
+\]
+the sums running over the chain of $z$. For every residue $c$ put $u_c=A\mathbf 1-BL_c$ and
+\[
+ \gamma(c)=u_c^{\top}Q_c^{-1}u_c .
+\]
+Let $\gamma_J$ be the value of $\gamma$ at the chain of the source $z$.
+
+\begin{proposition}[weighted congruence]\label{prop:weighted}
+Let $T$ be the Schur complement of the zone after elimination of $C$. For zone nodes $z,y$ in the cell $J$ with distinct residues, $T_{zy}$ is Gauss integral, and modulo $p$
+\[
+ T_{zy}\equiv\sum_{c\not\equiv z,y}\frac{w(c)}{(c-z)(c-y)},\qquad
+ w(c)=\frac{\gamma_J-\gamma(c)}{n^2}+\varepsilon\frac{B^2}{n}\,\mathbf 1_S(c),
+\]
+where $\varepsilon$ is a unit constant depending only on the offset.
+\end{proposition}
+
+\begin{proof}[Sketch]
+Write $M_c=R_{CC}+(U/p^2)I$ for the core block and $r_z=R(z,C)$, $c_y=R(C,y)$. With $G_z,G_y$ the extensions of $g$ by zero off the chains of $z$ and $y$, the Schur entry is exactly
+\[
+ T_{zy}=\Delta_{zy}-(r_z-G_z^{\top}M_c)M_c^{-1}(c_y-M_cG_y),
+\]
+where $\Delta_{zy}=R_{zy}-G_z^{\top}c_y-r_zG_y+G_z^{\top}M_cG_y$. The chains of $z$ and $y$ are transported to each other by the translation $y-z$, since no cut lies between them.
+The exact commutator identities
+$n(t_i-t_j)(Q_z)_{ij}=L_j-L_i$ and $nt_ib_i=L(z)-L_i$, with $t_i=(\text{node}_i-z)/p$, show that $Q_z(ntg)=u$. Therefore $\gamma=n(BJ-AI)$ with $I=-\sum t_ig_i$ and $J=-\sum t_iL_ig_i$.
+Reducing the cross terms chain by chain, with the block structure of $M_c$ by residue, gives the displayed sum. The part with $\gamma_J-\gamma(c)$ comes from the pole prefix.
+The part with $\mathbf 1_S$ comes from the regular prefix, which is periodic modulo $p$ and equals an explicit cyclic sum on the short arc.
+\end{proof}
+
+\subsection{Long residues carry no weight}
+Let $c$ be a long residue. Then $w(c)=0$ in each of the following cases.
+\begin{enumerate}[label=(\alph*)]
+\item $c$ is not a residue of a zone node. The chain of $c$ has the same endpoint data as the chain of $z$, including the case that crosses $r\bmod p$, and the response is unchanged: $\gamma(c)=\gamma_J$.
+\item $c$ is the residue of a zone node in the cell $J$. Chain transport inside the cell gives $\gamma(c)=\gamma_J$ again.
+\item $c$ is the residue of a zone node outside $J$. Here $\gamma(c)$ may differ from $\gamma_J$. But we may project: the Cauchy kernels supported on $J$ vanish at such a residue.
+\end{enumerate}
+Hence, after projection, the sum in Proposition~\ref{prop:weighted} runs over the $b$ short residues not occupied by the zone. The remaining weights are arbitrary.
+
+\subsection{From the congruence to the valuation}
+Let $W$ be the reduction modulo $p$ of the leading coefficient of $pT$ on the rows and columns of $J$. By Proposition~\ref{prop:weighted}, after the projection of the previous paragraph,
+$W$ is a sum of at most $b$ rank-one matrices $w(c)\,k_c(z)k_c(y)$, where $k_c(z)=1/(c-z)$. So $\operatorname{rank}W\le b$.
+
+The first-order argument of Section~\ref{sec:uniform-deficit} shows that $\det(pT)$ has valuation at least $\sigma$.
+The two-level determinant lemma gives more. If $\sigma$ units come from vanishing leading coefficients and the next coefficient matrix has rank at most $b$,
+then every unit of corank beyond $b$ gives one more factor of $p$. Hence
+\[
+ v_G\det(pT)\ge\sigma+(\sigma-b)_+ .
+\]
+The lemma does not assume that the leading corank is exact, and it does not assume that the Cauchy coefficients are nonzero.
+
+\emph{The second member.} The matrix of $F_2$ has one more common node $q=N$ with the same formal diagonal variable. Since $0<q-z\le2m<p$, the residue of $q$ differs from every zone residue.
+It changes exactly one chain response, $\gamma(q\bmod p)$. The reduction $W$ changes by one outer product, so its rank grows by at most one. The new core node has determinant valuation $-2$.
+The total fixed loss is at most $3$. The same bound for the leading block gives $v_G\ge\sigma+(\sigma-b-1)_+$ for the second member. This proves Theorem~\ref{thm:nextlevel}.
+
+\subsection{Summation}
+Put $u=p/r$ and $m=\lfloor r/8\rfloor$. The relevant primes have $u\in(\frac14,\frac35)$, so that $p>2m$. For a prime class $c\in\{1,3\}$ and a given $u$, the new deficit is
+\[
+ f_{\rm new}(u)=\max_J\min\bigl(\tfrac18,\ \sigma_J+(\sigma_J-b_J)_+\bigr),
+\]
+the maximum over overfull, non-clean long cells $J$ at $u$, with lengths and $b$ scaled by $r$. This function is piecewise affine.
+We merge it with the 61 rows of Section~\ref{sec:uniform-deficit} by a pointwise maximum, so that no deficit is added twice at one prime. Each endpoint of each row is trimmed by $10^{-7}$.
+Both offsets give the same profile with the two prime classes exchanged. The prime number theorem in progressions gives the quadratic contribution $\frac12\int f\,du$ as in Section~\ref{sec:uniform-deficit}.
+The integral over the merged profile exceeds that of the 61 rows by at least $\GainNew$. Hence
+\[
+ \Lambda\le\LamMid-\GainNew\le\LamNew .
+\]
+This is Theorem~\ref{thm:content} for $\lambda$ and $\lambda'$.
+
+\begin{remark}
+The argument covers only overfull long cells, with $z$ and $y$ in one pole interval. Cells that contain the whole zone are excluded, and we claim no saving there.
+\end{remark}
+% Periodic content for the conductor-three frame.
 \section{Periodic content for the conductor-three frame}\label{sec:chi-periodic}
 
-The translated-chain argument also applies to the $\chi$ frame. It improves
-the content estimate without changing the node family, the decay certificate,
-or the nonvanishing theorem of Section~\ref{sec:minor-nv}.
+The translated-chain argument also applies to the $\chi$ frame. It sharpens
+the content estimate for the node family, decay certificate and nonvanishing
+theorem of Section~\ref{sec:minor-nv}.
 
 \begin{proposition}\label{prop:chi-periodic-local}
 Let $p\ge5$ be prime, $p>2m$, and $p^2>3(r+2m)$. Suppose a cut-free
@@ -1029,19 +1151,10 @@ Subtracting this from the base content constant yields
    =\frac{2159207}{645120}=3.346985057\ldots .
 \end{equation}
 Proposition~\ref{prop:chi-periodic-local} makes this content estimate
-uniform in $J$. The existing $D=3.7251$, $c=6.6510$ and prime interval
-of width $2/5$ therefore give
-\[
- \frac{c}{D-\Lambda_\chi}
-   =\frac{536336640}{30491189}=17.589889328\ldots<17.60,
- \qquad D-\Lambda_\chi<\frac25.
-\]
+uniform in $J$.
 The periodic entry interface, cleared cancellation, integral perturbation
-and principal-minor transfer, finite profile, prime summation and final
-measure assembly are kernel checked in Lean.
-
-% End chi3-periodic-content
-
+and principal-minor transfer, finite profile and prime summation are
+kernel checked in Lean.
 
 \section{Nonvanishing modulo a prime}\label{sec:nonvanishing}
 
@@ -1430,8 +1543,6 @@ $W=8$ it fails exactly when $\ell\equiv43\pmod{60}$. We therefore use $r\le8m\le
 $\ell\equiv1\pmod6$ with $\ell\ge61$ has a pair, with $5r\le2\ell\le5r+11$.
 
 %% =====================================================================
-
-% Begin chi3-bounded-deletions
 % New section: bounded low-node deletions for the chi frame.
 % This file deliberately leaves the preceding pair argument unchanged.
 \section{Uniform nonvanishing after bounded low-node deletion}\label{sec:minor-nv}
@@ -1772,12 +1883,7 @@ Finally $\deg P_J\le|J|\le r$. We keep the declared degree budget equal
 to the original $r$ for every member, so $q^r$ times the common clearing
 denominator times $P_J(p/q)$ is an integer. Neither the degree scale nor
 the exponential window changes when the nonzero member is selected.
-
-% End chi3-bounded-deletions
-
-
-% Begin chi3-quarter-border
-% Quarter-border upgrade. The preceding finite-field argument is retained.
+% Quarter border and characteristic-zero selection.
 \section{A quarter border and characteristic-zero selection}
 \label{sec:chi3-quarter}
 
@@ -1943,9 +2049,6 @@ The public statement is $14.35$. The certificate uses the shared
 content, common-minor decay and pinned measure interfaces; no new
 global determinant engine is introduced.
 
-% End chi3-quarter-border
-
-
 \section{Analytic decay}\label{sec:decay}
 
 \begin{theorem}[decay and window]\label{thm:decay}
@@ -1953,7 +2056,7 @@ For admissible geometries of scale $r$ and real $t$ with $|t|\le e^{-cr}$,
 \[
 \begin{gathered}
  |P_{\mathcal G}(\xi+t)|\le\exp\bigl(-(D-o(1))r^2\bigr),\\
- (D,c)=\begin{cases}(3.9028,\ 7.6444)&\text{for }\lambda,\lambda',\\ (3.7251,\ 6.6510)&\text{for }L(2,\chi_{-3}).\end{cases}
+ (D,c)=\begin{cases}(\Dnew,\ \cnew)&\text{for }\lambda,\lambda',\\ (3.7251,\ 6.6510)&\text{for }L(2,\chi_{-3}).\end{cases}
 \end{gathered}
 \]
 \end{theorem}
@@ -1970,7 +2073,8 @@ half-plane and $O(1/|z|)$ there, and
  E(z)=-\pi\bigl[\cot\pi z+\cot(\tfrac\pi4-\pi z)\bigr]
 \]
 is $1$-periodic with $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ for $|y|\ge1$. Let $N_0=\lfloor\frac7{50}r\rfloor$, $x^*=-N_0-\frac38$, and let
-$\Gamma$ be the two rays $x^*+u(-1\pm3i)$, $u\ge0$. Moving the contour to $\Gamma$ picks up the residues of $F$ at the
+$s_0$ be the slope parameter, $s_0=\frac52$ for $\lambda,\lambda'$ and $s_0=3$ for $L(2,\chi_{-3})$, and let
+$\Gamma$ be the two rays $x^*+u(-1\pm s_0i)$, $u\ge0$. Moving the contour to $\Gamma$ picks up the residues of $F$ at the
 $2N_0$ poles $-(j+\frac34)$ (residue $+1$) and $-(j+1)$ (residue $-1$), $j<N_0$; the part of the integrand with $\tilde F$
 integrates to $0$ over $\Gamma$. Hence, for all integers $a,b\ge0$,
 \begin{equation}\label{eq:gram}
@@ -2009,7 +2113,7 @@ of mass $1+\alpha$. Its logarithmic energy has the closed form
 \end{multline*}
 
 \subsection{The energy certificate}
-Fix $\rho=1/1024$ and the regularised kernel $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)\le-\log|z-w|$.
+Fix $\rho$ ($\rho=1/4096$ for $\lambda,\lambda'$ and $\rho=1/1024$ or $1/2048$ for $L(2,\chi_{-3})$) and the regularised kernel $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)\le-\log|z-w|$.
 
 \begin{lemma}[conditional positive definiteness]\label{lem:cpd}
 For points $p_1,\dots,p_N\in\C$ and real weights $q_\alpha$ with $\sum q_\alpha=0$,
@@ -2045,22 +2149,50 @@ above from its closed form and monotonicity. Then
 \]
 
 \begin{proposition}[certified constants]\label{prop:cert}
-For $\lambda$ and $\lambda'$ there is a measure $\sigma$ with $480$ atoms with dyadic coordinates and masses for which
+For $\lambda$ and $\lambda'$ there is a measure $\sigma$ with $\NatomsNew$ atoms with dyadic coordinates and masses, and $\rho=1/4096$, for which
 \[
 \begin{gathered}
- m'\ge2.2147,\quad S_{\rm cert}\ge-0.12218,\quad (1+\alpha)^2I_\rho(\sigma)\le2.53835,\\ g_{\min}\ge-1.6075,\quad
+ m'\ge\mpNew,\quad S_{\rm cert}\ge-\ScertNew,\quad (1+\alpha)^2I_\rho(\sigma)\le\IsigNew,\\ g_{\min}\ge-\gminNew,\quad
  I(\nu_{1/8})\ge1.7024457,
 \end{gathered}
 \]
-whence $D\ge3.9028$ and $c\le7.6444$. For $L(2,\chi_{-3})$ the certificate of \S\ref{ssec:chicert} gives $D\ge3.7251$
+whence $D\ge\Dnew$ and $c\le\cnew$. For $L(2,\chi_{-3})$ the certificate of \S\ref{ssec:chicert} gives $D\ge3.7251$
 and $c\le6.6510$.
 \end{proposition}
 
 All the inequalities are verified by the Lean kernel (\S\ref{sec:lean}); the data were generated with
-interval arithmetic in Arb \cite{Arb} and then checked independently in Lean with rational arithmetic. For $\lambda$
-the measure is assembled from a square-frame certificate and an extra family of atoms that represents the additional
-density $\frac12\mathrm{Leb}|_{[1,1+2\alpha]}$; the function $g$ splits as the square-frame function plus a correction
-term, which is certified on a coarse cover.
+interval arithmetic in Arb \cite{Arb} and then checked independently in Lean with rational arithmetic.
+The certificate for $\lambda$ and $\lambda'$ is described in the next subsection.
+
+\subsection{Dual-guided atoms and steeper rays}\label{ssec:slope-cert}
+Two choices distinguish the certificate for $\lambda$ and $\lambda'$.
+
+\emph{The slope.} Nothing in the contour argument requires slope $3$. The bound $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ holds on any pair of
+rays $x^*+u(-1\pm s_0i)$ with $s_0\ge1$, and the Gram representation \eqref{eq:gram} is unchanged. The slope enters the certificate only through the box cover
+of the rays (a) and the tail bound beyond $u=\frac32$. The vertical coordinate on a box is $s_0u\in[s_0u_1,s_0u_2]$. With the other parameters
+fixed, a scan over $s_0\in\{\frac94,\frac52,\frac{11}4\}$ gives the best ratio at $s_0=\frac52$. The decay engine takes $s_0$ as a parameter.
+Its exponent formula does not depend on $s_0$; only the certified constants $m'$, $g_{\min}$ and $c$ do.
+
+\emph{The atoms.} The measure $\sigma$ has $150$ atoms on the segment $[-\frac7{50},0]$, $600$ conjugate pairs on the rays and $300$ atoms on the line
+$[0,1]$. The positions were not chosen on a uniform grid. The certified ratio is the value of a fractional program in the masses of $\sigma$.
+We solved it numerically by a cutting-plane method together with Dinkelbach's iteration. The dual of this program is a measure
+on the support of $m$, and its support shows where the constraints $g\ge m'$, $g\ge\gamma_\ell$ and $g\ge g_{\min}$ are active. We place atoms
+at the active points, at spacing about $\rho$, and re-solve for the masses. With $\rho=1/4096$ this gives the constants of
+Proposition~\ref{prop:cert}.
+
+Each of the three families of inequalities is checked on a cover by cells with exact integer arithmetic (dyadic cell
+endpoints in units of $2^{-40}$, outward rounded). In each group of consecutive cells the atoms close to the cell are treated one by one
+and the remaining ones by a first-order Taylor expansion. The covers have $29\,701$ ray boxes, $6000$ segment cells and $6430$ line cells.
+The lower bounds in Lean are $10^{-5}$ below the interval values $m'$ and $g_{\min}$. This allowance lets far atoms be
+grouped and costs only $4\cdot10^{-5}$ in $D$.
+
+\begin{remark}[limits of this certificate]
+Weak duality bounds every certificate of this form from below. If $\mu$ is a probability measure on the support of $m$, then any admissible function $g$ satisfies an
+inequality in the integrals $\int g\,d\mu$, and an exact rational dual $\mu$ proves a lower bound for the exponent $c/\eta$ that holds for all
+$\sigma$. For $s_0=\frac52$, $\rho\ge1/4096$, $\alpha=\frac18$ and the content $\LamMid$, a rational dual measure with $3076$ atoms on the rays
+(verified in directed interval arithmetic with $192$ bits) shows that the exponent cannot be below $32.85$. This computation is not part of the Lean development.
+The certificate of Proposition~\ref{prop:cert} is within $0.1$ of this floor at the content $\LamMid$. Smaller $\rho$ needs proportionally more atoms.
+\end{remark}
 
 \subsection{The certificate for $L(2,\chi_{-3})$}\label{ssec:chicert}
 For $F_\chi$ the reflection formula $\psi(z+a)=\psi(1-a-z)-\pi\cot\pi(z+a)$ gives
@@ -2108,7 +2240,7 @@ $(r,m+1)$ with one column node moved by one place, at an energy cost $O(r)$.
 
 \subsection{$G\pm5\pi^2/48$}
 Let $\xi=\lambda$ (the case $\lambda'$ is identical, with primes $\ell\equiv1\pmod 4$). Let
-$\eta=D-\Lambda\ge3.9028-3.68274=0.22006$, let $\nu>c/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put
+$\eta=D-\Lambda\ge\Dnew-\LamNew=\etanew$, let $\nu>c/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put
 $L=\log q$. Choose $\delta>0$ with $\nu>c(1+\delta)/\eta$, let $r=\lceil(1+\delta)L/\eta\rceil$ and choose $m$ with
 $r\le8m\le r+8$.
 
@@ -2125,69 +2257,27 @@ $|d_{\mathcal G_e}P_{\mathcal G_e}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2
 
 \emph{Contradiction.} Comparing, $(\eta-o(1))r^2\le(r+1)L$; but $\eta r\ge(1+\delta)L$. Hence $\mu(\lambda)\le c/\eta$, and
 \[
- \frac c\eta\le\frac{7.6444}{3.9028-3.68274}=34.737798\ldots<34.74 .
+ \frac c\eta\le\frac{\cnew}{\Dnew-\LamNew}=\MuLamExact\ldots<\MuLam .
 \]
 Since $G-5\pi^2/48=2\lambda$ and $G+5\pi^2/48=2\lambda'$, this gives the first two bounds of Theorem~\ref{thm:main}.
 
 \subsection{$L(2,\chi_{-3})$}
-\emph{The earlier pair-family bound.}
-Now the geometry is tied to the prime: for each prime $\ell\equiv1\pmod6$, $\ell\ge61$, there is an admissible pair of
-members of scale $r$ with $5r\le2\ell\le5r+11$, so $r/\ell\to g=\frac25$, and Theorem~\ref{thm:nv} (in the form of
-\S\ref{ssec:nvother}) applies when $\ell\nmid q$. Let $\eta=3.7251-\frac{10339}{3072}=0.359540\ldots$, $\nu>c(1/\eta+\frac45)$,
-and choose $\delta$ small. The primes $\ell\equiv1\pmod 6$ in an interval $(Y,Y+(2+\delta)L]$ with $Y=\frac52(1+\delta)L/\eta$
-have product $e^{(1+\delta/2+o(1))L}>q$, so one of them, $\ell$, does not divide $q$. The corresponding scale satisfies
+Use Section~\ref{sec:chi3-quarter} with at most one common-node deletion, and put
 \[
- (1+\delta)L/\eta-O(1)\le r\le\tfrac25\bigl(Y+(2+\delta)L\bigr)+O(1)=\Bigl(\frac{1+\delta}\eta+\frac{2(2+\delta)}5\Bigr)L+O(1),
-\]
-so $cr<\nu L$ for $\delta$ small, and the comparison above, with $|C|\le r+1$, gives a contradiction. Hence
-\[
- \mu\bigl(\tfrac14L(2,\chi_{-3})\bigr)\le c\Bigl(\frac1\eta+gs\Bigr),\qquad g=\tfrac25,\ s=2,
-\]
-and $6.6510\,(1/0.3595401+0.8)=23.8194\ldots<23.82$. The valuation-one argument of Section~\ref{sec:minor-nv} also allows $s=1$, giving the retained bound $21.16$.
-
-\emph{The bounded-deletion family.} Put
-\[
- \eta=\frac{37251}{10000}-\frac{10339}{3072}=\frac{690317}{1920000},\qquad c=\frac{6651}{1000}.
+ \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
+ \qquad c=\frac{93657}{12500}.
 \]
 Let $\nu>c/\eta$, choose $\delta>0$ so that $c(1+\delta)/\eta<\nu$, put $L=\log q$ and
-$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/8\rceil$.
-For all sufficiently large $r$, every prime $\ell\equiv1\pmod6$ in
-\[
- \frac{51}{20}r\le\ell\le\frac{59}{20}r
-\]
-satisfies $K=(\ell+2)/3\le r$ and $r+2m\le(\ell-1)/2$.
-Indeed $r+2m\le5r/4+7/4$ and the lower endpoint leaves a positive linear margin;
-the upper endpoint gives $K\le59r/60+2/3\le r$ for large $r$.
-The prime number theorem in this progression gives
-\[
- \log\prod_{\substack{51r/20\le\ell\le59r/20\\\ell\equiv1\ (6)}}\ell^2
-   =\left(\frac25+o(1)\right)r>L,
-\]
-since $2/5>\eta$. Thus some such prime satisfies $\ell^2\nmid q$.
-By Theorem~\ref{thm:minor-nv}, some retained common set $J$ with at most three omissions has
-$P_J(p/q)\ne0$. The original tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
-and the estimates in Section~\ref{sec:minor-nv} give
+$r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/4\rceil$.
+By Theorem~\ref{thm:chi3-charzero-selection}, some retained member $P_J$ (the full determinant or a principal restriction omitting one common node)
+has $P_J(p/q)\ne0$. The tropical denominator $d_{r,m}$ clears its coefficients, its degree is at most $r$,
+and the uniform quarter-border content and decay bounds give
 \[
  q^{-r}\le |d_{r,m}P_J(p/q)|
  \le \exp\bigl(- (\eta-o(1))r^2\bigr)
 \]
 whenever $|\xi_\chi-p/q|<q^{-\nu}$; the required window holds because $cr<\nu L$.
-This contradicts $\eta r\ge(1+\delta)L$. Consequently
-\[
- \mu(\xi_\chi)\le\frac c\eta=\frac{12769920}{690317}
- =18.498631788\ldots<\frac{37}{2}.
-\]
-Rational scaling by four preserves the exponent. The periodic content profile of Section~\ref{sec:chi-periodic} first replaces this ratio by $536336640/30491189<17.60$.
-
-\emph{The quarter-border family.} Finally use Section~\ref{sec:chi3-quarter}, with $m=\lceil r/4\rceil$, at most one common-node deletion, and
-\[
- \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
- \qquad c=\frac{93657}{12500}.
-\]
-For any $\nu>c/\eta$, choose $\delta>0$ with $c(1+\delta)/\eta<\nu$ and take $r=\lceil(1+\delta)\log q/\eta\rceil$ as above.
-The characteristic-zero selector gives a nonzero retained member at every rational input. Its degree is at most $r$; the uniform quarter-border content and decay bounds give the same integer comparison
-$q^{-r}\le |d_{r,m}P_J(p/q)|\le\exp[-(\eta-o(1))r^2]$ in the required window. This again contradicts $\eta r\ge(1+\delta)\log q$.
-Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
+This contradicts $\eta r\ge(1+\delta)L$. Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -2199,11 +2289,9 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 
 \begin{remark}[where the constants enter]
 For $\lambda$, $\partial\mu/\partial D=-c/\eta^2\approx-158$, so the third decimal of $D$ matters. The rank deficits of
-\S\ref{sec:content} first lower the exponent from $50.0$ to $38.35$, and Section~\ref{sec:uniform-deficit} lowers it to $34.74$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
+\S\ref{sec:content}, the uniform rescaled-core deficit of Section~\ref{sec:uniform-deficit} and the next-level deficit of Section~\ref{sec:next-level} determine $\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. The free choice of $\ell$ (Theorem~\ref{thm:nv} for all
 $S$ in a range) removes a term $c\,g\,s$ which would otherwise be about $5.1$.
-For $L(2,\chi_{-3})$, valuation-one nonvanishing first reduces the pair-family bound from $23.82$ to $21.16$;
-bounded low-node deletion removes the remaining prime-location cost; the periodic content improvement then gives $17.60$.
-Characteristic-zero selection then allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
+For $L(2,\chi_{-3})$, bounded low-node deletion removes the prime-location cost, and characteristic-zero selection allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio $14.3475713785\ldots$. At this fixed geometry, reducing the fixed deletion count further would not change the leading decay or content constants.
 \end{remark}
 
 %% =====================================================================
@@ -2222,17 +2310,19 @@ definitions of the development: $G$ is $\sum_j(-1)^j/(2j+1)^2$ and $L(2,\chi_{-3
 $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \lean{ChallengeHybrid.lean} and proved in
 \lean{SolutionHybrid.lean} (namespace \lean{CatalanHybridChallenge}):
 \begin{itemize}
-\item \lean{lam_hybrid_measure_3474}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
- $q^{-(34.74+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main}); it is \lean{lam_hyb_measure_uniform};
-\item \lean{mir_hybrid_measure_3474}: the same for $G+5\pi^2/48$; it is \lean{mir_hyb_measure_uniform};
+\item \lean{lam_hybrid_measure_3244}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
+ $q^{-(\MuLam+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main});
+\item \lean{mir_hybrid_measure_3244}: the same for $G+5\pi^2/48$;
 \item \lean{chi3_hybrid_measure_1435}: the same for $L(2,\chi_{-3})$ with exponent $14.35$; it is
  \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
+\item \lean{longCell_rowLocal}, \lean{kind3_rowLocal} and \lean{lam_both_eps_merged}, \lean{mir_both_eps_merged}: the next-level deficit of Section~\ref{sec:next-level} on a long cell, its binding to the prime profile and the resulting content bound;
+\item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda$ with the certificate of \S\ref{ssec:slope-cert}; the decay engine in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
 \item \lean{p6_minorNV_square}, \lean{bandPencil_corank} and \lean{physical_low_rescue}:
  the bounded-deletion nonvanishing argument of Section~\ref{sec:minor-nv};
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
 \item \lean{hyb_primal_false} and \lean{primal_pair}: the end of the nonvanishing chain and Lemma~\ref{lem:primal};
-\item \lean{lam_hybrid_decay}, \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $\lambda$ and $L(2,\chi_{-3})$;
+\item \lean{p6_hybrid_decay}: Theorem~\ref{thm:decay} for $L(2,\chi_{-3})$;
 \item \lean{profile_both_eps}, \lean{p6_content}: Theorem~\ref{thm:content} for $\lambda$ and $L(2,\chi_{-3})$.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}, and the command \texttt{\#print axioms} reports only the
@@ -2250,6 +2340,8 @@ Geometries, the matrices $\Phi_{\mathcal G}$, Lemma~\ref{lem:integrality}, pair 
 \noindent \lean{CatalanCore/Arith/Hybrid}\par
 Gauss valuations, Lemma~\ref{lem:trop}, the level majorant, Proposition~\ref{prop:dual}, prime sums over linear pieces,
 the rank-deficit interface (Lemma~\ref{lem:rank}) and bordering.\par\medskip
+\noindent \lean{CatalanCore/Arith/Hybrid/ShiftNonclean}, \lean{CatalanFrames/HybCommon/DeficitProfile}\par
+Proposition~\ref{prop:weighted} and Theorem~\ref{thm:nextlevel}: the weighted congruence, the two-level determinant bound and the merged profile.\par\medskip
 \noindent \lean{CatalanFrames/Lambda/Hyb*}, \lean{CatalanFrames/LambdaMirrorHybrid}, \lean{CatalanFrames/P6Hybrid}\par
 Theorem~\ref{thm:content} and Theorem~\ref{thm:deficits} for the three constants.\par\medskip
 \noindent \lean{CatalanFrames/LambdaHybrid/NV}\par
@@ -2258,7 +2350,7 @@ Proposition~\ref{prop:red} and its three-level analogue, Lemma~\ref{lem:primal} 
 \noindent \lean{CatalanCore/Star/Leonard}\par
 Proposition~\ref{prop:delta}, Proposition~\ref{prop:bispectral}, (K1)--(K5), the diagonal and Darboux steps, the
 positivity argument, Lemma~\ref{lem:bridge}, Theorem~\ref{thm:good} and the specialisation $\theta\to0$.\par\medskip
-\noindent \lean{CatalanCore/Decay/Rect}, \lean{CatalanCore/Cert/SigmaHyb}, \lean{CatalanCore/Cert/SigmaP6H}\par
+\noindent \lean{CatalanCore/Decay/Rect}, \lean{CatalanCore/Cert/SigmaHybS}, \lean{CatalanCore/Cert/SigmaP6H}\par
 The contour identity, the two-family Andr\'eief bound, Lemma~\ref{lem:cpd}, node removal, and the certificates of
 Proposition~\ref{prop:cert} and \S\ref{ssec:chicert}.\par\medskip
 \noindent \lean{CatalanCore/Measure}, \lean{CatalanFrames/*/Assembly*}\par
@@ -2270,25 +2362,28 @@ system and ported to the current toolchain; the repository's README and provenan
 
 \section*{Disclosure of AI use}
 
-The original development was produced by the AI systems Claude Opus~5.5 and Claude Sonnet~5.5
-(Anthropic): the mathematics, including the rectangular frames, the content bounds and rank deficits, the
-nonvanishing argument and the decay certificates, and all proofs; the Lean formalization; the numerical
-computations and the certificate generators; the literature search; and the text of this paper. Claude worked in a
-series of conversations at the request of the author, who posed the problem, directed the work, and is responsible
-for this submission. The repository infrastructure, vendored formalizations and certificate tooling of the
-companion project \cite{Litsey2026}, which this work reuses, were developed with OpenAI Codex as described there.
-The subsequent improvement for $L(2,\chi_{-3})$ from $23.82$ to $17.60$, including valuation-one reduction and the periodic content improvement,
-the finite-field corank argument, bounded-deletion transfer, their Lean formalization and the corresponding
-additions to this paper, was developed with OpenAI Codex. The earlier exposition is retained except where the
-stronger theorem requires changes. The subsequent uniform rescaled-core argument for both
-$G\pm5\pi^2/48$, the finite interval profile and its Lean formalization, and the improvement from $38.35$
-to $34.74$ were also developed with OpenAI Codex.
-The subsequent quarter-border improvement to $14.35$, including characteristic-zero selection, the analytic certificate and the retained periodic D1 saving, was developed with OpenAI Codex.
+The mathematics, proofs, Lean formalization and text were produced by AI systems at the request of the author, who posed the problem,
+directed the work, and is responsible for this submission. Claude Opus~5.5 and Claude Sonnet~5.5 (Anthropic), working in a series of
+conversations, produced the rectangular frames, the content bounds and rank deficits, the nonvanishing argument and the decay certificates,
+the second-level deficit at non-clean primes with its weighted congruence, the slope-parametrised decay engine and the dual-guided certificate,
+with their proofs and Lean formalization; the numerical computations and the certificate generators; the literature search; and the text.
+OpenAI Codex produced the repository infrastructure, vendored formalizations and certificate tooling of the companion project \cite{Litsey2026},
+which this work reuses; for $L(2,\chi_{-3})$, the valuation-one reduction, the periodic content profile, the finite-field corank argument,
+bounded-deletion transfer, the quarter border with characteristic-zero selection, the analytic certificate and the periodic D1 saving;
+and the uniform rescaled-core argument for $G\pm5\pi^2/48$ with its finite interval profile. Codex also produced the Lean formalization
+and the corresponding text for these parts.
 The underlying determinant method and the irrationality proof for $G$ are OpenAI's \cite{OpenAI2026}. We use Lean~4
 \cite{Lean4}, Mathlib \cite{Mathlib}, the PNT+ project \cite{PNTPlus}, and Arb \cite{Arb} (through
 \texttt{python-flint}) for interval arithmetic in generating certificate data, which Lean re-checks. The formal
 verification in Lean is intended as an independent check of every step of the argument above.
 
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
 \begin{thebibliography}{10}
 
 \bibitem{AAR99}

@@ -123,18 +123,20 @@ end CatalanCore.Rect
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay
 
 /-- Theorem N for a pattern given as an arbitrary finite index set. -/
-theorem det_pattern_le {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
+theorem det_pattern_le {Fr : Frame} (hFr : Fr.DecayOKs' sl) {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
     {m0 : ℝ} (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i) {N0 : ℕ} {R : ℝ} (hR : (N0 : ℝ) ≤ R)
     {P : Type} [Fintype P] [DecidableEq P] (rowN colN : P → ℕ) (hr : Function.Injective rowN)
     (hc : Function.Injective colN) {k : ℕ} (eq : P ≃ Fin k) {Nn : ℕ} (hkN : k ≤ Nn) {T : ℝ}
-    (hE : Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0) T
+    (hE : Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0) T
       (fun i => rowN (eq.symm i)) (fun i => colN (eq.symm i))) :
     |(Matrix.of fun p q : P => Fr.Tent (rowN p) (colN q)).det|
       ≤ Real.exp (T + Nn * Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-          + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1))) := by
+          + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1))) := by
   have hdet : (Matrix.of fun p q : P => Fr.Tent (rowN p) (colN q)).det
       = (Matrix.of fun i j : Fin k => Fr.Tent (rowN (eq.symm i)) (colN (eq.symm j))).det :=
     (Matrix.det_submatrix_equiv_self eq.symm _).symm
@@ -179,12 +181,12 @@ theorem phiTop_y_inr (r m : ℕ) (S : Finset (Fin (r + 1))) (j : Fin m) :
 
 
 /-- Member-2 term bound when `b` is kept: pattern `(r, m+1)` with one column node moved. -/
-theorem term_top_in {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
+theorem term_top_in {Fr : Frame} (hFr : Fr.DecayOKs' sl) {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
     {m0 : ℝ} (hm0 : 0 < m0) (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i) {r m N0 : ℕ} {R : ℝ}
     (hR : (N0 : ℝ) ≤ R) {T1 cc : ℝ} {t : ℝ} (hq : |t| * Real.exp (cc * r) ≤ 1)
     (hEn1 : ∀ (k : ℕ) (s : Fin k → Fin (r + m + 1)), Function.Injective s →
         (∀ b : Fin (r + m + 1), r ≤ (b : ℕ) → ∃ i, s i = b) →
-        Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0)
+        Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0)
           (T1 + r * (((r : ℝ) + m + 1) - k) * cc)
           (fun i => xnode r (s i)) (fun i => ynode r (s i)))
     (S : Finset (Fin (r + 1))) (hl : Fin.last r ∈ S) :
@@ -192,10 +194,10 @@ theorem term_top_in {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he
         |(Rect.FullN Fr (fun a : ↥S => Rect.cT r m a.1) (fun i : Fin m => r + 2 * (i : ℕ))
           (fun i : Fin m => r + 2 * (i : ℕ) + 1) (Fr.const : ℝ)).det|
       ≤ Real.exp (T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-          + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) + Real.log (4 * (1 + 1 / m0)))) := by
+          + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) + Real.log (4 * (1 + 1 / m0)))) := by
   classical
   set L0 : ℝ := Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-      + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) with hL0
+      + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) with hL0
   set κ : ℝ := Real.log (4 * (1 + 1 / m0)) with hκ
   have hκ0 : 0 ≤ κ := Real.log_nonneg (by
     have : 0 ≤ 1 / m0 := by positivity
@@ -303,12 +305,12 @@ theorem phiOut_y (r m : ℕ) (S : Finset (Fin (r + 1))) (hl : Fin.last r ∉ S)
   · simp [phiOut, Rect.colN, ynode]
 
 /-- Member-2 term bound when `b` is omitted: a pattern of `(r, m)`. -/
-theorem term_top_out {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
+theorem term_top_out {Fr : Frame} (hFr : Fr.DecayOKs' sl) {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
     {m0 : ℝ} (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i) {r m N0 : ℕ} {R : ℝ}
     (hR : (N0 : ℝ) ≤ R) {T0 cc : ℝ} {t : ℝ} (hq : |t| * Real.exp (cc * r) ≤ 1) (ht1 : |t| ≤ 1)
     (hEn0 : ∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
         (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-        Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0)
+        Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0)
           (T0 + r * (((r : ℝ) + m) - k) * cc)
           (fun i => xnode r (s i)) (fun i => ynode r (s i)))
     (S : Finset (Fin (r + 1))) (hl : Fin.last r ∉ S) :
@@ -316,10 +318,10 @@ theorem term_top_out {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (h
         |(Rect.FullN Fr (fun a : ↥S => Rect.cT r m a.1) (fun i : Fin m => r + 2 * (i : ℕ))
           (fun i : Fin m => r + 2 * (i : ℕ) + 1) (Fr.const : ℝ)).det|
       ≤ Real.exp (T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-          + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1))) := by
+          + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1))) := by
   classical
   set L0 : ℝ := Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-      + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) with hL0
+      + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) with hL0
   have hScard : S.card ≤ r := by
     have : S ⊆ Finset.univ.erase (Fin.last r) := fun a ha =>
       Finset.mem_erase.2 ⟨fun h => hl (h ▸ ha), Finset.mem_univ _⟩
@@ -369,26 +371,26 @@ theorem term_top_out {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (h
 
 /-- **The window for member 2.**  Same hypotheses as `window_rect` for the two patterns `(r, m)`
 and `(r, m+1)`; the bound has the `(r,m+1)` term perturbed by `O(r)`. -/
-theorem window_rect_top {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
+theorem window_rect_top {Fr : Frame} (hFr : Fr.DecayOKs' sl) {e : ℝ} (he0 : 0 < e) (he1 : e < 1)
     {m0 : ℝ} (hm0 : 0 < m0) (hm0xs : m0 ≤ Fr.xs) (hm0μ : ∀ i, m0 ≤ Fr.μ i) {r m N0 : ℕ} {R : ℝ}
     (hR : (N0 : ℝ) ≤ R) {T0 T1 cc : ℝ} (hcc : 0 ≤ cc)
     (hEn0 : ∀ (k : ℕ) (s : Fin k → Fin (r + m)), Function.Injective s →
         (∀ b : Fin (r + m), r ≤ (b : ℕ) → ∃ i, s i = b) →
-        Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0)
+        Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0)
           (T0 + r * (((r : ℝ) + m) - k) * cc)
           (fun i => xnode r (s i)) (fun i => ynode r (s i)))
     (hEn1 : ∀ (k : ℕ) (s : Fin k → Fin (r + m + 1)), Function.Injective s →
         (∀ b : Fin (r + m + 1), r ≤ (b : ℕ) → ∃ i, s i = b) →
-        Frame.RectEnergy Fr N0 k e m0 (max (Real.log Fr.Aco) 0)
+        Frame.RectEnergy Fr sl N0 k e m0 (max (Real.log Fr.Aco) 0)
           (T1 + r * (((r : ℝ) + m + 1) - k) * cc)
           (fun i => xnode r (s i)) (fun i => ynode r (s i)))
     {t : ℝ} (ht : |t| ≤ Real.exp (-cc * r)) :
     |Polynomial.aeval (Fr.const + t) ((Rect.afterTop r m).fullPolyG Fr)|
       ≤ 2 ^ (r + 1) * Real.exp (max
           (T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)))
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)))
           (T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) + Real.log (4 * (1 + 1 / m0))))) := by
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) + Real.log (4 * (1 + 1 / m0))))) := by
   classical
   rw [Rect.aeval_fullPolyTop, Rect.det_fullN_expansion Fr _ _ _ (Fr.const : ℝ) t]
   have hq : |t| * Real.exp (cc * r) ≤ 1 := by
@@ -406,9 +408,9 @@ theorem window_rect_top {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e)
           (Fr.const : ℝ)).det|
         ≤ Real.exp (max
           (T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)))
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)))
           (T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) + Real.log (4 * (1 + 1 / m0))))) := by
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) + Real.log (4 * (1 + 1 / m0))))) := by
     intro S _
     rw [abs_mul, abs_pow]
     by_cases hl : Fin.last r ∈ S
@@ -427,9 +429,9 @@ theorem window_rect_top {Fr : Frame} (hFr : Fr.DecayOK') {e : ℝ} (he0 : 0 < e)
         Finset.abs_sum_le_sum_abs _ _
     _ ≤ ∑ S ∈ (Finset.univ : Finset (Fin (r + 1))).powerset, Real.exp (max
           (T0 + ((r : ℝ) + m) * Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)))
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)))
           (T1 + ((r : ℝ) + m + 1) * (Real.log (Fr.Wabs * R + (Fr.Wabs * ⌈(Fr.xs : ℝ)⌉₊
-            + 2 * (Fr.Aco ^ e / Frame.betaE e) + 1)) + Real.log (4 * (1 + 1 / m0))))) :=
+            + 2 * (Fr.Aco ^ e / Frame.betaE sl e) + 1)) + Real.log (4 * (1 + 1 / m0))))) :=
         Finset.sum_le_sum hterm
     _ = _ := by
         rw [Finset.sum_const, Finset.card_powerset, Finset.card_univ, Fintype.card_fin]

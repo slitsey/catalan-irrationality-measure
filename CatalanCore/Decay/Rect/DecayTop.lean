@@ -13,7 +13,7 @@ Same certificate and same constants as `decay_of_certG_rect`, and the same share
 `decay_core`.  For `m = α r` the member `afterTop r m` is controlled by the energy bounds of the
 two patterns `(r, m)` and `(r, m+1)` (`window_rect_top`), the latter perturbed by `O(r)`
 (`rectEnergy_perturb`), which is absorbed into the slack `δ r²`.
-`mem2Decay_of_certG_rect` packages the `m = r/8` cast glue shared by every `α = 1/8` frame.
+`mem2Decay_of_certG_rect_slope` packages the `m = r/8` cast glue shared by every `α = 1/8` frame.
 -/
 
 open Filter Topology
@@ -21,10 +21,12 @@ open CatalanLambda.Decay (Usig Utau Irho cexpr)
 
 namespace CatalanCore
 
+variable {sl : ℝ}
+
 open Decay
 
 theorem decay_top_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -71,7 +73,7 @@ theorem decay_top_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ
 
 /-- The window-`1` case (`α r ≤ m ≤ α r + 1`). -/
 theorem decay_top_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -85,7 +87,7 @@ theorem decay_top_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} 
 
 /-- `decay_top_of_certG_rect_win` for `m = α r` exactly. -/
 theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -101,8 +103,8 @@ theorem decay_top_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt 
 
 /-- **Member decay on a relation `A` inside the window `α r ≤ m ≤ α r + a`** (P6GAP):
 `Mem1DecayA` from `decay_rect_win`. -/
-theorem mem1DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+theorem mem1DecayA_of_certG_rect_slack_slope {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -115,8 +117,8 @@ theorem mem1DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → �
   exact ⟨N, fun r m hAr hr t ht => hN r m hr (hA r m hAr).1 (hA r m hAr).2 t ht⟩
 
 /-- **The second-member decay on a relation `A` inside `α r ≤ m ≤ α r + a`** (P6GAP). -/
-theorem mem2DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+theorem mem2DecayA_of_certG_rect_slack_slope {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -131,7 +133,7 @@ theorem mem2DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → �
 /-- **The second-member decay on an admissible relation `A`, window `α r ≤ m ≤ α r + 1`**
 (P6): `decay_top_of_certG_rect_win` stated as `Mem2DecayA`. -/
 theorem mem2DecayA_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -146,7 +148,7 @@ theorem mem2DecayA_of_certG_rect_win {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ}
 /-- **The second-member decay on an admissible relation `A`** (G3): `decay_top_of_certG_rect`
 for every `(r, m)` with `A r m` and `m = α r` exactly, stated as `Mem2DecayA`. -/
 theorem mem2DecayA_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt) {α : ℚ} (hα : 0 < α)
     (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
         + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -159,8 +161,8 @@ theorem mem2DecayA_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt
 
 /-- **The second-member decay of every `α = 1/8` frame**: `decay_top_of_certG_rect` at `α = 1/8`
 and `m = r/8` (the cast glue, once), stated as `Mem2Decay`. -/
-theorem mem2Decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
-    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt)
+theorem mem2Decay_of_certG_rect_slope {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOKs' sl) (F : Cert.CertCoreGs sl K ρ ε c wt)
     (hg : ∀ s : ℂ, F.g s = (1 + (((1 / 8 : ℚ)) : ℝ)) * Usig ρ c wt s
         - Unu (((1 / 8 : ℚ)) : ℝ) s + (1 - ε) * Real.pi * |s.im|)
     (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
@@ -175,5 +177,40 @@ theorem mem2Decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt 
       rw [Nat.mul_div_cancel_left _ (by norm_num)]
       push_cast; ring) δ hδ
   exact ⟨N, fun r h8 hr t ht => hN r (r / 8) ⟨h8, rfl⟩ hr t ht⟩
+
+/-- **`mem1DecayA_of_certG_rect_slack`** (slope `3`, the existing statement). -/
+theorem mem1DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
+    {a : ℝ} (ha : 0 ≤ a) {A : ℕ → ℕ → Prop}
+    (hA : ∀ r m, A r m → (α : ℝ) * r ≤ m ∧ (m : ℝ) ≤ α * r + a) :
+    Rect.Mem1DecayA Fr A (D : ℝ) (F.ccert : ℝ) :=
+  mem1DecayA_of_certG_rect_slack_slope hFr.toDecayOKs' F hα hg hw0 hRc hc hInu hD ha hA
+
+/-- **`mem2DecayA_of_certG_rect_slack`** (slope `3`, the existing statement). -/
+theorem mem2DecayA_of_certG_rect_slack {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt) {α : ℚ} (hα : 0 < α)
+    (hg : ∀ s : ℂ, F.g s = (1 + (α : ℝ)) * Usig ρ c wt s - Unu (α : ℝ) s
+        + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (α : ℝ)) {D : ℚ} (hD : D ≤ F.Dof Fr.d α Inu)
+    (hcc : (0 : ℝ) ≤ F.ccert) {a : ℝ} (ha : 0 ≤ a) {A : ℕ → ℕ → Prop}
+    (hA : ∀ r m, A r m → (α : ℝ) * r ≤ m ∧ (m : ℝ) ≤ α * r + a) :
+    Rect.Mem2DecayA Fr A (D : ℝ) (F.ccert : ℝ) :=
+  mem2DecayA_of_certG_rect_slack_slope hFr.toDecayOKs' F hα hg hw0 hRc hc hInu hD hcc ha hA
+
+/-- **`mem2Decay_of_certG_rect`** (slope `3`, the existing statement). -/
+theorem mem2Decay_of_certG_rect {K : ℕ} {ρ ε : ℝ} {c : Fin K → ℂ} {wt : Fin K → ℝ} {Fr : Frame}
+    (hFr : Fr.DecayOK') (F : Cert.CertCoreG K ρ ε c wt)
+    (hg : ∀ s : ℂ, F.g s = (1 + (((1 / 8 : ℚ)) : ℝ)) * Usig ρ c wt s
+        - Unu (((1 / 8 : ℚ)) : ℝ) s + (1 - ε) * Real.pi * |s.im|)
+    (hw0 : ∀ k, 0 ≤ wt k) {Rc : ℝ} (hRc : 0 ≤ Rc) (hc : ∀ k, ‖c k‖ ≤ Rc)
+    {Inu : ℚ} (hInu : (Inu : ℝ) ≤ Jfun (((1 / 8 : ℚ)) : ℝ)) {D : ℚ}
+    (hD : D ≤ F.Dof Fr.d (1 / 8) Inu) (hcc : (0 : ℝ) ≤ F.ccert) :
+    Rect.Mem2Decay Fr (D : ℝ) (F.ccert : ℝ) :=
+  mem2Decay_of_certG_rect_slope hFr.toDecayOKs' F hg hw0 hRc hc hInu hD hcc
 
 end CatalanCore

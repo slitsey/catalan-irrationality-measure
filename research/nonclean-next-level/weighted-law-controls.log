@@ -1,8 +1,0 @@
-guard: CIM unavailable; using native RAM and process-tree metrics (same limits)
-exact weighted controls passed 100
-exact weighted controls passed 200
-exact weighted controls passed 300
-exact weighted controls passed 400
-exact weighted controls passed 500
-exact weighted controls passed 600
-ALL exact weighted/source/geometry controls passed 685

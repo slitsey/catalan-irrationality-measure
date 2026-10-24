@@ -139,12 +139,14 @@ set_option maxHeartbeats 2000000 in
 theorem newProfile_nodup : newProfile.Nodup := by
   norm_num (config := {maxSteps := 1000000}) [newProfile, rawProfile, DeficitRow.trim, profileTrim, List.nodup_cons, DeficitRow.mk.injEq]
 
-def profileIntegral : ℚ := (newProfile.map DeficitRow.area).sum/2
+def profileIntegralL (L : List DeficitRow) : ℚ := (L.map DeficitRow.area).sum/2
+
+def profileIntegral : ℚ := profileIntegralL newProfile
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 theorem profileIntegral_eq : profileIntegral=4420349242147094110541/213717258282528000000000 := by
-  norm_num [profileIntegral, newProfile, rawProfile, DeficitRow.trim, profileTrim, DeficitRow.area]
+  norm_num [profileIntegral, profileIntegralL, newProfile, rawProfile, DeficitRow.trim, profileTrim, DeficitRow.area]
 
 def baseLambda : ℚ := 24729491161/6665218560-1/448-1/576-1/352
 
@@ -166,16 +168,46 @@ lemma newProfile_hi_le_one (P : DeficitRow) (hP : P∈newProfile) : P.hi≤1 := 
   · simp only [hk, if_false] at hh
     exact hh.2.2.1.trans (by norm_num)
 
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 2000000 in
+theorem profile_lift_support : ∀P∈newProfile, (1/8 : ℚ)≤P.lo ∧
+    (if P.kind=0 then P.hi≤1/4 else
+      1/4≤P.lo ∧ P.hi≤(if P.poleClass=1 then 9/10 else 9/14)) := by
+  norm_num [newProfile,rawProfile,DeficitRow.trim,profileTrim]
+
+/-- **Row-list data.**  Everything the generic summation, family and weight machinery
+(`Summation`, `Family`, `Weight`, `Log`, `SumFinal`, `Arithmetic`) needs from a list of rows.
+The profile merge supplies it for the merged list; the banked list supplies it as `newProfile_rowData`. -/
+structure RowData (L : List DeficitRow) : Prop where
+  basic : ∀P∈L, (P.poleClass=1 ∨ P.poleClass=3) ∧ 0<P.lo ∧ P.lo<P.hi
+  hi_le_one : ∀P∈L, P.hi≤1
+  pairwise : L.Pairwise DeficitRow.disjoint
+  nodup : L.Nodup
+  lift : ∀P∈L, (1/8 : ℚ)≤P.lo ∧
+    (if P.kind=0 then P.hi≤1/4 else
+      1/4≤P.lo ∧ P.hi≤(if P.poleClass=1 then 9/10 else 9/14))
+
+theorem newProfile_rowData : RowData newProfile where
+  basic P hP := by
+    have h := newProfile_cert P hP
+    exact ⟨h.1,h.2.1,h.2.2.1⟩
+  hi_le_one := newProfile_hi_le_one
+  pairwise := newProfile_pairwise
+  nodup := newProfile_nodup
+  lift := profile_lift_support
+
 abbrev NewDeficit := ℕ→ℕ→ℕ
 noncomputable def profileClass (o : ℕ) (P : DeficitRow) : ZMod 4 :=
   if P.poleClass=1 then ((4-o : ℕ) : ZMod 4) else (o : ZMod 4)
 noncomputable def DeficitRow.toPiece (P : DeficitRow) (C : ℝ) : Piece :=
   ⟨P.lo,P.hi,P.a,P.b,C⟩
 
-/-- The sole geometric input to the profile PNT theorem. -/
-def ProfileCover (o : ℕ) (δ : NewDeficit) (C : ℝ) : Prop :=
-  ∀ᶠr : ℕ in atTop, ∀P∈newProfile,
+/-- The sole geometric input to the profile PNT theorem, for an arbitrary row list. -/
+def ProfileCoverL (L : List DeficitRow) (o : ℕ) (δ : NewDeficit) (C : ℝ) : Prop :=
+  ∀ᶠr : ℕ in atTop, ∀P∈L,
     LowerCovers (profileClass o P) (fun p => (δ r p : ℝ)) r (P.toPiece C)
+
+abbrev ProfileCover (o : ℕ) (δ : NewDeficit) (C : ℝ) : Prop := ProfileCoverL newProfile o δ C
 
 #print axioms newProfile_cert
 #print axioms profileIntegral_eq
