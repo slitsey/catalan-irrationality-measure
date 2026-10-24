@@ -264,5 +264,53 @@ theorem combLin_mul_left {R : Type*} [CommRing R] {ι : Type*} [Fintype ι] (v :
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
 
+
+/-! ### Triangular count -/
+
+/-- A sequence obeying the order-`e` alternating binomial recurrence on `[m0+e, m1)` that
+vanishes on the first `e` terms vanishes on `[m0, m1)`. -/
+theorem alt_binom_vanish {K : Type*} [Field K] (a : ℕ → K) (e m0 m1 : ℕ)
+    (hrec : ∀ mu, m0 + e ≤ mu → mu < m1 →
+      ∑ t ∈ Finset.range (e + 1), (-1 : K) ^ t * (e.choose t : K) * a (mu - t) = 0)
+    (hinit : ∀ mu, m0 ≤ mu → mu < m0 + e → a mu = 0) :
+    ∀ mu, m0 ≤ mu → mu < m1 → a mu = 0 := by
+  intro mu
+  induction mu using Nat.strong_induction_on with
+  | _ mu ih =>
+    intro h0 h1
+    by_cases hmu : mu < m0 + e
+    · exact hinit mu h0 hmu
+    · have hr := hrec mu (by omega) h1
+      rw [Finset.sum_eq_single 0] at hr
+      · simpa using hr
+      · intro t ht ht0
+        have htl := Finset.mem_range.mp ht
+        rw [ih (mu - t) (by omega) (by omega) (by omega), mul_zero]
+      · intro h; exact absurd (Finset.mem_range.mpr (by omega)) h
+
+/-- Triangular families with nonzero diagonal are linearly independent. -/
+theorem triangular_linearIndependent {K : Type*} [Field K] {k : ℕ} (w : Fin k → Fin k → K)
+    (hlow : ∀ i j : Fin k, i < j → w i j = 0) (hdiag : ∀ i, w i i ≠ 0) :
+    LinearIndependent K w := by
+  rw [Fintype.linearIndependent_iff]
+  intro c hc
+  have key : ∀ m : ℕ, ∀ i : Fin k, k - m ≤ i.val → c i = 0 := by
+    intro m
+    induction m with
+    | zero => intro i hi; exact absurd i.isLt (by omega)
+    | succ m ih =>
+      intro i hi
+      have hz := congrFun hc i
+      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at hz
+      rw [Finset.sum_eq_single i] at hz
+      · exact (mul_eq_zero.mp hz).resolve_right (hdiag i)
+      · intro j _ hj
+        rcases lt_or_gt_of_ne hj with h | h
+        · rw [hlow j i h, mul_zero]
+        · rw [ih j (by have := Fin.lt_def.mp h; omega), zero_mul]
+      · intro h; exact absurd (Finset.mem_univ i) h
+  intro i
+  exact key k i (by omega)
+
 end
 end CatalanMeasure.GenD
