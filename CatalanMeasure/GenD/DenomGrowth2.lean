@@ -68,7 +68,7 @@ theorem denExp_term_le (P : Parameters) (lb : NullityLB P) {N p : ℕ} (hp : p �
       exact mul_le_mul_of_nonneg_right hcast hlogp
 
 theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
-    (f : PL.Prof) (l : List PrimeGrowth.Seg) (κ0 : ℝ)
+    (f : PL.Prof) (l : List PrimeGrowth.Seg) (κ0 : ℝ) (sl : ℕ)
     (hloss : ∀ N p : ℕ, 0 < N → p ≤ P.H N →
       (OddProfile.oddLossNat P N p : ℝ) = N * f.eval ((p : ℝ) / N))
     (hf0 : ∀ x : ℝ, x ≤ 1 → f.eval x = κ0)
@@ -76,7 +76,7 @@ theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
     (hgain : ∀ N p : ℕ, 0 < N → p.Prime → P.H N < p ^ 2 → p ≤ P.H N →
       lb.kap N p ≤ OddProfile.oddLossNat P N p ∧
         (0 < lb.kap N p → 2 * P.n N ≤ OddProfile.oddLossNat P N p))
-    (hgood : ∀ s ∈ l, PrimeGrowth.Seg.Good lb.kap s)
+    (hgood : ∀ s ∈ l, PrimeGrowth.Seg.Good (fun N p => lb.kap N p + sl) s)
     (hord : l.Pairwise (fun s t => s.b ≤ t.a))
     (hwin : ∀ s ∈ l, ∀ N p : ℕ, 0 < N → p.Prime → s.a * N < p → (p : ℝ) ≤ s.b * N →
       p ≠ 2 ∧ P.H N < p ^ 2 ∧ p ≤ P.H N)
@@ -87,11 +87,11 @@ theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
         (N : ℝ) ^ 2 := by
   have hcont : Continuous f.eval := f.continuous
   have hM := OddProfile.prime_sum_tendsto_from_zero hcont κ0 hf0 hH1
-  have e1 := twoAdic_growth P hP (show 0 < ε / 4 by positivity)
-  have e2 := smallPrime_growth P hP (show 0 < ε / 4 by positivity)
-  have e3 := (tendsto_order.mp hM).2 (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 4)
+  have e1 := twoAdic_growth P hP (show 0 < ε / 5 by positivity)
+  have e2 := smallPrime_growth P hP (show 0 < ε / 5 by positivity)
+  have e3 := (tendsto_order.mp hM).2 (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 5)
     (by linarith)
-  have e4 := PrimeGrowth.segs_growth lb.kap (fun N => oddBranch P N) l hgood hord
+  have e4 := PrimeGrowth.segs_growth (fun N p => lb.kap N p + sl) (fun N => oddBranch P N) l hgood hord
     (fun N s hs p hp h1 h2 => by
       have hN : 0 < N := by
         rcases Nat.eq_zero_or_pos N with h | h
@@ -102,8 +102,12 @@ theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
       obtain ⟨hp2, hsq, hpH⟩ := hwin s hs N p hN hp h1 h2
       exact Finset.mem_filter.mpr ⟨Finset.mem_filter.mpr ⟨Finset.mem_Ioc.mpr ⟨hp.pos, hpH⟩, hp⟩,
         hp2, not_le.mpr hsq⟩)
-    (c := PrimeGrowth.totalArea l - ε / 4) (by linarith)
-  filter_upwards [e1, e2, e3, e4, eventually_gt_atTop (0 : ℕ)] with N h1 h2 h3 h4 hN
+    (c := PrimeGrowth.totalArea l - ε / 5) (by linarith)
+  have hlog4 : 0 < Real.log 4 := Real.log_pos (by norm_num)
+  have hH1R : (0 : ℝ) < P.H 1 := by exact_mod_cast (lt_trans Nat.zero_lt_one hH1)
+  filter_upwards [e1, e2, e3, e4, eventually_gt_atTop (0 : ℕ),
+    eventually_ge_atTop ⌈5 * (sl : ℝ) * (Real.log 4 * (P.H 1 : ℝ)) / ε⌉₊]
+    with N h1 h2 h3 h4 hN hN5
   have hNr : (0 : ℝ) < N := by exact_mod_cast hN
   rw [log_expDenom]
   -- termwise bound
@@ -160,8 +164,8 @@ theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
   have hC : ∑ p ∈ denomPrimes P N,
       (if p ≠ 2 ∧ ¬ p ^ 2 ≤ P.H N then
         ((OddProfile.oddLossNat P N p : ℝ) - (lb.kap N p : ℝ)) * Real.log p else 0) ≤
-      N * (N * (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 4)) -
-        (PrimeGrowth.totalArea l - ε / 4) * (N : ℝ) ^ 2 := by
+      N * (N * (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 5)) -
+        (PrimeGrowth.totalArea l - ε / 5) * (N : ℝ) ^ 2 + ε / 5 * (N : ℝ) ^ 2 := by
     rw [← Finset.sum_filter]
     change ∑ p ∈ oddBranch P N, ((OddProfile.oddLossNat P N p : ℝ) - (lb.kap N p : ℝ)) *
       Real.log p ≤ _
@@ -182,10 +186,43 @@ theorem denom_growth (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
       ring
     have h3' : ∑ p ∈ (Finset.Ioc 0 (P.H 1 * N)).filter Nat.Prime,
         f.eval ((p : ℝ) / N) * Real.log (p : ℝ) ≤
-        (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 4) * N := by
+        (κ0 + (∫ x in (1 : ℝ)..(P.H 1 : ℝ), f.eval x) + ε / 5) * N := by
       have := (div_lt_iff₀ hNr).mp h3
       exact this.le
-    have h4' := h4
+    -- the slack: Σ_T (kap + sl) log p = Σ_T kap log p + sl Σ_T log p, Σ_T log p ≤ θ(H N)
+    have hθ : ∑ p ∈ oddBranch P N, Real.log (p : ℝ) ≤ Real.log 4 * (P.H N : ℝ) := by
+      refine le_trans ?_ (Chebyshev.theta_le_log4_mul_x (Nat.cast_nonneg _))
+      rw [Chebyshev.theta_eq_sum_Icc, Nat.floor_natCast]
+      apply Finset.sum_le_sum_of_subset_of_nonneg
+      · intro p hp
+        obtain ⟨hmem, _⟩ := Finset.mem_filter.mp hp
+        obtain ⟨hmem2, hpr⟩ := Finset.mem_filter.mp hmem
+        exact Finset.mem_filter.mpr ⟨Finset.mem_Icc.mpr
+          ⟨Nat.zero_le _, (Finset.mem_Ioc.mp hmem2).2⟩, hpr⟩
+      · intro p hp _
+        have hpr := (Finset.mem_filter.mp hp).2
+        exact Real.log_nonneg (by exact_mod_cast hpr.one_lt.le)
+    have hslack : (sl : ℝ) * (Real.log 4 * (P.H N : ℝ)) ≤ ε / 5 * (N : ℝ) ^ 2 := by
+      have hc : 5 * (sl : ℝ) * (Real.log 4 * (P.H 1 : ℝ)) / ε ≤ N :=
+        (Nat.le_ceil _).trans (by exact_mod_cast hN5)
+      have hc' : (sl : ℝ) * (Real.log 4 * (P.H 1 : ℝ)) ≤ ε / 5 * N := by
+        have := (div_le_iff₀ hε).mp hc
+        linarith
+      rw [TwoAdic.cast_H]
+      have := mul_le_mul_of_nonneg_right hc' hNr.le
+      nlinarith only [this]
+    have h4' : (PrimeGrowth.totalArea l - ε / 5) * (N : ℝ) ^ 2 ≤
+        ∑ p ∈ oddBranch P N, (lb.kap N p : ℝ) * Real.log p + ε / 5 * (N : ℝ) ^ 2 := by
+      have hsplit : ∑ p ∈ oddBranch P N, ((lb.kap N p + sl : ℕ) : ℝ) * Real.log p =
+          ∑ p ∈ oddBranch P N, (lb.kap N p : ℝ) * Real.log p +
+            (sl : ℝ) * ∑ p ∈ oddBranch P N, Real.log (p : ℝ) := by
+        rw [Finset.mul_sum, ← Finset.sum_add_distrib]
+        apply Finset.sum_congr rfl
+        intro p _
+        push_cast; ring
+      have := mul_le_mul_of_nonneg_left hθ (Nat.cast_nonneg (α := ℝ) sl)
+      rw [hsplit] at h4
+      nlinarith only [h4, this, hslack]
     have hmono := mul_le_mul_of_nonneg_left h3' hNr.le
     nlinarith only [hL, hL2, hmono, h4']
   nlinarith only [hA, hB, hC, h1, h2]
