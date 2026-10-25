@@ -64,11 +64,19 @@
 \newcommand{\EtaThirds}{0.6398917}
 \newcommand{\MuThirds}{10.61}
 \newcommand{\MuThirdsExact}{10.6078}
+% Constants of the result for psi'(a/5) - zeta(2).
+\newcommand{\LamFifths}{3.675334}         % content (195975263767/53321748480)
+\newcommand{\EtaFifths}{0.230235}
+\newcommand{\MuFifths}{31.95}
+\newcommand{\MuFifthsExact}{31.9439}
+% Constants of the result for L(2,chi_{-3}).
+\newcommand{\MuChi}{14.21}
+\newcommand{\MuChiExact}{14.2095662593}
 % ---------------------------------------------------------------------------
 
 \begin{document}
 
-\title{Irrationality measures for $G\pm5\pi^2/48$, $L(2,\chi_{-3})$ and $L(2,\chi_{-3})\pm\frac23\zeta(2)$}
+\title[Irrationality measures for $G\pm5\pi^2/48$ and related constants]{Irrationality measures for $G\pm5\pi^2/48$, $L(2,\chi_{-3})$, $L(2,\chi_{-3})\pm\frac23\zeta(2)$ and $\psi'(\frac a5)-\zeta(2)$}
 
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
@@ -88,7 +96,7 @@ $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \begin{gathered}
  \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le \MuLam,\qquad
  \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le \MuLam,\\
- \mu\bigl(L(2,\chi_{-3})\bigr)\le 14.35 ,
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le \MuChi ,
 \end{gathered}
 \]
 and, for the digamma differences with shifts $\frac13$ and $\frac23$,
@@ -98,6 +106,8 @@ effective bound $\mu\le24781$. The same method gives, for the two numbers $L(2,\
 \[
  \mu\Bigl(L(2,\chi_{-3})\pm\tfrac23\zeta(2)\Bigr)\le10.61 .
 \]
+For the shifts $\frac a5$ it gives $\mu\bigl(\psi'(\frac a5)-\zeta(2)\bigr)\le\MuFifths$ for $a=1,2,3,4$; we know of no earlier irrationality
+result for these four numbers.
 
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer nodes.
 We bound their denominators with $p$-adic assignment problems and rank deficits modulo $p$. We prove nonvanishing
@@ -147,14 +157,14 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 \begin{gathered}
  \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\qquad
  \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\\
- \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-14.35-\varepsilon}.
+ \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-\MuChi-\varepsilon}.
 \end{gathered}
 \]
 In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le\MuLam$ and
-$\mu(L(2,\chi_{-3}))\le14.35$.
+$\mu(L(2,\chi_{-3}))\le\MuChi$.
 \end{theorem}
 
-The computed values of the exponents are $\MuLamExact$ and $14.3475713785\ldots$.
+The computed values of the exponents are $\MuLamExact$ and $\MuChiExact\ldots$.
 
 A companion result concerns the digamma differences with shifts $\frac13$ and $\frac23$, for which
 $\psi'(\frac13)=\frac{2\pi^2}3+\frac92L(2,\chi_{-3})$ and $\psi'(\frac23)=\frac{2\pi^2}3-\frac92L(2,\chi_{-3})$. Since $\pi^2/9=\frac23\zeta(2)$, they give
@@ -169,7 +179,19 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 In particular $L(2,\chi_{-3})\pm\frac23\zeta(2)$ are irrational and have irrationality exponent at most $\MuThirds$.
 \end{theorem}
 
-The computed value of the exponent is $\MuThirdsExact\ldots$, namely $6.78788/(3.87115-3.2312582\ldots)$. Theorem~\ref{thm:main} and Theorem~\ref{thm:thirds}, together with every
+The computed value of the exponent is $\MuThirdsExact\ldots$, namely $6.78788/(3.87115-3.2312582\ldots)$.
+
+The shifts $\frac a5$ give four further numbers, $\psi'(\frac a5)-\zeta(2)=\sum_{n\ge0}(n+\frac a5)^{-2}-\frac{\pi^2}6$.
+
+\begin{theorem}\label{thm:fifths}
+For $a\in\{1,2,3,4\}$ and every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
+\[
+ \Bigl|\psi'\bigl(\tfrac a5\bigr)-\zeta(2)-\frac pq\Bigr|>q^{-\MuFifths-\varepsilon}.
+\]
+In particular the four numbers $\psi'(\frac a5)-\zeta(2)$ are irrational and have irrationality exponent at most $\MuFifths$.
+\end{theorem}
+
+The computed value of the exponent is $\MuFifthsExact\ldots$. Theorems~\ref{thm:main}, \ref{thm:thirds} and~\ref{thm:fifths}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -192,11 +214,13 @@ $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a constructio
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
 The remark following that theorem states that the same theorem and proof hold for any $\Q$-linear combination of
 $L(2,\chi_{-3})$ and $\zeta(2)$; in particular $24781$ was the known bound for $L(2,\chi_{-3})\pm\frac23\zeta(2)$.
-Theorem~\ref{thm:main} improves it to $14.35$ for $L(2,\chi_{-3})$, and Theorem~\ref{thm:thirds} to $10.61$ for the
+Theorem~\ref{thm:main} improves it to $\MuChi$ for $L(2,\chi_{-3})$, and Theorem~\ref{thm:thirds} to $10.61$ for the
 two numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$. Leibtag et al.\ \cite{LBKWSK26} find numerically that
 Ap\'ery-like approximations from conservative matrix fields have positive approximation exponents for
 $L(2,\chi_{-3})\pm\frac23\zeta(2)$, and a supplement to their paper uses one such field to give an Ap\'ery-style
 proof of the theorem of Calegari, Dimitrov and Tang; the exponent it proves for each of these two numbers is only greater than $10^{-4}$.
+For the four numbers $\psi'(\frac a5)-\zeta(2)$ of Theorem~\ref{thm:fifths} our searches found no earlier irrationality result; the irrationality of $\mathrm{Li}_2(1/5)$ proved by Prellberg \cite{Prellberg26}
+concerns a different number.
 
 For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
 and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
@@ -229,7 +253,7 @@ irrationality of $\zeta(3)$ by Liu, Zhang and Zhi \cite{LZZ25}.
 Section~\ref{sec:overview} explains the construction and the new ideas without technicalities, and states the
 general deduction. Sections~\ref{sec:construction}--\ref{sec:decay} give the construction and the three estimates
 (denominator, nonvanishing, decay); Section~\ref{sec:proof} deduces Theorem~\ref{thm:main}, and
-Section~\ref{sec:thirds} proves Theorem~\ref{thm:thirds}, and Section~\ref{sec:limits} discusses the limits of the method. Section~\ref{sec:lean} describes the
+Section~\ref{sec:thirds} proves Theorem~\ref{thm:thirds}, Section~\ref{sec:fifths} proves Theorem~\ref{thm:fifths}, and Section~\ref{sec:limits} discusses the limits of the method. Section~\ref{sec:lean} describes the
 formalization, and the disclosure of AI use follows it.
 
 \subsection{Notation and conventions}
@@ -384,7 +408,7 @@ $\lambda_+$ the size can be chosen independently of $\ell$, so the term $gs$ dis
 $\mu\le\cnew/\etanew<\MuLam$. For $L(2,\chi_{-3})$, Section~\ref{sec:chi3-quarter} uses a quarter border and a characteristic-zero selection of one
 common-node deletion; no prime has to be chosen, so the term $gs$ again disappears. Together with an analytic certificate and the saving at small primes
 this gives
-$\mu\le(93657/12500)/(1158407/250000-\Lambda_{16})<14.35$, with $\Lambda_{16}=339258406689121/82516315939200$.
+$\mu\le(376269/50000)/(1485123059/320000000-\Lambda_{16})<\MuChi$, with $\Lambda_{16}=339258406689121/82516315939200$.
 
 \begin{center}
 {\setlength{\tabcolsep}{2pt}
@@ -394,8 +418,9 @@ constant & content $\Lambda$ & decay $D$ & window $c$ & $\eta=D-\Lambda$ & $gs$ 
 \midrule
 $G-5\pi^2/48$ & $\LamNew$ & $\Dnew$ & $\cnew$ & $\etanew$ & $0$ & $\MuLamExact$\\
 $G+5\pi^2/48$ & $\LamNew$ & $\Dnew$ & $\cnew$ & $\etanew$ & $0$ & $\MuLamExact$\\
-$L(2,\chi_{-3})$ & $\Lambda_{16}$ & $4.633628$ & $7.49256$ & $0.522218$ & $0$ & $14.347571$\\
+$L(2,\chi_{-3})$ & $\Lambda_{16}$ & $4.641010$ & $7.52538$ & $0.529600$ & $0$ & $14.209567$\\
 $L(2,\chi_{-3})\pm\frac23\zeta(2)$ & \LamThirds & \DThirds & \cThirds & \EtaThirds & $0$ & \MuThirdsExact\\
+$\psi'(\frac a5)-\zeta(2)$ & \LamFifths & \Dnew & $7.3546196$ & \EtaFifths & $0$ & \MuFifthsExact\\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -1071,7 +1096,7 @@ For admissible geometries of scale $r$ and real $t$ with $|t|\le e^{-cr}$,
 \[
 \begin{gathered}
  |P_{\mathcal G}(\xi+t)|\le\exp\bigl(-(D-o(1))r^2\bigr),\\
- (D,c)=\begin{cases}(\Dnew,\ \cnew)&\text{for }\lambda_-,\lambda_+,\\ (4.633628,\ 7.49256)&\text{for }L(2,\chi_{-3}).\end{cases}
+ (D,c)=\begin{cases}(\Dnew,\ \cnew)&\text{for }\lambda_-,\lambda_+,\\ (4.641010,\ 7.52538)&\text{for }L(2,\chi_{-3}).\end{cases}
 \end{gathered}
 \]
 \end{theorem}
@@ -1171,8 +1196,8 @@ For $\lambda_-$ and $\lambda_+$ there is a measure $\sigma$ with $\NatomsNew$ at
  I(\nu_{1/8})\ge1.7024457,
 \end{gathered}
 \]
-whence $D\ge\Dnew$ and $c\le\cnew$. For $L(2,\chi_{-3})$ the certificate of Section~\ref{sec:chi3-quarter} gives $D\ge4.633628$
-and $c\le7.49256$.
+whence $D\ge\Dnew$ and $c\le\cnew$. For $L(2,\chi_{-3})$ the certificate of Section~\ref{sec:chi3-quarter} gives $D\ge4.641009$
+and $c\le7.52538$.
 \end{proposition}
 
 All the inequalities are verified by the Lean kernel (\S\ref{sec:lean}); the data were generated with
@@ -1259,8 +1284,8 @@ Since $G-5\pi^2/48=2\lambda_-$ and $G+5\pi^2/48=2\lambda_+$, this gives the firs
 \subsection{$L(2,\chi_{-3})$}
 Use Section~\ref{sec:chi3-quarter} with at most one common-node deletion, and put
 \[
- \eta=\frac{1158407}{250000}-\Lambda_{16}=0.522217997\ldots,
- \qquad c=\frac{93657}{12500}.
+ \eta=\frac{1485123059}{320000000}-\Lambda_{16}=0.5295995572\ldots,
+ \qquad c=\frac{376269}{50000}.
 \]
 Let $\nu>c/\eta$, choose $\delta>0$ so that $c(1+\delta)/\eta<\nu$, put $L=\log q$ and
 $r=\lceil(1+\delta)L/\eta\rceil$, and set $m=\lceil r/4\rceil$.
@@ -1272,7 +1297,7 @@ and the uniform quarter-border content and decay bounds give
  \le \exp\bigl(- (\eta-o(1))r^2\bigr)
 \]
 whenever $|\xi_\chi-p/q|<q^{-\nu}$; the required window holds because $cr<\nu L$.
-This contradicts $\eta r\ge(1+\delta)L$. Consequently $\mu(\xi_\chi)\le c/\eta=14.3475713785\ldots<14.35$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
+This contradicts $\eta r\ge(1+\delta)L$. Consequently $\mu(\xi_\chi)\le c/\eta=\MuChiExact\ldots<\MuChi$; rational scaling by four completes Theorem~\ref{thm:main}. \qed
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1284,6 +1309,7 @@ from an analytic asymptotic, and that the size $r$ of the determinant is chosen 
 
 %% =====================================================================
 \input{thirds-shift}
+\input{fifths-shift}
 
 %% =====================================================================
 \section{Limits of the method}\label{sec:limits}
@@ -1297,8 +1323,8 @@ $\Lambda$; the certificate of \S\ref{ssec:slope-cert} determines $D$ and $c$. Th
 otherwise be about $5.1$.
 
 For $L(2,\chi_{-3})$, characteristic-zero selection of a single common-node deletion
-allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting ratio
-$14.3475713785\ldots$. At this geometry, reducing the number of deleted nodes further would not change the
+allows the quarter border of Section~\ref{sec:chi3-quarter}; with the certificate there the ratio is
+$\MuChiExact\ldots$. At this geometry, reducing the number of deleted nodes further would not change the
 leading decay or content constants. Further progress requires a smaller content constant, through new rank
 deficits, or a larger decay constant, through a better treatment of the energy problem; weak duality
 (Remark~\ref{rem:certlimit}) measures how much a certificate of the present form can still gain. For
@@ -1326,8 +1352,9 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
  $q^{-(\MuLam+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main});
 \item \lean{mir_hybrid_measure_3244}: the same for $G+5\pi^2/48$;
 \item \lean{chi3_plus_zeta2_measure_1061}, \lean{chi3_minus_zeta2_measure_1061}: the same for $L(2,\chi_{-3})+\pi^2/9$ and $L(2,\chi_{-3})-\pi^2/9$ with exponent $\MuThirds$ (Theorem~\ref{thm:thirds}); they are stated in \lean{CatalanFrames/Thirds/StatementsT.lean} (namespace \lean{CatalanFrames.Thirds}), with the content \lean{thirdsSharpPrice} and the constants $D=\frac{77423}{20000}$, $c=\frac{169697}{25000}$ entering through \lean{chi3_plus_zeta2_measure_of_decay} and the check \lean{thirds_exponent_checkT};
-\item \lean{chi3_hybrid_measure_1435}: the same for $L(2,\chi_{-3})$ with exponent $14.35$; it is
- \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
+\item \lean{chi3_hybrid_measure_1421}: the same for $L(2,\chi_{-3})$ with exponent $\MuChi$; it is
+ \lean{CatalanFrames.P6Hybrid.QuarterContour.Cert1421.chi3_measure}, with the decay certificate in \lean{CatalanCore/Cert/QuarterContour} and \lean{CatalanCore/Cert/SigmaQuarterContour};
+\item \lean{fifths1_hybrid_measure_3195}, \dots, \lean{fifths4_hybrid_measure_3195}: the same for $\psi'(\frac a5)-\pi^2/6$, $a=1,\dots,4$, with exponent $\MuFifths$ (Theorem~\ref{thm:fifths}); they are \lean{CatalanFrames.Fifths.fifths1_measure_3195}, \dots, in \lean{CatalanFrames/Fifths/Statements.lean}, with the content bound \lean{fifths1_hasContent} and the decay \lean{fifths1_minorDecayS};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
 \item \lean{thirds_hasNVPinC}, \lean{thirdsAc_minorDecayT} and \lean{thirdsAc_hasContent_sharp}, with the \lean{thirdsBc} versions: Theorems~\ref{thm:thirds-nv}, \ref{thm:decay-thirds} and \ref{thm:content-thirds};
 \item \lean{longCell_rowLocal}, \lean{kind3_rowLocal} and \lean{lam_both_eps_merged}, \lean{mir_both_eps_merged}: the next-level deficit of Section~\ref{sec:next-level} on a long cell, its binding to the prime profile and the resulting content bound;

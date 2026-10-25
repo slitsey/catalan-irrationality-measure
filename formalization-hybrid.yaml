@@ -3,15 +3,15 @@
 version: "v0.4"
 
 project:
-  name: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}) and L(2, chi_{-3}) -/+ pi^2/9"
+  name: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}), L(2, chi_{-3}) -/+ pi^2/9 and psi'(a/5) - pi^2/6"
   description: >-
     For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 32.44
     and mu(G + 5 pi^2/48) <= 32.44, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
-    we prove mu(L(2, chi_{-3})) <= 14.35, and mu(L(2, chi_{-3}) + pi^2/9) <= 10.61 and
-    mu(L(2, chi_{-3}) - pi^2/9) <= 10.61: for every e > 0, all large q and all p coprime to q,
+    we prove mu(L(2, chi_{-3})) <= 14.21, and mu(L(2, chi_{-3}) + pi^2/9) <= 10.61 and
+    mu(L(2, chi_{-3}) - pi^2/9) <= 10.61, and mu(psi'(a/5) - pi^2/6) <= 31.95 for a = 1, 2, 3, 4: for every e > 0, all large q and all p coprime to q,
     |x - p/q| > q^(-(E+e)). The proofs use rectangular, bordered Loewner matrices of digamma
     differences (library CatalanCore; the shifts 1/4, 3/4 give G, the shifts 1/3, 2/3 give
-    L(2, chi_{-3}) together with a multiple of pi^2), nonvanishing modulo a prime and by characteristic-zero
+    L(2, chi_{-3}) together with a multiple of pi^2, the shifts a/5 give psi'(a/5) - pi^2/6), nonvanishing modulo a prime and by characteristic-zero
     selection, decay from Cauchy determinants and Andreief's identity, and kernel-checked
     rational certificates.
   authors:
@@ -34,10 +34,11 @@ related_formalizations:
 
 status:
   scope: >-
-    All five advertised statements are fully proved (SolutionHybrid.lean, via
+    All nine advertised hybrid statements are fully proved (SolutionHybrid.lean, via
     CatalanFrames.LambdaHybrid.lam_hyb_measure_final2, CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final2
-    and CatalanFrames.P6Hybrid.Quarter.chi3_measure, CatalanFrames.Thirds.chi3_plus_zeta2_measure_1061
-    and CatalanFrames.Thirds.chi3_minus_zeta2_measure_1061). No sorry and
+    CatalanFrames.P6Hybrid.QuarterContour.Cert1421.chi3_measure, CatalanFrames.Thirds.chi3_plus_zeta2_measure_1061,
+    CatalanFrames.Thirds.chi3_minus_zeta2_measure_1061 and CatalanFrames.Fifths.fifths1_measure_3195, ...,
+    CatalanFrames.Fifths.fifths4_measure_3195). No sorry and
     no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -46,7 +47,7 @@ status:
 fidelity:
   divergences: >-
     None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 811/25, 287/20 and 1061/100 as rationals cast to R.
+    to q (IsCoprime p q) and q >= q0, with E = 811/25, 1421/100, 1061/100 and 639/20 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -63,8 +64,8 @@ alignment:
       lean: "CatalanHybridChallenge.mir_hybrid_measure_3244"
       module: "ChallengeHybrid"
       status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.35"
-      lean: "CatalanHybridChallenge.chi3_hybrid_measure_1435"
+    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.21"
+      lean: "CatalanHybridChallenge.chi3_hybrid_measure_1421"
       module: "ChallengeHybrid"
       status: proved
     - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}) + pi^2/9, exponent 10.61"
@@ -75,9 +76,25 @@ alignment:
       lean: "CatalanHybridChallenge.chi3_minus_pi2_hybrid_measure_1061"
       module: "ChallengeHybrid"
       status: proved
+    - source: "Litsey (2026), hybrid measure for psi'(1/5) - pi^2/6, exponent 31.95"
+      lean: "CatalanHybridChallenge.fifths1_hybrid_measure_3195"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), hybrid measure for psi'(2/5) - pi^2/6, exponent 31.95"
+      lean: "CatalanHybridChallenge.fifths2_hybrid_measure_3195"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), hybrid measure for psi'(3/5) - pi^2/6, exponent 31.95"
+      lean: "CatalanHybridChallenge.fifths3_hybrid_measure_3195"
+      module: "ChallengeHybrid"
+      status: proved
+    - source: "Litsey (2026), hybrid measure for psi'(4/5) - pi^2/6, exponent 31.95"
+      lean: "CatalanHybridChallenge.fifths4_hybrid_measure_3195"
+      module: "ChallengeHybrid"
+      status: proved
 
 sources:
-  - title: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}) and L(2, chi_{-3}) -/+ pi^2/9"
+  - title: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}), L(2, chi_{-3}) -/+ pi^2/9 and psi'(a/5) - pi^2/6"
     type: original-proof
     relationship: other
     note: "Companion work by S. Litsey (2026)."

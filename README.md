@@ -1,15 +1,16 @@
 # Irrationality measures for Catalan's constant and related constants
 
-A Lean 4 formalization of five irrationality measures. Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be
-Catalan's constant and `L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)`.
+A Lean 4 formalization of ten irrationality measures. Let `G = ∑_{j ≥ 0} (-1)^j / (2j+1)^2` be
+Catalan's constant, `L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` and `ψ'(x) = ∑_{n ≥ 0} 1/(n+x)^2`.
 
 > **Theorem.**
 >
 > - μ(G) ≤ 590;
 > - μ(G − 5π²/48) ≤ 32.44;
 > - μ(G + 5π²/48) ≤ 32.44;
-> - μ(L(2, χ₋₃)) ≤ 14.35;
-> - μ(L(2, χ₋₃) ± π²/9) ≤ 10.61 (both signs).
+> - μ(L(2, χ₋₃)) ≤ 14.21;
+> - μ(L(2, χ₋₃) ± π²/9) ≤ 10.61 (both signs);
+> - μ(ψ'(a/5) − π²/6) ≤ 31.95 for a = 1, 2, 3, 4.
 
 For `G` this means `|G − a/b| > b^(-590)` for every integer `a` and every sufficiently large
 integer `b`. For the other constants `x` with exponent `E` it means: for every `e > 0`,
@@ -23,7 +24,7 @@ All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.s
 - S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX source and PDF in
   [`paper/`](paper/) (`catalan-measure-hexagon.tex` is the single-file version), Hexagon preprint
   `hexagon:2610.00187`.
-- S. Litsey, *Irrationality measures for G ± 5π²/48, L(2, χ₋₃) and L(2, χ₋₃) ± π²/9* (2026): LaTeX source and PDF in
+- S. Litsey, *Irrationality measures for G ± 5π²/48, L(2, χ₋₃), L(2, χ₋₃) ± (2/3)ζ(2) and ψ'(a/5) − ζ(2)* (2026): LaTeX source and PDF in
   [`paper-lambda/`](paper-lambda/) (`lambda-irrationality-hexagon.tex` is the single-file version),
   Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
 
@@ -79,12 +80,12 @@ and decay proved with Cauchy determinants and Andréief's identity.
   certificate has contour rays of slope 5/2, `ρ = 1/4096` and atoms placed on the support of an
   extremal dual measure (`D ≥ 3.90557`, `c ≤ 7.3546`). Lean theorems: `lam_hybrid_measure_3244`,
   `mir_hybrid_measure_3244`.
-- **L(2, χ₋₃) (14.35).** Characteristic-zero selection with at most one common-node deletion
+- **L(2, χ₋₃) (14.21).** Characteristic-zero selection with at most one common-node deletion
   allows a quarter border. With the saving at small primes, the content constant is
-  `Λ = 339258406689121/82516315939200`. A kernel-checked certificate with 1600 atoms gives
-  `D ≥ 4.633628` and `c = 7.49256`, so `c/(D − Λ) = 14.3475713…`. Lean theorem:
-  `chi3_hybrid_measure_1435`. The exact certificate data are in
-  [`paper-lambda/certificates/`](paper-lambda/certificates/).
+  `Λ = 339258406689121/82516315939200`. A kernel-checked decay certificate with contour rays of slope
+  12/5, `ρ = 1/2048` and 2950 atoms gives `D ≥ 1485123059/320000000 = 4.641009…` and
+  `c = 376269/50000 = 7.52538`, so `c/(D − Λ) = 14.20957…`. Lean theorem: `chi3_hybrid_measure_1421`;
+  the certificate is in `CatalanCore/Cert/QuarterContour/` and `CatalanCore/Cert/SigmaQuarterContour/`.
 
 ## The thirds frames: L(2, χ₋₃) ± π²/9
 
@@ -98,6 +99,17 @@ the slope-5/2 certificate, with its own measure of 2950 atoms on the segment, th
 `D ≥ 3.87115` and `c = 6.78788`, so `c/(D − Λ) = 10.6078…`. Lean theorems:
 `chi3_plus_pi2_hybrid_measure_1061` and `chi3_minus_pi2_hybrid_measure_1061`; the frames and the content
 tables are in `CatalanFrames/Thirds/`, the certificate in `CatalanCore/Cert/SigmaThirds/`. The derivation is in [`paper-lambda/thirds-shift.tex`](paper-lambda/thirds-shift.tex).
+
+## The fifths frames: ψ'(a/5) − π²/6
+
+The shifts `s = a/5` (`a = 1, 2, 3, 4`) give the four numbers `ψ'(a/5) − π²/6 = Σ_{n ≥ 0} 1/(n + a/5)² − ζ(2)`.
+No two of them are rationally affine images of each other: their sum is `10π²/3`, and
+`ψ'(1/5) + ψ'(4/5)` and `ψ'(2/5) + ψ'(3/5)` involve `√5 π²`. We know of no earlier irrationality result for any of them.
+The same characteristic-zero selection and quarter border, with zeros of `k(5k − u)` modulo a prime power, give
+the content constant `Λ = 195975263767/53321748480 = 3.675334…`, and the slope-5/2 decay certificate applies
+unchanged (`D ≥ 3.90557`, `c = 7.3546196`), so `c/(D − Λ) = 31.9439…`. Lean theorems:
+`fifths1_hybrid_measure_3195`, …, `fifths4_hybrid_measure_3195`; the frames and the content tables are in
+`CatalanFrames/Fifths/`.
 
 ## Kernel-checked certificates
 

@@ -4,9 +4,13 @@
   "theorem_names": [
     "CatalanHybridChallenge.lam_hybrid_measure_3244",
     "CatalanHybridChallenge.mir_hybrid_measure_3244",
-    "CatalanHybridChallenge.chi3_hybrid_measure_1435",
+    "CatalanHybridChallenge.chi3_hybrid_measure_1421",
     "CatalanHybridChallenge.chi3_plus_pi2_hybrid_measure_1061",
-    "CatalanHybridChallenge.chi3_minus_pi2_hybrid_measure_1061"
+    "CatalanHybridChallenge.chi3_minus_pi2_hybrid_measure_1061",
+    "CatalanHybridChallenge.fifths1_hybrid_measure_3195",
+    "CatalanHybridChallenge.fifths2_hybrid_measure_3195",
+    "CatalanHybridChallenge.fifths3_hybrid_measure_3195",
+    "CatalanHybridChallenge.fifths4_hybrid_measure_3195"
   ],
   "definition_names": [],
   "permitted_axioms": [
