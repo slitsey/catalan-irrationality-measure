@@ -58,12 +58,12 @@
 \newcommand{\IsigNew}{2.43054}          % (1+alpha)^2 I_rho(sigma)
 \newcommand{\NatomsNew}{1650}           % atoms of the certificate measure
 % Constants of the result for L(2,chi_{-3}) +- (2/3)zeta(2).
-\newcommand{\LamThirds}{3.2313}            % content (32313/10000)
-\newcommand{\DThirds}{3.90557}
-\newcommand{\cThirds}{7.3546196}
-\newcommand{\EtaThirds}{0.67427}
-\newcommand{\MuThirds}{10.91}
-\newcommand{\MuThirdsExact}{10.9075}
+\newcommand{\LamThirds}{3.2312582}         % content (43074084803/13330437120)
+\newcommand{\DThirds}{3.87115}           % 77423/20000
+\newcommand{\cThirds}{6.78788}           % 169697/25000
+\newcommand{\EtaThirds}{0.6398917}
+\newcommand{\MuThirds}{10.61}
+\newcommand{\MuThirdsExact}{10.6078}
 % ---------------------------------------------------------------------------
 
 \begin{document}
@@ -92,11 +92,11 @@ $G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
 \end{gathered}
 \]
 and, for the digamma differences with shifts $\frac13$ and $\frac23$,
-$\mu\bigl(L(2,\chi_{-3})\pm\frac23\zeta(2)\bigr)\le10.91$, where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
+$\mu\bigl(L(2,\chi_{-3})\pm\frac23\zeta(2)\bigr)\le10.61$, where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
 For $L(2,\chi_{-3})$, which Calegari, Dimitrov and Tang proved irrational, the previous best bound we know of is their
 effective bound $\mu\le24781$. The same method gives, for the two numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$,
 \[
- \mu\Bigl(L(2,\chi_{-3})\pm\tfrac23\zeta(2)\Bigr)\le10.91 .
+ \mu\Bigl(L(2,\chi_{-3})\pm\tfrac23\zeta(2)\Bigr)\le10.61 .
 \]
 
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer nodes.
@@ -169,7 +169,7 @@ For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$,
 In particular $L(2,\chi_{-3})\pm\frac23\zeta(2)$ are irrational and have irrationality exponent at most $\MuThirds$.
 \end{theorem}
 
-The computed value of the exponent is $\MuThirdsExact\ldots$, namely $7.3546196/(3.90557-3.2313)$. Theorem~\ref{thm:main} and Theorem~\ref{thm:thirds}, together with every
+The computed value of the exponent is $\MuThirdsExact\ldots$, namely $6.78788/(3.87115-3.2312582\ldots)$. Theorem~\ref{thm:main} and Theorem~\ref{thm:thirds}, together with every
 result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
 standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
@@ -192,7 +192,7 @@ $\Q$ \cite{CDT2024}, by a new arithmetic holonomy bound applied to a constructio
 \cite{CDT2025} they made holonomy bounds effective; Theorem~5.1 there gives $\mu(L(2,\chi_{-3}))\le24781$.
 The remark following that theorem states that the same theorem and proof hold for any $\Q$-linear combination of
 $L(2,\chi_{-3})$ and $\zeta(2)$; in particular $24781$ was the known bound for $L(2,\chi_{-3})\pm\frac23\zeta(2)$.
-Theorem~\ref{thm:main} improves it to $14.35$ for $L(2,\chi_{-3})$, and Theorem~\ref{thm:thirds} to $10.91$ for the
+Theorem~\ref{thm:main} improves it to $14.35$ for $L(2,\chi_{-3})$, and Theorem~\ref{thm:thirds} to $10.61$ for the
 two numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$. Leibtag et al.\ \cite{LBKWSK26} find numerically that
 Ap\'ery-like approximations from conservative matrix fields have positive approximation exponents for
 $L(2,\chi_{-3})\pm\frac23\zeta(2)$, and a supplement to their paper uses one such field to give an Ap\'ery-style
@@ -1301,7 +1301,10 @@ allows the quarter border of Section~\ref{sec:chi3-quarter}, giving the limiting
 $14.3475713785\ldots$. At this geometry, reducing the number of deleted nodes further would not change the
 leading decay or content constants. Further progress requires a smaller content constant, through new rank
 deficits, or a larger decay constant, through a better treatment of the energy problem; weak duality
-(Remark~\ref{rem:certlimit}) measures how much a certificate of the present form can still gain.
+(Remark~\ref{rem:certlimit}) measures how much a certificate of the present form can still gain. For
+$L(2,\chi_{-3})\pm\frac23\zeta(2)$ the certificate of Section~\ref{sec:thirds} gives $\MuThirdsExact\ldots$. A dual measure, checked with
+$192$-bit ball arithmetic, shows that no certificate of the same form, with the same $\alpha$, slope, segment and $\rho\ge1/4096$, gives an
+exponent below $10.593$, so a further gain needs a different geometry or a smaller content constant.
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -1322,11 +1325,11 @@ $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The main statements are stated in \
 \item \lean{lam_hybrid_measure_3244}: for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$,
  $q^{-(\MuLam+e)}<|G-5\pi^2/48-p/q|$ (Theorem~\ref{thm:main});
 \item \lean{mir_hybrid_measure_3244}: the same for $G+5\pi^2/48$;
-\item \lean{chi3_plus_zeta2_measure}, \lean{chi3_minus_zeta2_measure}: the same for $L(2,\chi_{-3})+\pi^2/9$ and $L(2,\chi_{-3})-\pi^2/9$ with exponent $\MuThirds$ (Theorem~\ref{thm:thirds}); they are stated in \lean{CatalanFrames/Thirds/Statements.lean} (namespace \lean{CatalanFrames.Thirds}), with the constants $\LamThirds$, $\DThirds$, $\cThirds$ entering through the hypotheses of \lean{thirds_measure_of_hyps} and the check \lean{thirds_exponent_check};
+\item \lean{chi3_plus_zeta2_measure_1061}, \lean{chi3_minus_zeta2_measure_1061}: the same for $L(2,\chi_{-3})+\pi^2/9$ and $L(2,\chi_{-3})-\pi^2/9$ with exponent $\MuThirds$ (Theorem~\ref{thm:thirds}); they are stated in \lean{CatalanFrames/Thirds/StatementsT.lean} (namespace \lean{CatalanFrames.Thirds}), with the content \lean{thirdsSharpPrice} and the constants $D=\frac{77423}{20000}$, $c=\frac{169697}{25000}$ entering through \lean{chi3_plus_zeta2_measure_of_decay} and the check \lean{thirds_exponent_checkT};
 \item \lean{chi3_hybrid_measure_1435}: the same for $L(2,\chi_{-3})$ with exponent $14.35$; it is
  \lean{CatalanFrames.P6Hybrid.Quarter.chi3_measure};
 \item \lean{Quarter.decay}, \lean{Quarter.Periodic.hasContent} and \lean{Quarter.hasNVPin}: the quarter-border decay, content and characteristic-zero selection interfaces;
-\item \lean{thirds_hasNVPinC}, \lean{thirdsAc_minorDecay}, \lean{thirdsAc_hasContent} (and the \lean{thirdsBc} versions): Theorems~\ref{thm:thirds-nv}, \ref{thm:decay-thirds} and \ref{thm:content-thirds};
+\item \lean{thirds_hasNVPinC}, \lean{thirdsAc_minorDecayT} and \lean{thirdsAc_hasContent_sharp}, with the \lean{thirdsBc} versions: Theorems~\ref{thm:thirds-nv}, \ref{thm:decay-thirds} and \ref{thm:content-thirds};
 \item \lean{longCell_rowLocal}, \lean{kind3_rowLocal} and \lean{lam_both_eps_merged}, \lean{mir_both_eps_merged}: the next-level deficit of Section~\ref{sec:next-level} on a long cell, its binding to the prime profile and the resulting content bound;
 \item \lean{lam_hybrid_decayS}: Theorem~\ref{thm:decay} for $\lambda_-$ with the certificate of \S\ref{ssec:slope-cert}; the decay estimate in \lean{CatalanCore/Decay} takes the ray slope as a parameter;
 \item \lean{nv_hyb_nonvanishing_gen}: Theorem~\ref{thm:nv} and its analogues in \S\ref{ssec:nvother};
@@ -1358,9 +1361,9 @@ Proposition~\ref{prop:red} and its three-level analogue, Lemma~\ref{lem:primal} 
 \noindent \lean{CatalanCore/Star/Leonard}\par
 Proposition~\ref{prop:delta}, Proposition~\ref{prop:bispectral}, (K1)--(K5), the diagonal and Darboux steps, the
 positivity argument, Lemma~\ref{lem:bridge}, Theorem~\ref{thm:good} and the specialisation $\theta\to0$.\par\medskip
-\noindent \lean{CatalanCore/Decay/Rect}, \lean{CatalanCore/Cert/SigmaHybS}, \lean{CatalanCore/Cert/SigmaP6H}\par
+\noindent \lean{CatalanCore/Decay/Rect}, \lean{CatalanCore/Cert/SigmaHybS}, \lean{CatalanCore/Cert/SigmaP6H}, \lean{CatalanCore/Cert/SigmaThirds}\par
 The contour identity, the two-family Andr\'eief bound, Lemma~\ref{lem:cpd}, node removal, and the certificates of
-Proposition~\ref{prop:cert} and Section~\ref{sec:chi3-quarter}.\par\medskip
+Proposition~\ref{prop:cert}, Section~\ref{sec:chi3-quarter} and Theorem~\ref{thm:decay-thirds}.\par\medskip
 \noindent \lean{CatalanFrames/Thirds}\par
 The frames \lean{thirdsAc} and \lean{thirdsBc} ($s=1/3,2/3$), the content tables and hybrid content, the characteristic-zero nonvanishing, the decay instance and the final statements of Section~\ref{sec:thirds}; the theorems are checked with \texttt{\#print axioms} in each module.\\par\medskip
 \noindent \lean{CatalanCore/Measure}, \lean{CatalanFrames/*/Assembly*}\par

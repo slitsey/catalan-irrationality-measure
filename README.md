@@ -9,7 +9,7 @@ Catalan's constant and `L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^
 > - μ(G − 5π²/48) ≤ 32.44;
 > - μ(G + 5π²/48) ≤ 32.44;
 > - μ(L(2, χ₋₃)) ≤ 14.35;
-> - μ(L(2, χ₋₃) ± π²/9) ≤ 10.91 (both signs).
+> - μ(L(2, χ₋₃) ± π²/9) ≤ 10.61 (both signs).
 
 For `G` this means `|G − a/b| > b^(-590)` for every integer `a` and every sufficiently large
 integer `b`. For the other constants `x` with exponent `E` it means: for every `e > 0`,
@@ -92,11 +92,12 @@ The digamma differences `ψ(z+1) − ψ(z+s)` with shifts `s = 1/3, 2/3` give `�
 `ψ'(2/3) = 2π²/3 − 9L/2` with `L = L(2, χ₋₃)`, hence the numbers `L ± π²/9 = L ± (2/3)ζ(2)`. The rational
 kernel is `M[a,b] = −e/(9(b−a)) · Σ 1/(k(3k−e))` (`e = 2` for `s = 1/3`, `e = 1` for `s = 2/3`), with
 the denominators `k(3k−e)` and zeros modulo a prime power near `q/3` and `2q/3`. With the quarter
-border and characteristic-zero selection of the `L(2, χ₋₃)` bound, the content constant is
-`Λ = 3.2313`; the slope-5/2 decay certificate applies unchanged (`D ≥ 3.90557`, `c = 7.3546196`), so
-`c/(D − Λ) = 10.9075…`. Lean theorems: `chi3_plus_pi2_hybrid_measure_1091` and
-`chi3_minus_pi2_hybrid_measure_1091`; the frames and the content tables are in
-`CatalanFrames/Thirds/`. The derivation is in [`paper-lambda/thirds-shift.tex`](paper-lambda/thirds-shift.tex).
+border and characteristic-zero selection of the `L(2, χ₋₃)` bound, the content constant is the
+exact table value `Λ = 43074084803/13330437120 = 3.2312582…`. The decay certificate has the same form as
+the slope-5/2 certificate, with its own measure of 2950 atoms on the segment, the rays and the line:
+`D ≥ 3.87115` and `c = 6.78788`, so `c/(D − Λ) = 10.6078…`. Lean theorems:
+`chi3_plus_pi2_hybrid_measure_1061` and `chi3_minus_pi2_hybrid_measure_1061`; the frames and the content
+tables are in `CatalanFrames/Thirds/`, the certificate in `CatalanCore/Cert/SigmaThirds/`. The derivation is in [`paper-lambda/thirds-shift.tex`](paper-lambda/thirds-shift.tex).
 
 ## Kernel-checked certificates
 
