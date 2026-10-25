@@ -85,11 +85,13 @@ lemma thirds_tail (T : ThirdsData Fr e) {r m p : ℕ} (hp : p.Prime) (h5 : 5 ≤
   have h0 : XGm (thirdsInst T) r m p = 0 := by omega
   simp [WGm, h0]
 
-theorem thirds_log_content_of (T : ThirdsData Fr e)
+/-- Use any separately verified upper bound for the two class constants. -/
+theorem thirds_log_content_of_le (T : ThirdsData Fr e)
+    (C : ℝ) (hC : Clow + Chigh ≤ C)
     (hbands : (Band (thirdsInst T) 6 1 3 1 1 2 ∧ Band (thirdsInst T) 6 5 3 2 1 2) ∨
       (Band (thirdsInst T) 6 1 3 2 1 2 ∧ Band (thirdsInst T) 6 5 3 1 1 2)) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ r : ℕ in atTop, ∀ m : ℕ, r ≤ 8 * m → 8 * m ≤ r + 9 →
-      Real.log (Dhyb (thirdsInst T) r m) ≤ (32313 / 10000 + ε) * (r : ℝ) ^ 2 := by
+      Real.log (Dhyb (thirdsInst T) r m) ≤ (C + ε) * (r : ℝ) ^ 2 := by
   have hu1 : IsUnit (1 : ZMod 6) := isUnit_one
   have hu5 : IsUnit (5 : ZMod 6) := by decide
   have hcl : ∀ᶠ r : ℕ in atTop, ∀ m : ℕ, r ≤ 8 * m → 8 * m ≤ r + 9 →
@@ -131,8 +133,15 @@ theorem thirds_log_content_of (T : ThirdsData Fr e)
   have hm : m ≤ r := by omega
   have hE := hx m hm
   have hq := hcl m h1 h2
-  have hCC' := mul_le_mul_of_nonneg_right Clow_add_Chigh_le (sq_nonneg (r : ℝ))
+  have hCC' := mul_le_mul_of_nonneg_right hC (sq_nonneg (r : ℝ))
   nlinarith
+
+theorem thirds_log_content_of (T : ThirdsData Fr e)
+    (hbands : (Band (thirdsInst T) 6 1 3 1 1 2 ∧ Band (thirdsInst T) 6 5 3 2 1 2) ∨
+      (Band (thirdsInst T) 6 1 3 2 1 2 ∧ Band (thirdsInst T) 6 5 3 1 1 2)) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ r : ℕ in atTop, ∀ m : ℕ, r ≤ 8 * m → 8 * m ≤ r + 9 →
+      Real.log (Dhyb (thirdsInst T) r m) ≤ (32313 / 10000 + ε) * (r : ℝ) ^ 2 := by
+  exact thirds_log_content_of_le T (32313 / 10000) Clow_add_Chigh_le hbands hε
 
 end CatalanFrames.Thirds
 
