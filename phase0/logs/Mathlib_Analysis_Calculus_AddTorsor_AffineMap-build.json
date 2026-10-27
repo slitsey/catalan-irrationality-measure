@@ -1,0 +1,11 @@
+{
+  "target": "Mathlib.Analysis.Calculus.AddTorsor.AffineMap",
+  "mode": "build",
+  "rc": 0,
+  "wrapper_wall_seconds": 14.02787150000222,
+  "sampled_wrapper_tree_peak_bytes": 1466892288,
+  "lean_process_peak_working_sets_bytes": {
+    "28732": 850124800
+  },
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

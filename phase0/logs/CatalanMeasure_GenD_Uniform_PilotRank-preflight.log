@@ -1,0 +1,4 @@
+✖ [1785/1788] Building CatalanMeasure.CellCert.RawInts
+error: target is out-of-date and needs to be rebuilt
+Some required targets logged failures:
+- CatalanMeasure.CellCert.RawInts

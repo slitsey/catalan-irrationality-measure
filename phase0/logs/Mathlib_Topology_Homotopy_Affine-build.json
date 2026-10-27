@@ -1,0 +1,11 @@
+{
+  "target": "Mathlib.Topology.Homotopy.Affine",
+  "mode": "build",
+  "rc": 0,
+  "wrapper_wall_seconds": 13.931272099958733,
+  "sampled_wrapper_tree_peak_bytes": 1312948224,
+  "lean_process_peak_working_sets_bytes": {
+    "31868": 712409088
+  },
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

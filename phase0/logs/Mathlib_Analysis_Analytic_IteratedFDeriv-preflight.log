@@ -1,0 +1,4 @@
+✖ [2047/2047] Building Mathlib.Analysis.Analytic.IteratedFDeriv
+error: target is out-of-date and needs to be rebuilt
+Some required targets logged failures:
+- Mathlib.Analysis.Analytic.IteratedFDeriv

@@ -1,0 +1,10 @@
+{
+  "target": "Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare",
+  "mode": "preflight",
+  "rc": 3,
+  "wrapper_wall_seconds": 4.059894300065935,
+  "sampled_wrapper_tree_peak_bytes": 596791296,
+  "lean_process_peak_working_sets_bytes": {},
+  "log": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\phase0\\logs\\Mathlib_MeasureTheory_Integral_CurveIntegral_Poincare-preflight.log",
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

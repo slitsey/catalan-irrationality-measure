@@ -1,0 +1,12 @@
+{
+  "target": "CatalanCore.Uniform.Decay.PilotArithmetic",
+  "mode": "build",
+  "rc": 0,
+  "wrapper_wall_seconds": 7.296861700015143,
+  "sampled_wrapper_tree_peak_bytes": 1432559616,
+  "lean_process_peak_working_sets_bytes": {
+    "18004": 891138048
+  },
+  "log": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\phase0\\logs\\CatalanCore_Uniform_Decay_PilotArithmetic-build-20261027-124216.log",
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

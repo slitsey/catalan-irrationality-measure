@@ -1,0 +1,12 @@
+{
+  "target": "CatalanMeasure.CellCert.RawInts",
+  "mode": "build",
+  "rc": 0,
+  "wrapper_wall_seconds": 7.412497599958442,
+  "sampled_wrapper_tree_peak_bytes": 795955200,
+  "lean_process_peak_working_sets_bytes": {
+    "32744": 266698752
+  },
+  "log": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\phase0\\logs\\CatalanMeasure_CellCert_RawInts-build.log",
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

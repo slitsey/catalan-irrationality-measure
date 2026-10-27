@@ -1,0 +1,877 @@
+ℹ [3/4] Replayed CatalanCore.Uniform.Decay.PilotArithmetic
+info: stderr:
+cumulative profiling times:
+	.olean serialization 16.8ms
+	attribute application 0.224ms
+	compilation (IR) 0.956ms
+	compilation (LCNF base) 15.8ms
+	compilation (LCNF impure) 4.56ms
+	compilation (LCNF mono) 7.98ms
+	congr simp thm 0.284ms
+	do element elaborator 0.621ms
+	elaboration 68.5ms
+	fix level params 0.137ms
+	instantiate metavars 0.157ms
+	let-to-have transformation 0.699ms
+	linting 4.34ms
+	module linting 0.0072ms
+	parsing 5.92ms
+	process pre-definitions 28ms
+	share common exprs 0.752ms
+	simp 5.56ms
+	tactic execution 13.2ms
+	type checking 30.2ms
+	typeclass inference 28.4ms
+ℹ [4/4] Built CatalanCore.Uniform.Decay.PilotPotential (66s)
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:8:0: elaboration took 6.82ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:11:0: type checking took 7.12ms
+elaboration took 1.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:15:0: type checking took 6.72ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:19:0: type checking took 6.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:23:0: type checking took 6.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:27:0: type checking took 6.37ms
+elaboration took 1.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:31:0: type checking took 6.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:35:0: type checking took 6.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:39:0: type checking took 6.42ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:43:0: type checking took 6.39ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:47:0: type checking took 6.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:51:0: type checking took 6.53ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:55:0: type checking took 6.8ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:59:0: type checking took 6.89ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:63:0: type checking took 6.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:67:0: type checking took 6.42ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:71:0: type checking took 6.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:75:0: type checking took 6.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:79:0: type checking took 6.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:83:0: type checking took 6.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:87:0: type checking took 6.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:91:0: type checking took 6.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:95:0: type checking took 6.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:99:0: type checking took 6.81ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:103:0: type checking took 6.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:107:0: type checking took 6.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:111:0: type checking took 6.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:115:0: type checking took 6.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:119:0: type checking took 6.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:123:0: type checking took 6.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:127:0: type checking took 6.56ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:131:0: type checking took 7.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:135:0: type checking took 6.43ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:139:0: type checking took 6.45ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:143:0: type checking took 9.57ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:147:0: type checking took 6.66ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:151:0: type checking took 6.76ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:155:0: type checking took 7.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:159:0: type checking took 7.09ms
+elaboration took 1.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:163:0: type checking took 5.9ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:167:0: type checking took 9.67ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:171:0: type checking took 7.56ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:175:0: type checking took 8.18ms
+elaboration took 1.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:179:0: type checking took 7.67ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:183:0: type checking took 6.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:187:0: type checking took 5.91ms
+elaboration took 1.52ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:191:0: type checking took 6.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:195:0: type checking took 6.59ms
+elaboration took 1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:199:0: type checking took 6.79ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:203:0: type checking took 6.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:207:0: type checking took 7.64ms
+elaboration took 1.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:211:0: type checking took 6.07ms
+elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:215:0: typeclass inference of Decidable took 1.2ms
+type checking took 10.9ms
+elaboration took 1.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:219:0: type checking took 5.93ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:223:0: type checking took 6.85ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:227:0: type checking took 6.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:231:0: type checking took 6.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:235:0: type checking took 9.54ms
+elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:239:0: type checking took 5.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:243:0: type checking took 6.61ms
+elaboration took 1.18ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:247:0: type checking took 6.61ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:251:0: type checking took 7.32ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:255:0: type checking took 6.59ms
+elaboration took 1.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:259:0: type checking took 7.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:263:0: type checking took 6.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:267:0: type checking took 5.9ms
+elaboration took 1.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:271:0: typeclass inference of Decidable took 1.23ms
+type checking took 10.2ms
+elaboration took 1.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:275:0: type checking took 5.92ms
+elaboration took 1.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:279:0: type checking took 10.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:283:0: typeclass inference of Decidable took 1.38ms
+type checking took 7ms
+elaboration took 1.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:287:0: typeclass inference of Decidable took 1.02ms
+type checking took 7.81ms
+elaboration took 1.75ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:291:0: type checking took 7.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:295:0: type checking took 6.26ms
+elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:299:0: type checking took 6.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:303:0: type checking took 8.54ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:307:0: type checking took 7.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:311:0: type checking took 6.93ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:315:0: type checking took 6.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:319:0: type checking took 6.54ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:323:0: type checking took 6.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:327:0: type checking took 12.5ms
+elaboration took 1.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:331:0: type checking took 6.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:335:0: type checking took 7.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:339:0: type checking took 5.95ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:343:0: type checking took 6.37ms
+elaboration took 1.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:347:0: type checking took 7.84ms
+elaboration took 1.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:351:0: type checking took 8.82ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:355:0: type checking took 6.33ms
+elaboration took 1.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:359:0: type checking took 5.89ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:363:0: type checking took 5.92ms
+elaboration took 1.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:367:0: typeclass inference of Decidable took 1.03ms
+type checking took 8.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:371:0: type checking took 6.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:375:0: type checking took 6.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:379:0: type checking took 6.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:383:0: type checking took 6.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:387:0: type checking took 6.35ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:391:0: type checking took 5.87ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:395:0: type checking took 5.91ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:399:0: type checking took 6.97ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:403:0: type checking took 6.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:407:0: type checking took 6.29ms
+elaboration took 1.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:411:0: type checking took 6.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:415:0: type checking took 9.81ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:419:0: type checking took 8.12ms
+elaboration took 1.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:423:0: type checking took 6.46ms
+elaboration took 1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:427:0: type checking took 8.67ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:431:0: type checking took 5.82ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:435:0: type checking took 5.94ms
+elaboration took 1.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:439:0: typeclass inference of Decidable took 1.19ms
+type checking took 9.13ms
+elaboration took 1.86ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:443:0: type checking took 5.92ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:447:0: type checking took 6.94ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:451:0: type checking took 8.51ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:455:0: type checking took 6.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:459:0: type checking took 10.8ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:463:0: type checking took 6.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:467:0: typeclass inference of Decidable took 1.6ms
+type checking took 10.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:471:0: typeclass inference of Decidable took 1.01ms
+type checking took 7.3ms
+elaboration took 1.53ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:475:0: typeclass inference of Decidable took 1.12ms
+type checking took 7.83ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:479:0: type checking took 6.46ms
+elaboration took 1.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:483:0: type checking took 9.8ms
+elaboration took 1.49ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:487:0: type checking took 9.42ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:491:0: type checking took 7.78ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:495:0: type checking took 7.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:499:0: type checking took 5.98ms
+elaboration took 1.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:503:0: type checking took 6.2ms
+elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:507:0: type checking took 11.6ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:511:0: typeclass inference of Decidable took 1.41ms
+type checking took 8.8ms
+elaboration took 1.78ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:515:0: type checking took 6.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:519:0: type checking took 6.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:523:0: type checking took 7.39ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:527:0: type checking took 5.9ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:531:0: type checking took 8.62ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:535:0: type checking took 6.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:539:0: type checking took 8.4ms
+elaboration took 1.32ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:543:0: type checking took 6.32ms
+elaboration took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:547:0: type checking took 6.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:551:0: type checking took 6.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:555:0: type checking took 6.45ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:559:0: type checking took 6.46ms
+elaboration took 1.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:563:0: type checking took 6.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:567:0: type checking took 6.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:571:0: type checking took 6.38ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:575:0: type checking took 6.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:579:0: type checking took 6.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:582:0: elaboration took 1.27ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:583:0: type checking took 6.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:587:0: type checking took 6.67ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:591:0: type checking took 7.46ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:595:0: type checking took 6.23ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:599:0: type checking took 6.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:603:0: type checking took 6.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:607:0: type checking took 6.82ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:611:0: type checking took 6.64ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:615:0: type checking took 6.63ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:619:0: type checking took 6.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:623:0: type checking took 6.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:627:0: type checking took 6.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:631:0: type checking took 6.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:635:0: type checking took 6.3ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:639:0: type checking took 7.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:643:0: type checking took 6.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:647:0: type checking took 7.56ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:651:0: type checking took 7.52ms
+elaboration took 1.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:655:0: type checking took 6.84ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:659:0: type checking took 7.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:663:0: type checking took 6.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:667:0: type checking took 5.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:671:0: type checking took 11.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:675:0: typeclass inference of Decidable took 1.29ms
+type checking took 7.5ms
+elaboration took 1.52ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:679:0: typeclass inference of Decidable took 1.22ms
+type checking took 6.79ms
+elaboration took 1.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:683:0: type checking took 6.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:687:0: type checking took 6.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:691:0: type checking took 6.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:695:0: type checking took 10.6ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:699:0: type checking took 7.37ms
+elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:703:0: typeclass inference of Decidable took 1.24ms
+type checking took 11.1ms
+elaboration took 1.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:707:0: type checking took 6.81ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:711:0: type checking took 9.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:715:0: type checking took 7.79ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:719:0: type checking took 6.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:722:0: typeclass inference of Inhabited took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:723:0: type checking took 10.8ms
+elaboration took 1.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:727:0: type checking took 9.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:731:0: type checking took 6.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:735:0: type checking took 7.83ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:739:0: type checking took 6.62ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:743:0: type checking took 6.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:747:0: type checking took 9.74ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:751:0: type checking took 6.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:755:0: type checking took 6.12ms
+elaboration took 1.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:759:0: type checking took 10.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:763:0: type checking took 6.63ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:767:0: type checking took 5.32ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:771:0: type checking took 5.73ms
+elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:775:0: type checking took 5.17ms
+elaboration took 1.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:779:0: type checking took 5.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:783:0: type checking took 5.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:787:0: type checking took 5.44ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:791:0: type checking took 5.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:795:0: type checking took 4.93ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:799:0: type checking took 6.98ms
+elaboration took 1.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:803:0: type checking took 5.76ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:807:0: type checking took 5.32ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:811:0: type checking took 6.04ms
+elaboration took 1.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:815:0: type checking took 7.39ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:819:0: type checking took 5.92ms
+elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:823:0: type checking took 5.62ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:827:0: type checking took 7.87ms
+elaboration took 1.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:831:0: type checking took 4.99ms
+elaboration took 1.18ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:835:0: type checking took 5.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:839:0: typeclass inference of Decidable took 1.38ms
+type checking took 9.93ms
+elaboration took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:843:0: type checking took 4.91ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:847:0: type checking took 7.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:851:0: type checking took 5.51ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:855:0: type checking took 5.63ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:859:0: type checking took 5.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:863:0: type checking took 5.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:867:0: type checking took 4.96ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:871:0: type checking took 5.85ms
+elaboration took 1.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:875:0: type checking took 6.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:879:0: type checking took 5.6ms
+elaboration took 1.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:883:0: type checking took 5.27ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:887:0: type checking took 6.38ms
+elaboration took 1.35ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:891:0: type checking took 5.85ms
+elaboration took 1.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:895:0: type checking took 5.29ms
+elaboration took 1.27ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:899:0: type checking took 6.2ms
+elaboration took 1.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:903:0: type checking took 5.01ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:907:0: type checking took 8.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:911:0: type checking took 6.33ms
+elaboration took 1.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:915:0: type checking took 4.88ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:919:0: type checking took 5ms
+elaboration took 1.62ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:923:0: type checking took 5.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:927:0: type checking took 5.38ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:931:0: type checking took 5.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:935:0: type checking took 5.19ms
+elaboration took 1.49ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:939:0: type checking took 5.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:943:0: type checking took 4.96ms
+elaboration took 1.47ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:947:0: type checking took 9.6ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:951:0: type checking took 6.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:955:0: type checking took 6.35ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:959:0: type checking took 5.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:963:0: type checking took 4.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:967:0: type checking took 5.22ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:971:0: typeclass inference of Decidable took 1.57ms
+type checking took 4.97ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:975:0: type checking took 7.99ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:979:0: type checking took 8.74ms
+elaboration took 1.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:983:0: type checking took 4.95ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:987:0: type checking took 10.3ms
+elaboration took 2.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:991:0: type checking took 5.22ms
+elaboration took 1.38ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:995:0: typeclass inference of Decidable took 1.18ms
+type checking took 5.65ms
+elaboration took 2.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:999:0: typeclass inference of Decidable took 1.13ms
+type checking took 8.49ms
+elaboration took 1.43ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1003:0: type checking took 5.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1007:0: type checking took 4.82ms
+elaboration took 1.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1011:0: type checking took 5.23ms
+elaboration took 1.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1015:0: type checking took 5.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1019:0: type checking took 4.6ms
+elaboration took 1.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1023:0: type checking took 5.45ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1027:0: type checking took 7.18ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1031:0: type checking took 5.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1035:0: type checking took 5.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1039:0: type checking took 5.21ms
+elaboration took 1.6ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1043:0: type checking took 5.18ms
+elaboration took 1.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1047:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1051:0: type checking took 5.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1055:0: type checking took 5.12ms
+elaboration took 1.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1059:0: type checking took 5.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1063:0: type checking took 5.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1067:0: type checking took 5.38ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1071:0: type checking took 5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1075:0: type checking took 11.3ms
+elaboration took 1.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1076:0: elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1079:0: type checking took 5.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1083:0: type checking took 5.22ms
+elaboration took 1.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1087:0: type checking took 7.47ms
+elaboration took 1.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1091:0: typeclass inference of Decidable took 1.27ms
+type checking took 7.99ms
+elaboration took 1.8ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1095:0: type checking took 5.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1099:0: type checking took 8.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1103:0: type checking took 5.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1107:0: type checking took 5.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1111:0: type checking took 8.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1112:0: elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1115:0: typeclass inference of Decidable took 1.09ms
+type checking took 7.42ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1119:0: type checking took 5.38ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1123:0: type checking took 6.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1127:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1131:0: type checking took 5.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1135:0: typeclass inference of Decidable took 1.82ms
+type checking took 8.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1139:0: typeclass inference of Decidable took 1.32ms
+type checking took 5.09ms
+elaboration took 1.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1143:0: type checking took 6.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1147:0: type checking took 10.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1151:0: type checking took 7.39ms
+elaboration took 1.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1155:0: typeclass inference of Decidable took 1.23ms
+type checking took 7.88ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1159:0: type checking took 5.86ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1163:0: type checking took 5.61ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1167:0: type checking took 8.41ms
+elaboration took 1.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1171:0: type checking took 5.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1175:0: type checking took 5.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1179:0: type checking took 6.56ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1183:0: type checking took 5.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1187:0: type checking took 8.82ms
+elaboration took 1.3ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1188:0: elaboration took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1191:0: type checking took 7.85ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1195:0: type checking took 5.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1199:0: type checking took 5.13ms
+elaboration took 1.35ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1203:0: typeclass inference of Decidable took 1.32ms
+type checking took 10.2ms
+tactic execution of Lean.Parser.Tactic.decide took 1.36ms
+elaboration took 1.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1207:0: type checking took 5.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1211:0: type checking took 18.8ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1215:0: type checking took 5.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1219:0: type checking took 6.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1223:0: type checking took 5.12ms
+elaboration took 1.6ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1227:0: type checking took 6.22ms
+elaboration took 1.51ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1231:0: type checking took 6.39ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1235:0: type checking took 5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1239:0: type checking took 5.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1243:0: type checking took 6.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1247:0: type checking took 7.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1251:0: type checking took 6.25ms
+elaboration took 1.55ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1255:0: type checking took 5.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1259:0: type checking took 6.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1260:0: elaboration took 1.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1263:0: type checking took 5.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1267:0: type checking took 6.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1271:0: type checking took 4.98ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1275:0: type checking took 6.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1279:0: type checking took 5.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1283:0: type checking took 5.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1287:0: typeclass inference of Decidable took 1.23ms
+type checking took 10.8ms
+elaboration took 1.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1291:0: type checking took 5.9ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1295:0: type checking took 5.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1299:0: type checking took 6.87ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1303:0: type checking took 5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1307:0: type checking took 5.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1308:0: elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1311:0: type checking took 5.11ms
+elaboration took 1.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1315:0: type checking took 5.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1319:0: type checking took 5.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1323:0: type checking took 4.99ms
+elaboration took 1.54ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1327:0: type checking took 4.98ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1331:0: type checking took 6.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1335:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1339:0: type checking took 6.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1343:0: type checking took 5.03ms
+elaboration took 1.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1347:0: type checking took 9.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1351:0: type checking took 4.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1355:0: type checking took 6.55ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1359:0: typeclass inference of Decidable took 1.18ms
+type checking took 6.54ms
+elaboration took 1.71ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1363:0: type checking took 5.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1367:0: type checking took 7.85ms
+process pre-definitions took 1.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1368:0: elaboration took 1.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1371:0: type checking took 9.67ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1375:0: type checking took 5.43ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1379:0: type checking took 5.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1383:0: type checking took 5.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1387:0: type checking took 5.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1391:0: type checking took 4.97ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1392:0: elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1395:0: type checking took 5.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1396:0: process pre-definitions took 1.2ms
+elaboration took 1.27ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1398:0: elaboration took 1.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1399:0: typeclass inference of Decidable took 1.05ms
+type checking took 6.77ms
+tactic execution of Lean.Parser.Tactic.decide took 9.62ms
+elaboration took 1.66ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1403:0: type checking took 5.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1407:0: type checking took 6.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1410:0: typeclass inference of Inhabited took 1.05ms
+elaboration took 1.34ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1411:0: type checking took 5.54ms
+elaboration took 2.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1415:0: type checking took 5.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1419:0: type checking took 5.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1423:0: type checking took 5.46ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1427:0: type checking took 4.96ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1431:0: type checking took 5.58ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1435:0: type checking took 6.86ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1439:0: type checking took 6.55ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1443:0: type checking took 6.47ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1447:0: typeclass inference of Decidable took 1.23ms
+type checking took 6.82ms
+tactic execution of Lean.Parser.Tactic.decide took 11.6ms
+elaboration took 1.98ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1451:0: type checking took 8.85ms
+elaboration took 1.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1455:0: type checking took 5.43ms
+elaboration took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1459:0: type checking took 6.44ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1463:0: typeclass inference of Decidable took 1.76ms
+type checking took 5.85ms
+elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1464:0: share common exprs took 1.45ms
+process pre-definitions took 1.46ms
+elaboration took 1.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1466:0: process pre-definitions took 1.02ms
+elaboration took 1.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1467:0: type checking took 7.91ms
+elaboration took 1.76ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1468:0: process pre-definitions took 1.38ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1471:0: type checking took 5.65ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1475:0: type checking took 8.71ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1479:0: typeclass inference of Decidable took 1ms
+type checking took 7.16ms
+elaboration took 1.48ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1483:0: type checking took 7.05ms
+elaboration took 1.57ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1487:0: type checking took 5.8ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1491:0: type checking took 5.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1495:0: type checking took 4.97ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1499:0: typeclass inference of Decidable took 1.29ms
+type checking took 5.68ms
+elaboration took 1.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1503:0: typeclass inference of Decidable took 1.32ms
+type checking took 9.66ms
+tactic execution of Lean.Parser.Tactic.decide took 2.22ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1507:0: type checking took 5.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1511:0: type checking took 5.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1515:0: type checking took 10.7ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1519:0: type checking took 5.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1523:0: type checking took 5.78ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1527:0: type checking took 5.87ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1531:0: type checking took 5.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1535:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1539:0: type checking took 5.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1543:0: type checking took 5.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1547:0: type checking took 5.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1551:0: type checking took 5.13ms
+elaboration took 1.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1555:0: type checking took 5.41ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1558:0: process pre-definitions took 1.65ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1559:0: type checking took 5.93ms
+elaboration took 1.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1563:0: type checking took 5.77ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1567:0: type checking took 5.25ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1571:0: type checking took 5.43ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1575:0: type checking took 5.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1579:0: type checking took 5.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1583:0: type checking took 5.54ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1587:0: type checking took 5.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1591:0: type checking took 7.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1595:0: type checking took 5.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1599:0: type checking took 5.35ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1603:0: type checking took 5.52ms
+elaboration took 1.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1607:0: type checking took 5.51ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1611:0: type checking took 7ms
+elaboration took 1.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1615:0: type checking took 6.43ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1619:0: type checking took 6.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1623:0: type checking took 9.05ms
+elaboration took 1.11ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1627:0: type checking took 6.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1631:0: type checking took 5.79ms
+elaboration took 1.08ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1635:0: type checking took 5.83ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1639:0: type checking took 5.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1643:0: type checking took 5.19ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1647:0: type checking took 7.73ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1651:0: type checking took 6.33ms
+elaboration took 1.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1655:0: type checking took 6.3ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1659:0: type checking took 5.17ms
+elaboration took 1.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1663:0: type checking took 8.76ms
+elaboration took 1.09ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1667:0: type checking took 5.54ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1671:0: typeclass inference of Decidable took 1.21ms
+type checking took 8.24ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1675:0: type checking took 5.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1679:0: type checking took 5.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1683:0: type checking took 5.95ms
+elaboration took 1.15ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1687:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1691:0: type checking took 8.74ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1695:0: type checking took 6.18ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1699:0: type checking took 7.75ms
+elaboration took 1.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1703:0: type checking took 6.62ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1707:0: type checking took 5.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1711:0: type checking took 5.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1715:0: type checking took 5.26ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1719:0: type checking took 5.01ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1723:0: type checking took 6.05ms
+elaboration took 1.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1727:0: type checking took 5.3ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1731:0: type checking took 4.88ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1735:0: type checking took 5.03ms
+elaboration took 1.21ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1739:0: type checking took 4.94ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1743:0: type checking took 5.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1747:0: type checking took 5.02ms
+elaboration took 1.39ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1751:0: type checking took 5.06ms
+elaboration took 1.4ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1755:0: type checking took 7.27ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1759:0: type checking took 5.49ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1763:0: typeclass inference of Decidable took 1.17ms
+type checking took 10.2ms
+elaboration took 2.02ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1767:0: type checking took 5.05ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1771:0: typeclass inference of Decidable took 1.02ms
+type checking took 7.2ms
+elaboration took 1.69ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1775:0: type checking took 4.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1779:0: type checking took 5.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1783:0: type checking took 5.28ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1787:0: type checking took 5.13ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1791:0: type checking took 5.16ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1795:0: type checking took 5.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1799:0: type checking took 4.93ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1803:0: type checking took 7.91ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1807:0: type checking took 6.31ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1811:0: type checking took 4.95ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1815:0: type checking took 5.12ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1819:0: type checking took 9.48ms
+elaboration took 1.32ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1823:0: type checking took 5.31ms
+elaboration took 1.07ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1827:0: type checking took 4.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1831:0: type checking took 5.21ms
+elaboration took 1.1ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1835:0: type checking took 9.96ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1839:0: type checking took 5.06ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1843:0: type checking took 5ms
+elaboration took 1.59ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1847:0: type checking took 4.92ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1851:0: type checking took 4.93ms
+elaboration took 1.32ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1855:0: typeclass inference of Decidable took 1.21ms
+type checking took 6.28ms
+elaboration took 1.36ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1859:0: type checking took 4.99ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1863:0: type checking took 5.46ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1867:0: type checking took 5.18ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1872:0: compilation (LCNF base) took 18.6ms
+compilation (LCNF mono) took 4.08ms
+compilation (LCNF mono) took 13.3ms
+compilation (LCNF impure) took 8.11ms
+compilation (IR) took 2.29ms
+process pre-definitions took 10.5ms
+linting took 2.06ms
+elaboration took 78.9ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1873:0: compilation (LCNF base) took 21.2ms
+compilation (LCNF mono) took 6.44ms
+compilation (LCNF mono) took 38.6ms
+compilation (LCNF impure) took 37.5ms
+compilation (IR) took 12.8ms
+process pre-definitions took 13.4ms
+elaboration took 7.61ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1876:0: tactic execution of Lean.Parser.Tactic.tacticSeq took 1.56ms
+share common exprs took 2.72ms
+type checking took 72.7ms
+process pre-definitions took 1.64ms
+linting took 2.87ms
+elaboration took 258ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1878:0: type checking took 3.69ms
+compilation (LCNF base) took 50.7ms
+compilation (LCNF mono) took 14.3ms
+compilation (LCNF mono) took 67.1ms
+compilation (LCNF impure) took 51.6ms
+compilation (IR) took 21.4ms
+process pre-definitions took 29.5ms
+elaboration took 130ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1880:0: elaboration took 378ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1882:0: elaboration took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1883:0: elaboration took 1.63ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1884:0: type checking took 4.99s
+elaboration took 1.55ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1885:0: type checking took 202ms
+elaboration took 3.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1889:0: share common exprs took 1.71ms
+type checking took 5.04ms
+compilation (LCNF base) took 57ms
+compilation (LCNF mono) took 17.1ms
+compilation (LCNF mono) took 74.4ms
+compilation (LCNF impure) took 49.8ms
+compilation (IR) took 19.3ms
+process pre-definitions took 41.8ms
+linting took 1.05ms
+elaboration took 140ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1891:0: elaboration took 447ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1894:0: elaboration took 1.18ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1895:0: type checking took 5.15s
+elaboration took 1.58ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1896:0: type checking took 194ms
+process pre-definitions took 4.94ms
+elaboration took 2.14ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1900:0: share common exprs took 1.19ms
+type checking took 5.16ms
+compilation (LCNF base) took 44.3ms
+compilation (LCNF mono) took 13.5ms
+compilation (LCNF mono) took 69.3ms
+compilation (LCNF impure) took 41.3ms
+compilation (IR) took 18.1ms
+process pre-definitions took 33.3ms
+elaboration took 123ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1902:0: elaboration took 440ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1905:0: elaboration took 1.46ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1906:0: type checking took 4.78s
+tactic execution of Lean.Parser.Tactic.decide took 2.04ms
+elaboration took 1.66ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1907:0: type checking took 172ms
+elaboration took 3.96ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1911:0: share common exprs took 1.23ms
+type checking took 5.43ms
+compilation (LCNF base) took 50.3ms
+compilation (LCNF mono) took 16.9ms
+compilation (LCNF mono) took 64.2ms
+compilation (LCNF impure) took 41.9ms
+compilation (IR) took 19.9ms
+process pre-definitions took 40.3ms
+linting took 2.12ms
+elaboration took 127ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1913:0: elaboration took 413ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1916:0: elaboration took 1.61ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1917:0: type checking took 4.81s
+elaboration took 1.55ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1918:0: type checking took 183ms
+elaboration took 2.22ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1922:0: share common exprs took 1.3ms
+type checking took 4.66ms
+compilation (LCNF base) took 55.9ms
+compilation (LCNF mono) took 14.3ms
+compilation (LCNF mono) took 66.3ms
+compilation (LCNF impure) took 39.8ms
+compilation (IR) took 18.2ms
+process pre-definitions took 36.1ms
+elaboration took 125ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1924:0: elaboration took 355ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1927:0: elaboration took 1.98ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1928:0: type checking took 4.81s
+elaboration took 1.5ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1929:0: type checking took 195ms
+elaboration took 2.83ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1933:0: share common exprs took 1.34ms
+type checking took 5.36ms
+compilation (LCNF base) took 42.8ms
+compilation (LCNF mono) took 13.5ms
+compilation (LCNF mono) took 73ms
+compilation (LCNF impure) took 38.4ms
+compilation (IR) took 21.5ms
+process pre-definitions took 35ms
+elaboration took 135ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1935:0: process pre-definitions took 46.5ms
+elaboration took 348ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1938:0: elaboration took 1.2ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1939:0: type checking took 4.79s
+elaboration took 1.65ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1940:0: type checking took 195ms
+elaboration took 2.29ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1944:0: share common exprs took 1.58ms
+type checking took 5.05ms
+compilation (LCNF base) took 55.9ms
+compilation (LCNF mono) took 16.1ms
+compilation (LCNF mono) took 74.5ms
+compilation (LCNF impure) took 39.8ms
+compilation (IR) took 17.2ms
+process pre-definitions took 41.6ms
+elaboration took 122ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1946:0: elaboration took 422ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1949:0: elaboration took 1.17ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1950:0: type checking took 4.92s
+elaboration took 2.37ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1951:0: type checking took 178ms
+elaboration took 3.33ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1955:0: share common exprs took 1.37ms
+type checking took 7.14ms
+compilation (LCNF base) took 48.7ms
+compilation (LCNF mono) took 15.2ms
+compilation (LCNF mono) took 67.4ms
+compilation (LCNF impure) took 38.2ms
+compilation (IR) took 17.7ms
+process pre-definitions took 37.7ms
+elaboration took 128ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1957:0: elaboration took 427ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1960:0: elaboration took 1.03ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1961:0: type checking took 4.74s
+elaboration took 1.61ms
+info: CatalanCore/Uniform/Decay/PilotPotential.lean:1962:0: type checking took 182ms
+elaboration took 3.45ms
+info: stderr:
+parsing took 1.32ms
+parsing took 6.6ms
+parsing took 3.85ms
+parsing took 5.61ms
+parsing took 1.37ms
+parsing took 3.79ms
+parsing took 1.27ms
+parsing took 5.83ms
+parsing took 1.81ms
+parsing took 4.54ms
+parsing took 1.09ms
+parsing took 66.3ms
+parsing took 5.27ms
+parsing took 1.79ms
+parsing took 20.7ms
+parsing took 4.96ms
+parsing took 1.34ms
+parsing took 3.61ms
+.olean serialization took 2.23s
+cumulative profiling times:
+	.olean serialization 2.23s
+	attribute application 8.93ms
+	compilation (IR) 200ms
+	compilation (LCNF base) 688ms
+	compilation (LCNF impure) 520ms
+	compilation (LCNF mono) 1.03s
+	elaboration 5.57s
+	fix level params 7.08ms
+	instantiate metavars 7.08ms
+	let-to-have transformation 6.1ms
+	linting 170ms
+	module linting 0.0054ms
+	parsing 295ms
+	process pre-definitions 750ms
+	share common exprs 35.1ms
+	tactic execution 166ms
+	type checking 43.7s
+	typeclass inference 771ms
+Build completed successfully (4 jobs).

@@ -1,0 +1,11 @@
+{
+  "target": "Mathlib.Algebra.Order.Field.Pointwise",
+  "mode": "build",
+  "rc": 0,
+  "wrapper_wall_seconds": 27.893591100000776,
+  "sampled_wrapper_tree_peak_bytes": 1004331008,
+  "lean_process_peak_working_sets_bytes": {
+    "17684": 414527488
+  },
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

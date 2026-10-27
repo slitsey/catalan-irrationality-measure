@@ -1,0 +1,9 @@
+{
+  "target": "Mathlib.MeasureTheory.Integral.CurveIntegral.Basic",
+  "mode": "preflight",
+  "rc": 3,
+  "wrapper_wall_seconds": 4.0227878000587225,
+  "sampled_wrapper_tree_peak_bytes": 605626368,
+  "lean_process_peak_working_sets_bytes": {},
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

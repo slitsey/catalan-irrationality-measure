@@ -1,0 +1,84 @@
+{
+  "source": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\outputs\\Compatibility programme\\thin-windows-2026-10-24\\complete29\\production\\D58-L0203\\right.json",
+  "source_sha256": "6d3e9e5eba644f1df93620cd5dd8e79229a9fedab202377dccb3efa35a6318d3",
+  "witness": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\outputs\\Compatibility programme\\thin-windows-2026-10-24\\complete30\\production\\D58-L0203\\right.json",
+  "witness_sha256": "7d918f22a9fcc46dc9e5905b53908eabe6075f7246381b2320b190d2e90e7df7",
+  "basis_rank": 3,
+  "maps": [
+    {
+      "index": 0,
+      "compressed_map_index": 0,
+      "rows": 5,
+      "rank": 1,
+      "weight": "13"
+    },
+    {
+      "index": 1,
+      "compressed_map_index": 2,
+      "rows": 3,
+      "rank": 0,
+      "weight": "17"
+    },
+    {
+      "index": 2,
+      "compressed_map_index": 3,
+      "rows": 2,
+      "rank": 0,
+      "weight": "9"
+    },
+    {
+      "index": 3,
+      "compressed_map_index": 4,
+      "rows": 10,
+      "rank": 2,
+      "weight": "3"
+    },
+    {
+      "index": 4,
+      "compressed_map_index": 5,
+      "rows": 6,
+      "rank": 1,
+      "weight": "13"
+    },
+    {
+      "index": 5,
+      "compressed_map_index": 6,
+      "rows": 1,
+      "rank": 0,
+      "weight": "7"
+    },
+    {
+      "index": 6,
+      "compressed_map_index": 7,
+      "rows": 14,
+      "rank": 2,
+      "weight": "18"
+    },
+    {
+      "index": 7,
+      "compressed_map_index": 8,
+      "rows": 12,
+      "rank": 2,
+      "weight": "4"
+    },
+    {
+      "index": 8,
+      "compressed_map_index": 9,
+      "rows": 11,
+      "rank": 1,
+      "weight": "1"
+    },
+    {
+      "index": 9,
+      "compressed_map_index": 11,
+      "rows": 2,
+      "rank": 0,
+      "weight": "3"
+    }
+  ],
+  "weighted_image_rank_sum": 77,
+  "euler_at_x26": 1,
+  "status": "independent exact Fraction replay passed",
+  "lean_file": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\CatalanMeasure\\GenD\\Uniform\\PilotRank.lean",
+  "lean_lines": 196
+}

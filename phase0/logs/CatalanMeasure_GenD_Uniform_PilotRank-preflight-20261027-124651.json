@@ -1,0 +1,10 @@
+{
+  "target": "CatalanMeasure.GenD.Uniform.PilotRank",
+  "mode": "preflight",
+  "rc": 3,
+  "wrapper_wall_seconds": 3.947736000060104,
+  "sampled_wrapper_tree_peak_bytes": 588242944,
+  "lean_process_peak_working_sets_bytes": {},
+  "log": "C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\phase0\\logs\\CatalanMeasure_GenD_Uniform_PilotRank-preflight-20261027-124651.log",
+  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
+}

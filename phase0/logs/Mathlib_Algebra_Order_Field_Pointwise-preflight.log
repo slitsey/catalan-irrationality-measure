@@ -1,0 +1,4 @@
+✖ [484/484] Building Mathlib.Algebra.Order.Field.Pointwise
+error: target is out-of-date and needs to be rebuilt
+Some required targets logged failures:
+- Mathlib.Algebra.Order.Field.Pointwise

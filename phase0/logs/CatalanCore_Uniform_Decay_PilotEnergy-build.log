@@ -1,0 +1,93 @@
+ℹ [3/4] Replayed CatalanCore.Uniform.Decay.PilotArithmetic
+info: stderr:
+cumulative profiling times:
+	.olean serialization 16.8ms
+	attribute application 0.224ms
+	compilation (IR) 0.956ms
+	compilation (LCNF base) 15.8ms
+	compilation (LCNF impure) 4.56ms
+	compilation (LCNF mono) 7.98ms
+	congr simp thm 0.284ms
+	do element elaborator 0.621ms
+	elaboration 68.5ms
+	fix level params 0.137ms
+	instantiate metavars 0.157ms
+	let-to-have transformation 0.699ms
+	linting 4.34ms
+	module linting 0.0072ms
+	parsing 5.92ms
+	process pre-definitions 28ms
+	share common exprs 0.752ms
+	simp 5.56ms
+	tactic execution 13.2ms
+	type checking 30.2ms
+	typeclass inference 28.4ms
+ℹ [4/4] Built CatalanCore.Uniform.Decay.PilotEnergy (3.4s)
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:8:0: process pre-definitions took 1.06ms
+elaboration took 14.3ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:10:0: compilation (LCNF base) took 1.63ms
+process pre-definitions took 1.56ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:11:0: typeclass inference of Decidable took 1.12ms
+type checking took 18ms
+elaboration took 2.04ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:15:0: type checking took 6.18ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:19:0: type checking took 6.41ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:23:0: type checking took 6.68ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:27:0: type checking took 6.36ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:31:0: type checking took 5.95ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:35:0: type checking took 6.92ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:39:0: type checking took 6.04ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:43:0: type checking took 4.94ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:47:0: type checking took 5.82ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:51:0: type checking took 5ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:55:0: type checking took 5.07ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:59:0: type checking took 7.26ms
+elaboration took 1.61ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:62:0: typeclass inference of Inhabited took 1.01ms
+elaboration took 1.65ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:63:0: type checking took 5.6ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:67:0: type checking took 5.25ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:71:0: type checking took 6.59ms
+elaboration took 1.29ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:75:0: type checking took 7.35ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:79:0: type checking took 5.01ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:80:0: elaboration took 2.28ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:81:0: compilation (LCNF mono) took 1.06ms
+compilation (LCNF impure) took 1.04ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:84:0: type checking took 2.75ms
+elaboration took 9.26ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:92:0: type checking took 2.74ms
+elaboration took 1.16ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:93:0: type checking took 5.97ms
+elaboration took 1.13ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:97:0: compilation (LCNF base) took 1.47ms
+compilation (LCNF mono) took 1.88ms
+compilation (LCNF impure) took 1.75ms
+process pre-definitions took 1.24ms
+elaboration took 7.13ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:103:0: type checking took 11.5ms
+elaboration took 1.34ms
+info: CatalanCore/Uniform/Decay/PilotEnergy.lean:104:0: type checking took 5.58ms
+elaboration took 1.33ms
+info: stderr:
+.olean serialization took 13ms
+cumulative profiling times:
+	.olean serialization 13ms
+	attribute application 0.39ms
+	compilation (IR) 1.67ms
+	compilation (LCNF base) 15ms
+	compilation (LCNF impure) 8.82ms
+	compilation (LCNF mono) 15.8ms
+	elaboration 75.6ms
+	fix level params 0.268ms
+	instantiate metavars 0.306ms
+	let-to-have transformation 0.215ms
+	linting 7.8ms
+	module linting 0.0027ms
+	parsing 8.63ms
+	process pre-definitions 19.2ms
+	share common exprs 1.06ms
+	tactic execution 7.83ms
+	type checking 152ms
+	typeclass inference 30ms
+Build completed successfully (4 jobs).

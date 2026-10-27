@@ -1,0 +1,3669 @@
+ℹ [2752/2752] Built CatalanCore.Uniform.Decay.PilotCorner (10s)
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:16:0: overlappingInstancesLinter took 0.0181ms
+tacticAnalysis took 0.25ms
+linting took 1.09ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:18:0: overlappingInstancesLinter took 0.0151ms
+tacticAnalysis took 0.0978ms
+linting took 1.14ms
+elaboration took 0.444ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:19:0: overlappingInstancesLinter took 0.0152ms
+tacticAnalysis took 0.0971ms
+linting took 1.97ms
+elaboration took 0.424ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:21:0: overlappingInstancesLinter took 0.0331ms
+tacticAnalysis took 0.101ms
+linting took 1.48ms
+elaboration took 0.423ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:23:0: attribute application took 0.0222ms
+typeclass inference of Semiring took 0.363ms
+typeclass inference of Semiring took 0.0582ms
+typeclass inference of NonAssocSemiring took 0.269ms
+typeclass inference of Semiring took 0.0239ms
+typeclass inference of Semiring took 0.0044ms
+typeclass inference of Semiring took 0.0292ms
+typeclass inference of Semiring took 0.0028ms
+typeclass inference of TopologicalSpace took 0.516ms
+typeclass inference of AddCommMonoid took 0.0361ms
+typeclass inference of TopologicalSpace took 0.0036ms
+typeclass inference of AddCommMonoid took 0.0025ms
+typeclass inference of Module took 0.291ms
+typeclass inference of Module took 0.0219ms
+instantiate metavars took 0.0034ms
+instantiate metavars took 0.0003ms
+typeclass inference of SeminormedAddCommGroup took 0.937ms
+typeclass inference of SeminormedAddCommGroup took 0.0082ms
+typeclass inference of NontriviallyNormedField took 0.279ms
+typeclass inference of RCLike took 0.0762ms
+typeclass inference of NormedSpace took 4.34ms
+typeclass inference of NormedSpace took 0.0732ms
+typeclass inference of CoeFun took 3.54ms
+typeclass inference of OfNat took 1.47ms
+typeclass inference of CoeFun took 0.57ms
+instantiate metavars took 0.0054ms
+instantiate metavars took 0.0005ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.143ms
+fix level params took 0.0294ms
+type checking took 0.0953ms
+type checking took 0.0801ms
+type checking took 0.35ms
+type checking took 1.3ms
+type checking took 0.0646ms
+type checking took 1.82ms
+type checking took 1.09ms
+type checking took 1.21ms
+type checking took 0.128ms
+type checking took 2.14ms
+type checking took 0.973ms
+type checking took 1.44ms
+let-to-have transformation took 0.0123ms
+let-to-have transformation took 0.0123ms
+type checking took 11.9ms
+attribute application took 0.0033ms
+attribute application took 0.0007ms
+process pre-definitions took 3.62ms
+overlappingInstancesLinter took 5.76ms
+tacticAnalysis took 0.404ms
+linting took 3.71ms
+elaboration took 15.8ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:26:0: attribute application took 0.0047ms
+instantiate metavars took 0.0015ms
+instantiate metavars took 0.0006ms
+typeclass inference of RCLike took 0.14ms
+typeclass inference of NormedAddCommGroup took 0.242ms
+typeclass inference of NormedSpace took 0.333ms
+typeclass inference of NormedAddCommGroup took 0.069ms
+typeclass inference of NormedSpace took 0.133ms
+typeclass inference of RCLike took 0.029ms
+typeclass inference of NormedAddCommGroup took 0.0307ms
+typeclass inference of NormedAddCommGroup took 0.0067ms
+typeclass inference of RCLike took 0.0225ms
+typeclass inference of NormedSpace took 1.46ms
+typeclass inference of NormedSpace took 0.0086ms
+typeclass inference of AddCommGroup took 0.0382ms
+typeclass inference of NormedField took 0.0311ms
+typeclass inference of SeminormedAddCommGroup took 0.253ms
+typeclass inference of RCLike took 0.029ms
+typeclass inference of Module took 1.56ms
+typeclass inference of TopologicalSpace took 0.329ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.231ms
+typeclass inference of NonUnitalNonAssocRing took 0.109ms
+typeclass inference of DivisionRing took 0.128ms
+typeclass inference of NormedDivisionRing took 0.0938ms
+typeclass inference of ContinuousAdd took 3.04ms
+typeclass inference of AddCommGroup took 0.0354ms
+typeclass inference of NormedField took 0.0064ms
+typeclass inference of NormedField took 0.0311ms
+typeclass inference of SeminormedAddCommGroup took 0.42ms
+typeclass inference of RCLike took 0.0622ms
+typeclass inference of Module took 1.17ms
+typeclass inference of SeminormedAddCommGroup took 0.0132ms
+typeclass inference of RCLike took 0.0107ms
+typeclass inference of NormedSpace took 0.428ms
+typeclass inference of ContinuousSMul took 4.92ms
+typeclass inference of RCLike took 0.0609ms
+typeclass inference of NormedAddCommGroup took 0.0407ms
+typeclass inference of RCLike took 0.0097ms
+typeclass inference of NormedSpace took 1.54ms
+typeclass inference of NormedAddCommGroup took 0.0085ms
+typeclass inference of NormedSpace took 0.0067ms
+instantiate metavars took 0.0071ms
+instantiate metavars took 0.0004ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0004ms
+instantiate metavars took 0.0004ms
+share common exprs took 0.103ms
+fix level params took 0.0165ms
+type checking took 2.58ms
+type checking took 1.07ms
+let-to-have transformation took 0.0027ms
+let-to-have transformation took 0.0028ms
+type checking took 2.79ms
+attribute application took 0.0025ms
+attribute application took 0.0006ms
+process pre-definitions took 1.22ms
+overlappingInstancesLinter took 0.123ms
+tacticAnalysis took 0.336ms
+linting took 1.81ms
+elaboration took 5.36ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:29:0: attribute application took 0.0046ms
+typeclass inference of Ring took 0.157ms
+typeclass inference of AddCommGroup took 0.217ms
+typeclass inference of Module took 0.516ms
+typeclass inference of SeminormedAddCommGroup took 0.105ms
+typeclass inference of SeminormedAddCommGroup took 0.0438ms
+typeclass inference of SeminormedAddCommGroup took 0.234ms
+typeclass inference of AddCommGroup took 0.0291ms
+typeclass inference of AddTorsor took 0.921ms
+typeclass inference of Ring took 0.0943ms
+typeclass inference of Ring took 0.048ms
+typeclass inference of Ring took 0.0447ms
+typeclass inference of Ring took 0.0685ms
+typeclass inference of Ring took 0.0445ms
+typeclass inference of Ring took 0.0663ms
+typeclass inference of Ring took 0.144ms
+typeclass inference of Ring took 0.0667ms
+typeclass inference of Ring took 0.0442ms
+typeclass inference of Ring took 0.0499ms
+typeclass inference of Ring took 0.0396ms
+typeclass inference of Ring took 0.164ms
+typeclass inference of Ring took 0.101ms
+typeclass inference of Ring took 0.105ms
+typeclass inference of Ring took 0.0868ms
+typeclass inference of Ring took 0.0882ms
+typeclass inference of Ring took 0.0998ms
+typeclass inference of Ring took 0.0793ms
+typeclass inference of Ring took 0.0538ms
+typeclass inference of Ring took 0.0473ms
+typeclass inference of Ring took 0.0437ms
+typeclass inference of Ring took 0.0422ms
+typeclass inference of Ring took 0.0445ms
+typeclass inference of Ring took 0.0398ms
+typeclass inference of Ring took 0.0548ms
+typeclass inference of Ring took 0.0541ms
+typeclass inference of Ring took 0.0398ms
+typeclass inference of Ring took 0.0413ms
+typeclass inference of Ring took 0.0381ms
+typeclass inference of Ring took 0.0428ms
+typeclass inference of Ring took 0.0416ms
+typeclass inference of Ring took 0.0382ms
+typeclass inference of Ring took 0.0381ms
+typeclass inference of Ring took 0.0408ms
+typeclass inference of Ring took 0.0376ms
+typeclass inference of CoeFun took 4.51ms
+typeclass inference of Ring took 0.0557ms
+typeclass inference of AddCommGroup took 0.0286ms
+typeclass inference of Module took 0.12ms
+typeclass inference of Ring took 0.0252ms
+typeclass inference of NormedField took 0.0265ms
+typeclass inference of SeminormedAddCommGroup took 0.0079ms
+typeclass inference of RCLike took 0.025ms
+typeclass inference of Module took 1.37ms
+typeclass inference of OfNat took 0.138ms
+typeclass inference of OfNat took 0.0993ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.0585ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.026ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.0183ms
+typeclass inference of NormedAddCommGroup took 0.021ms
+typeclass inference of RCLike took 0.0204ms
+typeclass inference of NormedSpace took 1.3ms
+typeclass inference of HMul took 0.17ms
+typeclass inference of HSub took 0.149ms
+typeclass inference of HSub took 0.145ms
+typeclass inference of HMul took 0.157ms
+instantiate metavars took 0.0105ms
+instantiate metavars took 0.0003ms
+tactic execution of Lean.Parser.Tactic.unfold took 0.163ms
+typeclass inference of RCLike took 0.0647ms
+typeclass inference of NormedAddCommGroup took 0.0726ms
+typeclass inference of NormedSpace took 0.167ms
+typeclass inference of NormedAddCommGroup took 0.0556ms
+typeclass inference of NormedSpace took 0.127ms
+typeclass inference of NormedSpace took 0.109ms
+typeclass inference of NormedSpace took 0.104ms
+typeclass inference of RCLike took 0.0237ms
+typeclass inference of NormedAddCommGroup took 0.05ms
+typeclass inference of NormedSpace took 0.117ms
+typeclass inference of NormedAddCommGroup took 0.0537ms
+typeclass inference of NormedSpace took 0.112ms
+typeclass inference of NormedSpace took 0.0904ms
+typeclass inference of NormedSpace took 0.0908ms
+typeclass inference of RCLike took 0.0536ms
+typeclass inference of NormedSpace took 1.71ms
+typeclass inference of RCLike took 0.0286ms
+typeclass inference of NormedAddCommGroup took 0.0225ms
+typeclass inference of RCLike took 0.0201ms
+typeclass inference of NormedSpace took 0.86ms
+typeclass inference of NormedAddCommGroup took 0.004ms
+typeclass inference of NormedSpace took 0.0026ms
+typeclass inference of RCLike took 0.0204ms
+typeclass inference of NormedSpace took 0.66ms
+typeclass inference of NormedSpace took 0.0162ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 6.95ms
+tactic execution of Lean.Parser.Tactic.exact took 0.185ms
+tactic execution of Lean.Parser.Tactic.exact took 0.143ms
+tactic execution of Lean.Parser.Tactic.eqRefl took 0.07ms
+tactic execution of Lean.Parser.Tactic.applyRfl took 0.0553ms
+tactic execution of Lean.Parser.Tactic.tacticRfl took 0.0656ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0126ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0101ms
+tactic execution of Lean.Parser.Tactic.withReducible took 0.0149ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0087ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0099ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0051ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.005ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0045ms
+tactic execution of Lean.Parser.Tactic.skip took 0.0029ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0059ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0059ms
+tactic execution of Lean.Parser.Tactic.first took 0.0116ms
+tactic execution of Lean.Parser.Tactic.tacticTry_ took 0.0098ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0057ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0055ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0137ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.268ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0198ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0043ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0075ms
+tactic execution of Lean.Parser.Tactic.rwSeq took 0.0297ms
+typeclass inference of Ring took 0.078ms
+typeclass inference of AddCommGroup took 0.136ms
+typeclass inference of Module took 0.42ms
+typeclass inference of SeminormedAddCommGroup took 0.0675ms
+typeclass inference of SeminormedAddCommGroup took 0.0427ms
+typeclass inference of SeminormedAddCommGroup took 0.237ms
+typeclass inference of AddCommGroup took 0.0269ms
+typeclass inference of AddTorsor took 0.795ms
+typeclass inference of Ring took 0.0645ms
+typeclass inference of Ring took 0.0486ms
+typeclass inference of Ring took 0.0467ms
+typeclass inference of Ring took 0.0507ms
+typeclass inference of Ring took 0.045ms
+typeclass inference of Ring took 0.0556ms
+typeclass inference of Ring took 0.047ms
+typeclass inference of Ring took 0.0445ms
+typeclass inference of Ring took 0.0447ms
+typeclass inference of Ring took 0.0478ms
+typeclass inference of Ring took 0.0432ms
+typeclass inference of Ring took 0.07ms
+typeclass inference of Ring took 0.0489ms
+typeclass inference of Ring took 0.0475ms
+typeclass inference of Ring took 0.0417ms
+typeclass inference of Ring took 0.0414ms
+typeclass inference of Ring took 0.0488ms
+typeclass inference of Ring took 0.042ms
+typeclass inference of Ring took 0.0536ms
+typeclass inference of Ring took 0.0463ms
+typeclass inference of Ring took 0.0443ms
+typeclass inference of Ring took 0.0422ms
+typeclass inference of Ring took 0.0478ms
+typeclass inference of Ring took 0.0419ms
+typeclass inference of Ring took 0.0578ms
+typeclass inference of Ring took 0.0426ms
+typeclass inference of Ring took 0.0413ms
+typeclass inference of Ring took 0.0452ms
+typeclass inference of Ring took 0.0399ms
+typeclass inference of Ring took 0.0449ms
+typeclass inference of Ring took 0.0422ms
+typeclass inference of Ring took 0.0406ms
+typeclass inference of Ring took 0.0477ms
+typeclass inference of Ring took 0.0449ms
+typeclass inference of Ring took 0.04ms
+typeclass inference of CoeFun took 3.92ms
+typeclass inference of Ring took 0.0581ms
+typeclass inference of AddCommGroup took 0.0273ms
+typeclass inference of Module took 0.119ms
+typeclass inference of Ring took 0.0247ms
+typeclass inference of NormedField took 0.0249ms
+typeclass inference of SeminormedAddCommGroup took 0.0075ms
+typeclass inference of RCLike took 0.0239ms
+typeclass inference of Module took 1.17ms
+typeclass inference of HMul took 0.305ms
+typeclass inference of HSub took 0.266ms
+typeclass inference of HSub took 0.3ms
+typeclass inference of HMul took 0.213ms
+typeclass inference of OfNat took 0.111ms
+typeclass inference of OfNat took 0.0925ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.0502ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.0227ms
+typeclass inference of MeasureTheory.MeasureSpace took 0.0185ms
+typeclass inference of NormedAddCommGroup took 0.0211ms
+typeclass inference of RCLike took 0.0045ms
+typeclass inference of NormedSpace took 1.05ms
+tactic execution of Lean.Parser.Tactic.change took 12.5ms
+typeclass inference of NormedDivisionRing took 0.127ms
+typeclass inference of NormedDivisionRing took 0.0983ms
+typeclass inference of RCLike took 0.0408ms
+typeclass inference of NormedDivisionRing took 0.081ms
+typeclass inference of NormedAlgebra took 0.562ms
+typeclass inference of NormedDivisionRing took 0.0783ms
+typeclass inference of NormedDivisionRing took 0.0864ms
+typeclass inference of RCLike took 0.0218ms
+typeclass inference of NormedDivisionRing took 0.0742ms
+typeclass inference of NormedAlgebra took 0.304ms
+typeclass inference of NormedDivisionRing took 0.0896ms
+typeclass inference of RCLike took 0.0587ms
+typeclass inference of NormedAlgebra took 2.36ms
+typeclass inference of NormedDivisionRing took 0.0953ms
+typeclass inference of RCLike took 0.023ms
+typeclass inference of NormedAlgebra took 0.427ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 11.2ms
+tactic execution of Lean.Parser.Tactic.exact took 0.187ms
+tactic execution of Lean.Parser.Tactic.exact took 0.143ms
+tactic execution of Lean.Parser.Tactic.eqRefl took 3.61ms
+tactic execution of Lean.Parser.Tactic.tacticRfl took 0.0676ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0074ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0084ms
+tactic execution of Lean.Parser.Tactic.withReducible took 0.0104ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0046ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0043ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0041ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0069ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0049ms
+tactic execution of Lean.Parser.Tactic.first took 0.0081ms
+tactic execution of Lean.Parser.Tactic.tacticTry_ took 0.129ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0178ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0097ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0101ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.671ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0272ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.008ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0106ms
+tactic execution of Lean.Parser.Tactic.rwSeq took 1.14ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0689ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.106ms
+instantiate metavars took 0.0493ms
+instantiate metavars took 0.0004ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.235ms
+fix level params took 0.0304ms
+let-to-have transformation took 0.0078ms
+type checking took 10.8ms
+attribute application took 0.0036ms
+attribute application took 0.0012ms
+process pre-definitions took 0.463ms
+overlappingInstancesLinter took 0.539ms
+tacticAnalysis took 13.6ms
+linting took 14.9ms
+elaboration took 19.5ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:38:0: attribute application took 0.0028ms
+typeclass inference of Semiring took 0.0501ms
+typeclass inference of PartialOrder took 0.0387ms
+typeclass inference of AddCommMonoid took 0.0327ms
+typeclass inference of SeminormedRing took 0.162ms
+typeclass inference of RCLike took 0.0255ms
+typeclass inference of SMul took 1.05ms
+typeclass inference of NontriviallyNormedField took 0.094ms
+typeclass inference of AddCommGroup took 0.0282ms
+typeclass inference of Module took 0.441ms
+typeclass inference of TopologicalSpace took 0.326ms
+typeclass inference of AddCommGroup took 0.0044ms
+typeclass inference of Module took 0.0525ms
+typeclass inference of TopologicalSpace took 0.0035ms
+typeclass inference of Membership took 0.193ms
+typeclass inference of Membership took 0.107ms
+typeclass inference of Membership took 0.13ms
+typeclass inference of Membership took 0.0043ms
+typeclass inference of NontriviallyNormedField took 0.0846ms
+typeclass inference of AddCommGroup took 0.144ms
+typeclass inference of Module took 0.432ms
+typeclass inference of TopologicalSpace took 0.123ms
+typeclass inference of ContinuousSMul took 0.207ms
+typeclass inference of NontriviallyNormedField took 0.0046ms
+typeclass inference of AddCommGroup took 0.0036ms
+typeclass inference of Module took 0.0707ms
+typeclass inference of TopologicalSpace took 0.0043ms
+typeclass inference of Semiring took 0.0333ms
+typeclass inference of NonUnitalNonAssocRing took 0.149ms
+typeclass inference of DivisionRing took 0.372ms
+typeclass inference of NormedDivisionRing took 0.187ms
+typeclass inference of ContinuousSMul took 5.66ms
+instantiate metavars took 0.0058ms
+instantiate metavars took 0.0003ms
+typeclass inference of NormedAddCommGroup took 0.035ms
+typeclass inference of RCLike took 0.0257ms
+typeclass inference of NormedSpace took 1.12ms
+typeclass inference of RCLike took 0.0562ms
+typeclass inference of NormedAddCommGroup took 0.0283ms
+typeclass inference of RCLike took 0.0222ms
+typeclass inference of RCLike took 0.0181ms
+typeclass inference of RCLike took 0.0165ms
+typeclass inference of RCLike took 0.0152ms
+typeclass inference of NormedSpace took 0.272ms
+typeclass inference of NormedAddCommGroup took 0.081ms
+typeclass inference of NormedSpace took 0.17ms
+typeclass inference of RCLike took 0.0209ms
+typeclass inference of NormedSpace took 0.692ms
+typeclass inference of NormedSpace took 0.151ms
+typeclass inference of CompleteSpace took 0.201ms
+typeclass inference of RCLike took 0.0246ms
+typeclass inference of RCLike took 0.019ms
+typeclass inference of RCLike took 0.017ms
+typeclass inference of RCLike took 0.0157ms
+typeclass inference of RCLike took 0.0146ms
+typeclass inference of NormedSpace took 0.204ms
+typeclass inference of NormedAddCommGroup took 0.0707ms
+typeclass inference of NormedSpace took 0.135ms
+typeclass inference of NormedSpace took 0.0989ms
+typeclass inference of CompleteSpace took 0.126ms
+typeclass inference of RCLike took 0.0562ms
+typeclass inference of RCLike took 0.005ms
+typeclass inference of NormedSpace took 0.868ms
+typeclass inference of NormedAddCommGroup took 0.0041ms
+typeclass inference of NormedSpace took 0.0034ms
+typeclass inference of NormedSpace took 0.0212ms
+typeclass inference of CompleteSpace took 0.317ms
+tactic execution of Lean.Parser.Tactic.apply took 9.09ms
+tactic execution of Lean.Parser.Tactic.intro took 0.174ms
+typeclass inference of SeminormedAddCommGroup took 0.561ms
+typeclass inference of SeminormedAddCommGroup took 0.0086ms
+typeclass inference of NontriviallyNormedField took 0.0062ms
+typeclass inference of RCLike took 0.0101ms
+typeclass inference of NormedSpace took 1.06ms
+typeclass inference of NormedSpace took 0.0262ms
+typeclass inference of CoeFun took 1.14ms
+typeclass inference of OfNat took 0.605ms
+typeclass inference of NontriviallyNormedField took 0.0793ms
+typeclass inference of AddCommGroup took 0.028ms
+typeclass inference of Ring took 0.0283ms
+typeclass inference of Ring took 0.006ms
+typeclass inference of AddCommGroup took 0.0274ms
+typeclass inference of AddCommGroup took 0.0044ms
+typeclass inference of SeminormedAddCommGroup took 0.211ms
+typeclass inference of AddCommGroup took 1.95ms
+typeclass inference of NontriviallyNormedField took 0.0097ms
+typeclass inference of AddCommGroup took 0.0031ms
+typeclass inference of Module took 0.0496ms
+typeclass inference of TopologicalSpace took 0.0036ms
+typeclass inference of Ring took 0.0274ms
+typeclass inference of Ring took 0.0048ms
+typeclass inference of AddCommGroup took 0.0041ms
+typeclass inference of AddCommGroup took 0.0037ms
+typeclass inference of SeminormedAddCommGroup took 0.206ms
+typeclass inference of AddCommGroup took 1.23ms
+typeclass inference of Semiring took 0.0287ms
+typeclass inference of CommSemiring took 0.0224ms
+typeclass inference of Algebra took 0.156ms
+typeclass inference of Mul took 0.036ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.389ms
+typeclass inference of NonUnitalNonAssocRing took 0.0106ms
+typeclass inference of DivisionRing took 0.0076ms
+typeclass inference of NormedDivisionRing took 0.0123ms
+typeclass inference of Module took 5.96ms
+typeclass inference of NormedField took 0.0517ms
+typeclass inference of NormedField took 0.0139ms
+typeclass inference of AddCommGroup took 0.0202ms
+typeclass inference of AddCommGroup took 0.0188ms
+typeclass inference of SeminormedAddCommGroup took 0.0075ms
+typeclass inference of TopologicalSpace took 5.62ms
+typeclass inference of NormedAddCommGroup took 0.0075ms
+typeclass inference of NontriviallyNormedField took 0.0827ms
+typeclass inference of NontriviallyNormedField took 0.0048ms
+typeclass inference of NormedAddCommGroup took 0.0265ms
+typeclass inference of NormedAddCommGroup took 0.0055ms
+typeclass inference of NormedSpace took 2.06ms
+typeclass inference of NormedSpace took 0.273ms
+typeclass inference of SeminormedRing took 0.18ms
+typeclass inference of NormedAddCommGroup took 1.87ms
+typeclass inference of RCLike took 0.0242ms
+typeclass inference of NormedSpace took 0.871ms
+typeclass inference of NontriviallyNormedField took 0.0059ms
+typeclass inference of NontriviallyNormedField took 0.004ms
+typeclass inference of SeminormedAddCommGroup took 0.0068ms
+typeclass inference of SeminormedAddCommGroup took 0.0182ms
+typeclass inference of NormedSpace took 2.44ms
+typeclass inference of NormedSpace took 0.146ms
+typeclass inference of RCLike took 0.0062ms
+typeclass inference of Algebra took 0.0744ms
+typeclass inference of Algebra took 0.212ms
+typeclass inference of Algebra took 0.131ms
+typeclass inference of Algebra took 0.116ms
+typeclass inference of Algebra took 0.11ms
+typeclass inference of CommMonoid took 0.274ms
+typeclass inference of Algebra took 0.129ms
+typeclass inference of Algebra took 0.12ms
+typeclass inference of Algebra took 0.108ms
+typeclass inference of Algebra took 0.105ms
+typeclass inference of Algebra took 0.108ms
+typeclass inference of Monoid took 0.221ms
+typeclass inference of MulAction took 0.231ms
+typeclass inference of NormedSpace took 7.64ms
+typeclass inference of NormedAddCommGroup took 0.0131ms
+typeclass inference of NormedSpace took 0.0677ms
+typeclass inference of NontriviallyNormedField took 0.0106ms
+typeclass inference of NormedAddCommGroup took 0.0045ms
+typeclass inference of RCLike took 0.0072ms
+typeclass inference of NormedSpace took 1.2ms
+typeclass inference of NontriviallyNormedField took 0.0104ms
+typeclass inference of NormedAddCommGroup took 0.0045ms
+typeclass inference of NormedSpace took 0.0472ms
+typeclass inference of NontriviallyNormedField took 0.0087ms
+typeclass inference of NontriviallyNormedField took 0.005ms
+typeclass inference of NormedAddCommGroup took 0.0075ms
+typeclass inference of NormedAddCommGroup took 0.0065ms
+typeclass inference of NormedSpace took 0.0381ms
+typeclass inference of NormedSpace took 0.0312ms
+typeclass inference of SeminormedRing took 0.0067ms
+typeclass inference of NormedAddCommGroup took 1.54ms
+typeclass inference of NontriviallyNormedField took 0.0054ms
+typeclass inference of NontriviallyNormedField took 0.004ms
+typeclass inference of SeminormedAddCommGroup took 0.0061ms
+typeclass inference of SeminormedAddCommGroup took 0.004ms
+typeclass inference of RCLike took 0.0049ms
+typeclass inference of NormedSpace took 0.493ms
+typeclass inference of NormedSpace took 0.0241ms
+typeclass inference of RCLike took 0.0058ms
+typeclass inference of Semiring took 0.0049ms
+typeclass inference of CommSemiring took 0.004ms
+typeclass inference of Algebra took 0.132ms
+typeclass inference of NormedSpace took 2.61ms
+typeclass inference of NormedAddCommGroup took 0.0069ms
+typeclass inference of NormedAddCommGroup took 0.12ms
+typeclass inference of NormedSpace took 0.0306ms
+typeclass inference of NormedSpace took 0.431ms
+typeclass inference of NontriviallyNormedField took 0.106ms
+typeclass inference of NontriviallyNormedField took 0.0039ms
+typeclass inference of RCLike took 0.0049ms
+typeclass inference of NormedAlgebra took 0.375ms
+typeclass inference of NormedAddCommGroup took 0.0051ms
+typeclass inference of RCLike took 0.0053ms
+typeclass inference of NormedSpace took 0.766ms
+typeclass inference of NormedSpace took 0.0298ms
+typeclass inference of CommSemiring took 0.0298ms
+typeclass inference of NormedField took 0.0254ms
+typeclass inference of Semiring took 0.0068ms
+typeclass inference of SeminormedRing took 0.0042ms
+typeclass inference of RCLike took 0.0047ms
+typeclass inference of Algebra took 0.785ms
+typeclass inference of IsScalarTower took 3.28ms
+typeclass inference of NormedAddCommGroup took 0.101ms
+typeclass inference of NontriviallyNormedField took 0.0054ms
+typeclass inference of NontriviallyNormedField took 0.0041ms
+typeclass inference of SeminormedAddCommGroup took 0.0058ms
+typeclass inference of SeminormedAddCommGroup took 0.0038ms
+typeclass inference of NormedSpace took 0.027ms
+typeclass inference of NormedSpace took 0.0225ms
+typeclass inference of RCLike took 0.0061ms
+typeclass inference of AddCommMonoid took 0.0924ms
+typeclass inference of CommSemiring took 0.083ms
+typeclass inference of Module took 0.466ms
+typeclass inference of Semiring took 0.0751ms
+typeclass inference of NormedField took 0.0125ms
+typeclass inference of SeminormedAddCommGroup took 0.014ms
+typeclass inference of RCLike took 0.0103ms
+typeclass inference of Module took 1.89ms
+typeclass inference of NormedField took 0.0116ms
+typeclass inference of SeminormedRing took 0.239ms
+typeclass inference of AddCommMonoid took 0.0104ms
+typeclass inference of Semiring took 0.0073ms
+typeclass inference of Module took 0.191ms
+typeclass inference of CommSemiring took 0.041ms
+typeclass inference of NormedField took 0.0079ms
+typeclass inference of SeminormedAddCommGroup took 0.0096ms
+typeclass inference of RCLike took 0.0093ms
+typeclass inference of Module took 1.06ms
+typeclass inference of NormedField took 0.0337ms
+typeclass inference of SeminormedRing took 0.0082ms
+typeclass inference of RCLike took 0.0062ms
+typeclass inference of CommSemiring took 0.0057ms
+typeclass inference of NormedField took 0.0061ms
+typeclass inference of Semiring took 0.0061ms
+typeclass inference of SeminormedRing took 0.005ms
+typeclass inference of RCLike took 0.0053ms
+typeclass inference of Algebra took 0.718ms
+typeclass inference of NormedSpace took 10.5ms
+typeclass inference of NormedSpace took 0.436ms
+typeclass inference of AddCommGroup took 0.0063ms
+typeclass inference of AddCommGroup took 0.0059ms
+typeclass inference of Module took 0.216ms
+typeclass inference of AddCommGroup took 0.088ms
+typeclass inference of Algebra took 0.0724ms
+typeclass inference of Algebra took 0.0673ms
+typeclass inference of Algebra took 0.0552ms
+typeclass inference of Algebra took 0.0522ms
+typeclass inference of Algebra took 0.0514ms
+typeclass inference of CommMonoid took 0.0072ms
+typeclass inference of Algebra took 0.0612ms
+typeclass inference of Algebra took 0.0649ms
+typeclass inference of Algebra took 0.0566ms
+typeclass inference of Algebra took 0.0513ms
+typeclass inference of Algebra took 0.0518ms
+typeclass inference of Monoid took 0.0059ms
+typeclass inference of MulAction took 0.0067ms
+typeclass inference of Mul took 0.0336ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.175ms
+typeclass inference of NonUnitalNonAssocRing took 0.102ms
+typeclass inference of DivisionRing took 0.0855ms
+typeclass inference of NormedDivisionRing took 0.0762ms
+typeclass inference of Module took 3.94ms
+typeclass inference of Module took 0.112ms
+typeclass inference of Semiring took 0.0057ms
+typeclass inference of CommSemiring took 0.0039ms
+typeclass inference of Algebra took 0.146ms
+typeclass inference of IsScalarTower took 12ms
+tactic execution of Lean.Parser.Tactic.exact took 20.8ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0327ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0106ms
+tactic execution of Lean.cdot took 0.154ms
+tactic execution of Lean.Parser.Tactic.rintro took 0.575ms
+congr simp thm took 0.0366ms
+congr simp thm took 0.0633ms
+congr simp thm took 0.0011ms
+congr simp thm took 0.16ms
+congr simp thm took 0.0749ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.228ms
+typeclass inference of Group took 0.46ms
+typeclass inference of Group took 0.0031ms
+typeclass inference of Group took 0.008ms
+typeclass inference of Group took 0.0034ms
+typeclass inference of Group took 0.0033ms
+typeclass inference of Group took 0.0029ms
+typeclass inference of FunLike took 0.572ms
+typeclass inference of Ring took 0.0064ms
+typeclass inference of NontriviallyNormedField took 0.0066ms
+typeclass inference of NontriviallyNormedField took 0.0115ms
+typeclass inference of NormedField took 0.0067ms
+typeclass inference of NormedField took 0.0073ms
+typeclass inference of AddCommGroup took 0.0054ms
+typeclass inference of AddCommGroup took 0.082ms
+typeclass inference of NormedField took 0.0057ms
+typeclass inference of NormedField took 0.0048ms
+typeclass inference of AddCommGroup took 0.0044ms
+typeclass inference of AddCommGroup took 0.0038ms
+typeclass inference of NormedCommGroup took 0.0145ms
+typeclass inference of NormedCommGroup took 0.0034ms
+typeclass inference of NormedCommGroup took 0.0022ms
+typeclass inference of NormedCommGroup took 0.0031ms
+typeclass inference of NormedCommGroup took 0.0016ms
+typeclass inference of NormedGroup took 0.0445ms
+typeclass inference of NormedGroup took 0.0022ms
+typeclass inference of One took 9.55ms
+typeclass inference of MulOne took 0.0435ms
+typeclass inference of MulOne took 0.0278ms
+typeclass inference of MulOne took 0.029ms
+typeclass inference of MulOne took 0.0236ms
+typeclass inference of MulZeroOneClass took 0.0862ms
+typeclass inference of MulZeroOneClass took 0.0373ms
+typeclass inference of MulZeroOneClass took 0.0357ms
+typeclass inference of MulZeroOneClass took 0.0302ms
+typeclass inference of NonAssocSemiring took 0.105ms
+typeclass inference of NonAssocSemiring took 0.0442ms
+typeclass inference of NonAssocSemiring took 0.0421ms
+typeclass inference of NonAssocSemiring took 0.0367ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.0098ms
+typeclass inference of NonUnitalNonAssocRing took 0.0049ms
+typeclass inference of DivisionRing took 0.0051ms
+typeclass inference of NormedDivisionRing took 0.0048ms
+typeclass inference of Ring took 0.0091ms
+typeclass inference of NontriviallyNormedField took 0.0066ms
+typeclass inference of NontriviallyNormedField took 0.0049ms
+typeclass inference of Ring took 0.0061ms
+typeclass inference of AddCommGroup took 0.0058ms
+typeclass inference of SeminormedAddCommGroup took 0.0068ms
+typeclass inference of MulOneClass took 0.107ms
+typeclass inference of MulOneClass took 0.0431ms
+typeclass inference of MulOneClass took 0.0412ms
+typeclass inference of MulOneClass took 0.036ms
+typeclass inference of OneHomClass took 10.9ms
+congr simp thm took 0.057ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0616ms
+congr simp thm took 0.182ms
+congr simp thm took 0.0011ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0016ms
+congr simp thm took 0.0052ms
+typeclass inference of SMul took 0.12ms
+typeclass inference of IsSMulApply took 1.7ms
+congr simp thm took 0.0014ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0021ms
+congr simp thm took 0.0012ms
+typeclass inference of One took 0.0557ms
+typeclass inference of IsOneApply took 0.0461ms
+congr simp thm took 0.073ms
+congr simp thm took 0.0011ms
+typeclass inference of IsOneApplyEqSelf took 1.15ms
+typeclass inference of Mul took 0.0095ms
+congr simp thm took 0.0685ms
+congr simp thm took 0.0016ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0021ms
+congr simp thm took 0.0016ms
+typeclass inference of SMul took 0.0106ms
+typeclass inference of IsSMulApply took 0.313ms
+congr simp thm took 0.0013ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0013ms
+congr simp thm took 0.0009ms
+typeclass inference of One took 0.0084ms
+typeclass inference of IsOneApply took 0.0044ms
+congr simp thm took 0.0474ms
+congr simp thm took 0.0006ms
+typeclass inference of IsOneApplyEqSelf took 0.164ms
+typeclass inference of Mul took 0.0062ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0009ms
+typeclass inference of Monoid took 0.103ms
+typeclass inference of Monoid took 0.0057ms
+typeclass inference of MulZeroOneClass took 0.0948ms
+typeclass inference of MulZeroOneClass took 0.0048ms
+typeclass inference of Monoid took 0.0059ms
+typeclass inference of Monoid took 0.0052ms
+typeclass inference of MulZeroClass took 0.133ms
+typeclass inference of MulZeroClass took 0.0051ms
+typeclass inference of Ring took 0.0058ms
+congr simp thm took 0.0011ms
+typeclass inference of Monoid took 0.0068ms
+typeclass inference of Monoid took 0.0052ms
+typeclass inference of MulZeroOneClass took 0.0053ms
+typeclass inference of MulZeroOneClass took 0.0046ms
+typeclass inference of Monoid took 0.0056ms
+typeclass inference of Monoid took 0.0054ms
+typeclass inference of MulZeroClass took 0.0056ms
+typeclass inference of MulZeroClass took 0.0044ms
+typeclass inference of Ring took 0.0058ms
+simp took 33ms
+simp took 0.0394ms
+typeclass inference of NontriviallyNormedField took 0.14ms
+typeclass inference of AddCommGroup took 0.187ms
+typeclass inference of Module took 0.558ms
+typeclass inference of TopologicalSpace took 0.117ms
+typeclass inference of NontriviallyNormedField took 0.122ms
+typeclass inference of AddCommGroup took 0.0322ms
+typeclass inference of Module took 0.575ms
+typeclass inference of TopologicalSpace took 0.423ms
+typeclass inference of SMul took 0.119ms
+typeclass inference of Semiring took 0.0261ms
+typeclass inference of CommSemiring took 0.0227ms
+typeclass inference of Algebra took 0.197ms
+typeclass inference of SMul took 0.0062ms
+typeclass inference of SMulCommClass took 0.348ms
+congr simp thm took 0.0049ms
+congr simp thm took 0.0038ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0034ms
+congr simp thm took 0.0044ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0004ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0008ms
+typeclass inference of MulZeroOneClass took 0.0965ms
+typeclass inference of MulZeroOneClass took 0.0053ms
+typeclass inference of MulZeroClass took 0.0922ms
+typeclass inference of MulZeroClass took 0.0046ms
+typeclass inference of Ring took 0.0315ms
+congr simp thm took 0.001ms
+typeclass inference of MulZeroOneClass took 0.0058ms
+typeclass inference of MulZeroOneClass took 0.0047ms
+typeclass inference of MulZeroClass took 0.0049ms
+typeclass inference of MulZeroClass took 0.0041ms
+typeclass inference of Ring took 0.0048ms
+simp took 6.73ms
+simp took 0.0076ms
+tactic execution of Lean.Parser.Tactic.simpa took 2.52ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0339ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0104ms
+tactic execution of Lean.cdot took 2.51ms
+tactic execution of Lean.Parser.Tactic.exact took 0.104ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0126ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0074ms
+tactic execution of Lean.cdot took 0.478ms
+tactic execution of Lean.Parser.Tactic.exact took 0.073ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0101ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0057ms
+tactic execution of Lean.cdot took 0.0117ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.076ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.279ms
+instantiate metavars took 0.138ms
+instantiate metavars took 0.0007ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.825ms
+fix level params took 0.0965ms
+let-to-have transformation took 0.0112ms
+type checking took 53.7ms
+attribute application took 0.0079ms
+attribute application took 0.0016ms
+process pre-definitions took 4.45ms
+overlappingInstancesLinter took 0.186ms
+tacticAnalysis took 5.91ms
+linting took 8.41ms
+elaboration took 3.66ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:52:0: attribute application took 0.0032ms
+typeclass inference of Semiring took 0.0693ms
+typeclass inference of PartialOrder took 0.0362ms
+typeclass inference of AddCommMonoid took 0.0355ms
+typeclass inference of SeminormedRing took 0.239ms
+typeclass inference of RCLike took 0.0277ms
+typeclass inference of SMul took 1.06ms
+typeclass inference of NontriviallyNormedField took 0.0998ms
+typeclass inference of AddCommGroup took 0.0323ms
+typeclass inference of Module took 0.506ms
+typeclass inference of TopologicalSpace took 0.348ms
+typeclass inference of AddCommGroup took 0.0043ms
+typeclass inference of Module took 0.0576ms
+typeclass inference of TopologicalSpace took 0.0036ms
+typeclass inference of Membership took 0.185ms
+typeclass inference of Membership took 0.112ms
+typeclass inference of Membership took 0.124ms
+typeclass inference of Membership took 0.0047ms
+typeclass inference of Membership took 0.184ms
+typeclass inference of Membership took 0.005ms
+typeclass inference of RCLike took 0.0227ms
+typeclass inference of NormedAddCommGroup took 0.0422ms
+typeclass inference of NormedAddCommGroup took 0.0064ms
+typeclass inference of RCLike took 0.0261ms
+typeclass inference of NormedSpace took 1.38ms
+typeclass inference of NormedSpace took 0.0082ms
+typeclass inference of AddCommGroup took 0.0058ms
+typeclass inference of NormedField took 0.0314ms
+typeclass inference of SeminormedAddCommGroup took 0.25ms
+typeclass inference of RCLike took 0.0252ms
+typeclass inference of Module took 1.36ms
+typeclass inference of TopologicalSpace took 0.007ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.201ms
+typeclass inference of NonUnitalNonAssocRing took 0.118ms
+typeclass inference of DivisionRing took 0.15ms
+typeclass inference of NormedDivisionRing took 0.0866ms
+typeclass inference of ContinuousAdd took 3.7ms
+typeclass inference of AddCommGroup took 0.0387ms
+typeclass inference of NormedField took 0.0055ms
+typeclass inference of NormedField took 0.0278ms
+typeclass inference of SeminormedAddCommGroup took 0.363ms
+typeclass inference of RCLike took 0.0397ms
+typeclass inference of Module took 0.787ms
+typeclass inference of SeminormedAddCommGroup took 0.0091ms
+typeclass inference of RCLike took 0.0195ms
+typeclass inference of NormedSpace took 0.731ms
+typeclass inference of ContinuousSMul took 4.61ms
+typeclass inference of RCLike took 0.0659ms
+typeclass inference of NormedAddCommGroup took 0.0444ms
+typeclass inference of RCLike took 0.011ms
+typeclass inference of NormedSpace took 1.59ms
+typeclass inference of NormedAddCommGroup took 0.009ms
+typeclass inference of NormedSpace took 0.0063ms
+typeclass inference of RCLike took 0.0141ms
+typeclass inference of NormedAddCommGroup took 0.0161ms
+typeclass inference of NormedAddCommGroup took 0.0102ms
+typeclass inference of NormedSpace took 0.0157ms
+typeclass inference of NormedSpace took 0.0125ms
+typeclass inference of AddCommGroup took 0.012ms
+typeclass inference of Module took 0.308ms
+typeclass inference of TopologicalSpace took 0.0111ms
+typeclass inference of ContinuousAdd took 0.0991ms
+typeclass inference of ContinuousSMul took 0.0978ms
+typeclass inference of RCLike took 0.0093ms
+typeclass inference of NormedAddCommGroup took 0.0046ms
+typeclass inference of NormedSpace took 0.007ms
+typeclass inference of NormedAddCommGroup took 0.0039ms
+typeclass inference of NormedSpace took 0.0047ms
+typeclass inference of HAdd took 0.338ms
+typeclass inference of HAdd took 0.35ms
+instantiate metavars took 0.0198ms
+instantiate metavars took 0.0007ms
+typeclass inference of NormedAddCommGroup took 0.0146ms
+typeclass inference of RCLike took 0.0113ms
+typeclass inference of NormedSpace took 1.28ms
+typeclass inference of RCLike took 0.074ms
+typeclass inference of NormedAddCommGroup took 0.0068ms
+typeclass inference of RCLike took 0.0285ms
+typeclass inference of RCLike took 0.0237ms
+typeclass inference of RCLike took 0.0224ms
+typeclass inference of RCLike took 0.0194ms
+typeclass inference of NormedSpace took 0.35ms
+typeclass inference of NormedAddCommGroup took 0.102ms
+typeclass inference of NormedSpace took 0.198ms
+typeclass inference of RCLike took 0.0061ms
+typeclass inference of NormedSpace took 0.838ms
+typeclass inference of NormedSpace took 0.166ms
+typeclass inference of RCLike took 0.027ms
+typeclass inference of RCLike took 0.0231ms
+typeclass inference of RCLike took 0.0191ms
+typeclass inference of RCLike took 0.0158ms
+typeclass inference of RCLike took 0.0149ms
+typeclass inference of NormedSpace took 0.217ms
+typeclass inference of NormedAddCommGroup took 0.0683ms
+typeclass inference of NormedSpace took 0.127ms
+typeclass inference of NormedSpace took 0.0984ms
+typeclass inference of RCLike took 0.012ms
+typeclass inference of NormedSpace took 0.0052ms
+typeclass inference of NormedAddCommGroup took 0.0026ms
+typeclass inference of NormedSpace took 0.0035ms
+typeclass inference of NormedSpace took 0.0297ms
+tactic execution of Lean.Parser.Tactic.apply took 7.51ms
+tactic execution of Lean.Parser.Tactic.intro took 0.134ms
+typeclass inference of SeminormedAddCommGroup took 0.25ms
+typeclass inference of SeminormedAddCommGroup took 0.0041ms
+typeclass inference of NontriviallyNormedField took 0.0028ms
+typeclass inference of RCLike took 0.0045ms
+typeclass inference of NormedSpace took 0.679ms
+typeclass inference of NormedSpace took 0.0258ms
+typeclass inference of CoeFun took 1.21ms
+typeclass inference of OfNat took 0.624ms
+typeclass inference of NontriviallyNormedField took 0.082ms
+typeclass inference of AddCommGroup took 0.0046ms
+typeclass inference of Ring took 0.0294ms
+typeclass inference of Ring took 0.0058ms
+typeclass inference of AddCommGroup took 0.0295ms
+typeclass inference of AddCommGroup took 0.0052ms
+typeclass inference of SeminormedAddCommGroup took 0.0147ms
+typeclass inference of AddCommGroup took 2.55ms
+typeclass inference of NontriviallyNormedField took 0.0131ms
+typeclass inference of AddCommGroup took 0.0045ms
+typeclass inference of Module took 0.0728ms
+typeclass inference of TopologicalSpace took 0.0048ms
+typeclass inference of Ring took 0.0368ms
+typeclass inference of Ring took 0.0069ms
+typeclass inference of AddCommGroup took 0.0058ms
+typeclass inference of AddCommGroup took 0.0051ms
+typeclass inference of SeminormedAddCommGroup took 0.0069ms
+typeclass inference of AddCommGroup took 1.6ms
+typeclass inference of Semiring took 0.0335ms
+typeclass inference of CommSemiring took 0.0252ms
+typeclass inference of Algebra took 0.184ms
+typeclass inference of Mul took 0.0383ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.0054ms
+typeclass inference of NonUnitalNonAssocRing took 0.0053ms
+typeclass inference of DivisionRing took 0.0056ms
+typeclass inference of NormedDivisionRing took 0.0047ms
+typeclass inference of Module took 3.73ms
+typeclass inference of NormedField took 0.0248ms
+typeclass inference of NormedField took 0.0062ms
+typeclass inference of AddCommGroup took 0.0048ms
+typeclass inference of AddCommGroup took 0.0039ms
+typeclass inference of SeminormedAddCommGroup took 0.0053ms
+typeclass inference of TopologicalSpace took 1.53ms
+typeclass inference of NormedAddCommGroup took 0.0069ms
+typeclass inference of NontriviallyNormedField took 0.0799ms
+typeclass inference of NontriviallyNormedField took 0.0044ms
+typeclass inference of NormedAddCommGroup took 0.0295ms
+typeclass inference of NormedAddCommGroup took 0.0057ms
+typeclass inference of NormedSpace took 1.93ms
+typeclass inference of NormedSpace took 0.256ms
+typeclass inference of SeminormedRing took 0.159ms
+typeclass inference of NormedAddCommGroup took 1.77ms
+typeclass inference of RCLike took 0.0056ms
+typeclass inference of NormedSpace took 0.774ms
+typeclass inference of NontriviallyNormedField took 0.0056ms
+typeclass inference of NontriviallyNormedField took 0.0041ms
+typeclass inference of SeminormedAddCommGroup took 0.0054ms
+typeclass inference of SeminormedAddCommGroup took 0.0038ms
+typeclass inference of NormedSpace took 2.19ms
+typeclass inference of NormedSpace took 0.311ms
+typeclass inference of RCLike took 0.0209ms
+typeclass inference of Algebra took 0.191ms
+typeclass inference of Algebra took 0.177ms
+typeclass inference of Algebra took 0.161ms
+typeclass inference of Algebra took 0.144ms
+typeclass inference of Algebra took 0.138ms
+typeclass inference of CommMonoid took 0.327ms
+typeclass inference of Algebra took 0.14ms
+typeclass inference of Algebra took 0.145ms
+typeclass inference of Algebra took 0.126ms
+typeclass inference of Algebra took 0.122ms
+typeclass inference of Algebra took 0.125ms
+typeclass inference of Monoid took 0.201ms
+typeclass inference of MulAction took 0.153ms
+typeclass inference of NormedSpace took 13.4ms
+typeclass inference of NormedAddCommGroup took 0.0098ms
+typeclass inference of NormedSpace took 0.0451ms
+typeclass inference of NontriviallyNormedField took 0.0069ms
+typeclass inference of NormedAddCommGroup took 0.0029ms
+typeclass inference of RCLike took 0.005ms
+typeclass inference of NormedSpace took 0.786ms
+typeclass inference of NontriviallyNormedField took 0.0065ms
+typeclass inference of NormedAddCommGroup took 0.0037ms
+typeclass inference of NormedSpace took 0.0283ms
+typeclass inference of NontriviallyNormedField took 0.0046ms
+typeclass inference of NontriviallyNormedField took 0.0034ms
+typeclass inference of NormedAddCommGroup took 0.0056ms
+typeclass inference of NormedAddCommGroup took 0.0047ms
+typeclass inference of NormedSpace took 0.0439ms
+typeclass inference of NormedSpace took 0.0245ms
+typeclass inference of SeminormedRing took 0.005ms
+typeclass inference of NormedAddCommGroup took 1.14ms
+typeclass inference of NontriviallyNormedField took 0.005ms
+typeclass inference of NontriviallyNormedField took 0.0043ms
+typeclass inference of SeminormedAddCommGroup took 0.0051ms
+typeclass inference of SeminormedAddCommGroup took 0.0035ms
+typeclass inference of RCLike took 0.0049ms
+typeclass inference of NormedSpace took 0.473ms
+typeclass inference of NormedSpace took 0.0244ms
+typeclass inference of RCLike took 0.0066ms
+typeclass inference of Semiring took 0.0051ms
+typeclass inference of CommSemiring took 0.0036ms
+typeclass inference of Algebra took 0.133ms
+typeclass inference of NormedSpace took 2.72ms
+typeclass inference of NormedAddCommGroup took 0.0078ms
+typeclass inference of NormedAddCommGroup took 0.128ms
+typeclass inference of NormedSpace took 0.0326ms
+typeclass inference of NormedSpace took 0.428ms
+typeclass inference of NontriviallyNormedField took 0.11ms
+typeclass inference of NontriviallyNormedField took 0.0041ms
+typeclass inference of RCLike took 0.0058ms
+typeclass inference of NormedAlgebra took 0.405ms
+typeclass inference of NormedAddCommGroup took 0.0062ms
+typeclass inference of RCLike took 0.0055ms
+typeclass inference of NormedSpace took 0.839ms
+typeclass inference of NormedSpace took 0.032ms
+typeclass inference of CommSemiring took 0.0316ms
+typeclass inference of NormedField took 0.0054ms
+typeclass inference of Semiring took 0.0056ms
+typeclass inference of SeminormedRing took 0.0043ms
+typeclass inference of RCLike took 0.0048ms
+typeclass inference of Algebra took 0.73ms
+typeclass inference of IsScalarTower took 2.83ms
+typeclass inference of NormedAddCommGroup took 0.117ms
+typeclass inference of NontriviallyNormedField took 0.0071ms
+typeclass inference of NontriviallyNormedField took 0.0041ms
+typeclass inference of SeminormedAddCommGroup took 0.0069ms
+typeclass inference of SeminormedAddCommGroup took 0.0039ms
+typeclass inference of NormedSpace took 0.0329ms
+typeclass inference of NormedSpace took 0.0244ms
+typeclass inference of RCLike took 0.0076ms
+typeclass inference of AddCommMonoid took 0.0632ms
+typeclass inference of CommSemiring took 0.0769ms
+typeclass inference of Module took 0.473ms
+typeclass inference of Semiring took 0.0783ms
+typeclass inference of NormedField took 0.0141ms
+typeclass inference of SeminormedAddCommGroup took 0.0167ms
+typeclass inference of RCLike took 0.0121ms
+typeclass inference of Module took 1.8ms
+typeclass inference of NormedField took 0.0131ms
+typeclass inference of SeminormedRing took 0.271ms
+typeclass inference of AddCommMonoid took 0.0136ms
+typeclass inference of Semiring took 0.0582ms
+typeclass inference of Module took 0.255ms
+typeclass inference of CommSemiring took 0.0581ms
+typeclass inference of NormedField took 0.0138ms
+typeclass inference of SeminormedAddCommGroup took 0.0146ms
+typeclass inference of RCLike took 0.0108ms
+typeclass inference of Module took 1.8ms
+typeclass inference of NormedField took 0.0118ms
+typeclass inference of SeminormedRing took 0.0129ms
+typeclass inference of RCLike took 0.0103ms
+typeclass inference of CommSemiring took 0.0098ms
+typeclass inference of NormedField took 0.0089ms
+typeclass inference of Semiring took 0.0115ms
+typeclass inference of SeminormedRing took 0.0085ms
+typeclass inference of RCLike took 0.0081ms
+typeclass inference of Algebra took 1.17ms
+typeclass inference of NormedSpace took 11.6ms
+typeclass inference of NormedSpace took 0.833ms
+typeclass inference of AddCommGroup took 0.0067ms
+typeclass inference of AddCommGroup took 0.0061ms
+typeclass inference of Module took 0.209ms
+typeclass inference of AddCommGroup took 0.144ms
+typeclass inference of Algebra took 0.0757ms
+typeclass inference of Algebra took 0.382ms
+typeclass inference of Algebra took 0.115ms
+typeclass inference of Algebra took 0.0975ms
+typeclass inference of Algebra took 0.095ms
+typeclass inference of CommMonoid took 0.0102ms
+typeclass inference of Algebra took 0.0968ms
+typeclass inference of Algebra took 0.0921ms
+typeclass inference of Algebra took 0.0875ms
+typeclass inference of Algebra took 0.208ms
+typeclass inference of Algebra took 0.106ms
+typeclass inference of Monoid took 0.0084ms
+typeclass inference of MulAction took 0.0116ms
+typeclass inference of Mul took 0.0411ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.23ms
+typeclass inference of NonUnitalNonAssocRing took 0.109ms
+typeclass inference of DivisionRing took 0.0908ms
+typeclass inference of NormedDivisionRing took 0.0738ms
+typeclass inference of Module took 5.02ms
+typeclass inference of Module took 0.116ms
+typeclass inference of Semiring took 0.0064ms
+typeclass inference of CommSemiring took 0.0039ms
+typeclass inference of Algebra took 0.159ms
+typeclass inference of IsScalarTower took 11.9ms
+tactic execution of Lean.Parser.Tactic.exact took 19.7ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.034ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0104ms
+tactic execution of Lean.cdot took 0.126ms
+tactic execution of Lean.Parser.Tactic.rintro took 0.551ms
+congr simp thm took 0.0078ms
+congr simp thm took 0.0035ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0479ms
+congr simp thm took 0.0244ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0037ms
+typeclass inference of Group took 0.348ms
+typeclass inference of Group took 0.0031ms
+typeclass inference of Group took 0.0033ms
+typeclass inference of Group took 0.0019ms
+typeclass inference of Group took 0.0016ms
+typeclass inference of Group took 0.002ms
+typeclass inference of FunLike took 0.347ms
+typeclass inference of Ring took 0.0062ms
+typeclass inference of NontriviallyNormedField took 0.0062ms
+typeclass inference of NontriviallyNormedField took 0.0051ms
+typeclass inference of NormedField took 0.0119ms
+typeclass inference of NormedField took 0.0087ms
+typeclass inference of AddCommGroup took 0.0077ms
+typeclass inference of AddCommGroup took 0.113ms
+typeclass inference of NormedField took 0.0083ms
+typeclass inference of NormedField took 0.0069ms
+typeclass inference of AddCommGroup took 0.0059ms
+typeclass inference of AddCommGroup took 0.005ms
+typeclass inference of NormedCommGroup took 0.0131ms
+typeclass inference of NormedCommGroup took 0.0032ms
+typeclass inference of NormedCommGroup took 0.0021ms
+typeclass inference of NormedCommGroup took 0.0065ms
+typeclass inference of NormedCommGroup took 0.0021ms
+typeclass inference of NormedGroup took 0.0623ms
+typeclass inference of NormedGroup took 0.0027ms
+typeclass inference of One took 10.8ms
+typeclass inference of MulOne took 0.0533ms
+typeclass inference of MulOne took 0.0338ms
+typeclass inference of MulOne took 0.0325ms
+typeclass inference of MulOne took 0.025ms
+typeclass inference of MulZeroOneClass took 0.0629ms
+typeclass inference of MulZeroOneClass took 0.0393ms
+typeclass inference of MulZeroOneClass took 0.0389ms
+typeclass inference of MulZeroOneClass took 0.0439ms
+typeclass inference of NonAssocSemiring took 0.0755ms
+typeclass inference of NonAssocSemiring took 0.0419ms
+typeclass inference of NonAssocSemiring took 0.042ms
+typeclass inference of NonAssocSemiring took 0.0374ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.0065ms
+typeclass inference of NonUnitalNonAssocRing took 0.0052ms
+typeclass inference of DivisionRing took 0.0055ms
+typeclass inference of NormedDivisionRing took 0.0046ms
+typeclass inference of Ring took 0.0059ms
+typeclass inference of NontriviallyNormedField took 0.0058ms
+typeclass inference of NontriviallyNormedField took 0.0047ms
+typeclass inference of Ring took 0.006ms
+typeclass inference of AddCommGroup took 0.0053ms
+typeclass inference of SeminormedAddCommGroup took 0.0297ms
+typeclass inference of MulOneClass took 0.142ms
+typeclass inference of MulOneClass took 0.0995ms
+typeclass inference of MulOneClass took 0.0715ms
+typeclass inference of MulOneClass took 0.0606ms
+typeclass inference of OneHomClass took 10.8ms
+congr simp thm took 0.0759ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0071ms
+congr simp thm took 0.066ms
+congr simp thm took 0.0011ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0018ms
+congr simp thm took 0.0055ms
+typeclass inference of SMul took 0.127ms
+typeclass inference of IsSMulApply took 1.67ms
+congr simp thm took 0.0014ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0014ms
+congr simp thm took 0.0009ms
+typeclass inference of One took 0.0404ms
+typeclass inference of IsOneApply took 0.0344ms
+congr simp thm took 0.0508ms
+congr simp thm took 0.0006ms
+typeclass inference of IsOneApplyEqSelf took 0.937ms
+typeclass inference of Mul took 0.0079ms
+congr simp thm took 0.006ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0006ms
+congr simp thm took 0.0018ms
+congr simp thm took 0.0013ms
+typeclass inference of SMul took 0.0087ms
+typeclass inference of IsSMulApply took 0.288ms
+congr simp thm took 0.0012ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0016ms
+congr simp thm took 0.0008ms
+typeclass inference of One took 0.0074ms
+typeclass inference of IsOneApply took 0.0041ms
+congr simp thm took 0.0472ms
+congr simp thm took 0.0006ms
+typeclass inference of IsOneApplyEqSelf took 0.162ms
+typeclass inference of Mul took 0.0064ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0008ms
+typeclass inference of Monoid took 0.0948ms
+typeclass inference of Monoid took 0.006ms
+typeclass inference of MulZeroOneClass took 0.0935ms
+typeclass inference of MulZeroOneClass took 0.0051ms
+typeclass inference of Monoid took 0.0057ms
+typeclass inference of Monoid took 0.0049ms
+typeclass inference of MulZeroClass took 0.1ms
+typeclass inference of MulZeroClass took 0.0049ms
+typeclass inference of Ring took 0.0059ms
+congr simp thm took 0.001ms
+typeclass inference of Monoid took 0.0062ms
+typeclass inference of Monoid took 0.0051ms
+typeclass inference of MulZeroOneClass took 0.0049ms
+typeclass inference of MulZeroOneClass took 0.0053ms
+typeclass inference of Monoid took 0.0054ms
+typeclass inference of Monoid took 0.0053ms
+typeclass inference of MulZeroClass took 0.005ms
+typeclass inference of MulZeroClass took 0.0047ms
+typeclass inference of Ring took 0.0056ms
+simp took 29.1ms
+simp took 0.0141ms
+typeclass inference of NontriviallyNormedField took 0.0979ms
+typeclass inference of AddCommGroup took 0.164ms
+typeclass inference of Module took 0.432ms
+typeclass inference of TopologicalSpace took 0.103ms
+typeclass inference of NontriviallyNormedField took 0.005ms
+typeclass inference of AddCommGroup took 0.0036ms
+typeclass inference of Module took 0.0589ms
+typeclass inference of TopologicalSpace took 0.0045ms
+typeclass inference of SMul took 0.0896ms
+typeclass inference of Semiring took 0.005ms
+typeclass inference of CommSemiring took 0.0037ms
+typeclass inference of Algebra took 0.14ms
+typeclass inference of SMul took 0.0056ms
+typeclass inference of SMulCommClass took 0.257ms
+congr simp thm took 0.0026ms
+congr simp thm took 0.002ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.002ms
+congr simp thm took 0.0047ms
+congr simp thm took 0.0017ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0006ms
+congr simp thm took 0.0014ms
+congr simp thm took 0.0016ms
+typeclass inference of MulZeroOneClass took 0.0092ms
+typeclass inference of MulZeroOneClass took 0.0079ms
+typeclass inference of MulZeroClass took 0.0081ms
+typeclass inference of MulZeroClass took 0.0069ms
+typeclass inference of Ring took 0.0083ms
+congr simp thm took 0.0016ms
+typeclass inference of MulZeroOneClass took 0.0069ms
+typeclass inference of MulZeroOneClass took 0.0064ms
+typeclass inference of MulZeroClass took 0.006ms
+typeclass inference of MulZeroClass took 0.0049ms
+typeclass inference of Ring took 0.0059ms
+simp took 9.47ms
+simp took 0.0091ms
+tactic execution of Lean.Parser.Tactic.simpa took 1.65ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0329ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0108ms
+tactic execution of Lean.cdot took 0.283ms
+tactic execution of Lean.Parser.Tactic.exact took 0.0834ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0114ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0071ms
+tactic execution of Lean.cdot took 0.0207ms
+tactic execution of Lean.Parser.Tactic.exact took 0.0464ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0078ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0049ms
+tactic execution of Lean.cdot took 0.0083ms
+tactic execution of Lean.Parser.Tactic.exact took 0.0403ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0071ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0049ms
+tactic execution of Lean.cdot took 0.0068ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0765ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.191ms
+instantiate metavars took 0.129ms
+instantiate metavars took 0.0005ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.732ms
+fix level params took 0.101ms
+let-to-have transformation took 0.0117ms
+type checking took 49.4ms
+attribute application took 0.0052ms
+attribute application took 0.0037ms
+process pre-definitions took 4.7ms
+overlappingInstancesLinter took 0.265ms
+tacticAnalysis took 2.34ms
+linting took 7.02ms
+elaboration took 14.3ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:68:0: attribute application took 0.0035ms
+instantiate metavars took 0.0039ms
+instantiate metavars took 0.0004ms
+typeclass inference of OfNat took 0.159ms
+typeclass inference of OfNat took 0.0538ms
+typeclass inference of OfNat took 0.0642ms
+typeclass inference of LT took 0.0451ms
+typeclass inference of OfNat took 0.117ms
+instantiate metavars took 0.0026ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.0139ms
+fix level params took 0.0048ms
+let-to-have transformation took 0.003ms
+let-to-have transformation took 0.0008ms
+type checking took 0.045ms
+attribute application took 0.0031ms
+attribute application took 0.0013ms
+process pre-definitions took 0.187ms
+overlappingInstancesLinter took 0.133ms
+tacticAnalysis took 0.289ms
+linting took 1.89ms
+elaboration took 24.7ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:70:0: attribute application took 0.0026ms
+instantiate metavars took 0.0009ms
+instantiate metavars took 0.0003ms
+typeclass inference of CoeT took 0.892ms
+typeclass inference of CoeT took 0.566ms
+typeclass inference of HMul took 0.169ms
+typeclass inference of HAdd took 0.153ms
+typeclass inference of CoeT took 0.46ms
+typeclass inference of HAdd took 0.169ms
+typeclass inference of HMul took 0.15ms
+typeclass inference of CoeT took 0.446ms
+typeclass inference of CoeT took 0.408ms
+typeclass inference of HMul took 0.0044ms
+typeclass inference of HAdd took 0.0029ms
+typeclass inference of CoeT took 0.0044ms
+typeclass inference of HAdd took 0.0392ms
+typeclass inference of HMul took 0.0348ms
+typeclass inference of HDiv took 0.208ms
+typeclass inference of HDiv took 0.174ms
+instantiate metavars took 0.0059ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.0187ms
+fix level params took 0.0044ms
+let-to-have transformation took 0.0019ms
+let-to-have transformation took 0.0014ms
+type checking took 0.064ms
+attribute application took 0.0021ms
+attribute application took 0.0006ms
+process pre-definitions took 0.139ms
+overlappingInstancesLinter took 0.134ms
+tacticAnalysis took 0.448ms
+linting took 2.16ms
+elaboration took 2.78ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:74:0: attribute application took 0.0021ms
+typeclass inference of Membership took 0.163ms
+typeclass inference of Membership took 0.113ms
+typeclass inference of CoeT took 0.486ms
+typeclass inference of CoeT took 0.442ms
+typeclass inference of HMul took 0.128ms
+typeclass inference of HAdd took 0.121ms
+typeclass inference of CoeT took 0.393ms
+typeclass inference of HAdd took 0.145ms
+typeclass inference of HMul took 0.139ms
+typeclass inference of OfNat took 0.108ms
+typeclass inference of OfNat took 0.0447ms
+typeclass inference of OfNat took 0.0953ms
+instantiate metavars took 0.0045ms
+instantiate metavars took 0.0003ms
+tactic execution of Lean.Parser.Tactic.intro took 0.0521ms
+tactic execution of Lean.Parser.Tactic.obtain took 0.745ms
+tactic execution of Lean.Parser.Tactic.refine took 0.35ms
+tactic execution of Lean.Parser.Tactic.rotateRight took 0.0115ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0224ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0049ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0062ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0065ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0054ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0105ms
+tactic execution of Lean.Parser.Tactic.tacticRefine_lift_ took 0.0086ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0224ms
+typeclass inference of OfNat took 0.119ms
+typeclass inference of OfNat took 0.0553ms
+typeclass inference of HMul took 0.134ms
+typeclass inference of HMul took 0.144ms
+typeclass inference of OfNat took 0.0883ms
+tactic execution of Lean.Parser.Tactic.refine took 0.565ms
+congr simp thm took 0.0073ms
+congr simp thm took 0.0039ms
+congr simp thm took 0.0223ms
+typeclass inference of Monoid took 0.0431ms
+typeclass inference of Monoid took 0.0168ms
+typeclass inference of MulZeroOneClass took 0.105ms
+typeclass inference of MulZeroOneClass took 0.0045ms
+typeclass inference of Monoid took 0.0046ms
+typeclass inference of Monoid took 0.0045ms
+typeclass inference of MulZeroClass took 0.097ms
+typeclass inference of NormedRing took 0.104ms
+typeclass inference of NormedDivisionRing took 0.0955ms
+typeclass inference of NoZeroDivisors took 1.81ms
+congr simp thm took 0.0172ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0014ms
+simp took 3.84ms
+simp took 0.0103ms
+congr simp thm took 0.0051ms
+congr simp thm took 0.0021ms
+congr simp thm took 0.0038ms
+congr simp thm took 0.0169ms
+congr simp thm took 0.0377ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0159ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0007ms
+typeclass inference of AddZeroClass took 0.122ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0006ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0007ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0004ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0008ms
+typeclass inference of MulZeroClass took 0.0984ms
+typeclass inference of AddZeroClass took 0.0051ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0006ms
+congr simp thm took 0.026ms
+typeclass inference of AddGroupWithOne took 0.0795ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0003ms
+congr simp thm took 0.0007ms
+typeclass inference of AddGroupWithOne took 0.0515ms
+typeclass inference of MulZeroClass took 0.0048ms
+congr simp thm took 0.0009ms
+congr simp thm took 0.0006ms
+typeclass inference of MulZeroClass took 0.0051ms
+typeclass inference of AddZeroClass took 0.0047ms
+typeclass inference of Monoid took 0.036ms
+typeclass inference of Monoid took 0.0044ms
+typeclass inference of MulZeroOneClass took 0.0916ms
+typeclass inference of MulZeroOneClass took 0.0047ms
+typeclass inference of Monoid took 0.0045ms
+typeclass inference of Monoid took 0.0044ms
+typeclass inference of MulZeroClass took 0.0048ms
+typeclass inference of NormedRing took 0.0866ms
+typeclass inference of NormedDivisionRing took 0.0859ms
+typeclass inference of NoZeroDivisors took 1.62ms
+congr simp thm took 0.004ms
+congr simp thm took 0.0008ms
+congr simp thm took 0.0011ms
+simp took 7.81ms
+simp took 0.0111ms
+tactic execution of Lean.Parser.Tactic.simpa took 0.404ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0121ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0059ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0064ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.0081ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0056ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0051ms
+tactic execution of Lean.Parser.Tactic.case took 0.0421ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0205ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0047ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0072ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0286ms
+typeclass inference of Preorder took 0.214ms
+typeclass inference of Preorder took 0.0349ms
+typeclass inference of Preorder took 0.0249ms
+typeclass inference of Mul took 0.0308ms
+typeclass inference of Zero took 0.0306ms
+typeclass inference of NormedRing took 0.0966ms
+typeclass inference of NormedDivisionRing took 0.0841ms
+typeclass inference of NoZeroDivisors took 1.11ms
+tactic execution of Lean.Parser.Tactic.exact took 1.29ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0589ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0476ms
+instantiate metavars took 0.0776ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.135ms
+fix level params took 0.0233ms
+let-to-have transformation took 0.0038ms
+type checking took 2.28ms
+attribute application took 0.0028ms
+attribute application took 0.0006ms
+process pre-definitions took 0.234ms
+overlappingInstancesLinter took 0.156ms
+tacticAnalysis took 0.969ms
+linting took 3.48ms
+elaboration took 2.01ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:82:0: attribute application took 0.0022ms
+typeclass inference of Membership took 0.17ms
+typeclass inference of Membership took 0.117ms
+typeclass inference of NontriviallyNormedField took 0.0992ms
+typeclass inference of AddCommGroup took 0.0468ms
+typeclass inference of Module took 0.501ms
+typeclass inference of TopologicalSpace took 0.369ms
+typeclass inference of AddCommGroup took 0.0044ms
+typeclass inference of Module took 0.0539ms
+typeclass inference of TopologicalSpace took 0.0036ms
+instantiate metavars took 0.0031ms
+instantiate metavars took 0.0003ms
+typeclass inference of CoeT took 0.509ms
+typeclass inference of CoeT took 0.437ms
+typeclass inference of HMul took 0.13ms
+typeclass inference of HAdd took 0.123ms
+typeclass inference of CoeT took 0.546ms
+typeclass inference of HAdd took 0.16ms
+typeclass inference of HMul took 0.145ms
+typeclass inference of NontriviallyNormedField took 0.004ms
+typeclass inference of AddCommGroup took 0.0038ms
+typeclass inference of Module took 0.0636ms
+typeclass inference of TopologicalSpace took 0.004ms
+typeclass inference of AddCommGroup took 0.0031ms
+typeclass inference of Module took 0.0421ms
+typeclass inference of TopologicalSpace took 0.0033ms
+tactic execution of Lean.Parser.Tactic.refine took 1.38ms
+typeclass inference of NormedRing took 0.188ms
+typeclass inference of NormedAddCommGroup took 0.0367ms
+typeclass inference of RCLike took 0.0283ms
+typeclass inference of NormedSpace took 1.53ms
+typeclass inference of NormedAlgebra took 0.717ms
+typeclass inference of NormedAddCommGroup took 0.0087ms
+typeclass inference of NormedAddCommGroup took 0.0069ms
+typeclass inference of NormedSpace took 0.0372ms
+typeclass inference of NormedSpace took 0.0297ms
+tactic execution of Mathlib.Meta.FunProp.funPropTacStx took 48.8ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.021ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0082ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0081ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.0105ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0068ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0068ms
+tactic execution of Lean.Parser.Tactic.case took 0.0692ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0183ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0065ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0115ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0169ms
+typeclass inference of NontriviallyNormedField took 0.117ms
+typeclass inference of AddCommGroup took 0.0328ms
+typeclass inference of Module took 0.49ms
+typeclass inference of TopologicalSpace took 0.349ms
+typeclass inference of AddCommGroup took 0.0038ms
+typeclass inference of Module took 0.0476ms
+typeclass inference of TopologicalSpace took 0.0027ms
+typeclass inference of NormedAddCommGroup took 0.0307ms
+typeclass inference of RCLike took 0.0281ms
+typeclass inference of NormedSpace took 1.36ms
+typeclass inference of NormedAddCommGroup took 0.0069ms
+typeclass inference of NormedSpace took 0.0266ms
+typeclass inference of NormedAddCommGroup took 0.0056ms
+typeclass inference of NormedSpace took 0.0284ms
+typeclass inference of NontriviallyNormedField took 0.0061ms
+typeclass inference of NormedAddCommGroup took 0.0302ms
+typeclass inference of RCLike took 0.0223ms
+typeclass inference of NormedSpace took 0.852ms
+typeclass inference of NormedAddCommGroup took 0.0042ms
+typeclass inference of NormedSpace took 0.022ms
+typeclass inference of NormedAddCommGroup took 0.0097ms
+typeclass inference of NormedSpace took 0.0215ms
+typeclass inference of NontriviallyNormedField took 0.0869ms
+typeclass inference of NormedAlgebra took 0.409ms
+typeclass inference of NontriviallyNormedField took 0.0116ms
+typeclass inference of NontriviallyNormedField took 0.0022ms
+typeclass inference of NormedAlgebra took 0.274ms
+typeclass inference of NontriviallyNormedField took 0.0066ms
+typeclass inference of AddCommGroup took 0.0027ms
+typeclass inference of Module took 0.0451ms
+typeclass inference of TopologicalSpace took 0.0029ms
+typeclass inference of AddCommGroup took 0.0023ms
+typeclass inference of Module took 0.0353ms
+typeclass inference of TopologicalSpace took 0.0024ms
+typeclass inference of NormedAddCommGroup took 0.0063ms
+typeclass inference of NormedSpace took 0.0329ms
+typeclass inference of NormedAddCommGroup took 0.0047ms
+typeclass inference of NormedSpace took 0.0238ms
+typeclass inference of NontriviallyNormedField took 0.006ms
+typeclass inference of NormedAddCommGroup took 0.0035ms
+typeclass inference of NormedSpace took 0.0279ms
+typeclass inference of NormedAddCommGroup took 0.0031ms
+typeclass inference of NormedSpace took 0.0268ms
+typeclass inference of NormedAddCommGroup took 0.0023ms
+typeclass inference of NormedSpace took 0.0197ms
+tactic execution of Lean.Parser.Tactic.exact took 15ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0392ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0946ms
+instantiate metavars took 0.0162ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.091ms
+fix level params took 0.0146ms
+let-to-have transformation took 0.0051ms
+type checking took 6.24ms
+attribute application took 0.0046ms
+attribute application took 0.0005ms
+process pre-definitions took 0.276ms
+overlappingInstancesLinter took 0.163ms
+tacticAnalysis took 0.914ms
+linting took 3.35ms
+elaboration took 1.89ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:90:0: attribute application took 0.0021ms
+instantiate metavars took 0.0014ms
+instantiate metavars took 0.0002ms
+typeclass inference of CoeT took 0.648ms
+typeclass inference of OfNat took 0.137ms
+typeclass inference of OfNat took 0.0604ms
+typeclass inference of OfNat took 0.0473ms
+typeclass inference of OfNat took 0.0416ms
+typeclass inference of HDiv took 0.215ms
+typeclass inference of HDiv took 0.173ms
+typeclass inference of OfNat took 0.115ms
+typeclass inference of OfNat took 0.0527ms
+typeclass inference of OfNat took 0.113ms
+typeclass inference of OfNat took 0.387ms
+typeclass inference of OfNat took 0.0905ms
+typeclass inference of OfNat took 0.0442ms
+typeclass inference of OfNat took 0.0423ms
+typeclass inference of OfNat took 0.0383ms
+typeclass inference of HDiv took 0.183ms
+typeclass inference of HDiv took 0.18ms
+typeclass inference of OfNat took 0.0867ms
+typeclass inference of OfNat took 0.0516ms
+typeclass inference of OfNat took 0.0968ms
+typeclass inference of OfNat took 0.214ms
+typeclass inference of OfNat took 0.0518ms
+typeclass inference of OfNat took 0.0408ms
+typeclass inference of OfNat took 0.0371ms
+typeclass inference of OfNat took 0.0351ms
+typeclass inference of HDiv took 0.0046ms
+typeclass inference of HDiv took 0.0401ms
+typeclass inference of OfNat took 0.0645ms
+typeclass inference of OfNat took 0.0464ms
+typeclass inference of OfNat took 0.0047ms
+typeclass inference of OfNat took 0.216ms
+typeclass inference of OfNat took 0.0477ms
+typeclass inference of OfNat took 0.0366ms
+typeclass inference of OfNat took 0.0569ms
+typeclass inference of OfNat took 0.269ms
+typeclass inference of HDiv took 0.0059ms
+typeclass inference of HDiv took 0.0529ms
+typeclass inference of OfNat took 0.0715ms
+typeclass inference of OfNat took 0.0541ms
+typeclass inference of OfNat took 0.0042ms
+typeclass inference of OfNat took 0.215ms
+typeclass inference of OfNat took 0.0504ms
+typeclass inference of OfNat took 0.0393ms
+typeclass inference of OfNat took 0.0378ms
+typeclass inference of OfNat took 0.0363ms
+typeclass inference of HDiv took 0.0046ms
+typeclass inference of HDiv took 0.041ms
+typeclass inference of OfNat took 0.0037ms
+typeclass inference of OfNat took 0.0052ms
+typeclass inference of OfNat took 0.212ms
+typeclass inference of CoeT took 0.247ms
+typeclass inference of CoeT took 0.212ms
+typeclass inference of HDiv took 0.173ms
+typeclass inference of HMul took 0.126ms
+typeclass inference of HAdd took 0.124ms
+typeclass inference of HSub took 0.118ms
+typeclass inference of HMul took 0.0035ms
+typeclass inference of HMul took 0.0028ms
+typeclass inference of HMul took 0.0024ms
+typeclass inference of HMul took 0.0026ms
+typeclass inference of HSub took 0.0023ms
+typeclass inference of CoeT took 0.192ms
+typeclass inference of HSub took 0.0034ms
+typeclass inference of CoeT took 0.18ms
+typeclass inference of Neg took 0.0278ms
+typeclass inference of HMul took 0.156ms
+typeclass inference of HMul took 0.0601ms
+typeclass inference of HSub took 0.169ms
+typeclass inference of HMul took 0.0385ms
+typeclass inference of HAdd took 0.155ms
+typeclass inference of HMul took 0.0348ms
+typeclass inference of HSub took 0.032ms
+typeclass inference of HSub took 0.0302ms
+typeclass inference of HMul took 0.0311ms
+typeclass inference of HDiv took 0.195ms
+instantiate metavars took 0.0187ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.0592ms
+fix level params took 0.0129ms
+type checking took 0.11ms
+type checking took 0.0845ms
+type checking took 0.079ms
+type checking took 0.0739ms
+type checking took 0.0727ms
+let-to-have transformation took 0.0037ms
+let-to-have transformation took 0.0055ms
+type checking took 0.165ms
+attribute application took 0.0032ms
+attribute application took 0.0008ms
+process pre-definitions took 0.741ms
+overlappingInstancesLinter took 0.154ms
+tacticAnalysis took 0.734ms
+linting took 3.08ms
+elaboration took 7.9ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:96:0: attribute application took 0.0034ms
+typeclass inference of NontriviallyNormedField took 0.115ms
+typeclass inference of AddCommGroup took 0.0502ms
+typeclass inference of Module took 0.553ms
+typeclass inference of TopologicalSpace took 0.379ms
+typeclass inference of AddCommGroup took 0.0045ms
+typeclass inference of Module took 0.0633ms
+typeclass inference of TopologicalSpace took 0.0036ms
+instantiate metavars took 0.0026ms
+instantiate metavars took 0.0002ms
+tactic execution of Lean.Parser.Tactic.intro took 0.0798ms
+typeclass inference of OfNat took 0.108ms
+typeclass inference of OfNat took 0.0536ms
+typeclass inference of OfNat took 0.0422ms
+typeclass inference of OfNat took 0.037ms
+typeclass inference of HDiv took 0.203ms
+typeclass inference of HDiv took 0.186ms
+typeclass inference of OfNat took 0.113ms
+typeclass inference of OfNat took 0.24ms
+tactic execution of Lean.Parser.Tactic.refine took 0.814ms
+tactic execution of Lean.Parser.Tactic.rotateRight took 0.0097ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0201ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0052ms
+tactic execution of Lean.Parser.Tactic.paren took 0.007ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0054ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0045ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0092ms
+tactic execution of Lean.Parser.Tactic.tacticRefine_lift_ took 0.0085ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0147ms
+typeclass inference of OfNat took 0.1ms
+typeclass inference of OfNat took 0.0535ms
+typeclass inference of OfNat took 0.0423ms
+typeclass inference of OfNat took 0.0371ms
+typeclass inference of HDiv took 0.0044ms
+typeclass inference of HDiv took 0.0428ms
+typeclass inference of OfNat took 0.0056ms
+typeclass inference of OfNat took 0.247ms
+tactic execution of Lean.Parser.Tactic.refine took 0.742ms
+tactic execution of Lean.Parser.Tactic.rotateRight took 0.0088ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.019ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0048ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0055ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0066ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0054ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0071ms
+tactic execution of Lean.Parser.Tactic.tacticRefine_lift_ took 0.0075ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0183ms
+typeclass inference of OfNat took 0.0058ms
+tactic execution of Lean.Parser.Tactic.refine took 0.299ms
+tactic execution of Lean.Parser.Tactic.rotateRight took 0.0059ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0166ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0045ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0051ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0048ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0052ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0072ms
+tactic execution of Lean.Parser.Tactic.tacticRefine_lift_ took 0.0067ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0118ms
+typeclass inference of CoeT took 0.31ms
+typeclass inference of OfNat took 0.0916ms
+typeclass inference of OfNat took 0.0487ms
+typeclass inference of HSub took 0.145ms
+typeclass inference of HSub took 0.144ms
+typeclass inference of OfNat took 0.0984ms
+tactic execution of Lean.Parser.Tactic.refine took 0.765ms
+tactic execution of Lean.Parser.Tactic.intro took 0.0376ms
+typeclass inference of AddGroup took 0.153ms
+typeclass inference of AddGroup took 0.118ms
+typeclass inference of AddGroup took 0.0876ms
+tactic execution of Lean.Parser.Tactic.refine took 1.12ms
+tactic execution of Lean.Parser.Tactic.rotateRight took 0.0067ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0165ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0049ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0047ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0053ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0045ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0065ms
+tactic execution of Lean.Parser.Tactic.tacticRefine_lift_ took 0.0068ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0095ms
+typeclass inference of OfNat took 0.0779ms
+typeclass inference of OfNat took 0.0465ms
+typeclass inference of OfNat took 0.126ms
+tactic execution of Lean.Parser.Tactic.refine took 0.362ms
+congr simp thm took 0.0086ms
+congr simp thm took 0.0029ms
+simp took 0.543ms
+simp took 0.0088ms
+congr simp thm took 0.0024ms
+congr simp thm took 0.0013ms
+congr simp thm took 0.001ms
+congr simp thm took 0.0365ms
+typeclass inference of NatCast took 0.115ms
+typeclass inference of AddMonoidWithOne took 0.116ms
+typeclass inference of CharP took 0.261ms
+congr simp thm took 0.021ms
+congr simp thm took 0.0005ms
+congr simp thm took 0.0011ms
+simp took 1.38ms
+simp took 0.0075ms
+tactic execution of Lean.Parser.Tactic.simpa took 0.184ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0112ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0065ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0052ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.0076ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0048ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0042ms
+tactic execution of Lean.Parser.Tactic.case took 0.0202ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.018ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0046ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0073ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.019ms
+typeclass inference of Preorder took 0.0967ms
+typeclass inference of Preorder took 0.0474ms
+typeclass inference of Preorder took 0.053ms
+typeclass inference of Preorder took 0.0422ms
+typeclass inference of Preorder took 2.41ms
+typeclass inference of Preorder took 0.0037ms
+typeclass inference of Preorder took 0.084ms
+typeclass inference of Preorder took 0.0471ms
+typeclass inference of CoeT took 0.17ms
+typeclass inference of Preorder took 0.0472ms
+typeclass inference of Preorder took 0.032ms
+typeclass inference of Preorder took 0.0251ms
+tactic execution of Lean.Parser.Tactic.exact took 1.2ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0375ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0063ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0058ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.0079ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.006ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0053ms
+tactic execution of Lean.Parser.Tactic.case took 0.0329ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0191ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0059ms
+tactic execution of Lean.Parser.Tactic.focus took 0.008ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0245ms
+typeclass inference of CoeT took 0.264ms
+typeclass inference of CoeT took 0.203ms
+typeclass inference of HMul took 0.143ms
+typeclass inference of HSub took 0.0047ms
+typeclass inference of CoeT took 0.202ms
+typeclass inference of HSub took 0.0042ms
+typeclass inference of CoeT took 0.247ms
+typeclass inference of HSub took 0.0432ms
+typeclass inference of HSub took 0.0351ms
+typeclass inference of HMul took 0.159ms
+typeclass inference of NontriviallyNormedField took 0.005ms
+typeclass inference of AddCommGroup took 0.004ms
+typeclass inference of Module took 0.0859ms
+typeclass inference of TopologicalSpace took 0.0042ms
+typeclass inference of AddCommGroup took 0.0031ms
+typeclass inference of Module took 0.0416ms
+typeclass inference of TopologicalSpace took 0.0036ms
+tactic execution of Lean.Parser.Tactic.refine took 1.43ms
+typeclass inference of NormedRing took 0.164ms
+typeclass inference of NormedAddCommGroup took 0.0373ms
+typeclass inference of RCLike took 0.027ms
+typeclass inference of NormedSpace took 1.99ms
+typeclass inference of NormedAlgebra took 0.755ms
+typeclass inference of NormedAddCommGroup took 0.0072ms
+typeclass inference of NormedAddCommGroup took 0.0053ms
+typeclass inference of NormedSpace took 0.0349ms
+typeclass inference of NormedSpace took 0.0291ms
+typeclass inference of NormedAddCommGroup took 0.0069ms
+typeclass inference of NormedAddCommGroup took 0.0048ms
+typeclass inference of NormedSpace took 0.0278ms
+typeclass inference of NormedSpace took 0.0272ms
+tactic execution of Mathlib.Meta.FunProp.funPropTacStx took 8.09ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0216ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0079ms
+tactic execution of Lean.Parser.Tactic.paren took 0.0066ms
+tactic execution of Lean.Parser.Tactic.withAnnotateState took 0.0086ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0057ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0059ms
+tactic execution of Lean.Parser.Tactic.case took 0.0351ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0183ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0061ms
+tactic execution of Lean.Parser.Tactic.focus took 0.0101ms
+tactic execution of Lean.Parser.Tactic.tacticHave__ took 0.0506ms
+typeclass inference of NormedAddCommGroup took 0.0076ms
+typeclass inference of NormedSpace took 0.0329ms
+typeclass inference of NormedRing took 0.0058ms
+typeclass inference of NormedAlgebra took 0.0895ms
+typeclass inference of OfNat took 0.225ms
+typeclass inference of OfNat took 0.124ms
+typeclass inference of OfNat took 0.0986ms
+typeclass inference of OfNat took 0.086ms
+typeclass inference of HDiv took 0.545ms
+typeclass inference of HDiv took 0.209ms
+typeclass inference of NontriviallyNormedField took 0.0044ms
+typeclass inference of NormedAddCommGroup took 0.0255ms
+typeclass inference of RCLike took 0.0208ms
+typeclass inference of NormedSpace took 0.77ms
+typeclass inference of NormedRing took 0.126ms
+typeclass inference of NormedAlgebra took 0.957ms
+typeclass inference of NormedAddCommGroup took 0.0159ms
+typeclass inference of NormedSpace took 0.084ms
+typeclass inference of NormedAddCommGroup took 0.0534ms
+typeclass inference of NormedSpace took 0.0714ms
+typeclass inference of NormedAddCommGroup took 0.0142ms
+typeclass inference of NormedSpace took 0.0637ms
+typeclass inference of NormedRing took 0.0173ms
+typeclass inference of NormedAlgebra took 0.083ms
+typeclass inference of OfNat took 0.0799ms
+typeclass inference of OfNat took 0.0561ms
+typeclass inference of OfNat took 0.105ms
+typeclass inference of OfNat took 0.235ms
+typeclass inference of OfNat took 0.0567ms
+typeclass inference of OfNat took 0.0432ms
+typeclass inference of OfNat took 0.0415ms
+typeclass inference of OfNat took 0.0383ms
+typeclass inference of HDiv took 0.0048ms
+typeclass inference of HDiv took 0.0415ms
+typeclass inference of NontriviallyNormedField took 0.0043ms
+typeclass inference of NormedAddCommGroup took 0.003ms
+typeclass inference of NormedSpace took 0.0386ms
+typeclass inference of NormedRing took 0.003ms
+typeclass inference of NormedAlgebra took 0.0859ms
+typeclass inference of NontriviallyNormedField took 0.0105ms
+typeclass inference of NormedAddCommGroup took 0.0032ms
+typeclass inference of NormedSpace took 0.0284ms
+typeclass inference of NormedAddCommGroup took 0.0026ms
+typeclass inference of NormedSpace took 0.0218ms
+typeclass inference of NormedAddCommGroup took 0.0058ms
+typeclass inference of NormedSpace took 0.0267ms
+typeclass inference of NormedAddCommGroup took 0.0046ms
+typeclass inference of NormedSpace took 0.0469ms
+typeclass inference of NormedAddCommGroup took 0.0072ms
+typeclass inference of NormedSpace took 0.0321ms
+typeclass inference of NormedRing took 0.0063ms
+typeclass inference of NormedAlgebra took 0.201ms
+typeclass inference of OfNat took 0.0879ms
+typeclass inference of OfNat took 0.0652ms
+typeclass inference of OfNat took 0.0054ms
+typeclass inference of OfNat took 0.247ms
+typeclass inference of OfNat took 0.0671ms
+typeclass inference of OfNat took 0.108ms
+typeclass inference of OfNat took 0.0681ms
+typeclass inference of OfNat took 0.0434ms
+typeclass inference of HDiv took 0.0053ms
+typeclass inference of HDiv took 0.0425ms
+typeclass inference of NontriviallyNormedField took 0.0048ms
+typeclass inference of NormedAddCommGroup took 0.003ms
+typeclass inference of NormedSpace took 0.0382ms
+typeclass inference of NormedRing took 0.003ms
+typeclass inference of NormedAlgebra took 0.0854ms
+typeclass inference of NontriviallyNormedField took 0.0101ms
+typeclass inference of NormedAddCommGroup took 0.0031ms
+typeclass inference of NormedSpace took 0.0278ms
+typeclass inference of NormedAddCommGroup took 0.0027ms
+typeclass inference of NormedSpace took 0.0215ms
+typeclass inference of NormedAddCommGroup took 0.0059ms
+typeclass inference of NormedSpace took 0.0288ms
+typeclass inference of NormedRing took 0.0049ms
+typeclass inference of NormedAlgebra took 0.0772ms
+typeclass inference of CoeT took 1.03ms
+typeclass inference of OfNat took 0.0051ms
+typeclass inference of OfNat took 0.222ms
+typeclass inference of Neg took 0.0331ms
+typeclass inference of NontriviallyNormedField took 0.0045ms
+typeclass inference of NormedAddCommGroup took 0.003ms
+typeclass inference of NormedSpace took 0.0336ms
+typeclass inference of NormedRing took 0.0032ms
+typeclass inference of NormedAlgebra took 0.0851ms
+typeclass inference of NontriviallyNormedField took 0.292ms
+typeclass inference of Mul took 0.22ms
+typeclass inference of Zero took 0.272ms
+typeclass inference of NoZeroDivisors took 0.123ms
+typeclass inference of Mul took 0.0766ms
+typeclass inference of Zero took 0.0416ms
+typeclass inference of NormedRing took 0.0232ms
+typeclass inference of NormedDivisionRing took 0.0902ms
+typeclass inference of NoZeroDivisors took 2.01ms
+typeclass inference of NontriviallyNormedField took 0.0136ms
+typeclass inference of NontriviallyNormedField took 0.0051ms
+typeclass inference of NormedAlgebra took 0.83ms
+typeclass inference of NontriviallyNormedField took 0.0081ms
+typeclass inference of AddCommGroup took 0.0038ms
+typeclass inference of Module took 0.252ms
+typeclass inference of TopologicalSpace took 0.0039ms
+typeclass inference of AddCommGroup took 0.0031ms
+typeclass inference of Module took 0.0401ms
+typeclass inference of TopologicalSpace took 0.0052ms
+tactic execution of Lean.Parser.Tactic.exact took 26.7ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0831ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0438ms
+instantiate metavars took 0.0564ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.264ms
+fix level params took 0.0316ms
+let-to-have transformation took 0.0051ms
+type checking took 8.46ms
+attribute application took 0.0069ms
+attribute application took 0.0011ms
+process pre-definitions took 0.531ms
+overlappingInstancesLinter took 0.227ms
+tacticAnalysis took 2.06ms
+linting took 7.18ms
+elaboration took 2.9ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:114:0: attribute application took 0.0044ms
+instantiate metavars took 0.0011ms
+instantiate metavars took 0.0002ms
+typeclass inference of OfScientific took 0.0955ms
+typeclass inference of OfScientific took 0.035ms
+typeclass inference of OfScientific took 0.0242ms
+typeclass inference of OfScientific took 0.0191ms
+typeclass inference of OfScientific took 0.0197ms
+typeclass inference of OfScientific took 0.0159ms
+typeclass inference of HAdd took 0.174ms
+typeclass inference of HMul took 0.136ms
+typeclass inference of Neg took 0.0311ms
+typeclass inference of Neg took 0.0035ms
+typeclass inference of HMul took 0.173ms
+typeclass inference of HAdd took 0.143ms
+typeclass inference of OfScientific took 0.128ms
+typeclass inference of OfScientific took 0.0033ms
+typeclass inference of OfScientific took 0.0022ms
+typeclass inference of OfScientific took 0.0018ms
+instantiate metavars took 0.0053ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.0197ms
+fix level params took 0.006ms
+let-to-have transformation took 0.0028ms
+let-to-have transformation took 0.0021ms
+type checking took 0.0643ms
+attribute application took 0.002ms
+attribute application took 0.0005ms
+process pre-definitions took 0.143ms
+overlappingInstancesLinter took 0.143ms
+tacticAnalysis took 0.35ms
+linting took 2.11ms
+elaboration took 1.57ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:116:0: attribute application took 0.0028ms
+instantiate metavars took 0.001ms
+instantiate metavars took 0.0002ms
+typeclass inference of OfScientific took 0.0671ms
+typeclass inference of OfScientific took 0.0323ms
+typeclass inference of OfScientific took 0.0297ms
+typeclass inference of OfScientific took 0.0202ms
+typeclass inference of HAdd took 0.156ms
+typeclass inference of HMul took 0.127ms
+typeclass inference of HSub took 0.123ms
+typeclass inference of Neg took 0.0279ms
+typeclass inference of HSub took 0.142ms
+typeclass inference of HMul took 0.134ms
+typeclass inference of HAdd took 0.135ms
+typeclass inference of OfScientific took 0.0809ms
+typeclass inference of OfScientific took 0.003ms
+typeclass inference of OfScientific took 0.0021ms
+instantiate metavars took 0.0053ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+share common exprs took 0.0271ms
+fix level params took 0.006ms
+let-to-have transformation took 0.0024ms
+let-to-have transformation took 0.0019ms
+type checking took 0.0885ms
+attribute application took 0.002ms
+attribute application took 0.0006ms
+process pre-definitions took 0.156ms
+overlappingInstancesLinter took 0.117ms
+tacticAnalysis took 0.31ms
+linting took 1.66ms
+elaboration took 1.49ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:118:0: attribute application took 0.0021ms
+instantiate metavars took 0.0007ms
+instantiate metavars took 0.0003ms
+typeclass inference of OfScientific took 0.0623ms
+typeclass inference of OfScientific took 0.0355ms
+typeclass inference of OfScientific took 0.0284ms
+typeclass inference of OfScientific took 0.0193ms
+typeclass inference of HAdd took 0.148ms
+typeclass inference of HMul took 0.125ms
+typeclass inference of HSub took 0.123ms
+typeclass inference of Neg took 0.0275ms
+typeclass inference of HSub took 0.134ms
+typeclass inference of HMul took 0.133ms
+typeclass inference of HAdd took 0.133ms
+typeclass inference of OfScientific took 0.0882ms
+typeclass inference of OfScientific took 0.003ms
+typeclass inference of OfScientific took 0.0019ms
+instantiate metavars took 0.0052ms
+instantiate metavars took 0.0003ms
+instantiate metavars took 0.0001ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 0.0213ms
+fix level params took 0.0055ms
+let-to-have transformation took 0.0023ms
+let-to-have transformation took 0.002ms
+type checking took 0.0707ms
+attribute application took 0.0021ms
+attribute application took 0.0006ms
+process pre-definitions took 0.143ms
+overlappingInstancesLinter took 0.124ms
+tacticAnalysis took 0.307ms
+linting took 1.75ms
+elaboration took 1.51ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:121:0: attribute application took 0.0022ms
+typeclass inference of RCLike took 0.0422ms
+typeclass inference of NormedAddCommGroup took 0.0404ms
+typeclass inference of NormedAddCommGroup took 0.007ms
+typeclass inference of RCLike took 0.0233ms
+typeclass inference of NormedSpace took 1.41ms
+typeclass inference of NormedSpace took 0.0079ms
+typeclass inference of AddCommGroup took 0.0413ms
+typeclass inference of NormedField took 0.0483ms
+typeclass inference of SeminormedAddCommGroup took 0.435ms
+typeclass inference of RCLike took 0.0358ms
+typeclass inference of Module took 1.94ms
+typeclass inference of TopologicalSpace took 0.532ms
+typeclass inference of NonUnitalNonAssocSemiring took 0.216ms
+typeclass inference of NonUnitalNonAssocRing took 0.13ms
+typeclass inference of DivisionRing took 0.108ms
+typeclass inference of NormedDivisionRing took 0.0864ms
+typeclass inference of ContinuousAdd took 2.89ms
+typeclass inference of AddCommGroup took 0.0365ms
+typeclass inference of NormedField took 0.0067ms
+typeclass inference of NormedField took 0.0265ms
+typeclass inference of SeminormedAddCommGroup took 0.231ms
+typeclass inference of RCLike took 0.0231ms
+typeclass inference of Module took 0.567ms
+typeclass inference of SeminormedAddCommGroup took 0.0057ms
+typeclass inference of RCLike took 0.0051ms
+typeclass inference of NormedSpace took 0.206ms
+typeclass inference of ContinuousSMul took 3ms
+typeclass inference of RCLike took 0.0319ms
+typeclass inference of NormedAddCommGroup took 0.0252ms
+typeclass inference of RCLike took 0.0046ms
+typeclass inference of NormedSpace took 0.752ms
+typeclass inference of NormedAddCommGroup took 0.0036ms
+typeclass inference of NormedSpace took 0.0032ms
+typeclass inference of RCLike took 0.0089ms
+typeclass inference of NormedAddCommGroup took 0.008ms
+typeclass inference of NormedAddCommGroup took 0.0053ms
+typeclass inference of NormedSpace took 0.0084ms
+typeclass inference of NormedSpace took 0.0057ms
+typeclass inference of AddCommGroup took 0.0055ms
+typeclass inference of Module took 0.187ms
+typeclass inference of TopologicalSpace took 0.0062ms
+typeclass inference of ContinuousAdd took 0.0563ms
+typeclass inference of ContinuousSMul took 0.0584ms
+typeclass inference of RCLike took 0.0047ms
+typeclass inference of NormedAddCommGroup took 0.0022ms
+typeclass inference of NormedSpace took 0.0035ms
+typeclass inference of NormedAddCommGroup took 0.0017ms
+typeclass inference of NormedSpace took 0.0021ms
+typeclass inference of HAdd took 0.163ms
+typeclass inference of HAdd took 0.156ms
+instantiate metavars took 0.0058ms
+instantiate metavars took 0.0002ms
+typeclass inference of OfNat took 0.133ms
+tactic execution of Lean.Parser.Tactic.apply took 1.03ms
+norm_num took 1.91ms
+congr simp thm took 0.0812ms
+norm_num took 0.0105ms
+norm_num took 0.0181ms
+norm_num took 0.007ms
+congr simp thm took 0.0401ms
+norm_num took 0.0049ms
+norm_num took 0.0026ms
+norm_num took 0.0024ms
+typeclass inference of AddMonoidWithOne took 0.252ms
+norm_num took 12.6ms
+norm_num took 0.0318ms
+norm_num took 1.12ms
+congr simp thm took 0.0469ms
+norm_num took 0.0151ms
+norm_num took 0.0052ms
+norm_num took 0.0089ms
+congr simp thm took 0.0077ms
+norm_num took 0.0057ms
+norm_num took 0.0043ms
+norm_num took 0.0047ms
+norm_num took 0.0029ms
+norm_num took 0.0073ms
+typeclass inference of Preorder took 0.153ms
+typeclass inference of Semiring took 0.0539ms
+typeclass inference of PartialOrder took 0.439ms
+typeclass inference of AddMonoidWithOne took 0.205ms
+typeclass inference of PartialOrder took 0.277ms
+typeclass inference of AddMonoidWithOne took 0.0088ms
+norm_num took 0.385ms
+norm_num took 0.03ms
+norm_num took 0.172ms
+norm_num took 0.0046ms
+norm_num took 0.0149ms
+norm_num took 0.007ms
+norm_num took 0.0055ms
+congr simp thm took 0.0462ms
+norm_num took 0.0056ms
+norm_num took 0.003ms
+typeclass inference of DivisionSemiring took 0.253ms
+typeclass inference of DivisionSemiring took 0.0203ms
+typeclass inference of Semiring took 0.0829ms
+typeclass inference of AddMonoidWithOne took 0.11ms
+norm_num took 3.19ms
+norm_num took 8.74ms
+typeclass inference of DivisionSemiring took 0.137ms
+typeclass inference of Semiring took 0.228ms
+typeclass inference of AddMonoidWithOne took 1.19ms
+norm_num took 1.92ms
+typeclass inference of AddMonoidWithOne took 0.0066ms
+norm_num took 0.0527ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of CharZero took 0.778ms
+norm_num took 13.7ms
+norm_num took 8.48ms
+norm_num took 10.5ms
+norm_num took 21.5ms
+typeclass inference of Semiring took 0.0107ms
+typeclass inference of Ring took 0.0364ms
+typeclass inference of LinearOrder took 0.0408ms
+typeclass inference of CharZero took 2.11ms
+norm_num took 5.96ms
+norm_num took 21.6ms
+typeclass inference of Ring took 0.0547ms
+typeclass inference of DivisionRing took 0.045ms
+norm_num took 12.9ms
+typeclass inference of Semiring took 0.0403ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of Semiring took 0.0048ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.0666ms
+norm_num took 6.22ms
+typeclass inference of DivisionSemiring took 0.007ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0396ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0289ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.0918ms
+norm_num took 0.0515ms
+norm_num took 0.106ms
+norm_num took 0.145ms
+norm_num took 0.059ms
+typeclass inference of CharZero took 0.0753ms
+norm_num took 0.0895ms
+norm_num took 0.101ms
+typeclass inference of Ring took 0.0043ms
+typeclass inference of DivisionRing took 0.0045ms
+norm_num took 0.0917ms
+typeclass inference of DivisionSemiring took 0.0031ms
+typeclass inference of DivisionSemiring took 0.0027ms
+typeclass inference of Semiring took 0.004ms
+typeclass inference of AddMonoidWithOne took 0.0032ms
+norm_num took 0.0614ms
+norm_num took 0.902ms
+typeclass inference of DivisionSemiring took 0.0046ms
+typeclass inference of Semiring took 0.0036ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0372ms
+typeclass inference of AddMonoidWithOne took 0.0021ms
+norm_num took 0.0256ms
+typeclass inference of DivisionSemiring took 0.002ms
+typeclass inference of CharZero took 0.0828ms
+norm_num took 0.0469ms
+norm_num took 0.0996ms
+norm_num took 0.111ms
+norm_num took 0.0317ms
+typeclass inference of CharZero took 0.075ms
+norm_num took 0.0797ms
+norm_num took 0.0915ms
+norm_num took 1.48ms
+norm_num took 6.87ms
+typeclass inference of DivisionSemiring took 0.0144ms
+typeclass inference of DivisionSemiring took 0.0053ms
+typeclass inference of Semiring took 0.0073ms
+typeclass inference of AddMonoidWithOne took 0.0046ms
+norm_num took 0.133ms
+norm_num took 0.225ms
+typeclass inference of DivisionSemiring took 0.0054ms
+typeclass inference of Semiring took 0.0045ms
+typeclass inference of AddMonoidWithOne took 0.0038ms
+norm_num took 0.0489ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0236ms
+typeclass inference of DivisionSemiring took 0.0024ms
+typeclass inference of CharZero took 0.112ms
+norm_num took 0.12ms
+norm_num took 0.161ms
+norm_num took 0.171ms
+norm_num took 0.146ms
+typeclass inference of CharZero took 0.0815ms
+norm_num took 0.195ms
+norm_num took 0.37ms
+norm_num took 0.0112ms
+norm_num took 0.0032ms
+congr simp thm took 0.0017ms
+typeclass inference of DivisionSemiring took 0.0071ms
+typeclass inference of Semiring took 0.0075ms
+typeclass inference of AddMonoidWithOne took 0.0045ms
+norm_num took 0.445ms
+typeclass inference of AddMonoidWithOne took 0.0057ms
+norm_num took 0.135ms
+typeclass inference of DivisionSemiring took 0.0046ms
+typeclass inference of CharZero took 0.0886ms
+norm_num took 0.151ms
+norm_num took 0.347ms
+norm_num took 0.518ms
+typeclass inference of Ring took 0.0072ms
+typeclass inference of DivisionRing took 0.0054ms
+norm_num took 0.473ms
+typeclass inference of DivisionSemiring took 0.0171ms
+typeclass inference of Semiring took 0.0116ms
+typeclass inference of AddMonoidWithOne took 0.0071ms
+norm_num took 0.47ms
+typeclass inference of AddMonoidWithOne took 0.0095ms
+norm_num took 0.205ms
+typeclass inference of DivisionSemiring took 0.0072ms
+typeclass inference of CharZero took 0.159ms
+norm_num took 0.235ms
+norm_num took 0.39ms
+norm_num took 0.405ms
+norm_num took 0.0077ms
+typeclass inference of AddMonoidWithOne took 0.0058ms
+norm_num took 0.201ms
+typeclass inference of DivisionSemiring took 0.0051ms
+typeclass inference of Semiring took 0.0036ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.115ms
+typeclass inference of AddMonoidWithOne took 0.0034ms
+norm_num took 0.143ms
+typeclass inference of DivisionSemiring took 0.0043ms
+typeclass inference of CharZero took 0.074ms
+norm_num took 0.0954ms
+norm_num took 0.12ms
+norm_num took 0.0784ms
+typeclass inference of LT took 0.0583ms
+typeclass inference of Semifield took 0.112ms
+typeclass inference of LinearOrder took 0.034ms
+typeclass inference of IsStrictOrderedRing took 0.472ms
+norm_num took 12.5ms
+tactic execution of Mathlib.Tactic.normNum took 47.6ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0342ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0155ms
+norm_num took 0.0541ms
+congr simp thm took 0.0118ms
+norm_num took 0.0147ms
+norm_num took 0.0085ms
+norm_num took 0.0108ms
+congr simp thm took 0.0072ms
+norm_num took 0.0086ms
+norm_num took 0.0061ms
+norm_num took 0.0053ms
+typeclass inference of AddMonoidWithOne took 0.413ms
+norm_num took 0.626ms
+norm_num took 0.0375ms
+norm_num took 0.227ms
+congr simp thm took 0.0082ms
+norm_num took 0.0077ms
+norm_num took 0.0055ms
+norm_num took 0.012ms
+congr simp thm took 0.0068ms
+norm_num took 0.0075ms
+norm_num took 0.006ms
+norm_num took 0.0049ms
+norm_num took 0.0042ms
+norm_num took 0.0108ms
+typeclass inference of Preorder took 0.166ms
+typeclass inference of Semiring took 0.0809ms
+typeclass inference of PartialOrder took 0.336ms
+typeclass inference of AddMonoidWithOne took 0.301ms
+typeclass inference of PartialOrder took 0.277ms
+typeclass inference of AddMonoidWithOne took 0.0127ms
+norm_num took 0.39ms
+norm_num took 0.0324ms
+norm_num took 0.187ms
+norm_num took 0.0073ms
+norm_num took 0.0137ms
+norm_num took 0.0081ms
+norm_num took 0.0073ms
+congr simp thm took 0.0097ms
+norm_num took 0.0067ms
+norm_num took 0.0047ms
+norm_num took 0.0458ms
+norm_num took 0.123ms
+congr simp thm took 0.011ms
+norm_num took 0.0071ms
+norm_num took 0.0054ms
+norm_num took 0.0102ms
+congr simp thm took 0.0067ms
+norm_num took 0.007ms
+norm_num took 0.0055ms
+norm_num took 0.0056ms
+norm_num took 0.0056ms
+congr simp thm took 0.0012ms
+typeclass inference of DivisionSemiring took 0.329ms
+typeclass inference of DivisionSemiring took 0.0102ms
+typeclass inference of Semiring took 0.0643ms
+typeclass inference of AddMonoidWithOne took 0.0441ms
+norm_num took 0.201ms
+norm_num took 0.501ms
+typeclass inference of DivisionSemiring took 0.172ms
+typeclass inference of Semiring took 0.322ms
+typeclass inference of AddMonoidWithOne took 2.16ms
+norm_num took 0.134ms
+typeclass inference of AddMonoidWithOne took 0.0068ms
+norm_num took 0.0663ms
+typeclass inference of DivisionSemiring took 0.0044ms
+typeclass inference of CharZero took 0.875ms
+norm_num took 0.159ms
+norm_num took 0.43ms
+norm_num took 0.335ms
+norm_num took 0.197ms
+typeclass inference of Semiring took 0.0082ms
+typeclass inference of Ring took 0.0352ms
+typeclass inference of LinearOrder took 0.0395ms
+typeclass inference of CharZero took 1.93ms
+norm_num took 0.249ms
+norm_num took 0.444ms
+typeclass inference of Ring took 0.0373ms
+typeclass inference of DivisionRing took 0.0336ms
+norm_num took 0.345ms
+typeclass inference of Semiring took 0.0258ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of DivisionSemiring took 0.005ms
+typeclass inference of Semiring took 0.0036ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0522ms
+norm_num took 0.139ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of Semiring took 0.0031ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0329ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0272ms
+typeclass inference of DivisionSemiring took 0.0024ms
+typeclass inference of CharZero took 0.0764ms
+norm_num took 0.0459ms
+norm_num took 0.1ms
+norm_num took 0.0806ms
+norm_num took 0.0276ms
+typeclass inference of CharZero took 0.0703ms
+norm_num took 0.0706ms
+norm_num took 0.0792ms
+typeclass inference of Ring took 0.0036ms
+typeclass inference of DivisionRing took 0.0032ms
+norm_num took 0.0752ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of DivisionSemiring took 0.0028ms
+typeclass inference of Semiring took 0.0034ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0462ms
+norm_num took 0.0933ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of Semiring took 0.0027ms
+typeclass inference of AddMonoidWithOne took 0.0021ms
+norm_num took 0.0297ms
+typeclass inference of AddMonoidWithOne took 0.002ms
+norm_num took 0.0246ms
+typeclass inference of DivisionSemiring took 0.0018ms
+typeclass inference of CharZero took 0.07ms
+norm_num took 0.0362ms
+norm_num took 0.0823ms
+norm_num took 0.071ms
+norm_num took 0.0238ms
+typeclass inference of CharZero took 0.0608ms
+norm_num took 0.0611ms
+norm_num took 0.0678ms
+norm_num took 0.148ms
+norm_num took 0.274ms
+typeclass inference of DivisionSemiring took 0.0055ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of Semiring took 0.0044ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.088ms
+norm_num took 0.148ms
+typeclass inference of DivisionSemiring took 0.0051ms
+typeclass inference of Semiring took 0.0037ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0368ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.0237ms
+typeclass inference of DivisionSemiring took 0.0027ms
+typeclass inference of CharZero took 0.0755ms
+norm_num took 0.0791ms
+norm_num took 0.108ms
+norm_num took 0.111ms
+norm_num took 0.0997ms
+typeclass inference of CharZero took 0.0826ms
+norm_num took 0.11ms
+norm_num took 0.206ms
+norm_num took 0.0056ms
+norm_num took 0.0029ms
+congr simp thm took 0.0011ms
+typeclass inference of DivisionSemiring took 0.0055ms
+typeclass inference of Semiring took 0.0054ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.283ms
+typeclass inference of AddMonoidWithOne took 0.0046ms
+norm_num took 0.108ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0649ms
+norm_num took 0.0918ms
+norm_num took 0.256ms
+norm_num took 0.391ms
+typeclass inference of Ring took 0.0056ms
+typeclass inference of DivisionRing took 0.0046ms
+norm_num took 0.38ms
+typeclass inference of DivisionSemiring took 0.0043ms
+typeclass inference of Semiring took 0.0038ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.173ms
+typeclass inference of AddMonoidWithOne took 0.004ms
+norm_num took 0.0899ms
+typeclass inference of DivisionSemiring took 0.0034ms
+typeclass inference of CharZero took 0.0646ms
+norm_num took 0.0881ms
+norm_num took 0.13ms
+norm_num took 0.101ms
+norm_num took 0.0055ms
+typeclass inference of DivisionSemiring took 0.0054ms
+typeclass inference of Semiring took 0.0045ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.147ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.0915ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of CharZero took 0.0668ms
+norm_num took 0.0885ms
+norm_num took 0.117ms
+norm_num took 0.164ms
+typeclass inference of Ring took 0.0048ms
+typeclass inference of DivisionRing took 0.0038ms
+norm_num took 0.156ms
+typeclass inference of Semiring took 0.0049ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of Semiring took 0.0042ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.0839ms
+norm_num took 0.137ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0482ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0261ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.0721ms
+norm_num took 0.0736ms
+norm_num took 0.11ms
+norm_num took 0.103ms
+norm_num took 0.0859ms
+typeclass inference of CharZero took 0.0649ms
+norm_num took 0.086ms
+norm_num took 0.132ms
+typeclass inference of Ring took 0.0037ms
+typeclass inference of DivisionRing took 0.0035ms
+norm_num took 0.131ms
+typeclass inference of Ring took 0.004ms
+typeclass inference of DivisionSemiring took 0.0083ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.0042ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.0501ms
+norm_num took 0.0893ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0342ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0252ms
+typeclass inference of DivisionSemiring took 0.0034ms
+typeclass inference of CharZero took 0.0801ms
+norm_num took 0.0438ms
+norm_num took 0.0917ms
+norm_num took 0.0753ms
+norm_num took 0.0257ms
+typeclass inference of CharZero took 0.0659ms
+norm_num took 0.0723ms
+norm_num took 0.118ms
+norm_num took 0.0202ms
+norm_num took 4.18ms
+norm_num took 0.121ms
+congr simp thm took 0.0069ms
+norm_num took 0.0045ms
+norm_num took 0.0025ms
+typeclass inference of DivisionSemiring took 0.0061ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0043ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.103ms
+norm_num took 0.135ms
+typeclass inference of DivisionSemiring took 0.0077ms
+typeclass inference of Semiring took 0.0039ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0457ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.029ms
+typeclass inference of DivisionSemiring took 0.0025ms
+typeclass inference of CharZero took 0.076ms
+norm_num took 0.0805ms
+norm_num took 0.11ms
+norm_num took 0.132ms
+norm_num took 0.164ms
+typeclass inference of CharZero took 0.0653ms
+norm_num took 0.0937ms
+norm_num took 0.174ms
+typeclass inference of Ring took 0.004ms
+typeclass inference of DivisionRing took 0.0034ms
+norm_num took 0.147ms
+typeclass inference of Ring took 0.0044ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of DivisionSemiring took 0.0031ms
+typeclass inference of Semiring took 0.0036ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.096ms
+norm_num took 0.134ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0343ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0232ms
+typeclass inference of DivisionSemiring took 0.0024ms
+typeclass inference of CharZero took 0.0796ms
+norm_num took 0.078ms
+norm_num took 0.105ms
+norm_num took 0.108ms
+norm_num took 0.0837ms
+typeclass inference of CharZero took 0.0675ms
+norm_num took 0.0845ms
+norm_num took 0.143ms
+norm_num took 0.0174ms
+norm_num took 0.177ms
+congr simp thm took 0.0893ms
+norm_num took 0.0083ms
+norm_num took 0.0033ms
+typeclass inference of DivisionSemiring took 0.0071ms
+typeclass inference of DivisionSemiring took 0.0049ms
+typeclass inference of Semiring took 0.0046ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.0958ms
+norm_num took 0.136ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.003ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.043ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0223ms
+typeclass inference of DivisionSemiring took 0.0023ms
+typeclass inference of CharZero took 0.0742ms
+norm_num took 0.0741ms
+norm_num took 0.102ms
+norm_num took 0.103ms
+norm_num took 0.0867ms
+typeclass inference of CharZero took 0.0654ms
+norm_num took 0.121ms
+norm_num took 0.208ms
+norm_num took 0.0091ms
+congr simp thm took 0.0014ms
+typeclass inference of DivisionSemiring took 0.0048ms
+typeclass inference of Semiring took 0.0038ms
+typeclass inference of AddMonoidWithOne took 0.0299ms
+norm_num took 0.216ms
+typeclass inference of AddMonoidWithOne took 0.0051ms
+norm_num took 0.087ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of CharZero took 0.0689ms
+norm_num took 0.0986ms
+norm_num took 0.131ms
+norm_num took 0.112ms
+typeclass inference of Ring took 0.0058ms
+typeclass inference of DivisionSemiring took 0.0047ms
+typeclass inference of Semiring took 0.0035ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.163ms
+typeclass inference of AddMonoidWithOne took 0.0038ms
+norm_num took 0.0916ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0657ms
+norm_num took 0.0871ms
+norm_num took 0.109ms
+norm_num took 0.0864ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of Semiring took 0.0029ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0888ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.076ms
+typeclass inference of DivisionSemiring took 0.0029ms
+typeclass inference of CharZero took 0.0609ms
+norm_num took 0.0368ms
+norm_num took 0.0771ms
+norm_num took 0.0361ms
+typeclass inference of DivisionRing took 0.0058ms
+norm_num took 1.58ms
+typeclass inference of Mul took 0.0383ms
+typeclass inference of NonUnitalNonAssocRing took 0.209ms
+typeclass inference of HasDistribNeg took 0.387ms
+typeclass inference of Semiring took 0.0061ms
+typeclass inference of DivisionSemiring took 0.0043ms
+typeclass inference of Semiring took 0.004ms
+typeclass inference of AddMonoidWithOne took 0.0105ms
+norm_num took 0.166ms
+typeclass inference of AddMonoidWithOne took 0.0038ms
+norm_num took 0.109ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of CharZero took 0.0696ms
+norm_num took 0.095ms
+norm_num took 0.125ms
+norm_num took 0.166ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0043ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.129ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.0869ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0653ms
+norm_num took 0.0444ms
+norm_num took 0.0941ms
+norm_num took 0.299ms
+norm_num took 0.207ms
+typeclass inference of Ring took 0.0048ms
+typeclass inference of DivisionRing took 0.004ms
+norm_num took 0.197ms
+typeclass inference of AddGroup took 0.0373ms
+typeclass inference of SubtractionMonoid took 0.199ms
+typeclass inference of AddGroup took 0.0054ms
+typeclass inference of AddGroup took 0.11ms
+typeclass inference of SubtractionMonoid took 0.0051ms
+typeclass inference of SubtractionMonoid took 0.0675ms
+typeclass inference of DivisionSemiring took 0.0058ms
+typeclass inference of Semiring took 0.0043ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.155ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.097ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.148ms
+norm_num took 0.264ms
+norm_num took 0.17ms
+norm_num took 0.161ms
+typeclass inference of Ring took 0.0082ms
+typeclass inference of DivisionRing took 0.0059ms
+norm_num took 0.189ms
+typeclass inference of DivisionSemiring took 0.005ms
+typeclass inference of Semiring took 0.0048ms
+typeclass inference of AddMonoidWithOne took 0.0032ms
+norm_num took 0.147ms
+typeclass inference of AddMonoidWithOne took 0.0044ms
+norm_num took 0.114ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of CharZero took 0.0851ms
+norm_num took 0.054ms
+norm_num took 0.117ms
+norm_num took 0.143ms
+typeclass inference of Ring took 0.0047ms
+typeclass inference of DivisionRing took 0.0043ms
+norm_num took 0.107ms
+norm_num took 0.181ms
+norm_num took 0.0075ms
+norm_num took 0.0035ms
+congr simp thm took 0.0012ms
+typeclass inference of DivisionSemiring took 0.0081ms
+typeclass inference of Semiring took 0.0045ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.161ms
+typeclass inference of AddMonoidWithOne took 0.0039ms
+norm_num took 0.0951ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of CharZero took 0.0701ms
+norm_num took 0.0918ms
+norm_num took 0.122ms
+norm_num took 0.336ms
+typeclass inference of Ring took 0.0041ms
+typeclass inference of DivisionRing took 0.0035ms
+norm_num took 0.157ms
+typeclass inference of DivisionSemiring took 0.0039ms
+typeclass inference of Semiring took 0.0121ms
+typeclass inference of AddMonoidWithOne took 0.006ms
+norm_num took 0.237ms
+typeclass inference of AddMonoidWithOne took 0.0054ms
+norm_num took 0.117ms
+typeclass inference of DivisionSemiring took 0.0045ms
+typeclass inference of CharZero took 0.087ms
+norm_num took 0.115ms
+norm_num took 0.29ms
+norm_num took 0.101ms
+norm_num took 0.0073ms
+typeclass inference of AddMonoidWithOne took 0.0068ms
+norm_num took 0.215ms
+typeclass inference of DivisionSemiring took 0.0178ms
+typeclass inference of Semiring took 0.0046ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.14ms
+typeclass inference of AddMonoidWithOne took 0.004ms
+norm_num took 0.106ms
+typeclass inference of DivisionSemiring took 0.0039ms
+typeclass inference of CharZero took 0.0787ms
+norm_num took 0.0971ms
+norm_num took 0.132ms
+norm_num took 0.0936ms
+typeclass inference of LT took 0.0466ms
+typeclass inference of Semifield took 0.0964ms
+typeclass inference of LinearOrder took 0.0307ms
+typeclass inference of IsStrictOrderedRing took 0.39ms
+norm_num took 0.248ms
+tactic execution of Mathlib.Tactic.normNum took 12.3ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0258ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0296ms
+norm_num took 0.0209ms
+congr simp thm took 0.0046ms
+norm_num took 0.0058ms
+norm_num took 0.003ms
+norm_num took 0.0036ms
+congr simp thm took 0.003ms
+norm_num took 0.0028ms
+norm_num took 0.0023ms
+norm_num took 0.0023ms
+typeclass inference of AddMonoidWithOne took 0.157ms
+norm_num took 0.25ms
+norm_num took 0.0156ms
+norm_num took 0.0852ms
+congr simp thm took 0.0048ms
+norm_num took 0.0037ms
+norm_num took 0.0025ms
+norm_num took 0.0043ms
+congr simp thm took 0.0029ms
+norm_num took 0.0032ms
+norm_num took 0.0025ms
+norm_num took 0.002ms
+norm_num took 0.0019ms
+norm_num took 0.0044ms
+typeclass inference of Preorder took 0.0816ms
+typeclass inference of Semiring took 0.0337ms
+typeclass inference of PartialOrder took 0.183ms
+typeclass inference of AddMonoidWithOne took 0.125ms
+typeclass inference of PartialOrder took 0.161ms
+typeclass inference of AddMonoidWithOne took 0.0055ms
+norm_num took 0.178ms
+norm_num took 0.0138ms
+norm_num took 0.0731ms
+norm_num took 0.0032ms
+norm_num took 0.0062ms
+norm_num took 0.0047ms
+norm_num took 0.0029ms
+congr simp thm took 0.0045ms
+norm_num took 0.0026ms
+norm_num took 0.0019ms
+norm_num took 0.0214ms
+norm_num took 0.0547ms
+congr simp thm took 0.0047ms
+norm_num took 0.0029ms
+norm_num took 0.0024ms
+norm_num took 0.0047ms
+congr simp thm took 0.0031ms
+norm_num took 0.0032ms
+norm_num took 0.0024ms
+norm_num took 0.0023ms
+norm_num took 0.0024ms
+congr simp thm took 0.0006ms
+norm_num took 0.0171ms
+norm_num took 0.0421ms
+congr simp thm took 0.0006ms
+norm_num took 0.0045ms
+congr simp thm took 0.0005ms
+norm_num took 0.0027ms
+norm_num took 0.0023ms
+congr simp thm took 0.0004ms
+typeclass inference of DivisionSemiring took 0.157ms
+typeclass inference of DivisionSemiring took 0.0047ms
+typeclass inference of Semiring took 0.0316ms
+typeclass inference of AddMonoidWithOne took 0.0331ms
+norm_num took 0.104ms
+norm_num took 0.248ms
+typeclass inference of DivisionSemiring took 0.0955ms
+typeclass inference of Semiring took 0.172ms
+typeclass inference of AddMonoidWithOne took 1.01ms
+norm_num took 0.0774ms
+typeclass inference of AddMonoidWithOne took 0.004ms
+norm_num took 0.0459ms
+typeclass inference of DivisionSemiring took 0.0034ms
+typeclass inference of CharZero took 0.589ms
+norm_num took 0.103ms
+norm_num took 0.298ms
+norm_num took 0.192ms
+norm_num took 0.101ms
+typeclass inference of Semiring took 0.0061ms
+typeclass inference of Ring took 0.0275ms
+typeclass inference of LinearOrder took 0.0337ms
+typeclass inference of CharZero took 1.62ms
+norm_num took 0.12ms
+norm_num took 0.223ms
+typeclass inference of Ring took 0.0309ms
+typeclass inference of DivisionRing took 0.0275ms
+norm_num took 0.243ms
+typeclass inference of Semiring took 0.0239ms
+typeclass inference of DivisionSemiring took 0.0039ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of Semiring took 0.0039ms
+typeclass inference of AddMonoidWithOne took 0.0033ms
+norm_num took 0.0535ms
+norm_num took 0.125ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of Semiring took 0.0031ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0331ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0267ms
+typeclass inference of DivisionSemiring took 0.002ms
+typeclass inference of CharZero took 0.072ms
+norm_num took 0.0395ms
+norm_num took 0.0873ms
+norm_num took 0.107ms
+norm_num took 0.0265ms
+typeclass inference of CharZero took 0.0672ms
+norm_num took 0.0675ms
+norm_num took 0.0694ms
+typeclass inference of Ring took 0.0037ms
+typeclass inference of DivisionRing took 0.0033ms
+norm_num took 0.0684ms
+typeclass inference of DivisionSemiring took 0.0027ms
+typeclass inference of DivisionSemiring took 0.0025ms
+typeclass inference of Semiring took 0.0035ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.046ms
+norm_num took 0.0925ms
+typeclass inference of DivisionSemiring took 0.0031ms
+typeclass inference of Semiring took 0.003ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0359ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0265ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.074ms
+norm_num took 0.0413ms
+norm_num took 0.0889ms
+norm_num took 0.0702ms
+norm_num took 0.0234ms
+typeclass inference of CharZero took 0.0634ms
+norm_num took 0.0704ms
+norm_num took 0.0659ms
+norm_num took 0.146ms
+norm_num took 0.215ms
+typeclass inference of DivisionSemiring took 0.006ms
+typeclass inference of DivisionSemiring took 0.0045ms
+typeclass inference of Semiring took 0.0059ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.101ms
+norm_num took 0.156ms
+typeclass inference of DivisionSemiring took 0.0047ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0358ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0251ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.0825ms
+norm_num took 0.0886ms
+norm_num took 0.164ms
+norm_num took 0.11ms
+norm_num took 0.108ms
+typeclass inference of CharZero took 0.076ms
+norm_num took 0.171ms
+norm_num took 0.249ms
+norm_num took 0.0092ms
+norm_num took 0.0035ms
+congr simp thm took 0.0008ms
+typeclass inference of DivisionSemiring took 0.0066ms
+typeclass inference of Semiring took 0.0058ms
+typeclass inference of AddMonoidWithOne took 0.0033ms
+norm_num took 0.307ms
+typeclass inference of AddMonoidWithOne took 0.0132ms
+norm_num took 0.137ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of CharZero took 0.079ms
+norm_num took 0.117ms
+norm_num took 0.287ms
+norm_num took 0.425ms
+typeclass inference of Ring took 0.0057ms
+typeclass inference of DivisionRing took 0.0044ms
+norm_num took 0.357ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0046ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.183ms
+typeclass inference of AddMonoidWithOne took 0.0041ms
+norm_num took 0.101ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of CharZero took 0.0804ms
+norm_num took 0.101ms
+norm_num took 0.142ms
+norm_num took 0.117ms
+norm_num took 0.006ms
+typeclass inference of DivisionSemiring took 0.0057ms
+typeclass inference of Semiring took 0.0045ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.153ms
+typeclass inference of AddMonoidWithOne took 0.0034ms
+norm_num took 0.0897ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of CharZero took 0.0675ms
+norm_num took 0.0865ms
+norm_num took 0.118ms
+norm_num took 0.187ms
+typeclass inference of Ring took 0.0043ms
+typeclass inference of DivisionRing took 0.0031ms
+norm_num took 0.152ms
+typeclass inference of Semiring took 0.0047ms
+typeclass inference of DivisionSemiring took 0.012ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.0855ms
+norm_num took 0.142ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0504ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0244ms
+typeclass inference of DivisionSemiring took 0.0022ms
+typeclass inference of CharZero took 0.0744ms
+norm_num took 0.0744ms
+norm_num took 0.102ms
+norm_num took 0.106ms
+norm_num took 0.0905ms
+typeclass inference of CharZero took 0.074ms
+norm_num took 0.0896ms
+norm_num took 0.139ms
+typeclass inference of Ring took 0.0042ms
+typeclass inference of DivisionRing took 0.0037ms
+norm_num took 0.132ms
+typeclass inference of Ring took 0.0034ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.0486ms
+norm_num took 0.0918ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of Semiring took 0.0029ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0327ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0223ms
+typeclass inference of DivisionSemiring took 0.0024ms
+typeclass inference of CharZero took 0.0708ms
+norm_num took 0.0374ms
+norm_num took 0.0851ms
+norm_num took 0.0746ms
+norm_num took 0.024ms
+typeclass inference of CharZero took 0.0714ms
+norm_num took 0.0632ms
+norm_num took 0.0702ms
+norm_num took 0.019ms
+norm_num took 0.168ms
+norm_num took 0.113ms
+congr simp thm took 0.0067ms
+norm_num took 0.0048ms
+norm_num took 0.0026ms
+typeclass inference of DivisionSemiring took 0.0061ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0043ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.0993ms
+norm_num took 0.136ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.0033ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.044ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0253ms
+typeclass inference of DivisionSemiring took 0.0022ms
+typeclass inference of CharZero took 0.0747ms
+norm_num took 0.0746ms
+norm_num took 0.104ms
+norm_num took 0.105ms
+norm_num took 0.0876ms
+typeclass inference of CharZero took 0.0648ms
+norm_num took 0.092ms
+norm_num took 0.168ms
+typeclass inference of Ring took 0.0037ms
+typeclass inference of DivisionRing took 0.0032ms
+norm_num took 0.146ms
+typeclass inference of Ring took 0.0042ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of Semiring took 0.0038ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.0956ms
+norm_num took 0.137ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of Semiring took 0.0033ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0329ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0218ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.0711ms
+norm_num took 0.0696ms
+norm_num took 0.0986ms
+norm_num took 0.105ms
+norm_num took 0.0847ms
+typeclass inference of CharZero took 0.0646ms
+norm_num took 0.0847ms
+norm_num took 0.14ms
+norm_num took 0.0171ms
+norm_num took 0.172ms
+congr simp thm took 0.0059ms
+norm_num took 0.0042ms
+norm_num took 0.0026ms
+typeclass inference of DivisionSemiring took 0.0052ms
+typeclass inference of DivisionSemiring took 0.0045ms
+typeclass inference of Semiring took 0.0042ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.0924ms
+norm_num took 0.136ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0031ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0429ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0228ms
+typeclass inference of DivisionSemiring took 0.0021ms
+typeclass inference of CharZero took 0.0727ms
+norm_num took 0.0724ms
+norm_num took 0.1ms
+norm_num took 0.103ms
+norm_num took 0.0877ms
+typeclass inference of CharZero took 0.0633ms
+norm_num took 0.113ms
+norm_num took 0.239ms
+norm_num took 0.009ms
+congr simp thm took 0.0011ms
+typeclass inference of DivisionSemiring took 0.0057ms
+typeclass inference of Semiring took 0.0044ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.163ms
+typeclass inference of AddMonoidWithOne took 0.0038ms
+norm_num took 0.0871ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0672ms
+norm_num took 0.0861ms
+norm_num took 0.133ms
+norm_num took 0.115ms
+typeclass inference of Ring took 0.0085ms
+typeclass inference of DivisionSemiring took 0.005ms
+typeclass inference of Semiring took 0.0034ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.158ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.101ms
+typeclass inference of DivisionSemiring took 0.0039ms
+typeclass inference of CharZero took 0.0733ms
+norm_num took 0.0932ms
+norm_num took 0.115ms
+norm_num took 0.0933ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of Semiring took 0.0033ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0915ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0759ms
+typeclass inference of DivisionSemiring took 0.0031ms
+typeclass inference of CharZero took 0.062ms
+norm_num took 0.0813ms
+norm_num took 0.117ms
+norm_num took 0.0387ms
+typeclass inference of DivisionRing took 0.0112ms
+norm_num took 0.285ms
+typeclass inference of Mul took 0.0333ms
+typeclass inference of NonUnitalNonAssocRing took 0.202ms
+typeclass inference of HasDistribNeg took 0.361ms
+typeclass inference of Semiring took 0.0062ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0039ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.155ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.102ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of CharZero took 0.0723ms
+norm_num took 0.123ms
+norm_num took 0.124ms
+norm_num took 0.166ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.0044ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.121ms
+typeclass inference of AddMonoidWithOne took 0.0032ms
+norm_num took 0.0842ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of CharZero took 0.0668ms
+norm_num took 0.0444ms
+norm_num took 0.102ms
+norm_num took 0.321ms
+norm_num took 0.204ms
+typeclass inference of Ring took 0.0048ms
+typeclass inference of DivisionRing took 0.0038ms
+norm_num took 0.199ms
+typeclass inference of AddGroup took 0.0364ms
+typeclass inference of SubtractionMonoid took 0.172ms
+typeclass inference of AddGroup took 0.0052ms
+typeclass inference of AddGroup took 0.107ms
+typeclass inference of SubtractionMonoid took 0.0049ms
+typeclass inference of SubtractionMonoid took 0.0657ms
+typeclass inference of DivisionSemiring took 0.0101ms
+typeclass inference of Semiring took 0.0057ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.196ms
+typeclass inference of AddMonoidWithOne took 0.0045ms
+norm_num took 0.126ms
+typeclass inference of DivisionSemiring took 0.0045ms
+typeclass inference of CharZero took 0.0876ms
+norm_num took 0.112ms
+norm_num took 0.154ms
+norm_num took 0.217ms
+typeclass inference of Ring took 0.0057ms
+typeclass inference of DivisionRing took 0.0049ms
+norm_num took 0.236ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.0038ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.121ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.109ms
+typeclass inference of DivisionSemiring took 0.0044ms
+typeclass inference of CharZero took 0.0846ms
+norm_num took 0.0512ms
+norm_num took 0.124ms
+norm_num took 0.12ms
+typeclass inference of Ring took 0.005ms
+typeclass inference of DivisionRing took 0.004ms
+norm_num took 0.0983ms
+norm_num took 0.167ms
+norm_num took 0.0071ms
+norm_num took 0.0034ms
+congr simp thm took 0.0009ms
+typeclass inference of DivisionSemiring took 0.006ms
+typeclass inference of Semiring took 0.0046ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.178ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.1ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of CharZero took 0.0736ms
+norm_num took 0.0953ms
+norm_num took 0.124ms
+norm_num took 0.192ms
+typeclass inference of Ring took 0.0045ms
+typeclass inference of DivisionRing took 0.0036ms
+norm_num took 0.16ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0045ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.16ms
+typeclass inference of AddMonoidWithOne took 0.0037ms
+norm_num took 0.0866ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of CharZero took 0.0714ms
+norm_num took 0.0895ms
+norm_num took 0.139ms
+norm_num took 0.108ms
+norm_num took 0.0057ms
+typeclass inference of DivisionSemiring took 0.0049ms
+typeclass inference of Semiring took 0.0044ms
+typeclass inference of AddMonoidWithOne took 0.0029ms
+norm_num took 0.15ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.0889ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of CharZero took 0.0662ms
+norm_num took 0.0852ms
+norm_num took 0.109ms
+norm_num took 0.168ms
+typeclass inference of Ring took 0.0041ms
+typeclass inference of DivisionRing took 0.0034ms
+norm_num took 0.148ms
+typeclass inference of Semiring took 0.0039ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of DivisionSemiring took 0.0033ms
+typeclass inference of Semiring took 0.0036ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0825ms
+norm_num took 0.142ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of Semiring took 0.0033ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0463ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.0295ms
+typeclass inference of DivisionSemiring took 0.0023ms
+typeclass inference of CharZero took 0.083ms
+norm_num took 0.0766ms
+norm_num took 0.101ms
+norm_num took 0.1ms
+norm_num took 0.0882ms
+typeclass inference of CharZero took 0.0645ms
+norm_num took 0.085ms
+norm_num took 0.132ms
+typeclass inference of Ring took 0.004ms
+typeclass inference of DivisionRing took 0.0033ms
+norm_num took 0.13ms
+typeclass inference of Ring took 0.0034ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of DivisionSemiring took 0.0028ms
+typeclass inference of Semiring took 0.0034ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0458ms
+norm_num took 0.0844ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of Semiring took 0.0028ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0318ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0226ms
+typeclass inference of DivisionSemiring took 0.0023ms
+typeclass inference of CharZero took 0.0688ms
+norm_num took 0.0352ms
+norm_num took 0.0827ms
+norm_num took 0.0705ms
+norm_num took 0.0231ms
+typeclass inference of CharZero took 0.062ms
+norm_num took 0.0604ms
+norm_num took 0.06ms
+norm_num took 0.0181ms
+norm_num took 0.109ms
+norm_num took 0.11ms
+congr simp thm took 0.0011ms
+typeclass inference of DivisionSemiring took 0.0057ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.0028ms
+norm_num took 0.0954ms
+norm_num took 0.13ms
+typeclass inference of DivisionSemiring took 0.0038ms
+typeclass inference of Semiring took 0.003ms
+typeclass inference of AddMonoidWithOne took 0.0023ms
+norm_num took 0.0474ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0234ms
+typeclass inference of DivisionSemiring took 0.0023ms
+typeclass inference of CharZero took 0.074ms
+norm_num took 0.0739ms
+norm_num took 0.0999ms
+norm_num took 0.0994ms
+norm_num took 0.0833ms
+typeclass inference of CharZero took 0.064ms
+norm_num took 0.0872ms
+norm_num took 0.158ms
+typeclass inference of Ring took 0.0039ms
+typeclass inference of DivisionRing took 0.0035ms
+norm_num took 0.144ms
+typeclass inference of Ring took 0.004ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of DivisionSemiring took 0.003ms
+typeclass inference of Semiring took 0.0037ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.0806ms
+norm_num took 0.132ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of Semiring took 0.003ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0325ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0227ms
+typeclass inference of DivisionSemiring took 0.0022ms
+typeclass inference of CharZero took 0.0726ms
+norm_num took 0.0717ms
+norm_num took 0.107ms
+norm_num took 0.103ms
+norm_num took 0.082ms
+typeclass inference of CharZero took 0.0688ms
+norm_num took 0.0832ms
+norm_num took 0.134ms
+norm_num took 0.0167ms
+norm_num took 0.163ms
+congr simp thm took 0.0011ms
+typeclass inference of DivisionSemiring took 0.0049ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0054ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.0953ms
+norm_num took 0.141ms
+typeclass inference of DivisionSemiring took 0.004ms
+typeclass inference of Semiring took 0.0029ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.043ms
+typeclass inference of AddMonoidWithOne took 0.0025ms
+norm_num took 0.0227ms
+typeclass inference of DivisionSemiring took 0.0023ms
+typeclass inference of CharZero took 0.0722ms
+norm_num took 0.0736ms
+norm_num took 0.162ms
+norm_num took 0.106ms
+norm_num took 0.0941ms
+typeclass inference of CharZero took 0.071ms
+norm_num took 0.477ms
+norm_num took 0.193ms
+norm_num took 0.0087ms
+congr simp thm took 0.0014ms
+typeclass inference of DivisionSemiring took 0.0049ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.0032ms
+norm_num took 0.158ms
+typeclass inference of AddMonoidWithOne took 0.0035ms
+norm_num took 0.0936ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of CharZero took 0.0679ms
+norm_num took 0.0866ms
+norm_num took 0.128ms
+norm_num took 0.114ms
+typeclass inference of Ring took 0.005ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0032ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.148ms
+typeclass inference of AddMonoidWithOne took 0.0034ms
+norm_num took 0.0935ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0686ms
+norm_num took 0.0857ms
+norm_num took 0.107ms
+norm_num took 0.0856ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of Semiring took 0.0029ms
+typeclass inference of AddMonoidWithOne took 0.0022ms
+norm_num took 0.0903ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.077ms
+typeclass inference of DivisionSemiring took 0.0029ms
+typeclass inference of CharZero took 0.0627ms
+norm_num took 0.0355ms
+norm_num took 0.0789ms
+norm_num took 0.035ms
+typeclass inference of DivisionRing took 0.0043ms
+norm_num took 0.203ms
+typeclass inference of Mul took 0.0051ms
+typeclass inference of NonUnitalNonAssocRing took 0.0043ms
+typeclass inference of HasDistribNeg took 0.266ms
+typeclass inference of Semiring took 0.0049ms
+typeclass inference of DivisionSemiring took 0.0034ms
+typeclass inference of Semiring took 0.0034ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.156ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.104ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0683ms
+norm_num took 0.0879ms
+norm_num took 0.119ms
+norm_num took 0.151ms
+typeclass inference of DivisionSemiring took 0.0036ms
+typeclass inference of Semiring took 0.0033ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.0927ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.0925ms
+typeclass inference of DivisionSemiring took 0.0034ms
+typeclass inference of CharZero took 0.0697ms
+norm_num took 0.0423ms
+norm_num took 0.0879ms
+norm_num took 0.108ms
+norm_num took 0.116ms
+typeclass inference of Ring took 0.0038ms
+typeclass inference of DivisionRing took 0.0046ms
+norm_num took 0.197ms
+typeclass inference of AddGroup took 0.0057ms
+typeclass inference of SubtractionMonoid took 0.0049ms
+typeclass inference of AddGroup took 0.0047ms
+typeclass inference of AddGroup took 0.106ms
+typeclass inference of SubtractionMonoid took 0.0051ms
+typeclass inference of SubtractionMonoid took 0.0526ms
+typeclass inference of DivisionSemiring took 0.0051ms
+typeclass inference of Semiring took 0.0053ms
+typeclass inference of AddMonoidWithOne took 0.003ms
+norm_num took 0.155ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.0965ms
+typeclass inference of DivisionSemiring took 0.022ms
+typeclass inference of CharZero took 0.127ms
+norm_num took 0.187ms
+norm_num took 0.131ms
+norm_num took 0.242ms
+typeclass inference of Ring took 0.0053ms
+typeclass inference of DivisionRing took 0.0042ms
+norm_num took 0.148ms
+typeclass inference of DivisionSemiring took 0.0037ms
+typeclass inference of Semiring took 0.0035ms
+typeclass inference of AddMonoidWithOne took 0.0026ms
+norm_num took 0.104ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.0857ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of CharZero took 0.0646ms
+norm_num took 0.0409ms
+norm_num took 0.0882ms
+norm_num took 0.102ms
+typeclass inference of Ring took 0.0035ms
+typeclass inference of DivisionRing took 0.0031ms
+norm_num took 0.0789ms
+norm_num took 0.146ms
+norm_num took 0.0058ms
+norm_num took 0.0026ms
+congr simp thm took 0.0008ms
+typeclass inference of DivisionSemiring took 0.0055ms
+typeclass inference of Semiring took 0.0039ms
+typeclass inference of AddMonoidWithOne took 0.0027ms
+norm_num took 0.151ms
+typeclass inference of AddMonoidWithOne took 0.0032ms
+norm_num took 0.117ms
+typeclass inference of DivisionSemiring took 0.0041ms
+typeclass inference of CharZero took 0.0683ms
+norm_num took 0.0917ms
+norm_num took 0.112ms
+norm_num took 0.168ms
+typeclass inference of Ring took 0.0042ms
+typeclass inference of DivisionRing took 0.0034ms
+norm_num took 0.15ms
+typeclass inference of DivisionSemiring took 0.0042ms
+typeclass inference of Semiring took 0.0041ms
+typeclass inference of AddMonoidWithOne took 0.0031ms
+norm_num took 0.155ms
+typeclass inference of AddMonoidWithOne took 0.0036ms
+norm_num took 0.0827ms
+typeclass inference of DivisionSemiring took 0.0032ms
+typeclass inference of CharZero took 0.0678ms
+norm_num took 0.0868ms
+norm_num took 0.122ms
+norm_num took 0.102ms
+norm_num took 0.0052ms
+typeclass inference of AddMonoidWithOne took 0.0056ms
+norm_num took 0.177ms
+typeclass inference of DivisionSemiring took 0.0044ms
+typeclass inference of Semiring took 0.0035ms
+typeclass inference of AddMonoidWithOne took 0.0024ms
+norm_num took 0.137ms
+typeclass inference of AddMonoidWithOne took 0.0038ms
+norm_num took 0.0878ms
+typeclass inference of DivisionSemiring took 0.0035ms
+typeclass inference of CharZero took 0.0667ms
+norm_num took 0.0854ms
+norm_num took 0.11ms
+norm_num took 0.073ms
+typeclass inference of LT took 0.0403ms
+typeclass inference of Semifield took 0.086ms
+typeclass inference of LinearOrder took 0.025ms
+typeclass inference of IsStrictOrderedRing took 0.345ms
+norm_num took 0.207ms
+tactic execution of Mathlib.Tactic.normNum took 10.3ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.0189ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 0.0202ms
+tactic execution of Lean.Parser.Tactic.allGoals took 0.122ms
+tactic execution of Lean.Parser.Tactic.tacticSeq1Indented took 0.034ms
+tactic execution of Lean.Parser.Tactic.tacticSeq took 1.09ms
+instantiate metavars took 0.0051ms
+instantiate metavars took 0.0005ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0002ms
+instantiate metavars took 0.0001ms
+share common exprs took 2.1ms
+fix level params took 0.113ms
+let-to-have transformation took 0.0074ms
+type checking took 13.9ms
+attribute application took 0.0051ms
+attribute application took 0.0016ms
+process pre-definitions took 1.29ms
+overlappingInstancesLinter took 0.171ms
+tacticAnalysis took 1.05ms
+linting took 4.51ms
+elaboration took 8.38ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:127:22: type checking took 0.0202ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:127:29: type checking took 0.0128ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:127:33: type checking took 0.0103ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:127:37: type checking took 0.0104ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:129:0: 'CatalanCore.Uniform.Decay.PilotCorner.primitive_hasDerivWithinAt' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:129:0: overlappingInstancesLinter took 0.0346ms
+tacticAnalysis took 0.17ms
+linting took 1.24ms
+elaboration took 1.39ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:130:0: 'CatalanCore.Uniform.Decay.PilotCorner.chi3_corner' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:130:0: overlappingInstancesLinter took 0.0346ms
+tacticAnalysis took 0.167ms
+linting took 1.37ms
+elaboration took 2.57ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:132:0: overlappingInstancesLinter took 0.0318ms
+tacticAnalysis took 0.163ms
+linting took 1.17ms
+elaboration took 0.102ms
+info: CatalanCore/Uniform/Decay/PilotCorner.lean:133:0: overlappingInstancesLinter took 0.0538ms
+tacticAnalysis took 0.269ms
+linting took 3.49ms
+module linting took 0.01ms
+elaboration took 0.0811ms
+info: stderr:
+parsing took 0.0519ms
+parsing took 0.0712ms
+parsing took 0.0166ms
+parsing took 0.214ms
+parsing took 0.205ms
+parsing took 0.935ms
+parsing took 0.609ms
+parsing took 0.716ms
+parsing took 0.253ms
+parsing took 0.349ms
+parsing took 0.366ms
+parsing took 0.401ms
+parsing took 0.488ms
+parsing took 0.865ms
+parsing took 0.204ms
+parsing took 0.188ms
+parsing took 0.187ms
+parsing took 0.536ms
+parsing took 0.0512ms
+parsing took 0.0362ms
+parsing took 0.021ms
+parsing took 0.0013ms
+.olean serialization took 12.3ms
+cumulative profiling times:
+	.olean serialization 12.3ms
+	attribute application 0.124ms
+	congr simp thm 2.14ms
+	elaboration 119ms
+	fix level params 0.494ms
+	instantiate metavars 0.595ms
+	let-to-have transformation 0.105ms
+	linting 81.1ms
+	module linting 0.0091ms
+	norm_num 223ms
+	overlappingInstancesLinter 8.67ms
+	parsing 6.78ms
+	process pre-definitions 18.3ms
+	share common exprs 4.78ms
+	simp 92ms
+	tactic execution 290ms
+	tacticAnalysis 31.5ms
+	type checking 175ms
+	typeclass inference 433ms
+Build completed successfully (2752 jobs).
