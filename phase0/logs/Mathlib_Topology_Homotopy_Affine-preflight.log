@@ -1,4 +1,0 @@
-✖ [1571/1571] Building Mathlib.Topology.Homotopy.Affine
-error: target is out-of-date and needs to be rebuilt
-Some required targets logged failures:
-- Mathlib.Topology.Homotopy.Affine

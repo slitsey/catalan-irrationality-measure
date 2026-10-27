@@ -1,9 +1,0 @@
-{
-  "target": "CatalanCore.Uniform.Decay.PilotCorner",
-  "mode": "preflight",
-  "rc": 3,
-  "wrapper_wall_seconds": 4.092829099972732,
-  "sampled_wrapper_tree_peak_bytes": 605241344,
-  "lean_process_peak_working_sets_bytes": {},
-  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
-}

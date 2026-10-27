@@ -1,4 +1,0 @@
-✖ [3/3] Building CatalanCore.Uniform.Decay.PilotArithmetic
-error: target is out-of-date and needs to be rebuilt
-Some required targets logged failures:
-- CatalanCore.Uniform.Decay.PilotArithmetic

@@ -1,9 +1,0 @@
-{
-  "target": "Mathlib.Analysis.Analytic.IteratedFDeriv",
-  "mode": "preflight",
-  "rc": 3,
-  "wrapper_wall_seconds": 3.7687358999392018,
-  "sampled_wrapper_tree_peak_bytes": 588021760,
-  "lean_process_peak_working_sets_bytes": {},
-  "note": "Tree includes wrapper/guard/Lake; individual Lean values are OS lifetime peaks. No CPU/kernel estimate inferred from wrapper time."
-}
