@@ -1,0 +1,23 @@
+module
+
+public import CatalanCore.Uniform.Content.UFFamily3.Thirds
+
+@[expose] public section
+
+open Polynomial Matrix Finset CatalanCore CatalanCore.Basic CatalanCore.Arith.Hybrid
+  CatalanCore.Arith.Hybrid.Periodic CatalanCore.Uniform.Content.UFMember
+  CatalanCore.Uniform.Content.Hybrid CatalanCore.Uniform.Content.UFMoments
+  CatalanCore.Uniform.Content.UFWedge CatalanCore.Uniform.Content.Smith
+  CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.UFWire
+  CatalanCore.Uniform.Content.Member CatalanCore.Uniform.Content.Wire
+  CatalanCore.Uniform.Content.UFFamily CatalanCore.Uniform.Content.UFFamily.SevE
+  CatalanCore.Uniform.Content.UFFamily2 CatalanCore.Uniform.Content.UFFamily3
+
+namespace CatalanCore.Uniform.Content.UFFamily4
+
+open CatalanCore.Uniform.Content.UFFamily3
+
+/-- Coverage of the thirds band by the families, residue class `p ≡ @RHO@ (3)`. -/
+theorem cover_rho@RHO@ {r p : ℕ} (hr : r % 2 = 0) (hp2 : p % 2 = 1) (hlo : 3 * r < 10 * p)
+    (hhi : 10 * p ≤ 39 * r) (hp60 : 60 ≤ p) (hp3 : p % 3 = @RHO@) : ∃ i, RegOf i r p := by
+  have hr0 : 0 < r := by omega
