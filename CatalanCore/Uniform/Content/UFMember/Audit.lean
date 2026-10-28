@@ -3,6 +3,7 @@ module
 public import CatalanCore.Uniform.Content.UFMember.Layer
 public import CatalanCore.Uniform.Content.UFMember.SchurFam
 public import CatalanCore.Uniform.Content.UFMember.FiberMom
+public import CatalanCore.Uniform.Content.UFMember.AltData
 
 /-! Axiom audit of the UF member package. -/
 
@@ -54,3 +55,6 @@ public import CatalanCore.Uniform.Content.UFMember.FiberMom
 #print axioms CatalanCore.Uniform.Content.UFMember.rowMomB1_red
 #print axioms CatalanCore.Uniform.Content.UFMember.colMomA_red
 #print axioms CatalanCore.Uniform.Content.UFMember.colMomB1_red
+#print axioms CatalanCore.Uniform.Content.UFMember.alt_hdist
+#print axioms CatalanCore.Uniform.Content.UFMember.altSmithJKDatum
+#print axioms CatalanCore.Uniform.Content.UFMember.altSmithJKDatum_empty_price
