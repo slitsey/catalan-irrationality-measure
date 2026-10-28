@@ -7,7 +7,7 @@ cell tables). -/
 
 namespace CatalanCore.Uniform.Bank.Chi3
 open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCore.Uniform.Decay.PolyWire2
-  CatalanCore.Uniform.Decay.Nodes CatalanCore.Uniform
+  CatalanCore.Uniform.Decay.Nodes CatalanCore.Uniform CatalanCore.Uniform.Decay.PolyFull
 
 theorem chi3_hasScaledDecay (G₀ : BlockGeom) {Fr : Frame} (hC : Fr.ContourOK)
     (hAR : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off)
