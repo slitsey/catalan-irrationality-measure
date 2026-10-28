@@ -39,10 +39,8 @@ theorem encAtom_sound {a : Atom} {c ε : ℚ} (h : encAtom a = some (c, ε)) :
       simpa [Atom.val, toCQ_toC] using this
   | argC w =>
     simp only [encAtom] at h
-    by_cases him : w.im = 0
-    · simp [argEnc, QC.toCQ, him] at h
-    · have := argEnc_sound (w := w.toCQ) h (by simpa [QC.toCQ] using him)
-      simpa [Atom.val, toCQ_toC] using this
+    have := argEnc_sound (w := w.toCQ) h
+    simpa [Atom.val, toCQ_toC] using this
 
 /-- Upper bound of a term list. -/
 def termsUb : List (ℚ × Atom) → Option ℚ
