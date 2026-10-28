@@ -22,30 +22,36 @@ def intervalRowsEquiv (lo n total : Nat) (hlen : lo+n ≤ total) :
       intro i hi
       have hn : ¬(lo ≤ i.val ∧ i.val < lo+n) := by omega
       simp only [dif_neg hn]⟩
-  invFun x := fun j => x ⟨lo+j.val,by have := j.is_lt; omega⟩
+  invFun x := fun j => x.1 ⟨lo+j.val,by have := j.is_lt; omega⟩
   left_inv x := by
     funext j
     have hj := j.is_lt
-    split_ifs with hi
-    · congr 1; apply Fin.ext; omega
-    · omega
+    have hc : lo ≤ lo+j.val ∧ lo+j.val < lo+n := by omega
+    simp only [hc, and_self, dite_true]
+    congr 1
+    apply Fin.ext
+    simp
   right_inv x := by
     apply Subtype.ext
     funext i
-    split_ifs with hi
-    · congr 1; apply Fin.ext; omega
-    · exact (x.property i (by omega)).symm
+    by_cases hi : lo ≤ i.val ∧ i.val < lo+n
+    · simp only [hi, and_self, dite_true]
+      exact congrArg x.1 (Fin.ext (by simp only; omega))
+    · simp only [hi, dite_false]
+      exact (x.property i (by omega)).symm
   map_add' x y := by
     apply Subtype.ext
     funext i
-    split_ifs <;> simp
+    by_cases hi : lo ≤ i.val ∧ i.val < lo+n
+    · simp [hi]
+    · simp [hi]
   map_smul' a x := by
     apply Subtype.ext
     funext i
-    split_ifs  <;> simp
+    by_cases hi : lo ≤ i.val ∧ i.val < lo+n
+    · simp [hi]
+    · simp [hi]
 
 #print axioms intervalRowsEquiv
 end
 end CatalanMeasure.GenD.Uniform.Prefix
-
-

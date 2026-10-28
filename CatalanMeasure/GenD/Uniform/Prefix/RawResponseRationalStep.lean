@@ -11,7 +11,7 @@ variable {p : ℕ} [Fact p.Prime]
 local notation "Fp" => ZMod p
 
 def integerPstepPsi (K ah q J : ℕ) (S : ℤ) (a b : ℤ[X]) : ℚ :=
-  ∑ k∈range (q+1),(((-1:ℤ)^(q-k)*(q.choose k:ℤ)):ℚ)*integerPsi K ah (J+k) S a b
+  ∑ k∈range (q+1),Int.cast (R:=ℚ) ((-1:ℤ)^(q-k)*(q.choose k:ℤ))*integerPsi K ah (J+k) S a b
 
 def pstepMomentException (K q J : ℕ) : ℕ :=
   ∏ k∈range (q+1),sourceMomentException (J+k) K
@@ -35,9 +35,9 @@ theorem integerPstepPsi_residue (K ah q J : ℕ) (S : ℤ) (a b : ℤ[X])
     exact (integerPsi_residue K ah (J+k) S a b (hlocal k hk)).1
   have hr := palindromicRatResidue_int_sum (p:=p) (range (q+1))
     (fun k => (-1:ℤ)^(q-k)*(q.choose k:ℤ)) (fun k => integerPsi K ah (J+k) S a b) hden
+  unfold integerPstepPsi
   refine ⟨hr.1,?_⟩
-  rw [show integerPstepPsi K ah q J S a b=
-      ∑ k∈range (q+1),(((-1:ℤ)^(q-k)*(q.choose k:ℤ)):ℚ)*integerPsi K ah (J+k) S a b from rfl,hr.2]
+  rw [hr.2]
   unfold pstepCovector
   apply Finset.sum_congr rfl
   intro k hk

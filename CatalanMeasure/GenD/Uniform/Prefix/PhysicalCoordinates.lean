@@ -10,9 +10,9 @@ theorem physicalTiling_apply_label (b h p : Nat) (hp : p=2*h+1) (h2 : (2 : K)≠
     (x : TilingCoordinates (K := K) b h) (i : RowLabels b h) :
     physicalTilingEquiv b h p hp h2 x (fullRowIndexEquiv b h p hp i)=
       packRows b h (tilingEquiv b h h2 x) i := by
-  change packRows b h (tilingEquiv b h h2 x)
-    ((fullRowIndexEquiv b h p hp).symm ((fullRowIndexEquiv b h p hp) i))=_
-  rw [Equiv.symm_apply_apply]
+  unfold physicalTilingEquiv
+  simp only [LinearEquiv.trans_apply]
+  exact Equiv.piCongrLeft_apply_apply (fun _ => K) (fullRowIndexEquiv b h p hp) _ i
 
 theorem physicalTiling_pair_plus (b h p : Nat) (hp : p=2*h+1) (h2 : (2 : K)≠0)
     (x : TilingCoordinates (K := K) b h) (k : Fin b) (j : Fin h) :
