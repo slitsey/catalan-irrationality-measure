@@ -4,7 +4,7 @@ public import CatalanCore.Uniform.Measure.Coefficient
 @[expose] public section
 namespace CatalanMeasure.GenD.Uniform.Arithmetic
 open Polynomial CatalanMeasure.Parametric Filter
-open scoped Topology
+open scoped Topology Nat
 noncomputable section
 
 def coefficientNormalizer {P : Parameters} (Z : Normalizer P) (N : ℕ) : ℕ :=

@@ -141,10 +141,11 @@ def recyclingSafeLB (P : Parameters) (lb : NullityLB P) : NullityLB P where
   kap N p := if N<p ∧ p≤2*N then 0 else lb.kap N p
   ok := by
     intro N p hN hp hp2 hsq
-    dsimp
-    split_ifs
-    · exact Nat.zero_le _
-    · exact lb.ok N p hN hp hp2 hsq
+    by_cases hr : N<p ∧ p≤2*N
+    · simp only [hr, and_self, if_true]
+      exact Nat.zero_le _
+    · simp only [hr, if_false]
+      exact lb.ok N p hN hp hp2 hsq
 
 def canonicalNormalizer (P : Parameters) (hP : Admissible P) (lb : NullityLB P)
     (N0 : ℕ) (hN0 : P.H 1<N0) : Normalizer P :=

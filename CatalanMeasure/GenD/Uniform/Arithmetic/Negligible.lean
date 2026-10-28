@@ -85,7 +85,7 @@ theorem linear_log_negligible (K H : ℝ) (hH : 0<H) {ε : ℝ} (hε : 0<ε) :
   have hi : Tendsto (fun N:ℕ => (N:ℝ)⁻¹) atTop (𝓝 0) :=
     tendsto_inv_atTop_zero.comp tendsto_natCast_atTop_atTop
   have hl : Tendsto (fun N:ℕ => Real.log (N:ℝ)/(N:ℝ)) atTop (𝓝 0) := by
-    simpa using (Real.tendsto_pow_log_div_mul_add_atTop 1 0 1 one_ne_zero).comp
+    exact (Real.isLittleO_log_id_atTop.tendsto_div_nhds_zero).comp
       (tendsto_natCast_atTop_atTop : Tendsto (fun N:ℕ => (N:ℝ)) atTop atTop)
   have ht := ((hi.const_mul (Real.log H)).add hl).const_mul K
   simp only [mul_zero,add_zero] at ht
@@ -96,7 +96,6 @@ theorem linear_log_negligible (K H : ℝ) (hH : 0<H) {ε : ℝ} (hε : 0<ε) :
       K*Real.log (H*N)/(N:ℝ) := by
     rw [Real.log_mul hH.ne' hn.ne']
     field_simp
-    ring
   rw [he,div_lt_iff₀ hn] at hv
   have hm := mul_le_mul_of_nonneg_right hv.le hn.le
   nlinarith only [hm]
