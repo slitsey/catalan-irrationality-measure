@@ -178,8 +178,8 @@ theorem catValid_uf (c : ℚ) (hc : 0 < c) {Fr : Frame} {q o : ℕ} (T : TwoTerm
 
 /-- **The catalogue of a two-term bank with UF, fully instantiated**: table T, LP1, LP2, rank, UF and any M3D
 windows, with `N0 = max (NFr …) N1`, `c N1 ≥ q (2 + c)`. -/
-theorem catValid_bankUF {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
-    (B : CatalanFrames.HybGen.ArithmeticInfo I Lc cm) {Gd : ℕ → Prop}
+theorem catValid_bankUF {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ}
+    (hL : I.cd.L = Lc) {Gd : ℕ → Prop}
     (Lv : CatalanFrames.HybCommon.LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) {q o : ℕ} (T : TwoTermData Fr q o) {nm : ℕ}
     (hnorm : Fr.norm = (nm : ℚ)) (depth Pbad K N1 : ℕ) (hK : 2 ≤ c * K) (hN1 : (q : ℚ) * (2 + c) ≤ c * N1)
@@ -191,7 +191,7 @@ theorem catValid_bankUF {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {L
     CatValid c hc Fr depth q o Pbad (max (NFr (1 / Fr.norm) (-1 / Fr.norm) q K) N1)
       (tableT ++ ([brLP1, brLP2, brRank, brS] ++ wins.map (fun w => brWin w.1 w.2))) := by
   set N0 := max (NFr (1 / Fr.norm) (-1 / Fr.norm) q K) N1
-  have hT := catValid_tableT I B Lv c hc hc1 depth q o Pbad N0 hLq
+  have hT := catValid_tableT I hL Lv c hc hc1 depth q o Pbad N0 hLq
     (fun p hp h => ⟨(hP p hp h).2.2.2.1, (hP p hp h).2.2.2.2.1, (hP p hp h).2.2.2.2.2⟩) hkq
   have hLP := catValid_LP c hc T hnorm depth Pbad N0 (fun p hp h => ⟨(hP p hp h).1, (hP p hp h).2.1,
     (hP p hp h).2.2.1⟩)

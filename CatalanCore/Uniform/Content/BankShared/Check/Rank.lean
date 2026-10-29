@@ -130,8 +130,8 @@ theorem catValid_rank (c : ℚ) (hc : 0 < c) {Fr : Frame} {q o : ℕ} (T : TwoTe
 
 /-- **The catalogue of a two-term bank, fully instantiated**: table T, LP1, LP2, the rank branch and any M3D
 windows are valid with `N0 = NFr`, given the T-layer data of the frame. -/
-theorem catValid_bank {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
-    (B : CatalanFrames.HybGen.ArithmeticInfo I Lc cm) {Gd : ℕ → Prop}
+theorem catValid_bank {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ}
+    (hL : I.cd.L = Lc) {Gd : ℕ → Prop}
     (Lv : CatalanFrames.HybCommon.LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) {q o : ℕ} (T : TwoTermData Fr q o) {nm : ℕ}
     (hnorm : Fr.norm = (nm : ℚ)) (depth Pbad K : ℕ) (hK : 2 ≤ c * K) (hq : 0 < q) (hLq : Lc ≤ q)
@@ -141,7 +141,7 @@ theorem catValid_bank {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc 
       k < p → I.cd.kq p = k) (wins : List (ℕ × ℕ)) :
     CatValid c hc Fr depth q o Pbad (NFr (1 / Fr.norm) (-1 / Fr.norm) q K)
       (tableT ++ ([brLP1, brLP2, brRank] ++ wins.map (fun w => brWin w.1 w.2))) :=
-  catValid_twoTerm I B Lv c hc hc1 T hnorm depth Pbad _ hq hLq hP hkq
+  catValid_twoTerm I hL Lv c hc hc1 T hnorm depth Pbad _ hq hLq hP hkq
     (catValid_rank c hc T depth Pbad K hK (fun p hp h => by have := (hP p hp h).2.2.1; omega)) wins
 
 end CatalanCore.Uniform.Content.BankShared.Check

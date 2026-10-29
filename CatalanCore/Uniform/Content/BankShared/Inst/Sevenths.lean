@@ -10,12 +10,14 @@ Instantiation only: `seventhsFrameAt a` (Codex, `Bank/Sevenths/Frame`, read only
 `twoTermInst` applies to all six members.
 
 * all six members: `seventhsShift`, `seventhsInst`, `seventhsInst_levels` (good primes `p > 7`), `seventhsInst_norm`,
-  `seventhsInst_hP`, `seventhsInst_hkq`, `seventhsInst_bad_le`;
-* members `a + 1 ∈ {1, 2, 3, 4}` (`a.val < 4`): `seventhsInst_arithmetic : ArithmeticInfo _ 7 2`, and the catalogue
-  validity `seventhsInst_catValid_bank`, `seventhsInst_catValid_bankUF` (`catValid_bank(UF)` instantiated);
+  `seventhsInst_hP`, `seventhsInst_hkq`, `seventhsInst_bad_le`, and the catalogue validity
+  `seventhsInst_catValid_bank`, `seventhsInst_catValid_bankUF` (`catValid_bank(UF)` instantiated; they need only
+  `hL : (seventhsInst a).cd.L = 7`, which is `rfl`);
+* members `a + 1 ∈ {1, 2, 3, 4}` (`a.val < 4`): also `seventhsInst_arithmetic : ArithmeticInfo _ 7 2`;
 * members `a + 1 ∈ {5, 6}`: `seventhsInst_not_arithmetic` (no `ArithmeticInfo` for this instance, at `N = 1`),
   and for member `5` the stronger `seventhsFive_not_arithmetic`: NO hybrid instance of `seventhsFrameAt 4`
-  has `ArithmeticInfo` (`Δ₁ = -2/5` forces `Ebd 1 ≥ 5`, while `Ebd 1 + 1 ≤ Ecub 1 = 5`). -/
+  has `ArithmeticInfo` (`Δ₁ = -2/5` forces `Ebd 1 ≥ 5`, while `Ebd 1 + 1 ≤ Ecub 1 = 5`).  The content route
+  does not need `ArithmeticInfo` (only `L = Lc` at good primes), so this does not block members 5 and 6. -/
 
 namespace CatalanCore.Uniform.Content.BankShared.Inst
 open CatalanCore CatalanCore.Arith.Hybrid CatalanCore.Basic CatalanCore.Uniform.Content.Smith
@@ -56,34 +58,36 @@ theorem seventhsInst_hkq (a : Fin 6) {Pbad : ℕ} (h : 7 ≤ Pbad) :
 theorem seventhsInst_bad_le (a : Fin 6) {p : ℕ} (hp : p ∈ (seventhsInst a).cd.bad) : p ≤ 7 :=
   twoTerm_bad_le (seventhsShift a) hp
 
-/-! ### Members `1, 2, 3, 4`: arithmetic data and the catalogue -/
+theorem seventhsInst_L (a : Fin 6) : (seventhsInst a).cd.L = 7 := twoTermInst_L (seventhsShift a)
 
-theorem seventhsInst_arithmetic (a : Fin 6) (ha : a.val < 4) : ArithmeticInfo (seventhsInst a) 7 2 :=
-  twoTerm_arithmetic_small (seventhsShift a) (by norm_num) (by unfold seventhNumerator; omega)
-    (by norm_num)
-
-/-- **`catValid_bank` at the sevenths members `1, …, 4`** (table T, LP1, LP2, rank, windows `wins`). -/
-theorem seventhsInst_catValid_bank (a : Fin 6) (ha : a.val < 4) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
+/-- **`catValid_bank` at every sevenths member** (table T, LP1, LP2, rank, windows `wins`). -/
+theorem seventhsInst_catValid_bank (a : Fin 6) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
     (depth Pbad K : ℕ) (hPbad : 13 ≤ Pbad) (hK : 2 ≤ c * K) (wins : List (ℕ × ℕ)) :
     CatValid c hc (seventhsFrameAt a) depth 7 (7 - seventhNumerator a) Pbad
       (NFr (1 / (seventhsFrameAt a).norm) (-1 / (seventhsFrameAt a).norm) 7 K)
       (tableT ++ ([brLP1, brLP2, brRank] ++ wins.map (fun w => brWin w.1 w.2))) :=
-  catValid_bank (seventhsInst a) (seventhsInst_arithmetic a ha) (seventhsInst_levels a) c hc hc1
+  catValid_bank (seventhsInst a) (seventhsInst_L a) (seventhsInst_levels a) c hc hc1
     (sevenths_twoTerm a) (seventhsInst_norm a) depth Pbad K hK (by norm_num) le_rfl
     (seventhsInst_hP a hPbad) (seventhsInst_hkq a (by omega)) wins
 
-/-- **`catValid_bankUF` at the sevenths members `1, …, 4`** (with the UF branch `brS`). -/
-theorem seventhsInst_catValid_bankUF (a : Fin 6) (ha : a.val < 4) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
+/-- **`catValid_bankUF` at every sevenths member** (with the UF branch `brS`). -/
+theorem seventhsInst_catValid_bankUF (a : Fin 6) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
     (depth Pbad K N1 : ℕ) (hPbad : 13 ≤ Pbad) (hK : 2 ≤ c * K)
     (hN1 : ((7 : ℕ) : ℚ) * (2 + c) ≤ c * N1) (wins : List (ℕ × ℕ)) :
     CatValid c hc (seventhsFrameAt a) depth 7 (7 - seventhNumerator a) Pbad
       (max (NFr (1 / (seventhsFrameAt a).norm) (-1 / (seventhsFrameAt a).norm) 7 K) N1)
       (tableT ++ ([brLP1, brLP2, brRank, brS] ++ wins.map (fun w => brWin w.1 w.2))) :=
-  catValid_bankUF (seventhsInst a) (seventhsInst_arithmetic a ha) (seventhsInst_levels a) c hc hc1
+  catValid_bankUF (seventhsInst a) (seventhsInst_L a) (seventhsInst_levels a) c hc hc1
     (sevenths_twoTerm a) (seventhsInst_norm a) depth Pbad K N1 hK hN1 (by norm_num) le_rfl
     (seventhsInst_hP a hPbad) (seventhsInst_hkq a (by omega)) wins
 
-/-! ### Members `5, 6`: the obstruction -/
+/-! ### Members `1, 2, 3, 4`: arithmetic data -/
+
+theorem seventhsInst_arithmetic (a : Fin 6) (ha : a.val < 4) : ArithmeticInfo (seventhsInst a) 7 2 :=
+  twoTerm_arithmetic_small (seventhsShift a) (by norm_num) (by unfold seventhNumerator; omega)
+    (by norm_num)
+
+/-! ### Members `5, 6`: no `ArithmeticInfo` (the content route does not need it) -/
 
 /-- Members `5, 6` (`u ∈ {2, 1}`): `Ebd 1 + 1 = 8 - u > 5 = Ecub 1`, so the generic instance has no
 `ArithmeticInfo`. -/

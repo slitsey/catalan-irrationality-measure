@@ -54,7 +54,7 @@ theorem fifths_catValid {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : �
       bankData.cat := by
   have hu0 := T.hu0
   have hu1 := T.hu1
-  exact catValid_bankUF (fifthsInst T) (fifths_arithmetic T) (fifths_levels T) (2 / 9) two_ninths_pos
+  exact catValid_bankUF (fifthsInst T) (fifths_arithmetic T).L_eq (fifths_levels T) (2 / 9) two_ninths_pos
     (by norm_num) (shift_twoTerm T) (nm := 5 * 5) (by rw [T.norm_eq]; norm_num) depth 9 9 50
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -91,7 +91,7 @@ theorem fifths_preValid {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : �
       omega
     have : p * p ≤ 5 * 5 := Nat.mul_le_mul hp5 hp5
     omega
-  obtain ⟨n, hn, hle⟩ := pre_gle_any (fifthsInst T) (fifths_arithmetic T) (2 / 9) two_ninths_pos
+  obtain ⟨n, hn, hle⟩ := pre_gle_any (fifthsInst T) (fifths_arithmetic T).L_eq (2 / 9) two_ninths_pos
     (by norm_num) depth i hr2 (by omega) p 7 122 3 49 (20 / 9) (by norm_num) hcF (by norm_num) hbad
     (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
   refine ⟨n, hn, ?_⟩

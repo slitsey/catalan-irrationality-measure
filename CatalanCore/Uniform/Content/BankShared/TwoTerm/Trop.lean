@@ -12,13 +12,15 @@ set_option maxHeartbeats 1600000
 /-! # Table T, tail and prefix for every two-term bank (lane C4, gap C4)
 
 The tropical layer is stated over an arbitrary hybrid instance `I : HybInst Fr` of the frame (the
-instance carries `q`, the norm and the bad primes) with the arithmetic data `ArithmeticInfo I Lc cm`
-and, where the pole index enters, the level facts `LevelFacts I Gd (c < kq)`.  The geometry is
+instance carries `q`, the norm and the bad primes) with `hL : I.cd.L = Lc` (the only arithmetic datum
+used: every prime here is good, so the bad-prime bounds of `ArithmeticInfo` never enter) and, where the
+pole index enters, the level facts `LevelFacts I Gd (c < kq)`.  The geometry is
 `altGeom c` at even scales.
 
 * `kq_eq_poleIndex` (**class map for the instance**, C3): if `Φ(k) = k (q k - o)`, the first root
   `kq p` is the pole index of the root class: `q · kq p = j p + o` with `j = rootClass`.
 * `trop_gle`: every member is `p ^ tropExp`-integral (any prime).
+* `tropExp_le_good`: the good-prime branch of `tropExp_le_arithmetic`, without `ArithmeticInfo`.
 * `T_gle`: one level only (`Lc N < p²`, `p` not bad): `p ^ XGm`-integral.
 * `T_gle_D1`, `T_gle_D1x`, `T_gle_D2`, `T_gle_D3`, `T_gle_D45`, `T_gle_D6`: the six branches of
   table T as clearing exponents (`D2` at its optimal `u₀ = k + p - r`).
@@ -91,9 +93,21 @@ theorem trop_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] (c : ℚ) (hc : 0 < c)
     (retainedFin (altGeom_hybShape c hc hr) S)
   exact hQ ▸ hG
 
+/-- **Good primes** (the good-prime branch of `tropExp_le_arithmetic`; no `ArithmeticInfo`):
+`tropExp ≤ 2 (r + m) cntG + tropVal (HW lev p r m)`. -/
+theorem tropExp_le_good (I : HybInst Fr) (r m p : ℕ) (hr : 1 ≤ r) (hp : p.Prime) (hnb : p ∉ I.cd.bad) :
+    (tropExp I r m p : ℝ) ≤ ((2 * (r + m) * cntG I r m p : ℕ) : ℝ) + (tropVal (HW I.lev p r m) : ℝ) := by
+  have hb := tropExp_le I r m p hr hp hnb
+  rw [cOf_eq_zero I hp hnb, zero_mul, zero_add] at hb
+  have hb' : (tropExp I r m p : ℝ) ≤
+      ((tropVal (HW I.lev p r m) + 2 * (r + m) * cntG I r m p : ℕ) : ℝ) := by
+    exact_mod_cast hb
+  push_cast at hb' ⊢
+  linarith
+
 /-- **Table T bridge.**  One level only (`Lc N < p²`) and `p` not bad: every member is
 `p ^ XGm`-integral, `XGm = tropVal (HW lev p r m)`. -/
-theorem T_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : ArithmeticInfo I Lc cm)
+theorem T_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ} (hL : I.cd.L = Lc)
     (c : ℚ) (hc : 0 < c) (depth : ℕ) (i : ((altGeom c hc).family Fr depth).ι)
     (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ) [Fact p.Prime] (hnb : p ∉ I.cd.bad)
     (hsq : Lc * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p) :
@@ -102,11 +116,11 @@ theorem T_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Arithm
   have hpp : p.Prime := Fact.out
   have hcnt : cntG I i.1 ((altGeom c hc).borderSize i.1) p = 0 := by
     apply cntG_zero _ _ _ _ hpp
-    rw [B.L_eq, pow_two]
+    rw [hL, pow_two]
     exact hsq
-  have hle := tropExp_le_arithmetic B i.1 ((altGeom c hc).borderSize i.1) p hr1 hpp
-  rw [if_neg hnb, hcnt] at hle
-  simp only [if_neg hnb, Nat.cast_zero, mul_zero, add_zero, zero_add] at hle
+  have hle := tropExp_le_good I i.1 ((altGeom c hc).borderSize i.1) p hr1 hpp hnb
+  rw [hcnt] at hle
+  simp only [Nat.cast_zero, mul_zero, zero_add] at hle
   have hle' : tropExp I i.1 ((altGeom c hc).borderSize i.1) p ≤
       XGm I i.1 ((altGeom c hc).borderSize i.1) p := by
     unfold XGm
@@ -117,29 +131,29 @@ theorem T_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Arithm
 
 section Branches
 
-variable (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : ArithmeticInfo I Lc cm)
+variable (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ} (hL : I.cd.L = Lc)
   (c : ℚ) (hc : 0 < c) (depth : ℕ) (i : ((altGeom c hc).family Fr depth).ι)
   (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ) [Fact p.Prime] (hnb : p ∉ I.cd.bad)
   (hsq : Lc * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p)
-include B hr hr1 hnb hsq
+include hL hr hr1 hnb hsq
 
 /-- Branch D1: `2 (r + m)`. -/
 theorem T_gle_D1 :
     GLE p (2 * (i.1 + (altGeom c hc).borderSize i.1)) (((altGeom c hc).family Fr depth).Q i) :=
-  (T_gle I B c hc depth i hr hr1 p hnb hsq).mono (XGm_D1 I _ _ _)
+  (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono (XGm_D1 I _ _ _)
 
 /-- Branch D1x (the sawtooth): `2 r + 2 m - δ_p(m)`, `p` odd. -/
 theorem T_gle_D1x (h2 : p ≠ 2) :
     GLE p (2 * i.1 + 2 * (altGeom c hc).borderSize i.1 -
       min ((altGeom c hc).borderSize i.1 % p) (p - (altGeom c hc).borderSize i.1 % p))
       (((altGeom c hc).family Fr depth).Q i) :=
-  (T_gle I B c hc depth i hr hr1 p hnb hsq).mono (XGm_D1x I _ _ _ Fact.out h2)
+  (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono (XGm_D1x I _ _ _ Fact.out h2)
 
 /-- Branch D3: `2 r + m` on `2 m < p ≤ r`. -/
 theorem T_gle_D3 {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (hm : 2 * (altGeom c hc).borderSize i.1 < p) (hpr : p ≤ i.1) :
     GLE p (2 * i.1 + (altGeom c hc).borderSize i.1) (((altGeom c hc).family Fr depth).Q i) :=
-  (T_gle I B c hc depth i hr hr1 p hnb hsq).mono
+  (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono
     (val_D3 p i.1 _ (lev := I.lev) (Fact.out : p.Prime).one_lt.le
       (fun c' hc' => Lv.high p c' (Fact.out : p.Prime).one_lt.le hc') hm hpr)
 
@@ -153,7 +167,7 @@ theorem T_gle_D2 {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.
       (((altGeom c hc).family Fr depth).Q i) := by
   obtain ⟨u, L, h1, h2, h3, h4, h5⟩ := XGm_D2_good Lv i.1 ((altGeom c hc).borderSize i.1) p
     Fact.out hG hm hpr hk
-  refine (T_gle I B c hc depth i hr hr1 p hnb hsq).mono (h5.trans ?_)
+  refine (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono (h5.trans ?_)
   omega
 
 /-- Branch D45: `2 (r - k) + 2 m + (2 m - (p - r))` on `r < p`, `2 m ≤ r`. -/
@@ -161,7 +175,7 @@ theorem T_gle_D45 {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd
     (hG : Gd p) (hrp : i.1 < p) (hmr : 2 * (altGeom c hc).borderSize i.1 ≤ i.1) :
     GLE p (2 * (i.1 - I.cd.kq p) + 2 * (altGeom c hc).borderSize i.1 +
       (2 * (altGeom c hc).borderSize i.1 - (p - i.1))) (((altGeom c hc).family Fr depth).Q i) :=
-  (T_gle I B c hc depth i hr hr1 p hnb hsq).mono
+  (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono
     (XGm_D45_good Lv i.1 _ p Fact.out hG hrp hmr)
 
 /-- Branch D6: `2 m - (k - r)` on `r + 2 m ≤ p`, `r ≤ k`. -/
@@ -169,7 +183,7 @@ theorem T_gle_D6 {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.
     (hG : Gd p) (hN : i.1 + 2 * (altGeom c hc).borderSize i.1 ≤ p) (hk : i.1 ≤ I.cd.kq p) :
     GLE p (2 * (altGeom c hc).borderSize i.1 - (I.cd.kq p - i.1))
       (((altGeom c hc).family Fr depth).Q i) :=
-  (T_gle I B c hc depth i hr hr1 p hnb hsq).mono
+  (T_gle I hL c hc depth i hr hr1 p hnb hsq).mono
     (XGm_D6_good Lv i.1 _ p Fact.out hG hN hk)
 
 end Branches
@@ -179,7 +193,7 @@ end Branches
 /-- **Tail.**  With the pole index `q · kq p = j p + o` (`j ≥ 1`, `o < q`, `Lc ≤ q ≤ p`, `p ≥ 3`,
 `p` good; needed only at scales `r ≥ 1`) and `q N < p + o + q` (`N = r + 2 m`), every member is
 `p`-integral (exponent `0`): branch D6. -/
-theorem tail_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : ArithmeticInfo I Lc cm)
+theorem tail_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ} (hL : I.cd.L = Lc)
     {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (depth : ℕ) (i : ((altGeom c hc).family Fr depth).ι)
     (hr : i.1 % 2 = 0) {q o j : ℕ} (hLq : Lc ≤ q) (hoq : o < q) (p : ℕ) [hp : Fact p.Prime]
@@ -216,7 +230,7 @@ theorem tail_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Ari
         q * (i.1 + 2 * (altGeom c hc).borderSize i.1) := Nat.mul_le_mul_right _ hLq
     have h2 : 3 * p ≤ p * p := Nat.mul_le_mul_right p hp3
     omega
-  have hgl := T_gle_D6 I B c hc depth i hr hr1 p (not_bad_of_levels Lv hp.out hG) hsq Lv hG hNp
+  have hgl := T_gle_D6 I hL c hc depth i hr hr1 p (not_bad_of_levels Lv hp.out hG) hsq Lv hG hNp
     (by omega)
   exact hgl.mono (by omega)
 
@@ -233,7 +247,7 @@ theorem log2_mul_pow (r e : ℕ) (hr : r ≠ 0) : Nat.log 2 (r * 2 ^ e) = Nat.lo
 /-- **Prefix, good primes** (`p ∉ bad`, `p ≤ r`).  With the bank inequalities `Lc N ≤ A r`,
 `Lc N ≤ 2^e r`, `2 (r + m) e ≤ C r`, `2 (r + m) ≤ C r` and `2 (r + m) ≤ α₀ r + 1`, some clearing
 exponent is at most `α₀ r + X r p`, `X` the budget `sqrtLog A C + unit`. -/
-theorem pre_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : ArithmeticInfo I Lc cm)
+theorem pre_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ} (hL : I.cd.L = Lc)
     (c : ℚ) (hc : 0 < c) (depth : ℕ) (i : ((altGeom c hc).family Fr depth).ι)
     (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ) [hp : Fact p.Prime] (hnb : p ∉ I.cd.bad)
     (A C e : ℕ) (α0 : ℝ)
@@ -254,9 +268,7 @@ theorem pre_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Arit
     congr 1
     simp [SmallBudget.unit, SmallBudget.ofCutoff, hpr]
   have hX0 := (SmallBudget.sqrtLog A C).nonneg r p
-  have hle := tropExp_le_arithmetic B r m p hr1 hp.out
-  rw [if_neg hnb] at hle
-  simp only [if_neg hnb, zero_add] at hle
+  have hle := tropExp_le_good I r m p hr1 hp.out hnb
   have hD1 : XGm I r m p ≤ 2 * (r + m) := XGm_D1 _ _ _ _
   have hXG : (tropVal (HW I.lev p r m) : ℝ) ≤ 2 * ((r : ℝ) + m) := by
     have : tropVal (HW I.lev p r m) ≤ 2 * (r + m) := hD1
@@ -265,7 +277,7 @@ theorem pre_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Arit
   by_cases hsq : p * p ≤ A * r
   · rw [SmallBudget.sqrtLog_X_of A C r p hsq]
     have hcnt := cntG_le I r m p hp.out
-    rw [B.L_eq] at hcnt
+    rw [hL] at hcnt
     have hlog : Nat.log 2 (Lc * (r + 2 * m)) ≤ Nat.log 2 r + e := by
       rw [← log2_mul_pow r e (by omega)]
       exact Nat.log_mono_right he
@@ -287,7 +299,7 @@ theorem pre_gle (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ} (B : Arit
   · push Not at hsq
     have hz : cntG I r m p = 0 := by
       apply cntG_zero _ _ _ _ hp.out
-      rw [B.L_eq, pow_two]
+      rw [hL, pow_two]
       omega
     rw [hz] at hle
     simp only [mul_zero, Nat.cast_zero, zero_add] at hle
@@ -345,8 +357,8 @@ theorem pre_crude (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (depth : ℕ)
 
 /-- **Prefix, every prime `p ≤ r`**: good primes by `pre_gle`, bad primes (`p² ≤ A r`) by the
 crude exponent. -/
-theorem pre_gle_any (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
-    (B : ArithmeticInfo I Lc cm) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (depth : ℕ)
+theorem pre_gle_any (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ}
+    (hL : I.cd.L = Lc) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (depth : ℕ)
     (i : ((altGeom c hc).family Fr depth).ι) (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ)
     [hp : Fact p.Prime] (A C e cE : ℕ) (α0 : ℝ) (hα0 : 0 ≤ α0) (hcE : cFr Fr ≤ cE)
     (hC : 2 * (cE + 12) ≤ C) (hbad : p ∈ I.cd.bad → p * p ≤ A * i.1)
@@ -359,6 +371,6 @@ theorem pre_gle_any (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
       (n : ℝ) ≤ α0 * i.1 + (SmallBudget.add (SmallBudget.sqrtLog A C) SmallBudget.unit).X i.1 p := by
   by_cases hb : p ∈ I.cd.bad
   · exact pre_crude c hc hc1 depth i hr p A C cE α0 hα0 hcE hC (hbad hb) hpr
-  · exact pre_gle I B c hc depth i hr hr1 p hb A C e α0 hA he hC1 hC2 h0 hpr
+  · exact pre_gle I hL c hc depth i hr hr1 p hb A C e α0 hA he hC1 hC2 h0 hpr
 
 end CatalanCore.Uniform.Content.BankShared.TwoTerm

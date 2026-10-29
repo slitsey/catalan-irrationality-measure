@@ -72,7 +72,7 @@ example {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ)
     (i : (FamE Fr depth).ι) (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ) [Fact p.Prime]
     (hp5 : 5 ≤ p) (hsq : 3 * (i.1 + 2 * G310.borderSize i.1) < p * p) :
     GLE p (XGm (thirdsInst T) i.1 (G310.borderSize i.1) p) ((FamE Fr depth).Q i) :=
-  T_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)) (3 / 10) c310_pos depth i hr hr1 p
+  T_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (3 / 10) c310_pos depth i hr hr1 p
     (not_bad_of_levels (thirds_levels T) Fact.out hp5) hsq
 
 /-- `thirds_tail_gle`. -/
@@ -84,7 +84,7 @@ example {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ)
   have he := T.he
   have key : ∀ j, 1 ≤ j → (1 ≤ i.1 → 3 * (thirdsInst T).cd.kq p = j * p + e) →
       GLE p 0 ((FamE Fr depth).Q i) := fun j hj hk =>
-    tail_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)) (thirds_levels T) (3 / 10) c310_pos
+    tail_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (thirds_levels T) (3 / 10) c310_pos
       (by norm_num) depth i hr2 (q := 3) (o := e) (by norm_num) (by omega) p
       (fun h1 => ⟨by show 5 ≤ p; omega, by omega, by omega, hk h1⟩) hj (by omega)
   rcases Nat.eq_zero_or_pos i.1 with h0 | h0
@@ -107,7 +107,7 @@ example {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ)
   obtain ⟨hk1, hk2⟩ := altGeom_border_nat (3 / 10) c310_pos 3 10 (by norm_num) (by norm_num) hr2
   have hR : (10 : ℝ) * (2 * ((altGeom (3 / 10) c310_pos).borderSize i.1 : ℝ)) < 3 * i.1 + 10 := by
     exact_mod_cast hk2
-  exact pre_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)) (3 / 10) c310_pos depth i hr2
+  exact pre_gle (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (3 / 10) c310_pos depth i hr2
     (by omega) p (not_bad_of_levels (thirds_levels T) hp.out hp5) 5 5 2 (23 / 10)
     (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
 
@@ -222,7 +222,7 @@ example {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : ℕ)
     (p : ℕ) [Fact p.Prime] (hp7 : 7 ≤ p) (hsq : 5 * (i.1 + 2 * F5.borderSize i.1) < p * p) :
     GLE p (XGm (fifthsInst T) i.1 (F5.borderSize i.1) p)
       ((AltE (2 / 9) two_ninths_pos Fr depth).Q i) :=
-  T_gle (fifthsInst T) (fifths_arithmetic T) (2 / 9) two_ninths_pos depth i hr hr1 p
+  T_gle (fifthsInst T) (fifths_arithmetic T).L_eq (2 / 9) two_ninths_pos depth i hr hr1 p
     (not_bad_of_levels (fifths_levels T) Fact.out hp7) hsq
 
 /-- `tail5`. -/
@@ -235,7 +235,7 @@ example {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth j : ℕ) (hj : 1 �
   have hr2 : i.1 % 2 = 0 := hi.2
   obtain ⟨hb1, hb2⟩ := altGeom_border_nat (2 / 9) two_ninths_pos 2 9 (by norm_num) (by norm_num) hr2
   have hu := T.hu1
-  exact tail_gle (fifthsInst T) (fifths_arithmetic T) (fifths_levels T) (2 / 9) two_ninths_pos
+  exact tail_gle (fifthsInst T) (fifths_arithmetic T).L_eq (fifths_levels T) (2 / 9) two_ninths_pos
     (by norm_num) depth i hr2 (q := 5) (o := u) (by norm_num) hu p
     (fun h1 => ⟨by show 7 ≤ p; omega, by omega, by omega, hk h1⟩) hj (by omega)
 
@@ -268,7 +268,7 @@ example {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : ℕ)
       omega
     have : p * p ≤ 5 * 5 := Nat.mul_le_mul hp5 hp5
     omega
-  obtain ⟨n, hn, hle⟩ := pre_gle_any (fifthsInst T) (fifths_arithmetic T) (2 / 9) two_ninths_pos
+  obtain ⟨n, hn, hle⟩ := pre_gle_any (fifthsInst T) (fifths_arithmetic T).L_eq (2 / 9) two_ninths_pos
     (by norm_num) depth i hr2 (by omega) p 7 122 3 49 (20 / 9) (by norm_num) hcF (by norm_num) hbad
     (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
   refine ⟨n, hn, ?_⟩

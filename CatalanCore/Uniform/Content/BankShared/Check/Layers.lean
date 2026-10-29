@@ -174,8 +174,8 @@ theorem catValid_win (c : ℚ) (hc : 0 < c) {Fr : Frame} {q o : ℕ} (T : TwoTer
 
 /-! ### Table T -/
 
-theorem catValid_tableT {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
-    (B : ArithmeticInfo I Lc cm) {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
+theorem catValid_tableT {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ}
+    (hL : I.cd.L = Lc) {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (depth q o Pbad N0 : ℕ) (hLq : Lc ≤ q)
     (hP : ∀ p : ℕ, p.Prime → Pbad < p → p ∉ I.cd.bad ∧ Gd p ∧ p ≠ 2)
     (hkq : ∀ p : ℕ, p.Prime → Pbad < p → ∀ j k : ℕ, q * k = j * p + o → 0 < j → j < q → 0 < k →
@@ -198,26 +198,26 @@ theorem catValid_tableT {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {L
     omega
   simp only [tableT, List.mem_cons, List.not_mem_nil, or_false] at hb
   rcases hb with rfl | rfl | rfl | rfl | rfl | rfl
-  · exact ⟨_, T_gle_D1 I B c hc depth i hr hr1 p hnb hsq, by simp only [brD1, zero_mul, add_zero]; exact le_refl _⟩
-  · exact ⟨_, T_gle_D1x I B c hc depth i hr hr1 p hnb hsq hp2,
+  · exact ⟨_, T_gle_D1 I hL c hc depth i hr hr1 p hnb hsq, by simp only [brD1, zero_mul, add_zero]; exact le_refl _⟩
+  · exact ⟨_, T_gle_D1x I hL c hc depth i hr hr1 p hnb hsq hp2,
       by simp only [brD1x, zero_mul, add_zero]; exact le_refl _⟩
   · have h1 := holds_2mltp (hcond c2mltp (by simp [brD2]))
     have h2 := holds_Pler (hcond cPler (by simp [brD2]))
     have h3 := holds_Kler (hcond cKler (by simp [brD2]))
-    have hg := T_gle_D2 I B c hc depth i hr hr1 p hnb hsq Lv hG h1 h2 (by rw [hkq']; exact h3)
+    have hg := T_gle_D2 I hL c hc depth i hr hr1 p hnb hsq Lv hG h1 h2 (by rw [hkq']; exact h3)
     rw [hkq'] at hg
     exact ⟨_, hg, by simp only [brD2, zero_mul, add_zero]; exact le_refl _⟩
   · have h1 := holds_2mltp (hcond c2mltp (by simp [brD3]))
     have h2 := holds_Pler (hcond cPler (by simp [brD3]))
-    exact ⟨_, T_gle_D3 I B c hc depth i hr hr1 p hnb hsq Lv h1 h2,
+    exact ⟨_, T_gle_D3 I hL c hc depth i hr hr1 p hnb hsq Lv h1 h2,
       by simp only [brD3, zero_mul, add_zero]; exact le_refl _⟩
   · have h1 := holds_Rltp (hcond cRltp (by simp [brD45]))
-    have hg := T_gle_D45 I B c hc depth i hr hr1 p hnb hsq Lv hG h1 hmr
+    have hg := T_gle_D45 I hL c hc depth i hr hr1 p hnb hsq Lv hG h1 hmr
     rw [hkq'] at hg
     exact ⟨_, hg, by simp only [brD45, zero_mul, add_zero]; exact le_refl _⟩
   · have h1 := holds_Nlep (hcond cNlep (by simp [brD6]))
     have h2 := holds_Rlek (hcond cRlek (by simp [brD6]))
-    have hg := T_gle_D6 I B c hc depth i hr hr1 p hnb hsq Lv hG h1 (by rw [hkq']; exact h2)
+    have hg := T_gle_D6 I hL c hc depth i hr hr1 p hnb hsq Lv hG h1 (by rw [hkq']; exact h2)
     rw [hkq'] at hg
     exact ⟨_, hg, by simp only [brD6, zero_mul, add_zero]; exact le_refl _⟩
 
@@ -225,8 +225,8 @@ theorem catValid_tableT {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {L
 
 /-- **The catalogue of a two-term bank**: table T, LP1, LP2, the rank branch and any M3D windows, given the rank
 branch (lane C2L) as the one remaining hypothesis. -/
-theorem catValid_twoTerm {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc cm : ℕ}
-    (B : ArithmeticInfo I Lc cm) {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
+theorem catValid_twoTerm {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {Lc : ℕ}
+    (hL : I.cd.L = Lc) {Gd : ℕ → Prop} (Lv : LevelFacts I Gd (fun q c => c < I.cd.kq q))
     (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) {q o : ℕ} (T : TwoTermData Fr q o) {nm : ℕ}
     (hnorm : Fr.norm = (nm : ℚ)) (depth Pbad N0 : ℕ) (hq : 0 < q) (hLq : Lc ≤ q)
     (hP : ∀ p : ℕ, p.Prime → Pbad < p →
@@ -236,7 +236,7 @@ theorem catValid_twoTerm {Fr : Frame} (I : HybInst Fr) [∀ r m, I.DiagOK r m] {
     (hrank : CatValid c hc Fr depth q o Pbad N0 [brRank]) (wins : List (ℕ × ℕ)) :
     CatValid c hc Fr depth q o Pbad N0
       (tableT ++ ([brLP1, brLP2, brRank] ++ wins.map (fun w => brWin w.1 w.2))) := by
-  refine catValid_append (catValid_tableT I B Lv c hc hc1 depth q o Pbad N0 hLq
+  refine catValid_append (catValid_tableT I hL Lv c hc hc1 depth q o Pbad N0 hLq
     (fun p hp h => ⟨(hP p hp h).2.2.2.1, (hP p hp h).2.2.2.2.1, (hP p hp h).2.2.2.2.2⟩) hkq) ?_
   have hLP := catValid_LP c hc T hnorm depth Pbad N0 (fun p hp h => ⟨(hP p hp h).1, (hP p hp h).2.1,
     (hP p hp h).2.2.1⟩)

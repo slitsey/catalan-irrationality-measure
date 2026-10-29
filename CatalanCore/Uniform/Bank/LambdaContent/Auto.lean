@@ -57,7 +57,7 @@ theorem cFr_mirN : cFr mirNFrame ≤ 36 := by decide +kernel
 theorem lamMinus_catValid (depth : ℕ) :
     CatValid (1 / 5) one_fifth_pos lamFrame depth 4 1 28
       (max (NFr (1 / lamFrame.norm) (-1 / lamFrame.norm) 4 10) 44) bankData.cat :=
-  catValid_bankUF lamInst (arith_of_bad lam_badInfo) lam_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
+  catValid_bankUF lamInst (arith_of_bad lam_badInfo).L_eq lam_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
     (by norm_num) lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -92,7 +92,7 @@ theorem lamMinus_preValid (depth : ℕ) :
     have hp3 : p ≤ 3 := lam_badInfo.bad_le p hpb
     have : p * p ≤ 3 * 3 := Nat.mul_le_mul hp3 hp3
     omega
-  obtain ⟨n, hn, hle⟩ := pre_gle_any lamInst (arith_of_bad lam_badInfo) (1 / 5) one_fifth_pos
+  obtain ⟨n, hn, hle⟩ := pre_gle_any lamInst (arith_of_bad lam_badInfo).L_eq (1 / 5) one_fifth_pos
     (by norm_num) depth i hr2 (by omega) p 5 96 3 36 (11 / 5) (by norm_num) cFr_lamMinus (by norm_num) hbad
     (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
   refine ⟨n, hn, ?_⟩
@@ -114,7 +114,7 @@ theorem lamMinus_content_auto (depth : ℕ) (hd : depth ≤ 64) :
 theorem mirN_catValid (depth : ℕ) :
     CatValid (1 / 5) one_fifth_pos mirNFrame depth 4 3 28
       (max (NFr (1 / mirNFrame.norm) (-1 / mirNFrame.norm) 4 10) 44) bankData.cat :=
-  catValid_bankUF mirNInst (arith_of_bad mirBad) mirN_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
+  catValid_bankUF mirNInst (arith_of_bad mirBad).L_eq mirN_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
     (by norm_num) mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -148,7 +148,7 @@ theorem mirN_preValid (depth : ℕ) :
     have hp3 : p ≤ 3 := mirBad.bad_le p hpb
     have : p * p ≤ 3 * 3 := Nat.mul_le_mul hp3 hp3
     omega
-  obtain ⟨n, hn, hle⟩ := pre_gle_any mirNInst (arith_of_bad mirBad) (1 / 5) one_fifth_pos
+  obtain ⟨n, hn, hle⟩ := pre_gle_any mirNInst (arith_of_bad mirBad).L_eq (1 / 5) one_fifth_pos
     (by norm_num) depth i hr2 (by omega) p 5 96 3 36 (11 / 5) (by norm_num) cFr_mirN (by norm_num) hbad
     (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
   refine ⟨n, hn, ?_⟩

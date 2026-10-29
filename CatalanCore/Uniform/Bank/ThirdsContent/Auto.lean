@@ -92,7 +92,7 @@ bound `N0 = NFr` of `rankClosedLayer` and `K = 7` (`(3/10) · 7 ≥ 2`). -/
 theorem thirds_catValid {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ) :
     CatValid (3 / 10) c310_pos Fr depth 3 e 5 (NFr (1 / Fr.norm) (-1 / Fr.norm) 3 7) noUF.cat := by
   have he := T.he
-  exact catValid_bank (thirdsInst T) (arith_of_bad (thirds_badInfo T)) (thirds_levels T) (3 / 10)
+  exact catValid_bank (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (thirds_levels T) (3 / 10)
     c310_pos (by norm_num) (ThirdsData.twoTerm T) (nm := 3 * 3) (by rw [T.norm_eq]; norm_num) depth 5 7
     (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,

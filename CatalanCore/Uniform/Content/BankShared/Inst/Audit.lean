@@ -110,6 +110,7 @@ set_option pp.fullNames true
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_hP
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_hkq
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_arithmetic
+#print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_L
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_catValid_bank
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_catValid_bankUF
 #print axioms CatalanCore.Uniform.Content.BankShared.Inst.seventhsInst_not_arithmetic
