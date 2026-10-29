@@ -146,19 +146,25 @@ end {C.mod}
 
 
 # ---------------------------------------------------------------------------------- gen
-def run_slices(C, tmpl, name, args_for, nslices, label, gb):
+def run_slices(C, tmpl, name, args_for, nslices, label, gb, maxpar=None):
+    """Run `nslices` generator jobs through the driver, at most `maxpar` submitted at a time (all at
+    once if None). Short jobs (one spec line each) let builds and research run between them."""
     src = open(os.path.join(HERE, tmpl), encoding='utf-8').read()
     src = src.replace('@ENV0@', C.mod + '.Env0').replace('@ENVNS@', C.mod)
     gl = os.path.join(C.scratch, name + '.lean')
     open(gl, 'w', encoding='utf-8', newline='\n').write(src)
-    procs = []
-    for k in range(nslices):
-        out = os.path.join(C.scratch, f'{name}_{k}.out')
-        cmd = [PY, '-I', '-X', 'utf8', LANES, 'run', f'{label}{k}', str(gb), '--', PY, '-I', '-X', 'utf8',
-               os.path.join(HERE, 'runlean.py'), out, gl] + args_for(k)
-        procs.append(subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT))
-    for p in procs:
-        p.communicate()
+    live, todo = [], list(range(nslices))
+    while todo or live:
+        while todo and (maxpar is None or len(live) < maxpar):
+            k = todo.pop(0)
+            out = os.path.join(C.scratch, f'{name}_{k}.out')
+            cmd = [PY, '-I', '-X', 'utf8', LANES, 'run', f'{label}{k}', str(gb), '--', PY, '-I', '-X', 'utf8',
+                   os.path.join(HERE, 'runlean.py'), out, gl] + args_for(k)
+            live.append(subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT))
+        time.sleep(5)
+        for q in [q for q in live if q.poll() is not None]:
+            q.communicate()
+            live.remove(q)
     return [os.path.join(C.scratch, f'{name}_{k}.out') for k in range(nslices)]
 
 
@@ -185,8 +191,11 @@ def cmd_gen(C, a):
         spec = [l for l in spec if (l.split()[0] == 'M') or (('T' + l.split()[1]) if l.startswith('T ') else l.split()[0]) in keep]
     sp = os.path.join(C.scratch, 'spec.txt')
     open(sp, 'w').write('\n'.join(spec) + '\n')
-    n = a.slices
-    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n, a.label or f'{C.bank}gen', a.gb)
+    # one driver job per spec line (each tube edge, the line, the cap) unless --slices is given, with at
+    # most --maxpar in flight: short jobs, so builds and research are not starved for hours
+    n = a.slices if a.slices > 0 else len([l for l in spec if not l.startswith('M')])
+    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n,
+                      a.label or f'{C.bank}gen', a.gb, maxpar=a.maxpar)
     if a.cmd in ('gen', 'all') and not a.noE:
         cmd_genE(C, a)
 
@@ -618,7 +627,7 @@ def cmd_build(C, a):
             if m is None:
                 time.sleep(3)
                 continue
-            r = subprocess.run([PY, '-I', '-X', 'utf8', LANES, 'submit', m, str(8 if m.endswith(('.Check', '.Decay')) else 6 if m.endswith('.Glob') else a.gb)], cwd=ROOT,
+            r = subprocess.run([PY, '-I', '-X', 'utf8', LANES, 'submit', m, str(5 if m.endswith(('.Check', '.Decay')) else 6 if m.endswith('.Glob') else a.gb)], cwd=ROOT,
                                capture_output=True, text=True)
             ok = r.returncode == 0
             with lock:
@@ -643,7 +652,9 @@ if __name__ == '__main__':
     ap.add_argument('--K', type=int, default=24, help='multipole order (0: no multipole cells)')
     ap.add_argument('--J', type=int, default=12)
     ap.add_argument('--centre', default=None, help='multipole centre (real), default midpoint of the support')
-    ap.add_argument('--slices', type=int, default=4)
+    ap.add_argument('--slices', type=int, default=0,
+                    help='0: one driver job per spec line (default); k>0: k bundled slices')
+    ap.add_argument('--maxpar', type=int, default=2, help='generator jobs in flight at once')
     ap.add_argument('--only', default=None, help='comma list of spec lines to run, e.g. T3,T4,L,CP (tests)')
     ap.add_argument('--noE', action='store_true', help='skip the energy/G jobs')
     ap.add_argument('--capfrac', type=Fr, default=Fr(19, 20), help='fraction of the receipt cap excess the cap cells may spend')
