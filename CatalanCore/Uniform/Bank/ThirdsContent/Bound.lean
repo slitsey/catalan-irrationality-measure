@@ -56,3 +56,6 @@ theorem thirds_minus_measure :
   MeasureUF.thirds_measure_minus thirdsBc_decay
 
 end CatalanCore.Uniform.Bank.ThirdsContent.Bound
+
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Bound.thirds_plus_measure
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Bound.thirds_minus_measure

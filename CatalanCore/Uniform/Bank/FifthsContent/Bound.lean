@@ -76,3 +76,8 @@ theorem fifths4_measure : Measure.MeasureLBAt (fifthsTarget 4) ((59983 / 2500 : 
       (m0_le _ _ _ _ _ _ (by norm_num)) _)
 
 end CatalanCore.Uniform.Bank.FifthsContent.Bound
+
+#print axioms CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths1_measure
+#print axioms CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths2_measure
+#print axioms CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths3_measure
+#print axioms CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths4_measure
