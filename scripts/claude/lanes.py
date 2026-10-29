@@ -110,6 +110,21 @@ def tree_usage(roots):
     return out
 
 
+def hold_refusal(target):
+    """Coordinator hold: `hold.txt` lines `<target prefix>  # reason`. A matching job (build or
+    `run` job, whose target is `job.<label>`) is refused with rc 95 and the reason; nothing builds."""
+    try:
+        lines = (LANES / 'hold.txt').read_text(encoding='utf-8').splitlines()
+    except OSError:
+        return None
+    for l in lines:
+        pre, _, why = l.partition('#')
+        pre = pre.strip()
+        if pre and (target == pre or target.startswith(pre)):
+            return why.strip() or pre
+    return None
+
+
 def registry_refusal(target):
     """CANONICAL.md enforcement: a NEW (untracked) module must sit under a registered prefix
     and must not be a scratch/pilot/demo file. Tracked modules always build."""
@@ -234,6 +249,14 @@ def drive():
                 # if this job has waited > STARVE seconds, nothing behind it may backfill.
                 if time.time() - float(s.get('submitted', time.time())) > STARVE:
                     break
+        if pick:
+            why = hold_refusal(spec['target'])
+            if why:
+                spec.update(rc=95, ended=time.time(), output='lanes: held by coordinator: ' + why)
+                (DONE / f'{pick.stem}.json').write_text(json.dumps(spec), encoding='utf-8')
+                pick.unlink(missing_ok=True)
+                log(f"refuse-hold {spec['target']}")
+                pick = None
         if pick and not spec.get('cmd'):
             why = registry_refusal(spec['target'])
             if why:
