@@ -257,6 +257,12 @@ def drive():
                 pick = None
         if pick:
             b = float(spec.get('budget', 3))
+            # 28 Oct 20:45: roots submitted with budget 3 were guard-killed (cap 1.5x budget) although
+            # their class peak was known. Give the guard at least the forecast working set x 1.2.
+            gb = max(b, -(-1.2 * est(spec['target'])[1] // 1))
+            if gb > b:
+                log(f"raise-budget {spec['target']} {b:.0f}->{gb:.0f}")
+                b = gb
             if True:
                 jid = pick.stem
                 pick.rename(RUN / pick.name)
