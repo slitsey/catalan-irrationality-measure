@@ -171,21 +171,22 @@ def cmd_gen(C, a):
     cx = Fr(round((min(xs) + max(xs)) / 2 * 10), 10) if a.centre is None else Fr(a.centre)
     ex = json.load(open(gen_bank.BANKS[C.bank]['exact']))
     budget = Fr(ex['cap_excess'])        # the receipt's cap excess = budget for sum (width * (ub - m'))
-    tau = Fr(round(float(a.taufrac * budget / C.d['sc']['r0']) * 10 ** 18), 10 ** 18)
-    print('cap budget', float(budget), 'tau', float(tau))
+    # the cap cells may spend this much in all; the generator spreads it over the excess region at -r0
+    R0 = Fr((a.capfrac * budget * 10 ** 18).__floor__(), 10 ** 18)
+    print('cap budget', float(budget), 'spent at most', float(R0))
     spec = []
     if a.K > 0:
         spec.append(f'M {cx.numerator} {cx.denominator} 0 1 {a.K} {a.J}')
     for e in range(C.nE):
         spec.append(f'T {e}')
-    spec += ['L', f'{a.capmode} {tau.numerator} {tau.denominator}']
+    spec += ['L', f'{a.capmode} {R0.numerator} {R0.denominator}']
     if a.only:
         keep = set(a.only.split(','))
         spec = [l for l in spec if (l.split()[0] == 'M') or (('T' + l.split()[1]) if l.startswith('T ') else l.split()[0]) in keep]
     sp = os.path.join(C.scratch, 'spec.txt')
     open(sp, 'w').write('\n'.join(spec) + '\n')
     n = a.slices
-    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n, f'{C.bank}gen', a.gb)
+    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n, a.label or f'{C.bank}gen', a.gb)
     if a.cmd in ('gen', 'all') and not a.noE:
         cmd_genE(C, a)
 
@@ -215,7 +216,7 @@ def read_gen(C, capfile=None):
             if ln.startswith('FAIL'):
                 fails.append(ln)
                 continue
-            if ln.startswith('MPNONE'):
+            if ln.startswith('MPNONE') or ln.startswith('#'):
                 continue
             if ln.startswith('MP '):
                 head, mu = [x.strip() for x in ln.split('|')]
@@ -617,7 +618,7 @@ def cmd_build(C, a):
             if m is None:
                 time.sleep(3)
                 continue
-            r = subprocess.run([PY, '-I', '-X', 'utf8', LANES, 'submit', m, str(8 if m.endswith(('.Check', '.Decay')) else a.gb)], cwd=ROOT,
+            r = subprocess.run([PY, '-I', '-X', 'utf8', LANES, 'submit', m, str(8 if m.endswith(('.Check', '.Decay')) else 6 if m.endswith('.Glob') else a.gb)], cwd=ROOT,
                                capture_output=True, text=True)
             ok = r.returncode == 0
             with lock:
@@ -645,7 +646,8 @@ if __name__ == '__main__':
     ap.add_argument('--slices', type=int, default=4)
     ap.add_argument('--only', default=None, help='comma list of spec lines to run, e.g. T3,T4,L,CP (tests)')
     ap.add_argument('--noE', action='store_true', help='skip the energy/G jobs')
-    ap.add_argument('--taufrac', type=Fr, default=Fr(9, 10), help='fraction of the receipt cap excess spent by cap cells')
+    ap.add_argument('--capfrac', type=Fr, default=Fr(19, 20), help='fraction of the receipt cap excess the cap cells may spend')
+    ap.add_argument('--label', default=None, help='driver job label of the generator slices (default <bank>gen)')
     ap.add_argument('--eslices', type=int, default=2)
     ap.add_argument('--gb', type=float, default=2.5)
     ap.add_argument('--parallel', type=int, default=3)

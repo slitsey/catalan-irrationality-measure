@@ -426,16 +426,44 @@ def bestCapR (usePL : Bool) (a b : ℚ) (aBp bBp : Bool) : CapR :=
     | none => c
   else c
 
-/-- Greedy cap cover: the widest cell `[a, e]` whose excess `∫ (ub - m')` is at most `τ (e - a)`, where
-`τ` is the cap's share of the receipt's excess budget (total cost ≤ τ r₀ ≤ the receipt's `cap_excess`). -/
-partial def greedyCap (usePL : Bool) (tau : ℚ) (a b : ℚ) (bpsL : List ℚ) (w : ℚ) (fuel : ℕ) : List (ℚ × ℚ × CapR) :=
+/-- The cap's excess `(ub - m')₊` at `x`, from a cell of width `10⁻¹²`: close to the true `(g - m')₊`. -/
+def excessAt (usePL : Bool) (bpsL : List ℚ) (x : ℚ) : ℚ :=
+  let e := x + 1 / 10 ^ 12
+  match bestCapR usePL x e (bpsL.contains x) false with
+  | .fail => 1
+  | r => capCost x e r * 10 ^ 12
+
+/-- The end of the excess region next to `-r₀`: the first grid point (64 steps) to the right of `-r₀` with
+no excess, sharpened by 30 bisection steps against the last point with excess. -/
+def excessEnd (usePL : Bool) (bpsL : List ℚ) : ℚ :=
+  let r0 := Dc.r0
+  let grid := (List.range 64).map fun i => -r0 + r0 * ((i + 1 : ℕ) : ℚ) / 64
+  match grid.find? (fun x => excessAt usePL bpsL x == 0) with
+  | none => 0
+  | some z =>
+    let rec bis (lo hi : ℚ) : ℕ → ℚ
+      | 0 => hi
+      | k + 1 =>
+        let mid := rbq ((lo + hi) / 2)
+        if mid ≤ lo || mid ≥ hi then hi
+        else if excessAt usePL bpsL mid == 0 then bis lo mid k else bis mid hi k
+    bis (max (-r0) (z - r0 / 64)) z 30
+
+/-- Greedy cap cover: the widest cell `[a, e]` whose excess `∫ (ub - m')` fits the remaining budget `R`
+spread evenly over the rest of the excess region `[a, xEnd]` (over `[a, 0]` once past it), and never more
+than `R`. Total cost ≤ the starting budget ≤ the receipt's `cap_excess`; the Lean check is that one sum,
+so where the budget is spent is a search choice only. -/
+partial def greedyCap (usePL : Bool) (xEnd R : ℚ) (a b : ℚ) (bpsL : List ℚ) (w : ℚ) (fuel : ℕ) :
+    List (ℚ × ℚ × CapR) :=
   if a ≥ b then [] else
   if fuel = 0 then [(a, b, .fail)] else
   let tr := fun (e : ℚ) =>
     let r := bestCapR usePL a e (bpsL.contains a) (bpsL.contains e)
     match r with
     | .fail => none
-    | r => if capCost a e r ≤ tau * (e - a) || e - a < 1 / 10 ^ 13 then some r else none
+    | r =>
+      let rate := if a < xEnd then R / (xEnd - a) else R / (-a)
+      if capCost a e r ≤ min (rate * (e - a)) R || e - a < 1 / 10 ^ 13 then some r else none
   match (if b - a ≤ 2 * w then tr b else none) with
   | some r => [(a, b, r)]
   | none =>
@@ -472,7 +500,7 @@ partial def greedyCap (usePL : Bool) (tau : ℚ) (a b : ℚ) (bpsL : List ℚ) (
           | some r => refine mid r hi k
           | none => refine lo rl mid k
       let (e2, r2) := if e1 ≥ b then (e1, r1) else refine e1 r1 eb 30
-      (a, e2, r2) :: greedyCap usePL tau e2 b bpsL (e2 - a) (fuel - 1)
+      (a, e2, r2) :: greedyCap usePL xEnd (max (R - capCost a e2 r2) 0) e2 b bpsL (e2 - a) (fuel - 1)
 
 /-! ### the multipole data -/
 
@@ -510,20 +538,28 @@ def process (Mopt : Option MPData) (line : String) : IO Unit := do
         | some f => IO.println s!"L {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL L {p.num} {p.den} {q.num} {q.den}"
   | tag :: rest =>
-    let tau : ℚ := match rest with
-      | [tn, td] => qOf tn td
-      | _ => 1 / 100000000000
+    let R0 : ℚ := match rest with
+      | [rn, rd] => qOf rn rd
+      | _ => 0
     if tag == "C" || tag == "CP" then
       let bl := realBps (-Dc.r0) 0
       let B := sortQ (([-Dc.r0, 0] ++ bl).eraseDups)
+      let usePL := tag == "CP"
+      let xEnd := excessEnd usePL bl
+      let x0 := excessAt usePL bl (-Dc.r0)
+      IO.println s!"# cap budget {GenC.qf R0} excess at -r0 {GenC.qf x0} excess region ends {GenC.qf xEnd}"
+      (← IO.getStdout).flush
+      let mut R := R0
       for (x, y) in B.zip B.tail do
-        for (p, q, r) in greedyCap (tag == "CP") tau x y bl ((y - x) / 16) 400 do
+        for (p, q, r) in greedyCap (tag == "CP") xEnd R x y bl ((y - x) / 16) 400 do
+          R := max (R - capCost p q r) 0
           match r with
           | .const ub f =>
             IO.println s!"C {p.num} {p.den} {q.num} {q.den} | {ub.num} {ub.den} | {showInts (kindInts f.kind)}"
           | .lin ua ub n lo C Fs =>
             IO.println s!"PL {p.num} {p.den} {q.num} {q.den} | {ua.num} {ua.den} {ub.num} {ub.den} | {n} {lo.num} {lo.den} {Fs.num} {Fs.den} {C.length} {showInts ((C.map pairInts).flatten)}"
           | .fail => IO.println s!"FAIL C {p.num} {p.den} {q.num} {q.den}"
+        (← IO.getStdout).flush
   | _ => IO.eprintln s!"bad line {line}"
 
 end GenC
