@@ -8,7 +8,8 @@ import CatalanCore.Uniform.Decay.PolyWire3.Decode
 trusted from the search).  Cell kinds tried: far (bank rule), multipole `mp`, jets of order 5..8,
 mixed (near pieces by distance), and the breakpoint cell `bp` next to every piece endpoint; each on the
 pieces with those reversed whose line the cell crosses beyond their end (`wallMask`, `CellKind.flip`).  Spec
-lines: `T e` (tube edge e), `L` (line), `C` (cap), `M cre_n cre_d cim_n cim_d K J`. -/
+lines: `T e` (tube edge e), `L` (line), `C` (cap), `M cre_n cre_d cim_n cim_d K J`.  An optional fourth argument
+is a plan file (plan-then-verify, see `planSeg`); without it the search is unchanged. -/
 
 open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.NearFast
   CatalanCore.Uniform.Decay.Tools CatalanCore.Uniform.Decay.PolyWire CatalanCore.Uniform.Decay.PolyWire2
@@ -321,6 +322,130 @@ def coverSeg (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ
     out := out ++ greedyCover ps M geom cpi m' farOk lo hi ((hi - lo) / 16) 400
   return out ++ tailCells
 
+/-! ### plan-then-verify (GenSpeed, 29 Oct)
+
+A plan is a list of proposed cells `[p, q]` of one spec line, with an optional kind hint (`some (some side)`:
+breakpoint cell of that side; `some none`: any other kind; `none`: no hint).  The planned endpoints inside
+each breakpoint segment `[x, y]` partition it; each part is tried once per kind in the existing order and,
+only if all fail, covered by the existing search (`coverSeg`) on that part.  Every emitted cell still passed
+`kindOk`, and the chain is contiguous by construction. -/
+
+/-- The breakpoint cell of side `side` on exactly `[a, b]`, orders 8, 6, 5 (the trial of `bpCellAt`). -/
+def bpTry (ps : List WP) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ) (a b : ℚ) (side : Bool) :
+    Option Found := Id.run do
+  let (zc, dd, h) := geom a b
+  let fl := wallMask ps (bpPoint side zc dd h) (bpDir side dd) (2 * h)
+  let ps' := flipAt fl ps
+  let mut res : Option Found := none
+  for n in [8, 6, 5] do
+    if res.isNone then
+      match evalBp n side ps' zc dd h cpi with
+      | some f =>
+        let f := wrapF fl f
+        if checkKind ps none zc dd h cpi m' f.kind then res := some f
+      | none => pure ()
+  return res
+
+/-- One planned cell, each kind once: with a breakpoint hint that cell first, with a general hint the
+general kinds first; without a hint the breakpoint cells at breakpoint ends first. -/
+def planCell (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (isBp : ℚ → Bool) (hint : Option (Option Bool)) (a b : ℚ) : Option Found := Id.run do
+  let sides : List Bool := match hint with
+    | some (some s) => [s]
+    | _ => (if isBp a then [false] else []) ++ (if isBp b then [true] else [])
+  let genFirst := match hint with
+    | some none => true
+    | _ => false
+  if genFirst then
+    match trialCell ps M geom cpi m' farOk a b with
+    | some f => return some f
+    | none => pure ()
+  for s in sides do
+    match bpTry ps geom cpi m' a b s with
+    | some f => return some f
+    | none => pure ()
+  if !genFirst then
+    match trialCell ps M geom cpi m' farOk a b with
+    | some f => return some f
+    | none => pure ()
+  return none
+
+abbrev PlanCells := List (ℚ × ℚ × Option (Option Bool))
+
+/-- The planned cover of the breakpoint segment `[x, y]`, and the number of parts that fell back to the
+search.  With `merge` (a plan line `MERGE`), consecutive planned cells are joined where the joined cell
+passes (doubling and bisection over the planned points). -/
+def planSeg (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (x y : ℚ) (isBp : ℚ → Bool) (farOk : ℚ → ℚ → Bool) (pl : PlanCells) (merge : Bool) :
+    List (ℚ × ℚ × Option Found) × ℕ := Id.run do
+  let inner := (sortQ ((pl.flatMap fun (p, q, _) => [p, q]).filter (fun t => x < t && t < y))).eraseDups
+  let pts := [x] ++ inner ++ [y]
+  let hintAt := fun (a b : ℚ) => (pl.find? (fun (p, q, _) => p == a && q == b)).bind (fun t => t.2.2)
+  let mut out : List (ℚ × ℚ × Option Found) := []
+  let mut nf := 0
+  if !merge then
+    for (a, b) in pts.zip pts.tail do
+      match planCell ps M geom cpi m' farOk isBp (hintAt a b) a b with
+      | some f => out := out ++ [(a, b, some f)]
+      | none =>
+        nf := nf + 1
+        out := out ++ coverSeg ps M geom cpi m' a b (isBp a) (isBp b) farOk
+    return (out, nf)
+  -- merge mode: from planned point `i`, the farthest planned point `j` whose cell `[t_i, t_j]` passes,
+  -- by doubling `j - i` and bisection on the index (a cell of the plan itself is tried first)
+  let T := pts.toArray
+  let n := T.size - 1
+  let mut i := 0
+  for _ in List.range (n + 1) do
+    if i < n then
+      let a := T[i]!
+      let tryJ := fun (j : ℕ) => planCell ps M geom cpi m' farOk isBp (hintAt a T[j]!) a T[j]!
+      match tryJ (i + 1) with
+      | none =>
+        nf := nf + 1
+        out := out ++ coverSeg ps M geom cpi m' a T[i + 1]! (isBp a) (isBp T[i + 1]!) farOk
+        i := i + 1
+      | some f1 =>
+        let mut jOk := i + 1
+        let mut fOk := f1
+        let mut jBad := n + 1
+        let mut k := 2
+        for _ in List.range 64 do
+          if jBad == n + 1 && jOk < n then
+            let j := min n (i + k)
+            match tryJ j with
+            | some f => jOk := j; fOk := f; k := 2 * k
+            | none => jBad := j
+        for _ in List.range 64 do
+          if jBad ≤ n && jBad > jOk + 1 then
+            let j := (jOk + jBad) / 2
+            match tryJ j with
+            | some f => jOk := j; fOk := f
+            | none => jBad := j
+        out := out ++ [(a, T[jOk]!, some fOk)]
+        i := jOk
+  return (out, nf)
+
+/-- The kind hint of a generator output tape: breakpoint side, or `none` for the other kinds. -/
+partial def hintOf : List Int → Option Bool
+  | 5 :: n :: rest => hintOf (rest.drop n.toNat)
+  | 3 :: _ :: s :: _ => some (s == 1)
+  | _ => none
+
+/-- The plan cells of spec line `T e` (`e = some _`) or `L` (`e = none`) in plan lines `T e pn pd qn qd [| tape]`
+/ `L pn pd qn qd [| tape]` (a generator output is a plan; other lines are ignored). -/
+def parsePlan (lines : List String) (e : Option String) : PlanCells :=
+  lines.filterMap fun l =>
+    let parts := l.splitOn "|"
+    let ws := ((parts.headD "").splitOn " ").filter (· ≠ "")
+    let hint : Option (Option Bool) := match parts with
+      | [_, k] => some (hintOf ((((k.splitOn " ").filter (· ≠ "")).map String.toInt!)))
+      | _ => none
+    match e, ws with
+    | some e0, ["T", e', pn, pd, qn, qd] => if e0 == e' then some (qOf pn pd, qOf qn qd, hint) else none
+    | none, ["L", pn, pd, qn, qd] => some (qOf pn pd, qOf qn qd, hint)
+    | _, _ => none
+
 def kindInts : CatalanCore.Uniform.Decay.PolyWire3.CellKind → List Int
   | .base .far => [(0 : Int)]
   | .base (.jetF n lo C Fs) => [(1 : Int), n, lo.num, (lo.den : Int), Fs.num, (Fs.den : Int), C.length] ++
@@ -513,30 +638,43 @@ def mkM (c : CQ) (K J : ℕ) : Option MPData :=
 
 def mpMain : IO (Option MPData) := pure none
 
-def process (Mopt : Option MPData) (line : String) : IO Unit := do
+def process (Mopt : Option MPData) (plan : List String) (line : String) : IO Unit := do
   let ws := (line.splitOn " ").filter (· ≠ "")
   match ws with
   | ["T", ei] =>
     let e := edgesC.getD ei.toNat! ((0, 0), (0, 0))
     let B := sortQ (([0, 1] ++ edgeBps e).eraseDups)
     let isBp := edgeBps e
+    let pl := parsePlan plan (some ei)
+    let mut nf := 0
     for (x, y) in B.zip B.tail do
-      let res := coverSeg psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains x) (isBp.contains y)
-        (fun a b => cellFarOk Dc Fc e (a, b))
+      let (res, k) := if pl.isEmpty then
+          (coverSeg psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains x) (isBp.contains y)
+            (fun a b => cellFarOk Dc Fc e (a, b)), 0)
+        else planSeg psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains ·)
+            (fun a b => cellFarOk Dc Fc e (a, b)) pl (plan.contains "MERGE")
+      nf := nf + k
       for (p, q, f) in res do
         match f with
         | some f => IO.println s!"T {ei} {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL T {ei} {p.num} {p.den} {q.num} {q.den}"
+    if !pl.isEmpty then IO.println s!"# plan T {ei}: {pl.length} planned cells, {nf} parts fell back to the search"
   | ["L"] =>
     let B := sortQ (([0, 1] ++ realBps 0 1).eraseDups)
     let isBp := realBps 0 1
+    let pl := parsePlan plan none
+    let mut nf := 0
     for (x, y) in B.zip B.tail do
-      let res := coverSeg psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains x) (isBp.contains y)
-        (fun _ _ => false)
+      let (res, k) := if pl.isEmpty then
+          (coverSeg psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains x) (isBp.contains y)
+            (fun _ _ => false), 0)
+        else planSeg psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains ·) (fun _ _ => false) pl (plan.contains "MERGE")
+      nf := nf + k
       for (p, q, f) in res do
         match f with
         | some f => IO.println s!"L {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL L {p.num} {p.den} {q.num} {q.den}"
+    if !pl.isEmpty then IO.println s!"# plan L: {pl.length} planned cells, {nf} parts fell back to the search"
   | tag :: rest =>
     let R0 : ℚ := match rest with
       | [rn, rd] => qOf rn rd
@@ -567,8 +705,12 @@ end GenC
 open GenC in
 def main (args : List String) : IO Unit := do
   match args with
-  | [file, k, nslices] =>
+  | file :: k :: nslices :: planArg =>
     let lines ← IO.FS.lines file
+    -- optional plan file (GenSpeed): proposed cells of the T / L lines, tried before any search
+    let mut plan : List String := []
+    if let [pf] := planArg then
+      plan := (← IO.FS.lines pf).toList
     -- the multipole line (if any) is applied to every slice
     let mut Mopt : Option MPData := none
     for l in lines do
@@ -586,7 +728,7 @@ def main (args : List String) : IO Unit := do
     for l in lines do
       if !(l.startsWith "M") then
         if i % nslices.toNat! == k.toNat! then
-          process Mopt l
+          process Mopt plan l
           (← IO.getStdout).flush
         i := i + 1
-  | _ => IO.eprintln "usage: GenCover spec k nslices"
+  | _ => IO.eprintln "usage: GenCover spec k nslices [plan]"

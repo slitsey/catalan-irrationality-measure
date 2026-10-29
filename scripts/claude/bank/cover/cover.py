@@ -8,6 +8,7 @@ modules `CatalanCore.Uniform.Bank.Common.Data.<Bank>.{Data,Frame}` (emitted by g
 
 Commands (run in this order; `all` runs env..gen..emit):
   env    write <mod>/Env0.lean (node pieces, polygon, far data, noRay data) -- build it first
+  plan   (optional) write a plan from the receipt's screen cells; `gen --plan` takes it, or a previous run's dir
   gen    write the Lean generators, run them through lanes.py (cells of every proved kind, pair energies)
   emit   read the generator output, write the Lean data modules (Env, Tube, Line, Cap, Energy, Check, Decay)
   build  build the emitted modules leaf-first through lanes.py (<= 3 at a time)
@@ -194,10 +195,46 @@ def cmd_gen(C, a):
     # one driver job per spec line (each tube edge, the line, the cap) unless --slices is given, with at
     # most --maxpar in flight: short jobs, so builds and research are not starved for hours
     n = a.slices if a.slices > 0 else len([l for l in spec if not l.startswith('M')])
-    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n,
+    extra = [plan_file(C, a.plan)] if a.plan else []
+    outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)] + extra, n,
                       a.label or f'{C.bank}gen', a.gb, maxpar=a.maxpar)
     if a.cmd in ('gen', 'all') and not a.noE:
         cmd_genE(C, a)
+
+
+def plan_file(C, src):
+    """The plan passed to the generator (GenSpeed): a plan file as is, or the `T`/`L` lines of a directory's
+    generator outputs `gen_[0-9]*.out` (a previous run: same cells, kinds as hints) copied to `plan.txt`."""
+    if not os.path.isdir(src):
+        return os.path.abspath(src)
+    lines = []
+    for f in sorted(glob.glob(os.path.join(src, 'gen_[0-9]*.out'))):
+        lines += [ln for ln in open(f, encoding='utf-8') if ln.startswith(('T ', 'L '))]
+    out = os.path.join(C.scratch, 'plan.txt')
+    open(out, 'w', encoding='utf-8', newline='\n').write(''.join(lines))
+    print('plan', out, len(lines), 'cells from', src)
+    return out
+
+
+def cmd_plan(C, a):
+    """Plan from the receipt's own screen cells (`covers.ray` in y, mapped onto the tube edges by y;
+    `covers.line` in x on [0, 1]); no hints.  With --merge the generator also joins consecutive planned
+    cells where the joined cell passes (the screen's cells are narrower than the widest admissible).  Written to --out (default <scratch>/plan-receipt.txt)."""
+    ex = json.load(open(gen_bank.BANKS[C.bank]['exact']))
+    ys = [p[1] for p in C.pts]
+    lines = ['MERGE'] if a.merge else []
+    for c in ex['covers']['ray']:
+        lo, hi = Fr(c[0]), Fr(c[1])
+        e = max(i for i in range(C.nE) if ys[i] <= lo)
+        assert hi <= ys[e + 1], ('ray cell crosses a vertex', c[:2])
+        u = [(t - ys[e]) / (ys[e + 1] - ys[e]) for t in (lo, hi)]
+        lines.append(f'T {e} {u[0].numerator} {u[0].denominator} {u[1].numerator} {u[1].denominator}')
+    for c in ex['covers']['line']:
+        lo, hi = Fr(c[0]), Fr(c[1])
+        lines.append(f'L {lo.numerator} {lo.denominator} {hi.numerator} {hi.denominator}')
+    out = a.out or os.path.join(C.scratch, 'plan-receipt.txt')
+    open(out, 'w', encoding='utf-8', newline='\n').write('\n'.join(lines) + '\n')
+    print('wrote', out, len(lines), 'planned cells')
 
 
 def cmd_genE(C, a):
@@ -643,7 +680,7 @@ def cmd_build(C, a):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('cmd', choices=['env', 'gen', 'genE', 'emit', 'build', 'all'])
+    ap.add_argument('cmd', choices=['env', 'plan', 'gen', 'genE', 'emit', 'build', 'all'])
     ap.add_argument('bank', choices=list(gen_bank.BANKS))
     ap.add_argument('--mod', required=True, help='Lean module prefix of the output directory')
     ap.add_argument('--scratch', default=None)
@@ -659,6 +696,10 @@ if __name__ == '__main__':
     ap.add_argument('--noE', action='store_true', help='skip the energy/G jobs')
     ap.add_argument('--capfrac', type=Fr, default=Fr(19, 20), help='fraction of the receipt cap excess the cap cells may spend')
     ap.add_argument('--label', default=None, help='driver job label of the generator slices (default <bank>gen)')
+    ap.add_argument('--plan', default=None, help='gen: plan file, or a directory of a previous run (gen_*.out); '
+                    'planned cells are verified first, the search runs only where they fail')
+    ap.add_argument('--out', default=None, help='plan: output file')
+    ap.add_argument('--merge', action='store_true', help='plan: let the generator join consecutive planned cells')
     ap.add_argument('--eslices', type=int, default=2)
     ap.add_argument('--gb', type=float, default=2.5)
     ap.add_argument('--parallel', type=int, default=3)
@@ -668,6 +709,8 @@ if __name__ == '__main__':
         cmd_env(C)
     if a.cmd in ('gen', 'all'):
         cmd_gen(C, a)
+    if a.cmd == 'plan':
+        cmd_plan(C, a)
     if a.cmd == 'genE':
         cmd_genE(C, a)
     if a.cmd in ('emit', 'all'):
