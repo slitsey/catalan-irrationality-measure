@@ -8,7 +8,7 @@ set_option Elab.async false
 The data `AutoUF.ufData` (C1's generated UF template, `uf_check : check ufData = true`) and the instance
 hypotheses of the thirds frames (`thirds_catValidUF` = `catValid_bankUF` at the thirds instance, with
 `N0 = max NFr 23`, `(3/10) · 23 ≥ 3 (2 + 3/10)`; `thirds_preValid`) give the content of both thirds frames with
-`Λ_fin = ufData.Λ` (`ufData_Λ`), and the target `uf_mu_le : ctT / (DtT - Λ_fin) ≤ 952671/100000`. -/
+`Λ_fin = ufData.Λ` (`ufData_Λ`), and the target `uf_mu_le : ctT / (DtT - Λ_fin) ≤ 95133/10000`. -/
 
 namespace CatalanCore.Uniform.Bank.ThirdsContent.AutoUF
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -18,15 +18,15 @@ open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCo
   CatalanCore.Uniform.Bank.Thirds CatalanCore.Uniform.Bank.ThirdsContent.Auto CatalanCore.Uniform.Content.RankProducer
 
 theorem ufData_Λ : ufData.Λ =
-    (7569325162637321873007658004333050646091334798082154599823427390926183513423191893051463882631850003866433703973370409 /
-      2285092212406854547639092362937046760046047768362479303790780917753130995126321327366499846108549016516110519276800000 : ℚ) := by
+    (1777453013714433553146743737198542670591271388661293194550480983618962845336086497823228593667967913829 /
+      536757381939161380355574488001949283584092398419490833900153982140793678706566347876418391704908800000 : ℚ) := by
   decide +kernel
 
-/-- **The thirds μ target**: `c / (D - Λ_fin) ≤ 952671/100000` with the finite UF constant `Λ_fin = ufData.Λ`
+/-- **The thirds μ target**: `c / (D - Λ_fin) ≤ 95133/10000` with the finite UF constant `Λ_fin = ufData.Λ`
 (`DtT`, `ctT` of `Bank/Thirds/Numerics`). -/
-theorem uf_mu_le : (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℝ)) ≤ ((952671 / 100000 : ℚ) : ℝ) := by
+theorem uf_mu_le : (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℝ)) ≤ ((95133/10000 : ℚ) : ℝ) := by
   have h1 : ufData.Λ < DtT := by rw [ufData_Λ]; unfold DtT; norm_num
-  have h2 : ctT ≤ 952671 / 100000 * (DtT - ufData.Λ) := by rw [ufData_Λ]; unfold ctT DtT; norm_num
+  have h2 : ctT ≤ 95133 / 10000 * (DtT - ufData.Λ) := by rw [ufData_Λ]; unfold ctT DtT; norm_num
   have hpos : (0 : ℝ) < (DtT : ℝ) - (ufData.Λ : ℝ) := by
     have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
   rw [div_le_iff₀ hpos]
@@ -38,7 +38,8 @@ theorem uf_mu_le : (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℝ)) ≤ ((952671 
 theorem thirds_catValidUF {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ) :
     CatValid (3 / 10) c310_pos Fr depth 3 e 5 (max (NFr (1 / Fr.norm) (-1 / Fr.norm) 3 7) 23) ufData.cat := by
   have he := T.he
-  exact catValid_bankUF (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (thirds_levels T) (3 / 10)
+  rw [ufData_cat]
+  exact catValid_bankUFwP (thirdsInst T) (arith_of_bad (thirds_badInfo T)).L_eq (thirds_levels T) (3 / 10)
     c310_pos (by norm_num) (ThirdsData.twoTerm T) (nm := 3 * 3) (by rw [T.norm_eq]; norm_num) depth 5 7 23
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -52,7 +53,7 @@ theorem thirds_catValidUF {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : 
       have h2 := (rootClass_unique hp (by omega) (by omega) (by omega) hjq hk').2
       show (thirdsCD T).kq p = k
       rw [h1, h2])
-    [(3, 4), (4, 4), (4, 5), (5, 5), (5, 6), (6, 6), (6, 7), (7, 7), (7, 8)]
+    ufWins ufPres
 
 /-- **Automatic content of `thirdsAc`** (member `a = 1`), with UF. -/
 theorem thirdsAc_content_autoUF (depth : ℕ) (hd : depth ≤ 64) :

@@ -13,13 +13,18 @@ namespace CatalanCore.Uniform.Bank.LambdaContent.Auto
 open CatalanCore.Uniform.Content.BankShared.Check
 
 /-- The lambda UF bank data, with its finite `Λ_fin`. -/
-def bankData : BankData := { bankHead with Λ := qq 1210311102638262342320035956005798112815887869094387160908759870704652772848920804229732609 344177131462169657795373231423307558604484064066486973702905124405340834755793255170400000, tmpls := [(1, tmpl1), (3, tmpl3)] }
+def bankData : BankData := { bankHead with Λ := qq 828235368586280359303410600428792845749633031996748989373383516433480155971824297111250104108739493929218753433171408579034240178416917526892693 235559813363677631821236254977095447545338421020141239671483652441752150956343118321040250544634671809060436176833737908893341811547506682400000, tmpls := [(1, tmpl1), (3, tmpl3)] }
 
 theorem tmpl1_okD : tmplOK bankData 1 tmpl1 = true :=
   tmplOK_withTmpls bankHead _ _ 1 tmpl1 tmpl1_ok
 
 theorem tmpl3_okD : tmplOK bankData 3 tmpl3 = true :=
   tmplOK_withTmpls bankHead _ _ 3 tmpl3 tmpl3_ok
+
+/-- The catalogue of `bankData` in the shape of `catValid_bankUFwP`. -/
+theorem bankData_cat : bankData.cat = tableT ++ ([brLP1, brLP2w, brRank, brS] ++
+    bankWins.map (fun w => brWin w.1 w.2)) ++ bankPres.map (fun x => brPre x.1 x.2.1 x.2.2) :=
+  (List.append_assoc _ _ _).symm
 
 set_option profiler true in
 theorem bank_params : checkParams bankData = true := by decide +kernel
@@ -38,8 +43,8 @@ theorem bank_check : check bankData = true := by
   rfl
 
 /-- The finite content constant. -/
-theorem bankData_Λ : bankData.Λ = (1210311102638262342320035956005798112815887869094387160908759870704652772848920804229732609 /
-    344177131462169657795373231423307558604484064066486973702905124405340834755793255170400000 : ℚ) := by
+theorem bankData_Λ : bankData.Λ = (828235368586280359303410600428792845749633031996748989373383516433480155971824297111250104108739493929218753433171408579034240178416917526892693 /
+    235559813363677631821236254977095447545338421020141239671483652441752150956343118321040250544634671809060436176833737908893341811547506682400000 : ℚ) := by
   decide +kernel
 
 end CatalanCore.Uniform.Bank.LambdaContent.Auto

@@ -5,7 +5,7 @@ set_option Elab.async false
 /-! # The thirds measure from the automatic UF content (coordinator)
 
 With the automatic content `AutoUF.thirds*_content_autoUF` at `Λ_fin = ufData.Λ` and the matched decay
-`ThirdsDecay` (`D = DtT`, `c = ctT`), the target bound `952671/100000` follows by `AutoUF.uf_mu_le`.
+`ThirdsDecay` (`D = DtT`, `c = ctT`), the target bound `95133/10000` follows by `AutoUF.uf_mu_le`.
 The theorems are conditional only on `ThirdsDecay`. -/
 
 namespace CatalanCore.Uniform.Bank.ThirdsContent.MeasureUF
@@ -52,27 +52,27 @@ theorem thirds_measureLB_lam (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i 
       obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
       exact ⟨n, ⟨hn, by have : G310.scale n = n.1 := rfl; omega⟩, hsc, hne⟩)
 
-theorem X_le : (1 : ℝ) * (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℚ)) ≤ ((952671 / 100000 : ℚ) : ℝ) := by
+theorem X_le : (1 : ℝ) * (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℚ)) ≤ ((95133/10000 : ℚ) : ℝ) := by
   rw [one_mul]; exact uf_mu_le
 
 /-- **`μ(L(2,χ₋₃) + π²/9) ≤ 9.52671`** from the automatic content; conditional only on the decay. -/
 theorem thirds_measure_plus (hD : ThirdsDecay thirdsAc (depth0 thirdsAc)) :
-    Measure.MeasureLBAt (chi3L2 + Real.pi ^ 2 / 9) ((952671 / 100000 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt (chi3L2 + Real.pi ^ 2 / 9) ((95133/10000 : ℚ) : ℝ) := by
   have h0 := thirds_measureLB_lam thirdsAc (by show 1 ≤ 2; norm_num) thirds_w_ne ufData.Λ lam_lt_Dt
     (thirdsAc_content_autoUF _ (depth0_le rfl)) hD
   have h1 := (Measure.MeasureLB_iff _ _).mp h0
-  have h' : Measure.MeasureLBAt thirdsAc.const ((952671 / 100000 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt thirdsAc.const ((95133/10000 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono X_le h1
   exact measureLBAt_of_const (Fam := G310.family thirdsAc (depth0 thirdsAc)) (a := -1 / 2)
     (by norm_num) (by norm_num) thirdsAc_const ((Measure.MeasureLB_iff _ _).mpr h')
 
 /-- **`μ(L(2,χ₋₃) − π²/9) ≤ 9.52671`** from the automatic content; conditional only on the decay. -/
 theorem thirds_measure_minus (hD : ThirdsDecay thirdsBc (depth0 thirdsBc)) :
-    Measure.MeasureLBAt (chi3L2 - Real.pi ^ 2 / 9) ((952671 / 100000 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt (chi3L2 - Real.pi ^ 2 / 9) ((95133/10000 : ℚ) : ℝ) := by
   have h0 := thirds_measureLB_lam thirdsBc (by show 1 ≤ 2; norm_num) thirds_w_ne' ufData.Λ lam_lt_Dt
     (thirdsBc_content_autoUF _ (depth0_le rfl)) hD
   have h1 := (Measure.MeasureLB_iff _ _).mp h0
-  have h' : Measure.MeasureLBAt thirdsBc.const ((952671 / 100000 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt thirdsBc.const ((95133/10000 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono X_le h1
   exact measureLBAt_of_const (Fam := G310.family thirdsBc (depth0 thirdsBc)) (a := 1 / 2)
     (by norm_num) (by norm_num) thirdsBc_const ((Measure.MeasureLB_iff _ _).mpr h')

@@ -45,14 +45,14 @@ theorem thirdsAc_decay : ThirdsDecay thirdsAc (depth0 thirdsAc) :=
 theorem thirdsBc_decay : ThirdsDecay thirdsBc (depth0 thirdsBc) :=
   decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl (by decide +kernel) _
 
-/-- **`μ(L(2,χ₋₃) + π²/9) ≤ 9.52671`.** -/
+/-- **`μ(L(2,χ₋₃) + π²/9) ≤ 9.5133`.** -/
 theorem thirds_plus_measure :
-    Measure.MeasureLBAt (chi3L2 + Real.pi ^ 2 / 9) ((952671 / 100000 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (chi3L2 + Real.pi ^ 2 / 9) ((95133/10000 : ℚ) : ℝ) :=
   MeasureUF.thirds_measure_plus thirdsAc_decay
 
-/-- **`μ(L(2,χ₋₃) − π²/9) ≤ 9.52671`.** -/
+/-- **`μ(L(2,χ₋₃) − π²/9) ≤ 9.5133`.** -/
 theorem thirds_minus_measure :
-    Measure.MeasureLBAt (chi3L2 - Real.pi ^ 2 / 9) ((952671 / 100000 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (chi3L2 - Real.pi ^ 2 / 9) ((95133/10000 : ℚ) : ℝ) :=
   MeasureUF.thirds_measure_minus thirdsBc_decay
 
 end CatalanCore.Uniform.Bank.ThirdsContent.Bound

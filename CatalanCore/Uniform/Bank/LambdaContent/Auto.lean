@@ -16,7 +16,7 @@ The content of `lambdaFrame false` (λ−, `lamFrame`, member `a = 3`, offset `o
 (λ+, `mirFrame`, member `a = 1`, offset `o = 3`) from the one bank check (`hasScaledContent_of_check`):
 
 * data: `AutoData.bankData` (C1's generated UF template, `n = 100`), `bank_check : check bankData = true`;
-* instance hypotheses, λ−: `lamMinus_catValid` (`catValid_bankUF` at `lamInst`, `lam_badInfo`, `lam_tropFacts`,
+* instance hypotheses, λ−: `lamMinus_catValid` (`catValid_bankUFwP` at `lamInst`, `lam_badInfo`, `lam_tropFacts`,
   the two-term data of `pipeline false`, norm `16`, bad primes `{2}`, `P_bad = 28`, `K = 10`, `N1 = 44`) and
   `lamMinus_preValid` (`pre_gle_any`, `p ≤ r/1000`, `α0 = 11/5`);
 * instance hypotheses, λ+: the same on the sign-normalised mirror `mirNFrame` (`mirNInst`, `mirBad`,
@@ -56,8 +56,9 @@ theorem cFr_mirN : cFr mirNFrame ≤ 36 := by decide +kernel
 /-- The branch catalogue of `bankData` is valid on `lamFrame` (`o = 1`). -/
 theorem lamMinus_catValid (depth : ℕ) :
     CatValid (1 / 5) one_fifth_pos lamFrame depth 4 1 28
-      (max (NFr (1 / lamFrame.norm) (-1 / lamFrame.norm) 4 10) 44) bankData.cat :=
-  catValid_bankUF lamInst (arith_of_bad lam_badInfo).L_eq lam_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
+      (max (NFr (1 / lamFrame.norm) (-1 / lamFrame.norm) 4 10) 44) bankData.cat := by
+  rw [bankData_cat]
+  exact catValid_bankUFwP lamInst (arith_of_bad lam_badInfo).L_eq lam_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
     (by norm_num) lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -71,7 +72,7 @@ theorem lamMinus_catValid (depth : ℕ) :
       have h2 := (rootClass_unique hp (by norm_num) (by norm_num) (by omega) hjq hk').2
       show lamCD.kq p = k
       rw [h1, h2])
-    [(5, 5), (5, 6), (6, 6), (6, 7), (7, 7), (7, 8), (8, 8), (8, 9), (9, 9), (9, 10), (10, 10), (10, 11)]
+    bankWins bankPres
 
 /-- The prefix bound of `lamFrame` (`pre_gle_any`), for `p ≤ r/1000`, `α0 = 11/5`. -/
 theorem lamMinus_preValid (depth : ℕ) :
@@ -113,8 +114,9 @@ theorem lamMinus_content_auto (depth : ℕ) (hd : depth ≤ 64) :
 /-- The branch catalogue of `bankData` is valid on `mirNFrame` (`o = 3`). -/
 theorem mirN_catValid (depth : ℕ) :
     CatValid (1 / 5) one_fifth_pos mirNFrame depth 4 3 28
-      (max (NFr (1 / mirNFrame.norm) (-1 / mirNFrame.norm) 4 10) 44) bankData.cat :=
-  catValid_bankUF mirNInst (arith_of_bad mirBad).L_eq mirN_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
+      (max (NFr (1 / mirNFrame.norm) (-1 / mirNFrame.norm) 4 10) 44) bankData.cat := by
+  rw [bankData_cat]
+  exact catValid_bankUFwP mirNInst (arith_of_bad mirBad).L_eq mirN_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
     (by norm_num) mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -127,7 +129,7 @@ theorem mirN_catValid (depth : ℕ) :
       have hk' : 4 * k = j * p + (4 - (4 - 3)) := hk
       have h2 := (rootClass_unique hp (by norm_num) (by norm_num) (by omega) hjq hk').2
       rw [h1, h2])
-    [(5, 5), (5, 6), (6, 6), (6, 7), (7, 7), (7, 8), (8, 8), (8, 9), (9, 9), (9, 10), (10, 10), (10, 11)]
+    bankWins bankPres
 
 /-- The prefix bound of `mirNFrame` (`pre_gle_any`), for `p ≤ r/1000`, `α0 = 11/5`. -/
 theorem mirN_preValid (depth : ℕ) :
