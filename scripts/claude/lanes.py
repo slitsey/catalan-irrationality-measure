@@ -17,6 +17,7 @@ than itself is refused. Near the floor the driver sheds its youngest owned job t
 and requeues it once.
 """
 import ctypes as C, json, os, subprocess, sys, time, uuid
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(r'C:\Users\seanl\Documents\Codex\2026-10-11\plea')
@@ -26,7 +27,9 @@ LANES = ROOT / 'work/tools/lanes'
 Q, RUN, DONE, OUTD = LANES / 'queue', LANES / 'running', LANES / 'done', LANES / 'out'
 for d in (Q, RUN, DONE, OUTD):
     d.mkdir(parents=True, exist_ok=True)
-MAXLANES, RAMP, STARVE = 6, 10, 300
+MAXLANES, RAMP, STARVE = 6, 2, 300
+# RAMP was 10 s; with a 7 s synchronous preflight per start the driver could not exceed ~2 lanes of
+# 23 s median jobs (28 Oct 19:30). Preflights now run in a background pool and are cached.
 FLOOR, MARGIN = 3.0, 1.0   # manage-compute-campaigns: system floor and operating margin (GB)
 THREADS = '4'   # lanes run in parallel, so each lean needs few worker threads (default = 22 cores)
 # 28 Oct 10:46: the watchdog killed a tube cell at < 3 GB free commit with 2 lanes: heavy
@@ -142,6 +145,8 @@ def log(msg):
 def drive():
     running = {}   # job id -> (Popen, spec)
     last = 0.0
+    pool = ThreadPoolExecutor(max_workers=4)
+    pre = {}   # target -> (future, submitted_at)
     log('driver start')
     # Restart recovery: a job left in running/ by a dead driver has no owner and no receipt.
     # Requeue it (lake makes a finished build a no-op), so its submitter still gets a receipt.
@@ -185,6 +190,13 @@ def drive():
             try: return p.stat().st_mtime
             except OSError: return float('inf')
         queued = sorted(Q.glob('*.json'), key=_mt)
+        for qf in queued[:12]:
+            try:
+                t = json.loads(qf.read_text(encoding='utf-8'))
+            except (json.JSONDecodeError, OSError):
+                continue
+            if not t.get('cmd') and (t['target'] not in pre or time.time() - pre[t['target']][1] > 600):
+                pre[t['target']] = (pool.submit(stale_count, t['target']), time.time())
         busy = {s['target'] for _, s in running.values()}
         pick = None
         if (queued and not (LANES / 'PAUSE').exists() and len(running) < MAXLANES
@@ -207,6 +219,10 @@ def drive():
                     continue   # being written by a submitter (28 Oct 11:51 crash), or just taken
                 if s['target'] in busy:
                     continue
+                if not s.get('cmd'):
+                    f = pre.get(s['target'])
+                    if f is None or not f[0].done():
+                        continue   # preflight still running in the background
                 ec, ew = est(s['target'])
                 bb = float(s.get('budget', 3))
                 if bb > 3:   # an explicit large budget (assembly roots) overrides a light class peak
@@ -230,7 +246,9 @@ def drive():
             # One lake build compiles every stale dependency in parallel (~1.5-2.5 GB each),
             # which is how a single root took ~15 GB of commit on 28 Oct 11:32. Refuse a build
             # whose stale frontier is more than the module itself, unless 'allow_frontier' is set.
-            n = stale_count(spec['target'])
+            n = pre.pop(spec['target'])[0].result()
+            if n > int(spec.get('allow_frontier', 1)):
+                n = stale_count(spec['target'])   # recheck fresh: a dependency may have just finished
             if n > int(spec.get('allow_frontier', 1)):
                 spec.update(rc=98, ended=time.time(), output=f'lanes: refused, stale frontier = {n} modules; build the leaves first (or submit with allow_frontier)')
                 (DONE / f'{pick.stem}.json').write_text(json.dumps(spec), encoding='utf-8')
