@@ -9,7 +9,8 @@ trusted from the search).  Cell kinds tried: far (bank rule), multipole `mp`, je
 mixed (near pieces by distance), and the breakpoint cell `bp` next to every piece endpoint; each on the
 pieces with those reversed whose line the cell crosses beyond their end (`wallMask`, `CellKind.flip`).  Spec
 lines: `T e` (tube edge e), `L` (line), `C` (cap), `M cre_n cre_d cim_n cim_d K J`.  An optional fourth argument
-is a plan file (plan-then-verify, see `planSeg`); without it the search is unchanged. -/
+is a plan file (plan-then-verify, see `planSeg`), or `FAST` (guided search for new edges, see `guidedCell`);
+without it the search is unchanged. -/
 
 open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.NearFast
   CatalanCore.Uniform.Decay.Tools CatalanCore.Uniform.Decay.PolyWire CatalanCore.Uniform.Decay.PolyWire2
@@ -426,6 +427,273 @@ def planSeg (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ 
         i := jOk
   return (out, nf)
 
+/-! ### guided search for new edges (GenSpeed2, 29 Oct)
+
+Plan argument `FAST`: the same cells as the greedy search in far fewer exact evaluations, with no plan.
+* `checkF`: every cell rule ends with the conjunct `m' ≤ lo - Fs - modSum …` on the same `lo`, `Fs` and
+  pieces as the trial's `margin`, so a kind of margin below `m'` fails `kindOk`; its check is skipped
+  (no result changes).  `solveFast` is `solveOne` with this, the per-piece part of `selFor` once and equal
+  selections once: the same result.
+* The end of each cell is found from the guide (`Guide`: the margin of the jet of order 8 split as `P - Fs`)
+  by a model root (`modelRoot`), aiming 0.45% inside it toward the open side, until the greedy's own stopping rule holds
+  (a passing end `lo`, a failing end `hi`, `100 (hi - lo) ≤ lo - a`); then the greedy's kind is taken on
+  `[a, lo]` (`solveFast`, all kinds in the greedy's order).  Trials accept a jet of order 8 on its margin
+  alone; the final kind is fully checked, and if it fails the cell is searched again with every trial
+  checked.  A cell with no passing end falls back to `greedyCover` for the rest of the segment.
+* Breakpoint cells: the same search (`guided1`) on the cell length, see `bpCellAtF`.
+Lines `# seg` report the time of each breakpoint segment (comments on stdout; `emit` ignores them). -/
+
+/-- The guide of a trial: `(P, F)` with `P = lo - modSum - m'` and `F = Fs` of the order-8 kind, so that the
+kind passes its last conjunct iff `P - F ≥ 0`. -/
+abbrev Guide := Float × Float
+
+partial def fsOf : CatalanCore.Uniform.Decay.PolyWire3.CellKind → Float
+  | .base (.jetF _ _ _ Fs) => qf Fs
+  | .base (.mixF _ _ _ _ _ Fs _ _) => qf Fs
+  | .bp _ _ _ _ Fs _ => qf Fs
+  | .flip _ k => fsOf k
+  | _ => 0
+
+def guideOf (m' : ℚ) (f : Found) : Guide :=
+  let F := fsOf f.kind
+  (qf (f.margin - m') + F, F)
+
+/-- `checkKind` behind the margin test (equal result, see above). -/
+def checkF (ps : List WP) (M : Option MPData) (zc dd : CQ) (h cpi m' : ℚ) (f : Found) : Bool :=
+  decide (m' ≤ f.margin) && checkKind ps M zc dd h cpi m' f.kind
+
+/-- The mixed rules of `solveOne` on the flipped pieces `ps'` (equal result). -/
+def solveMixF (ps : List WP) (M : Option MPData) (fl : List ℕ) (ps' : List WP) (zc dd : CQ) (h cpi m' : ℚ) :
+    Option Found := Id.run do
+  let R := qf (h * (|dd.re| + |dd.im|) + Wc)
+  let pre := ps'.map fun P => (segDist zc P, (aggEvalMF 8 zc dd h [P]).isNone)
+  let mut seen : List (List Bool) := []
+  for K in [8.0, 3.0, 30.0, 100.0] do
+    let sel := pre.map fun (d, nn) => decide (d ≤ K * R) || nn
+    if sel.any id && !(seen.contains sel) then
+      seen := sel :: seen
+      for n in [8, 6] do
+        match evalMix n ps' sel zc dd h cpi with
+        | some f =>
+          let f := wrapF fl f
+          if checkF ps M zc dd h cpi m' f then return some f
+        | none => pure ()
+  return none
+
+/-- `solveOne` (equal result when `jets = [5, 6, 7, 8]`; the trials pass only the jets not yet tried). -/
+def solveFast (ps : List WP) (M : Option MPData) (zc dd : CQ) (h cpi m' : ℚ) (jets : List ℕ) :
+    Option Found := Id.run do
+  match mpTry ps M zc dd h cpi m' with
+  | some f => return some f
+  | none => pure ()
+  let fl := wallMask ps zc dd h
+  let ps' := flipAt fl ps
+  for n in jets do
+    match evalJet n ps' zc dd h cpi with
+    | some f =>
+      let f := wrapF fl f
+      if checkF ps M zc dd h cpi m' f then return some f
+    | none => pure ()
+  return solveMixF ps M fl ps' zc dd h cpi m'
+
+/-- One trial `[a, e]`: far rule, then the jet of order 8 (its margin less `m'` is the guide; with
+`prov` it is accepted on the margin alone), then the other kinds.  Without `prov` it accepts exactly
+when `trialCell` does. -/
+def trialG (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (prov : Bool) (a e : ℚ) : Option Found × Option Guide :=
+  if farOk a e then (some ⟨.base .far, 0⟩, none) else
+  let (zc, dd, h) := geom a e
+  let fl := wallMask ps zc dd h
+  match evalJet 8 (flipAt fl ps) zc dd h cpi with
+  | some f =>
+    let f := wrapF fl f
+    let s := some (guideOf m' f)
+    if (prov && decide (m' ≤ f.margin)) || checkF ps M zc dd h cpi m' f then (some f, s)
+    else (solveFast ps M zc dd h cpi m' [5, 6, 7], s)
+  | none => (solveFast ps M zc dd h cpi m' [5, 6, 7], none)
+
+/-- The greedy's kind on `[a, e]` (`trialCell` with `solveFast`). -/
+def canonF (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (a e : ℚ) : Option Found :=
+  if farOk a e then some ⟨.base .far, 0⟩ else
+  let (zc, dd, h) := geom a e
+  solveFast ps M zc dd h cpi m' [5, 6, 7, 8]
+
+/-- `r > 0` as a rational, 9 digits. -/
+def ofRatio (r : Float) : ℚ := ((r * 1e9).floor.toUInt64.toNat : ℚ) / 10 ^ 9
+
+/-- The predicted root in `[A, B]` of the guide `P - F`, `P` linear and `F` a power of the width through the
+two trials `(x0, g0)`, `(x1, g1)` (the power fitted, in `[1, 20]`; without a second trial `P` is constant and
+the power 8); `B` if the model stays positive, `none` if it is negative at `A`. -/
+def modelRoot (x0 : Float) (g0 : Guide) (p1 : Option (Float × Guide)) (A B : Float) : Option Float := Id.run do
+  let (P0, F0) := g0
+  let (slope, pw) : Float × Float := match p1 with
+    | some (x1, (P1, F1)) =>
+      if x1 == x0 then (0, 8) else
+      let pw := if F0 > 0 && F1 > 0 && F0 != F1 then Float.log (F1 / F0) / Float.log (x1 / x0) else 8
+      ((P1 - P0) / (x1 - x0), max 1 (min 20 pw))
+    | none => (0, 8)
+  let g := fun (x : Float) => P0 + slope * (x - x0) - F0 * Float.pow (x / x0) pw
+  if !(A < B) || g A < 0 then return none
+  if g B ≥ 0 then return some B
+  let mut lo := A
+  let mut hi := B
+  for _ in List.range 80 do
+    let mid := (lo + hi) / 2
+    if g mid ≥ 0 then lo := mid else hi := mid
+  return some lo
+
+/-- The guided search on widths `x ∈ (0, X]` (rounded by `rnd`), see above: `tr x` is (passes, guide).  Stops
+at a passing `l` with `l ≥ X`, or with a failing `u > l`, `prec (u - l) ≤ l`; returns the widest passing width
+found and the number of trials.  The next width is the predicted root (`modelRoot`) moved by `off` toward the
+side to be closed; bisection where the guide is missing or the same side won three times; `gUp` / `gDn`: the
+greedy's gallop / shrink factors where no root is predicted. -/
+def guided1 (tr : ℚ → Bool × Option Guide) (rnd : ℚ → ℚ) (X x0 : ℚ) (prec : ℚ) (off gUp gDn : Float) :
+    Option ℚ × ℕ := Id.run do
+  let mut lo : Option (ℚ × Option Guide) := none
+  let mut hi : Option (ℚ × Option Guide) := none
+  let mut prev : Option (Float × Guide) := none
+  let mut x := rnd x0
+  let mut same : ℕ := 0
+  let mut lastPass : Bool := true
+  let mut nt : ℕ := 0
+  for _ in List.range 80 do
+    let (pass, s) := tr x
+    nt := nt + 1
+    same := if pass == lastPass then same + 1 else 0
+    lastPass := pass
+    if pass then
+      if lo.all (fun (l, _) => l < x) then lo := some (x, s)
+      if hi.any (fun (u, _) => u ≤ x) then hi := none
+    else
+      if lo.all (fun (l, _) => l < x) && hi.all (fun (u, _) => x < u) then hi := some (x, s)
+    match lo, hi with
+    | some (l, _), some (u, _) => if prec * (u - l) ≤ l then return (some l, nt)
+    | some (l, _), none => if l ≥ X then return (some l, nt)
+    | _, _ => pure ()
+    let prevS := prev
+    if let some sv := s then prev := some (qf x, sv)
+    let xf := qf x
+    match lo, hi with
+    | some (l, gl), some (u, gu) =>
+      let mid := rbq ((l + u) / 2)
+      let tgt : Option ℚ := match gl, gu with
+        | some g0, some g1 =>
+          if same < 3 then
+            match modelRoot (qf l) g0 (some (qf u, g1)) (qf l) (qf u) with
+            | some r =>
+              let rx := if r - qf l > qf u - r then r * (1 - off) else r * (1 + off)
+              some (rnd (l * ofRatio (rx / qf l)))
+            | none => none
+          else none
+        | _, _ => none
+      x := match tgt with
+        | some t => if l < t && t < u then t else mid
+        | none => mid
+      if x ≤ l || x ≥ u then x := rnd mid
+      if x ≤ l || x ≥ u then return (some l, nt)
+    | some (l, _), none =>
+      let g : Float := match s with
+        | some sv => match modelRoot xf sv prevS xf (4 * xf) with
+          | some r => max 1.1 (r * (1 + off) / xf)
+          | none => gUp
+        | none => gUp
+      x := rnd (l * ofRatio g)
+    | none, some (u, _) =>
+      let g : Float := match s with
+        | some sv => match modelRoot xf sv prevS (xf / 8) xf with
+          | some r => max 0.125 (min gDn (r * (1 - off) / xf))
+          | none => 0.125
+        | none => gDn
+      x := rnd (u * ofRatio g)
+    | none, none => x := rnd (x * 2 / 3)
+  return (lo.map (·.1), nt)
+
+/-- The end of the cell from `a` (previous width `w`): `guided1` with the greedy's start, gallop, shrink and
+stopping rule (1%); `none` if no trial end passed. -/
+def guidedCell (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (prov : Bool) (a b w : ℚ) : Option ℚ :=
+  let tr := trialG ps M geom cpi m' farOk prov a
+  if b - a ≤ 2 * w && (tr b).1.isSome then some b else
+  let w0 := if w ≤ 0 || a + w ≥ b then (b - a) / 2 else w
+  let (r, _) := guided1 (fun x => let t := tr (a + x); (t.1.isSome, t.2)) (fun x => stepTo b a x - a)
+    (b - a) w0 100 0.0045 1.5 (2 / 3)
+  r.map (a + ·)
+
+/-- Guided cover of `[a, b]` and the number of fallbacks to `greedyCover`. -/
+partial def guidedCover (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (a b : ℚ) (w : ℚ) (fuel : ℕ) : List (ℚ × ℚ × Option Found) × ℕ :=
+  if a ≥ b then ([], 0) else
+  if fuel = 0 then ([(a, b, none)], 0) else
+  let cell := fun (prov : Bool) =>
+    (guidedCell ps M geom cpi m' farOk prov a b w).bind fun e =>
+      (canonF ps M geom cpi m' farOk a e).map fun f => (e, f)
+  match (match cell true with | some r => some r | none => cell false) with
+  | some (e, f) =>
+    let (rest, k) := guidedCover ps M geom cpi m' farOk e b (e - a) (fuel - 1)
+    ((a, e, some f) :: rest, k)
+  | none => (greedyCover ps M geom cpi m' farOk a b w fuel, 1)
+
+/-- The breakpoint cell next to `x` (as `bpCellAt`: orders 8, 6, 5, `L ≤ Lmax`, first trial `Lmax`), its
+length by `guided1` on the margin of order 8 (halving where the guide gives no root; stopping rule
+`512 (Lbad - Lok) ≤ Lok`, the precision of `bpCellAt`'s ladder and 9 bisections).  With `prov` the trials
+accept order 8 on its margin; the chosen cell is fully checked (and searched again with checks if it fails). -/
+def bpCellAtF (ps : List WP) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ) (x Lmax : ℚ) (side : Bool) :
+    Option (ℚ × ℚ × Found) := Id.run do
+  let ends := fun (L : ℚ) => if side then (x - L, x) else (x, x + L)
+  -- the kind of the cell of length `L` (orders 8, 6, 5) and the guide (margin of order 8 less `m'`)
+  let okL := fun (prov : Bool) (L : ℚ) => Id.run do
+    let (a, b) := ends L
+    let (zc, dd, h) := geom a b
+    let fl := wallMask ps (bpPoint side zc dd h) (bpDir side dd) (2 * h)
+    let ps' := flipAt fl ps
+    let mut res : Option Found := none
+    let mut s : Option Guide := none
+    for n in [8, 6, 5] do
+      if res.isNone then
+        match evalBp n side ps' zc dd h cpi with
+        | some f =>
+          let f := wrapF fl f
+          if n == 8 then s := some (guideOf m' f)
+          if (prov && n == 8 && decide (m' ≤ f.margin)) || checkF ps none zc dd h cpi m' f then res := some f
+        | none => pure ()
+    return (res, s)
+  let rnd := fun (L : ℚ) => let r := rbq L; if r > Lmax then Lmax else if r ≤ 0 then 1 / oddGrid else r
+  for prov in [true, false] do
+    let (r, _) := guided1 (fun L => let t := okL prov L; (t.1.isSome, t.2)) rnd (rnd Lmax) Lmax 512 0.0009 2 0.5
+    match r with
+    | some L =>
+      match (okL false L).1 with
+      | some f =>
+        let (a, b) := ends L
+        return some (a, b, f)
+      | none => pure ()
+    | none => pure ()
+  return none
+
+/-- `coverSeg` with `bpCellAtF` and `guidedCover`; also the number of fallbacks. -/
+def coverSegF (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (x y : ℚ) (xb yb : Bool) (farOk : ℚ → ℚ → Bool) : List (ℚ × ℚ × Option Found) × ℕ := Id.run do
+  let mut out : List (ℚ × ℚ × Option Found) := []
+  let mut lo := x
+  let mut hi := y
+  let Lmax := min (y - x) (1 / 3)
+  if xb then
+    match bpCellAtF ps geom cpi m' x (if yb then Lmax / 2 else Lmax) false with
+    | some (a, b, f) => out := out ++ [(a, b, some f)]; lo := b
+    | none => pure ()
+  let mut tailCells : List (ℚ × ℚ × Option Found) := []
+  if yb && lo < hi then
+    match bpCellAtF ps geom cpi m' y (min (hi - lo) (1 / 3)) true with
+    | some (a, b, f) => tailCells := [(a, b, some f)]; hi := a
+    | none => pure ()
+  let mut nf := 0
+  if lo < hi then
+    let (cs, k) := guidedCover ps M geom cpi m' farOk lo hi ((hi - lo) / 16) 400
+    out := out ++ cs
+    nf := k
+  return (out ++ tailCells, nf)
+
 /-- The kind hint of a generator output tape: breakpoint side, or `none` for the other kinds. -/
 partial def hintOf : List Int → Option Bool
   | 5 :: n :: rest => hintOf (rest.drop n.toNat)
@@ -574,21 +842,26 @@ def excessEnd (usePL : Bool) (bpsL : List ℚ) : ℚ :=
         else if excessAt usePL bpsL mid == 0 then bis lo mid k else bis mid hi k
     bis (max (-r0) (z - r0 / 64)) z 30
 
-/-- Greedy cap cover: the widest cell `[a, e]` whose excess `∫ (ub - m')` fits the remaining budget `R`
-spread evenly over the rest of the excess region `[a, xEnd]` (over `[a, 0]` once past it), and never more
-than `R`. Total cost ≤ the starting budget ≤ the receipt's `cap_excess`; the Lean check is that one sum,
-so where the budget is spent is a search choice only. -/
+/-- Greedy cap cover: the widest cell `[a, e]` whose excess `∫ (ub - m')` fits its allowance, and never
+more than the remaining budget `R`. The allowance has two parts: the excess region `[a, xEnd]` gets
+`Rin = min (9R/10) (4 · excess(a) · (xEnd - a))`, about four times its own excess, spread evenly over it;
+the rest `R - Rin` is spread evenly over `[a, 0]`, for the slack `ub - g` of wide cells. A thin excess
+region therefore cannot spend the budget the rest of the cap needs (χ₋₃, 29 Oct). Total cost ≤ the
+starting budget ≤ the receipt's `cap_excess`; the Lean check is that one sum, so where the budget is
+spent is a search choice only. -/
 partial def greedyCap (usePL : Bool) (xEnd R : ℚ) (a b : ℚ) (bpsL : List ℚ) (w : ℚ) (fuel : ℕ) :
     List (ℚ × ℚ × CapR) :=
   if a ≥ b then [] else
   if fuel = 0 then [(a, b, .fail)] else
+  let rin := if a < xEnd then min (R * 9 / 10) (4 * excessAt usePL bpsL a * (xEnd - a)) else 0
+  let rout := (R - rin) / (-a)
   let tr := fun (e : ℚ) =>
     let r := bestCapR usePL a e (bpsL.contains a) (bpsL.contains e)
     match r with
     | .fail => none
     | r =>
-      let rate := if a < xEnd then R / (xEnd - a) else R / (-a)
-      if capCost a e r ≤ min (rate * (e - a)) R || e - a < 1 / 10 ^ 13 then some r else none
+      let inPart := if a < xEnd then rin * (min e xEnd - a) / (xEnd - a) else 0
+      if capCost a e r ≤ min (inPart + rout * (e - a)) R || e - a < 1 / 10 ^ 13 then some r else none
   match (if b - a ≤ 2 * w then tr b else none) with
   | some r => [(a, b, r)]
   | none =>
@@ -638,7 +911,7 @@ def mkM (c : CQ) (K J : ℕ) : Option MPData :=
 
 def mpMain : IO (Option MPData) := pure none
 
-def process (Mopt : Option MPData) (plan : List String) (line : String) : IO Unit := do
+def process (Mopt : Option MPData) (plan : List String) (fast : Bool) (line : String) : IO Unit := do
   let ws := (line.splitOn " ").filter (· ≠ "")
   match ws with
   | ["T", ei] =>
@@ -648,16 +921,23 @@ def process (Mopt : Option MPData) (plan : List String) (line : String) : IO Uni
     let pl := parsePlan plan (some ei)
     let mut nf := 0
     for (x, y) in B.zip B.tail do
-      let (res, k) := if pl.isEmpty then
+      let t0 ← IO.monoMsNow
+      let (res, k) := if fast then
+          coverSegF psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains x) (isBp.contains y)
+            (fun a b => cellFarOk Dc Fc e (a, b))
+        else if pl.isEmpty then
           (coverSeg psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains x) (isBp.contains y)
             (fun a b => cellFarOk Dc Fc e (a, b)), 0)
         else planSeg psC Mopt (tubeGeom e) cpiC Dc.mprime x y (isBp.contains ·)
             (fun a b => cellFarOk Dc Fc e (a, b)) pl (plan.contains "MERGE")
       nf := nf + k
+      let t1 ← IO.monoMsNow
+      if fast then IO.println s!"# seg {qf x} {qf y}: {res.length} cells, {t1 - t0} ms"
       for (p, q, f) in res do
         match f with
         | some f => IO.println s!"T {ei} {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL T {ei} {p.num} {p.den} {q.num} {q.den}"
+    if fast then IO.println s!"# fast T {ei}: {nf} fallbacks to the greedy search"
     if !pl.isEmpty then IO.println s!"# plan T {ei}: {pl.length} planned cells, {nf} parts fell back to the search"
   | ["L"] =>
     let B := sortQ (([0, 1] ++ realBps 0 1).eraseDups)
@@ -665,7 +945,9 @@ def process (Mopt : Option MPData) (plan : List String) (line : String) : IO Uni
     let pl := parsePlan plan none
     let mut nf := 0
     for (x, y) in B.zip B.tail do
-      let (res, k) := if pl.isEmpty then
+      let (res, k) := if fast then
+          coverSegF psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains x) (isBp.contains y) (fun _ _ => false)
+        else if pl.isEmpty then
           (coverSeg psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains x) (isBp.contains y)
             (fun _ _ => false), 0)
         else planSeg psC Mopt lineGeom cpiC Dc.gmin x y (isBp.contains ·) (fun _ _ => false) pl (plan.contains "MERGE")
@@ -674,6 +956,7 @@ def process (Mopt : Option MPData) (plan : List String) (line : String) : IO Uni
         match f with
         | some f => IO.println s!"L {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL L {p.num} {p.den} {q.num} {q.den}"
+    if fast then IO.println s!"# fast L: {nf} fallbacks to the greedy search"
     if !pl.isEmpty then IO.println s!"# plan L: {pl.length} planned cells, {nf} parts fell back to the search"
   | tag :: rest =>
     let R0 : ℚ := match rest with
@@ -709,8 +992,9 @@ def main (args : List String) : IO Unit := do
     let lines ← IO.FS.lines file
     -- optional plan file (GenSpeed): proposed cells of the T / L lines, tried before any search
     let mut plan : List String := []
+    let fast := planArg == ["FAST"]
     if let [pf] := planArg then
-      plan := (← IO.FS.lines pf).toList
+      if !fast then plan := (← IO.FS.lines pf).toList
     -- the multipole line (if any) is applied to every slice
     let mut Mopt : Option MPData := none
     for l in lines do
@@ -728,7 +1012,7 @@ def main (args : List String) : IO Unit := do
     for l in lines do
       if !(l.startsWith "M") then
         if i % nslices.toNat! == k.toNat! then
-          process Mopt plan l
+          process Mopt plan fast l
           (← IO.getStdout).flush
         i := i + 1
   | _ => IO.eprintln "usage: GenCover spec k nslices [plan]"

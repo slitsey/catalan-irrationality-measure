@@ -9,6 +9,7 @@ modules `CatalanCore.Uniform.Bank.Common.Data.<Bank>.{Data,Frame}` (emitted by g
 Commands (run in this order; `all` runs env..gen..emit):
   env    write <mod>/Env0.lean (node pieces, polygon, far data, noRay data) -- build it first
   plan   (optional) write a plan from the receipt's screen cells; `gen --plan` takes it, or a previous run's dir
+         (`gen --fast`: no plan, guided search for new edges, much faster than the plain greedy)
   gen    write the Lean generators, run them through lanes.py (cells of every proved kind, pair energies)
   emit   read the generator output, write the Lean data modules (Env, Tube, Line, Cap, Energy, Check, Decay)
   build  build the emitted modules leaf-first through lanes.py (<= 3 at a time)
@@ -195,7 +196,8 @@ def cmd_gen(C, a):
     # one driver job per spec line (each tube edge, the line, the cap) unless --slices is given, with at
     # most --maxpar in flight: short jobs, so builds and research are not starved for hours
     n = a.slices if a.slices > 0 else len([l for l in spec if not l.startswith('M')])
-    extra = [plan_file(C, a.plan)] if a.plan else []
+    assert not (a.plan and a.fast), '--plan and --fast exclude each other'
+    extra = [plan_file(C, a.plan)] if a.plan else (['FAST'] if a.fast else [])
     outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)] + extra, n,
                       a.label or f'{C.bank}gen', a.gb, maxpar=a.maxpar)
     if a.cmd in ('gen', 'all') and not a.noE:
@@ -698,6 +700,8 @@ if __name__ == '__main__':
     ap.add_argument('--label', default=None, help='driver job label of the generator slices (default <bank>gen)')
     ap.add_argument('--plan', default=None, help='gen: plan file, or a directory of a previous run (gen_*.out); '
                     'planned cells are verified first, the search runs only where they fail')
+    ap.add_argument('--fast', action='store_true', help='gen: guided search for new edges (no plan): greedy '
+                    'stopping rule and kinds, ends by a secant on the order-8 jet margin, checks skipped below the margin')
     ap.add_argument('--out', default=None, help='plan: output file')
     ap.add_argument('--merge', action='store_true', help='plan: let the generator join consecutive planned cells')
     ap.add_argument('--eslices', type=int, default=2)
