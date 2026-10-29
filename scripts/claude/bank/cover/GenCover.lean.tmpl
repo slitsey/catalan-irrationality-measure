@@ -761,14 +761,12 @@ def bestCap (a b : ℚ) (aBp bBp : Bool) : Option (ℚ × Found) := Id.run do
       match evalBp n true (flipAt flb negPs) zc dd h 0 with
       | some f => cands := wrapF flb f :: cands
       | none => pure ()
-  let mut best : Option (ℚ × Found) := none
-  for f in cands do
-    let m'' := floorG f.margin (10 ^ 15)
-    if checkKind negPs none zc dd h 0 m'' f.kind then
-      match best with
-      | some (ub, _) => if -m'' < ub then best := some (-m'', f)
-      | none => best := some (-m'', f)
-  return best
+  -- the passing candidate of largest `m''`, the first in `cands` on ties: the candidates in order of decreasing
+  -- `m''` (a stable sort) and the first that passes, so the losing candidates are not checked (GenSpeed, 29 Oct)
+  let ranked := (cands.map fun f => (floorG f.margin (10 ^ 15), f)).mergeSort (fun x y => decide (y.1 ≤ x.1))
+  for (m'', f) in ranked do
+    if checkKind negPs none zc dd h 0 m'' f.kind then return some (-m'', f)
+  return none
 
 def polyAt (Q : List ℚ) (s : ℚ) : ℚ := (List.range Q.length).foldl (fun acc k => acc + coeffs Q k * s ^ k) 0
 
@@ -900,6 +898,35 @@ partial def greedyCap (usePL : Bool) (xEnd R : ℚ) (a b : ℚ) (bpsL : List ℚ
       let (e2, r2) := if e1 ≥ b then (e1, r1) else refine e1 r1 eb 30
       (a, e2, r2) :: greedyCap usePL xEnd (max (R - capCost a e2 r2) 0) e2 b bpsL (e2 - a) (fuel - 1)
 
+/-- `greedyCap` with the guided search (`FAST`): the same allowance, acceptance and stopping rule (1%), the
+end of each cell by `guided1` with the guide (allowance, cost) (`P` = the allowance, linear in the width;
+`F` = the cost `∫ (ub - m')₊`, a fitted power).  A cell with no passing end falls back to `greedyCap`
+for the rest of the segment. -/
+partial def guidedCap (usePL : Bool) (xEnd R : ℚ) (a b : ℚ) (bpsL : List ℚ) (w : ℚ) (fuel : ℕ) :
+    List (ℚ × ℚ × CapR) :=
+  if a ≥ b then [] else
+  if fuel = 0 then [(a, b, .fail)] else
+  let rin := if a < xEnd then min (R * 9 / 10) (4 * excessAt usePL bpsL a * (xEnd - a)) else 0
+  let rout := (R - rin) / (-a)
+  let allow := fun (e : ℚ) =>
+    min ((if a < xEnd then rin * (min e xEnd - a) / (xEnd - a) else 0) + rout * (e - a)) R
+  let tr := fun (e : ℚ) =>
+    match bestCapR usePL a e (bpsL.contains a) (bpsL.contains e) with
+    | .fail => ((none : Option CapR), (none : Option Guide))
+    | r =>
+      let c := capCost a e r
+      (if c ≤ allow e || e - a < 1 / 10 ^ 13 then some r else none, some (qf (allow e), qf c))
+  match (if b - a ≤ 2 * w then (tr b).1 else none) with
+  | some r => [(a, b, r)]
+  | none =>
+    let w0 := if w ≤ 0 || a + w ≥ b then (b - a) / 2 else w
+    let (x, _) := guided1 (fun x => let t := tr (a + x); (t.1.isSome, t.2)) (fun x => stepTo b a x - a)
+      (b - a) w0 100 0.0045 1.5 (2 / 3)
+    let found := x.bind fun x => (tr (a + x)).1.map fun r => (a + x, r)
+    match found with
+    | some (e, r) => (a, e, r) :: guidedCap usePL xEnd (max (R - capCost a e r) 0) e b bpsL (e - a) (fuel - 1)
+    | none => greedyCap usePL xEnd R a b bpsL w fuel
+
 /-! ### the multipole data -/
 
 def mkM (c : CQ) (K J : ℕ) : Option MPData :=
@@ -962,17 +989,22 @@ def process (Mopt : Option MPData) (plan : List String) (fast : Bool) (line : St
     let R0 : ℚ := match rest with
       | [rn, rd] => qOf rn rd
       | _ => 0
-    if tag == "C" || tag == "CP" then
+    if tag == "C" || tag == "CP" || tag == "CPU" then
       let bl := realBps (-Dc.r0) 0
       let B := sortQ (([-Dc.r0, 0] ++ bl).eraseDups)
-      let usePL := tag == "CP"
-      let xEnd := excessEnd usePL bl
+      let usePL := tag != "C"
+      -- `CPU`: uniform rate, the remaining budget spread evenly over `[a, 0]` (no excess-region share)
+      let xEnd := if tag == "CPU" then -Dc.r0 else excessEnd usePL bl
       let x0 := excessAt usePL bl (-Dc.r0)
       IO.println s!"# cap budget {GenC.qf R0} excess at -r0 {GenC.qf x0} excess region ends {GenC.qf xEnd}"
       (← IO.getStdout).flush
       let mut R := R0
       for (x, y) in B.zip B.tail do
-        for (p, q, r) in greedyCap (tag == "CP") xEnd R x y bl ((y - x) / 16) 400 do
+        let t0 ← IO.monoMsNow
+        let cs := (if fast then guidedCap else greedyCap) usePL xEnd R x y bl ((y - x) / 16) 400
+        let t1 ← IO.monoMsNow
+        if fast then IO.println s!"# seg {qf x} {qf y}: {cs.length} cap cells, {t1 - t0} ms"
+        for (p, q, r) in cs do
           R := max (R - capCost p q r) 0
           match r with
           | .const ub f =>

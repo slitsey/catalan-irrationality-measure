@@ -687,7 +687,7 @@ if __name__ == '__main__':
     ap.add_argument('--mod', required=True, help='Lean module prefix of the output directory')
     ap.add_argument('--scratch', default=None)
     ap.add_argument('--capfile', default=None, help='generator output with the cap lines (e.g. a run with the CP spec)')
-    ap.add_argument('--capmode', default='C', choices=['C', 'CP'], help='C: constant upper bounds, CP: also PL chords')
+    ap.add_argument('--capmode', default='C', choices=['C', 'CP', 'CPU'], help='C: constant upper bounds, CP: also PL chords, CPU: CP with a uniform budget rate')
     ap.add_argument('--K', type=int, default=24, help='multipole order (0: no multipole cells)')
     ap.add_argument('--J', type=int, default=12)
     ap.add_argument('--centre', default=None, help='multipole centre (real), default midpoint of the support')
