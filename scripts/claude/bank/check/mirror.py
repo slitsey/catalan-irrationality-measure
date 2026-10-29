@@ -418,3 +418,24 @@ def tCand(kap, zeta):
 TS = mn(mn(tCand(False, False), tCand(False, True)), mn(tCand(True, False), tCand(True, True)))
 COND['1<=m'] = (0, 0, 1, 0, -1, False)
 UFS = (TS, [COND['2m<=p'], COND['1<=m']], 1)
+
+
+# ------------------------------------------------------------------------------------ LP2 widened and the prefix branches
+# Check/LP2W.lean `brLP2w`: tLP2 with the condition N <= p + k replaced by N <= 2p (same expression, debit 1).
+LP2W = (LP2[0], [COND['r<p'], COND['k<=r'], COND['N<=2p'], COND['p<r+m']], 1)
+BASE_W = [(n, (LP2W if n == 'LP2' else b)) for n, b in BASE]
+
+def _eNn(n): return add(R, smul(2, tsub(M, smul(n, P))))
+
+def prefix(n, j0, j1):
+    """Check/Prefix.lean `brPre n j0 j1`: the window bound of Theorem 1 at the strip n, price
+    2r + (2m - (hi - lo)), no conditions, debit 0."""
+    en = _eNn(n)
+    lo_k = R if j1 == 0 else add(AP, add(K, smul(j1 - 1, P)))
+    lo = mx(mx(tsub(en, P), R), mx(add(AP, smul(j0, P)), lo_k))
+    hi = mn(mn(en, add(R, P)), mn(add(AP, smul(j0 + 1, P)), add(AP, add(K, smul(j1, P)))))
+    return (add(smul(2, R), tsub(smul(2, M), tsub(hi, lo))), [], 0)
+
+def pres_list(nmax):
+    """all (n, j0, j1) with 1 <= n <= nmax, j0 < 2, j1 < 3 (the Lean `bankPres`)."""
+    return [(n, j0, j1) for n in range(1, nmax + 1) for j0 in range(2) for j1 in range(3)]

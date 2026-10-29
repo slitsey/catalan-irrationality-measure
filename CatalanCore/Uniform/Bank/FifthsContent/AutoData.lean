@@ -15,7 +15,7 @@ namespace CatalanCore.Uniform.Bank.FifthsContent.Auto
 open CatalanCore.Uniform.Content.BankShared.Check
 
 /-- The fifths UF bank data, with its finite `Λ_fin`. -/
-def bankData : BankData := { bankHead with Λ := qq 226487317556495767233335592038683783233726064567902721267191853461042592340729364136428383 64435803527044876027822469599957910382131945767919188614473133903999894959704878762798000, tmpls := [(1, tmpl1), (2, tmpl2), (3, tmpl3), (4, tmpl4)] }
+def bankData : BankData := { bankHead with Λ := qq 173937156456315298807306647759889076927163365643560282701749835034238387973792538072240342318080197597433706216470431985182551608950257572974125011573276885542423413 49499557127186711365962340956524925371249056576090314752836879469777208015304147377189274988238099339441061810594791286062291429223378697537821981824648939525888000, tmpls := [(1, tmpl1), (2, tmpl2), (3, tmpl3), (4, tmpl4)] }
 
 theorem tmpl1_okD : tmplOK bankData 1 tmpl1 = true :=
   tmplOK_withTmpls bankHead _ _ 1 tmpl1 tmpl1_ok
@@ -28,6 +28,11 @@ theorem tmpl3_okD : tmplOK bankData 3 tmpl3 = true :=
 
 theorem tmpl4_okD : tmplOK bankData 4 tmpl4 = true :=
   tmplOK_withTmpls bankHead _ _ 4 tmpl4 tmpl4_ok
+
+/-- The catalogue of `bankData` in the shape of `catValid_bankUFwP`. -/
+theorem bankData_cat : bankData.cat = tableT ++ ([brLP1, brLP2w, brRank, brS] ++
+    bankWins.map (fun w => brWin w.1 w.2)) ++ bankPres.map (fun x => brPre x.1 x.2.1 x.2.2) :=
+  (List.append_assoc _ _ _).symm
 
 set_option profiler true in
 theorem bank_params : checkParams bankData = true := by decide +kernel
@@ -46,8 +51,8 @@ theorem bank_check : check bankData = true := by
   rfl
 
 /-- The finite content constant. -/
-theorem bankData_Λ : bankData.Λ = (226487317556495767233335592038683783233726064567902721267191853461042592340729364136428383 /
-    64435803527044876027822469599957910382131945767919188614473133903999894959704878762798000 : ℚ) := by
+theorem bankData_Λ : bankData.Λ = (173937156456315298807306647759889076927163365643560282701749835034238387973792538072240342318080197597433706216470431985182551608950257572974125011573276885542423413 /
+    49499557127186711365962340956524925371249056576090314752836879469777208015304147377189274988238099339441061810594791286062291429223378697537821981824648939525888000 : ℚ) := by
   decide +kernel
 
 end CatalanCore.Uniform.Bank.FifthsContent.Auto

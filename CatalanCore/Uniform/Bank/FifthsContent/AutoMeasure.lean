@@ -7,7 +7,7 @@ set_option Elab.async false
 
 With the automatic content `Auto.fifthsK_content_auto` at `Λ_fin = bankData.Λ` (selection depth `≤ 64`,
 `depth_le`) and the decay `HasScaledDecay (F5.family fifthsK (F5.selectionDepth fifthsK 2)) F5.scale D5 c5`, the
-target bound `59983/2500` follows by `Auto.fifths_mu_le`.  The theorems are conditional only on the decay. -/
+target bound `2989/125` follows by `Auto.fifths_mu_le`.  The theorems are conditional only on the decay. -/
 
 namespace CatalanCore.Uniform.Bank.FifthsContent.AutoMeasure
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Bank.Fifths
@@ -23,20 +23,20 @@ theorem lam_lt_D5 : ((bankData.Λ : ℚ) : ℝ) < (D5 : ℝ) := by
   have h : bankData.Λ < D5 := by rw [bankData_Λ]; unfold D5; norm_num
   exact_mod_cast h
 
-theorem X_le : (1 : ℝ) * (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℚ)) ≤ ((59983 / 2500 : ℚ) : ℝ) := by
+theorem X_le : (1 : ℝ) * (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℚ)) ≤ ((2989 / 125 : ℚ) : ℝ) := by
   rw [one_mul]; exact fifths_mu_le
 
 /-- The fifths measure of a frame with constant `(-1/25)` times the target, from the automatic content and the
-decay at the selection depth, at any decay rate `D` with `Λ_fin < D` and `c5 ≤ (59983/2500) (D - Λ_fin)`. -/
+decay at the selection depth, at any decay rate `D` with `Λ_fin < D` and `c5 ≤ (2989/125) (D - Λ_fin)`. -/
 theorem fifths_measure_at (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i ≠ 0) {target : ℝ}
     (hconst : Fr.const = ((-1 / 25 : ℚ) : ℝ) * target)
     (hS : HasScaledContent ((F5.family Fr (F5.selectionDepth Fr 2)).restrictAdm (fun i => i.1 % 2 = 0))
       F5.scale ((bankData.Λ : ℚ) : ℝ))
-    (D : ℚ) (hΛD : bankData.Λ < D) (hμ : c5 ≤ 59983 / 2500 * (D - bankData.Λ))
+    (D : ℚ) (hΛD : bankData.Λ < D) (hμ : c5 ≤ 2989 / 125 * (D - bankData.Λ))
     (hD : HasScaledDecay (F5.family Fr (F5.selectionDepth Fr 2)) F5.scale (D : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt target ((59983 / 2500 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt target ((2989 / 125 : ℚ) : ℝ) := by
   have hlam : ((bankData.Λ : ℚ) : ℝ) < (D : ℝ) := by exact_mod_cast hΛD
-  have hX : (1 : ℝ) * (c5 : ℝ) / ((D : ℝ) - (bankData.Λ : ℚ)) ≤ ((59983 / 2500 : ℚ) : ℝ) := by
+  have hX : (1 : ℝ) * (c5 : ℝ) / ((D : ℝ) - (bankData.Λ : ℚ)) ≤ ((2989 / 125 : ℚ) : ℝ) := by
     have hpos : (0 : ℝ) < (D : ℝ) - (bankData.Λ : ℝ) := by linarith
     rw [one_mul, div_le_iff₀ hpos]
     have h3 := (Rat.cast_le (K := ℝ)).2 hμ
@@ -60,7 +60,7 @@ theorem fifths_measure_at (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i ≠
       refine ⟨R0, fun s hs x => ?_⟩
       obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
       exact ⟨n, ⟨hn, by show n.1 % 2 = 0; have : F5.scale n = n.1 := rfl; omega⟩, hsc, hne⟩)
-  have h' : Measure.MeasureLBAt Fr.const ((59983 / 2500 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt Fr.const ((2989 / 125 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono hX ((Measure.MeasureLB_iff _ _).1 key)
   have he : target = ((-25 : ℚ) : ℝ) * Fr.const + ((0 : ℚ) : ℝ) := by
     rw [hconst]; push_cast; ring
@@ -73,35 +73,35 @@ theorem fifths_measure_auto (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i �
     (hS : HasScaledContent ((F5.family Fr (F5.selectionDepth Fr 2)).restrictAdm (fun i => i.1 % 2 = 0))
       F5.scale ((bankData.Λ : ℚ) : ℝ))
     (hD : HasScaledDecay (F5.family Fr (F5.selectionDepth Fr 2)) F5.scale (D5 : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt target ((59983 / 2500 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt target ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_at Fr hd hw hconst hS D5 (by rw [bankData_Λ]; unfold D5; norm_num)
     (by rw [bankData_Λ]; unfold c5 D5; norm_num) hD
 
-/-- **`μ(fifthsTarget 1) ≤ 59983/2500`**, conditional only on the decay. -/
+/-- **`μ(fifthsTarget 1) ≤ 2989/125`**, conditional only on the decay. -/
 theorem fifths1_measure_auto
     (hD : HasScaledDecay (F5.family fifths1 (F5.selectionDepth fifths1 2)) F5.scale (D5 : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt (fifthsTarget 1) ((59983 / 2500 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (fifthsTarget 1) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_auto fifths1 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths1_const
     (fifths1_content_auto _ (depth_le rfl)) hD
 
-/-- **`μ(fifthsTarget 2) ≤ 59983/2500`**, conditional only on the decay. -/
+/-- **`μ(fifthsTarget 2) ≤ 2989/125`**, conditional only on the decay. -/
 theorem fifths2_measure_auto
     (hD : HasScaledDecay (F5.family fifths2 (F5.selectionDepth fifths2 2)) F5.scale (D5 : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt (fifthsTarget 2) ((59983 / 2500 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (fifthsTarget 2) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_auto fifths2 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths2_const
     (fifths2_content_auto _ (depth_le rfl)) hD
 
-/-- **`μ(fifthsTarget 3) ≤ 59983/2500`**, conditional only on the decay. -/
+/-- **`μ(fifthsTarget 3) ≤ 2989/125`**, conditional only on the decay. -/
 theorem fifths3_measure_auto
     (hD : HasScaledDecay (F5.family fifths3 (F5.selectionDepth fifths3 2)) F5.scale (D5 : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt (fifthsTarget 3) ((59983 / 2500 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (fifthsTarget 3) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_auto fifths3 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths3_const
     (fifths3_content_auto _ (depth_le rfl)) hD
 
-/-- **`μ(fifthsTarget 4) ≤ 59983/2500`**, conditional only on the decay. -/
+/-- **`μ(fifthsTarget 4) ≤ 2989/125`**, conditional only on the decay. -/
 theorem fifths4_measure_auto
     (hD : HasScaledDecay (F5.family fifths4 (F5.selectionDepth fifths4 2)) F5.scale (D5 : ℝ) (c5 : ℝ)) :
-    Measure.MeasureLBAt (fifthsTarget 4) ((59983 / 2500 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (fifthsTarget 4) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_auto fifths4 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths4_const
     (fifths4_content_auto _ (depth_le rfl)) hD
 

@@ -12,12 +12,12 @@ The content of `fifths1 … fifths4` (members `a = 1 … 4`, offsets `u = 5 - a`
 (`hasScaledContent_of_check`):
 
 * data: `AutoData.bankData` (C1's generated UF template, `n = 100`), `bank_check : check bankData = true`;
-* instance hypotheses: `fifths_catValid` (`catValid_bankUF` at `fifthsInst T`, `fifths_arithmetic T`,
+* instance hypotheses: `fifths_catValid` (`catValid_bankUFwP` (LP2 widened, prefix branches) at `fifthsInst T`, `fifths_arithmetic T`,
   `fifths_levels T`, two-term data of `ShiftData`, norm `25`, bad primes `{2, 3, 5}`, good primes `p ≥ 7`,
   `P_bad = 9`, `K = 9`, `N1 = 50`) and `fifths_preValid` (`pre_gle_any`, `p ≤ r/900`, `α0 = 20/9`);
 * `fifthsK_content_auto`: `HasScaledContent ((F5.family fifthsK depth).restrictAdm even) F5.scale Λ_fin`,
   `Λ_fin = bankData.Λ` (`bankData_Λ`), for every depth `≤ 64`;
-* `fifths_mu_le : c5 / (D5 - Λ_fin) ≤ 59983/2500` (`D5`, `c5` of `Bank/Fifths/Final`). -/
+* `fifths_mu_le : c5 / (D5 - Λ_fin) ≤ 2989/125` (`D5`, `c5` of `Bank/Fifths/Final`). -/
 
 namespace CatalanCore.Uniform.Bank.FifthsContent.Auto
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -54,7 +54,8 @@ theorem fifths_catValid {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : �
       bankData.cat := by
   have hu0 := T.hu0
   have hu1 := T.hu1
-  exact catValid_bankUF (fifthsInst T) (fifths_arithmetic T).L_eq (fifths_levels T) (2 / 9) two_ninths_pos
+  rw [bankData_cat]
+  exact catValid_bankUFwP (fifthsInst T) (fifths_arithmetic T).L_eq (fifths_levels T) (2 / 9) two_ninths_pos
     (by norm_num) (shift_twoTerm T) (nm := 5 * 5) (by rw [T.norm_eq]; norm_num) depth 9 9 50
     (by norm_num) (by norm_num) (by norm_num) le_rfl
     (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
@@ -68,7 +69,7 @@ theorem fifths_catValid {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : �
       have h2 := (rootClass_unique hp (by omega) (by omega) (by omega) hjq hk').2
       show (fifthsCD T).kq p = k
       rw [h1, h2])
-    [(5, 5), (5, 6), (6, 6), (6, 7), (7, 7), (7, 8), (8, 8), (8, 9), (9, 9), (9, 10)]
+    bankWins bankPres
 
 /-- The prefix bound of every fifths frame (`pre_gle_any`), for `p ≤ r/900`, `α0 = 20/9`. -/
 theorem fifths_preValid {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : ℕ) (hcF : cFr Fr ≤ 49) :
@@ -133,10 +134,10 @@ theorem fifths4_content_auto (depth : ℕ) (hd : depth ≤ 64) :
     fifths4 depth hd cFr_fifths4 4 (by decide) _ _ (fifths_catValid fifths4_shift depth)
     (fifths_preValid fifths4_shift depth cFr_fifths4)
 
-/-- **The fifths μ target**: `c5 / (D5 - Λ_fin) ≤ 59983/2500` with the finite UF constant `Λ_fin = bankData.Λ`. -/
-theorem fifths_mu_le : (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℝ)) ≤ ((59983 / 2500 : ℚ) : ℝ) := by
+/-- **The fifths μ target**: `c5 / (D5 - Λ_fin) ≤ 2989/125` with the finite UF constant `Λ_fin = bankData.Λ`. -/
+theorem fifths_mu_le : (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℝ)) ≤ ((2989 / 125 : ℚ) : ℝ) := by
   have h1 : bankData.Λ < D5 := by rw [bankData_Λ]; unfold D5; norm_num
-  have h2 : c5 ≤ 59983 / 2500 * (D5 - bankData.Λ) := by rw [bankData_Λ]; unfold c5 D5; norm_num
+  have h2 : c5 ≤ 2989 / 125 * (D5 - bankData.Λ) := by rw [bankData_Λ]; unfold c5 D5; norm_num
   have hpos : (0 : ℝ) < (D5 : ℝ) - (bankData.Λ : ℝ) := by
     have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
   rw [div_le_iff₀ hpos]

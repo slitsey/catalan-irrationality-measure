@@ -47,10 +47,12 @@ def strip_line(tau, al, ka, e, left, W):
         u = X.split_point(tau, al, ka, u, e)
     return e - u
 
-def search(P, cat, names, q, al, ka, depth, cF, Pbad):
+def search(P, cat, names, q, al, ka, depth, cF, Pbad, only=None):
     s, t, a, b, Cc = P
     opts = []
     for bi, (tau, conds, deb) in enumerate(cat):
+        if only is not None and bi not in only:
+            continue
         ok = True
         needL = needR = False
         for c in conds:

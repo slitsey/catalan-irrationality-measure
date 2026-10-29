@@ -24,7 +24,7 @@ theorem dim_eq : Dchi.dim = 2 := by decide +kernel
 theorem eps_pos : 0 < Dchi.ε := by decide +kernel
 theorem ccert_eq : Dchi.ccert = c5 := by decide +kernel
 theorem lam_lt : bankData.Λ < Dchi.Dt := by rw [bankData_Λ]; decide +kernel
-theorem mu_margin : c5 ≤ 59983 / 2500 * (Dchi.Dt - bankData.Λ) := by rw [bankData_Λ]; decide +kernel
+theorem mu_margin : c5 ≤ 2989 / 125 * (Dchi.Dt - bankData.Λ) := by rw [bankData_Λ]; decide +kernel
 
 /-- **Decay of a fifths frame from the generated cover.** -/
 theorem decay_of_frame {Fr : Frame} (hC : Frame.contourCheck Fr = true)
@@ -47,29 +47,29 @@ theorem m0_le (s xs δ0 : ℚ) (n0off : ℕ) (hs0 : 0 < s) (hs1 : s < 1) (hs : (
     exact h
   · show (1 / 5 : ℝ) ≤ ((1 : ℚ) : ℝ); norm_num
 
-/-- **`μ(fifthsTarget 1) ≤ 59983/2500`.** -/
-theorem fifths1_measure : Measure.MeasureLBAt (fifthsTarget 1) ((59983 / 2500 : ℚ) : ℝ) :=
+/-- **`μ(fifthsTarget 1) ≤ 2989/125`.** -/
+theorem fifths1_measure : Measure.MeasureLBAt (fifthsTarget 1) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_at fifths1 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths1_const
     (fifths1_content_auto _ (depth_le rfl)) _ lam_lt mu_margin
     (decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl
       (m0_le _ _ _ _ _ _ (by norm_num)) _)
 
-/-- **`μ(fifthsTarget 2) ≤ 59983/2500`.** -/
-theorem fifths2_measure : Measure.MeasureLBAt (fifthsTarget 2) ((59983 / 2500 : ℚ) : ℝ) :=
+/-- **`μ(fifthsTarget 2) ≤ 2989/125`.** -/
+theorem fifths2_measure : Measure.MeasureLBAt (fifthsTarget 2) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_at fifths2 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths2_const
     (fifths2_content_auto _ (depth_le rfl)) _ lam_lt mu_margin
     (decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl
       (m0_le _ _ _ _ _ _ (by norm_num)) _)
 
-/-- **`μ(fifthsTarget 3) ≤ 59983/2500`.** -/
-theorem fifths3_measure : Measure.MeasureLBAt (fifthsTarget 3) ((59983 / 2500 : ℚ) : ℝ) :=
+/-- **`μ(fifthsTarget 3) ≤ 2989/125`.** -/
+theorem fifths3_measure : Measure.MeasureLBAt (fifthsTarget 3) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_at fifths3 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths3_const
     (fifths3_content_auto _ (depth_le rfl)) _ lam_lt mu_margin
     (decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl
       (m0_le _ _ _ _ _ _ (by norm_num)) _)
 
-/-- **`μ(fifthsTarget 4) ≤ 59983/2500`.** -/
-theorem fifths4_measure : Measure.MeasureLBAt (fifthsTarget 4) ((59983 / 2500 : ℚ) : ℝ) :=
+/-- **`μ(fifthsTarget 4) ≤ 2989/125`.** -/
+theorem fifths4_measure : Measure.MeasureLBAt (fifthsTarget 4) ((2989 / 125 : ℚ) : ℝ) :=
   fifths_measure_at fifths4 (by show 1 ≤ 2; norm_num) (fifthsFrame_w_ne _ _ _ _ _ _) fifths4_const
     (fifths4_content_auto _ (depth_le rfl)) _ lam_lt mu_margin
     (decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl
