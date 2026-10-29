@@ -12,7 +12,7 @@
 \newcommand{\FormalizationLink}{\url{\FormalizationURL}}
 
 % Numerical constants of the certificate.
-\newcommand{\Bx}{589.19666}                             % threshold x of the criterion
+\newcommand{\Bx}{531.99924}                             % threshold x of the criterion
 \newcommand{\Rho}{301.54258}                            % perturbation exponent rho
 \newcommand{\Ctwo}{4.28886}                             % cost of a fixed column, second case
 \newcommand{\Cone}{4.09661}                             % cost of a fixed column, first case
@@ -22,9 +22,9 @@
 \newcommand{\SupY}{-1.57499400}                         % sup of the column field
 \newcommand{\FieldCap}{-2.53949899}                     % SupX + SupY
 \newcommand{\ResCap}{-0.0631062}                        % sup of the residual field
-\newcommand{\EtaInf}{7.987762}                          % real place minus denominators (no content)
-\newcommand{\EtaTot}{27.124717}                         % EtaInf + Chi
-\newcommand{\Kappa}{1.956605}                           % kappa = B/rho
+\newcommand{\EtaInf}{7.987764}                          % real place minus denominators (no rank deficiencies)
+\newcommand{\EtaTot}{30.041}                            % eta of the criterion (Final532)
+\newcommand{\Kappa}{1.764261}                           % kappa = 532/rho
 \newcommand{\Kcoef}{160}                                % number of Chebyshev coefficients
 \newcommand{\Ngeo}{75}                                  % geometric terms
 \newcommand{\Ncomplex}{41}                              % complex geometric terms
@@ -34,13 +34,15 @@
 \newcommand{\Disc}{1.645\cdot10^{-5}}                   % discriminant of the budget
 \newcommand{\DiscBound}{1.656\cdot10^{-5}}
 \newcommand{\TDelta}{6422.8355}                         % n_0^2 (U - log 2 / 2)
-\newcommand{\EtaExact}{27.12683}                        % TDelta minus the denominator exponent
-\newcommand{\Blimit}{589.19}                            % d rho / eta
+\newcommand{\EtaExact}{30.04748}                        % TDelta minus the denominator exponent
+\newcommand{\Blimit}{531.88}                            % d rho / EtaExact
 \newcommand{\NCtwo}{248.75}                             % n_0 c_2
-\newcommand{\PayL}{53.00012}                            % d + 4 d delta kappa
-\newcommand{\PayR}{53.072}                              % eta kappa
+\newcommand{\PayL}{53.000108}                           % d + 4 d delta kappa
+\newcommand{\PayR}{53.000183}                           % eta kappa
 \newcommand{\Digest}{ff307ca0287dc5224e268202cb0b09776e933652acd2f2f879492af28d3e381d}
-\newcommand{\Chi}{19.136955}                            % rounded-down content area
+\newcommand{\Chi}{22.05972}                             % area of the rank-deficiency profile (gain532)
+\newcommand{\ChiLean}{22.05325}                         % lower bound gain532_ge used in the proof
+\newcommand{\Aden}{6392.7880}                           % exponent of the denominators
 \newcommand{\Wcap}{52.788}                              % cover constant of the weights
 
 \newtheorem{theorem}{Theorem}[section]
@@ -73,7 +75,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 24, 2026}
+\date{October 29, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 31A15, 68V20}
 
@@ -82,18 +84,22 @@ logarithmic potentials, Gauss quadrature, formal verification}
 
 \begin{abstract}
 Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. Building on OpenAI's recent proof
-that $G$ is irrational, we prove that $|G-a/b|>b^{-590}$ for every integer $a$ and every
-sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $590$.
+that $G$ is irrational, we prove that $|G-a/b|>b^{-532}$ for every integer $a$ and every
+sufficiently large integer $b$; thus the irrationality exponent of $G$ is at most $532$.
 OpenAI's proof compares, for a determinant $\Delta$ whose entries are linear forms in $1$ and $G$,
 a lower bound coming from the denominators of $\Delta$ with an upper bound coming from an integral
-representation. The determinant depends on five integer parameters, a \emph{design}. We prove,
-for an arbitrary design, that the reduction modulo $p$ of the matrix of rational parts has a
-large kernel for every prime $p$ in four explicit windows, with closed formulas in the five
-parameters, and that the denominator of the determinant is smaller at $p$ by the dimension of this
-kernel. With the design $(58,9,3,5,3)$, a Gauss quadrature formula and an identity of Andr\'eief type
-with fixed points, which bound the determinant on an exponentially small neighbourhood of $G$, and a
-criterion with a free lower end of the window of primes, this gives the measure. All steps are
-formalized in the Lean proof assistant, with only the standard axioms.
+representation. The determinant depends on five integer parameters, a \emph{design}. We show that
+the denominator of the determinant is smaller at a prime $p$ by the dimension of the kernel of the
+reduction modulo $p$ of the matrix of rational parts, and we bound this dimension from below. For an
+arbitrary design we prove closed formulas on four windows of primes, and a general counting inequality:
+a space of row combinations on which a few linear conditions force the column responses to vanish, after
+a difference of step $p$ in the spirit of Lucas's theorem, contributes its dimension minus the rank of
+the conditions. Instances of this inequality give further families of kernel vectors, and for finitely
+many windows the inequality is applied to a fixed rational subspace whose required ranks are certified
+by stored integer kernel vectors. With the design $(58,9,3,5,3)$, a Gauss quadrature formula and an
+identity of Andr\'eief type with fixed points, which bound the determinant on an exponentially small
+neighbourhood of $G$, and a criterion with a free lower end of the window of primes, this gives the
+measure. All steps are formalized in the Lean proof assistant, with only the standard axioms.
 \end{abstract}
 
 \maketitle
@@ -120,9 +126,9 @@ $\mu(\xi)=2$. An \emph{irrationality measure} is an explicit upper bound for $\m
 \begin{theorem}\label{thm:main}
 For every integer $a$ and every sufficiently large integer $b$,
 \[
- \left|G-\frac ab\right|>b^{-590}.
+ \left|G-\frac ab\right|>b^{-532}.
 \]
-In particular $\mu(G)\le590$.
+In particular $\mu(G)\le532$.
 \end{theorem}
 
 The proof uses the prime number theorem. The theorem and every result in this paper have been
@@ -188,17 +194,38 @@ $\mu(G)\le10^8$. Carreira \cite{Carreira2026} treated the five integer parameter
 as free, stated conditions under which OpenAI's argument goes through for general parameters, and
 obtained $\mu(G)<2294$ in the revised version of his note; he also formulated the best real-place
 constant of the method as an equilibrium problem for two measures, and in \cite{Carreira2026b} he
-records attempts to carry the method to $\beta(4)$. His bound is the closest to ours, and the
-comparison is instructive. The determinants are of the same kind. Carreira makes the determinant
+records attempts to carry the method to $\beta(4)$. His general theorem, instantiated at the design
+$(36,6,2,3,2)$ by a search and certification carried out with Claude Fable~5.1, gives
+$\mu(G)<2401.74$ \cite{Bojnal2026}. Xu \cite{Xu2026} reported $\mu(G)\le727.03$ for
+the design $(20,3,1,2,1)$, with an improved trial potential, found by an AI system, in the energy
+estimate at the real place; his certificate is numerical, in ball arithmetic, and is not formalized.
+The comparison with Carreira's argument is instructive. The determinants are of the same kind. Carreira makes the determinant
 small near $G$ by bounding all its minors, as Jha does; here a quadrature formula for the coefficient of
-the constant is used instead (Section~\ref{sec:real}). And the present paper uses, for every prime $p$
-in an interval of length about $14N$, the rank of the reduction of the matrix modulo $p$; this lowers
-the denominator of the determinant by more than twice the margin that remains between the real and the
+the constant is used instead (Section~\ref{sec:real}). And the present paper uses, for the primes $p$
+in a union of windows spread over $(16N/7,\,53N/2]$, the rank of the reduction of the matrix modulo $p$; this lowers
+the denominator of the determinant by more than $2.7$ times the margin that remains between the real and the
 finite places without it (Section~\ref{sec:intro-ideas}). Eskandari \cite{Eskandari2026} studies rational
 approximations to $G$ from another point of view. For $L(2,\chi_{-3})$, Calegari, Dimitrov and Tang
 proved linear independence of $1$, $\zeta(2)$ and $L(2,\chi_{-3})$ \cite{CDT2024}, and their
-holonomy bounds give $\mu(L(2,\chi_{-3}))\le24781$ \cite[Thm.~5.1]{CDT2025}. A companion paper
-\cite{Litsey2026b} proves measures for $G\pm5\pi^2/48$ and $L(2,\chi_{-3})$ with a related method.
+holonomy bounds give $\mu(L(2,\chi_{-3}))\le24781$ \cite[Thm.~5.1]{CDT2025}.
+
+The numbers $\zeta(2)$, $G$ and $L(2,\chi_{-3})$ are differences of values of the trigamma function
+$\psi'$ at rational points. For $0<s<t\le1$ put
+\[
+ \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n=0}^\infty\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr).
+\]
+Then
+\begin{gather*}
+ \zeta(2)=\tfrac12\Psi(\tfrac12,1),\qquad G=\tfrac1{16}\Psi(\tfrac14,\tfrac34),\qquad
+ L(2,\chi_{-3})=\tfrac19\Psi(\tfrac13,\tfrac23),\\
+ G+\tfrac{5\pi^2}{48}=\tfrac18\Psi(\tfrac14,1),\qquad G-\tfrac{5\pi^2}{48}=-\tfrac18\Psi(\tfrac34,1).
+\end{gather*}
+Since the irrationality exponent does not change under $\xi\mapsto r\xi+r'$ with $r,r'\in\Q$, $r\ne0$,
+a measure for one of these numbers is a measure for the corresponding value of $\Psi$. The companion
+paper \cite{Litsey2026b} proves measures for $\Psi(\frac aq,1)$ with $q\in\{3,4,5,7\}$, $0<a<q$,
+$\gcd(a,q)=1$, and for
+$\Psi(\frac13,\frac23)$, from L\"owner matrices of digamma differences, with a method related to the
+present one.
 
 \subsection{What a measure requires}\label{sec:intro-need}
 Write $\Delta_N(X)$ for the determinant regarded as a polynomial in the constant, so that
@@ -235,12 +262,37 @@ columns, using Frobenius relations $(1-X)^p=1-X^p$ for the coefficients of the r
 (Theorems~\ref{thm:U6} and~\ref{thm:S}). They are proved from one digit formula for the entries
 modulo $p$ (Lemma~\ref{lem:digits}). For $(58,9,3,5,3)$ they cover the primes $12N<p\le26N$.
 
+\item \emph{A counting inequality for the nullity.} The four proofs have a common shape: a space $\cV$ of
+row combinations, a few linear conditions on $\cV$, and an argument that the conditions force all column
+responses to vanish. We prove this once (Theorem~\ref{thm:count}): if the conditions $\Phi$ on $\cV$ force
+the responses on the raw columns to vanish after the $\lfloor q/p\rfloor$-fold difference of step $p$, up to
+a polynomial of degree less than $q\bmod p$, then $\nu_N(p)\ge\dim\cV-\operatorname{rank}\Phi$. The step of
+size $p$ comes from the congruence $(1-T)^q\equiv(1-T)^{q\bmod p}(1-T^p)^{\lfloor q/p\rfloor}\pmod p$ of
+Lucas's theorem, so the inequality also applies when the filter is longer than the prime. Further
+families of kernel vectors are instances of it, for every design: Frobenius products, in which the row
+polynomial is a fixed polynomial times a polynomial in $X^p$, the conditions being Taylor coefficients at
+$X=\pm1$, coefficients at $0$ and at $\infty$ and finitely many responses; and families in which the
+responses are constant along the digit $\lfloor j/p\rfloor$ of the column, which then cost only $p-q$
+conditions (Section~\ref{ssec:families}).
+
+\item \emph{A fixed rational subspace, with stored kernel vectors.} In the \emph{profile form} of the
+inequality the space is $\Pi\otimes V$, where $\Pi$ is a space of $m$ polynomial coordinates and $V$ is a
+fixed subspace of $\Q^s$ of dimension $d$, and the conditions come in groups of $w_j$ jets composed with
+fixed linear maps $B_j$ on $V$. Then $\nu_N(p)\ge m\,d-\sum_jw_j\operatorname{rank}(B_j|_V)$, where $m$ and
+the $w_j$ are affine in $N$ and $p$ on a window, while $V$ and the $B_j$ do not depend on $N$ or $p$
+(Theorem~\ref{thm:profile}). Upper bounds $r_j$ for the ranks are certified by $d-r_j$ integer vectors in
+the coordinates of $V$ that $B_j$ kills, and by one nonzero minor showing that they stay independent modulo
+$p$; the identification of the conditions with the jets is checked on each window by a verified decision
+procedure. For $(58,9,3,5,3)$ this is done for $34$ windows between $3N$ and $16.2N$.
+
 \item \emph{One bound per prime.} At a prime $p$ the valuation of $\Delta_N(z)$ is at least
 $\nu_N(p)-2n$ for every $z$ that is $p$-integral (Proposition~\ref{prop:valuation}); the denominator
-of the determinant is therefore divided by $p^{\nu_N(p)}$, and the best of the four bounds is used
-once. No separate common factor of the coefficients is needed: integer-valuedness of $\Delta_N$ at
+of the determinant is therefore divided by $p^{\nu_N(p)}$, and on each window of primes one bound is
+used. No separate common factor of the coefficients is needed: integer-valuedness of $\Delta_N$ at
 the integers already makes the coefficients of $Q_N$ divisible by what is gained
-(Proposition~\ref{prop:denominators}). The gain is $\int\kappa(x)\,dx=35369/1848$ in units of $N^2$.
+(Proposition~\ref{prop:denominators}). For $(58,9,3,5,3)$ the windows give a piecewise linear profile
+$\kappa$ with $102$ pieces on $(16/7,53/2]$, and the gain is $\int\kappa(x)\,dx=\Chi\ldots$ in units of
+$N^2$ (Theorem~\ref{thm:profile-D}).
 
 \item \emph{Perturbation by quadrature with an odd number of nodes.} The smallness on a neighbourhood
 of $G$ is obtained from a Gauss-type quadrature formula for the coefficient of the constant, with
@@ -261,12 +313,13 @@ $\omega=3/4$.
 
 \subsection{The constants}
 For the design $(58,9,3,5,3)$, in the unit $N$ with $n=58N$: the degree of $Q_N$ is $d=53N$; the
-perturbation exponent is $\rho=\Rho$; the decay rate of $Q_N$ is $\eta=\EtaTot$, of which the real
-place minus the denominators without the gain is $\EtaInf$ and the gain from the rank deficiencies is
-$\Chi$ (rounded down from $35369/1848=19.13906\ldots$). Decimals are truncated; the constants of the
-formal proof are the exact rational numbers. The criterion gives the exponent
-$\Bx$ as the least $B$ allowed by its conditions
-(Section~\ref{sec:proof}); the integer $590$ is the exponent of Theorem~\ref{thm:main}, for which
+perturbation exponent is $\rho=\Rho$; the decay rate of $Q_N$ is $\eta=\EtaTot$, a rational number
+below the sum of the real place minus the denominators without the gain, $\EtaInf\ldots$, and the gain from
+the rank deficiencies, $\int\kappa=\Chi\ldots$; the proof uses the lower bound $\int\kappa\ge\ChiLean$.
+In the criterion, $\omega=3/4$, $\delta=2.9\cdot10^{-7}$ and $\kappa=532/\rho=\Kappa\ldots$ Decimals are
+truncated; the constants of the formal proof are the exact rational numbers. With $\eta=\EtaTot$ the
+criterion gives the exponent $\Bx$ as the least $B$ allowed by its conditions
+(Section~\ref{sec:proof}); the integer $532$ is the exponent of Theorem~\ref{thm:main}, for which
 all the conditions are verified in Lean with rational constants.
 
 \subsection{Organization and notation}
@@ -337,32 +390,84 @@ $\mu_0=\max(q,H+q-6p)$:
 
 These are the statements of the Lean theorems \lean{t\_rank}, \lean{u\_rank}, \lean{u6\_rank\_closed} and
 \lean{s\_rank} (the last two in the form $m_1-m_0-e$ and its closed form), proved for every
-admissible design. For $D$ they combine, for $12N<p\le26N$ and up to the loss of one unit at the
-integer rounding, into the following function $\kappa$ of $x=p/N$ (units of $N$); on each cell the
-value is the largest of the bounds that apply.
+admissible design. For $D$ they apply for $12N<p\le26N$, where they give most of the gain
+(Section~\ref{ssec:kappa}).
+
+Below $12N$ the closed formulas give nothing, and further kernel vectors come from a single counting
+inequality, of which the proofs of Theorem~\ref{thm:content} are special cases. For $c\in\F_p^n$ and a raw
+column $j\in[b,L)$ let $R_c(j)$ be the reduction modulo $p$ of $p^2\sum_rc_rR(r,j)$, with $R$ as in
+\eqref{eq:rational-part}; these are the responses of Lemma~\ref{lem:digits}.
+
+\begin{theorem}\label{thm:count}
+Let $D$ be a design, $N\ge1$, $p$ an odd prime with $H<p^2$, and write $q=ap+r$ with $0\le r<p$. Let
+$\cV$ be a finite-dimensional vector space over $\F_p$, $\iota\colon\cV\to\F_p^n$ an injective linear map and
+$\Phi$ a linear map on $\cV$. Suppose that for every $x\in\ker\Phi$ there is a polynomial $G_x\in\F_p[X]$ of
+degree less than $r$ with
+\[
+ \sum_{v=0}^a(-1)^{a-v}\binom av\,R_{\iota(x)}(j+vp)=G_x(j)\qquad(b\le j<L-ap).
+\]
+Then $\nu_N(p)\ge\dim\cV-\operatorname{rank}\Phi$.
+\end{theorem}
+
+For $q<p$ the hypothesis says that the conditions $\Phi$ force all raw responses to vanish. The case of
+interest for the counting is the \emph{profile form}, in which the space is a tensor product of a space
+of polynomial coordinates with a fixed rational subspace, and the conditions are jets composed with fixed
+linear maps.
+
+\begin{theorem}\label{thm:profile}
+Let $v_1,\dots,v_d\in\Z^s$ span a subspace $V\subset\Q^s$ of dimension $d$, and for $j$ in a finite set $J$ let
+$B_j$ be an integer matrix with $s$ columns and $r_j\le d$ an integer such that there are $d-r_j$ vectors
+$k\in\Z^d$, linearly independent, with $B_j\bigl(\sum_ak_av_a\bigr)=0$. Let $\mathcal E\ne0$ be the product of a
+nonzero $d\times d$ minor of $(v_1,\dots,v_d)$ and, for each $j$, of a nonzero maximal minor of these kernel
+vectors. Let $p\nmid\mathcal E$ be an odd prime with $H<p^2$, write $q=ap+r$ as above, let $V_p=\F_p^d$ be the
+space of coordinates of $V$ modulo $p$, and let $m$ and $w_j$ ($j\in J$) be integers $\ge0$. Suppose that there
+are linear maps $\varphi_{j,k}\colon V_p^m\to V_p$ ($k<w_j$) and $\iota\colon V_p^m\to\F_p^n$ such that, on the joint
+kernel of the maps $B_j\circ\varphi_{j,k}$, the map $\iota$ is injective and satisfies the hypothesis of
+Theorem~\ref{thm:count}. Then
+\[
+ \nu_N(p)\ge m\,d-\sum_{j\in J}w_j\,r_j .
+\]
+\end{theorem}
+
+In the applications $m$ and the $w_j$ are affine functions of $N$ and $p$ on a window of primes, while $V$
+and the $B_j$ are fixed; so the bound is linear on the window, and the data to be stored are the vectors
+$v_a$, the matrices $B_j$ and the kernel vectors. For the design $D$ these bounds, the closed formulas and
+the further families of Section~\ref{sec:content} combine into the following.
+
+\begin{theorem}\label{thm:profile-D}
+For the design $D$ there are $102$ intervals $(a_i,b_i]$, with $16/7=a_1<b_1\le a_2<\dots<b_{102}=53/2$, and a
+function $\kappa$, linear on each interval and $0$ outside their union, such that for all large $N$ and
+every prime $p$ with $a_iN<p\le b_iN$ for some $i$
+\[
+ \nu_N(p)\ge N\kappa(p/N)-2 .
+\]
+On each interval the bound is given by one of the families of Section~\ref{sec:content}. The area of
+$\kappa$ is a rational number,
+\[
+ \int_0^\infty\kappa(x)\,dx=\frac{36235515874601938601596598}{1642609663271115992578125}=\Chi\ldots\ \ge\ \ChiLean .
+\]
+\end{theorem}
+
+The contributions by ranges of $x=p/N$ are as follows; the third column counts the intervals on which the
+bound is that of Theorem~\ref{thm:profile} with stored data.
 \begin{center}
-\begin{tabular}{@{}lll@{}}
+\begin{tabular}{@{}lrrl@{}}
 \toprule
-interval of $x$ & $\kappa(x)$ & bound \\
+range of $x$ & intervals & with stored data & area \\
 \midrule
-$(12,13]$ & $x/2-5$ & (c), $(p-1)/2-g$ \\
-$(13,\,146/11]$ & $73-11x/2$ & (c), $n+b+q+h-(11p+1)/2$ \\
-$(50/3,\,69/4]$ & $9x/2-75$ & (d), $(9p-2C)/2$ \\
-$(69/4,\,35/2]$ & $x/2-6$ & (d), $(p-1)/2+h-b$ \\
-$(35/2,\,128/7]$ & $64-7x/2$ & (d), $(2(n+q+h)-7p)/2$ \\
-$(64/3,\,23]$ & $3x-64$ & (a), $3p-(n+q+h)$ \\
-$(23,\,24]$ & $5$ & (a) up to $x=70/3$, then (b); in both the cap $g$ \\
-$(24,\,26]$ & $53-2x$ & (b), $n-g-2p$ \\
+$(16/7,\,3]$ & $11$ & $0$ & $0.06260$ \\
+$(3,\,6]$ & $46$ & $23$ & $0.25136$ \\
+$(6,\,12]$ & $27$ & $9$ & $0.71966$ \\
+$(12,\,53/2]$ & $18$ & $2$ & $21.02611$ \\
+\midrule
+total & $102$ & $34$ & $\Chi$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-and $\kappa=0$ elsewhere. The area of $\kappa$ is
-\[
- \int_0^\infty\kappa(x)\,dx=\frac54+\frac9{44}+\frac{49}{64}+\frac{43}{64}+\frac{121}{112}+\frac{25}6+5+6
- =\frac{35369}{1848}=19.13906\ldots
-\]
-The families (a)--(d) come from different arguments, and the kernels they produce are not shown to be
-independent; at a prime the best bound is used once, never the sum.
+The intervals in $(12,53/2]$ are listed in Section~\ref{ssec:kappa}, and the full list is part of the
+formalization (Section~\ref{sec:formal}). On each interval one bound is used.
+The families come from different arguments, and except for one pair (Section~\ref{ssec:families}) the
+kernels they produce are not shown to be independent, so at a prime the bounds are not added.
 
 \subsection{Valuations, denominators and the exponent}
 The rank deficiencies enter through the following statement, which is the finite-place input.
@@ -382,15 +487,15 @@ at $2$ a bound from the expansion into minors. They combine to the denominators.
 For the design $D$ there are positive integers $D_N$ such that $D_N\Delta_N(i)\in\Z$ for every integer
 $i$, such that $q^{2n}\mid D_N$ for every prime $N<q\le2N$, and such that for every $\varepsilon>0$ and
 all large $N$
-\[
- \log D_N\le(\mathsf A+\varepsilon)N^2,\qquad
- \mathsf A=\frac{2673}8\log2+116+\frac{24269}4-\frac{35369}{1848}=6395.7087\ldots
-\]
+\begin{gather*}
+ \log D_N\le(\mathsf A+\varepsilon)N^2,\\
+ \mathsf A=\frac{2673}8\log2+116+\frac{24269}4-\int_0^\infty\kappa(x)\,dx=\Aden\ldots
+\end{gather*}
 \end{proposition}
 
 Here $2673/8\,\log2$ is the contribution of the prime $2$, and $116+24269/4$ is the area of the
 piecewise linear function that bounds the poles at the odd primes (Section~\ref{sec:setup}); the last
-term is the gain $\int\kappa$ of Theorem~\ref{thm:content}.
+term is the gain $\int\kappa$ of Theorem~\ref{thm:profile-D}.
 
 At the real place we prove the following in Section~\ref{sec:real}. Put
 \begin{equation}\label{eq:rho-def}
@@ -406,7 +511,7 @@ Let $U=\Utarget$. For all large $N$ and all real $x$ with $|x-G|\le e^{-\rho N}$
 \]
 \end{theorem}
 
-Since $n_0^2(U-\frac12\log2)=\TDelta\ldots$ and $\mathsf A=6395.7087\ldots$, the polynomial
+Since $n_0^2(U-\frac12\log2)=\TDelta\ldots$ and $\mathsf A=\Aden\ldots$, the polynomial
 $Q_N=(d_0N)!\,D_N\Delta_N$ has integer coefficients, degree at most $d_0N$, and
 \[
  |Q_N(x)|\le e^{-\eta N^2}\qquad(|x-G|\le e^{-\rho N}),\qquad \eta=\EtaTot ,
@@ -435,15 +540,15 @@ for all integers $a$ and all sufficiently large $b$.
 The conditions say, in the order of the proof of Section~\ref{sec:proof}, that the window of primes
 contains a prime not dividing $b$, that the primes of the window above the chosen one are recycled, and
 that the final inequality is contradictory. For the design $D$ one takes $d=53$, $\omega=3/4$,
-$\delta=2.9\cdot10^{-7}$ and $\kappa=B/\rho$ with $B=590$; the last condition then reads
-$B>x:=d\rho/(\eta-4d\delta)=\Bx$.
+$\delta=2.9\cdot10^{-7}$ and $\kappa=B/\rho$ with $B=532$; the last condition then reads
+$B>x:=d\rho/(\eta-4d\delta)=\Bx\ldots$
 
 \subsection{A reading of the exponent}
 The criterion shows that, for a fixed design, the bound is $d\rho/\eta$ in the limit, and that its three
 ingredients come from three different places: the degree $d=n-g$ from the construction, the decay rate
 $\eta$ from the real place, the denominators and the rank deficiencies, and the perturbation exponent
 $\rho$ from the quadrature. The rank deficiencies matter because $\eta$ is a small difference of two
-large numbers, $\TDelta$ and $6395.71$; the gain $19.14$ is more than two thirds of $\eta=\EtaTot$.
+large numbers, $\TDelta$ and $\Aden$; the gain $22.06$ is nearly three quarters of $\eta=\EtaTot$.
 
 \input{sec2_3}
 \input{sec4}

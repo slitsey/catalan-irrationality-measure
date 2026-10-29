@@ -164,8 +164,8 @@ $\ell_N(p)=Nf(p/N)$ is piecewise linear in $x=p/N$ ($\lfloor\cdot\rfloor$ roundi
 \]
 and $f=0$ for $x\ge78$, since for $p>H$ the matrix $\cA^0_N+z\cL_N$ is $p$-integral. Its integral over
 $[1,78]$ is $24269/4$, and $f=116=2\cdot58$ on $[0,1]$. Note that $f(x)=2n_0$ for $x\le59/2$, which
-contains all the primes in $(N,2N]$ and, in particular, the whole range $[12,26]$ of the rank
-deficiencies of Theorem~\ref{thm:content}; there the bound of Proposition~\ref{prop:valuation} improves
+contains all the primes in $(N,2N]$ and, in particular, the whole range $(16/7,53/2]$ of the rank
+deficiencies of Theorem~\ref{thm:profile-D}; there the bound of Proposition~\ref{prop:valuation} improves
 $-\ell_N(p)=-2n$ to $\nu_N(p)-2n$.
 
 The primes $p\le\sqrt H$ are not covered by these bounds. For them we use the cruder bound
@@ -193,8 +193,8 @@ $\mathsf A_2=(58+78-9)^2/8-58^2/2=2673/8$ in units of $N^2$.
 
 \subsection{The common denominator}
 \begin{proof}[Proof of Proposition~\ref{prop:denominators}]
-Let $\kappa_N(p)$ be the largest of the bounds of Theorem~\ref{thm:content} that apply at $p$ (and $0$ if
-none does), for primes $p\le H$ with $H<p^2$, and put $e_N(p)=\min\bigl(\ell_N(p),\,2n-\kappa_N(p)\bigr)$. For the
+Let $\kappa_N(p)$ be the largest of the lower bounds for $\nu_N(p)$ of Section~\ref{sec:content} that apply at
+$p$ (and $0$ if none does), for primes $p\le H$ with $H<p^2$, and put $e_N(p)=\min\bigl(\ell_N(p),\,2n-\kappa_N(p)\bigr)$. For the
 primes with $p^2\le H$ use the crude bound above, for $p=2$ the $2$-adic bound, and let $D_N$ be the
 product of $p^{e_N(p)}$ over $p\le H$. By Proposition~\ref{prop:valuation} and the bounds of this section,
 $v_p(\Delta_N(i))\ge-e_N(p)$ for every integer $i\ge0$ and every $p$ (for $p>H$ the matrix is
@@ -207,9 +207,9 @@ the weighted form
  \frac1N\sum_{p}F(p/N)\log p\longrightarrow\int_0^\infty F(x)\,dx\qquad(N\to\infty),
 \end{equation}
 for bounded, Riemann integrable, compactly supported $F$, equal to $N^2\int_0^{78}f(x)\,dx+o(N^2)$ with
-$\int_0^{78}f=116+24269/4$. The primes with $\kappa_N(p)>0$ lie in $(12N,26N]$ and have
-$\ell_N(p)=116N$, so their exponent is $116N-\kappa_N(p)$; the sum of $\kappa_N(p)\log p$ is
-$N^2\int\kappa+o(N^2)$ by \eqref{eq:weighted-pnt}. The $2$-adic part contributes
+$\int_0^{78}f=116+24269/4$. The primes in the intervals of Theorem~\ref{thm:profile-D} lie in
+$(16N/7,53N/2]$ and have $\ell_N(p)=116N$, so their exponent is at most $116N-N\kappa(p/N)+2$; the sum of
+$(N\kappa(p/N)-2)\log p$ over these primes is $N^2\int\kappa+o(N^2)$ by \eqref{eq:weighted-pnt}. The $2$-adic part contributes
 $\mathsf A_2\log2\,N^2+o(N^2)$.
 \end{proof}
 

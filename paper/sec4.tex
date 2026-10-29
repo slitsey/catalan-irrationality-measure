@@ -1,6 +1,10 @@
 \section{Rank deficiencies modulo $p$}\label{sec:content}
 
-In this section we prove Theorem~\ref{thm:content}. The principle is that of the arithmetic method of Hata
+In this section we prove Theorems~\ref{thm:content}, \ref{thm:count}, \ref{thm:profile}
+and~\ref{thm:profile-D}. We begin with the four closed formulas, whose proofs show the mechanism in its
+simplest form, then prove the counting inequality that underlies all of them, describe the further
+families obtained from it, and finally the certified data for finitely many windows and the resulting
+function $\kappa$ for the design $D$. The principle is that of the arithmetic method of Hata
 and Rhin--Viola, in the form that suits a determinant: if the reduction modulo $p$ of $p^2\cA^0_N$ has
 rank at most $n-e$, then by Lemma~\ref{lem:rank-valuation} and Proposition~\ref{prop:valuation} the
 determinant $\Delta_N(z)$ gains a factor $p^e$ at every $z$ with denominator prime to $p$, in
@@ -251,9 +255,154 @@ $(n-4w)+3w+e=n-(w-e)$.
 The proof does not use a determinant or a lower bound for $N$. Unlike the proof of Theorem~\ref{thm:U6}, the
 telescoping here is over all digits, so no vanishing of $Y_c$ at the ends is needed.
 
-\subsection{The function $\kappa$ for the design $D$}
-For $D$, $L=70N$, $H=78N$, $a=22N$, $\Lambda=11N$ and $q+h=6N$. Writing $x=p/N$, one checks the hypotheses of
-the theorems on the intervals of the table of Section~\ref{sec:overview}. The hypotheses
+\subsection{The counting inequality}
+The four proofs above have one shape. A space of row combinations is chosen, a few linear conditions are
+imposed, and it is shown that the conditions make every response vanish; the dimension of the space minus
+the number of conditions is then a lower bound for the nullity. Theorem~\ref{thm:count} isolates this
+argument, and allows in addition filters longer than the prime.
+
+\begin{proof}[Proof of Theorem~\ref{thm:count}]
+By \eqref{eq:rational-part}, the response of $c$ at the filtered column $k$ is
+$\sum_{v=0}^q(-1)^v\binom qvR_c(b+k+v)$, the value at $T$ acting as the shift of the polynomial
+$(1-T)^q$. Modulo $p$ we have $(1-T)^p=1-T^p$, hence
+\[
+ (1-T)^q=(1-T)^r(1-T^p)^a ,
+\]
+which is the congruence of Lucas's theorem for the binomial coefficients $\binom qv$. So the response at
+$k$ equals $\sum_{u=0}^r(-1)^u\binom ru\,S_c(b+k+u)$, where
+$S_c(j)=\sum_{v=0}^a(-1)^v\binom av R_c(j+vp)$; the arguments satisfy $b\le j$ and $j+ap\le b+n-1+q=L-1$.
+For $c=\iota(x)$ with $x\in\ker\Phi$ we have $S_c(j)=\pm G_x(j)$, and the difference of order $r$ of a
+polynomial of degree less than $r$ vanishes identically. So $\iota(\ker\Phi)$ lies in the left kernel of
+$\cA^0_{N,p}$, and since $\iota$ is injective, $\nu_N(p)\ge\dim\ker\Phi=\dim\cV-\operatorname{rank}\Phi$.
+\end{proof}
+
+If the conditions only force the responses on a set $K$ of filtered columns to vanish, the same argument,
+with the remaining $n-|K|$ responses added to the conditions, gives
+$\nu_N(p)\ge\dim\cV-\operatorname{rank}\Phi-(n-|K|)$. The proofs of Theorems~\ref{thm:T}--\ref{thm:S} are of
+this form, with $K$ the set of all filtered columns in Theorems~\ref{thm:T} and~\ref{thm:U} and a block of
+columns in Theorems~\ref{thm:U6} and~\ref{thm:S}.
+
+\begin{proof}[Proof of Theorem~\ref{thm:profile}]
+Since $p\nmid\mathcal E$, the reductions of $v_1,\dots,v_d$ are linearly independent, so that $V_p$ is the
+reduction of $V$ in the coordinates of this basis. The kernel vectors of $B_j$ satisfy an integer identity,
+so their reductions lie in the kernel of $B_j|_{V_p}$, and they remain independent because their minor is a
+unit modulo $p$; hence $\operatorname{rank}(B_j|_{V_p})\le r_j$. The map
+$\Phi=(B_j\circ\varphi_{j,k})_{j,k}$ therefore has rank at most $\sum_jw_jr_j$, and its kernel has dimension at
+least $md-\sum_jw_jr_j$. Theorem~\ref{thm:count}, applied to $\ker\Phi$ with no further conditions, gives
+the bound.
+\end{proof}
+
+In the applications the space $V_p^m$ is a space of \emph{slot polynomials}: the row combinations are written
+as sums $\sum_i\lambda_i(X)\,F_i(X^p)$ of fixed polynomials $\lambda_i$ times polynomials in $X^p$, which is the
+form in which \eqref{eq:cheb-p} and the relation $(1-X)^p=1-X^p$ express the row polynomials modulo $p$, and
+the coordinates of the $F_i$ take values in $V$. The jets $\varphi_{j,k}$ are Taylor coefficients at $X=1$
+and $X=-1$, coefficients at $0$ and at $\infty$ in a window of degrees, and responses at finitely many
+columns; the map $\iota$ is the map to row combinations. By the digit formula, the response of such a
+combination at the raw column $Jp+\ell$ is a sum over the slots of a moment form in $J$ and the digit,
+which does not depend on the design, times a coefficient of $F_i$.
+% TODO(verify): the description of the slot frame follows the module documentation of
+% W/Slots/Core (SlotSystem, repU, repT, resp) and W/Charts3/Host (HostIdent); match wording to the Lean.
+
+\subsection{Further families}\label{ssec:families}
+The following lower bounds for $\nu_N(p)$ are proved, each for every admissible design, by explicit choices of
+the space, the conditions and the columns in Theorem~\ref{thm:count} or its variant above. Each is a
+piecewise linear function of $p$ and the parameters, positive on windows described by linear inequalities.
+We describe them in words; the statements are those of the formalization, cited in
+Section~\ref{sec:formal}.
+% TODO(verify): the one-line descriptions below are taken from the statements and documentation of the
+% cited Lean modules (W/Frob, W/Slots, W/SlotsA, W/SlotsT, W/MTGlue, W/HYPlus, W/ZoneZ, W/ZoneZ2,
+% W/Tier3, W/LStar, W/LStar2, W/TheoremC, W/Thin); they have not been matched clause by clause.
+\begin{enumerate}[label=(\roman*),wide]
+\item \emph{Frobenius products.} Row combinations whose polynomial is a product of a fixed polynomial with
+a polynomial in $X^p$ of bounded degree, the conditions being the classes of profiles seen by the columns.
+For $D$ this gives $53N-2p-1$ on $(26N,53N/2)$, where $2p+2\le53N$.
+\item \emph{A truncated form of Theorem~\ref{thm:U6}.} Without the hypothesis $n\le4p+2g+1$, the bound
+$\mu_1-\mu_0-e_+-(n-4p-2g-1)_+$ holds whenever $L\le6p$ and $b+q\le p+\mu_0$; for $D$ it gives $5p-59N+1$ on
+$(59N/5,12N]$.
+\item \emph{A raw tail of the antisymmetric family.} With $D_T'=n-1-g-3p$ and four digits, the count is
+$p-1-(2g+q+h)$ under $4p\le L$, $b\le p$, $D_T'\le g$, $D_T'\le(p-1)/2$, $3p+1+g\le n$ and $4p+b\le H$; for
+$D$ this is $p-16N-1$ on $(16N,118N/7]$.
+\item \emph{Two families of slot polynomials and their sum.} The first fixes a digit $s\le H/p$ and a range of
+blocks of rows, the second is periodic in the block index; their kernels are independent when both apply
+under a separation condition, and the sum of the two bounds is a lower bound. This is the one place where
+two bounds are added.
+\item \emph{Families with a constant profile on a cell.} Several families (the theorems called MT, M, Z, C
+and $\mathrm C'$ in the formalization) use slot polynomials whose coordinates satisfy finitely many
+rational linear equations, the \emph{cell} equations; a solution modulo $p$ exists for every $p$ prime to a
+fixed integer, the modulus of the cell, and the bound is the dimension of the slot space minus the number of
+conditions. In the families C and $\mathrm C'$ the responses depend only on the residue of the column modulo
+$p$, so that the filter costs $p-q$ conditions; these give bounds on $(16N/7,5N/2]$, $(58N/17,59N/17]$ and
+$(29N/8,11N/3]$.
+\item \emph{Block decompositions for $h\ge p$ and $h<p$.} Writing a row index as $kp+d$ and $y=X^p$, the
+identities
+\[
+ (X-1)^hWT_{kp+d}=\bigl((X-1)T_k\bigr)(y)\,Q_1+\bigl((X-1)(X^2-1)U_{k-1}\bigr)(y)\,Q_2
+\]
+and its analogue for $U_{kp+d-1}$, with $Q_1=(X-1)^{h-p}WT_d$ and $Q_2=(X-1)^{h-p}U_{d-1}$, hold in $\F_p[X]$ for
+$h\ge p$; at a residue with a single live digit the responses of all rows of a block are proportional, and the
+bound counts the blocks. For $h<p$ a difference of order $p-h$ of the coefficients plays the same role.
+For $D$ these give bounds on $(59N/21,3N]$, where $h\ge p$, and on $(3N,16N/5]$.
+\end{enumerate}
+
+\subsection{Stored data for finitely many windows}\label{ssec:packets}
+On the remaining windows below $16.2N$ the bound is that of Theorem~\ref{thm:profile} with a stored
+subspace. For each of $34$ windows we store integer vectors $v_1,\dots,v_d$ spanning $V$, a set of $d$ pivot
+columns with the adjugate of the corresponding minor, and for each map $B_j$ its integer matrix, the bound
+$r_j$, $d-r_j$ kernel vectors in the coordinates of $V$, and again a pivot set with an adjugate. A single
+Boolean function of these data, evaluated by the Lean kernel, checks the shapes, the identities
+$\mathrm{adj}\cdot v_{\mathrm{piv}}=\delta\cdot I$ and the products $B_j\bigl(\sum_ak_av_a\bigr)=0$ in
+integers; its soundness theorem gives the hypotheses of Theorem~\ref{thm:profile} on $V$ and the $B_j$, with
+$\mathcal E$ the product of the minors. No prime enters this check.
+
+The hypotheses on the jets and on $\iota$ depend on $N$ and $p$. A window is described by finitely many
+inequalities that are affine in $N$ and $(p-1)/2$, and so are $m$ and the $w_j$ on each of finitely many
+pieces of the window. A second verified procedure checks on each piece that the jets of the slot frame have
+the required orders at $0$, $\pm1$ and $\infty$, that the map $\iota$ is injective on the joint kernel and
+lands in the domain of the slot frame, and that the responses vanish, each inequality being derived from
+the window inequalities by nonnegative integer combinations with rounding, in the manner of
+Chv\'atal--Gomory cuts. Its soundness theorem gives the hypotheses of Theorem~\ref{thm:profile} at every
+prime $p\ge61$ of the window with $p\nmid\mathcal E$; for large $N$ all primes of the window are of this
+kind. For $33$ of the $34$ windows the hypotheses are established in this way, and for the remaining one by
+a direct proof. The windows lie in $(3N,16.2N)$, where $p>q$, so $a=0$ in Theorem~\ref{thm:count}.
+% TODO(verify): "derived ... in the manner of Chvatal--Gomory cuts", "p >= 61" (form <0,2,-59>) and the
+% list of checks paraphrase W/Charts6/Check (Affine, Cert, Host: checkHost, physHost_of_checks).
+
+\subsection{The function $\kappa$ for the design $D$}\label{ssec:kappa}
+For $D$, $L=70N$, $H=78N$, $a=22N$, $\Lambda=11N$ and $q+h=6N$. On $(12N,53N/2]$ the function $\kappa$ of
+Theorem~\ref{thm:profile-D} is as follows, with $x=p/N$.
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+interval of $x$ & $\kappa(x)$ & bound \\
+\midrule
+$(12,13]$ & $x/2-5$ & Theorem~\ref{thm:content}(c), $(p-1)/2-g$ \\
+$(13,\,146/11]$ & $73-11x/2$ & Theorem~\ref{thm:content}(c), second term \\
+$(341/25,\,69/5]$ & $11x/2-75$ & Section~\ref{ssec:families} \\
+$(69/5,\,14]$ & $x/2-6$ & Section~\ref{ssec:families} \\
+$(14,\,711/50]$ & $64-9x/2$ & Section~\ref{ssec:families} \\
+$(30287/2000,\,78/5]$ & $7x/2-53$ & Section~\ref{ssec:families} \\
+$(78/5,\,16]$ & $25-3x/2$ & Section~\ref{ssec:families} \\
+$(16,\,809/50]$ & $73-9x/2$ & Section~\ref{ssec:families} \\
+$(809/50,\,178/11]$ & $73-9x/2$ & Section~\ref{ssec:packets} \\
+$(178/11,\,1619/100]$ & $x-16$ & Section~\ref{ssec:packets} \\
+$(1619/100,\,118/7]$ & $x-16$ & Section~\ref{ssec:families}(iii) \\
+$(118/7,\,69/4]$ & $9x/2-75$ & Theorem~\ref{thm:content}(d), $(9p-2C)/2$ \\
+$(69/4,\,35/2]$ & $x/2-6$ & Theorem~\ref{thm:content}(d), $(p-1)/2+h-b$ \\
+$(35/2,\,128/7]$ & $64-7x/2$ & Theorem~\ref{thm:content}(d), $(2(n+q+h)-7p)/2$ \\
+$(64/3,\,23]$ & $3x-64$ & Theorem~\ref{thm:content}(a), $3p-(n+q+h)$ \\
+$(23,\,24]$ & $5$ & Theorem~\ref{thm:content}(a) up to $x=70/3$, then (b) \\
+$(24,\,26]$ & $53-2x$ & Theorem~\ref{thm:content}(b), $n-g-2p$ \\
+$(26,\,53/2]$ & $53-2x$ & Section~\ref{ssec:families}(i) \\
+\bottomrule
+\end{tabular}
+\end{center}
+% TODO(verify): the attribution of the six intervals in (341/25, 809/50] to particular families of
+% Section ssec:families is not traced in the Lean (they are certified from the ledger fams13 in
+% Bank532/Ledger532.lean, wins532_cert, via old_cert); only "one of the families" is checked.
+Their areas add up to $21.02610\ldots$, and the $84$ intervals below $12$ contribute $1.03361\ldots$, so that
+the total is $\Chi\ldots$; the exact sum is computed in the formalization from the list of intervals.
+
+For Theorem~\ref{thm:content} one checks the hypotheses on the intervals above. The hypotheses
 $e\ge0$ and $n\le4p+2g+1$ both read $x\ge12$, and $L\le6p$ reads $x\ge35/3$; so Theorems~\ref{thm:U6}
 and~\ref{thm:S} apply for $x\ge12$. For $12\le x\le13$ one has $\mu_0=H+q-6p=81N-6p$, so the first branch
 of Theorem~\ref{thm:U6} applies, and for $x\ge13$ one has $\mu_0=3N$ and the second branch, which is positive
@@ -265,13 +414,21 @@ $D_T=\min(5N,52N-1-2p,75N-3p)$; it gives $3p-(n+q+h)=3x-64$ up to $x=23$ and the
 $x=70/3$. From $x=70/3$ the hypotheses of Theorem~\ref{thm:U} hold up to $x=26$ (they read
 $3p\ge L$, $3p\le H$, $2p\le n+q$ and $2h\le p+1$), and give $\min(n,2p+2g+1)-g-2p-1$, which is $5N$ for
 $x\le24$ and $53N-2p-1$ above. In each case the value of the theorem is the value in the table minus at
-most one unit, from the integer rounding. At a prime the largest of the values that apply is used.
-The area of $\kappa$ is the sum of the areas of the eight cells, which are listed in
-Section~\ref{sec:overview}.
+most one unit, from the integer rounding. The same kind of check, with linear inequalities in $N$, $p$
+and the parameters, gives the bounds of Section~\ref{ssec:families} on their intervals, and
+Section~\ref{ssec:packets} gives the others. This proves Theorem~\ref{thm:profile-D}; the loss of $2$ in its
+statement covers the integer rounding of all the bounds.
 
 \begin{remark}
 Numerical computations of the exact rank of $\cA^0_{N,p}$ for several designs and primes show that the
 bounds of Theorem~\ref{thm:content} are attained in the windows where they were tested, and that other
 families add kernel where the windows overlap. These computations are not part of the proof. An upper bound
 for the nullity is not proved, and none is needed.
+\end{remark}
+
+\begin{remark}
+The subspaces $V$ of Section~\ref{ssec:packets} were found numerically, as optimal constant subspaces for the
+bound of Theorem~\ref{thm:profile} on each window; they are dense rational subspaces with no evident closed
+form, which is why they are stored. Only the stored integer identities and the checked window conditions
+enter the proof.
 \end{remark}

@@ -70,13 +70,22 @@
 \newcommand{\MuFifths}{31.95}
 \newcommand{\MuFifthsExact}{31.9439}
 % Constants of the result for L(2,chi_{-3}).
-\newcommand{\MuChi}{14.21}
+\newcommand{\MuChi}{13.7486}   % Lean: Chi3Rank.RankFinal.chi3_measure_L2_rank (137486/10000), commit 70c2712
 \newcommand{\MuChiExact}{14.2095662593}
+% ---------------------------------------------------------------------------
+% Headline bounds of the uniform route (29 Oct 2026), the rational numbers of the Lean `Bound` modules:
+% lambda 315113/10000, thirds 952671/100000, fifths 59983/2500, sevenths 70993/20.
+% PENDING: each holds unconditionally once its `Bound` module builds (decay covers); until then the
+% body below still describes the earlier certificates and must be rewritten (outputs/.../papers-2026-10-29/PLAN.md).
+\newcommand{\MuLamU}{31.5113}
+\newcommand{\MuThirdsU}{9.52671}
+\newcommand{\MuFifthsU}{23.9932}
+\newcommand{\MuSeventhsU}{3549.65}
 % ---------------------------------------------------------------------------
 
 \begin{document}
 
-\title[Irrationality measures for $G\pm5\pi^2/48$ and related constants]{Irrationality measures for $G\pm5\pi^2/48$, $L(2,\chi_{-3})$, $L(2,\chi_{-3})\pm\frac23\zeta(2)$ and $\psi'(\frac a5)-\zeta(2)$}
+\title[Irrationality measures for differences of trigamma values]{Irrationality measures for differences of trigamma values}
 
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
@@ -90,24 +99,26 @@ Cauchy determinants, Andr\'eief identity, $p$-adic valuations, Jacobi matrices, 
 formal verification, Lean}
 
 \begin{abstract}
-Building on OpenAI's determinant method for the irrationality of Catalan's constant
-$G=\sum_{j\ge0}(-1)^j/(2j+1)^2$, we prove
+For $0<s<t\le1$ let $\Psi(s,t)=\psi'(s)-\psi'(t)$, a difference of values of the trigamma function.
+Catalan's constant is $G=\frac1{16}\Psi(\frac14,\frac34)$. Building on OpenAI's determinant method for
+the irrationality of $G$, we prove irrationality measures for $\Psi(\frac aq,1)=\psi'(\frac aq)-\zeta(2)$
+with $q\in\{3,4,5,7\}$ and $\gcd(a,q)=1$, and for $\Psi(\frac13,\frac23)=9L(2,\chi_{-3})$. In classical
+terms, with $\mu$ the irrationality exponent,
 \[
 \begin{gathered}
- \mu\Bigl(G-\frac{5\pi^2}{48}\Bigr)\le \MuLam,\qquad
- \mu\Bigl(G+\frac{5\pi^2}{48}\Bigr)\le \MuLam,\\
- \mu\bigl(L(2,\chi_{-3})\bigr)\le \MuChi ,
+ \mu\Bigl(G\pm\frac{5\pi^2}{48}\Bigr)\le \MuLamU,\qquad
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le \MuChi,\qquad
+ \mu\Bigl(L(2,\chi_{-3})\pm\frac{\pi^2}9\Bigr)\le \MuThirdsU,\\
+ \mu\bigl(\psi'(\tfrac a5)-\zeta(2)\bigr)\le\MuFifthsU\ (1\le a\le4),\qquad
+ \mu\bigl(\psi'(\tfrac a7)-\zeta(2)\bigr)\le\MuSeventhsU\ (1\le a\le6).
 \end{gathered}
 \]
-and, for the digamma differences with shifts $\frac13$ and $\frac23$,
-$\mu\bigl(L(2,\chi_{-3})\pm\frac23\zeta(2)\bigr)\le10.61$, where $\mu$ is the irrationality exponent. We know of no earlier irrationality measure for $G\pm5\pi^2/48$.
-For $L(2,\chi_{-3})$, which Calegari, Dimitrov and Tang proved irrational, the previous best bound we know of is their
-effective bound $\mu\le24781$. The same method gives, for the two numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$,
-\[
- \mu\Bigl(L(2,\chi_{-3})\pm\tfrac23\zeta(2)\Bigr)\le10.61 .
-\]
-For the shifts $\frac a5$ it gives $\mu\bigl(\psi'(\frac a5)-\zeta(2)\bigr)\le\MuFifths$ for $a=1,2,3,4$; we know of no earlier irrationality
-result for these four numbers.
+For $L(2,\chi_{-3})$ and $L(2,\chi_{-3})\pm\pi^2/9$, which Calegari, Dimitrov and Tang proved
+irrational, the previous best bound we know of is their effective bound $\mu\le24781$. We know of no
+earlier irrationality measure for the other numbers, and no earlier irrationality result for
+$\psi'(\frac a5)-\zeta(2)$ and $\psi'(\frac a7)-\zeta(2)$.
+% TODO(rewrite with the body): the method paragraph below describes the earlier certificates; replace it
+% by the checker theorem for the content and the cell-cover theorem for the decay (PLAN.md section 4).
 
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer nodes.
 We bound their denominators with $p$-adic assignment problems and rank deficits modulo $p$. We prove nonvanishing
@@ -137,63 +148,67 @@ irrationality-measure results built on it \cite{Jha2026,Carreira2026,Litsey2026}
 determinant of large size whose denominators and decay are balanced very closely.
 
 In the present paper we study a different, much smaller, family of determinants: rectangular
-L\"owner matrices of digamma differences, attached to the numbers
+L\"owner matrices of digamma differences. They approximate the differences of values of the trigamma
+function $\psi'$,
 \[
-\begin{gathered}
- \lambda_-=\frac G2-\frac{5\pi^2}{96},\qquad \lambda_+=\frac G2+\frac{5\pi^2}{96},\qquad
- \frac14L(2,\chi_{-3}),\\
- L(2,\chi_{-3})=\sum_{k\ge0}\Bigl(\frac1{(3k+1)^2}-\frac1{(3k+2)^2}\Bigr)=0.78130\,24128\ldots
-\end{gathered}
+ \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n=0}^\infty\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr),\qquad 0<s<t\le1 .
 \]
-Thus $G-5\pi^2/48=2\lambda_-$, $G+5\pi^2/48=2\lambda_+$, and $\lambda_-+\lambda_+=G$.
+Catalan's constant is one of these numbers, $G=\frac1{16}\Psi(\frac14,\frac34)$, and the companion paper
+\cite{Litsey2026} treats it with OpenAI's construction. Here the second shift is $t=1$, with one exception,
+$L(2,\chi_{-3})=\frac19\Psi(\frac13,\frac23)$, where
+\[
+ L(2,\chi_{-3})=\sum_{k\ge0}\Bigl(\frac1{(3k+1)^2}-\frac1{(3k+2)^2}\Bigr)=0.78130\,24128\ldots
+\]
+For $t=1$ and $s=\frac aq$ the value $\Psi(\frac aq,1)=\psi'(\frac aq)-\zeta(2)$ is an $L$-value or a
+combination of $L$-values plus a rational multiple of $\pi^2$; for $q=4$ and $q=3$,
+\begin{gather*}
+ \Psi(\tfrac14,1)=8\Bigl(G+\frac{5\pi^2}{48}\Bigr),\qquad \Psi(\tfrac34,1)=-8\Bigl(G-\frac{5\pi^2}{48}\Bigr),\\
+ \Psi(\tfrac13,1)=\frac92\Bigl(L(2,\chi_{-3})+\frac{\pi^2}9\Bigr),\qquad
+ \Psi(\tfrac23,1)=-\frac92\Bigl(L(2,\chi_{-3})-\frac{\pi^2}9\Bigr).
+\end{gather*}
+We also write $\lambda_\pm=\frac G2\pm\frac{5\pi^2}{96}$, so that $G\pm5\pi^2/48=2\lambda_\pm$,
+$\Psi(\frac14,1)=16\lambda_+$ and $\Psi(\frac34,1)=-16\lambda_-$.
 
 Recall that the \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the
 infimum of the $\mu$ such that $|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all
-sufficiently large $b$.
+sufficiently large $b$. It does not change under $\xi\mapsto r\xi+r'$ with $r,r'\in\Q$, $r\ne0$, so a
+bound for a value of $\Psi$ is a bound for the classical constant in the same row of
+Table~\ref{tab:main}.
 
-\begin{theorem}\label{thm:main}
-For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+$(s,t)$ & the number, up to a rational affine map & $B$ \\
+\midrule
+$(\frac14,1)$, $(\frac34,1)$ & $G+\frac{5\pi^2}{48}$, $G-\frac{5\pi^2}{48}$ & $\MuLamU$ \\
+$(\frac13,\frac23)$ & $L(2,\chi_{-3})$ & $\MuChi$ \\
+$(\frac13,1)$, $(\frac23,1)$ & $L(2,\chi_{-3})+\frac{\pi^2}9$, $L(2,\chi_{-3})-\frac{\pi^2}9$ & $\MuThirdsU$ \\
+$(\frac a5,1)$, $a=1,2,3,4$ & $\psi'(\frac a5)-\zeta(2)$ & $\MuFifthsU$ \\
+$(\frac a7,1)$, $a=1,\dots,6$ & $\psi'(\frac a7)-\zeta(2)$ & $\MuSeventhsU$ \\
+\bottomrule
+\end{tabular}
+\caption{The pairs of shifts and the exponents of Theorem~\ref{thm:main}.}\label{tab:main}
+\end{table}
+
+\begin{theorem}\label{thm:main}\label{thm:thirds}\label{thm:fifths}
+Let $(s,t)$ and $B$ be in one row of Table~\ref{tab:main}. For every $\varepsilon>0$ there is $q_0$ such
+that for all coprime integers $p$, $q$ with $q\ge q_0$,
 \[
-\begin{gathered}
- \Bigl|G-\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\qquad
- \Bigl|G+\frac{5\pi^2}{48}-\frac pq\Bigr|>q^{-\MuLam-\varepsilon},\\
- \Bigl|L(2,\chi_{-3})-\frac pq\Bigr|>q^{-\MuChi-\varepsilon}.
-\end{gathered}
+ \Bigl|\Psi(s,t)-\frac pq\Bigr|>q^{-B-\varepsilon}.
 \]
-In particular $G\pm5\pi^2/48$ are irrational, $\mu(G\pm5\pi^2/48)\le\MuLam$ and
-$\mu(L(2,\chi_{-3}))\le\MuChi$.
+In particular $\Psi(s,t)$ and the number in the same row are irrational, with irrationality exponent at
+most $B$.
 \end{theorem}
 
-The computed values of the exponents are $\MuLamExact$ and $\MuChiExact\ldots$.
-
-A companion result concerns the digamma differences with shifts $\frac13$ and $\frac23$, for which
-$\psi'(\frac13)=\frac{2\pi^2}3+\frac92L(2,\chi_{-3})$ and $\psi'(\frac23)=\frac{2\pi^2}3-\frac92L(2,\chi_{-3})$. Since $\pi^2/9=\frac23\zeta(2)$, they give
-the numbers $L(2,\chi_{-3})\pm\frac23\zeta(2)$.
-
-\begin{theorem}\label{thm:thirds}
-For every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
-\[
- \Bigl|L(2,\chi_{-3})+\frac{\pi^2}9-\frac pq\Bigr|>q^{-\MuThirds-\varepsilon},\qquad
- \Bigl|L(2,\chi_{-3})-\frac{\pi^2}9-\frac pq\Bigr|>q^{-\MuThirds-\varepsilon}.
-\]
-In particular $L(2,\chi_{-3})\pm\frac23\zeta(2)$ are irrational and have irrationality exponent at most $\MuThirds$.
-\end{theorem}
-
-The computed value of the exponent is $\MuThirdsExact\ldots$, namely $6.78788/(3.87115-3.2312582\ldots)$.
-
-The shifts $\frac a5$ give four further numbers, $\psi'(\frac a5)-\zeta(2)=\sum_{n\ge0}(n+\frac a5)^{-2}-\frac{\pi^2}6$.
-
-\begin{theorem}\label{thm:fifths}
-For $a\in\{1,2,3,4\}$ and every $\varepsilon>0$ there is $q_0$ such that for all coprime integers $p$, $q$ with $q\ge q_0$,
-\[
- \Bigl|\psi'\bigl(\tfrac a5\bigr)-\zeta(2)-\frac pq\Bigr|>q^{-\MuFifths-\varepsilon}.
-\]
-In particular the four numbers $\psi'(\frac a5)-\zeta(2)$ are irrational and have irrationality exponent at most $\MuFifths$.
-\end{theorem}
-
-The computed value of the exponent is $\MuFifthsExact\ldots$. Theorems~\ref{thm:main}, \ref{thm:thirds} and~\ref{thm:fifths}, together with every
-result in this paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the
-standard axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
+The rows are one construction with different shifts. The frame is the digamma difference
+$\psi(z+t)-\psi(z+s)$, or for $L(2,\chi_{-3})$ a combination of three of them; for the pairs
+$(\frac aq,1)$ the node geometry depends on $q$ only through one rational parameter. The shift
+$s=\frac12$ also belongs to the family, with $\Psi(\frac12,1)=\psi'(\frac12)-\zeta(2)=2\zeta(2)=\pi^2/3$. The
+method applies to it, but the exponent it gives is larger than the known bounds for $\mu(\zeta(2))$
+\cite{Giraudin26,LBKWSK26}, so we do not state it. Theorem~\ref{thm:main}, together with every result in this
+paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the standard
+axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
 
 \subsection{Previous results}
@@ -201,7 +216,7 @@ For earlier work on the arithmetic of $G$ and related values see
 \cite{RivoalZudilin2003,Zudilin2003,Zudilin02Cheb,KrattRivoal08,KrattZudilin19} and the survey
 \cite{Zudilin19Survey}; for recent rational approximations to $G$ see Eskandari \cite{Eskandari2026}. Finite
 irrationality exponents for $G$ itself were obtained after OpenAI's proof by Jha \cite{Jha2026}, Carreira
-\cite{Carreira2026} and the author \cite{Litsey2026}; Carreira \cite{Carreira2026b} also records attempts to carry the
+\cite{Carreira2026}, Bojnal \cite{Bojnal2026}, Xu \cite{Xu2026} and the author \cite{Litsey2026}; Carreira \cite{Carreira2026b} also records attempts to carry the
 determinant method to $\beta(4)$. Our searches found no previous irrationality result, and no irrationality measure, for $G-5\pi^2/48$ or $G+5\pi^2/48$.
 Eskandari, Murty and Nemoto \cite{EMN2025} construct a $2$-dimensional mixed motive over $\Q$ with period $G$ and
 use it to obtain linear forms in $1$ and $G$. Eskandari \cite{Eskandari2026} improves the approximation exponent of these

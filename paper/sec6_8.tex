@@ -46,7 +46,7 @@ Take the design $D=(58,9,3,5,3)$ and $d=53$ (the degree of $Q_N$ is at most $53N
 $Q_p$ of the proposition are the $Q_N$ with $N=p$), and
 \begin{gather*}
  \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac34,\quad \delta=2.9\cdot10^{-7},\\
- \kappa=\frac{590}{\rho}=\Kappa .
+ \kappa=\frac{532}{\rho}=\Kappa\ldots
 \end{gather*}
 We check the hypotheses.
 \begin{itemize}
@@ -58,18 +58,20 @@ primes $p<q\le2p$.
 \item The smallness: by Theorem~\ref{thm:real}, Proposition~\ref{prop:denominators} and $\log(53N)!=o(N^2)$,
 for $|x-G|\le e^{-\rho N}$ and large $N$,
 \[
- |Q_N(x)|\le\exp\bigl(-(\TDelta\ldots-6395.7087\ldots-3\varepsilon)N^2\bigr)\le e^{-\eta N^2}
+ |Q_N(x)|\le\exp\bigl(-(\TDelta\ldots-\Aden\ldots-3\varepsilon)N^2\bigr)\le e^{-\eta N^2}
 \]
-since $\eta=\EtaTot<\EtaExact\ldots$ is rounded down.
-\item The numerical conditions: $\rho\kappa=590$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa$;
+since $\eta=\EtaTot<\EtaExact\ldots$ is rounded down. In the formal proof this is the inequality
+$\eta<\TDelta\ldots-\mathsf A$ with $\int\kappa$ replaced by its lower bound $\ChiLean$, which needs
+$\ChiLean\ge\eta-7.98775$.
+\item The numerical conditions: $\rho\kappa=532$; $0<\eta<2d=106$; $\omega=3/4\le1$ and $2\omega=1.5<\kappa=\Kappa\ldots$;
 $2(\omega-\delta(2\kappa-\omega))=1.49999\ldots>1$; and
 $d+4d\delta\kappa=\PayL\ldots<\eta\kappa=\PayR\ldots$.
 \end{itemize}
-Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-590}$ for all integers
+Proposition~\ref{prop:criterion} therefore gives $|G-a/b|>b^{-\rho\kappa}=b^{-532}$ for all integers
 $a$ and all sufficiently large $b$. This proves Theorem~\ref{thm:main}. The last condition is
-equivalent to $590>x=d\rho/(\eta-4d\delta)=\Bx$, and in the limit $\delta\to0$ the argument gives
-the exponent $d\rho/\eta=\Blimit\ldots$ for the constants above; the integer $590$ is the one for
-which all conditions are verified with rational constants.
+equivalent to $532>x=d\rho/(\eta-4d\delta)=\Bx\ldots$ With the exact gain in place of the rounded rate,
+the limit $\delta\to0$ of the argument is $d\rho/(\TDelta\ldots-\mathsf A)=\Blimit\ldots$; the integer $532$
+is the one for which all conditions are verified with rational constants.
 
 \section{Remarks on the method}\label{sec:remarks}
 
@@ -77,17 +79,18 @@ The exponent $d\rho/\eta$ has three ingredients. The degree $d=n-g$ and the pert
 $\rho=n_0c_2+w$ come from the construction and from the quadrature: of $\rho=\Rho$, the cost of fixed
 columns $n_0c_2$ is $\NCtwo$ and the logarithmic size of the weights is $52.79$. The decay rate $\eta$ is
 a small difference of two large numbers, the energy at the real place, $\TDelta$, and the exponent of the
-denominators, $6395.71$, and the rank deficiencies of Theorem~\ref{thm:content} contribute $19.14$ of the
+denominators, $\Aden$, and the rank deficiencies of Section~\ref{sec:content} contribute $22.06$ of the
 $\EtaTot$. Since the exponent is inversely proportional to $\eta$, an additional gain of $0.01$ in the area
-of $\kappa$ lowers it by about $0.22$.
+of $\kappa$ lowers it by about $0.18$.
 
-All four theorems of Section~\ref{sec:content} are lower bounds for the nullity, and the proofs give the
-kernel vectors explicitly. They are proved for every design, and so are the other arguments of the paper; a
-different design changes $d$, $\rho$ and $\eta$ together, and we make no claim that $D$ is optimal. In
-particular the bound $\kappa$ of Theorem~\ref{thm:content} does not use any relation between different
-families, and at a prime where windows overlap the exact nullity is larger than each bound. An upper bound
-for the nullity, or a proof that the kernels of two families are independent, would increase $\eta$ without
-changing anything else.
+All the results of Section~\ref{sec:content} are lower bounds for the nullity, and the proofs give the
+kernel vectors explicitly. The closed formulas, the counting inequality and the families derived from it are
+proved for every design, and so are the other arguments of the paper; the stored subspaces of
+Section~\ref{ssec:packets} belong to the design $D$. A different design changes $d$, $\rho$ and $\eta$
+together, and we make no claim that $D$ is optimal. Except for one pair of families, the function $\kappa$
+does not use any relation between different families, and at a prime where windows overlap the exact
+nullity may be larger than each bound. An upper bound for the nullity is not needed; more independence
+between families, or larger stored subspaces, would increase $\eta$ without changing anything else.
 
 \section{Formalization}\label{sec:formal}
 
@@ -97,11 +100,14 @@ OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The develo
 \FormalizationLink.
 \end{center}
 The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
-written as the series $\sum_j(-1)^j/(2j+1)^2$; it is the theorem
+written as the series $\sum_j(-1)^j/(2j+1)^2$, and its proof is \lean{Solution.lean}, a wrapper of the theorem
 \begin{center}
-\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_590}
+{\small\texttt{CatalanMeasure.GenD.Uniform.Bank532.catalan\_irrationalityMeasure\_532}}
 \end{center}
-and its proof is \lean{Solution.lean}. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
+in \lean{CatalanMeasure/GenD/Uniform/Bank532/Hosts532Inst.lean}.
+% TODO(verify): Challenge.lean/Solution.lean and comparator.json still state and wrap the superseded
+% theorem; switch the public root to catalan_irrationalityMeasure_532 (Sean's OK needed) before release,
+% and re-check the "no native_decide" and axiom claims on the new root. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
 command \lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound}. The file \lean{comparator.json} is a configuration for \lean{lake comparator}
 \cite{Comparator} stating that \lean{Solution} proves the statement of \lean{Challenge} with these axioms
@@ -124,12 +130,30 @@ contain no numeral).
 \lean{TwoAdic} (the bound \eqref{eq:A2}), \lean{DenomExp}, \lean{DenomGrowth}, \lean{DenomGrowth2},
 \lean{Denominator} and \lean{Normalizer} (the common denominator, $Q_N$, the divisibility of
 Lemma~\ref{lem:recycling}).
-\item[Rank deficiencies] \lean{Interface} (the nullity, the four families and \lean{famKap\_le\_nullity}),
+\item[Closed formulas] \lean{Interface} (the nullity, the four families and \lean{famKap\_le\_nullity}),
 \lean{RankCommon}, \lean{RankK6}, \lean{RankDigits}, \lean{RankFam}, \lean{RankFilt}, \lean{RankSeq},
 \lean{RankBlock} (the shared layers: Chebyshev reflection, identity \eqref{eq:K6}, the digit formula in
 filtered form, the block framework), and \lean{RankT}, \lean{RankU}, \lean{RankUCore}, \lean{RankU6},
 \lean{RankS} for Theorems~\ref{thm:T}--\ref{thm:S}; \lean{KapHelpers} turns the comparison with a window list
 into linear arithmetic.
+\item[Counting inequality and families] \lean{Uniform/W/}: \lean{Core} (the counting inequality with a set of
+columns, \lean{w\_core}, \lean{w\_core\_all}), \lean{Profile} (its profile form), \lean{Lucas/PStep} and
+\lean{Charts3/PStepPoly} (the step of size $p$: \lean{gKill\_of\_pstep\_poly} and
+\lean{slot\_nullity\_pstep\_poly}),
+\lean{Charts3/Host} (Theorem~\ref{thm:profile} as \lean{host\_count} and the lower bound
+\lean{NullityLB.ofPacketHost}), \lean{Slots} (the slot frame), and the families of
+Section~\ref{ssec:families} in \lean{Frob}, \lean{FrobInst}, \lean{Slots}, \lean{SlotsA}, \lean{SlotsT},
+\lean{MTGlue}, \lean{HYPlus}, \lean{ZoneZ}, \lean{ZoneZ2}, \lean{Tier3}, \lean{LStar}, \lean{LStar2},
+\lean{TheoremC} and \lean{Thin}.
+\item[Stored data] \lean{Uniform/W/Prof/Packet} (the stored subspaces, \lean{Packet.check} and its soundness
+\lean{Packet.check\_sound}) and \lean{Uniform/W/Charts6/Check} (the window conditions: affine forms and
+their derivations, \lean{checkHost} and its soundness \lean{physHost\_of\_checks}); the $34$ data modules are in
+\lean{Uniform/Bank532/Pk} and \lean{Uniform/Bank532/Host\_*}.
+\item[The profile of $D$] \lean{Uniform/Bank540}, \lean{Uniform/Bank535} and \lean{Uniform/Bank532}: the
+interval lists with their certificates (\lean{WinCert}), the growth of the denominator from any list of
+families (\lean{growth\_of\_families}), the list \lean{wins532} of the $102$ intervals with its area
+\lean{gain532} and the bound \lean{gain532\_ge}, the conditions of the criterion (\lean{Bank532/Gate}) and the
+final assembly \lean{Final532}.
 \item[Nonvanishing] \lean{Nonvanishing} (Proposition~\ref{prop:nonvanishing} from the three base matrices),
 and the residue-table certificates \lean{CertMod}, \lean{ResBase}, \lean{ResCheck}, \lean{ResInv},
 \lean{ResRec}.
@@ -143,23 +167,25 @@ the perturbation by the quadrature nodes (\lean{Prefactor}, \lean{AtomBase}, \le
 \lean{CircleCover}). \lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
 (\lean{WLog}, \lean{WLogSpec}), the residual field with a weight (\lean{ResW}), the shifted tables
 (\lean{PolyShift}) and the assembly of cells and blocks (\lean{CellLoc}, \lean{Assembly}).
-\item[The design $D$] \lean{D58/} holds the instance: \lean{Budget590} (the constants of the certificate),
-\lean{Ramps}, \lean{Kap}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, \lean{Pay}, \lean{Final}
-(the design, the window list, the profile $f$, $\mathsf A_2=2673/8$, the growth of the denominator and
-the conditions of the criterion), \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
-\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), \lean{Cert590/} (the second
-case: trial data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap),
-\lean{Bank590}, \lean{SecondTrial590}, \lean{C3/} (the three inverses modulo $1009$), \lean{Certified} and \lean{Main590}, which
-proves \lean{catalan\_irrationalityMeasure\_590} in the namespace \lean{CatalanMeasure.GenD.D58}.
+\item[The design $D$] \lean{D58/} holds the instance at the real place and for the denominators: the
+constants of the certificate, \lean{Ramps}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, the
+profile $f$ and $\mathsf A_2=2673/8$, \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
+\lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), the second case (trial
+data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap) and \lean{C3/} (the three
+inverses modulo $1009$). \lean{Uniform/Bank540/Decay} collects the constants $\rho$ and
+$n_0^2(U-\frac12\log2)$ and the smallness on the neighbourhood of $G$.
+% TODO(verify): several D58 module names carry a superseded exponent in their names (Budget, Bank,
+% SecondTrial, Cert and Main modules); they are left unnamed here. Rename in the Lean before citing them.
 \end{description}
-The public theorem in \lean{Solution.lean} is a one-line wrapper of that theorem. The modules of
+The public theorem in \lean{Solution.lean} is a one-line wrapper of the theorem displayed above. The modules of
 OpenAI's formalization and the generic valuation theorems of the construction
 (\lean{CatalanMeasure/Parametric}) are used as they are.
 
 \subsection{Certificates}
 The proof combines conventional formal proofs with numerical certificates checked by the Lean kernel:
 the inverses of the base matrices modulo $1009$, the cover of Lemma~\ref{lem:quadrature}, the trial
-sequences of Section~\ref{ssec:trials} and the covers of Section~\ref{ssec:cells}. All are exact rational or
+sequences of Section~\ref{ssec:trials}, the covers of Section~\ref{ssec:cells}, and the stored subspaces,
+kernel vectors and window conditions of Section~\ref{ssec:packets}. All are exact rational or
 integer computations, decided by the kernel without compiled code. The interval arithmetic used to
 generate the trial data and the covers \cite{Arb} is not trusted: Lean rechecks every inequality. Four
 devices keep the certificates small enough for the kernel.
