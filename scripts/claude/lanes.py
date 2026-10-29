@@ -107,6 +107,27 @@ def tree_usage(roots):
     return out
 
 
+def registry_refusal(target):
+    """CANONICAL.md enforcement: a NEW (untracked) module must sit under a registered prefix
+    and must not be a scratch/pilot/demo file. Tracked modules always build."""
+    rel = target.replace('.', '/') + '.lean'
+    tracked = subprocess.run(['git', 'ls-files', '--error-unmatch', rel], cwd=WORK,
+                             capture_output=True).returncode == 0
+    if tracked:
+        return None
+    last = target.rsplit('.', 1)[-1].lower()
+    if any(last.startswith(w) for w in ('scratch', 'pilot', 'demo')):
+        return f'new module {target} is a scratch/pilot/demo file; put experiments in scratch/ (CANONICAL.md rule 4)'
+    try:
+        allow = [l.strip() for l in (LANES / 'allow.txt').read_text(encoding='utf-8').splitlines()
+                 if l.strip() and not l.startswith('#')]
+    except OSError:
+        return None
+    if not any(target == a or target.startswith(a + '.') for a in allow):
+        return f'new module {target} is outside the registered canonical prefixes (CANONICAL.md); extend the canonical module or ask the coordinator to register a directory'
+    return None
+
+
 def stale_count(target):
     r = subprocess.run([str(PY), '-I', 'scripts/claude/run_guarded.py', target, 'preflight', '3'],
                        cwd=WORK, capture_output=True, text=True, encoding='utf-8', errors='replace')
@@ -197,6 +218,14 @@ def drive():
                 # if this job has waited > STARVE seconds, nothing behind it may backfill.
                 if time.time() - float(s.get('submitted', time.time())) > STARVE:
                     break
+        if pick and not spec.get('cmd'):
+            why = registry_refusal(spec['target'])
+            if why:
+                spec.update(rc=96, ended=time.time(), output='lanes: refused: ' + why)
+                (DONE / f'{pick.stem}.json').write_text(json.dumps(spec), encoding='utf-8')
+                pick.unlink(missing_ok=True)
+                log(f"refuse-registry {spec['target']}")
+                pick = None
         if pick and not spec.get('cmd'):
             # One lake build compiles every stale dependency in parallel (~1.5-2.5 GB each),
             # which is how a single root took ~15 GB of commit on 28 Oct 11:32. Refuse a build
