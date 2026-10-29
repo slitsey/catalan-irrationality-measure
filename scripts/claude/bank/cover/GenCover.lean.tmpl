@@ -6,7 +6,8 @@ import CatalanCore.Uniform.Decay.PolyWire3.Decode
 `lean --run GenCover.lean <spec> <k> <nslices>`.  One output line per cell, kind tapes as in
 `PolyWire3.Decode`.  Every printed cell has passed the library Boolean `kindOk` (so nothing is
 trusted from the search).  Cell kinds tried: far (bank rule), multipole `mp`, jets of order 5..8,
-mixed (near pieces by distance), and the breakpoint cell `bp` next to every piece endpoint.  Spec
+mixed (near pieces by distance), and the breakpoint cell `bp` next to every piece endpoint; each on the
+pieces with those reversed whose line the cell crosses beyond their end (`wallMask`, `CellKind.flip`).  Spec
 lines: `T e` (tube edge e), `L` (line), `C` (cap), `M cre_n cre_d cim_n cim_d K J`. -/
 
 open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.NearFast
@@ -89,6 +90,17 @@ def evalBp (n : ℕ) (side : Bool) (ps : List WP) (zc dd : CQ) (h cpi : ℚ) : O
 def checkKind (ps : List WP) (M : Option MPData) (zc dd : CQ) (h cpi m' : ℚ) (k : CatalanCore.Uniform.Decay.PolyWire3.CellKind) : Bool :=
   kindOk ps M zc dd h Wc Rtw cpi m' eWc ePc k
 
+/-- WALL (28 Oct): the indices of the pieces whose line the cell `zc + s dd`, `|s| ≤ h`, crosses beyond the
+end `B`: `sideOk3` fails and `Re ζ₀ > 1`.  They are reversed (`CellKind.flip`), which `sideOk3` accepts. -/
+def wallMask (ps : List WP) (zc dd : CQ) (h : ℚ) : List ℕ :=
+  ((List.range ps.length).zip ps).filterMap fun (i, P) =>
+    let z0 := z0of P.A P.B zc
+    if !(sideOk3 z0 (eof P.A P.B dd) h) && decide (1 < z0.re) then some i else none
+
+/-- A kind found on `flipAt fl ps`, as a kind on `ps`. -/
+def wrapF (fl : List ℕ) (f : Found) : Found :=
+  if fl.isEmpty then f else ⟨.flip fl f.kind, f.margin⟩
+
 def segDist (z : CQ) (P : WP) : Float :=
   let ax := qf P.A.re; let ay := qf P.A.im; let bx := qf P.B.re; let by_ := qf P.B.im
   let zx := qf z.re; let zy := qf z.im
@@ -119,16 +131,22 @@ def solveOne (ps : List WP) (M : Option MPData) (zc dd : CQ) (h cpi m' : ℚ) : 
   match mpTry ps M zc dd h cpi m' with
   | some f => return some f
   | none => pure ()
+  let fl := wallMask ps zc dd h
+  let ps' := flipAt fl ps
   for n in [5, 6, 7, 8] do
-    match evalJet n ps zc dd h cpi with
-    | some f => if checkKind ps M zc dd h cpi m' f.kind then return some f
+    match evalJet n ps' zc dd h cpi with
+    | some f =>
+      let f := wrapF fl f
+      if checkKind ps M zc dd h cpi m' f.kind then return some f
     | none => pure ()
   for K in [8.0, 3.0, 30.0, 100.0] do
-    let sel := selFor ps zc dd h K
+    let sel := selFor ps' zc dd h K
     if sel.any id then
       for n in [8, 6] do
-        match evalMix n ps sel zc dd h cpi with
-        | some f => if checkKind ps M zc dd h cpi m' f.kind then return some f
+        match evalMix n ps' sel zc dd h cpi with
+        | some f =>
+          let f := wrapF fl f
+          if checkKind ps M zc dd h cpi m' f.kind then return some f
         | none => pure ()
   return none
 
@@ -155,6 +173,66 @@ partial def solveCell (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ →
     let s := if s ≤ a || s ≥ b then (a + b) / 2 else s
     solveCell ps M geom cpi m' lo hi a s farOk (depth + 1) ++
       solveCell ps M geom cpi m' lo hi s b farOk (depth + 1)
+
+/-- One trial cell `[a, e]`: the bank's far rule, else jets / multipole / mixed. -/
+def trialCell (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (a e : ℚ) : Option Found :=
+  if farOk a e then some ⟨.base .far, 0⟩ else
+  let (zc, dd, h) := geom a e
+  solveOne ps M zc dd h cpi m'
+
+def stepTo (b a w : ℚ) : ℚ :=
+  if a + w ≥ b then b else
+  let e := rbq (a + w)
+  if e ≤ a then b else e
+
+/-- Greedy cover of `[a, b]` (D17 fix, 28 Oct): from the left, the widest admissible cell by gallop
+(factor 3/2) from the previous width, then bisection to 1% of the width; every cell is still verified by `kindOk`. -/
+partial def greedyCover (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : ℚ)
+    (farOk : ℚ → ℚ → Bool) (a b : ℚ) (w : ℚ) (fuel : ℕ) : List (ℚ × ℚ × Option Found) :=
+  if a ≥ b then [] else
+  if fuel = 0 then [(a, b, none)] else
+  let tr := trialCell ps M geom cpi m' farOk a
+  match (if b - a ≤ 2 * w then tr b else none) with
+  | some f => [(a, b, some f)]
+  | none =>
+    -- find a working width
+    let w0 := if w ≤ 0 || a + w ≥ b then (b - a) / 2 else w
+    let rec shrink (w : ℚ) (k : ℕ) : Option (ℚ × Found) :=
+      match k with
+      | 0 => none
+      | k + 1 =>
+        let e := stepTo b a w
+        match tr e with
+        | some f => some (e, f)
+        | none => shrink (w * 2 / 3) k
+    match shrink w0 90 with
+    | none => [(a, b, none)]
+    | some (e0, f0) =>
+      -- gallop upward
+      let rec up (e : ℚ) (f : Found) (k : ℕ) : (ℚ × Found) × ℚ :=
+        match k with
+        | 0 => ((e, f), e)
+        | k + 1 =>
+          if e ≥ b then ((e, f), e) else
+          let e' := stepTo b a ((e - a) * 3 / 2)
+          match tr e' with
+          | some f' => up e' f' k
+          | none => ((e, f), e')
+      let ((e1, f1), eb) := up e0 f0 60
+      let rec refine (lo : ℚ) (fl : Found) (hi : ℚ) (k : ℕ) : ℚ × Found :=
+        match k with
+        | 0 => (lo, fl)
+        | k + 1 =>
+          if eb == e1 then (lo, fl) else
+          if 100 * (hi - lo) ≤ lo - a then (lo, fl) else
+          let mid := rbq ((lo + hi) / 2)
+          if mid ≤ lo || mid ≥ hi then (lo, fl) else
+          match tr mid with
+          | some f => refine mid f hi k
+          | none => refine lo fl mid k
+      let (e2, f2) := if e1 ≥ b then (e1, f1) else refine e1 f1 eb 30
+      (a, e2, some f2) :: greedyCover ps M geom cpi m' farOk e2 b (e2 - a) (fuel - 1)
 
 def tubeGeom (e : Pt × Pt) (a b : ℚ) : CQ × CQ × ℚ :=
   (edgeCentre (cqOf e.1) (cqOf e.2) a b, CQ.sub (cqOf e.2) (cqOf e.1), (b - a) / 2)
@@ -189,11 +267,15 @@ def bpCellAt (ps : List WP) (geom : ℚ → ℚ → CQ × CQ × ℚ) (cpi m' : �
   let okL := fun (L : ℚ) => Id.run do
     let (a, b) := if side then (x - L, x) else (x, x + L)
     let (zc, dd, h) := geom a b
+    let fl := wallMask ps (bpPoint side zc dd h) (bpDir side dd) (2 * h)
+    let ps' := flipAt fl ps
     let mut res : Option Found := none
     for n in [8, 6, 5] do
       if res.isNone then
-        match evalBp n side ps zc dd h cpi with
-        | some f => if checkKind ps none zc dd h cpi m' f.kind then res := some f
+        match evalBp n side ps' zc dd h cpi with
+        | some f =>
+          let f := wrapF fl f
+          if checkKind ps none zc dd h cpi m' f.kind then res := some f
         | none => pure ()
     match res with
     | some f => return some (a, b, f)
@@ -236,7 +318,7 @@ def coverSeg (ps : List WP) (M : Option MPData) (geom : ℚ → ℚ → CQ × CQ
     | some (a, b, f) => tailCells := [(a, b, some f)]; hi := a
     | none => pure ()
   if lo < hi then
-    out := out ++ solveCell ps M geom cpi m' lo hi lo hi farOk 0
+    out := out ++ greedyCover ps M geom cpi m' farOk lo hi ((hi - lo) / 16) 400
   return out ++ tailCells
 
 def kindInts : CatalanCore.Uniform.Decay.PolyWire3.CellKind → List Int
@@ -249,6 +331,7 @@ def kindInts : CatalanCore.Uniform.Decay.PolyWire3.CellKind → List Int
   | .bp n side lo C Fs eS => [(3 : Int), n, (if side then 1 else 0), lo.num, (lo.den : Int), Fs.num,
       (Fs.den : Int), eS, C.length] ++ (C.map pairInts).flatten
   | .mp rm rh => [(4 : Int), rm.num, (rm.den : Int), rh.num, (rh.den : Int)]
+  | .flip ix k => [(5 : Int), ix.length] ++ ix.map (fun i => (i : Int)) ++ kindInts k
 
 def showInts (l : List Int) : String := " ".intercalate (l.map toString)
 
@@ -258,34 +341,37 @@ def negPs : List WP := psC.map negW
 
 def bestCap (a b : ℚ) (aBp bBp : Bool) : Option (ℚ × Found) := Id.run do
   let (zc, dd, h) := lineGeom a b
-  let ps' := negPs
+  let fl := wallMask negPs zc dd h
+  let ps' := flipAt fl negPs
   let mut res : Option Found := none
   match evalJet 8 ps' zc dd h 0 with
-  | some f => res := some f
+  | some f => res := some (wrapF fl f)
   | none =>
     for K in [8.0, 3.0, 30.0] do
       if res.isNone then
         let sel := selFor ps' zc dd h K
         if sel.any id then
           match evalMix 8 ps' sel zc dd h 0 with
-          | some f => res := some f
+          | some f => res := some (wrapF fl f)
           | none => pure ()
   -- breakpoint cells are better next to a breakpoint
   let mut cands : List Found := res.toList
   if aBp then
+    let flb := wallMask negPs (bpPoint false zc dd h) (bpDir false dd) (2 * h)
     for n in [8, 6] do
-      match evalBp n false ps' zc dd h 0 with
-      | some f => cands := f :: cands
+      match evalBp n false (flipAt flb negPs) zc dd h 0 with
+      | some f => cands := wrapF flb f :: cands
       | none => pure ()
   if bBp then
+    let flb := wallMask negPs (bpPoint true zc dd h) (bpDir true dd) (2 * h)
     for n in [8, 6] do
-      match evalBp n true ps' zc dd h 0 with
-      | some f => cands := f :: cands
+      match evalBp n true (flipAt flb negPs) zc dd h 0 with
+      | some f => cands := wrapF flb f :: cands
       | none => pure ()
   let mut best : Option (ℚ × Found) := none
   for f in cands do
     let m'' := floorG f.margin (10 ^ 15)
-    if checkKind ps' none zc dd h 0 m'' f.kind then
+    if checkKind negPs none zc dd h 0 m'' f.kind then
       match best with
       | some (ub, _) => if -m'' < ub then best := some (-m'', f)
       | none => best := some (-m'', f)
@@ -340,17 +426,53 @@ def bestCapR (usePL : Bool) (a b : ℚ) (aBp bBp : Bool) : CapR :=
     | none => c
   else c
 
-partial def solveCap (usePL : Bool) (a b : ℚ) (bpsL : List ℚ) (depth : ℕ) : List (ℚ × ℚ × CapR) :=
-  let r := bestCapR usePL a b (bpsL.contains a) (bpsL.contains b)
-  let good := match r with
-    | .fail => false
-    | r => capCost a b r ≤ 1 / 2000000000 || b - a < 1 / 10 ^ 13
-  if good then [(a, b, r)] else
-  if depth > 60 then [(a, b, r)] else
-  let s := if bpsL.contains a then rbq (a + (b - a) / 16)
-    else if bpsL.contains b then rbq (b - (b - a) / 16) else rbq ((a + b) / 2)
-  let s := if s ≤ a || s ≥ b then (a + b) / 2 else s
-  solveCap usePL a s bpsL (depth + 1) ++ solveCap usePL s b bpsL (depth + 1)
+/-- Greedy cap cover: the widest cell `[a, e]` whose excess `∫ (ub - m')` is at most `τ (e - a)`, where
+`τ` is the cap's share of the receipt's excess budget (total cost ≤ τ r₀ ≤ the receipt's `cap_excess`). -/
+partial def greedyCap (usePL : Bool) (tau : ℚ) (a b : ℚ) (bpsL : List ℚ) (w : ℚ) (fuel : ℕ) : List (ℚ × ℚ × CapR) :=
+  if a ≥ b then [] else
+  if fuel = 0 then [(a, b, .fail)] else
+  let tr := fun (e : ℚ) =>
+    let r := bestCapR usePL a e (bpsL.contains a) (bpsL.contains e)
+    match r with
+    | .fail => none
+    | r => if capCost a e r ≤ tau * (e - a) || e - a < 1 / 10 ^ 13 then some r else none
+  match (if b - a ≤ 2 * w then tr b else none) with
+  | some r => [(a, b, r)]
+  | none =>
+    let w0 := if w ≤ 0 || a + w ≥ b then (b - a) / 2 else w
+    let rec shrink (w : ℚ) (k : ℕ) : Option (ℚ × CapR) :=
+      match k with
+      | 0 => none
+      | k + 1 =>
+        let e := stepTo b a w
+        match tr e with
+        | some r => some (e, r)
+        | none => shrink (w * 2 / 3) k
+    match shrink w0 120 with
+    | none => [(a, b, .fail)]
+    | some (e0, r0) =>
+      let rec up (e : ℚ) (r : CapR) (k : ℕ) : (ℚ × CapR) × ℚ :=
+        match k with
+        | 0 => ((e, r), e)
+        | k + 1 =>
+          if e ≥ b then ((e, r), e) else
+          let e' := stepTo b a ((e - a) * 3 / 2)
+          match tr e' with
+          | some r' => up e' r' k
+          | none => ((e, r), e')
+      let ((e1, r1), eb) := up e0 r0 60
+      let rec refine (lo : ℚ) (rl : CapR) (hi : ℚ) (k : ℕ) : ℚ × CapR :=
+        match k with
+        | 0 => (lo, rl)
+        | k + 1 =>
+          if 100 * (hi - lo) ≤ lo - a then (lo, rl) else
+          let mid := rbq ((lo + hi) / 2)
+          if mid ≤ lo || mid ≥ hi then (lo, rl) else
+          match tr mid with
+          | some r => refine mid r hi k
+          | none => refine lo rl mid k
+      let (e2, r2) := if e1 ≥ b then (e1, r1) else refine e1 r1 eb 30
+      (a, e2, r2) :: greedyCap usePL tau e2 b bpsL (e2 - a) (fuel - 1)
 
 /-! ### the multipole data -/
 
@@ -387,12 +509,15 @@ def process (Mopt : Option MPData) (line : String) : IO Unit := do
         match f with
         | some f => IO.println s!"L {p.num} {p.den} {q.num} {q.den} | {showInts (kindInts f.kind)}"
         | none => IO.println s!"FAIL L {p.num} {p.den} {q.num} {q.den}"
-  | [tag] =>
+  | tag :: rest =>
+    let tau : ℚ := match rest with
+      | [tn, td] => qOf tn td
+      | _ => 1 / 100000000000
     if tag == "C" || tag == "CP" then
       let bl := realBps (-Dc.r0) 0
       let B := sortQ (([-Dc.r0, 0] ++ bl).eraseDups)
       for (x, y) in B.zip B.tail do
-        for (p, q, r) in solveCap (tag == "CP") x y bl 0 do
+        for (p, q, r) in greedyCap (tag == "CP") tau x y bl ((y - x) / 16) 400 do
           match r with
           | .const ub f =>
             IO.println s!"C {p.num} {p.den} {q.num} {q.den} | {ub.num} {ub.den} | {showInts (kindInts f.kind)}"

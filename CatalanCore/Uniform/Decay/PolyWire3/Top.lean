@@ -6,7 +6,8 @@ set_option Elab.async false
 # `hasScaledDecay_of_tables3` (lane D, package D17)
 
 `hasScaledDecay_of_tables2` of `PolyWire2.Top2` with the tube and line cells of the single kind
-`CellKind` (`PolyWire2` kinds, breakpoint cell, multipole cell) and the cap cells of kind `PLKind`
+`CellKind` (`PolyWire2` kinds, breakpoint cell, multipole cell, any of these on the pieces with a
+per-cell set reversed) and the cap cells of kind `PLKind`
 (constant upper bounds of any cell kind, or a piecewise-linear majorant).  Same statement and
 hypotheses as `Top2`, `PolyTables3.check` in place of `PolyTables2.check`; the energy table is
 unchanged.

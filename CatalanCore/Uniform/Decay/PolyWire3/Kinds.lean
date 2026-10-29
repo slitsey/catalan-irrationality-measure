@@ -3,6 +3,7 @@ import CatalanCore.Uniform.Decay.FarField.Cell
 import CatalanCore.Uniform.Decay.FarField.CapPL
 import CatalanCore.Uniform.Decay.FarField.LinJet
 import CatalanCore.Uniform.Decay.PolyWire2.Top2
+import CatalanCore.Uniform.Decay.NearFast.Flip
 set_option Elab.async false
 
 /-!
@@ -10,9 +11,12 @@ set_option Elab.async false
 
 `CellKind` contains all proved kinds: `base k` (PolyWire2's `jetF` / `mixF` / `far`), `bp`
 (the breakpoint cell of `Breakpoint.Cell`) and `mp` (the far-field multipole cell of
-`FarField.Cell`).  `kindOk_sound` only cites `kindOk2_sound`, `bpOk_sound`, `mpCellOk_sound`.
+`FarField.Cell`), and `flip ix k`: the kind `k` evaluated on the pieces with those at the indices
+`ix` reversed (`NearFast.flipAt`; a cell crossing the line of a piece beyond its end `B` is accepted by
+the fast evaluator for the reversed piece).  `kindOk_sound` only cites `kindOk2_sound`, `bpOk_sound`,
+`mpCellOk_sound` and the equality of potentials `flipAt_sum`.
 The multipole data is an `Option MPData`: `none` for banks that do not use it (the global test is
-then trivial and an `mp` cell never passes).  The tube / line / cap statements are those of
+then trivial and an `mp` cell never passes); under `flip` it is `none`.  The tube / line / cap statements are those of
 `FarField.Kinds3` and `FarField.PLKinds` with this one type.
 -/
 
@@ -28,11 +32,13 @@ open CatalanCore.Uniform.Decay.Breakpoint (bpOk bpOk_sound)
 open CatalanCore.Uniform.Decay.FarField (MPData mpGlobalOk mpCellOk mpCellOk_sound cellOkFL cellOkFL_sound
   PLCell plLine plChain plSum plCapOkOf plCapOkOf_sound)
 
-/-- All proved cell kinds.  `bp n side lo C Fs eS` is `bpOk`, `mp rm rh` is `mpCellOk`. -/
+/-- All proved cell kinds.  `bp n side lo C Fs eS` is `bpOk`, `mp rm rh` is `mpCellOk`, `flip ix k` is
+the kind `k` on `flipAt ix ps`. -/
 inductive CellKind where
   | base (k : CellKind2)
   | bp (n : ℕ) (side : Bool) (lo : ℚ) (C : List ℚ) (Fs : ℚ) (eS : ℕ)
   | mp (rm rh : ℚ)
+  | flip (ix : List ℕ) (k : CellKind)
 
 /-- A cell `[ulo, uhi]` with its kind. -/
 structure TCell where
@@ -53,6 +59,8 @@ def kindOk (ps : List WP) (M : Option MPData) (zc dd : CQ) (h W Rtwo cpi m' : �
   | .mp rm rh => match M with
       | none => false
       | some M0 => mpCellOk M0 zc dd h W cpi m' rm rh
+  | .flip ix k => kindOk (flipAt ix ps) none zc dd h W Rtwo cpi m' eW eP k
+termination_by structural k => k
 
 theorem kindOk_sound {ps : List WP} {M : Option MPData} (hG : globalOk ps M = true) {zc dd : CQ}
     {h W Rtwo cpi m' : ℚ} {eW eP : ℕ} {k : CellKind}
@@ -61,13 +69,16 @@ theorem kindOk_sound {ps : List WP} {M : Option MPData} (hG : globalOk ps M = tr
     (m' : ℝ) ≤ -(ps.map (fun P => (P.w : ℝ) *
         PhiW P (zc.toC + (s : ℂ) * dd.toC + (δ : ℂ)))).sum
       + (cpi : ℝ) * |(zc.toC + (s : ℂ) * dd.toC + (δ : ℂ)).im| := by
-  cases k with
+  induction k generalizing ps M with
   | base k => (simp only [kindOk] at hc; exact kindOk2_sound hc s δ hs hδ)
   | bp n side lo C Fs eS => (simp only [kindOk] at hc; exact bpOk_sound hc s δ hs hδ)
   | mp rm rh =>
     cases M with
     | none => (simp only [kindOk] at hc; cases hc)
     | some M0 => (simp only [kindOk] at hc; exact mpCellOk_sound hG hc s δ hs hδ)
+  | flip ix k ih =>
+    simp only [kindOk] at hc
+    exact flip_lower ix ps (ih (ps := flipAt ix ps) (M := none) rfl hc)
 
 /-! ### Tube cells -/
 

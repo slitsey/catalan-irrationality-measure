@@ -16,7 +16,9 @@ The cover is lemma-aware: for every tube edge / line / cap the piece endpoints o
 next to each, the largest breakpoint cell `bp` (Breakpoint.Cell); in between, the multipole cell `mp`
 (FarField.Cell, if the global moments pass), jets of order 5..8, mixed cells, the bank's far rule; cap
 cells are constant upper bounds of any kind (the PL chord kind `lin` is decoded and checked by the
-library but not produced here).  Every printed cell passed the library Boolean `kindOk` inside the generator;
+library but not produced here).  Every kind except `mp` and `lin` is tried on the pieces with those reversed
+whose line the cell crosses beyond their end (tag 5, `CellKind.flip`; WALL, 28 Oct).
+Every printed cell passed the library Boolean `kindOk` inside the generator;
 the Lean modules re-prove each by `decide +kernel`.
 """
 import sys, os, json, glob, subprocess, argparse, time, re, threading
@@ -167,17 +169,24 @@ def cmd_gen(C, a):
         pts += [(s['ax'], s['ay']), (s['bx'], s['by'])]
     xs = [p[0] for p in pts] + [h for (_, _, h) in C.RP + C.CP] + [l for (_, l, _) in C.RP + C.CP]
     cx = Fr(round((min(xs) + max(xs)) / 2 * 10), 10) if a.centre is None else Fr(a.centre)
+    ex = json.load(open(gen_bank.BANKS[C.bank]['exact']))
+    budget = Fr(ex['cap_excess'])        # the receipt's cap excess = budget for sum (width * (ub - m'))
+    tau = Fr(round(float(a.taufrac * budget / C.d['sc']['r0']) * 10 ** 18), 10 ** 18)
+    print('cap budget', float(budget), 'tau', float(tau))
     spec = []
     if a.K > 0:
         spec.append(f'M {cx.numerator} {cx.denominator} 0 1 {a.K} {a.J}')
     for e in range(C.nE):
         spec.append(f'T {e}')
-    spec += ['L', a.capmode]
+    spec += ['L', f'{a.capmode} {tau.numerator} {tau.denominator}']
+    if a.only:
+        keep = set(a.only.split(','))
+        spec = [l for l in spec if (l.split()[0] == 'M') or (('T' + l.split()[1]) if l.startswith('T ') else l.split()[0]) in keep]
     sp = os.path.join(C.scratch, 'spec.txt')
     open(sp, 'w').write('\n'.join(spec) + '\n')
     n = a.slices
     outs = run_slices(C, 'GenCover.lean.tmpl', 'gen', lambda k: [sp, str(k), str(n)], n, f'{C.bank}gen', a.gb)
-    if a.cmd in ('gen', 'all'):
+    if a.cmd in ('gen', 'all') and not a.noE:
         cmd_genE(C, a)
 
 
@@ -237,6 +246,8 @@ def read_gen(C, capfile=None):
 
 
 def kind_name(ints):
+    if ints[0] == 5:        # flip mask `5 len ix(len)` in front of the kind (WALL, 28 Oct)
+        return kind_name(ints[2 + ints[1]:]) + '/flip'
     return {0: 'far', 1: 'jet', 2: 'mix', 3: 'bp', 4: 'mp'}[ints[0]]
 
 
@@ -632,6 +643,9 @@ if __name__ == '__main__':
     ap.add_argument('--J', type=int, default=12)
     ap.add_argument('--centre', default=None, help='multipole centre (real), default midpoint of the support')
     ap.add_argument('--slices', type=int, default=4)
+    ap.add_argument('--only', default=None, help='comma list of spec lines to run, e.g. T3,T4,L,CP (tests)')
+    ap.add_argument('--noE', action='store_true', help='skip the energy/G jobs')
+    ap.add_argument('--taufrac', type=Fr, default=Fr(9, 10), help='fraction of the receipt cap excess spent by cap cells')
     ap.add_argument('--eslices', type=int, default=2)
     ap.add_argument('--gb', type=float, default=2.5)
     ap.add_argument('--parallel', type=int, default=3)

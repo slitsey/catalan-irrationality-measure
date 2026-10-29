@@ -7,7 +7,9 @@ set_option Elab.async false
 
 Cells are `raw_ints%` tapes: `ulo(2), uhi(2)` then the kind:
 `0` far; `1 n lo(2) Fs(2) len C(2 len)` jet; `2 n ρ(2) lo(2) Fs(2) eW' eP' ns sel(ns) len C(2 len)` mix;
-`3 n side lo(2) Fs(2) eS len C(2 len)` breakpoint; `4 rm(2) rh(2)` multipole.
+`3 n side lo(2) Fs(2) eS len C(2 len)` breakpoint; `4 rm(2) rh(2)` multipole;
+`5 len ix(len) body`: the kind `body` (tags `0`–`4`) on the pieces with those at the indices `ix`
+reversed (`CellKind.flip`).
 A PL cap cell is `tag a(2) b(2) ua(2) ub(2) body`: tag `0` is the constant upper bound `ua` of the
 cell kind `body`, tag `1` is the chord `ua → ub` with body `n lo(2) Fs(2) len C(2 len)`.
 -/
@@ -19,11 +21,17 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.Cells CatalanCore.
 open CatalanCore.Uniform.Decay.FarField (MPData)
 open CatalanCore.Uniform.Decay.NearCells
 
-def decodeKind3 : List ℤ → CellKind
+/-- The kinds of tags `0`–`4`. -/
+def decodeKindB : List ℤ → CellKind
   | 3 :: n :: sd :: ln :: ld :: fn :: fd :: es :: len :: t =>
       .bp n.toNat (decide (sd = 1)) (qOfP ln ld) (qsOf (t.take (2 * len.toNat))) (qOfP fn fd) es.toNat
   | 4 :: rmn :: rmd :: rhn :: rhd :: _ => .mp (qOfP rmn rmd) (qOfP rhn rhd)
   | k => .base (decodeKind k)
+
+/-- All kinds: tag `5` is a flip mask in front of a kind of tags `0`–`4`. -/
+def decodeKind3 : List ℤ → CellKind
+  | 5 :: len :: t => .flip ((t.take len.toNat).map Int.toNat) (decodeKindB (t.drop len.toNat))
+  | k => decodeKindB k
 
 def decodeCell3 : List ℤ → TCell
   | un :: ud :: vn :: vd :: k => ⟨qOfP un ud, qOfP vn vd, decodeKind3 k⟩
