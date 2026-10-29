@@ -400,3 +400,21 @@ def piece_ok_lean(P, cert, cat, q, al, ka, depth, cF, Pbad):
     Rn = max(math.ceil(Rr), 2)
     L = lgF(14 * Rn)
     return 14 * Rn < 2 ** (L + 1) and 2 * Rn * (3 * L + cF) <= Cc
+
+# ------------------------------------------------------------------------------------ the UF branch S (Check/UF.lean)
+def _eB(kap): return add(AP, P) if kap else AP
+def _eL(zeta): return K if zeta else C(0)
+def _eU(zeta): return tsub(P, C(1)) if zeta else tsub(K, C(1))
+def _eUb(kap, zeta): return mn(_eU(zeta), tsub(SP, C(1))) if kap else _eU(zeta)
+def _eOvl(a, b): return tsub(mn(N_, add(b, C(1))), mx(R, a))
+def _eBeta(w0, w1): return add(add(_eOvl(w0, w1), _eOvl(add(w0, P), add(w1, P))), _eOvl(tsub(w0, P), tsub(w1, P)))
+def _eCB(t0, tv, w0):
+    W = tsub(mn(add(tv, C(1)), N_), t0)
+    return tsub(two(add(R, M)), add(add(M, tsub(W, M)),
+                                    tsub(tsub(W, M), tsub(P, add(tsub(add(tv, C(1)), w0), tsub(two(M), _eBeta(w0, tv)))))))
+def tCand(kap, zeta):
+    B, L = _eB(kap), _eL(zeta)
+    return _eCB(mx(R, add(B, L)), add(B, _eUb(kap, zeta)), add(B, L))
+TS = mn(mn(tCand(False, False), tCand(False, True)), mn(tCand(True, False), tCand(True, True)))
+COND['1<=m'] = (0, 0, 1, 0, -1, False)
+UFS = (TS, [COND['2m<=p'], COND['1<=m']], 1)
