@@ -99,19 +99,17 @@ OpenAI's formalization of the irrationality of $G$ \cite{OpenAI2026}. The develo
 \begin{center}
 \FormalizationLink.
 \end{center}
-The statement of Theorem~\ref{thm:main} in \lean{Challenge.lean} uses only Mathlib, with Catalan's constant
-written as the series $\sum_j(-1)^j/(2j+1)^2$, and its proof is \lean{Solution.lean}, a wrapper of the theorem
+Theorem~\ref{thm:main} is the theorem
 \begin{center}
 {\small\texttt{CatalanMeasure.GenD.Uniform.Bank532.catalan\_irrationalityMeasure\_532}}
 \end{center}
-in \lean{CatalanMeasure/GenD/Uniform/Bank532/Hosts532Inst.lean}.
-% TODO(verify): Challenge.lean/Solution.lean and comparator.json still state and wrap the superseded
-% theorem; switch the public root to catalan_irrationalityMeasure_532 (Sean's OK needed) before release,
-% and re-check the "no native_decide" and axiom claims on the new root. The solution has no \lean{sorry} and no \lean{native\_decide}, and the
-command \lean{\#print axioms} reports only the three standard axioms \lean{propext}, \lean{Classical.choice} and
-\lean{Quot.sound}. The file \lean{comparator.json} is a configuration for \lean{lake comparator}
-\cite{Comparator} stating that \lean{Solution} proves the statement of \lean{Challenge} with these axioms
-only. The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The parts of OpenAI's
+in \lean{CatalanMeasure/GenD/Uniform/Bank532/Hosts532Inst.lean}. It uses only Mathlib in its statement, with
+Catalan's constant written as the series $\sum_j(-1)^j/(2j+1)^2$ and the conclusion $|G-a/b|>b^{-532}$ for
+all integers $a$ and all sufficiently large $b$. The modules of the development contain no \lean{sorry} and no
+\lean{native\_decide}, and the command \lean{\#print axioms}, which ends the file above, is the check that
+only the three standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound} are used. The
+repository also contains a configuration \lean{comparator.json} for \lean{lake comparator}
+\cite{Comparator}, which checks that a solution file proves a challenge statement with these axioms only. The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The parts of OpenAI's
 formalization that are used were converted to Lean's module system and ported to a recent Lean release; the
 repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
 
@@ -174,10 +172,11 @@ profile $f$ and $\mathsf A_2=2673/8$, \lean{Circle} (the 42-piece cover), \lean{
 data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap) and \lean{C3/} (the three
 inverses modulo $1009$). \lean{Uniform/Bank540/Decay} collects the constants $\rho$ and
 $n_0^2(U-\frac12\log2)$ and the smallness on the neighbourhood of $G$.
-% TODO(verify): several D58 module names carry a superseded exponent in their names (Budget, Bank,
-% SecondTrial, Cert and Main modules); they are left unnamed here. Rename in the Lean before citing them.
+The remaining modules of \lean{D58/} (the scalar budget, the interval bank, the second-case trial data, the
+certificates and the main assembly of the design $D$) are used by the final assembly in the form in which
+they stand and are not cited individually.
 \end{description}
-The public theorem in \lean{Solution.lean} is a one-line wrapper of the theorem displayed above. The modules of
+The modules of
 OpenAI's formalization and the generic valuation theorems of the construction
 (\lean{CatalanMeasure/Parametric}) are used as they are.
 

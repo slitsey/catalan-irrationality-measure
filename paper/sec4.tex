@@ -292,16 +292,25 @@ least $md-\sum_jw_jr_j$. Theorem~\ref{thm:count}, applied to $\ker\Phi$ with no 
 the bound.
 \end{proof}
 
-In the applications the space $V_p^m$ is a space of \emph{slot polynomials}: the row combinations are written
-as sums $\sum_i\lambda_i(X)\,F_i(X^p)$ of fixed polynomials $\lambda_i$ times polynomials in $X^p$, which is the
-form in which \eqref{eq:cheb-p} and the relation $(1-X)^p=1-X^p$ express the row polynomials modulo $p$, and
-the coordinates of the $F_i$ take values in $V$. The jets $\varphi_{j,k}$ are Taylor coefficients at $X=1$
-and $X=-1$, coefficients at $0$ and at $\infty$ in a window of degrees, and responses at finitely many
-columns; the map $\iota$ is the map to row combinations. By the digit formula, the response of such a
-combination at the raw column $Jp+\ell$ is a sum over the slots of a moment form in $J$ and the digit,
-which does not depend on the design, times a coefficient of $F_i$.
-% TODO(verify): the description of the slot frame follows the module documentation of
-% W/Slots/Core (SlotSystem, repU, repT, resp) and W/Charts3/Host (HostIdent); match wording to the Lean.
+In the applications the row combinations are organized in \emph{slot systems}. A slot system consists of data
+$x_1,\dots,x_D\in\F_p^K$, a linear map $x\mapsto c(x)$ from the data to row combinations, injective on a
+subspace of admissible data, fixed polynomials $\lambda_1,\dots,\lambda_D\in\F_p[X]$ of degree less than some
+$e_{\max}$, and two linear maps $\mathcal T,\mathcal G$ from $\F_p^K$ to $\F_p[Y]$, such that for every
+admissible $x$ the two row polynomials of $c(x)$ multiplied by $(X-1)^h$, respectively by
+$(X-1)^h(X^2-1)^{(p-1)/2}$, equal $\sum_d\lambda_d(X)\,\mathcal T(x_d)(X^p)$, respectively
+$\sum_d\lambda_d(X)\,\mathcal G(x_d)(X^p)$; this is the form in which \eqref{eq:cheb-p} and the relation
+$(1-X)^p=1-X^p$ express the row polynomials modulo $p$. By the digit formula, the response of $c(x)$ at the
+raw column $Jp+\ell$ is
+\[
+ \sum_{0\le e<e_{\max},\ p\mid H-1-\ell-e}\ \psi_{J,\,(H-1-\ell-e)/p}\Bigl(\sum_d\lambda_d[e]\,x_d\Bigr),
+\]
+where $\lambda_d[e]$ is the coefficient of $X^e$ and each $\psi_{J,s}$ is a linear form, a moment form in $J$
+and the digit $s$, determined by $\mathcal T$ and $\mathcal G$. For the stored subspaces the data are $m$
+polynomial coordinates with values in $V$, and the admissibility of the data is not imposed directly: the
+jets $\varphi_{j,k}$ are Taylor coefficients at $X=-1,0,1$, coefficients at $\infty$, and window rows, the map
+$\iota$ from $V_p^m$ to the data is an arbitrary linear map, and only on the joint kernel of the jets is it
+required to land in the admissible data, to be injective, and to give responses of the form needed in
+Theorem~\ref{thm:count}.
 
 \subsection{Further families}\label{ssec:families}
 The following lower bounds for $\nu_N(p)$ are proved, each for every admissible design, by explicit choices of
@@ -309,23 +318,27 @@ the space, the conditions and the columns in Theorem~\ref{thm:count} or its vari
 piecewise linear function of $p$ and the parameters, positive on windows described by linear inequalities.
 We describe them in words; the statements are those of the formalization, cited in
 Section~\ref{sec:formal}.
-% TODO(verify): the one-line descriptions below are taken from the statements and documentation of the
-% cited Lean modules (W/Frob, W/Slots, W/SlotsA, W/SlotsT, W/MTGlue, W/HYPlus, W/ZoneZ, W/ZoneZ2,
-% W/Tier3, W/LStar, W/LStar2, W/TheoremC, W/Thin); they have not been matched clause by clause.
 \begin{enumerate}[label=(\roman*),wide]
-\item \emph{Frobenius products.} Row combinations whose polynomial is a product of a fixed polynomial with
-a polynomial in $X^p$ of bounded degree, the conditions being the classes of profiles seen by the columns.
+\item \emph{Frobenius products.} Row combinations whose polynomial is the product of a fixed factor, a
+free polynomial $P$ of bounded degree $d_P$ in the Chebyshev variable, and a polynomial $\Lambda(X^p)$ with
+exponents in a window of $K$ consecutive values; the conditions require $\Lambda$ to annihilate the
+functionals seen by the columns, and the bound is $(d_P+1)(K-\#\text{seen})$.
 For $D$ this gives $53N-2p-1$ on $(26N,53N/2)$, where $2p+2\le53N$.
 \item \emph{A truncated form of Theorem~\ref{thm:U6}.} Without the hypothesis $n\le4p+2g+1$, the bound
 $\mu_1-\mu_0-e_+-(n-4p-2g-1)_+$ holds whenever $L\le6p$ and $b+q\le p+\mu_0$; for $D$ it gives $5p-59N+1$ on
 $(59N/5,12N]$.
+% TODO(verify): (iii) checked against the T-raw theorem's structure only; trace the hypotheses and the
+% interval (16N,118N/7] to the Lean instance before release.
 \item \emph{A raw tail of the antisymmetric family.} With $D_T'=n-1-g-3p$ and four digits, the count is
 $p-1-(2g+q+h)$ under $4p\le L$, $b\le p$, $D_T'\le g$, $D_T'\le(p-1)/2$, $3p+1+g\le n$ and $4p+b\le H$; for
 $D$ this is $p-16N-1$ on $(16N,118N/7]$.
 \item \emph{Two families of slot polynomials and their sum.} The first fixes a digit $s\le H/p$ and a range of
-blocks of rows, the second is periodic in the block index; their kernels are independent when both apply
-under a separation condition, and the sum of the two bounds is a lower bound. This is the one place where
-two bounds are added.
+blocks of rows, with slot polynomials divisible by a power of $X-1$; the second has slot polynomials
+$(X^p-1)P$ with $P$ supported in a window of degrees. Their kernels are independent when both apply,
+under a separation condition, at the same window $s$ or at the windows $s$ and $s-1$, and the sum of the
+two bounds is a lower bound. This is the one place where two bounds are added.
+% TODO(verify): (v) checked for structure only; the cell moduli and the exact intervals are not yet traced
+% to the Lean instances.
 \item \emph{Families with a constant profile on a cell.} Several families (the theorems called MT, M, Z, C
 and $\mathrm C'$ in the formalization) use slot polynomials whose coordinates satisfy finitely many
 rational linear equations, the \emph{cell} equations; a solution modulo $p$ exists for every $p$ prime to a
@@ -356,16 +369,17 @@ $\mathcal E$ the product of the minors. No prime enters this check.
 
 The hypotheses on the jets and on $\iota$ depend on $N$ and $p$. A window is described by finitely many
 inequalities that are affine in $N$ and $(p-1)/2$, and so are $m$ and the $w_j$ on each of finitely many
-pieces of the window. A second verified procedure checks on each piece that the jets of the slot frame have
-the required orders at $0$, $\pm1$ and $\infty$, that the map $\iota$ is injective on the joint kernel and
-lands in the domain of the slot frame, and that the responses vanish, each inequality being derived from
-the window inequalities by nonnegative integer combinations with rounding, in the manner of
-Chv\'atal--Gomory cuts. Its soundness theorem gives the hypotheses of Theorem~\ref{thm:profile} at every
-prime $p\ge61$ of the window with $p\nmid\mathcal E$; for large $N$ all primes of the window are of this
-kind. For $33$ of the $34$ windows the hypotheses are established in this way, and for the remaining one by
-a direct proof. The windows lie in $(3N,16.2N)$, where $p>q$, so $a=0$ in Theorem~\ref{thm:count}.
-% TODO(verify): "derived ... in the manner of Chvatal--Gomory cuts", "p >= 61" (form <0,2,-59>) and the
-% list of checks paraphrase W/Charts6/Check (Affine, Cert, Host: checkHost, physHost_of_checks).
+pieces of the window. A second verified procedure checks on each piece that the numbers of jets and their
+orders at $-1$, $0$, $1$ and $\infty$ are nonnegative and fit the window, that $p>59$, that the map $\iota$
+is injective on the joint kernel and lands in the domain of the slot frame, and that the response is
+given on the joint kernel by a polynomial in the column of degree less than $q \bmod p$ (so that
+Theorem~\ref{thm:count} applies), each required inequality in $N$ and $(p-1)/2$ being derived from the
+window inequalities by sums, nonnegative integer multiples, and division of the variable part by a common
+divisor with rounding of the constant, that is, by Chv\'atal--Gomory cuts. Its soundness theorem gives the
+hypotheses of Theorem~\ref{thm:profile} at every odd prime $p>59$ of the window with $p\nmid\mathcal E$;
+for large $N$ all primes of the window are of this kind. For $33$ of the $34$ windows the hypotheses are
+established in this way, and for the remaining one by a direct proof of the same statement. The windows
+lie in $(3N,16.2N)$, where $p>q$, so $a=0$ in Theorem~\ref{thm:count}.
 
 \subsection{The function $\kappa$ for the design $D$}\label{ssec:kappa}
 For $D$, $L=70N$, $H=78N$, $a=22N$, $\Lambda=11N$ and $q+h=6N$. On $(12N,53N/2]$ the function $\kappa$ of
@@ -396,10 +410,10 @@ $(26,\,53/2]$ & $53-2x$ & Section~\ref{ssec:families}(i) \\
 \bottomrule
 \end{tabular}
 \end{center}
-% TODO(verify): the attribution of the six intervals in (341/25, 809/50] to particular families of
-% Section ssec:families is not traced in the Lean (they are certified from the ledger fams13 in
-% Bank532/Ledger532.lean, wins532_cert, via old_cert); only "one of the families" is checked.
-Their areas add up to $21.02610\ldots$, and the $84$ intervals below $12$ contribute $1.03361\ldots$, so that
+For the six rows on $(341/25,809/50]$ the table records only that the function is a lower bound for $\kappa$
+given by the families of Section~\ref{ssec:families}; the formalization certifies each interval of the list
+by showing that the maximum of the lower bounds of Sections~\ref{ssec:families} and~\ref{ssec:packets} is at
+least the stated function on it, and does not single out the family that attains it. Their areas add up to $21.02610\ldots$, and the $84$ intervals below $12$ contribute $1.03361\ldots$, so that
 the total is $\Chi\ldots$; the exact sum is computed in the formalization from the list of intervals.
 
 For Theorem~\ref{thm:content} one checks the hypotheses on the intervals above. The hypotheses

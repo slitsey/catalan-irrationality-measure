@@ -1,14 +1,10 @@
 % Quarter border and characteristic-zero selection.
-\section{A quarter border and characteristic-zero selection}
+\section{The number $L(2,\chi_{-3})$}
 \label{sec:chi3-quarter}
 
-For the conductor-three frame, characteristic-zero interpolation permits a
-larger border than a finite-field selection. We take
-\[
- r\le4m\le r+3,
-\]
-and retain the full determinant together with its principal restrictions
-obtained by omitting one common node. Their degree budget is still $r$.
+For the frame $F_\chi$ we use a quarter border: the alternating geometry of parameter $c=\frac12$ at
+the scales $r\equiv0\pmod4$, so that $4m=r$. We retain the full determinant together with its
+principal restrictions obtained by omitting one common node. Their degree budget is still $r$.
 The denominator and decay estimates below apply uniformly to every member.
 
 \begin{theorem}[One common-node deletion]\label{thm:chi3-charzero-selection}
@@ -58,11 +54,12 @@ vanish by degree and root count. The left and right barycentric maps land in the
 \end{proof}
 
 \subsection{The uniform arithmetic profile}
-No new local valuation identity is needed: the two explicit dual certificates of
-Section~\ref{sec:content} for $L(2,\chi_{-3})$ (the residue-class certificate and the
-certificate in which only row potentials are raised) suffice. At a prime $p$ put $u=p/r$.
-We always use the first certificate, and the smaller of the two bounds when $r+2m\le2p$,
-the range in which the second is proved. For the two classes of primes modulo $6$ this
+The singular indices of $F_\chi$ are those $k$ with $p\mid k(3k-2)(2k-1)$, and the relevant
+classes of primes are modulo $6$. We first use assignment bounds with explicit potentials, as in
+\S\ref{sssec:trop}: the residue-class potentials of (T1$'$), and potentials in which only row
+potentials are raised, on nodes that have a congruent partner below the first pole. At a prime $p$
+put $u=p/r$. We always use the first bound, and the smaller of the two when $r+2m\le2p$, the range
+in which the second is proved. For the two classes of primes modulo $6$ this
 gives the piecewise linear profiles $w_1,w_5$ below; at a common endpoint the two
 neighbouring pieces agree.
 \[
@@ -117,35 +114,36 @@ The finite-size argument is the same for every $n$, with a fixed additive roundi
 The same denominator clears every principal restriction, so the family of determinants and
 the selection of Theorem~\ref{thm:chi3-charzero-selection} are unchanged.
 
+\paragraph{Windows and the rank bound.}
+The window bound of Theorem~\ref{thm:window} (with $n=0$) and the rank bound of
+\S\ref{sssec:rank} do not use the two-term structure: for a frame with several poles the bit $z$
+of a fibre becomes the index of the arc between consecutive pole classes, and the arc below the first
+pole still has a vanishing step function at the digit $0$. With the cuts $t\equiv0$, $t\equiv\frac23$
+and $t\equiv\frac12$ modulo $p$, the windows lower the content by $853129/196035840$. The rank bound, in
+the class $1\bmod 6$ on $\frac58\le u\le\frac56$ and in the class $5\bmod6$ on $\frac12\le u\le\frac58$, lowers
+the integrals of the two classes by $\frac1{64}$ and $\frac1{320}$, that is, the content by $\frac3{320}$. Altogether,
+\[
+ \Lambda_\chi=\Lambda_{16}-\frac{853129}{196035840}-\frac3{320}=\frac{4733759984905769}{1155228423148800}=4.09768\ldots
+\]
+for the scales $r\equiv0\pmod4$.
+
 \subsection{The analytic certificate}
-The decay estimate of Section~\ref{sec:decay} is applied with $\alpha=1/4$, the segment $[-\frac{107}{1000},0]$, contour rays of slope
-$\frac{12}5$, regularization radius $1/2048$, and a rational probability measure $\sigma$ with $2950$ atoms on the segment, the
-rays (in conjugate pairs) and the line, all of modulus at most $16$. The positions and masses were found by solving the fractional program for $c/(D-\Lambda_{16})$ of \S\ref{ssec:slope-cert}
-numerically, at the content of this section, and rounding to dyadic positions and masses.
-The function to be bounded is
+The quarter border is the alternating geometry of parameter $c=\frac12$ at the scales $r\equiv0\pmod 4$, and the decay
+estimate is Theorem~\ref{thm:decay} for the frame $F_\chi$, with $d=3$ digamma terms.
+The node measure $\nu_{1/2}$ has mass $\frac54$ and energy
 \[
- g(s)=\frac54 U^\sigma(s)-U^{\nu_{1/4}}(s)
-                 +\Bigl(1-\frac1{100000}\Bigr)\pi|\operatorname{Im}s|,
+ I(\nu_{1/2})=\frac{75}{32}-\frac98\log\frac32-\frac1{16}\log2 .
 \]
-and the identity
+A certificate measure on a polygon, with a cover by cells accepted by the checks of \S\ref{ssec:slope-cert}, gives
 \[
- U^{\nu_{1/4}}(s)=\frac12U^\tau(s)
-       +\frac34U^\tau(2s/3)-\frac34\log(3/2)
+\begin{gathered}
+ D=\frac{4643511791526209475773}{10^{21}}=4.64351\ldots,\\ \gamma=\frac{37521870783566737}{5\cdot10^{15}}=7.50437\ldots
+\end{gathered}
 \]
-reduces the potential of the node distribution to the potential $U^\tau$ already bounded in
-Section~\ref{sec:decay}. The inequalities on the rays, the segment and the line are checked on covers by cells, as in \S\ref{ssec:slope-cert},
-with the near atoms of each cell treated one by one and the others by a Taylor expansion. With the sums over pairs of atoms this gives
+Omitting one common node changes the energy only by a term linear in $r$, which is absorbed in the $o(r^2)$ error. By
+Theorem~\ref{thm:chi3-charzero-selection} a retained determinant does not vanish at any rational point, so no prime has to
+be chosen, and the deduction of Section~\ref{sec:proof} gives
 \[
- S_{\rm base}=-\frac{154489}{5000000},\qquad
- I^\sigma\le\frac{179918953}{100000000},\qquad
- I^\nu\ge\frac{184428}{100000}.
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le\frac\gamma{D-\Lambda_\chi}=\MuChiExact\ldots<\MuChi.
 \]
-Hence $D\ge1485123059/320000000=4.6410095\ldots$ and $c=376269/50000=7.52538$. Omitting one common node
-changes the energy only by a term linear in $r$, which is absorbed in the $o(r^2)$ error. By
-Theorem~\ref{thm:chi3-charzero-selection} a retained determinant does not vanish at any rational
-point, so no prime has to be chosen, and the deduction of Section~\ref{sec:proof} gives
-\[
- \mu\bigl(L(2,\chi_{-3})\bigr)
- \le\frac{376269/50000}{1485123059/320000000-\Lambda_{16}}
- =\MuChiExact\ldots<\MuChi.
-\]
+% Lean: CatalanCore.Uniform.Bank.Chi3Rank.chi3_measure_L2_rank (decay: Chi3New.chi3_decay; content: hasScaledContent_chi3_rank).
