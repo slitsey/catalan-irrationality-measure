@@ -8,7 +8,7 @@ set_option Elab.async false
 With the automatic content `Auto.sevenths_content_auto a` at `Λ_fin = bankData.Λ` (selection depth `≤ 64`,
 `depth_le`) and the decay
 `HasScaledDecay (F7.family (seventhsFrameAt a) (F7.selectionDepth (seventhsFrameAt a) 2)) F7.scale D7 c7`, the
-target bound `70993/20 (= 354965/100)` follows by `Auto.sevenths_mu_le`.  The theorem is conditional only on the
+target bound `2801` follows by `Auto.sevenths_mu_le`.  The theorem is conditional only on the
 decay. -/
 
 namespace CatalanCore.Uniform.Bank.SeventhsContent.AutoMeasure
@@ -25,14 +25,14 @@ theorem lam_lt_D7 : ((bankData.Λ : ℚ) : ℝ) < (D7 : ℝ) := by
   have h : bankData.Λ < D7 := by rw [bankData_Λ]; unfold D7; norm_num
   exact_mod_cast h
 
-theorem X_le : (1 : ℝ) * (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℚ)) ≤ ((70993 / 20 : ℚ) : ℝ) := by
+theorem X_le : (1 : ℝ) * (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℚ)) ≤ ((2801 : ℚ) : ℝ) := by
   rw [one_mul]; exact sevenths_mu_le
 
-/-- **`μ(seventhsTarget (a + 1)) ≤ 70993/20`** for each of the six members, conditional only on the decay. -/
+/-- **`μ(seventhsTarget (a + 1)) ≤ 2801`** for each of the six members, conditional only on the decay. -/
 theorem sevenths_measure_auto (a : Fin 6)
     (hD : HasScaledDecay (F7.family (seventhsFrameAt a) (F7.selectionDepth (seventhsFrameAt a) 2)) F7.scale
       (D7 : ℝ) (c7 : ℝ)) :
-    Measure.MeasureLBAt (seventhsTarget (seventhNumerator a)) ((70993 / 20 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt (seventhsTarget (seventhNumerator a)) ((2801 : ℚ) : ℝ) := by
   have hmass : (F7.common.mass : ℝ) = 1 := by rw [F7_common_mass]; norm_num
   have hc : (0 : ℝ) < (c7 : ℝ) := by unfold c7; norm_num
   have hd2 : (seventhsFrameAt a).d = 2 := rfl
@@ -52,7 +52,7 @@ theorem sevenths_measure_auto (a : Fin 6)
       refine ⟨R0, fun s hs x => ?_⟩
       obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
       exact ⟨n, ⟨hn, by show n.1 % 2 = 0; have : F7.scale n = n.1 := rfl; omega⟩, hsc, hne⟩)
-  have h' : Measure.MeasureLBAt (seventhsFrameAt a).const ((70993 / 20 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt (seventhsFrameAt a).const ((2801 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono X_le ((Measure.MeasureLB_iff _ _).1 key)
   have he : seventhsTarget (seventhNumerator a) = ((-49 : ℚ) : ℝ) * (seventhsFrameAt a).const + ((0 : ℚ) : ℝ) := by
     rw [seventhsFrameAt_const a]; push_cast; ring

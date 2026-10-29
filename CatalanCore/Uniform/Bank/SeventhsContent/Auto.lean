@@ -2,6 +2,7 @@ import CatalanCore.Uniform.Bank.SeventhsContent.AutoData
 import CatalanCore.Uniform.Content.BankShared.Inst.Sevenths
 import CatalanCore.Uniform.Bank.Sevenths.Final
 import CatalanCore.Arith.Hybrid.PieceTools
+import CatalanCore.Uniform.Content.BankShared.Check.Prefix
 set_option Elab.async false
 
 /-! # Automatic content of the six sevenths frames (lane C1L)
@@ -9,21 +10,21 @@ set_option Elab.async false
 The content of `seventhsFrameAt a` (members `a + 1 = 1 … 6`, offsets `o = 7 - (a + 1)`) from the one bank check
 (`hasScaledContent_of_check`):
 
-* data: `AutoData.bankData` (C1's generated UF template, prefix truncation `n = 777` chosen from the μ target),
+* data: `AutoData.bankData` (C1's generated UF template, prefix truncation `n = 100`, LP2 widened, prefix branches `n ≤ 8`),
   `bank_check : check bankData = true`;
-* instance hypotheses: `sevenths_catValid` (C6L's `seventhsInst_catValid_bankUF`, `P_bad = 13`, `K = 12`,
-  `N1 = 91`, windows `(6,6) … (12,13)`) and `sevenths_preValid` (`pre_gle_any` at `seventhsInst a`,
+* instance hypotheses: `sevenths_catValid` (`catValid_bankUFwP` at `seventhsInst a`, `P_bad = 13`, `K = 12`,
+  `N1 = 91`, windows `(6,6) … (12,13)`, prefix branches `bankPres`) and `sevenths_preValid` (`pre_gle_any` at `seventhsInst a`,
   `p ≤ r/1000`, `α0 = 13/6`);
 * `sevenths_content_auto a`: `HasScaledContent ((F7.family (seventhsFrameAt a) depth).restrictAdm even) F7.scale
   Λ_fin`, `Λ_fin = bankData.Λ` (`bankData_Λ`), every depth `≤ 64`;
-* `sevenths_mu_le : c7 / (D7 - Λ_fin) ≤ 70993/20` (`= 354965/100`; `D7`, `c7` of `Bank/Sevenths/Final`), exact. -/
+* `sevenths_mu_le : c7 / (D7 - Λ_fin) ≤ 2801` ( `D7`, `c7` of `Bank/Sevenths/Final`), exact. -/
 
 namespace CatalanCore.Uniform.Bank.SeventhsContent.Auto
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
   CatalanCore.Uniform.Content.BankShared.Check CatalanCore.Uniform.Content.BankShared.TwoTerm
   CatalanCore.Uniform.Content.BankShared.Inst CatalanCore.Uniform.Content.SmallPrimes CatalanCore.Arith
   CatalanCore.Arith.Hybrid CatalanCore.Uniform.Content.RankProducer
-open CatalanCore.Uniform.Bank.Sevenths (F7 one_sixth_pos seventhsFrameAt seventhNumerator D7 c7)
+open CatalanCore.Uniform.Bank.Sevenths (F7 one_sixth_pos seventhsFrameAt seventhNumerator D7 c7 sevenths_twoTerm)
 
 /-! ### Instance hypotheses of the sevenths frames -/
 
@@ -36,10 +37,12 @@ theorem sevenths_mem (a : Fin 6) : seventhNumerator a ∈ bankData.members := by
 theorem sevenths_catValid (a : Fin 6) (depth : ℕ) :
     CatValid (1 / 6) one_sixth_pos (seventhsFrameAt a) depth 7 (7 - seventhNumerator a) 13
       (max (NFr (1 / (seventhsFrameAt a).norm) (-1 / (seventhsFrameAt a).norm) 7 12) 91) bankData.cat :=
-  seventhsInst_catValid_bankUF a (1 / 6) one_sixth_pos (by norm_num) depth 13 12 91 le_rfl (by norm_num)
-    (by norm_num)
-    [(6, 6), (6, 7), (7, 7), (7, 8), (8, 8), (8, 9), (9, 9), (9, 10), (10, 10), (10, 11), (11, 11), (11, 12),
-      (12, 12), (12, 13)]
+  by
+  rw [bankData_cat]
+  exact catValid_bankUFwP (seventhsInst a) (seventhsInst_L a) (seventhsInst_levels a) (1 / 6) one_sixth_pos
+    (by norm_num) (sevenths_twoTerm a) (nm := 7 * 7) (seventhsInst_norm a) depth 13 12 91
+    (by norm_num) (by norm_num) (by norm_num) le_rfl (seventhsInst_hP a (by omega))
+    (seventhsInst_hkq a (by omega)) bankWins bankPres
 
 /-- The prefix bound of every sevenths frame (`pre_gle_any`), for `p ≤ r/1000`, `α0 = 13/6`. -/
 theorem sevenths_preValid (a : Fin 6) (depth : ℕ) :
@@ -78,11 +81,11 @@ theorem sevenths_content_auto (a : Fin 6) (depth : ℕ) (hd : depth ≤ 64) :
     (seventhsFrameAt a) depth hd (cFr_sevenths a) (seventhNumerator a) (sevenths_mem a) _ _
     (sevenths_catValid a depth) (sevenths_preValid a depth)
 
-/-- **The sevenths μ target**, exactly: `c7 / (D7 - Λ_fin) ≤ 70993/20 (= 354965/100)` with the finite UF constant
+/-- **The sevenths μ target**, exactly: `c7 / (D7 - Λ_fin) ≤ 2801` with the finite UF constant
 `Λ_fin = bankData.Λ`. -/
-theorem sevenths_mu_le : (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℝ)) ≤ ((70993 / 20 : ℚ) : ℝ) := by
+theorem sevenths_mu_le : (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℝ)) ≤ ((2801 : ℚ) : ℝ) := by
   have h1 : bankData.Λ < D7 := by rw [bankData_Λ]; unfold D7; norm_num
-  have h2 : c7 ≤ 70993 / 20 * (D7 - bankData.Λ) := by rw [bankData_Λ]; unfold c7 D7; norm_num
+  have h2 : c7 ≤ 2801 * (D7 - bankData.Λ) := by rw [bankData_Λ]; unfold c7 D7; norm_num
   have hpos : (0 : ℝ) < (D7 : ℝ) - (bankData.Λ : ℝ) := by
     have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
   rw [div_le_iff₀ hpos]
