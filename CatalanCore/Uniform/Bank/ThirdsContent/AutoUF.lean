@@ -1,5 +1,6 @@
 import CatalanCore.Uniform.Bank.ThirdsContent.AutoUFData
 import CatalanCore.Uniform.Bank.ThirdsContent.Auto
+import CatalanCore.Uniform.Bank.Thirds.Numerics
 set_option Elab.async false
 
 /-! # Thirds acceptance test of automatic content, with UF (lane C1L)
@@ -7,7 +8,7 @@ set_option Elab.async false
 The data `AutoUF.ufData` (C1's generated UF template, `uf_check : check ufData = true`) and the instance
 hypotheses of the thirds frames (`thirds_catValidUF` = `catValid_bankUF` at the thirds instance, with
 `N0 = max NFr 23`, `(3/10) · 23 ≥ 3 (2 + 3/10)`; `thirds_preValid`) give the content of both thirds frames with
-`Λ_fin = ufData.Λ` (`ufData_Λ`). -/
+`Λ_fin = ufData.Λ` (`ufData_Λ`), and the target `uf_mu_le : ctT / (DtT - Λ_fin) ≤ 952671/100000`. -/
 
 namespace CatalanCore.Uniform.Bank.ThirdsContent.AutoUF
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -17,8 +18,21 @@ open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCo
   CatalanCore.Uniform.Bank.Thirds CatalanCore.Uniform.Bank.ThirdsContent.Auto CatalanCore.Uniform.Content.RankProducer
 
 theorem ufData_Λ : ufData.Λ =
-    (6562873126993562158511254244529020304997 / 1981255334746020948125427932233938720000 : ℚ) := by
+    (7569325162637321873007658004333050646091334798082154599823427390926183513423191893051463882631850003866433703973370409 /
+      2285092212406854547639092362937046760046047768362479303790780917753130995126321327366499846108549016516110519276800000 : ℚ) := by
   decide +kernel
+
+/-- **The thirds μ target**: `c / (D - Λ_fin) ≤ 952671/100000` with the finite UF constant `Λ_fin = ufData.Λ`
+(`DtT`, `ctT` of `Bank/Thirds/Numerics`). -/
+theorem uf_mu_le : (ctT : ℝ) / ((DtT : ℝ) - (ufData.Λ : ℝ)) ≤ ((952671 / 100000 : ℚ) : ℝ) := by
+  have h1 : ufData.Λ < DtT := by rw [ufData_Λ]; unfold DtT; norm_num
+  have h2 : ctT ≤ 952671 / 100000 * (DtT - ufData.Λ) := by rw [ufData_Λ]; unfold ctT DtT; norm_num
+  have hpos : (0 : ℝ) < (DtT : ℝ) - (ufData.Λ : ℝ) := by
+    have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
+  rw [div_le_iff₀ hpos]
+  have h3 := (Rat.cast_le (K := ℝ)).2 h2
+  push_cast at h3 ⊢
+  linarith
 
 /-- The branch catalogue of `ufData` is valid on every thirds frame. -/
 theorem thirds_catValidUF {Fr : Frame} {e : ℕ} (T : ThirdsData Fr e) (depth : ℕ) :
@@ -61,5 +75,6 @@ theorem thirdsBc_content_autoUF (depth : ℕ) (hd : depth ≤ 64) :
 #print axioms thirdsBc_content_autoUF
 #print axioms ufData_Λ
 #print axioms uf_check
+#print axioms uf_mu_le
 
 end CatalanCore.Uniform.Bank.ThirdsContent.AutoUF
