@@ -25,6 +25,14 @@ from pl import PL, pl_min
 
 CBIG = F(10) ** 12
 NL = chr(10)
+
+
+def hdr(*imps):
+    """Header of an emitted Lean file in the module format (PORTING.md section 1): `module`, a `public import`
+    per import, and `@[expose] public section`, so every declaration stays public with its body visible."""
+    return 'module\n\n' + ''.join(f'public import {m}\n' for m in imps) + '\n@[expose] public section\n'
+
+
 BANKS = {
     'fifths': dict(q=5, M=10, members=[1, 2, 3, 4], Pbad=9, cF=49, alpha0=F(20, 9), t0=F(1, 900),
                    alpha0b=F(20, 9), n_min=100, lp2w=True, pre_nmax=8,
@@ -264,9 +272,8 @@ def emit(name, b, D, T, wins, n, chunk=20):
     else:
         extra_txt = NL.join(['/-- LP1, LP2, the rank branch, the UF branch and the M3D windows (indices 6, 7, 8, 9, 10, ...). -/',
                              f'def bankExtra : List Branch := [brLP1, brLP2, brRank, brS, {wl}]', ''])
-    head = f"""import CatalanCore.Uniform.Content.BankShared.Check.Split
-import CatalanCore.Uniform.Content.BankShared.Check.{'Prefix' if newcat else 'UF'}
-set_option Elab.async false
+    head = hdr('CatalanCore.Uniform.Content.BankShared.Check.Split',
+               f"CatalanCore.Uniform.Content.BankShared.Check.{'Prefix' if newcat else 'UF'}") + f"""set_option Elab.async false
 
 /-! # Data header: the {name} bank parameters (lane C1L)
 
@@ -303,8 +310,7 @@ end {ns}
     (sub / 'Head.lean').write_text(head, encoding='utf-8')
     for j in sorted(T):
         rows = T[j][1]
-        L = [f"""import {mod}.Head
-set_option Elab.async false
+        L = [hdr(f'{mod}.Head') + f"""set_option Elab.async false
 set_option maxRecDepth 100000
 
 /-! # Data: root class `j = {j}` of the {name} UF template (lane C1L)
@@ -338,7 +344,7 @@ end {ns}
 """)
         (sub / f'U{j}.lean').write_text('\n'.join(L), encoding='utf-8')
     tl = ', '.join(f'({j}, tmpl{j})' for j in sorted(T))
-    imps = '\n'.join(f'import {mod}.U{j}' for j in sorted(T))
+    imps = [f'{mod}.U{j}' for j in sorted(T)]
     okd = '\n'.join(f'theorem tmpl{j}_okD : tmplOK bankData {j} tmpl{j} = true :=\n'
                     f'  tmplOK_withTmpls bankHead _ _ {j} tmpl{j} tmpl{j}_ok\n' for j in sorted(T))
     oks = ', '.join(f'tmpl{j}_okD' for j in sorted(T))
@@ -358,8 +364,7 @@ end {ns}
         'theorem bankData_cat : bankData.cat = tableT ++ ([brLP1, brLP2w, brRank, brS] ++',
         '    bankWins.map (fun w => brWin w.1 w.2)) ++ bankPres.map (fun x => brPre x.1 x.2.1 x.2.2) :=',
         '  (List.append_assoc _ _ _).symm', '', ''])
-    body = f"""{imps}
-set_option Elab.async false
+    body = hdr(*imps) + f"""set_option Elab.async false
 set_option maxRecDepth 100000
 
 /-! # Data: the {name} UF bank for the bank check (lane C1L)
@@ -438,8 +443,7 @@ def emit_parts(name, b, D, T, wins, n):
         per = -(-len(chunks) // parts)
         groups = [list(range(g, min(g + per, len(chunks)))) for g in range(0, len(chunks), per)]
         for gi, grp in enumerate(groups):
-            L = [f"""import {mod}.Head
-set_option Elab.async false
+            L = [hdr(f'{mod}.Head') + f"""set_option Elab.async false
 set_option maxRecDepth 100000
 
 /-! # Data: root class `j = {j}` of the {name} UF template, part {gi} (lane C1L)
@@ -462,11 +466,10 @@ namespace {ns}
         t1 = T[j][0]
         M = a0 * t1 + sum((qmass(P) for P, _ in rows), F(0))
         masses[j] = M
-        imps = '\n'.join(f'import {mod}.U{j}P{gi}' for gi in range(len(groups)))
+        imps = [f'{mod}.U{j}P{gi}' for gi in range(len(groups))]
         oks = ', '.join(f'{nm}_ok' for nm in nms)
         ms = ', '.join(f'{nm}_mass' for nm in nms)
-        cls = f"""{imps}
-set_option Elab.async false
+        cls = hdr(*imps) + f"""set_option Elab.async false
 set_option maxRecDepth 100000
 
 /-! # Data: the template of the root class `j = {j}` of the {name} UF bank (lane C1L)
@@ -499,16 +502,14 @@ end {ns}
     Lam = D['Lam']
     assert sum(masses.values(), F(0)) / len(masses) == Lam, 'template masses do not average to Lambda_fin'
     tl = ', '.join(f'({j}, tmpl{j})' for j in sorted(T))
-    imps = '\n'.join(f'import {mod}.U{j}' for j in sorted(T))
+    imps = [f'{mod}.U{j}' for j in sorted(T)]
     cat_thm = cat_theorem(b)
     okd = '\n'.join(f'theorem tmpl{j}_okD : tmplOK bankData {j} tmpl{j} = true :=\n'
                     f'  tmplOK_withTmpls bankHead _ _ {j} tmpl{j} tmpl{j}_ok\n' for j in sorted(T))
     oks = ', '.join(f'tmpl{j}_okD' for j in sorted(T))
     ml = ', '.join(f'({j}, {lrat(masses[j])})' for j in sorted(T))
     mpf = ',\n    '.join(f'tmpl{j}_mass.trans rfl' for j in sorted(T))
-    body = f"""{imps}
-import CatalanCore.Uniform.Content.BankShared.Check.Mass
-set_option Elab.async false
+    body = hdr(*imps, 'CatalanCore.Uniform.Content.BankShared.Check.Mass') + f"""set_option Elab.async false
 set_option maxRecDepth 100000
 
 /-! # Data: the {name} UF bank for the bank check (lane C1L)

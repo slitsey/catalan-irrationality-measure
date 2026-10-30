@@ -163,11 +163,15 @@ def info_tape(c):
     return pair(c['a']) + pair(c['b']) + [c['rule']] + pair(c['lo']) + pair(c['hi'])
 
 
-HEAD = 'import CatalanCore.Uniform.Bank.Common.Schema\n\nnamespace CatalanCore.Uniform.Bank.Common.Data.{N}\nopen CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert\n\n'
+HEAD = 'module\n\npublic import CatalanCore.Uniform.Bank.Common.Schema\n\n@[expose] public section\n\nnamespace CatalanCore.Uniform.Bank.Common.Data.{N}\nopen CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert\n\n'
 FOOT = '\nend CatalanCore.Uniform.Bank.Common.Data.{N}\n'
 
 
-PILOT = '''import CatalanCore.Uniform.Bank.Common.Data.@N@.Data
+PILOT = '''module
+
+public import CatalanCore.Uniform.Bank.Common.Data.@N@.Data
+
+@[expose] public section
 
 /-! Pilot (lane B, B0), generated: D5's elementary checker `basicOk` on the @N@ bank data, timed per declaration. -/
 
@@ -231,8 +235,8 @@ def emit(name):
     mods['CellInfo'] = s + FOOT.format(N=N)
     sc = dict(D['sc'])
     sc.pop('Dreceipt')
-    s = ('import CatalanCore.Uniform.Bank.Common.Data.%s.Segs\nimport CatalanCore.Uniform.Bank.Common.Data.%s.Cells\n\n'
-         % (N, N))
+    s = ('module\n\npublic import CatalanCore.Uniform.Bank.Common.Data.%s.Segs\npublic import CatalanCore.Uniform.Bank.Common.Data.%s.Cells\n\n'
+         '@[expose] public section\n\n' % (N, N))
     s += (f'namespace CatalanCore.Uniform.Bank.Common.Data.{N}\n'
           'open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert\n\n')
     s += '/-! Generated; scalar certificate numbers and the assembled `SplineData`. -/\n\n'
