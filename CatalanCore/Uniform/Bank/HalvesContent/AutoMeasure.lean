@@ -15,11 +15,11 @@ theorem halves_measure_at (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i ≠
     (hconst : Fr.const = ((-1 / 12 : ℚ) : ℝ) * target)
     (hS : HasScaledContent ((FH.family Fr (FH.selectionDepth Fr 2)).restrictAdm (fun i => i.1 % 2 = 0))
       FH.scale ((bankData.Λ : ℚ) : ℝ))
-    (D : ℚ) (hΛD : bankData.Λ < D) (hμ : cH ≤ 3263 / 500 * (D - bankData.Λ))
+    (D : ℚ) (hΛD : bankData.Λ < D) (hμ : cH ≤ 65253 / 10000 * (D - bankData.Λ))
     (hD : HasScaledDecay (FH.family Fr (FH.selectionDepth Fr 2)) FH.scale (D : ℝ) (cH : ℝ)) :
-    Measure.MeasureLBAt target ((3263 / 500 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt target ((65253 / 10000 : ℚ) : ℝ) := by
   have hlam : ((bankData.Λ : ℚ) : ℝ) < (D : ℝ) := by exact_mod_cast hΛD
-  have hX : (1 : ℝ) * (cH : ℝ) / ((D : ℝ) - (bankData.Λ : ℚ)) ≤ ((3263 / 500 : ℚ) : ℝ) := by
+  have hX : (1 : ℝ) * (cH : ℝ) / ((D : ℝ) - (bankData.Λ : ℚ)) ≤ ((65253 / 10000 : ℚ) : ℝ) := by
     have hpos : (0 : ℝ) < (D : ℝ) - (bankData.Λ : ℝ) := by linarith
     rw [one_mul, div_le_iff₀ hpos]
     have h3 := (Rat.cast_le (K := ℝ)).2 hμ
@@ -43,7 +43,7 @@ theorem halves_measure_at (Fr : Frame) (hd : 1 ≤ Fr.d) (hw : ∀ i, Fr.w i ≠
       refine ⟨R0, fun s hs x => ?_⟩
       obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
       exact ⟨n, ⟨hn, by show n.1 % 2 = 0; have : FH.scale n = n.1 := rfl; omega⟩, hsc, hne⟩)
-  have h' : Measure.MeasureLBAt Fr.const ((3263 / 500 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt Fr.const ((65253 / 10000 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono hX ((Measure.MeasureLB_iff _ _).1 key)
   have he : target = ((-12 : ℚ) : ℝ) * Fr.const + ((0 : ℚ) : ℝ) := by
     rw [hconst]; push_cast; ring

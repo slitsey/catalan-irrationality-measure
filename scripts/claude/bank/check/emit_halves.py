@@ -43,6 +43,15 @@ if __name__ == '__main__':
             b = dict(B, lp2w=True, pre_nmax=k)
             n, mu_ex, sl = E.choose_n('halves', b)
             print('nmax', k, 'exact mu', mu_ex, 'n', n, flush=True)
+    elif mode == 'mu':
+        k = int(sys.argv[2])
+        b = dict(B, lp2w=True, pre_nmax=k)
+        lr, ll = E.exact_lam('halves', b)
+        E.getcontext().prec = 80
+        lam_ex = E.dec(lr) + E.dec(ll) * E.Decimal(2).ln()
+        print('nmax', k, 'exact mu', E.dec(b['c']) / (E.dec(b['D']) - lam_ex), flush=True)
+        for n in [int(x) for x in sys.argv[3:]] or [150]:
+            print('nmax', k, 'n', n, 'mu_fin', E.dec(E.mu(b, E.lam_fin('halves', b, n))), flush=True)
     elif mode == 'emit':
         b = dict(B, pre_nmax=int(sys.argv[2]))
         if len(sys.argv) > 3: b['target'] = F(sys.argv[3])

@@ -15,7 +15,7 @@ theorem dim_eq : Dchi.dim = 2 := by decide +kernel
 theorem eps_pos : 0 < Dchi.ε := by decide +kernel
 theorem ccert_eq : Dchi.ccert = cH := by decide +kernel
 theorem lam_lt : bankData.Λ < Dchi.Dt := by rw [bankData_Λ]; decide +kernel
-theorem mu_margin : cH ≤ 3263 / 500 * (Dchi.Dt - bankData.Λ) := by rw [bankData_Λ]; decide +kernel
+theorem mu_margin : cH ≤ 65253 / 10000 * (Dchi.Dt - bankData.Λ) := by rw [bankData_Λ]; decide +kernel
 
 theorem decay (depth : ℕ) :
     HasScaledDecay (FH.family halves depth) FH.scale (Dchi.Dt : ℝ) (cH : ℝ) := by
@@ -28,8 +28,8 @@ theorem decay (depth : ℕ) :
   rw [ccert_eq] at h
   exact h
 
-/-- The half-shift bank gives the irrationality-measure bound 3263/500 for pi squared. -/
-theorem pi2_measure : Measure.MeasureLBAt (Real.pi ^ 2) ((3263 / 500 : ℚ) : ℝ) :=
+/-- The half-shift bank gives the irrationality-measure bound 65253/10000 for pi squared. -/
+theorem pi2_measure : Measure.MeasureLBAt (Real.pi ^ 2) ((65253 / 10000 : ℚ) : ℝ) :=
   halves_measure_at halves (by show 1 ≤ 2; norm_num) halves_w_ne halves_const
     (halves_content_auto _ (depth_le rfl)) _ lam_lt mu_margin (decay _)
 
