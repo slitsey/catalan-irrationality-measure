@@ -110,7 +110,7 @@ denominator $q$. Nonvanishing follows from Hermite interpolation in characterist
 of common nodes. The size is bounded with Andr\'eief's identity and a lower bound for a discrete logarithmic energy,
 obtained from a comparison measure and verified on a finite cover by cells.
 
-Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
+The proof is formalized in Lean~4, with no unproved steps and only the standard axioms.
 \end{abstract}
 
 \maketitle
@@ -187,9 +187,10 @@ $\psi(z+t)-\psi(z+s)$, or for $L(2,\chi_{-3})$ a combination of three of them; f
 $(\frac aq,1)$ the node geometry depends on $q$ only through one rational parameter. The shift
 $s=\frac12$ also belongs to the family, with $\Psi(\frac12,1)=\psi'(\frac12)-\zeta(2)=2\zeta(2)=\pi^2/3$, and the
 method applies to it, but the exponent it gives is larger than the known bounds for $\mu(\zeta(2))$
-\cite{Giraudin26,LBKWSK26}, so we do not state it. Theorem~\ref{thm:main}, together with every result in this
-paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the standard
-axioms; see Section~\ref{sec:lean}. The formalization is available at \FormalizationLink. The use of AI
+\cite{Giraudin26,LBKWSK26}, so we do not state it. Theorem~\ref{thm:main}, together with every theorem, proposition and
+lemma used in its proof, has been verified in the Lean~4 proof assistant, with no unproved steps and only the standard
+axioms; see Section~\ref{sec:lean}. The remarks and Section~\ref{sec:limits}, which discuss the method, are not part of the
+formal proof. The formalization is available at \FormalizationLink. The use of AI
 in this work is disclosed at the end of the paper.
 
 \subsection{Previous results}
@@ -218,14 +219,16 @@ proof of the theorem of Calegari, Dimitrov and Tang; the exponent it proves for 
 For the numbers $\psi'(\frac a5)-\zeta(2)$ and $\psi'(\frac a7)-\zeta(2)$ of Theorem~\ref{thm:main} our searches found no earlier irrationality result; the irrationality of $\mathrm{Li}_2(1/5)$ proved by Prellberg \cite{Prellberg26}
 concerns a different number.
 
-For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09}
-and the Rhin--Viola bounds for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
-\cite{Apery79,Beukers79}) have been joined, since September 2026, by a series of new results, several of them
+For comparison, among classical constants, the bound $\mu(\log2)<3.5746$ of Marcovecchio \cite{Marcovecchio09},
+the bounds of Rhin and Viola for $\zeta(2)$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01} (after Ap\'ery and Beukers
+\cite{Apery79,Beukers79}) and Zudilin's bound for $\zeta(2)$ \cite{Zudilin14} have been joined, since September 2026, by a
+series of new results, several of them
 obtained with AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, improving
 the bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log a)=2$ for
 every rational $a>0$, $a\ne1$, and for nonzero rational combinations of such logarithms \cite{LiuJiangZhang26}. Giraudin
-\cite{Giraudin26,Giraudin26z3} lowered the bounds for $\mu(\zeta(2))$ and $\mu(\zeta(3))$ to $5.0193784$ and $5.5138800$ by
-applying the Rhin--Viola method at new integral directions. Leibtag, Barkan, Kalisch, Weinbaum, Shalyt and Kaminer
+lowered the bound for $\mu(\zeta(2))$ to $5.0193784$ with two hypergeometric constructions of Zudilin \cite{Zudilin14} at
+new parameters \cite{Giraudin26}, and the bound for $\mu(\zeta(3))$ to $5.5138800$ by applying the Rhin--Viola method at a
+new integral direction \cite{Giraudin26z3}. Leibtag, Barkan, Kalisch, Weinbaum, Shalyt and Kaminer
 \cite{LBKWSK26} showed that the classical constructions are one-dimensional trajectories in conservative matrix
 fields, and by searching over other trajectories obtained $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Prellberg
 \cite{Prellberg26} proved that $\mathrm{Li}_2(-1/4)$, $\mathrm{Li}_2(1/5)$ and $\mathrm{Li}_2(-1/3)$ are irrational, three
@@ -592,7 +595,7 @@ The following bounds of the form \eqref{eq:localform} hold.
 (LP2) & $2(r-k_p)+3m$ & $r<p<r+m$, $k_p\le r$, $N\le2p$ & $1$\\
 (W) & $2r+2m-(b-a)$ for each window $[a,b)$ of Theorem~\ref{thm:window} & as there & $0$\\
 (R) & $\Pi_R$ of \eqref{eq:PiR} & $2m<p$ & $0$\\
-(S) & the separated-node bound of \S\ref{ssec:sep} & $2m\le p$ & $1$\\
+(S) & $\Pi_S$ of \eqref{eq:PiS} & $2m\le p$ & $1$\\
 \bottomrule
 \end{tabular}}
 \end{center}
@@ -746,20 +749,35 @@ $t_0$ contains a singular index, the residues modulo $p$ of $p$ times the partia
 singular contributions in an interval of length less than $p$ cannot cancel). The leading coefficient in $x$ of the
 bordered determinant of a fibre is this residue, so the cross product of the two bordered fibre determinants has a
 nonzero leading coefficient, and the border node is eliminated against $t_0$ with no further information. Counting the
-residues of the window together with the residues of the eliminated border nodes gives an explicit bound: a minimum over
-the four choices of the window type $(k,z)\in\{h,h+1\}\times\{0,1\}$ of an expression in the lengths of the window and
-of its overlaps with the border and its two translates by $\pm p$.
-% Lean: Content.UFSimple.closedPrice (the minimum of four closedBound candidates), layer ufClosedLayer (debit 1);
-% catalogue entry brS (Content/BankShared/Check/UF.lean).
-The resulting expression belongs to the same class of integer expressions as the others, and its profile is given in
-the formal proof.
+residues of the window together with the residues of the eliminated border nodes gives an explicit bound, a minimum over
+the four window types $(k,z)\in\{h,h+1\}\times\{0,1\}$, which we now state.
+
+Let $2m\le p$, and let $h$, $s_0$, $\rho=k_p$ and the arcs $\mathrm{arc}_0$, $\mathrm{arc}_1$ be as in \S\ref{sssec:rank}. For a
+type $(k,z)$ let $K_{k,z}$ be the interval of the integers $kp+x$ with $x\in\mathrm{arc}_z$, and with $x<s_0$ if $k=h+1$. Let
+$n_J$ be the number of border nodes in $K_{k,z}$ (these form the window, and $n_J=W(k,z)$ in the notation of
+\eqref{eq:PiR}), let $\beta$ be the number of border nodes in
+$K_{k,z}$ and in its two translates $K_{k,z}\pm p$, and put
+\[
+ n_\emptyset=p-|K_{k,z}|-(2m-\beta),\qquad n_+=(n_J-m)_+ .
+\]
+Since $2m\le p$, each residue class receives at most one border node, so $\beta$ is the number of border nodes whose residues
+are those of $K_{k,z}$, and $n_\emptyset$ is the number of the other residue classes that receive no border node. Then
+\begin{equation}\label{eq:PiS}
+ \Pi_S=\min_{(k,z)}\bigl(2r+m-n_+-(n_+-n_\emptyset)_+\bigr),
+\end{equation}
+where a type whose window is empty contributes $2r+m$, and (S) is the bound $e_p(r,I)\le\Pi_S+|I|$. The proof carries out
+the elimination above for every border node outside the window; we refer to the formal proof for it.
+% Lean: Content.UFSimple.closedPrice (the minimum of four closedBound candidates, Content/UFSimple/Closed.lean and
+% Cell.lean) and its layer ufClosedLayer (debit 1); catalogue entry brS = tS (Content/BankShared/Check/UF.lean), with
+% closedPrice <= tS (closedPrice_le_tS). Here K_{k,z} = [w0, t_v], w0 = candB + candL, t_v = candB + candUb, beta = beta3.
 
 \subsection{Profiles}\label{ssec:profiles}
 Let $\mathcal E$ be the set of integer expressions in $r,p,m,k$ built from integer constants with $+$, multiplication by
 integer constants, truncated subtraction $(x-y)_+$, $\min$, $\max$, the distance $\|X\|_p$ of an expression $X$ to $p\Z$,
 and the quantities $p\lfloor r/p\rfloor$ and $r\bmod p$. Every bound of Theorem~\ref{thm:local} lies in $\mathcal E$; for (R)
-this is \eqref{eq:PiR}, and for (W) the window ends are the cuts nearest to the ends of the window range, which are
-expressions of the same kind. The \emph{homogenisation} $\hat\tau(\theta)$ of $\tau\in\mathcal E$ replaces $r,p,m,k$ by
+and (S) this is \eqref{eq:PiR} and \eqref{eq:PiS}, the ends of the intervals $K_{k,z}$ being $kp=p\lfloor r/p\rfloor+(k-h)p$
+plus $0$, $\rho$, $\rho-1$, $p-1$ or $s_0-1$, and for (W) the window ends are the cuts nearest to the ends of the window
+range, which are expressions of the same kind. The \emph{homogenisation} $\hat\tau(\theta)$ of $\tau\in\mathcal E$ replaces $r,p,m,k$ by
 $1,\theta,\alpha,\kappa\theta$, every constant by $0$, $\|X\|_p$ by $\theta\|\hat X/\theta\|$ and $p\lfloor r/p\rfloor$ by
 $\theta\lfloor1/\theta\rfloor$. It is piecewise affine with rational breakpoints, finitely many in every interval
 $[\delta,\infty)$.
@@ -969,9 +987,11 @@ and Gaussian kernels are positive definite: expanding $e^{2t\langle p,p'\rangle}
 write the inner sum as a convergent sum of squares.
 \end{proof}
 
-A \emph{certificate measure} is a real measure $\sigma$ of mass $1$, symmetric under conjugation, with a density that is
-a polynomial on each of finitely many segments (with rational endpoints and coefficients) contained in
-$\Gamma\cup[-r_0,0]\cup[0,1]$. Comparing the free points and the deleted nodes with $b\sigma$ through
+A \emph{certificate measure} is a probability measure $\sigma$, symmetric under conjugation, carried by finitely many
+segments $[A_i,B_i]$ (with rational endpoints) contained in $\Gamma\cup[-r_0,0]\cup[0,1]$, on each of which it has the
+density $f_i(t)\,dt$ in the parameter $t\in[0,1]$ of the segment, with $f_i$ a polynomial with rational coefficients and
+$0\le f_i\le M_i$ for a rational $M_i$. We write $\Theta_\sigma=\sum_iM_i/|B_i-A_i|$ for the sum of the bounds of its densities
+with respect to arclength. Comparing the free points and the deleted nodes with $b\sigma$ through
 Lemma~\ref{lem:cpd} bounds the free--free energy from below by a sum of one-point terms and the constant $b^2I(\sigma)$;
 Riemann-sum comparisons replace the node sums by the potential $U^{\nu_c}$ and the node self-energy by $I(\nu_c)$, up to
 $O(r\log r)$. With the external field one arrives at the function
@@ -989,19 +1009,31 @@ rational numbers $m'$, $g_{\min}$, $S$, $I_\sigma$, $I_\nu$ such that
 
 \begin{theorem}[decay and window]\label{thm:decay}
 Let $0<c\le1$, let $F$ be a frame of \eqref{eq:frames} with $d$ digamma terms whose poles are separated from $x^*$, and let
-$(\sigma,m',g_{\min},S,I_\sigma,I_\nu)$ be a certificate for $\Gamma$ and $\nu_c$. Put
+$(\sigma,m',g_{\min},S,I_\sigma,I_\nu)$ be a certificate for $\Gamma$ and $\nu_c$. Let $\rho>0$, $\delta_\rho\ge\pi\rho\,\Theta_\sigma$,
+$\delta_{\rm m}>0$ and $\delta_S>0$ be rational, and put
 \[
- D=2(b\,m'+d\,S)-b^2I_\sigma+I_\nu-\delta,\qquad \gamma=2(m'-g_{\min}),
+ \delta=3b^2\delta_\rho+4b^2\delta_{\rm m}+2d\,\delta_S .
 \]
-with an explicit loss $\delta\ge0$ for the regularisation and the mesh. Then for every depth $d_0$, every member of the
-alternating geometry of parameter $c$ and every real $t$ with $|t|\le e^{-\gamma r}$,
+If $D$ and $\gamma$ are rational numbers with
+\[
+ D\le2(b\,m'+d\,S)-b^2I_\sigma+I_\nu-\delta,\qquad \gamma\ge2(m'-g_{\min}),
+\]
+then for every depth $d_0$, every member of the alternating geometry of parameter $c$ and every real $t$ with
+$|t|\le e^{-\gamma r}$,
 \[
  |P_{r,I}(\xi+t)|\le\exp\bigl(-(D-o(1))r^2\bigr).
 \]
 \end{theorem}
-% Lean: CatalanCore.Uniform.Decay.AltDecay.altGeom_hasScaledDecay (hypotheses: contourCheck, energyCheck, PolyTables3.check).
-% TODO(verify): the precise role of the regularisation radius and of the tube width W in the formal statement
-% (SplineData.rho, SplineData.W, dofOk) is summarised here as the loss delta.
+% Lean: CatalanCore.Uniform.Decay.AltDecay.altGeom_hasScaledDecay (hypotheses: contourCheck, energyCheck, PolyTables3.check);
+% D = SplineData.Dt and gamma = ccert, with SplineData.dofOk (D <= Dof - bridgeLoss, Spline/Final.lean) and
+% 2(m' - g_min) <= ccert in basicOkP; delta_rho, delta_m, delta_S are lossS (>= pi rho B_s), theta, etaS.
+
+The loss $\delta$ comes from replacing $\sigma$ by finitely many atoms in the comparison with the free points: the
+regularisation radius $\rho$ of Lemma~\ref{lem:cpd} and the mesh of the atoms lower $m'$ by $b(\delta_\rho+\delta_{\rm m})$ and
+raise $I_\sigma$ by $\delta_\rho+2\delta_{\rm m}$, and Darboux sums for the integral in (c) lower $S$ by $\delta_S$; inserted in
+the expression for $D$, these changes give $\delta$. The tolerances $\delta_{\rm m}$ and $\delta_S$ may be any positive rational
+numbers, since the atoms can be taken as fine as needed. In the certificates of this paper $\rho=10^{-12}$ and
+$\delta<10^{-9}$.
 
 The node energy $I(\nu_c)$ is a finite sum $\sum_tc_tH(s_t)$, $H(s)=\frac12s^2\log|s|-\frac34s^2$, over the rational
 differences of the endpoints of the two pieces of $\nu_c$, and the lower bound $I_\nu$ is checked with rational
@@ -1037,11 +1069,11 @@ function of $\sigma$, and its maximum over all measures on $\Gamma\cup[-r_0,0]\c
 where $\mu^*$ is the weighted equilibrium measure of the constrained energy problem on this set with the external field
 $(1-\varepsilon)\pi|\Im z|-U^{\nu_c}$ and the upper constraint $d\,dx$ on the segment \cite{SaffTotik}. Weak duality
 expresses the deficit of any certificate as a sum of nonnegative terms, the first of which is the energy of
-$2Bb\sigma-\lambda^*$, with $\lambda^*=2B\mu^*$ the optimal dual measure. Thus a certificate close to the best possible one
-must be close to $\sigma^*$ in energy, and $g-m'$ is then a small ripple on the support of $\mu^*$; this is why a pointwise
-verification on a cover is needed. The equilibrium measure itself is not used in the proof.
+$2B(b\sigma-\mu^*)$, the difference between $2Bb\sigma$ and the optimal dual measure $2B\mu^*$. Thus a certificate close to
+the best possible one must be close to $\sigma^*$ in energy, and $g-m'$ is then a small ripple on the support of $\mu^*$;
+this is why a pointwise verification on a cover is needed. This remark is not used in the proof of Theorem~\ref{thm:main}
+and is not part of the formalization.
 \end{remark}
-% TODO(verify): the deficit identity is from automatic-banks-2026-10-28/D1/PAPER.md (1.1); not formalized (not used by the proof).
 
 \subsection{Node removal and the window}
 The argument applies to every subset $S'\subseteq S$ of the common nodes: removing $\beta r$ common nodes turns them into
@@ -1268,8 +1300,8 @@ exponent is most sensitive to the decay where $\eta$ is small: for $G\pm5\pi^2/4
 shifts $\frac a7$ it exceeds $10^6$. On the arithmetic side, the profiles $\Phi_j$ are minima of the bounds of
 Theorem~\ref{thm:local}, and every further local bound lowers $\Lambda$ by the integral of the amount by which it lies below
 $\Phi_j$; the content constant of the method is the integral of the true exponent $e_p$, which the local bounds approximate
-from above. On the analytic side, Remark~\ref{rem:certlimit} shows that a certificate of the present form cannot do better
-than the constrained equilibrium measure on the chosen contour; a larger decay constant needs a different contour or a
+from above. On the analytic side, Remark~\ref{rem:certlimit} explains why a certificate of the present form cannot do
+better than the constrained equilibrium measure on the chosen contour; a larger decay constant needs a different contour or a
 different treatment of the energy problem. The geometry parameter $c$ trades the two against each other: a longer border
 increases $D$, through the larger node measure, and $\Lambda$, through the border rows and columns of the assignment
 bound.
@@ -1278,8 +1310,9 @@ bound.
 \section{Formalization}\label{sec:lean}
 \raggedbottom
 
-All results of this paper are formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}. The development is
-available at
+The proof of Theorem~\ref{thm:main}, with every theorem, proposition and lemma it uses, is formalized in Lean~4
+\cite{Lean4} with Mathlib \cite{Mathlib}; the remarks and Section~\ref{sec:limits} are not part of the formalization. The
+development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
@@ -1573,6 +1606,11 @@ Wadim Zudilin, \emph{A few remarks on linear forms involving {C}atalan's
 \bysame, \emph{An {A}p\'ery-like difference equation for {C}atalan's constant},
   Electron. J. Combin. \textbf{10} (2003), Research Paper 14,
   \href{https://arxiv.org/abs/math/0201024}{arXiv:math/0201024}.
+
+\bibitem{Zudilin14}
+\bysame, \emph{Two hypergeometric tales and a new irrationality measure of
+  {$\zeta(2)$}}, Ann. Math. Qu\'ebec \textbf{38} (2014), no.~1, 101--117,
+  \href{https://arxiv.org/abs/1310.1526}{arXiv:1310.1526}.
 
 \bibitem{Zudilin}
 \bysame, \emph{A determinantal approach to irrationality}, Constr. Approx.
