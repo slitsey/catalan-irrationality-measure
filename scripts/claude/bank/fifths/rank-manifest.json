@@ -1,0 +1,1825 @@
+{
+ "source_sha256": "3abc4fbcffa59e8c2dc98a05722a7f64f14e45b4089475192e9c08ea72b01d00",
+ "certificates": [
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T00",
+   "type_id": "328d4b0acc1ebe844e70425581fbf63b045899b4d90ba10019d03b3e085ce472",
+   "prime_class": 1,
+   "name": "C1T00",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T01",
+   "type_id": "ef9c636e9adb8185200b5b79775504473025e0c64ce6ef3946dbb3da28f99ccb",
+   "prime_class": 1,
+   "name": "C1T01",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T02",
+   "type_id": "ed131775179d383d1d416c0b31b2a14e94cd896f09ed7bb7cb2d3107b69c2f64",
+   "prime_class": 1,
+   "name": "C1T02",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T03",
+   "type_id": "992b779b90125909b3ec992a2272870fb12d987435590bf162ba4030df9b79b1",
+   "prime_class": 1,
+   "name": "C1T03",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T04",
+   "type_id": "cefc6d30ac72828a6a762e5cf6ca01fcceb0203fb66c43966f705aa069e4345d",
+   "prime_class": 1,
+   "name": "C1T04",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T05",
+   "type_id": "62dc8afc058922aabea70087953b315ae414f6c54e213bfd3cd8e38e8fed0145",
+   "prime_class": 1,
+   "name": "C1T05",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T06",
+   "type_id": "8979a48536f69423cfac046d0e1a5bfa4ff3695775fe2e6c4449142a57d7643f",
+   "prime_class": 1,
+   "name": "C1T06",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T07",
+   "type_id": "a69d523da673757739e720713e904546b01a4f559a0784bdbec70191a40686ff",
+   "prime_class": 1,
+   "name": "C1T07",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T08",
+   "type_id": "63e7a7869181f2b1d5fd5f8d16267ae13f92cb98127b0b292ac46f4ea4b7b9df",
+   "prime_class": 1,
+   "name": "C1T08",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T09",
+   "type_id": "efe7481185ebc32c542346447b6cbc57f99d155e81d3b6a7f28e0641c6838456",
+   "prime_class": 1,
+   "name": "C1T09",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T10",
+   "type_id": "23264e21ccc899dac02a82cfa4420fd374040eddc83ccb45090fc7cd93f42a37",
+   "prime_class": 1,
+   "name": "C1T10",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T11",
+   "type_id": "f86a754b8de30eb29ea174cc2592ff0a2f465806b2c79ca210744807c806ca64",
+   "prime_class": 1,
+   "name": "C1T11",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T12",
+   "type_id": "b8e829d04a0cb9a687bd1a15980b31e4fcac00001850612e67288f196504c634",
+   "prime_class": 1,
+   "name": "C1T12",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T13",
+   "type_id": "8c06a09850d6c5b28d929d232e7ae8bf3f374abfffaf9cdf5789f55551c0ea33",
+   "prime_class": 1,
+   "name": "C1T13",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T14",
+   "type_id": "5f95e0a7afefda3180674e24b4e371593f5a34757fb6569a828122418d543a17",
+   "prime_class": 1,
+   "name": "C1T14",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T15",
+   "type_id": "67690a18266e71d5f3512d545db28aef91e3d64efaa236b515e01222caadeead",
+   "prime_class": 1,
+   "name": "C1T15",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T16",
+   "type_id": "88fd95b53654c43bd22ff310384de410ac8ae80f124f9b3ceeff52bf06fc91d1",
+   "prime_class": 1,
+   "name": "C1T16",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T17",
+   "type_id": "5f520be66058ed41ad940900e51474b5127648d704a6da56f3cce190ee0bb543",
+   "prime_class": 1,
+   "name": "C1T17",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T18",
+   "type_id": "7e7dbb2774863008f61592b8a80be35de2f18205b369e9f648ba6fb19112cd54",
+   "prime_class": 1,
+   "name": "C1T18",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T19",
+   "type_id": "f7ebf1bf4c05da57e7511ace2e22ac9e3453d0fe169e795f12c800ae7bd3c39e",
+   "prime_class": 1,
+   "name": "C1T19",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T20",
+   "type_id": "312187a39f7cdf2dfa902bcc1730f35d221eb138f99ff7c54d94b9bff1d3a90f",
+   "prime_class": 1,
+   "name": "C1T20",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T21",
+   "type_id": "4ed408ed4903ddd30a080a76da8f45c15fca3e012dddfeda7985b88db5189ce6",
+   "prime_class": 1,
+   "name": "C1T21",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T22",
+   "type_id": "875ce762d38e62de74100c553a13781f8e4391239209067367b628aba04a4ad4",
+   "prime_class": 1,
+   "name": "C1T22",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T23",
+   "type_id": "618eccafd55b32997b3b69775705ac9e442cc0b34a1e4095670df9679bffc99c",
+   "prime_class": 1,
+   "name": "C1T23",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T24",
+   "type_id": "b6892057460498094f736d0a3fdca4f5a2ad790606609eb73ed0faca7bf8d3a9",
+   "prime_class": 1,
+   "name": "C1T24",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T25",
+   "type_id": "87908c37af31b1821aaa6ec50e43b0890e41f2393f36620d93bc482106dc1ea3",
+   "prime_class": 1,
+   "name": "C1T25",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T26",
+   "type_id": "0d65ed7722513f8c019243a6ccdfafb683b3f7732a9f02b3f8219c7fe4316196",
+   "prime_class": 1,
+   "name": "C1T26",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T27",
+   "type_id": "e449655207a89140db5da0bbfe77a9fdc621521a549b59365481f82cd497fac5",
+   "prime_class": 1,
+   "name": "C1T27",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T28",
+   "type_id": "2c30a14c633fa7a0de25257d54e83779be30fec147459141710790378e0302b2",
+   "prime_class": 1,
+   "name": "C1T28",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T29",
+   "type_id": "de3a7f5afb0f3d4ae98fea8721e39d8fc76144fe8adfbb285714b8f2f69e30ad",
+   "prime_class": 1,
+   "name": "C1T29",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T30",
+   "type_id": "4a19fa1eb6d1097b01274383df52649daec652fd879ef5d71e558959eb15ac0e",
+   "prime_class": 1,
+   "name": "C1T30",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T31",
+   "type_id": "7129cc5a0daebea1a03b8d17ecefb9d56907b4c423020899f4318c89a7c37183",
+   "prime_class": 1,
+   "name": "C1T31",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    1,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T32",
+   "type_id": "26a73cbcfeb5a1082f1b0831c5d0c2ccd62342ee5b7e78e9a784a2e5ee63bc8b",
+   "prime_class": 1,
+   "name": "C1T32",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C1T33",
+   "type_id": "f6665cde794ce2658d92a1963460a2c889e3eb270fc93e996e0d9a2ce65ee6a7",
+   "prime_class": 1,
+   "name": "C1T33",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T00",
+   "type_id": "ba3ab1df7bb7b9dec305fad242dc278aeabd0251de71e1199db8ad1e29ba7325",
+   "prime_class": 3,
+   "name": "C3T00",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T01",
+   "type_id": "a324b67329537906460c19bc6c039ca50b36b9e5cf1b2cca82e095cea1b59636",
+   "prime_class": 3,
+   "name": "C3T01",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T02",
+   "type_id": "9c720934bc4b256c1814997a29bc514b7df197231c7a8d9097f5f73d2008b748",
+   "prime_class": 3,
+   "name": "C3T02",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T03",
+   "type_id": "a8a691df4a4455e598067f5415a63bb82e0348f437c6b2a37e8e3a5d1381dd2c",
+   "prime_class": 3,
+   "name": "C3T03",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T04",
+   "type_id": "4a9b23bb883fcde9ec16378cc47f25ac6ed6aeca7e24a990e4339c4fcfb6c78f",
+   "prime_class": 3,
+   "name": "C3T04",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T05",
+   "type_id": "1bcb38c9bc009218908bc1374e0a0bd71a20ae7ea3bf5234011a4442d3519214",
+   "prime_class": 3,
+   "name": "C3T05",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T06",
+   "type_id": "f5289cf50541d7897e30c63bf208be51dc9dbd50d07f783ca62f2eddd0128564",
+   "prime_class": 3,
+   "name": "C3T06",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T07",
+   "type_id": "c93a6591117c5c196cef75751c87a712f602c5a1b0775adcf05a941e56678ce4",
+   "prime_class": 3,
+   "name": "C3T07",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T08",
+   "type_id": "e3419629782a157966133f82c9ca7a3c2b232c350c5c7a4f3174f75831dc31dd",
+   "prime_class": 3,
+   "name": "C3T08",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T09",
+   "type_id": "2f52891238c81ecae85dcb55953eb329532e727b00c719ae45195f66be2c39ad",
+   "prime_class": 3,
+   "name": "C3T09",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T10",
+   "type_id": "8343442daa18be1e25ef28f56eb5392a11cabcf006eb2798f2b09bff5ae7bd01",
+   "prime_class": 3,
+   "name": "C3T10",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T11",
+   "type_id": "adac0c11236189e50a519f29c81d9cad67e163b4b9ffb4b51e460f4d8bc20dc3",
+   "prime_class": 3,
+   "name": "C3T11",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T12",
+   "type_id": "94f9cf393183335140dd0b4a8261c62f071e694404dc5ff7bd465bde7d1b873b",
+   "prime_class": 3,
+   "name": "C3T12",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T13",
+   "type_id": "4d53ec778188866fe1f66592b5bcaa997e57ee393e446c2c0cada0d89089b372",
+   "prime_class": 3,
+   "name": "C3T13",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T14",
+   "type_id": "45a24031f6f6a1781f46ea637283a7eaf53a109695e287bba025cb802fca5e20",
+   "prime_class": 3,
+   "name": "C3T14",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T15",
+   "type_id": "28dd3441fb3df98c3f0da256a6184237d0ded0e1ac616fc865639d894ac36e87",
+   "prime_class": 3,
+   "name": "C3T15",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T16",
+   "type_id": "93980c9c6b3e9a8d277cab15bfc29dbcea91f927fd6079053944093aa216aa1f",
+   "prime_class": 3,
+   "name": "C3T16",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T17",
+   "type_id": "1a612dd4e8b5ac941ca845958a403015f0c35033e361f14c8313c2752190132b",
+   "prime_class": 3,
+   "name": "C3T17",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T18",
+   "type_id": "1376467842edce152bb2e67430f8704a22e5309abee9921bbdbfaf1a47187891",
+   "prime_class": 3,
+   "name": "C3T18",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T19",
+   "type_id": "496ef0f9a64c0c366c59a347953f0e333d697a205048fd3c66bfb29e3d5e16bd",
+   "prime_class": 3,
+   "name": "C3T19",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T20",
+   "type_id": "cfe2b67f2511972412485405f4bceb74a43cb46e780d9a2993b455e93942bf5a",
+   "prime_class": 3,
+   "name": "C3T20",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T21",
+   "type_id": "88126d1b741b6a8c26a21a8d9b7806a7782e256d5b99024d82c0bd0fff412fd1",
+   "prime_class": 3,
+   "name": "C3T21",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T22",
+   "type_id": "901a3a5c1241292d8c80f57f8f9a478e1d722b77a7e02cffef67d3b717f996b0",
+   "prime_class": 3,
+   "name": "C3T22",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T23",
+   "type_id": "ed8aaed03d78ea773415062452380b4bab160ca25a1eeee29bb5d382d5b0ef8a",
+   "prime_class": 3,
+   "name": "C3T23",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T24",
+   "type_id": "b06a551c6dfeeb58e619bf9f215dd5b450aa968fe3fb05797dfbac83f6663901",
+   "prime_class": 3,
+   "name": "C3T24",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T25",
+   "type_id": "cccd4ec0dccd80e6a04101c896aaa11b7089e5334f01d89c12b039b6267a051c",
+   "prime_class": 3,
+   "name": "C3T25",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T26",
+   "type_id": "54422fa50b67c9bd1fb9ffbbf05a94c75952b82eb6a11059a6721d50857c8ee6",
+   "prime_class": 3,
+   "name": "C3T26",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T27",
+   "type_id": "8b2b161c38b85355607f1a350f2ed0d98224cb3c1a48db50168d38c80ff3bccf",
+   "prime_class": 3,
+   "name": "C3T27",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T28",
+   "type_id": "1d3e4a3a5347fd10bf586b27b06a2db2cd5709481f02a326b78216734dceea9e",
+   "prime_class": 3,
+   "name": "C3T28",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T29",
+   "type_id": "7129cc5a0daebea1a03b8d17ecefb9d56907b4c423020899f4318c89a7c37183",
+   "prime_class": 3,
+   "name": "C3T29",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    1,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T30",
+   "type_id": "3b541e205dc9fadf54cb092ad122da974392f5f56733668cc81b3e636c9ce496",
+   "prime_class": 3,
+   "name": "C3T30",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T31",
+   "type_id": "0f081efc88d30a91661f97110ae1740f510226f4bd8fa0b1783b5e415431a8b2",
+   "prime_class": 3,
+   "name": "C3T31",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T32",
+   "type_id": "26a73cbcfeb5a1082f1b0831c5d0c2ccd62342ee5b7e78e9a784a2e5ee63bc8b",
+   "prime_class": 3,
+   "name": "C3T32",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C3T33",
+   "type_id": "f6665cde794ce2658d92a1963460a2c889e3eb270fc93e996e0d9a2ce65ee6a7",
+   "prime_class": 3,
+   "name": "C3T33",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T00",
+   "type_id": "f591dfad93bc7da41ee380657a9a7c3878f501783599293d23384f04941a87c9",
+   "prime_class": 7,
+   "name": "C7T00",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T01",
+   "type_id": "6d9b7cf9a9a099fa93a10ba346058dd90c5c245007aa332ff6d340577d718545",
+   "prime_class": 7,
+   "name": "C7T01",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T02",
+   "type_id": "b8a59561a6ba60157308de0b4f4feb990e45ab81a5638ff690727292f2c88e1a",
+   "prime_class": 7,
+   "name": "C7T02",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T03",
+   "type_id": "9f951b42879409ac0a7af877a73c47569ae41e5e59c3a20d0f9afc7bda1ce527",
+   "prime_class": 7,
+   "name": "C7T03",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T04",
+   "type_id": "75221e7747feb5eb99b437c246ead04782722188e7fb2bc8ac31d97564d07f67",
+   "prime_class": 7,
+   "name": "C7T04",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T05",
+   "type_id": "b5dda78fef8d3625f26362d5b2b1f8aba2cadf908b16d50e89a811205418eff9",
+   "prime_class": 7,
+   "name": "C7T05",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T06",
+   "type_id": "a58405bc54ef780f7280f9cdb914cc28fb17151ddafb2a78f39c5ea3416cadb4",
+   "prime_class": 7,
+   "name": "C7T06",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T07",
+   "type_id": "7efd1938ae82acf7583799a0dd5cd43d7b105df867a0520d7180b4a59d125af5",
+   "prime_class": 7,
+   "name": "C7T07",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T08",
+   "type_id": "c65b06edba3c83f9ba2f9b123ace2489ab1021a00790295675ad6678ec196bb6",
+   "prime_class": 7,
+   "name": "C7T08",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T09",
+   "type_id": "137bfe94f9fae45dd292e43277b1b0cfa6202d32349da737e67cbf3732048eee",
+   "prime_class": 7,
+   "name": "C7T09",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T10",
+   "type_id": "77829bf39dbf08b36c614f4384aefb8bad83ac9e8af290aa307fc5597dc7397f",
+   "prime_class": 7,
+   "name": "C7T10",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T11",
+   "type_id": "9a18cbe4e031ba809fbe0155187e3c42afda4001619920c28f11b09f127d1603",
+   "prime_class": 7,
+   "name": "C7T11",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T12",
+   "type_id": "4add6df19056791388ac0831af339deed09c783b587b4808c3f7469f282eeae8",
+   "prime_class": 7,
+   "name": "C7T12",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T13",
+   "type_id": "0aa5db004debc4d83a1eba4a5a629af66c65c9a7bb038395d514d6ea462fb271",
+   "prime_class": 7,
+   "name": "C7T13",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T14",
+   "type_id": "a8835419ce29d1906510579803aa2b59d266fd1f8cc8c7fd56acf5a4969c6478",
+   "prime_class": 7,
+   "name": "C7T14",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T15",
+   "type_id": "aa4898e622414a9f6f18bbc306e39e87978fb3d53a3266b2140a6e3d3d285ef8",
+   "prime_class": 7,
+   "name": "C7T15",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T16",
+   "type_id": "111dda1df85ab8734a581c1bd9906a8925ca7a9d00845b71d948755f9f64ade4",
+   "prime_class": 7,
+   "name": "C7T16",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T17",
+   "type_id": "2fc3d5c0873aafba8e4c44a1946a1f52505f6f1f17d3fcfcdebf37ef875fa92f",
+   "prime_class": 7,
+   "name": "C7T17",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T18",
+   "type_id": "da000df77461c2f6ca8db50447d0f630942520c7208ec9ad73582e9c96900e0f",
+   "prime_class": 7,
+   "name": "C7T18",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T19",
+   "type_id": "a966d01bd5ad6d16c0c4e3cf87013e8033a45a684455b774ddd9b63f4358ac73",
+   "prime_class": 7,
+   "name": "C7T19",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T20",
+   "type_id": "4bdd08a315bf4d2f5cbcde19892b33a79b0f5690dcbb997c6a8583304b8a7d44",
+   "prime_class": 7,
+   "name": "C7T20",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T21",
+   "type_id": "e664d3e735f99b451dc0acb28ae61079aacc2ecdb076a65efaa4dd2c3afb49d9",
+   "prime_class": 7,
+   "name": "C7T21",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T22",
+   "type_id": "1f69f9ffbc7ae76f52c60ac1e97df6287a5a1952ab310c05489b1d8931d35c36",
+   "prime_class": 7,
+   "name": "C7T22",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T23",
+   "type_id": "95965a02f729f28da4c2f30df6cb323eb9f0276e2422ba52f0776a536b68f244",
+   "prime_class": 7,
+   "name": "C7T23",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T24",
+   "type_id": "145467879fc0622dc4f58397b2aa368a7b22d682c57835ab49e40ca3248c5aab",
+   "prime_class": 7,
+   "name": "C7T24",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T25",
+   "type_id": "dba30fc6ef86c09b7753fd8fe70d21910702591e647104cc7106a1b920d9c822",
+   "prime_class": 7,
+   "name": "C7T25",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T26",
+   "type_id": "7129cc5a0daebea1a03b8d17ecefb9d56907b4c423020899f4318c89a7c37183",
+   "prime_class": 7,
+   "name": "C7T26",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    1,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T27",
+   "type_id": "15d8a947c768cd03e2fea561b80b02e570da7afa1d7d7ddc1167729fe7829600",
+   "prime_class": 7,
+   "name": "C7T27",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T28",
+   "type_id": "76d0dff6eb6e9e5865f84890344c543f31cd765b9340cccb098a6407fd802514",
+   "prime_class": 7,
+   "name": "C7T28",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T29",
+   "type_id": "26a73cbcfeb5a1082f1b0831c5d0c2ccd62342ee5b7e78e9a784a2e5ee63bc8b",
+   "prime_class": 7,
+   "name": "C7T29",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C7T30",
+   "type_id": "f6665cde794ce2658d92a1963460a2c889e3eb270fc93e996e0d9a2ce65ee6a7",
+   "prime_class": 7,
+   "name": "C7T30",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T00",
+   "type_id": "7f1140165ccf075e3767d22696dbaa091f7e8dfd4fd915b04c6d1dc54296d69b",
+   "prime_class": 9,
+   "name": "C9T00",
+   "dim": [
+    5,
+    6
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T01",
+   "type_id": "cfcfb12d75e51f14091541abacc54740d6334a22567966463655f902a95b5426",
+   "prime_class": 9,
+   "name": "C9T01",
+   "dim": [
+    6,
+    5
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T02",
+   "type_id": "da78c0be6d76cbfe28f625ce07f6c4b684d53ff588d04cf72a7ef056aa1e19a2",
+   "prime_class": 9,
+   "name": "C9T02",
+   "dim": [
+    5,
+    5
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T03",
+   "type_id": "827b46ff0a12126daf7f1360ad337211c114caaccdb97bad5dc3dcb9cc49390c",
+   "prime_class": 9,
+   "name": "C9T03",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T04",
+   "type_id": "a6ebaf53628d3fb85b6fbc8af305912c083ab0f4724d0eac91dcf4daab58a2e2",
+   "prime_class": 9,
+   "name": "C9T04",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T05",
+   "type_id": "c60c6e23783f9220a66b7d3bfcdbab202906ea01c211a277d464d00063ee1872",
+   "prime_class": 9,
+   "name": "C9T05",
+   "dim": [
+    5,
+    4
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T06",
+   "type_id": "46757da877130c89af9879f3fa0bf864c44285d5a506fb4ec5eb03743c94c86a",
+   "prime_class": 9,
+   "name": "C9T06",
+   "dim": [
+    4,
+    5
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T07",
+   "type_id": "c95d30f75bae7ce052185ef63047ef9f69aebb02555acff541363ebfbfb1fcc1",
+   "prime_class": 9,
+   "name": "C9T07",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T08",
+   "type_id": "ff3979c343ecdad438f55022c4881ed7eac2c18651ac22caaeb6afb466022da4",
+   "prime_class": 9,
+   "name": "C9T08",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T09",
+   "type_id": "c1115b0a0a4116e61cbc7c40c8fc7ed33c17293985dda951e6c474bccaa3c28d",
+   "prime_class": 9,
+   "name": "C9T09",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T10",
+   "type_id": "51fea1c0b0112718f02d21a93994de881337317603dd6ce31c97ec05eee1b165",
+   "prime_class": 9,
+   "name": "C9T10",
+   "dim": [
+    4,
+    4
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T11",
+   "type_id": "799e5764a3f4431bf57d24ae8ac2b0925fcee3df289ddf20657c88941ef1d6c9",
+   "prime_class": 9,
+   "name": "C9T11",
+   "dim": [
+    3,
+    4
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T12",
+   "type_id": "70049b80bea2505d0dfbb195c0a12ae9403c3735994ca03a3d26c4663134a37a",
+   "prime_class": 9,
+   "name": "C9T12",
+   "dim": [
+    4,
+    3
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T13",
+   "type_id": "8b47d764610b1ca9f4dc94d2d1205e3056bf289d40f7caec3ca18ee760806272",
+   "prime_class": 9,
+   "name": "C9T13",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T14",
+   "type_id": "47cbb14da045db4fb610dfa93118585b1d2c8ac74488ada12a8882c0e72780e1",
+   "prime_class": 9,
+   "name": "C9T14",
+   "dim": [
+    3,
+    3
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T15",
+   "type_id": "272d6115ee7f7eb958bedaa6959a666faa03904af0cfe6e1bb74eceb2e80d3de",
+   "prime_class": 9,
+   "name": "C9T15",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T16",
+   "type_id": "7eef5dff4d9f090270a59891946582a46643c3f69ee68dbe41b1d28bbcf92375",
+   "prime_class": 9,
+   "name": "C9T16",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T17",
+   "type_id": "5ef27503f218335002fe0124220d8e2c9ae5621f209440cfe5d994ae782f246c",
+   "prime_class": 9,
+   "name": "C9T17",
+   "dim": [
+    3,
+    2
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T18",
+   "type_id": "31454c9d39c31a50f1bcbab79c59ceb7b2c1c032925cfb4c811b29048f7d28fa",
+   "prime_class": 9,
+   "name": "C9T18",
+   "dim": [
+    2,
+    3
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T19",
+   "type_id": "8c1d4d0e18ba1cf17833025d9d6cbda2ec8a6f463262bdb8992aec02af03ba3b",
+   "prime_class": 9,
+   "name": "C9T19",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T20",
+   "type_id": "a4357a6665f628eea44b1ac05306b58e3956ac72ee5f088dc13226dba9b69770",
+   "prime_class": 9,
+   "name": "C9T20",
+   "dim": [
+    2,
+    2
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T21",
+   "type_id": "c316a1daf254becf377bec38cf4d922fe5a7e35569880d507f93fecba9d3d706",
+   "prime_class": 9,
+   "name": "C9T21",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T22",
+   "type_id": "461bb09da466ec163da6f1085a6bd69951cd10e6e8ae5b0a59f47507db8041a7",
+   "prime_class": 9,
+   "name": "C9T22",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T23",
+   "type_id": "5d12fbe38c9e6846cfd27f2aea5caa8e7c43b849b0ba6639d9358b8931251a74",
+   "prime_class": 9,
+   "name": "C9T23",
+   "dim": [
+    1,
+    2
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T24",
+   "type_id": "cf138ed094796f202bc7942bf7a7cf9f23a04f384a14295edf402544035d5230",
+   "prime_class": 9,
+   "name": "C9T24",
+   "dim": [
+    2,
+    1
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T25",
+   "type_id": "b206460b30bf966248f8bbde703bce5eb99550448b554bdfac7d4ee738d3ceeb",
+   "prime_class": 9,
+   "name": "C9T25",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    0,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T26",
+   "type_id": "7129cc5a0daebea1a03b8d17ecefb9d56907b4c423020899f4318c89a7c37183",
+   "prime_class": 9,
+   "name": "C9T26",
+   "dim": [
+    1,
+    1
+   ],
+   "killed": [
+    1,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T27",
+   "type_id": "9362fadd055d7016a44cc726c3383ab444a56ae286e1cc9f7e15161f760ab791",
+   "prime_class": 9,
+   "name": "C9T27",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T28",
+   "type_id": "b0dfe0943e1c06d1ba62ed1cb8f9e4717da87ea4e3ff6e3f92f7218fe671e9c0",
+   "prime_class": 9,
+   "name": "C9T28",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T29",
+   "type_id": "26a73cbcfeb5a1082f1b0831c5d0c2ccd62342ee5b7e78e9a784a2e5ee63bc8b",
+   "prime_class": 9,
+   "name": "C9T29",
+   "dim": [
+    1,
+    0
+   ],
+   "killed": [
+    1,
+    0
+   ]
+  },
+  {
+   "module": "CatalanCore.Uniform.Bank.FifthsContent.RankData.C9T30",
+   "type_id": "f6665cde794ce2658d92a1963460a2c889e3eb270fc93e996e0d9a2ce65ee6a7",
+   "prime_class": 9,
+   "name": "C9T30",
+   "dim": [
+    0,
+    1
+   ],
+   "killed": [
+    0,
+    1
+   ]
+  }
+ ]
+}

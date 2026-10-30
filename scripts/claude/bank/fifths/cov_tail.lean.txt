@@ -1,0 +1,170 @@
+/-! ### Closed-form kinds -/
+
+section Kinds
+variable {Fr : Frame} {u : ℕ} (T : ShiftData Fr 5 u) (depth : ℕ)
+
+theorem shift_twoTerm : TwoTermData Fr 5 u where
+  o_pos := T.hu0
+  o_lt := T.hu1
+  delta_eq t ht := by
+    rw [T.delta t (by omega), cast_linear T.hu1 (by omega)]
+    norm_num
+  dsq_eq t ht := by
+    rw [T.dsq t (by omega), cast_linear T.hu1 (by omega)]
+    norm_num
+
+theorem shift_norm : Fr.norm = 25 := by
+  rw [T.norm_eq]; norm_num
+
+theorem XGm_D3_fifths (r m p : ℕ) (hp : p.Prime) (h7 : 7 ≤ p) (hm : 2 * m < p) (hu : p ≤ r) :
+    XGm (fifthsInst T) r m p ≤ 2 * r + m :=
+  val_D3 p r m (lev := (fifthsInst T).lev) hp.one_lt.le
+    (fun c hc => (fifths_levels T).high p c hp.one_lt.le hc) hm hu
+
+/-- The member constraints used by the integer statements. -/
+theorem member_dom {i : (AltE (2 / 9) two_ninths_pos Fr depth).ι}
+    (hi : (AltE (2 / 9) two_ninths_pos Fr depth).Adm i) :
+    i.1 % 2 = 0 ∧ 2 * i.1 ≤ 18 * F5.borderSize i.1 + 9 ∧ 18 * F5.borderSize i.1 ≤ 2 * i.1 + 8 :=
+  ⟨hi.2, (border_bounds5 hi.2).1, (border_bounds5 hi.2).2⟩
+
+theorem low_of {sn sd r p : ℕ} (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (h1 : sn * r / sd < p) : r < 900 * p := by
+  have h3 : sn * r < p * sd := (Nat.div_lt_iff_lt_mul hsd).1 h1
+  have h4 : sn * r < sn * (900 * p) :=
+    lt_of_lt_of_le h3 (by nlinarith)
+  exact Nat.lt_of_mul_lt_mul_left h4
+
+/-- M3D: `m3_general` for gap indices `n0, n1, n3`. -/
+theorem pieceOK_m3 (hcF : cFr Fr ≤ 49) (n0 n1 n3 j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (hint : ∀ r p m k : ℕ, R0 ≤ r → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 → 1 ≤ u → u < 5 →
+      5 * k = j * p + u → sn * r / sd < p → p ≤ tn * r / td → m ≤ p ∧
+      D * (((2 * r + 2 * m : ℕ) : ℤ) - ((min (min ((n0 + 1) * p) ((n1 + 1) * p + k))
+              (min (r + (n3 + 1) * p) (min (r + 2 * m) (r + p))) -
+        max (max (n0 * p) (n1 * p + k)) (max (r + n3 * p) (max r (r + 2 * m - p))) : ℕ) : ℤ)) ≤
+        A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_of T depth hcF j sn sd tn td A B E D hD hE hnn ?_
+  intro i hi hR p h1 h2 hp hk hpf
+  obtain ⟨hr, hb1, hb2⟩ := member_dom depth hi
+  have hu0 : 1 ≤ u := T.hu0
+  have hu1 : u < 5 := T.hu1
+  have hlow : i.1 < 900 * p := low_of hsd h900 h1
+  have hp7 : 7 ≤ p := by unfold R0 at hR; omega
+  have hsq := hsq_of5 hR hb2 hlow
+  obtain ⟨hmp, hineq⟩ := hint i.1 p (F5.borderSize i.1) _ hR hb1 hb2 hu0 hu1 hk h1 h2
+  obtain ⟨n, hn, hle⟩ := m3_general (shift_twoTerm T) (shift_norm T) depth i hi p hp7 hsq hmp
+    ((fifthsInst T).cd.kq p) j (by omega) n0 n1 n3
+  refine ⟨n, hn, ?_⟩
+  have hn' : (n : ℤ) ≤ ((2 * i.1 + 2 * F5.borderSize i.1 : ℕ) : ℤ) -
+      ((min (min ((n0 + 1) * p) ((n1 + 1) * p + (fifthsInst T).cd.kq p))
+        (min (i.1 + (n3 + 1) * p) (min (i.1 + 2 * F5.borderSize i.1) (i.1 + p))) -
+        max (max (n0 * p) (n1 * p + (fifthsInst T).cd.kq p))
+          (max (i.1 + n3 * p) (max i.1 (i.1 + 2 * F5.borderSize i.1 - p))) : ℕ) : ℤ) := by
+    omega
+  calc D * (n : ℤ) ≤ D * (((2 * i.1 + 2 * F5.borderSize i.1 : ℕ) : ℤ) -
+      ((min (min ((n0 + 1) * p) ((n1 + 1) * p + (fifthsInst T).cd.kq p))
+        (min (i.1 + (n3 + 1) * p) (min (i.1 + 2 * F5.borderSize i.1) (i.1 + p))) -
+        max (max (n0 * p) (n1 * p + (fifthsInst T).cd.kq p))
+          (max (i.1 + n3 * p) (max i.1 (i.1 + 2 * F5.borderSize i.1 - p))) : ℕ) : ℤ)) :=
+        mul_le_mul_of_nonneg_left hn' hD.le
+    _ ≤ _ := hineq
+
+/-- Generic reduction for the table-T kinds: some `b ≥ XGm` is below the line. -/
+theorem pieceOK_T (hcF : cFr Fr ≤ 49) (j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (bound : ∀ (r m p : ℕ), p.Prime → R0 ≤ r → 7 ≤ p → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 →
+      5 * (fifthsInst T).cd.kq p = j * p + u → sn * r / sd < p → p ≤ tn * r / td →
+      ∃ b : ℤ, (XGm (fifthsInst T) r m p : ℤ) ≤ b ∧ D * b ≤ A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_of T depth hcF j sn sd tn td A B E D hD hE hnn ?_
+  intro i hi hR p h1 h2 hp hk hpf
+  obtain ⟨hr, hb1, hb2⟩ := member_dom depth hi
+  have hlow : i.1 < 900 * p := low_of hsd h900 h1
+  have hp7 : 7 ≤ p := by unfold R0 at hR; omega
+  have hsq := hsq_of5 hR hb2 hlow
+  have hr1 : 1 ≤ i.1 := by unfold R0 at hR; omega
+  have hg := fifths_T_gle T depth i hr hr1 p hp7 hsq
+  obtain ⟨b, hb, hDb⟩ := bound i.1 (F5.borderSize i.1) p hp hR hp7 hb1 hb2 hk h1 h2
+  refine ⟨_, hg, ?_⟩
+  calc D * (XGm (fifthsInst T) i.1 (F5.borderSize i.1) p : ℤ) ≤ D * b :=
+        mul_le_mul_of_nonneg_left hb hD.le
+    _ ≤ _ := hDb
+
+/-- Sawtooth kind (`XGm_D1x`), with `m = q p + s0` and `q ∈ {q0, q0+1, q0+2}`. -/
+theorem pieceOK_saw (hcF : cFr Fr ≤ 49) (q0 j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (hint : ∀ r p m : ℕ, R0 ≤ r → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 →
+      sn * r / sd < p → p ≤ tn * r / td → (q0 * p ≤ m ∧ m < (q0 + 3) * p) ∧
+      ∀ s0 : ℕ, s0 < p → (m = q0 * p + s0 ∨ m = (q0 + 1) * p + s0 ∨ m = (q0 + 2) * p + s0) →
+        D * (((2 * r + 2 * m - min s0 (p - s0) : ℕ)) : ℤ) ≤ A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_T T depth hcF j sn sd tn td A B E D hD hE hsd h900 hnn ?_
+  intro r m p hp hR hp7 hb1 hb2 hk h1 h2
+  have h := XGm_D1x (fifthsInst T) r m p hp (by omega)
+  obtain ⟨⟨hq1, hq2⟩, hmain⟩ := hint r p m hR hb1 hb2 h1 h2
+  have hp0 : 0 < p := hp.pos
+  have hdm := Nat.div_add_mod m p
+  have hlt : m % p < p := Nat.mod_lt _ hp0
+  have hq3 : q0 ≤ m / p := (Nat.le_div_iff_mul_le hp0).2 hq1
+  have hq4 : m / p < q0 + 3 := (Nat.div_lt_iff_lt_mul hp0).2 hq2
+  refine ⟨((2 * r + 2 * m - min (m % p) (p - m % p) : ℕ) : ℤ), by exact_mod_cast h, ?_⟩
+  apply hmain _ hlt
+  have : m / p = q0 ∨ m / p = q0 + 1 ∨ m / p = q0 + 2 := by omega
+  rcases this with h0 | h0 | h0
+  · left; rw [h0] at hdm; rw [← hdm]; ring
+  · right; left; rw [h0] at hdm; rw [← hdm]; ring
+  · right; right; rw [h0] at hdm; rw [← hdm]; ring
+
+/-- Kind `D3` (`2 m < p ≤ r`): `XGm ≤ 2 r + m`. -/
+theorem pieceOK_D3 (hcF : cFr Fr ≤ 49) (j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (hint : ∀ r p m k : ℕ, R0 ≤ r → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 → 1 ≤ u → u < 5 →
+      5 * k = j * p + u → sn * r / sd < p → p ≤ tn * r / td → (2 * m < p ∧ p ≤ r) ∧
+      D * ((2 * r + m : ℕ) : ℤ) ≤ A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_T T depth hcF j sn sd tn td A B E D hD hE hsd h900 hnn ?_
+  intro r m p hp hR hp7 hb1 hb2 hk h1 h2
+  obtain ⟨⟨hm, hpr⟩, hmain⟩ := hint r p m _ hR hb1 hb2 T.hu0 T.hu1 hk h1 h2
+  have h := XGm_D3_fifths T r m p hp hp7 hm hpr
+  exact ⟨((2 * r + m : ℕ) : ℤ), by exact_mod_cast h, hmain⟩
+
+/-- Kind `D45` (`r < p`, `2 m ≤ r`). -/
+theorem pieceOK_D45 (hcF : cFr Fr ≤ 49) (j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (hint : ∀ r p m k : ℕ, R0 ≤ r → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 → 1 ≤ u → u < 5 →
+      5 * k = j * p + u → sn * r / sd < p → p ≤ tn * r / td → (r < p ∧ 2 * m ≤ r) ∧
+      D * ((2 * (r - k) + 2 * m + (2 * m - (p - r)) : ℕ) : ℤ) ≤ A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_T T depth hcF j sn sd tn td A B E D hD hE hsd h900 hnn ?_
+  intro r m p hp hR hp7 hb1 hb2 hk h1 h2
+  obtain ⟨⟨hrp, hmr⟩, hmain⟩ := hint r p m _ hR hb1 hb2 T.hu0 T.hu1 hk h1 h2
+  have h := XGm_D45_good (fifths_levels T) r m p hp hp7 hrp hmr
+  exact ⟨((2 * (r - (fifthsInst T).cd.kq p) + 2 * m + (2 * m - (p - r)) : ℕ) : ℤ),
+    by exact_mod_cast h, hmain⟩
+
+/-- Kind `D6` (`r + 2 m ≤ p`, `r ≤ k`). -/
+theorem pieceOK_D6 (hcF : cFr Fr ≤ 49) (j sn sd tn td : ℕ) (A B E D : ℤ) (hD : 0 < D)
+    (hE : D * 2600000000 ≤ E) (hsd : 0 < sd) (h900 : sd ≤ 900 * sn)
+    (hnn : ∀ r p : ℕ, sn * r / sd < p → p ≤ tn * r / td → 0 ≤ A * (r : ℤ) + B * (p : ℤ))
+    (hint : ∀ r p m k : ℕ, R0 ≤ r → 2 * r ≤ 18 * m + 9 → 18 * m ≤ 2 * r + 8 → 1 ≤ u → u < 5 →
+      5 * k = j * p + u → sn * r / sd < p → p ≤ tn * r / td → (r + 2 * m ≤ p ∧ r ≤ k) ∧
+      D * ((2 * m - (k - r) : ℕ) : ℤ) ≤ A * (r : ℤ) + B * (p : ℤ) + E) :
+    PieceOK T depth j sn sd tn td A B E D := by
+  refine pieceOK_T T depth hcF j sn sd tn td A B E D hD hE hsd h900 hnn ?_
+  intro r m p hp hR hp7 hb1 hb2 hk h1 h2
+  obtain ⟨⟨hN, hkr⟩, hmain⟩ := hint r p m _ hR hb1 hb2 T.hu0 T.hu1 hk h1 h2
+  have h := XGm_D6_good (fifths_levels T) r m p hp hp7 hN hkr
+  exact ⟨((2 * m - ((fifthsInst T).cd.kq p - r) : ℕ) : ℤ), by exact_mod_cast h, hmain⟩
+
+end Kinds
+
+#print axioms pieceOK_m3
+#print axioms pieceOK_saw
+#print axioms pieceOK_D6
+end CatalanCore.Uniform.Bank.FifthsContent

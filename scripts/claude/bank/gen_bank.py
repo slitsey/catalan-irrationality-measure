@@ -20,6 +20,7 @@ SV = os.path.join(PROG, 'sevenths-decay-2026-10-27', 'exact-check')
 OUTBASE = os.path.join(ROOT, 'CatalanCore', 'Uniform', 'Bank', 'Common', 'Data')
 
 BANKS = {
+    'Halves': dict(exact=f'{HY}/exact-HALF.json', hyp=f'{HY}/hyp-HALF.json', members=['halves']),
     'Fifths': dict(exact=f'{HY}/exact-FIFTH.json', hyp=f'{HY}/hyp-FIFTH.json',
                    members=['fifth-1', 'fifth-2', 'fifth-3', 'fifth-4']),
     'Thirds': dict(exact=f'{HY}/exact-THIRD.json', hyp=f'{HY}/hyp-THIRD.json', members=['thirds+', 'thirds-']),
