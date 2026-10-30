@@ -17,13 +17,18 @@ theorem ccert_eq : Dchi.ccert = cH := by decide +kernel
 theorem lam_lt : bankData.Λ < Dchi.Dt := by rw [bankData_Λ]; decide +kernel
 theorem mu_margin : cH ≤ 65253 / 10000 * (Dchi.Dt - bankData.Λ) := by rw [bankData_Λ]; decide +kernel
 
+theorem m0_le : ∀ i, (1 / 2 : ℝ) ≤ halves.μ i := by
+  intro i
+  fin_cases i
+  · show (1 / 2 : ℝ) ≤ ((1 / 2 : ℚ) : ℝ); norm_num
+  · show (1 / 2 : ℝ) ≤ ((1 : ℚ) : ℝ); norm_num
+
 theorem decay (depth : ℕ) :
     HasScaledDecay (FH.family halves depth) FH.scale (Dchi.Dt : ℝ) (cH : ℝ) := by
   have h := altGeom_hasScaledDecay (3 / 10) three_tenths_pos (by norm_num)
     (Fr := halves) (by decide +kernel) (by decide +kernel) (by decide +kernel)
     TabC tab_RP tab_CP tab_Mq Dchi Pply check_true (by rw [dim_eq]; rfl) 30 energy_ok
-    (m0 := 1 / 2) (by norm_num)
-    (by intro i; fin_cases i <;> norm_num [halves, CatalanFrames.Thirds.thirdsFrame])
+    (m0 := 1 / 2) (by norm_num) m0_le
     eps_pos depth
   rw [ccert_eq] at h
   exact h
