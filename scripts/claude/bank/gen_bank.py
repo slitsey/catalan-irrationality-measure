@@ -25,7 +25,7 @@ BANKS = {
                    members=['fifth-1', 'fifth-2', 'fifth-3', 'fifth-4']),
     'Thirds': dict(exact=f'{HY}/exact-THIRD.json', hyp=f'{HY}/hyp-THIRD.json', members=['thirds+', 'thirds-']),
     'Chi3': dict(exact=f'{HY}/exact-CHI3.json', hyp=f'{HY}/hyp-CHI3.json', members=['chi3']),
-    'Lambda': dict(exact=f'{HY}/exact-LAMB.json', hyp=f'{HY}/hyp-LAMB.json', members=['lambda+', 'lambda-']),
+    'Fourths': dict(exact=f'{HY}/exact-LAMB.json', hyp=f'{HY}/hyp-LAMB.json', members=['lambda+', 'lambda-']),
     'Sev1': dict(exact=f'{SV}/exact-A-tight.json', hyp=f'{SV}/hypotheses/hyp-results.json', members=['1']),
 }
 

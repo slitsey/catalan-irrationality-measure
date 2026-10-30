@@ -1,103 +1,139 @@
-module
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Topology.Algebra.InfiniteSum.Real
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Topology.Algebra.InfiniteSum.Real
+import CatalanCore.Uniform.Bank.FourthsContent.Bound
+import CatalanCore.Uniform.Bank.Chi3.KContent.Bound
+import CatalanCore.Uniform.Bank.ThirdsContent.Bound
+import CatalanCore.Uniform.Bank.FifthsContent.Bound
+import CatalanCore.Uniform.Bank.SeventhsContent.Bound
 
-import CatalanFrames.LambdaHybrid.FinalS
-import CatalanFrames.LambdaMirrorHybrid.FinalS
-import CatalanCore.Measure.Scaling
-import CatalanFrames.Thirds.StatementsT
-import CatalanFrames.P6Hybrid.ContourResearch.Cert1421
-import CatalanFrames.Fifths.Statements
-
-public section
 
 /-!
-Proofs of the strongest statements in `ChallengeHybrid.lean`.
-The slope-5/2 decay certificate with the merged non-clean content profile gives both 32.44
-bounds (`lam_hybrid_measure_3244`, `mir_hybrid_measure_3244`); periodic content and
-characteristic-zero selection with a quarter border and a slope-12/5 contour certificate give 14.21;
-the thirds frames with their own decay certificate give `L(2, χ₋₃) ± π²/9` with exponent 10.61;
-the fifths frames give `ψ'(a/5) - π²/6` (a = 1, ..., 4) with exponent 31.95. `MeasureLBAt` unfolds to the displayed statements.
+Not yet a `module` file: the bank closures are being converted to the module system; until then this file
+imports them as an ordinary file.
+Proofs of the statements in `ChallengeHybrid.lean`, from the `Bound` theorems of the trigamma-difference
+banks (`CatalanCore.Uniform.Bank.*Content.Bound` and `CatalanCore.Uniform.Bank.Chi3.KContent.Bound`).
+`MeasureLBAt` unfolds to the displayed statements; for `G ± 5π²/48` the target is rewritten first.
 -/
 
-namespace CatalanHybridChallenge
+namespace TrigammaDifferences
 
 open CatalanCore
 
-theorem lam_hybrid_measure_3244 :
+theorem lambda_minus_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((811 / 25 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| :=
-  CatalanFrames.LambdaHybrid.lam_hyb_measure_final2
+      (q : ℝ) ^ (-(((314411 / 10000 : ℚ) : ℝ) + e)) <
+        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48) - (p : ℝ) / q| := by
+    have h := CatalanCore.Uniform.Bank.FourthsContent.Bound.lambda_measure false
+    have e : CatalanCore.Uniform.Bank.Fourths.lambdaTarget false = (∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48 := by
+      simp [CatalanCore.Uniform.Bank.Fourths.lambdaTarget, sub_eq_add_neg]
+    rw [e] at h
+    exact h
 
-theorem mir_hybrid_measure_3244 :
+theorem lambda_plus_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((811 / 25 : ℚ) : ℝ) + e)) <
-        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48)
-          - (p : ℝ) / q| :=
-  CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final2
+      (q : ℝ) ^ (-(((314411 / 10000 : ℚ) : ℝ) + e)) <
+        |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48) - (p : ℝ) / q| := by
+    have h := CatalanCore.Uniform.Bank.FourthsContent.Bound.lambda_measure true
+    have e : CatalanCore.Uniform.Bank.Fourths.lambdaTarget true = (∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48 := by
+      simp [CatalanCore.Uniform.Bank.Fourths.lambdaTarget]
+    rw [e] at h
+    exact h
 
-theorem chi3_hybrid_measure_1421 :
+theorem chi3_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1421/100 : ℚ) : ℝ) + e)) <
-        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
-          - (p : ℝ) / q| :=
-  CatalanFrames.P6Hybrid.QuarterContour.Cert1421.chi3_measure
+      (q : ℝ) ^ (-(((137046 / 10000 : ℚ) : ℝ) + e)) <
+        |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k
 
-theorem chi3_plus_pi2_hybrid_measure_1061 :
+theorem chi3_plus_pi2_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1061 / 100 : ℚ) : ℝ) + e)) <
-        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
-          + Real.pi ^ 2 / 9) - (p : ℝ) / q| :=
-  CatalanFrames.Thirds.chi3_plus_zeta2_measure_1061
+      (q : ℝ) ^ (-(((95133 / 10000 : ℚ) : ℝ) + e)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 9) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.ThirdsContent.Bound.thirds_plus_measure
 
-theorem chi3_minus_pi2_hybrid_measure_1061 :
+theorem chi3_minus_pi2_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((1061 / 100 : ℚ) : ℝ) + e)) <
-        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2))
-          - Real.pi ^ 2 / 9) - (p : ℝ) / q| :=
-  CatalanFrames.Thirds.chi3_minus_zeta2_measure_1061
+      (q : ℝ) ^ (-(((95133 / 10000 : ℚ) : ℝ) + e)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 9) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.ThirdsContent.Bound.thirds_minus_measure
 
-theorem fifths1_hybrid_measure_3195 :
+theorem fifths1_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((639 / 20 : ℚ) : ℝ) + e)) <
-        |((∑' n : ℕ, 1 / ((n : ℝ) + (((((1 : ℕ) : ℚ) / 5 : ℚ)) : ℝ)) ^ 2) - Real.pi ^ 2 / 6)
-          - (p : ℝ) / q| :=
-  CatalanFrames.Fifths.fifths1_measure_3195
+      (q : ℝ) ^ (-(((47823 / 2000 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths1_measure
 
-theorem fifths2_hybrid_measure_3195 :
+theorem fifths2_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((639 / 20 : ℚ) : ℝ) + e)) <
-        |((∑' n : ℕ, 1 / ((n : ℝ) + (((((2 : ℕ) : ℚ) / 5 : ℚ)) : ℝ)) ^ 2) - Real.pi ^ 2 / 6)
-          - (p : ℝ) / q| :=
-  CatalanFrames.Fifths.fifths2_measure_3195
+      (q : ℝ) ^ (-(((47823 / 2000 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths2_measure
 
-theorem fifths3_hybrid_measure_3195 :
+theorem fifths3_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((639 / 20 : ℚ) : ℝ) + e)) <
-        |((∑' n : ℕ, 1 / ((n : ℝ) + (((((3 : ℕ) : ℚ) / 5 : ℚ)) : ℝ)) ^ 2) - Real.pi ^ 2 / 6)
-          - (p : ℝ) / q| :=
-  CatalanFrames.Fifths.fifths3_measure_3195
+      (q : ℝ) ^ (-(((47823 / 2000 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths3_measure
 
-theorem fifths4_hybrid_measure_3195 :
+theorem fifths4_measure :
     ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
-      (q : ℝ) ^ (-(((639 / 20 : ℚ) : ℝ) + e)) <
-        |((∑' n : ℕ, 1 / ((n : ℝ) + (((((4 : ℕ) : ℚ) / 5 : ℚ)) : ℝ)) ^ 2) - Real.pi ^ 2 / 6)
-          - (p : ℝ) / q| :=
-  CatalanFrames.Fifths.fifths4_measure_3195
+      (q : ℝ) ^ (-(((47823 / 2000 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths4_measure
 
-#print axioms lam_hybrid_measure_3244
-#print axioms mir_hybrid_measure_3244
-#print axioms chi3_hybrid_measure_1421
-#print axioms chi3_plus_pi2_hybrid_measure_1061
-#print axioms chi3_minus_pi2_hybrid_measure_1061
-#print axioms fifths1_hybrid_measure_3195
-#print axioms fifths2_hybrid_measure_3195
-#print axioms fifths3_hybrid_measure_3195
-#print axioms fifths4_hybrid_measure_3195
+theorem sevenths1_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨0, by decide⟩
 
-end CatalanHybridChallenge
+theorem sevenths2_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨1, by decide⟩
+
+theorem sevenths3_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨2, by decide⟩
+
+theorem sevenths4_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨3, by decide⟩
+
+theorem sevenths5_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((5 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨4, by decide⟩
+
+theorem sevenths6_measure :
+    ∀ e : ℝ, 0 < e → ∃ q₀ : ℕ, ∀ (p : ℤ) (q : ℕ), q₀ ≤ q → IsCoprime p (q : ℤ) →
+      (q : ℝ) ^ (-(((2801 : ℚ) : ℝ) + e)) <
+        |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((6 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (p : ℝ) / q| :=
+  CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure ⟨5, by decide⟩
+
+#print axioms lambda_minus_measure
+#print axioms lambda_plus_measure
+#print axioms chi3_measure
+#print axioms chi3_plus_pi2_measure
+#print axioms chi3_minus_pi2_measure
+#print axioms fifths1_measure
+#print axioms fifths2_measure
+#print axioms fifths3_measure
+#print axioms fifths4_measure
+#print axioms sevenths1_measure
+#print axioms sevenths2_measure
+#print axioms sevenths3_measure
+#print axioms sevenths4_measure
+#print axioms sevenths5_measure
+#print axioms sevenths6_measure
+
+end TrigammaDifferences

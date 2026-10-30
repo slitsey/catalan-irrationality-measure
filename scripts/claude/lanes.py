@@ -28,6 +28,21 @@ Q, RUN, DONE, OUTD = LANES / 'queue', LANES / 'running', LANES / 'done', LANES /
 for d in (Q, RUN, DONE, OUTD):
     d.mkdir(parents=True, exist_ok=True)
 MAXLANES, RAMP, STARVE = 6, 2, 300
+MAXGEN = 4   # at most this many capped `run` jobs (generators, receipts, probes) at once
+
+
+def capped_run(spec):
+    """A `run` job (target `job.*`) counts against MAXGEN unless its label starts with one of the
+    exempt prefixes in LANES/gen-exempt.txt (short checks, audits, research screens)."""
+    t = spec.get('target', '')
+    if not (spec.get('cmd') and t.startswith('job.')):
+        return False
+    try:
+        exempt = [l.strip() for l in (LANES / 'gen-exempt.txt').read_text(encoding='utf-8').splitlines()
+                  if l.strip() and not l.lstrip().startswith('#')]
+    except OSError:
+        exempt = []
+    return not any(t.startswith('job.' + e) for e in exempt)
 # RAMP was 10 s; with a 7 s synchronous preflight per start the driver could not exceed ~2 lanes of
 # 23 s median jobs (28 Oct 19:30). Preflights now run in a background pool and are cached.
 FLOOR, MARGIN = 3.0, 1.0   # manage-compute-campaigns: system floor and operating margin (GB)
@@ -233,6 +248,10 @@ def drive():
                 except (json.JSONDecodeError, OSError):
                     continue   # being written by a submitter (28 Oct 11:51 crash), or just taken
                 if s['target'] in busy:
+                    continue
+                # Generator cap (replaces defer-generators.sh): while MAXGEN capped `run` jobs are
+                # running, a queued capped `run` job waits so a freed lane goes to a module build.
+                if capped_run(s) and sum(capped_run(r) for _, r in running.values()) >= MAXGEN:
                     continue
                 if not s.get('cmd'):
                     f = pre.get(s['target'])

@@ -1,3 +1,3 @@
 module
 
-public import CatalanMeasure.GenD.D58.Main590
+public import CatalanMeasure.GenD.Uniform.Bank532.Hosts532Inst

@@ -708,34 +708,4 @@ theorem measureEta_ratio_le : ((44 : ℕ) : ℝ) / measureEta ≤ 191031 / 10000
   unfold measureEta
   norm_num
 
-/-- **Catalan's constant has irrationality measure at most `8127`.** -/
-theorem catalan_irrationalityMeasure_8127 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(8127 : ℝ)) < |catalan - a / b| := by
-  have hε : (0 : ℝ) < 10001 / 191031 := by norm_num
-  have hc : (1 : ℝ) < 10001 / 10000 := by norm_num
-  filter_upwards [catalan_irrationalityMeasure_pnt measureEta_pos measureEta_lt hε hc,
-    eventually_ge_atTop 1] with b hb hb1 a
-  refine lt_of_le_of_lt ?_ (hb a)
-  apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
-  have hX := measureEta_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / measureEta) ((10001 / 10000) / (10001 / 191031)) = 191031 / 10000 := by
-    rw [max_eq_right (by norm_num at hX ⊢; linarith)]
-    norm_num
-  rw [hmax]
-  unfold lemma6Rho
-  norm_num
-
-/-- **Chebyshev-window version: irrationality measure at most `23168`.** -/
-theorem catalan_irrationalityMeasure_23168 :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(23168 : ℝ)) < |catalan - a / b| := by
-  filter_upwards [catalan_irrationalityMeasure measureEta_pos measureEta_lt,
-    eventually_ge_atTop 1] with b hb hb1 a
-  refine lt_of_le_of_lt ?_ (hb a)
-  apply Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast hb1)
-  have hX := measureEta_ratio_le
-  have hmax : max (((44 : ℕ) : ℝ) / measureEta) 4 ≤ 191031 / 10000 :=
-    max_le hX (by norm_num)
-  unfold lemma6Rho
-  nlinarith
-
 end OAI.InternalCatalan

@@ -22,7 +22,7 @@ SRC = {
     'Fifths': (f'{HY}/exact-FIFTH.json', f'{HY}/hyp-FIFTH.json', ['fifth-1', 'fifth-2', 'fifth-3', 'fifth-4']),
     'Thirds': (f'{HY}/exact-THIRD.json', f'{HY}/hyp-THIRD.json', ['thirds+', 'thirds-']),
     'Chi3': (f'{HY}/exact-CHI3.json', f'{HY}/hyp-CHI3.json', ['chi3']),
-    'Lambda': (f'{HY}/exact-LAMB.json', f'{HY}/hyp-LAMB.json', ['lambda+', 'lambda-']),
+    'Fourths': (f'{HY}/exact-LAMB.json', f'{HY}/hyp-LAMB.json', ['lambda+', 'lambda-']),
     'Sev1': (f'{SV}/exact-A-tight.json', f'{SV}/hypotheses/hyp-results.json', ['1']),
 }
 
