@@ -31,8 +31,8 @@
 \newcommand{\Nblocks}{47, 38 and 23}                    % blocks of the three covers
 \newcommand{\Ncells}{373, 302 and 176}                  % cells of the three covers
 \newcommand{\Mmargin}{2.986\cdot10^{-6}}                % slack of the objective
-\newcommand{\Disc}{1.645\cdot10^{-5}}                   % discriminant of the budget
-\newcommand{\DiscBound}{1.656\cdot10^{-5}}
+\newcommand{\Disc}{1.646\cdot10^{-5}}                   % upper bound for the discriminant (exact 1.64546...e-5)
+\newcommand{\DiscBound}{1.655\ldots\cdot10^{-5}}        % 8 l m = 1.65584...e-5
 \newcommand{\TDelta}{6422.8355}                         % n_0^2 (U - log 2 / 2)
 \newcommand{\EtaExact}{30.04748}                        % TDelta minus the denominator exponent
 \newcommand{\Blimit}{531.88}                            % d rho / EtaExact
@@ -154,8 +154,9 @@ from Salikhov's integrals \cite{Salikhov08} with an additional arithmetic saving
 Since September 2026 a series of new results in this area has appeared, several of them obtained with
 AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}, and Liu, Jiang and
 Zhang proved $\mu(\log r)=2$ for every rational $r>0$, $r\ne1$ \cite{LiuJiangZhang26}. Giraudin lowered
-the bounds for $\mu(\zeta(2))$ and $\mu(\zeta(3))$ to $5.0193784$ and $5.5138800$ by applying the
-Rhin--Viola method at new integral directions \cite{Giraudin26,Giraudin26z3}. Leibtag, Barkan, Kalisch,
+the bound for $\mu(\zeta(2))$ to $5.0193784$ with two hypergeometric constructions of Zudilin
+\cite{Zudilin14} at new parameters \cite{Giraudin26}, and the bound for $\mu(\zeta(3))$ to $5.5138800$
+by applying the Rhin--Viola method at a new integral direction \cite{Giraudin26z3}. Leibtag, Barkan, Kalisch,
 Weinbaum, Shalyt and Kaminer \cite{LBKWSK26} showed that the classical constructions are
 one-dimensional trajectories in conservative matrix fields, and by searching over other trajectories
 obtained $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Prellberg \cite{Prellberg26} proved that
@@ -318,7 +319,7 @@ below the sum of the real place minus the denominators without the gain, $\EtaIn
 the rank deficiencies, $\int\kappa=\Chi\ldots$; the proof uses the lower bound $\int\kappa\ge\ChiLean$.
 In the criterion, $\omega=3/4$, $\delta=2.9\cdot10^{-7}$ and $\kappa=532/\rho=\Kappa\ldots$ Decimals are
 truncated; the constants of the formal proof are the exact rational numbers. With $\eta=\EtaTot$ the
-criterion gives the exponent $\Bx$ as the least $B$ allowed by its conditions
+last condition of the criterion reads $B>\Bx\ldots$, and the others hold with room to spare
 (Section~\ref{sec:proof}); the integer $532$ is the exponent of Theorem~\ref{thm:main}, for which
 all the conditions are verified in Lean with rational constants.
 
@@ -389,7 +390,7 @@ $\mu_0=\max(q,H+q-6p)$:
 \end{theorem}
 
 These are the statements of the Lean theorems \lean{t\_rank}, \lean{u\_rank}, \lean{u6\_rank\_closed} and
-\lean{s\_rank} (the last two in the form $m_1-m_0-e$ and its closed form), proved for every
+\lean{s\_rank} (the third in the closed form of~(c), the fourth in the form $m_1-m_0-e$), proved for every
 admissible design. For $D$ they apply for $12N<p\le26N$, where they give most of the gain
 (Section~\ref{ssec:kappa}).
 
@@ -455,10 +456,10 @@ bound is that of Theorem~\ref{thm:profile} with stored data.
 \toprule
 range of $x$ & intervals & with stored data & area \\
 \midrule
-$(16/7,\,3]$ & $11$ & $0$ & $0.06260$ \\
+$(16/7,\,3]$ & $11$ & $0$ & $0.06259$ \\
 $(3,\,6]$ & $46$ & $23$ & $0.25136$ \\
-$(6,\,12]$ & $27$ & $9$ & $0.71966$ \\
-$(12,\,53/2]$ & $18$ & $2$ & $21.02611$ \\
+$(6,\,12]$ & $27$ & $9$ & $0.71965$ \\
+$(12,\,53/2]$ & $18$ & $2$ & $21.02610$ \\
 \midrule
 total & $102$ & $34$ & $\Chi$ \\
 \bottomrule
@@ -505,7 +506,7 @@ where $c_2=\Ctwo$ is the cost of a fixed column in the energy estimate and $w=52
 size of the weights of the quadrature formula.
 
 \begin{theorem}\label{thm:real}
-Let $U=\Utarget$. For all large $N$ and all real $x$ with $|x-G|\le e^{-\rho N}$,
+Let $U=\Utarget$. For every $\varepsilon>0$, all large $N$ and all real $x$ with $|x-G|\le e^{-\rho N}$,
 \[
  |\Delta_N(x)|\le\exp\bigl(-(n_0^2(U-\tfrac12\log2)-\varepsilon)N^2\bigr),\qquad n_0=58 .
 \]

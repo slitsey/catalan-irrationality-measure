@@ -1,4 +1,4 @@
-% refs.bib for the hybrid paper. Every entry below was checked by a web search on 2026-10-19
+% refs.bib for the paper on Catalan's constant and its companion. Every entry below was checked by a web search on 2026-10-19
 % (title, authors, year, venue/arXiv ID/DOI).
 % Corrections relative to HJ-literature/refs.bib:
 %  - arXiv:0810.1927 is Krattenthaler--Rivoal (not Zudilin), "On a linear form for Catalan's constant".
@@ -68,6 +68,8 @@
 
 % Verified 29 Oct 2026 at the issue page (opened by ry-xu on October 22, 2026; numerical certificate in
 % ball arithmetic with an exact rational replay, not Lean-checked) and at github.com/ry-xu/slightlysupervised.
+% Rechecked 29 Oct 2026 (Paper I release pass): issue #5 still open, title, bound 727.03 and design (20,3,1,2,1)
+% as above, no later comments; the profile github.com/ry-xu shows the name "Ryan Xu".
 @misc{Xu2026,
   author       = {Xu, Ryan},
   title        = {Improved {$\kappa=2$} trial: {$\mu(G)\le727.03$}},
@@ -81,6 +83,9 @@
 % README "An irrationality exponent below 2402 for Catalan's constant", dated 15 October 2026; design search and
 % certification by Claude Fable 5.1 (Anthropic) in Claude Code on compute provided by Hrishik Sai Bojnal;
 % instantiates Carreira's general theorem at the design (36,6,2,3,2); not formalized; not checked by a second person.
+% URL rechecked 29 Oct 2026 (Paper I release pass): github.com/proof-factory/catalan-exponent answers HTTP 200,
+% github.com/fringewidth/catalan-exponent answers HTTP 301 with Location the proof-factory URL; README unchanged
+% (mu(G) < 2401.74, Theorem 35 of Carreira at (36,6,2,3,2), credits dated 15 October 2026).
 @misc{Bojnal2026,
   author       = {Bojnal, Hrishik Sai},
   title        = {An irrationality exponent below 2402 for {C}atalan's constant},
@@ -255,6 +260,8 @@
 }
 
 % v2 (8 Oct 2026) verified at arxiv.org/abs/2610.10192 on 29 Oct 2026.
+% Rechecked at the arXiv abstract page on 29 Oct 2026 (Paper I release pass): title and authors as below,
+% v1 7 Oct 2026, v2 8 Oct 2026 (current), math.NT; abstract: mu(log r) = 2 for rational r > 0, r != 1.
 @misc{LiuJiangZhang26,
   author        = {Liu, Jingwen and Jiang, Kai and Zhang, Pingwen},
   title         = {Irrationality exponents of logarithms of positive rational numbers},
@@ -548,6 +555,10 @@
   primaryClass  = {math.NT}
 }
 
+% Giraudin26, Giraudin26z3: checked at the arXiv abstract pages on 29 Oct 2026 (Paper I release pass), one
+% version each (2 Oct 2026 and 22 Sep 2026), author "David Niedbala Giraudin".  2610.02912: mu(zeta(2)) < 5.0193784
+% from two hypergeometric constructions of Zudilin at new parameters (not Rhin--Viola).  2609.26980:
+% mu(zeta(3)) < 5.5138800 from Rhin--Viola's Theorem 5.1 at a new integral direction.
 @misc{Giraudin26,
   author        = {Giraudin, David Niedbala},
   title         = {A new upper bound for the irrationality exponent of {$\zeta(2)$}},
@@ -597,11 +608,31 @@
   year    = {2008},
   pages   = {570--572}
 }
+% Litsey2026b: title as in the companion manuscript (paper-lambda/lambda-irrationality.tex, 29 Oct 2026);
+% the new version replaces the Hexagon listing 2610.00401, which on 29 Oct 2026 still shows v1 (20 Oct 2026)
+% under the earlier title.
 @misc{Litsey2026b,
   author       = {Litsey, Sean},
-  title        = {Irrationality measures for {$G\pm5\pi^2/48$} and {$L(2,\chi_{-3})$}},
+  title        = {Irrationality measures for differences of trigamma values},
   year         = {2026},
   howpublished = {Hexagon preprint hexagon:2610.00401, \url{https://hexagonmath.org/2610.00401}}
+}
+
+% Zudilin14: checked at arxiv.org/abs/1310.1526 on 29 Oct 2026 (title, author, journal reference
+% Ann. Math. Quebec 38 (2014), 101-117; the abstract gives mu(zeta(2)) <= 5.095412) and at Crossref for
+% DOI 10.1007/s40316-014-0016-0 (Annales mathematiques du Quebec, vol. 38, issue 1, pp. 101-117, June 2014).
+@article{Zudilin14,
+  author        = {Zudilin, Wadim},
+  title         = {Two hypergeometric tales and a new irrationality measure of {$\zeta(2)$}},
+  journal       = {Ann. Math. Qu\'ebec},
+  volume        = {38},
+  number        = {1},
+  year          = {2014},
+  pages         = {101--117},
+  doi           = {10.1007/s40316-014-0016-0},
+  eprint        = {1310.1526},
+  note          = {\href{https://arxiv.org/abs/1310.1526}{arXiv:1310.1526}},
+  archivePrefix = {arXiv}
 }
 
 @misc{LBKWSK26,

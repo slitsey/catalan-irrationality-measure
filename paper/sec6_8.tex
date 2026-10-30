@@ -114,7 +114,7 @@ formalization that are used were converted to Lean's module system and ported to
 repository's \texttt{README} and \texttt{PORTING.md} describe the changes.
 
 \subsection{Module layout}
-Everything specific to this paper is in the directory \lean{GenD} of \lean{CatalanMeasure}. Its design is that of the paper:
+The design-generic part of the development is in the directory \lean{GenD} of \lean{CatalanMeasure}. Its design is that of the paper:
 a design is data, the generic modules prove every statement for an arbitrary design, and the instance
 files contain numerals only.
 \begin{description}[leftmargin=1.5em,style=nextline]
@@ -127,7 +127,9 @@ contain no numeral).
 \item[Denominators] \lean{OddProfile} (the valuations $\ell_N(p)$ for the lower and upper pools),
 \lean{TwoAdic} (the bound \eqref{eq:A2}), \lean{DenomExp}, \lean{DenomGrowth}, \lean{DenomGrowth2},
 \lean{Denominator} and \lean{Normalizer} (the common denominator, $Q_N$, the divisibility of
-Lemma~\ref{lem:recycling}).
+Lemma~\ref{lem:recycling}); \lean{Uniform/Arithmetic} and \lean{Uniform/LedgerW} (the common denominator
+\lean{canonicalNormalizer} built from an arbitrary lower bound for the nullity, and the growth of its
+logarithm).
 \item[Closed formulas] \lean{Interface} (the nullity, the four families and \lean{famKap\_le\_nullity}),
 \lean{RankCommon}, \lean{RankK6}, \lean{RankDigits}, \lean{RankFam}, \lean{RankFilt}, \lean{RankSeq},
 \lean{RankBlock} (the shared layers: Chebyshev reflection, identity \eqref{eq:K6}, the digit formula in
@@ -139,13 +141,17 @@ columns, \lean{w\_core}, \lean{w\_core\_all}), \lean{Profile} (its profile form)
 \lean{Charts3/PStepPoly} (the step of size $p$: \lean{gKill\_of\_pstep\_poly} and
 \lean{slot\_nullity\_pstep\_poly}),
 \lean{Charts3/Host} (Theorem~\ref{thm:profile} as \lean{host\_count} and the lower bound
-\lean{NullityLB.ofPacketHost}), \lean{Slots} (the slot frame), and the families of
+\lean{NullityLB.ofPacketHost}), \lean{Slots} (the slot systems), \lean{Uniform/Prefix} (the responses in
+digit form and the splitting $(X-1)^q=(X-1)^{q\bmod p}(X^p-1)^{\lfloor q/p\rfloor}$ of the filter,
+\lean{filter\_polynomial\_split}), and the families of
 Section~\ref{ssec:families} in \lean{Frob}, \lean{FrobInst}, \lean{Slots}, \lean{SlotsA}, \lean{SlotsT},
 \lean{MTGlue}, \lean{HYPlus}, \lean{ZoneZ}, \lean{ZoneZ2}, \lean{Tier3}, \lean{LStar}, \lean{LStar2},
 \lean{TheoremC} and \lean{Thin}.
 \item[Stored data] \lean{Uniform/W/Prof/Packet} (the stored subspaces, \lean{Packet.check} and its soundness
 \lean{Packet.check\_sound}) and \lean{Uniform/W/Charts6/Check} (the window conditions: affine forms and
-their derivations, \lean{checkHost} and its soundness \lean{physHost\_of\_checks}); the $34$ data modules are in
+their derivations, \lean{checkHost} and its soundness \lean{physHost\_of\_checks}), with
+\lean{Uniform/W/Charts4} and \lean{Uniform/W/Charts5} (the slot systems of the stored subspaces, and the
+direct proof for the remaining window); the data of the $34$ windows are in
 \lean{Uniform/Bank532/Pk} and \lean{Uniform/Bank532/Host\_*}.
 \item[The profile of $D$] \lean{Uniform/Bank540}, \lean{Uniform/Bank535} and \lean{Uniform/Bank532}: the
 interval lists with their certificates (\lean{WinCert}), the growth of the denominator from any list of
@@ -155,30 +161,36 @@ final assembly \lean{Final532}.
 \item[Nonvanishing] \lean{Nonvanishing} (Proposition~\ref{prop:nonvanishing} from the three base matrices),
 and the residue-table certificates \lean{CertMod}, \lean{ResBase}, \lean{ResCheck}, \lean{ResInv},
 \lean{ResRec}.
-\item[Real place] \lean{Analytic/} (28 modules): the constants and fields of a design (\lean{Const},
-\lean{Fields}, \lean{CommonField}), the first-case and second-case contracts (\lean{First},
+\item[Real place] \lean{Analytic/} (23 modules): the constants and fields of a design (\lean{Const},
+\lean{Fields}, \lean{CommonField}, and the numerals for $D$ in \lean{Instances}), the first-case and
+second-case contracts (\lean{First},
 \lean{FirstGlue}, \lean{Second}, \lean{Glue}), the grouped products over the fixed points (\lean{GroupedProduct},
 \lean{MarkedSheet}, \lean{MarkedSheetOn}, \lean{MarkedMixedMajorant}, \lean{MarkedSecond}), the prefactor,
 the perturbation by the quadrature nodes (\lean{Prefactor}, \lean{AtomBase}, \lean{WeightedAtom},
-\lean{DeltaSmall}, \lean{DeltaChain}), and the nodes and the weight bounds for any number of nodes
-(\lean{GapNodes}, \lean{GapNodal}, \lean{GapWeights}, \lean{FullWeights}, \lean{GapCircleGen},
-\lean{CircleCover}). \lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
+\lean{DeltaSmall}, \lean{DeltaChain}), the quadrature formula \eqref{eq:quad} (\lean{FullInterval}), and the
+nodes and the weight bounds for any number of nodes
+(\lean{GapNodes}, \lean{GapNodal}, \lean{GapWeights}, \lean{GapCircleGen}).
+\lean{Cert/} (6 modules) is the generic cell machinery: the evaluator of logarithms
 (\lean{WLog}, \lean{WLogSpec}), the residual field with a weight (\lean{ResW}), the shifted tables
 (\lean{PolyShift}) and the assembly of cells and blocks (\lean{CellLoc}, \lean{Assembly}).
 \item[The design $D$] \lean{D58/} holds the instance at the real place and for the denominators: the
-constants of the certificate, \lean{Ramps}, \lean{OddProfile}, \lean{TwoAdic}, \lean{Normalizer}, the
-profile $f$ and $\mathsf A_2=2673/8$, \lean{Circle} (the 42-piece cover), \lean{FirstTrial},
+constants of the certificate, \lean{Ramps}, \lean{OddProfile} (the profile $f$), \lean{Normalizer},
+\lean{Circle} (the 42-piece cover), \lean{FirstTrial},
 \lean{FirstTrialCert}, \lean{FirstBridge} and \lean{FirstCert/} (the first case), the second case (trial
 data, the covers of $X$, $Y$ and $R$ in blocks, the norms, the near-field cap) and \lean{C3/} (the three
-inverses modulo $1009$). \lean{Uniform/Bank540/Decay} collects the constants $\rho$ and
+inverses modulo $1009$); the constant $\mathsf A_2=2673/8$ is evaluated from the generic bound in
+\lean{Uniform/Bank540/Ledger}. \lean{Uniform/Bank540/Decay} collects the constants $\rho$ and
 $n_0^2(U-\frac12\log2)$ and the smallness on the neighbourhood of $G$.
-The remaining modules of \lean{D58/} (the scalar budget, the interval bank, the second-case trial data, the
-certificates and the main assembly of the design $D$) are used by the final assembly in the form in which
-they stand and are not cited individually.
+The other modules of \lean{D58/} that the final assembly uses (the scalar budgets, the nullity bound
+\lean{Kap} and the block \lean{Final}) are used in the form in which they stand.
 \end{description}
 The modules of
-OpenAI's formalization and the generic valuation theorems of the construction
-(\lean{CatalanMeasure/Parametric}) are used as they are.
+OpenAI's formalization, the generic valuation theorems of the construction
+(\lean{CatalanMeasure/Parametric}), the modules of \lean{CatalanMeasure} outside \lean{GenD} on which the
+argument rests (among them the identity of Andr\'eief type with fixed points, the bound
+\eqref{eq:genvand}, the column expansion of Lemma~\ref{lem:expansion}, integer-valued polynomials and the
+cell certificates), and two modules of linear algebra shared with the
+companion paper (\lean{CatalanCore/Uniform/Content}) are used as they are.
 
 \subsection{Certificates}
 The proof combines conventional formal proofs with numerical certificates checked by the Lean kernel:

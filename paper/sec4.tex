@@ -220,9 +220,9 @@ $w-e$ equals $\mu_1-q-e=n+b+q+h-(11p+1)/2$ if $\mu_0=q$ and $(p-1)/2-g$ if $\mu_
 \begin{theorem}\label{thm:S}
 Let $e=(p+1)/2-q-h\ge0$ and $n\le4p+2g+1$, and put
 \[
- m_0=\max(b+q,\,L+\Lambda-4p),\qquad m_1=\min(p,\,L-3p,\,a+1),\qquad a=b+q+2g .
+ m_0=\max(b+q,\,L+\Lambda-4p),\qquad m_1=\min(p,\,L-3p,\,a+1),
 \]
-Then $\nu_N(p)\ge m_1-m_0-e$.
+where $a=b+q+2g$. Then $\nu_N(p)\ge m_1-m_0-e$.
 \end{theorem}
 
 \begin{proof}
@@ -327,9 +327,8 @@ For $D$ this gives $53N-2p-1$ on $(26N,53N/2)$, where $2p+2\le53N$.
 \item \emph{A truncated form of Theorem~\ref{thm:U6}.} Without the hypothesis $n\le4p+2g+1$, the bound
 $\mu_1-\mu_0-e_+-(n-4p-2g-1)_+$ holds whenever $L\le6p$ and $b+q\le p+\mu_0$; for $D$ it gives $5p-59N+1$ on
 $(59N/5,12N]$.
-% TODO(verify): (iii) checked against the T-raw theorem's structure only; trace the hypotheses and the
-% interval (16N,118N/7] to the Lean instance before release.
-\item \emph{A raw tail of the antisymmetric family.} With $D_T'=n-1-g-3p$ and four digits, the count is
+\item \emph{A raw tail of the antisymmetric family.} With the four centres $g+kp$ ($0\le k\le3$) and
+$D_T'=n-1-g-3p$, the count is
 $p-1-(2g+q+h)$ under $4p\le L$, $b\le p$, $D_T'\le g$, $D_T'\le(p-1)/2$, $3p+1+g\le n$ and $4p+b\le H$; for
 $D$ this is $p-16N-1$ on $(16N,118N/7]$.
 \item \emph{Two families of slot polynomials and their sum.} The first fixes a digit $s\le H/p$ and a range of
@@ -337,15 +336,14 @@ blocks of rows, with slot polynomials divisible by a power of $X-1$; the second 
 $(X^p-1)P$ with $P$ supported in a window of degrees. Their kernels are independent when both apply,
 under a separation condition, at the same window $s$ or at the windows $s$ and $s-1$, and the sum of the
 two bounds is a lower bound. This is the one place where two bounds are added.
-% TODO(verify): (v) checked for structure only; the cell moduli and the exact intervals are not yet traced
-% to the Lean instances.
 \item \emph{Families with a constant profile on a cell.} Several families (the theorems called MT, M, Z, C
 and $\mathrm C'$ in the formalization) use slot polynomials whose coordinates satisfy finitely many
 rational linear equations, the \emph{cell} equations; a solution modulo $p$ exists for every $p$ prime to a
 fixed integer, the modulus of the cell, and the bound is the dimension of the slot space minus the number of
 conditions. In the families C and $\mathrm C'$ the responses depend only on the residue of the column modulo
-$p$, so that the filter costs $p-q$ conditions; these give bounds on $(16N/7,5N/2]$, $(58N/17,59N/17]$ and
-$(29N/8,11N/3]$.
+$p$, so that the filter costs $(p-q)_+$ conditions; in $\mathrm C'$, where $h\ge p$, one writes
+$(X-1)^h=(X^p-1)(X-1)^{h-p}$, and the factor $(X-1)^{h-p}$ costs $h-p$ more. The family C gives bounds on $(58N/17,59N/17]$ and
+$(29N/8,11N/3]$, and $\mathrm C'$ on $(16N/7,5N/2]$.
 \item \emph{Block decompositions for $h\ge p$ and $h<p$.} Writing a row index as $kp+d$ and $y=X^p$, the
 identities
 \[
@@ -371,7 +369,7 @@ The hypotheses on the jets and on $\iota$ depend on $N$ and $p$. A window is des
 inequalities that are affine in $N$ and $(p-1)/2$, and so are $m$ and the $w_j$ on each of finitely many
 pieces of the window. A second verified procedure checks on each piece that the numbers of jets and their
 orders at $-1$, $0$, $1$ and $\infty$ are nonnegative and fit the window, that $p>59$, that the map $\iota$
-is injective on the joint kernel and lands in the domain of the slot frame, and that the response is
+is injective on the joint kernel and lands in the admissible data of a slot system, and that the response is
 given on the joint kernel by a polynomial in the column of degree less than $q \bmod p$ (so that
 Theorem~\ref{thm:count} applies), each required inequality in $N$ and $(p-1)/2$ being derived from the
 window inequalities by sums, nonnegative integer multiples, and division of the variable part by a common
@@ -391,12 +389,12 @@ interval of $x$ & $\kappa(x)$ & bound \\
 \midrule
 $(12,13]$ & $x/2-5$ & Theorem~\ref{thm:content}(c), $(p-1)/2-g$ \\
 $(13,\,146/11]$ & $73-11x/2$ & Theorem~\ref{thm:content}(c), second term \\
-$(341/25,\,69/5]$ & $11x/2-75$ & Section~\ref{ssec:families} \\
-$(69/5,\,14]$ & $x/2-6$ & Section~\ref{ssec:families} \\
-$(14,\,711/50]$ & $64-9x/2$ & Section~\ref{ssec:families} \\
-$(30287/2000,\,78/5]$ & $7x/2-53$ & Section~\ref{ssec:families} \\
-$(78/5,\,16]$ & $25-3x/2$ & Section~\ref{ssec:families} \\
-$(16,\,809/50]$ & $73-9x/2$ & Section~\ref{ssec:families} \\
+$(341/25,\,69/5]$ & $11x/2-75$ & Section~\ref{ssec:families}(v), family Z \\
+$(69/5,\,14]$ & $x/2-6$ & Section~\ref{ssec:families}(v), family Z \\
+$(14,\,711/50]$ & $64-9x/2$ & Section~\ref{ssec:families}(v), family Z \\
+$(30287/2000,\,78/5]$ & $7x/2-53$ & Section~\ref{ssec:families}(v), family Z \\
+$(78/5,\,16]$ & $25-3x/2$ & Section~\ref{ssec:families}(v), family Z \\
+$(16,\,809/50]$ & $73-9x/2$ & Section~\ref{ssec:families}(v), family Z \\
 $(809/50,\,178/11]$ & $73-9x/2$ & Section~\ref{ssec:packets} \\
 $(178/11,\,1619/100]$ & $x-16$ & Section~\ref{ssec:packets} \\
 $(1619/100,\,118/7]$ & $x-16$ & Section~\ref{ssec:families}(iii) \\
@@ -410,10 +408,9 @@ $(26,\,53/2]$ & $53-2x$ & Section~\ref{ssec:families}(i) \\
 \bottomrule
 \end{tabular}
 \end{center}
-For the six rows on $(341/25,809/50]$ the table records only that the function is a lower bound for $\kappa$
-given by the families of Section~\ref{ssec:families}; the formalization certifies each interval of the list
-by showing that the maximum of the lower bounds of Sections~\ref{ssec:families} and~\ref{ssec:packets} is at
-least the stated function on it, and does not single out the family that attains it. Their areas add up to $21.02610\ldots$, and the $84$ intervals below $12$ contribute $1.03361\ldots$, so that
+The six rows on $(341/25,809/50]$ come from the family Z of Section~\ref{ssec:families}(v), in two forms, on
+$(341/25,711/50]$ and on $(30287/2000,809/50]$. The areas of the rows of the table add up to $21.02610\ldots$,
+and the $84$ intervals below $12$ contribute $1.03361\ldots$, so that
 the total is $\Chi\ldots$; the exact sum is computed in the formalization from the list of intervals.
 
 For Theorem~\ref{thm:content} one checks the hypotheses on the intervals above. The hypotheses
