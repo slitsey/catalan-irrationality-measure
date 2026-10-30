@@ -1,0 +1,3 @@
+Preflight CatalanCore.Uniform.Content.RankProducer.AffineCost rc= 3 stale= ['CatalanCore.Uniform.Content.RankProducer.AffineCost']
+Submitted after preflight CatalanCore.Uniform.Content.RankProducer.AffineCost rc= 1
+CatalanCore.Uniform.Content.RankProducer.AffineCost: rc=1

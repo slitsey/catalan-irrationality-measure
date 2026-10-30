@@ -1,0 +1,3 @@
+Preflight CatalanCore.Uniform.Bank.Lambda.RankCount.C1S05 rc= 3 stale= ['CatalanCore.Uniform.Bank.Lambda.RankCount.C1S05']
+Submitted after preflight CatalanCore.Uniform.Bank.Lambda.RankCount.C1S05 rc= 0
+
