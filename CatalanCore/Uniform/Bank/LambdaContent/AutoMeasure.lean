@@ -8,7 +8,7 @@ set_option Elab.async false
 With the automatic content `Auto.lamMinus_content_auto` / `Auto.lamPlus_content_auto` at `Λ_fin = bankData.Λ`
 (selection depth `≤ 64`, `depth_le`) and the decay
 `HasScaledDecay (FL.family (lambdaFrame sgn) (FL.selectionDepth (lambdaFrame sgn) 2)) FL.scale DL cL`, the target
-bound `15721/500` follows by `Auto.lambda_mu_le`.  The theorems are conditional only on the decay. -/
+bound `314411/10000` follows by `Auto.lambda_mu_le`.  The theorems are conditional only on the decay. -/
 
 namespace CatalanCore.Uniform.Bank.LambdaContent.AutoMeasure
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Bank.Lambda
@@ -24,7 +24,7 @@ theorem lam_lt_DL : ((bankData.Λ : ℚ) : ℝ) < (DL : ℝ) := by
   have h : bankData.Λ < DL := by rw [bankData_Λ]; unfold DL; norm_num
   exact_mod_cast h
 
-theorem X_le : (1 : ℝ) * (cL : ℝ) / ((DL : ℝ) - (bankData.Λ : ℚ)) ≤ ((15721 / 500 : ℚ) : ℝ) := by
+theorem X_le : (1 : ℝ) * (cL : ℝ) / ((DL : ℝ) - (bankData.Λ : ℚ)) ≤ ((314411 / 10000 : ℚ) : ℝ) := by
   rw [one_mul]; exact lambda_mu_le
 
 theorem content_auto (sgn : Bool) :
@@ -34,12 +34,12 @@ theorem content_auto (sgn : Bool) :
   · exact lamMinus_content_auto _ (depth_le (lambdaFrame_d false))
   · exact lamPlus_content_auto _ (depth_le (lambdaFrame_d true))
 
-/-- **`μ(L(2, χ₋₄) ± 5π²/48) ≤ 15721/500`** (`lambdaTarget sgn`; `true` is plus), conditional only on the
+/-- **`μ(L(2, χ₋₄) ± 5π²/48) ≤ 314411/10000`** (`lambdaTarget sgn`; `true` is plus), conditional only on the
 decay. -/
 theorem lambda_measure_auto (sgn : Bool)
     (hD : HasScaledDecay (FL.family (lambdaFrame sgn) (FL.selectionDepth (lambdaFrame sgn) 2)) FL.scale
       (DL : ℝ) (cL : ℝ)) :
-    Measure.MeasureLBAt (lambdaTarget sgn) ((15721 / 500 : ℚ) : ℝ) := by
+    Measure.MeasureLBAt (lambdaTarget sgn) ((314411 / 10000 : ℚ) : ℝ) := by
   have hmass : (FL.common.mass : ℝ) = 1 := by rw [FL_common_mass]; norm_num
   have hc : (0 : ℝ) < (cL : ℝ) := by unfold cL; norm_num
   have hd : 1 ≤ (lambdaFrame sgn).d := by rw [lambdaFrame_d]; norm_num
@@ -59,7 +59,7 @@ theorem lambda_measure_auto (sgn : Bool)
       refine ⟨R0, fun s hs x => ?_⟩
       obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
       exact ⟨n, ⟨hn, by show n.1 % 2 = 0; have : FL.scale n = n.1 := rfl; omega⟩, hsc, hne⟩)
-  have h' : Measure.MeasureLBAt (lambdaFrame sgn).const ((15721 / 500 : ℚ) : ℝ) :=
+  have h' : Measure.MeasureLBAt (lambdaFrame sgn).const ((314411 / 10000 : ℚ) : ℝ) :=
     Measure.MeasureLBAt.mono X_le ((Measure.MeasureLB_iff _ _).1 key)
   have he : lambdaTarget sgn = ((2 : ℚ) : ℝ) * (lambdaFrame sgn).const + ((0 : ℚ) : ℝ) := by
     rw [lambdaFrame_const sgn]; push_cast; ring

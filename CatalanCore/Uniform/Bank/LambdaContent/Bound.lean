@@ -56,8 +56,8 @@ theorem lambda_decay (sgn : Bool) :
   decay_of_frame (frames_contour sgn) (frames_hAR sgn) (frames_norm sgn) (lambdaFrame_d sgn)
     (frames_m0 sgn) _
 
-/-- **`μ(L(2, χ₋₄) ± 5π²/48) ≤ 15721/500`** (`lambdaTarget sgn`; `true` is plus). -/
-theorem lambda_measure (sgn : Bool) : Measure.MeasureLBAt (lambdaTarget sgn) ((15721 / 500 : ℚ) : ℝ) :=
+/-- **`μ(L(2, χ₋₄) ± 5π²/48) ≤ 314411/10000`** (`lambdaTarget sgn`; `true` is plus). -/
+theorem lambda_measure (sgn : Bool) : Measure.MeasureLBAt (lambdaTarget sgn) ((314411 / 10000 : ℚ) : ℝ) :=
   lambda_measure_auto sgn (lambda_decay sgn)
 
 end CatalanCore.Uniform.Bank.LambdaContent.Bound
