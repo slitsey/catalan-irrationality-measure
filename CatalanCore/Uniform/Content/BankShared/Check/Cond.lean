@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Affine
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Affine
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Validity conditions and exact endpoints (lane C1L; C1/PAPER.md §2.2, Lemma 2)

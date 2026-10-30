@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.RankProducer.Cert
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Cert
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The moment lemma (Lemma 3 of C2/PAPER.md), existence route (lane C2L)

@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Expr
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Expr
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The line of a homogenised profile on an interval (lane C1L; C1/PAPER.md §9)

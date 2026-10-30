@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.NearFast.Alg
+module
+
+public import CatalanCore.Uniform.Decay.NearFast.Alg
+
+@[expose] public section
 set_option Elab.async false
 
 namespace CatalanCore.Uniform.Decay.NearFast

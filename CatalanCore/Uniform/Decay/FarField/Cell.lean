@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.FarField.Agg
-import CatalanCore.Uniform.Decay.FarField.Near
+module
+
+public import CatalanCore.Uniform.Decay.FarField.Agg
+public import CatalanCore.Uniform.Decay.FarField.Near
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

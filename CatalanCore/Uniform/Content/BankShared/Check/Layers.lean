@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Content
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.M3D
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Content
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.M3D
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The branch catalogue from the generic two-term layer lemmas (lane C1L; C4's `BankShared.TwoTerm`)

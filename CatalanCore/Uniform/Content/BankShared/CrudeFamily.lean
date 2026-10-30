@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.CrudeDet
-import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+module
+
+public import CatalanCore.Uniform.Content.BankShared.CrudeDet
+public import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # `p^(Ecrude)`-clearing of every member (canonical extraction of B4b proofs)

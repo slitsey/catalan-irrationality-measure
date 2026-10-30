@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyFull.Oracle2
-import CatalanCore.Uniform.Decay.PolyCells.Assemble
+module
+
+public import CatalanCore.Uniform.Decay.PolyFull.Oracle2
+public import CatalanCore.Uniform.Decay.PolyCells.Assemble
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

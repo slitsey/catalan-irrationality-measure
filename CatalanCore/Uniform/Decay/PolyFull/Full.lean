@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.PolyFull.CapG
+module
+
+public import CatalanCore.Uniform.Decay.PolyFull.CapG
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

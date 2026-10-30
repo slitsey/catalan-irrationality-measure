@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.Block
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Block
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Finset CatalanCore.Uniform.Content.Hybrid

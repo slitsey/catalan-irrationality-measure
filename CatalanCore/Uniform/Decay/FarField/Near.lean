@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Decay.FarField.Taylor
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Analysis.Normed.Field.Basic
+module
+
+public import CatalanCore.Uniform.Decay.FarField.Taylor
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Analysis.Normed.Field.Basic
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

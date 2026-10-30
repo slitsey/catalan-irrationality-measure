@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.LineMember
-import CatalanCore.Uniform.Content.RankProducer.Restriction
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.LineMember
+public import CatalanCore.Uniform.Content.RankProducer.Restriction
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Finset CatalanCore.Uniform.Content.Hybrid

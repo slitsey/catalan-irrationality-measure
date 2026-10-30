@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.FarField.Expand
+module
+
+public import CatalanCore.Uniform.Decay.FarField.Expand
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

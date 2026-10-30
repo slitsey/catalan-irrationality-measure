@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.FrameEntry
-import CatalanCore.Rect.Full
-import CatalanCore.Uniform.Frame.Family
+module
+
+public import CatalanCore.Uniform.Content.BankShared.FrameEntry
+public import CatalanCore.Rect.Full
+public import CatalanCore.Uniform.Frame.Family
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Crude clearing of the hybrid determinant (canonical extraction of B4b proofs)

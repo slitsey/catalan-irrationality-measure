@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearCells.Agg
-import CatalanCore.Uniform.Decay.Spline.PolyDensity
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Agg
+public import CatalanCore.Uniform.Decay.Spline.PolyDensity
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

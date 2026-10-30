@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.Tools.SeriesBridge
+module
+
+public import CatalanCore.Uniform.Decay.Tools.SeriesBridge
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Decay.PairEnergy.PairSound
-import CatalanCore.Uniform.Decay.NearCells.Eval
-import CatalanCore.Uniform.Decay.Cells.Energy
+module
+
+public import CatalanCore.Uniform.Decay.PairEnergy.PairSound
+public import CatalanCore.Uniform.Decay.NearCells.Eval
+public import CatalanCore.Uniform.Decay.Cells.Energy
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

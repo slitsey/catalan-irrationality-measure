@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.NearFast.Piece
+module
+
+public import CatalanCore.Uniform.Decay.NearFast.Piece
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

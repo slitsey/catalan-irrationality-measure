@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Budgeted
-import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Budgeted
+public import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared contract 4, single-template form and the crude-exponent budget (lane H17)

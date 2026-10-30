@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearCells.Model
-import CatalanCore.Uniform.Decay.Tools.EvalSound
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Model
+public import CatalanCore.Uniform.Decay.Tools.EvalSound
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

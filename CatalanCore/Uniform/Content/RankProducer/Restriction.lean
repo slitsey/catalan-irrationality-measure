@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.Cert
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Cert
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open CatalanCore CatalanCore.Uniform.Content.Hybrid

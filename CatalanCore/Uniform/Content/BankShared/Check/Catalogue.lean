@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Cover
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Cover
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The generic branch catalogue (lane C1L; C1/PAPER.md Theorem A)

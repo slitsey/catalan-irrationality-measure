@@ -1,4 +1,8 @@
-import CatalanCore.Linalg.TwoLevelDet
+module
+
+public import CatalanCore.Linalg.TwoLevelDet
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The determinant step of the prefix rule (paper `prefix-rule-2026-10-29`, Step 5)

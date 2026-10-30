@@ -1,5 +1,9 @@
-import Lean
-import CatalanMeasure.CellCert.RawInts
+module
+
+public import Lean
+public import CatalanMeasure.CellCert.RawInts
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0

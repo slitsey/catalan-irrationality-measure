@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.FarField.Series
-import CatalanCore.Uniform.Decay.FarField.Moments
+module
+
+public import CatalanCore.Uniform.Decay.FarField.Series
+public import CatalanCore.Uniform.Decay.FarField.Moments
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

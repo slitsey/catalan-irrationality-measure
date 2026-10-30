@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyFull.Oracle2
-import CatalanCore.Uniform.Decay.Cells.Energy
+module
+
+public import CatalanCore.Uniform.Decay.PolyFull.Oracle2
+public import CatalanCore.Uniform.Decay.Cells.Energy
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

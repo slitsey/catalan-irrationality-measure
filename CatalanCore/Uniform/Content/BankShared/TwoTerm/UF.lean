@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.UFSimple.Closed
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.UFSimple.Closed
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The UF hypotheses for every two-term bank (lane C4, gap C4)

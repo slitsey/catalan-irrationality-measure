@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Chi3Rank.Pair
+module
+
+public import CatalanCore.Uniform.Bank.Chi3Rank.Pair
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Paired row-kill / column-kill certificates: the member (lane H, H16) -/

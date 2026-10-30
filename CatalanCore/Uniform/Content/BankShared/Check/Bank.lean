@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Catalogue
-import CatalanCore.Uniform.Content.Member.Template
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Catalogue
+public import CatalanCore.Uniform.Content.Member.Template
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Bank data and the one Boolean check (lane C1L; C1/PAPER.md §5, (D1)-(D6))

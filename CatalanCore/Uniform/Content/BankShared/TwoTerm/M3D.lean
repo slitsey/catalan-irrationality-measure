@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.Wire.M3D
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.Wire.M3D
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 

@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Bank data split across modules (lane C1L)

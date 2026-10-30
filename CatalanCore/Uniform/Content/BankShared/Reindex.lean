@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.Shape.Alt
+module
+
+public import CatalanCore.Uniform.Content.Shape.Alt
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared contract 1 (lane H17): the family member is a common minor

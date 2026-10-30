@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.Wire.LP
-import CatalanCore.Arith.Hybrid.DefC5Entries
-import CatalanCore.Arith.Hybrid.LamEntries
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.Wire.LP
+public import CatalanCore.Arith.Hybrid.DefC5Entries
+public import CatalanCore.Arith.Hybrid.LamEntries
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # LP1 / LP2 for every two-term bank (lane C4, gap C4)

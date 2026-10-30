@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearCells.Cell
-import CatalanCore.Uniform.Decay.Cells.Far
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Cell
+public import CatalanCore.Uniform.Decay.Cells.Far
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

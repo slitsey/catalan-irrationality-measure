@@ -1,9 +1,13 @@
-import CatalanCore.Uniform.Decay.Breakpoint.Cell
-import CatalanCore.Uniform.Decay.FarField.Cell
-import CatalanCore.Uniform.Decay.FarField.CapPL
-import CatalanCore.Uniform.Decay.FarField.LinJet
-import CatalanCore.Uniform.Decay.PolyWire2.Top2
-import CatalanCore.Uniform.Decay.NearFast.Flip
+module
+
+public import CatalanCore.Uniform.Decay.Breakpoint.Cell
+public import CatalanCore.Uniform.Decay.FarField.Cell
+public import CatalanCore.Uniform.Decay.FarField.CapPL
+public import CatalanCore.Uniform.Decay.FarField.LinJet
+public import CatalanCore.Uniform.Decay.PolyWire2.Top2
+public import CatalanCore.Uniform.Decay.NearFast.Flip
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

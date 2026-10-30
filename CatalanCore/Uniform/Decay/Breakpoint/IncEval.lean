@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.Breakpoint.Inc
-import CatalanCore.Uniform.Decay.NearCells.Agg
+module
+
+public import CatalanCore.Uniform.Decay.Breakpoint.Inc
+public import CatalanCore.Uniform.Decay.NearCells.Agg
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

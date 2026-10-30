@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.CrudeFamily
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.Shape.Wrap
+module
+
+public import CatalanCore.Uniform.Content.BankShared.CrudeFamily
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.Shape.Wrap
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Crude clearing on the alternating geometries (canonical extraction of B4b proofs)

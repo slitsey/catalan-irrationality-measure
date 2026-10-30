@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Chi3Rank.Pair2
+module
+
+public import CatalanCore.Uniform.Bank.Chi3Rank.Pair2
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Node sets of the common-minor member and the `Realizes` criterion (lane H, H16) -/

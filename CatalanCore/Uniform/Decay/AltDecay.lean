@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Decay.PolyWire3.Top
-import CatalanCore.Uniform.Decay.Nodes.EnergyCheck
-import CatalanCore.Uniform.Decay.ContourCheck
-import CatalanCore.Uniform.Content.Shape.Alt
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire3.Top
+public import CatalanCore.Uniform.Decay.Nodes.EnergyCheck
+public import CatalanCore.Uniform.Decay.ContourCheck
+public import CatalanCore.Uniform.Content.Shape.Alt
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

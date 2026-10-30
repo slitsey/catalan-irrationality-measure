@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Decay.PolyWire2.Kinds
-import CatalanCore.Uniform.Decay.PolyWire2.Energy2
-import CatalanCore.Uniform.Decay.PolyWire.Top
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire2.Kinds
+public import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+public import CatalanCore.Uniform.Decay.PolyWire.Top
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

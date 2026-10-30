@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP
-import CatalanCore.Uniform.Content.Smith.TwoTerm2
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP
+public import CatalanCore.Uniform.Content.Smith.TwoTerm2
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # LP2 without the hypothesis `N ≤ p + k` (paper `lp2-strip-2026-10-29`)

@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Decay.PolyWire.Link
-import CatalanCore.Uniform.Decay.NearCells.Rules
-import CatalanCore.Uniform.Decay.NearCells2.Mix
-import CatalanCore.Uniform.Decay.PolyCells.Assemble
-import CatalanCore.Uniform.Decay.PolyFull.CapLb
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire.Link
+public import CatalanCore.Uniform.Decay.NearCells.Rules
+public import CatalanCore.Uniform.Decay.NearCells2.Mix
+public import CatalanCore.Uniform.Decay.PolyCells.Assemble
+public import CatalanCore.Uniform.Decay.PolyFull.CapLb
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

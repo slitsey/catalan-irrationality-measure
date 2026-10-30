@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearCells2.PieceExact
-import CatalanCore.Uniform.Decay.NearCells2.Eval2
+module
+
+public import CatalanCore.Uniform.Decay.NearCells2.PieceExact
+public import CatalanCore.Uniform.Decay.NearCells2.Eval2
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

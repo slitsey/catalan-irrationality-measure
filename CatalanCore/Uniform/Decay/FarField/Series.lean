@@ -1,4 +1,8 @@
-import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

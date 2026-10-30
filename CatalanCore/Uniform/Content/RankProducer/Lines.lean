@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.Price
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Price
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Module CatalanCore.Uniform.Content.Hybrid

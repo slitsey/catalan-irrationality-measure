@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PilotArithmetic
-import CatalanCore.Uniform.Decay.Tools.Enclosures
+module
+
+public import CatalanCore.Uniform.Decay.PilotArithmetic
+public import CatalanCore.Uniform.Decay.Tools.Enclosures
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

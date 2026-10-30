@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.Member.FrameDigamma
-import CatalanFrames.P6.Frame
+module
+
+public import CatalanCore.Uniform.Content.Member.FrameDigamma
+public import CatalanFrames.P6.Frame
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Closed form of the pole part `Lf`, `E` of the chi3 digamma frame at the node `x + p d` (lane H, H16)

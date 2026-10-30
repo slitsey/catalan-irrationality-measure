@@ -1,15 +1,19 @@
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Group.MinMax
-import Mathlib.Data.Rat.Cast.Order
-import Mathlib.Data.Real.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Algebra.Order.Floor.Ring
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Algebra.Order.Group.MinMax
+public import Mathlib.Data.Rat.Cast.Order
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The expression class of explicit layer prices and its homogenisation (lane C1L)

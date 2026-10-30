@@ -1,6 +1,10 @@
-import CatalanCore.Arith.Hybrid.Tropical
-import CatalanCore.Frame.Spec
-import Mathlib.Data.Nat.Log
+module
+
+public import CatalanCore.Arith.Hybrid.Tropical
+public import CatalanCore.Frame.Spec
+public import Mathlib.Data.Nat.Log
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Crude entry valuations of the Loewner matrix (canonical extraction of B4b proofs)

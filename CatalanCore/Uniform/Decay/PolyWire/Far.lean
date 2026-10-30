@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyWire.Link
-import CatalanCore.Uniform.Decay.Cells.FarNu
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire.Link
+public import CatalanCore.Uniform.Decay.Cells.FarNu
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

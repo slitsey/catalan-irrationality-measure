@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.Counts
-import CatalanCore.Uniform.Content.RankProducer.Price
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Counts
+public import CatalanCore.Uniform.Content.RankProducer.Price
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Finset CatalanCore.Uniform.Content.Hybrid

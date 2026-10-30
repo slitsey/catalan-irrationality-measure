@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.Triv
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Triv
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Paired row-kill / column-kill certificates (lane H, H16)

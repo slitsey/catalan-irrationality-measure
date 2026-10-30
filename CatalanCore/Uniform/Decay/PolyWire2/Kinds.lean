@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyWire.Tables
-import CatalanCore.Uniform.Decay.NearFast.Cell
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire.Tables
+public import CatalanCore.Uniform.Decay.NearFast.Cell
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

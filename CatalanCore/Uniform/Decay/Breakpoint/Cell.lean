@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Decay.Breakpoint.IncEval
-import CatalanCore.Uniform.Decay.Breakpoint.Rev
-import CatalanCore.Uniform.Decay.Breakpoint.LogB
-import CatalanCore.Uniform.Decay.NearFast.Cell
+module
+
+public import CatalanCore.Uniform.Decay.Breakpoint.IncEval
+public import CatalanCore.Uniform.Decay.Breakpoint.Rev
+public import CatalanCore.Uniform.Decay.Breakpoint.LogB
+public import CatalanCore.Uniform.Decay.NearFast.Cell
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

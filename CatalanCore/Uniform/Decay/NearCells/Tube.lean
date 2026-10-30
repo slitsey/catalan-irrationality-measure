@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Decay.NearCells.Agg
-import CatalanCore.Uniform.Decay.Cells.Facts
-import CatalanCore.Uniform.Decay.Assembly.SegmentModulus
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Agg
+public import CatalanCore.Uniform.Decay.Cells.Facts
+public import CatalanCore.Uniform.Decay.Assembly.SegmentModulus
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

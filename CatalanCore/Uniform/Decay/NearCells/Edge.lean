@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearCells.Point
-import CatalanCore.Uniform.Decay.PolyChain.Check
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Point
+public import CatalanCore.Uniform.Decay.PolyChain.Check
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

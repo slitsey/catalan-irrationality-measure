@@ -1,4 +1,8 @@
-import CatalanCore.Decay.Contour
+module
+
+public import CatalanCore.Decay.Contour
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

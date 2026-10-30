@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.NearFast.Agg
-import CatalanCore.Uniform.Decay.Breakpoint.Rev
+module
+
+public import CatalanCore.Uniform.Decay.NearFast.Agg
+public import CatalanCore.Uniform.Decay.Breakpoint.Rev
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedMoment
-import CatalanCore.Uniform.Content.RankProducer.Triv
-import CatalanCore.Uniform.Content.RankProducer.RationalLoads
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedMoment
+public import CatalanCore.Uniform.Content.RankProducer.Triv
+public import CatalanCore.Uniform.Content.RankProducer.RationalLoads
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The closed-form fibre certificates (C2/PAPER.md §2, lane C2L)

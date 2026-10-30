@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
-import CatalanCore.Uniform.Content.BankShared.AltCrude
-import CatalanCore.Uniform.Content.BankShared.BudgetedOne
-import CatalanCore.Uniform.Content.BankShared.Budgeted
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+public import CatalanCore.Uniform.Content.BankShared.AltCrude
+public import CatalanCore.Uniform.Content.BankShared.BudgetedOne
+public import CatalanCore.Uniform.Content.BankShared.Budgeted
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Theorem D: acceptance of the bank check gives the scaled content (lane C1L; C1/PAPER.md §5)

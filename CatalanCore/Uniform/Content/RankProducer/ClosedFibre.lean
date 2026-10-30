@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedCert
-import CatalanCore.Uniform.Content.UFSimple.Count
-import CatalanCore.Uniform.Content.Wire.Shape
-import CatalanCore.Uniform.Bank.Chi3Rank.Fibre
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedCert
+public import CatalanCore.Uniform.Content.UFSimple.Count
+public import CatalanCore.Uniform.Content.Wire.Shape
+public import CatalanCore.Uniform.Bank.Chi3Rank.Fibre
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Fibre shapes of a member of a hybrid-shaped geometry (Lemma 1 of C2/PAPER.md, lane C2L)

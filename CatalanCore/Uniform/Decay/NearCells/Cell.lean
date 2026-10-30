@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Decay.NearCells.Tube
+module
+
+public import CatalanCore.Uniform.Decay.NearCells.Tube
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

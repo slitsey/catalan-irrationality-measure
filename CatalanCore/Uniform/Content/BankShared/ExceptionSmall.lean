@@ -1,11 +1,15 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.Nat.Log
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.Asymptotics.Lemmas
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared contract 3 (lane H17): a fixed exceptional set costs `o(r^2)`

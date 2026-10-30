@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.SmallPrimes.Budget
+module
+
+public import CatalanCore.Uniform.Content.SmallPrimes.Budget
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Sums of small-prime budgets (lane B, B5c)

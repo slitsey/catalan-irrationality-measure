@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.Build
-import CatalanCore.Uniform.Content.RankProducer.LineWitness
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Build
+public import CatalanCore.Uniform.Content.RankProducer.LineWitness
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Module CatalanCore CatalanCore.Basic CatalanCore.Uniform.Content.Hybrid

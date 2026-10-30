@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Cond
-import Mathlib.Data.Nat.Log
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Cond
+public import Mathlib.Data.Nat.Log
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Certificates for template pieces and the finite covering criterion (lane C1L; C1/PAPER.md §3)

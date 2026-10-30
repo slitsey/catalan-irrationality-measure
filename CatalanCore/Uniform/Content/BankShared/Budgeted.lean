@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.SmallPrimes.Cover
-import CatalanCore.Uniform.Measure.NV0
+module
+
+public import CatalanCore.Uniform.Content.SmallPrimes.Cover
+public import CatalanCore.Uniform.Measure.NV0
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared contract 4 (lane H17): the content assembler with an exceptional-prime budget

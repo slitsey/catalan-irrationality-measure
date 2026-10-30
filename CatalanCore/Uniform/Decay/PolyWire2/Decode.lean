@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyWire2.Top2
-import CatalanMeasure.CellCert.RawInts
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire2.Top2
+public import CatalanMeasure.CellCert.RawInts
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

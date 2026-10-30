@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Chi3Rank.Closed
+module
+
+public import CatalanCore.Uniform.Bank.Chi3Rank.Closed
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The fibre palette of a two-pole frame (C2/PAPER.md §1, lane C2L)

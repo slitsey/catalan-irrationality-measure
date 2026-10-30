@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Decay.PolyWire3.Kinds
-import CatalanCore.Uniform.Decay.PolyWire2.Top2
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire3.Kinds
+public import CatalanCore.Uniform.Decay.PolyWire2.Top2
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

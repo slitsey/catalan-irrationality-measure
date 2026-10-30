@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.Lines
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.Lines
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open CatalanCore CatalanCore.Basic CatalanCore.Uniform.Content.Hybrid

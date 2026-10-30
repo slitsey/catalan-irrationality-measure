@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Decay.PolyWire.Far
-import CatalanCore.Uniform.Decay.PolyWire.Tables
-import CatalanCore.Uniform.Decay.PolyFull.FullLb
+module
+
+public import CatalanCore.Uniform.Decay.PolyWire.Far
+public import CatalanCore.Uniform.Decay.PolyWire.Tables
+public import CatalanCore.Uniform.Decay.PolyFull.FullLb
+
+@[expose] public section
 set_option Elab.async false
 
 /-!

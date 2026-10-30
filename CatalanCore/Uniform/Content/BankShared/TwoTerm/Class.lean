@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.Smith.TwoTerm2
-import CatalanCore.Uniform.Content.Shape.Alt
+module
+
+public import CatalanCore.Uniform.Content.Smith.TwoTerm2
+public import CatalanCore.Uniform.Content.Shape.Alt
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Two-term banks: root class, pole index, norm and border (lane C4, gap C3)

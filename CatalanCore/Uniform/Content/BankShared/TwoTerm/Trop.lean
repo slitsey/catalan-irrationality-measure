@@ -1,11 +1,15 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.BankShared.AltCrude
-import CatalanCore.Uniform.Content.BankShared.BudgetAdd
-import CatalanCore.Rect.MinorContent
-import CatalanFrames.HybGen.TropGood
-import CatalanFrames.HybGen.TableSum
-import CatalanFrames.HybGen.NumerologyAny
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.BankShared.AltCrude
+public import CatalanCore.Uniform.Content.BankShared.BudgetAdd
+public import CatalanCore.Rect.MinorContent
+public import CatalanFrames.HybGen.TropGood
+public import CatalanFrames.HybGen.TableSum
+public import CatalanFrames.HybGen.NumerologyAny
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.PrefixDet
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.M3D
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.PrefixDet
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.M3D
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The prefix rule: M3D with the border reduced modulo `p` (paper `prefix-rule-2026-10-29`)
