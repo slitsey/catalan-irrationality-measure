@@ -17,7 +17,7 @@ The content of `fifths1 … fifths4` (members `a = 1 … 4`, offsets `u = 5 - a`
   `P_bad = 9`, `K = 9`, `N1 = 50`) and `fifths_preValid` (`pre_gle_any`, `p ≤ r/900`, `α0 = 20/9`);
 * `fifthsK_content_auto`: `HasScaledContent ((F5.family fifthsK depth).restrictAdm even) F5.scale Λ_fin`,
   `Λ_fin = bankData.Λ` (`bankData_Λ`), for every depth `≤ 64`;
-* `fifths_mu_le : c5 / (D5 - Λ_fin) ≤ 2989/125` (`D5`, `c5` of `Bank/Fifths/Final`). -/
+* `fifths_mu_le : c5 / (D5 - Λ_fin) ≤ 47823 / 2000` (`D5`, `c5` of `Bank/Fifths/Final`). -/
 
 namespace CatalanCore.Uniform.Bank.FifthsContent.Auto
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -134,10 +134,10 @@ theorem fifths4_content_auto (depth : ℕ) (hd : depth ≤ 64) :
     fifths4 depth hd cFr_fifths4 4 (by decide) _ _ (fifths_catValid fifths4_shift depth)
     (fifths_preValid fifths4_shift depth cFr_fifths4)
 
-/-- **The fifths μ target**: `c5 / (D5 - Λ_fin) ≤ 2989/125` with the finite UF constant `Λ_fin = bankData.Λ`. -/
-theorem fifths_mu_le : (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℝ)) ≤ ((2989 / 125 : ℚ) : ℝ) := by
+/-- **The fifths μ target**: `c5 / (D5 - Λ_fin) ≤ 47823 / 2000` with the finite UF constant `Λ_fin = bankData.Λ`. -/
+theorem fifths_mu_le : (c5 : ℝ) / ((D5 : ℝ) - (bankData.Λ : ℝ)) ≤ ((47823 / 2000 : ℚ) : ℝ) := by
   have h1 : bankData.Λ < D5 := by rw [bankData_Λ]; unfold D5; norm_num
-  have h2 : c5 ≤ 2989 / 125 * (D5 - bankData.Λ) := by rw [bankData_Λ]; unfold c5 D5; norm_num
+  have h2 : c5 ≤ 47823 / 2000 * (D5 - bankData.Λ) := by rw [bankData_Λ]; unfold c5 D5; norm_num
   have hpos : (0 : ℝ) < (D5 : ℝ) - (bankData.Λ : ℝ) := by
     have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
   rw [div_le_iff₀ hpos]
