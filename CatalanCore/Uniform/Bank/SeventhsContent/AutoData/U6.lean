@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P0
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P1
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P2
+module
+
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P0
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P1
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6P2
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

@@ -1,4 +1,8 @@
-import CatalanCore.Arith.Hybrid.PieceTools
+module
+
+public import CatalanCore.Arith.Hybrid.PieceTools
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 10000
 set_option maxHeartbeats 3200000

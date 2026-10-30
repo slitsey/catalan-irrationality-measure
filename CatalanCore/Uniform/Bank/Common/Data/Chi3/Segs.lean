@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Common.Schema
+module
+
+public import CatalanCore.Uniform.Bank.Common.Schema
+
+@[expose] public section
 
 namespace CatalanCore.Uniform.Bank.Common.Data.Chi3
 open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert

@@ -1,10 +1,14 @@
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U1
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U2
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U3
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U4
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U5
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6
-import CatalanCore.Uniform.Content.BankShared.Check.Mass
+module
+
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U1
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U2
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U3
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U4
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U5
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.U6
+public import CatalanCore.Uniform.Content.BankShared.Check.Mass
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

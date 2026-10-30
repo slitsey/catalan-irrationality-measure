@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge0
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge1
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge2
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge3
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge4
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge0
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge1
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge2
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge3
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.Edge4
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

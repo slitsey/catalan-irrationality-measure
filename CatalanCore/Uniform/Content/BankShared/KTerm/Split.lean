@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.KTerm.Bank
+module
+
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Bank
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # k-shift bank data split across modules (lane K)

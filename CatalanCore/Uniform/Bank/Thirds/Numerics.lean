@@ -1,4 +1,8 @@
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The exact numerical contract of the thirds bank (lane B, B4).

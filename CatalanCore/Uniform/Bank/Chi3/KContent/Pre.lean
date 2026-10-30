@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Trop
-import CatalanCore.Arith.Hybrid.PieceTools
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Trop
+public import CatalanCore.Arith.Hybrid.PieceTools
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 

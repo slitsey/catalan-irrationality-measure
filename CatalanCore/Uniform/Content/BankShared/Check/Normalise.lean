@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Content
-import CatalanCore.Uniform.Content.BankShared.NormaliseGLE
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Content
+public import CatalanCore.Uniform.Content.BankShared.NormaliseGLE
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Normalisation transport of the bank-check hypotheses (lane C1L)

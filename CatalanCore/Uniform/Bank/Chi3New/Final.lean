@@ -1,9 +1,13 @@
-import CatalanCore.Uniform.Bank.Chi3New.Decay
-import CatalanCore.Uniform.Bank.Chi3New.Content
-import CatalanCore.Uniform.Bank.Chi3New.Reindex4
-import CatalanCore.Uniform.Content.Bridge.Hybrid
-import CatalanFrames.P6.Const
-import CatalanCore.Measure.Scaling
+module
+
+public import CatalanCore.Uniform.Bank.Chi3New.Decay
+public import CatalanCore.Uniform.Bank.Chi3New.Content
+public import CatalanCore.Uniform.Bank.Chi3New.Reindex4
+public import CatalanCore.Uniform.Content.Bridge.Hybrid
+public import CatalanFrames.P6.Const
+public import CatalanCore.Measure.Scaling
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The irrationality measure of `L(2, χ₋₃)` from the chi3 block family (lane B, B3f).

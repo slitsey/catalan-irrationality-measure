@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Fourths.Geom
-import CatalanCore.Uniform.Frame.NVAdapter
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.Geom
+public import CatalanCore.Uniform.Frame.NVAdapter
+
+@[expose] public section
 set_option Elab.async false
 
 

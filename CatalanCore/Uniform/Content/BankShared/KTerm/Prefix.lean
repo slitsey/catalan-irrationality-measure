@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.KTerm.Expr
+module
+
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Expr
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Window and prefix branches of a k-shift catalogue (lane K)

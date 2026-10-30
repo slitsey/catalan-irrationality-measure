@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.Shape.Reindex
+module
+
+public import CatalanCore.Uniform.Content.Shape.Reindex
+
+@[expose] public section
 set_option Elab.async false
 
 /-! Scale-four reindexing for the measure theorem (lane B, B3f): the analogue of

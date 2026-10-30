@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Chi3.Cover.Glob
-import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.Top
-import CatalanCore.Uniform.Bank.Chi3.Cover.Line.Top
-import CatalanCore.Uniform.Bank.Chi3.Cover.Cap.Top
-import CatalanCore.Uniform.Bank.Chi3.Cover.Energy.Top
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Glob
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.Top
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.Top
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Cap.Top
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Energy.Top
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Chi3New.Geom
-import CatalanCore.Uniform.Bank.Chi3Content.Final
-import CatalanCore.Uniform.Content.Shape.Reindex
+module
+
+public import CatalanCore.Uniform.Bank.Chi3New.Geom
+public import CatalanCore.Uniform.Bank.Chi3Content.Final
+public import CatalanCore.Uniform.Content.Shape.Reindex
+
+@[expose] public section
 set_option Elab.async false
 
 /-! Content of the chi3 block family at scales `r ≡ 0 (mod 4)` (lane B, B3f).

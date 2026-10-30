@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Expr
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Expr
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The pole shifts of a k-shift frame and their master lattice (lane K; kshift-instance-2026-10-29)

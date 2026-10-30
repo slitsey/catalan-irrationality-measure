@@ -1,4 +1,8 @@
-import Mathlib.Tactic
+module
+
+public import Mathlib.Tactic
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.Fourths
 

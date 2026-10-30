@@ -1,13 +1,17 @@
-import CatalanCore.Uniform.Bank.FourthsContent.Mu
-import CatalanCore.Uniform.Content.BankShared.Check.Normalise
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
-import CatalanFrames.Lambda.HybInst
-import CatalanFrames.LambdaMirrorHybrid.MirFinal
-import CatalanFrames.LambdaMirrorHybrid.MirTrop
-import CatalanCore.Uniform.Bank.Fourths.Final
-import CatalanCore.Uniform.Bank.Fourths.TwoTerm
-import CatalanCore.Uniform.Bank.Fourths.Frame
-import CatalanCore.Arith.Hybrid.PieceTools
+module
+
+public import CatalanCore.Uniform.Bank.FourthsContent.Mu
+public import CatalanCore.Uniform.Content.BankShared.Check.Normalise
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
+public import CatalanFrames.Lambda.HybInst
+public import CatalanFrames.LambdaMirrorHybrid.MirFinal
+public import CatalanFrames.LambdaMirrorHybrid.MirTrop
+public import CatalanCore.Uniform.Bank.Fourths.Final
+public import CatalanCore.Uniform.Bank.Fourths.TwoTerm
+public import CatalanCore.Uniform.Bank.Fourths.Frame
+public import CatalanCore.Arith.Hybrid.PieceTools
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Automatic content of the λ± frames (lane C1L)

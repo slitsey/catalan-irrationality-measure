@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.CovDefs
-import CatalanCore.Uniform.Bank.ThirdsContent.TwoTerm
-import CatalanCore.Uniform.Bank.ThirdsContent.Tbridge
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.CovDefs
+public import CatalanCore.Uniform.Bank.ThirdsContent.TwoTerm
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tbridge
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared facts for the thirds piece covers (lane B, B4b)

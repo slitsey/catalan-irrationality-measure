@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Inst.Roots
-import CatalanFrames.Fifths.ContentLocal
-import CatalanFrames.HybGen.NumerologyAny
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Inst.Roots
+public import CatalanFrames.Fifths.ContentLocal
+public import CatalanFrames.HybGen.NumerologyAny
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The generic frame instance of a two-term bank (lane C6L, gap C6)

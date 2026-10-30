@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Common.Data.Chi3.Segs
-import CatalanCore.Uniform.Bank.Common.Data.Chi3.Cells
+module
+
+public import CatalanCore.Uniform.Bank.Common.Data.Chi3.Segs
+public import CatalanCore.Uniform.Bank.Common.Data.Chi3.Cells
+
+@[expose] public section
 
 namespace CatalanCore.Uniform.Bank.Common.Data.Chi3
 open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert

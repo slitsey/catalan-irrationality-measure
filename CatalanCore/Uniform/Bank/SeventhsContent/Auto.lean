@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData
-import CatalanCore.Uniform.Content.BankShared.Inst.Sevenths
-import CatalanCore.Uniform.Bank.Sevenths.Final
-import CatalanCore.Arith.Hybrid.PieceTools
-import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+module
+
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData
+public import CatalanCore.Uniform.Content.BankShared.Inst.Sevenths
+public import CatalanCore.Uniform.Bank.Sevenths.Final
+public import CatalanCore.Arith.Hybrid.PieceTools
+public import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Automatic content of the six sevenths frames (lane C1L)

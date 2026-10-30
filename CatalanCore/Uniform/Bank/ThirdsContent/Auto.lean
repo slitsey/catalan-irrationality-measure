@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Rank
-import CatalanCore.Uniform.Content.BankShared.Check.Test
-import CatalanCore.Uniform.Bank.ThirdsContent.Edge
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Rank
+public import CatalanCore.Uniform.Content.BankShared.Check.Test
+public import CatalanCore.Uniform.Bank.ThirdsContent.Edge
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

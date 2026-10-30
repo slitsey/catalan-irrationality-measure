@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.FourthsContent.AutoData
-import CatalanCore.Uniform.Bank.Fourths.Final
+module
+
+public import CatalanCore.Uniform.Bank.FourthsContent.AutoData
+public import CatalanCore.Uniform.Bank.Fourths.Final
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The λ μ target with the finite UF constant (lane C1L)

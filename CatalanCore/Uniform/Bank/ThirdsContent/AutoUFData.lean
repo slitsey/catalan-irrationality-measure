@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
-import CatalanCore.Uniform.Content.BankShared.Check.Prefix
-import CatalanCore.Uniform.Content.BankShared.Check.Test
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+public import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+public import CatalanCore.Uniform.Content.BankShared.Check.Test
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

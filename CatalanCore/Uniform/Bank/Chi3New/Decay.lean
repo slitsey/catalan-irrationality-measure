@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Chi3.Env
-import CatalanCore.Uniform.Bank.Chi3.Cover.Check
-import CatalanCore.Uniform.Decay.AltDecay
-import CatalanCore.Uniform.Bank.Chi3New.Geom
-import CatalanFrames.P6.Contour
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.Env
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Check
+public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Bank.Chi3New.Geom
+public import CatalanFrames.P6.Contour
+
+@[expose] public section
 set_option Elab.async false
 
 /-! Decay of the chi3 block family from the current generated cover and the generic alternating-bank theorem. The public decay statement and constants are unchanged. -/

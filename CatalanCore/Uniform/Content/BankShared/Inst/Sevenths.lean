@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Inst.TwoTerm
-import CatalanCore.Uniform.Bank.Sevenths.TwoTerm
-import CatalanCore.Uniform.Content.BankShared.Check.UF
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Inst.TwoTerm
+public import CatalanCore.Uniform.Bank.Sevenths.TwoTerm
+public import CatalanCore.Uniform.Content.BankShared.Check.UF
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The sevenths frames from the generic two-term instance (lane C6L, gap C6)

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.KTerm.Expr
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
+module
+
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Expr
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Bank data and the check for a k-shift bank (lane K)

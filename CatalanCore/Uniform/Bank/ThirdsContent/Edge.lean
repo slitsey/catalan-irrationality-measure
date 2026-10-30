@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Pre
-import CatalanFrames.HybGen.TableSum
-import CatalanCore.Uniform.Content.BankShared.BudgetAdd
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Pre
+public import CatalanFrames.HybGen.TableSum
+public import CatalanCore.Uniform.Content.BankShared.BudgetAdd
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 3200000
 

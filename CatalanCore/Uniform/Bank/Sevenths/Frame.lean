@@ -1,6 +1,10 @@
-import CatalanFrames.P6.Const
-import CatalanCore.Decay.Atoms
-import Mathlib.NumberTheory.ZetaValues
+module
+
+public import CatalanFrames.P6.Const
+public import CatalanCore.Decay.Atoms
+public import Mathlib.NumberTheory.ZetaValues
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The six seventh frames with the exact contour offsets from the hypotheses receipt. -/

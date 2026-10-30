@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge0
-import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge1
-import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge2
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge0
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge1
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.Edge2
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.E4B00
-import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.E4B01
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.E4B00
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Tube.E4B01
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

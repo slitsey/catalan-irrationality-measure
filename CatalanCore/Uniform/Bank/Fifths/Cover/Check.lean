@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Fifths.Cover.Glob
-import CatalanCore.Uniform.Bank.Fifths.Cover.Tube.Top
-import CatalanCore.Uniform.Bank.Fifths.Cover.Line.Top
-import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.Top
-import CatalanCore.Uniform.Bank.Fifths.Cover.Energy.Top
+module
+
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Glob
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Tube.Top
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Line.Top
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.Top
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Energy.Top
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

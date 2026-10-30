@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Fourths.NV
-import CatalanCore.Uniform.Content.Shape.Reindex
-import CatalanCore.Measure.Scaling
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.NV
+public import CatalanCore.Uniform.Content.Shape.Reindex
+public import CatalanCore.Measure.Scaling
+
+@[expose] public section
 set_option Elab.async false
 
 

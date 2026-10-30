@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedAssign
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedAssign
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The closed rank member of one line class (Theorem R, lane C2L)

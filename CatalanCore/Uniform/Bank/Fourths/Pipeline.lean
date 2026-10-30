@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Fourths.PolePalette
-import CatalanCore.Uniform.Content.Member.FrameDigamma
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.PolePalette
+public import CatalanCore.Uniform.Content.Member.FrameDigamma
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.Fourths
 open CatalanCore CatalanCore.Uniform.Content.Member

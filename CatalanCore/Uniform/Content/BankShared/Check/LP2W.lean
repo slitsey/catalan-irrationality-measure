@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Check.UF
-import CatalanCore.Uniform.Content.BankShared.Check.Rank
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP2W
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.UF
+public import CatalanCore.Uniform.Content.BankShared.Check.Rank
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.LP2W
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The widened LP2 branch `brLP2w` (paper `lp2-strip-2026-10-29`)

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Fourths.Cover.Check
-import CatalanCore.Uniform.Decay.AltDecay
-import CatalanCore.Uniform.Bank.FourthsContent.AutoMeasure
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Check
+public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Bank.FourthsContent.AutoMeasure
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The λ± bounds (coordinator)

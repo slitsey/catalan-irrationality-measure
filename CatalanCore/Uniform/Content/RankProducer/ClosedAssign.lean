@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedFibre
-import CatalanCore.Uniform.Content.RankProducer.LineCost
-import CatalanCore.Uniform.Content.RankProducer.LineScores
-import CatalanCore.Uniform.Content.RankProducer.ActiveFibres
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedFibre
+public import CatalanCore.Uniform.Content.RankProducer.LineCost
+public import CatalanCore.Uniform.Content.RankProducer.LineScores
+public import CatalanCore.Uniform.Content.RankProducer.ActiveFibres
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The closed certificate assignment and its line price (Theorem R, lane C2L)

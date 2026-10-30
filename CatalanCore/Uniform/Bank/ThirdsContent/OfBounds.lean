@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Assemble
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Assemble
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Thirds content from `GLE` bounds (lane B, B4b)

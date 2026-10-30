@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Content.Shape.Alt
-import CatalanCore.Uniform.Decay.Nodes.Limit
-import CatalanCore.Uniform.Decay.PolyFull.CapNodes
-import CatalanLambda.Cert.LogBounds
+module
+
+public import CatalanCore.Uniform.Content.Shape.Alt
+public import CatalanCore.Uniform.Decay.Nodes.Limit
+public import CatalanCore.Uniform.Decay.PolyFull.CapNodes
+public import CatalanLambda.Cert.LogBounds
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The thirds node geometry `altGeom (3/10)` (lane B, B4): limiting pieces, total mass, node energy.

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B00
-import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B01
-import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B02
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B00
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B01
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E0B02
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

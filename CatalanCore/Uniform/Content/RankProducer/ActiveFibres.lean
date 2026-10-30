@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.RankProducer.FibreCounts
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.FibreCounts
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.RankProducer
 open Finset CatalanCore.Uniform.Content.Hybrid

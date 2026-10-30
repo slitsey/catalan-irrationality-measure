@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U1
-import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U2
-import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U3
-import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U4
+module
+
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U1
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U2
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U3
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoData.U4
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

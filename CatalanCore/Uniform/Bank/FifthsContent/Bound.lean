@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Fifths.Cover.Check
-import CatalanCore.Uniform.Decay.AltDecay
-import CatalanCore.Uniform.Bank.FifthsContent.AutoMeasure
+module
+
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Check
+public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoMeasure
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The fifths bounds (coordinator)

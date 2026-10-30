@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.KTerm.Bank
-import CatalanCore.Uniform.Content.BankShared.Check.Content
+module
+
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Bank
+public import CatalanCore.Uniform.Content.BankShared.Check.Content
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Theorem D for k-shift banks (lane K)

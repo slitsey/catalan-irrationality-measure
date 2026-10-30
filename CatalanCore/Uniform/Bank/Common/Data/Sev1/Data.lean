@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Common.Data.Sev1.Segs
-import CatalanCore.Uniform.Bank.Common.Data.Sev1.Cells
+module
+
+public import CatalanCore.Uniform.Bank.Common.Data.Sev1.Segs
+public import CatalanCore.Uniform.Bank.Common.Data.Sev1.Cells
+
+@[expose] public section
 
 namespace CatalanCore.Uniform.Bank.Common.Data.Sev1
 open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert

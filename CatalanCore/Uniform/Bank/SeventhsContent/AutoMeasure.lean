@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.SeventhsContent.Auto
-import CatalanCore.Uniform.Bank.Sevenths.Final
-import CatalanCore.Uniform.Bank.Sevenths.Frame
+module
+
+public import CatalanCore.Uniform.Bank.SeventhsContent.Auto
+public import CatalanCore.Uniform.Bank.Sevenths.Final
+public import CatalanCore.Uniform.Bank.Sevenths.Frame
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The sevenths measures from the automatic content (lane C1L)

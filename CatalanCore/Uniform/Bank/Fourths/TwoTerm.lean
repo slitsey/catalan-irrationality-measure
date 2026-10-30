@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.Fourths.Pipeline
-import CatalanCore.Uniform.Bank.Fourths.Roots
-import CatalanFrames.Thirds.Frame
-import CatalanCore.Uniform.Content.Smith.LP1Table
+module
+
+public import CatalanCore.Uniform.Bank.Fourths.Pipeline
+public import CatalanCore.Uniform.Bank.Fourths.Roots
+public import CatalanFrames.Thirds.Frame
+public import CatalanCore.Uniform.Content.Smith.LP1Table
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.Fourths
 open CatalanCore CatalanCore.Basic CatalanCore.Uniform.Content.Smith

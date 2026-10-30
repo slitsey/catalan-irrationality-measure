@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanFrames.HybGen.NatRoots
+module
+
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanFrames.HybGen.NatRoots
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Two-term banks of any modulus: bad primes, first roots, small primes (lane C6L, gap C6)

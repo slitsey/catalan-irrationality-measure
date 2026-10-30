@@ -1,9 +1,13 @@
-import CatalanCore.Uniform.Bank.FifthsContent.AutoData
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
-import CatalanFrames.Fifths.ContentHyb
-import CatalanCore.Uniform.Bank.Fifths.Final
-import CatalanCore.Uniform.Bank.Fifths.Frame
-import CatalanCore.Arith.Hybrid.PieceTools
+module
+
+public import CatalanCore.Uniform.Bank.FifthsContent.AutoData
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
+public import CatalanFrames.Fifths.ContentHyb
+public import CatalanCore.Uniform.Bank.Fifths.Final
+public import CatalanCore.Uniform.Bank.Fifths.Frame
+public import CatalanCore.Arith.Hybrid.PieceTools
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Automatic content of the four fifths frames (lane C1L)

@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
-import CatalanFrames.Thirds.Instance
-import CatalanFrames.Thirds.ContourInstances
-import CatalanCore.Uniform.Content.Smith.TwoTerm
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
+public import CatalanFrames.Thirds.Instance
+public import CatalanFrames.Thirds.ContourInstances
+public import CatalanCore.Uniform.Content.Smith.TwoTerm
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Two-term data of the thirds frames (lane B, B4b)

@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Content
-import CatalanCore.Uniform.Bank.Chi3New.Geom
-import CatalanCore.Uniform.Content.Shape.Reindex
-import CatalanCore.Uniform.Frame.NVAdapter
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Content
+public import CatalanCore.Uniform.Bank.Chi3New.Geom
+public import CatalanCore.Uniform.Content.Shape.Reindex
+public import CatalanCore.Uniform.Frame.NVAdapter
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Link of the k-shift content to the chi_{-3} measure theorem (lane K)

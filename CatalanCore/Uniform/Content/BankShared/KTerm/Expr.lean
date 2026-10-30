@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Cover
-import CatalanCore.Uniform.Content.BankShared.Inst.KShift
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Cover
+public import CatalanCore.Uniform.Content.BankShared.Inst.KShift
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Layer prices with several pole indices, compiled to the one-lattice class (lane K)

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedCount
-import CatalanCore.Uniform.Content.UFSimple.Closed
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedCount
+public import CatalanCore.Uniform.Content.UFSimple.Closed
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The closed rank price (3.1) and Theorem R at one prime (lane C2L)

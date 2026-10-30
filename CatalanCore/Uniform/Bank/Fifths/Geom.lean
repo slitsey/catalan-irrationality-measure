@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.Shape.Alt
-import CatalanCore.Uniform.Decay.Nodes.Limit
-import CatalanCore.Uniform.Decay.PolyFull.CapNodes
+module
+
+public import CatalanCore.Uniform.Content.Shape.Alt
+public import CatalanCore.Uniform.Decay.Nodes.Limit
+public import CatalanCore.Uniform.Decay.PolyFull.CapNodes
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The fifths node geometry `altGeom (2/9)` (lane B, B5): limiting pieces, total mass, support. -/

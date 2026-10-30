@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B00
-import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B01
-import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B02
-import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B03
+module
+
+public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B00
+public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B01
+public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B02
+public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E1B03
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

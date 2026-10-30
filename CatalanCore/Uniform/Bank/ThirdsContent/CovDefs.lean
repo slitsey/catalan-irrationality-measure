@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
-import CatalanCore.Arith.Hybrid.PieceTools
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
+public import CatalanCore.Arith.Hybrid.PieceTools
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Integer-form piece covers (lane B, B4b)

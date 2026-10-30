@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Sevenths.Frame
-import CatalanFrames.Thirds.Frame
-import CatalanCore.Uniform.Content.Smith.TwoTerm
+module
+
+public import CatalanCore.Uniform.Bank.Sevenths.Frame
+public import CatalanFrames.Thirds.Frame
+public import CatalanCore.Uniform.Content.Smith.TwoTerm
+
+@[expose] public section
 set_option Elab.async false
 
 namespace CatalanCore.Uniform.Bank.Sevenths

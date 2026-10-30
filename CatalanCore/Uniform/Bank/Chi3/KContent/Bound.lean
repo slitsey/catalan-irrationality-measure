@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Link
-import CatalanCore.Uniform.Bank.Chi3New.Final
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Link
+public import CatalanCore.Uniform.Bank.Chi3New.Final
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The irrationality measure of `L(2, χ₋₃)` on the k-shift route with the prefix layer

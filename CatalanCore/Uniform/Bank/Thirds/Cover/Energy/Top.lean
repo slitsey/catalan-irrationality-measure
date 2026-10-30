@@ -1,15 +1,19 @@
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R00
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R03
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R06
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R09
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R12
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R15
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R18
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R21
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R24
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R27
-import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R30
-import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R00
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R03
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R06
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R09
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R12
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R15
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R18
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R21
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R24
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R27
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Energy.R30
+public import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Layers
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
-import CatalanCore.Uniform.Content.RankProducer.Closed
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Layers
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Class
+public import CatalanCore.Uniform.Content.RankProducer.Closed
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The rank branch from C2L's closed rank layer (lane C1L)

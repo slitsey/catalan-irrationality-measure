@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U1
-import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U5
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U1
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U5
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

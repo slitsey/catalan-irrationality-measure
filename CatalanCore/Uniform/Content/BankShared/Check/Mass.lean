@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The class check with precomputed template masses (lane C1L)

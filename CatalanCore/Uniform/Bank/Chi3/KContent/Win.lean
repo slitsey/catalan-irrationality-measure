@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Trop
-import CatalanCore.Uniform.Content.BankShared.KTerm.Prefix
-import CatalanCore.Uniform.Content.BankShared.Check.Layers
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Prefix
-import CatalanCore.Uniform.Bank.Chi3Content.M3
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Trop
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Prefix
+public import CatalanCore.Uniform.Content.BankShared.Check.Layers
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Prefix
+public import CatalanCore.Uniform.Bank.Chi3Content.M3
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 

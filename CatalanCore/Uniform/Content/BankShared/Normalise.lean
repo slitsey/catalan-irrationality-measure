@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.Shape.Alt
-import CatalanCore.Uniform.Content.Shape.Reindex
+module
+
+public import CatalanCore.Uniform.Content.Shape.Alt
+public import CatalanCore.Uniform.Content.Shape.Reindex
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Shared contract 2 (lane H17): normalisation transport

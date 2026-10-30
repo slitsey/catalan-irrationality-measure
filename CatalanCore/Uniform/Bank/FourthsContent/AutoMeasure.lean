@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.FourthsContent.Auto
-import CatalanCore.Uniform.Bank.Fourths.Final
-import CatalanCore.Uniform.Bank.Fourths.Frame
+module
+
+public import CatalanCore.Uniform.Bank.FourthsContent.Auto
+public import CatalanCore.Uniform.Bank.Fourths.Final
+public import CatalanCore.Uniform.Bank.Fourths.Frame
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The λ± measures from the automatic content (lane C1L)

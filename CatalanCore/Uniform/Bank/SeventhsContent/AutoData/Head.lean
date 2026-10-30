@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Split
-import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Split
+public import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Data header: the sevenths bank parameters (lane C1L)

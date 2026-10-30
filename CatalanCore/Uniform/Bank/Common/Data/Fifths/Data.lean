@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Common.Data.Fifths.Segs
-import CatalanCore.Uniform.Bank.Common.Data.Fifths.Cells
+module
+
+public import CatalanCore.Uniform.Bank.Common.Data.Fifths.Segs
+public import CatalanCore.Uniform.Bank.Common.Data.Fifths.Cells
+
+@[expose] public section
 
 namespace CatalanCore.Uniform.Bank.Common.Data.Fifths
 open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert

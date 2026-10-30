@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Thirds.Cover.Check
-import CatalanCore.Uniform.Decay.AltDecay
-import CatalanCore.Uniform.Bank.ThirdsContent.MeasureUF
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Check
+public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Bank.ThirdsContent.MeasureUF
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The thirds bounds (coordinator)

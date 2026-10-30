@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedPrice
-import CatalanCore.Uniform.Content.RankProducer.ClosedPalette
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Content.Smith.TwoTerm
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedPrice
+public import CatalanCore.Uniform.Content.RankProducer.ClosedPalette
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Content.Smith.TwoTerm
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The generic closed rank layer (Theorem R of C2/PAPER.md, lane C2L)

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.FourthsContent.AutoData.U1
-import CatalanCore.Uniform.Bank.FourthsContent.AutoData.U3
+module
+
+public import CatalanCore.Uniform.Bank.FourthsContent.AutoData.U1
+public import CatalanCore.Uniform.Bank.FourthsContent.AutoData.U3
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

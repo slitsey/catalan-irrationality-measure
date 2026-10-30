@@ -1,7 +1,11 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Alt
-import CatalanCore.Uniform.Bank.Thirds.Final
-import CatalanCore.Uniform.Content.BankShared.BudgetedOne
-import CatalanCore.Uniform.Content.BankShared.Budgeted
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Alt
+public import CatalanCore.Uniform.Bank.Thirds.Final
+public import CatalanCore.Uniform.Content.BankShared.BudgetedOne
+public import CatalanCore.Uniform.Content.BankShared.Budgeted
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Thirds content: assembly with the exceptional primes discharged (lane B, B4b)

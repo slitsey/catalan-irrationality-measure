@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Chi3Rank.Closed
+module
+
+public import CatalanCore.Uniform.Bank.Chi3Rank.Closed
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.Fourths
 open Finset CatalanCore CatalanCore.Uniform.Content.Hybrid

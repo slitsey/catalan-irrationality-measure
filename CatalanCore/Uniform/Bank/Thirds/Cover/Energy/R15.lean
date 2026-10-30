@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Thirds.Cover.Env
-import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Cover.Env
+public import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

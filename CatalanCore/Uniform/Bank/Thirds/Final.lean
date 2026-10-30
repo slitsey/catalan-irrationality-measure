@@ -1,10 +1,14 @@
-import CatalanCore.Uniform.Bank.Thirds.Geom
-import CatalanCore.Uniform.Bank.Thirds.Numerics
-import CatalanCore.Uniform.Content.Shape.Reindex
-import CatalanCore.Uniform.Content.Bridge.Hybrid
-import CatalanCore.Measure.Scaling
-import CatalanFrames.Thirds.TargetConstants
-import CatalanFrames.Thirds.Assembly
+module
+
+public import CatalanCore.Uniform.Bank.Thirds.Geom
+public import CatalanCore.Uniform.Bank.Thirds.Numerics
+public import CatalanCore.Uniform.Content.Shape.Reindex
+public import CatalanCore.Uniform.Content.Bridge.Hybrid
+public import CatalanCore.Measure.Scaling
+public import CatalanFrames.Thirds.TargetConstants
+public import CatalanFrames.Thirds.Assembly
+
+@[expose] public section
 set_option Elab.async false
 
 /-! The irrationality measure of `L(2,χ₋₃) ± π²/9` from the thirds block family `G310.family Fr depth`

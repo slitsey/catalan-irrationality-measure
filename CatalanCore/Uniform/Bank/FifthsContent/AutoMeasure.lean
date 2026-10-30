@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.FifthsContent.Auto
-import CatalanCore.Uniform.Bank.Fifths.Final
-import CatalanCore.Uniform.Bank.Fifths.Frame
+module
+
+public import CatalanCore.Uniform.Bank.FifthsContent.Auto
+public import CatalanCore.Uniform.Bank.Fifths.Final
+public import CatalanCore.Uniform.Bank.Fifths.Frame
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The fifths measures from the automatic content (lane C1L)

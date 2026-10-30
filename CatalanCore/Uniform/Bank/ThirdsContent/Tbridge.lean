@@ -1,9 +1,13 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
-import CatalanCore.Uniform.Bank.ThirdsContent.TwoTerm
-import CatalanFrames.Thirds.Instance
-import CatalanFrames.Thirds.ContourInstances
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Rect.MinorContent
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.OfBounds
+public import CatalanCore.Uniform.Bank.ThirdsContent.TwoTerm
+public import CatalanFrames.Thirds.Instance
+public import CatalanFrames.Thirds.ContourInstances
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Rect.MinorContent
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Tropical (table T) bridge for the thirds family (lane B, B4b)

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.RankProducer.ClosedMember
-import CatalanCore.Uniform.Content.RankProducer.TrimCost
+module
+
+public import CatalanCore.Uniform.Content.RankProducer.ClosedMember
+public import CatalanCore.Uniform.Content.RankProducer.TrimCost
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Counting with deletions (Theorem R, "Deletions"; NOTES P5, lane C2L)

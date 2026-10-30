@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Rank
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.UF
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Rank
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.UF
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The UF branch S (lane C1L; C1/PAPER.md Lemma 3)

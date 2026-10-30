@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Det
-import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Det
+public import CatalanCore.Uniform.Content.BankShared.ExceptionSmall
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # `p^(Ecrude)`-clearing of every member (lane B, B4b)

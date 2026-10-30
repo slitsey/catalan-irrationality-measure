@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Data
-import CatalanCore.Uniform.Bank.Chi3.KContent.Win
-import CatalanCore.Uniform.Bank.Chi3.KContent.Pre
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Win
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Pre
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The content of chi_{-3} through `hasScaledContent_of_kcheck` (lane K)

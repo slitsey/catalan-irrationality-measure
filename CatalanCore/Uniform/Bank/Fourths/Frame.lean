@@ -1,5 +1,9 @@
-import CatalanFrames.Lambda.Const
-import CatalanFrames.LambdaMirror.Const
+module
+
+public import CatalanFrames.Lambda.Const
+public import CatalanFrames.LambdaMirror.Const
+
+@[expose] public section
 set_option Elab.async false
 
 namespace CatalanCore.Uniform.Bank.Fourths

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.AutoUF
-import CatalanCore.Uniform.Bank.Thirds.Final
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.AutoUF
+public import CatalanCore.Uniform.Bank.Thirds.Final
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The thirds measure from the automatic UF content (coordinator)

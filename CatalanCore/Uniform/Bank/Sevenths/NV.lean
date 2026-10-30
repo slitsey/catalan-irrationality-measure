@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Bank.Sevenths.Geom
-import CatalanCore.Uniform.Frame.NVAdapter
+module
+
+public import CatalanCore.Uniform.Bank.Sevenths.Geom
+public import CatalanCore.Uniform.Frame.NVAdapter
+
+@[expose] public section
 set_option Elab.async false
 
 /-! Nonvanishing of the sevenths block family (lane B, B5): `HasNV0` from the generic selector, for

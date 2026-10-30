@@ -1,11 +1,15 @@
-import CatalanCore.Uniform.Content.BankShared.Check.Bank
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl0
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl1
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl2
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_0
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_1
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_0
-import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_1
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.Bank
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl0
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl1
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl2
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_0
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_1
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_0
+public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_1
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

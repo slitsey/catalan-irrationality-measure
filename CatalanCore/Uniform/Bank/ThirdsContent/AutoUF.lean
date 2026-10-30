@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.AutoUFData
-import CatalanCore.Uniform.Bank.ThirdsContent.Auto
-import CatalanCore.Uniform.Bank.Thirds.Numerics
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.AutoUFData
+public import CatalanCore.Uniform.Bank.ThirdsContent.Auto
+public import CatalanCore.Uniform.Bank.Thirds.Numerics
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Thirds acceptance test of automatic content, with UF (lane C1L)

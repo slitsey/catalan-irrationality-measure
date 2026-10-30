@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Normalise
-import CatalanCore.Arith.Hybrid.Tropical
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Normalise
+public import CatalanCore.Arith.Hybrid.Tropical
+
+@[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Content.BankShared
 open Polynomial CatalanCore CatalanCore.Basic CatalanCore.Arith.Hybrid

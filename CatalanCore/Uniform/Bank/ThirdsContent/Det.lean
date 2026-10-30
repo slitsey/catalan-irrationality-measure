@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Entry
-import CatalanCore.Rect.Full
-import CatalanCore.Uniform.Frame.Family
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Entry
+public import CatalanCore.Rect.Full
+public import CatalanCore.Uniform.Frame.Family
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Crude clearing of the hybrid determinant (lane B, B4b)

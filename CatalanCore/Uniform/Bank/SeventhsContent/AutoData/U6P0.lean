@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.Head
+module
+
+public import CatalanCore.Uniform.Bank.SeventhsContent.AutoData.Head
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

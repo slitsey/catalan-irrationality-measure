@@ -1,6 +1,10 @@
-import CatalanCore.Uniform.Bank.ThirdsContent.Family
-import CatalanCore.Uniform.Content.BankShared.Reindex
-import CatalanCore.Uniform.Bank.Thirds.Geom
+module
+
+public import CatalanCore.Uniform.Bank.ThirdsContent.Family
+public import CatalanCore.Uniform.Content.BankShared.Reindex
+public import CatalanCore.Uniform.Bank.Thirds.Geom
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # Crude clearing on the alternating geometries (lane B, B4b)

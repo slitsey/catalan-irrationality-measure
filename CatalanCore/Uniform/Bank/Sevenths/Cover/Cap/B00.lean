@@ -1,4 +1,8 @@
-import CatalanCore.Uniform.Bank.Sevenths.Cover.Env
+module
+
+public import CatalanCore.Uniform.Bank.Sevenths.Cover.Env
+
+@[expose] public section
 set_option Elab.async false
 set_option maxRecDepth 100000
 

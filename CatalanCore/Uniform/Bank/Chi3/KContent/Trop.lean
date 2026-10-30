@@ -1,8 +1,12 @@
-import CatalanCore.Uniform.Bank.Chi3.KContent.Data.Head
-import CatalanCore.Uniform.Content.BankShared.KTerm.Content
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
-import CatalanFrames.P6Hybrid.ZDual
-import CatalanFrames.P6Hybrid.Level
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.Head
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Content
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
+public import CatalanFrames.P6Hybrid.ZDual
+public import CatalanFrames.P6Hybrid.Level
+
+@[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 

@@ -1,5 +1,9 @@
-import CatalanCore.Uniform.Content.BankShared.Check.LP2W
-import CatalanCore.Uniform.Content.BankShared.TwoTerm.Prefix
+module
+
+public import CatalanCore.Uniform.Content.BankShared.Check.LP2W
+public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Prefix
+
+@[expose] public section
 set_option Elab.async false
 
 /-! # The prefix branches `brPre n j0 j1` (paper `prefix-rule-2026-10-29`, section 5)
