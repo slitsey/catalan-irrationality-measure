@@ -387,7 +387,7 @@ Table~\ref{tab:data} lists the constants for every row of Table~\ref{tab:main}.
 \subsection{Formal verification}
 Every step, including the local arithmetic bounds and the checker of the content tables, the interpolation argument
 for nonvanishing, the contour representation, the cell checks of the decay certificates and the prime number theorem
-in arithmetic progressions, is formalised in Lean~4 with Mathlib \cite{Lean4,Mathlib}. The formal proofs are built on
+in arithmetic progressions, is formalized in Lean~4 with Mathlib \cite{Lean4,Mathlib}. The formal proofs are built on
 a shared core (rectangular determinants, Gauss valuations, the local bounds, the content checker, the
 characteristic-zero selection, the decay theorem and the measure deduction); a family supplies its frame, its geometry
 parameter and its data tables. The written proofs below are at the level of a research article; for long computations
@@ -500,13 +500,14 @@ and $v_p(\den f)=\max(0,-v(f))$. For a member we write $e_p(r,I)=v_p(\den P_{r,I
 
 \begin{lemma}[assignment bound and LP duality]\label{lem:trop}
 Let $B$ be a square matrix over $\Q[x]$ with rows $I$ and columns $J$, $W_{ab}=\max(0,-v(B_{ab}))$, and let
-$\tau(W)=\max_\sigma\sum_{a\in I}W_{a\sigma(a)}$ over bijections $\sigma:I\to J$. Then $v(\det B)\ge-\tau(W)$.
-If real numbers $u_a$, $v_b$ satisfy $W_{ab}\le u_a+v_b$ for all $a,b$, then $\tau(W)\le\sum_au_a+\sum_bv_b$.
+$\tau(W)$ be the maximum of $\sum_{a\in I}W_{ab_a}$ over the bijections $a\mapsto b_a$ from $I$ to $J$. Then
+$v(\det B)\ge-\tau(W)$. If real numbers $u_a$, $v_b$ satisfy $W_{ab}\le u_a+v_b$ for all $a,b$, then
+$\tau(W)\le\sum_au_a+\sum_bv_b$.
 \end{lemma}
 \begin{proof}
-Each Leibniz term has valuation $\sum_av(B_{a\sigma(a)})\ge-\sum_aW_{a\sigma(a)}$, and $v$ of a sum is at least
+Each Leibniz term has valuation $\sum_av(B_{ab_a})\ge-\sum_aW_{ab_a}$, and $v$ of a sum is at least
 the minimum. The second statement is weak LP duality for the assignment problem:
-$\sum_aW_{a\sigma(a)}\le\sum_a(u_a+v_{\sigma(a)})$.
+$\sum_aW_{ab_a}\le\sum_a(u_a+v_{b_a})$.
 \end{proof}
 
 \begin{lemma}[rank of the reduction]\label{lem:rank}
@@ -523,11 +524,11 @@ $v(\det B)\ge\corank(B\bmod p)$.
 \end{proof}
 
 The rank bounds below use a refinement of Lemma~\ref{lem:rank} at second order. Suppose that after a unimodular change
-of rows and columns over $\cO$ the first $x$ rows and the first $y$ columns of $B$ are divisible by $p$, and the
-$x\times y$ block where they meet is divisible by $p^2$. Dividing the first $x$ rows by $p$ leaves the first $y$ columns
-divisible by $p$, so
+of rows and columns over $\cO$ the first $n_1$ rows and the first $n_2$ columns of $B$ are divisible by $p$, and the
+$n_1\times n_2$ block where they meet is divisible by $p^2$. Dividing the first $n_1$ rows by $p$ leaves the first $n_2$
+columns divisible by $p$, so
 \begin{equation}\label{eq:corner}
- v(\det B)\ge x+y .
+ v(\det B)\ge n_1+n_2 .
 \end{equation}
 The vectors that produce such rows and columns are kernel vectors of the reduction of $B$ on single residue classes,
 and the condition on the corner is a statement about their pairing at first order, which we now describe. Let
@@ -536,21 +537,26 @@ $v_p(b-a)\ge1$ only if $a\equiv b\pmod p$, and then $v_p(b-a)=1$. Hence $B$ has 
 block diagonal over the residue classes $\rho$ modulo $p$ (the \emph{fibres}), and for nodes $a\equiv\rho$,
 $b\equiv\rho'$ in distinct fibres
 \begin{equation}\label{eq:firstorder}
- B_{ab}\equiv\frac{p\,(\sigma(b)-\sigma(a))}{\rho'-\rho}\pmod{p^2},
+ B_{ab}\equiv\frac{p\,(V(b)-V(a))}{\rho'-\rho}\pmod{p^2},
 \end{equation}
-where $\sigma(t)\in\F_p$ is the residue of $p$ times the partial sum $\sum_{k\le t}(\frac1k-\frac q{qk-o})$, up to the
-normalising factor $q^{-2}$; $\sigma$ is a step function of $t$ which jumps only at the poles $t\equiv0$ and $t\equiv k_p$.
+where $V(t)\in\F_p$ is the residue of $p$ times the partial sum $\sum_{k\le t}(\frac1k-\frac q{qk-o})$, up to the
+normalising factor $q^{-2}$; $V$ is a step function of $t$ which jumps only at the poles $t\equiv0$ and $t\equiv k_p$.
+
+For a vector $\mathbf y$ indexed by nodes, its \emph{moment pair} is
+\[
+ \Bigl(\sum_ay_a,\ \sum_ay_aV(a)\Bigr).
+\]
 
 \begin{lemma}[pairing]\label{lem:pairing}
-Let $\lambda$ be supported on the rows of the fibre $\rho$ and $\kappa'$ on the columns of a different fibre $\rho'$,
-and write $\mu(\lambda)=(\sum_a\lambda_a,\sum_a\lambda_a\sigma(a))$ for the \emph{moment pair}. Then
+Let $\mathbf y$ be supported on the rows of the fibre $\rho$ and $\mathbf y'$ on the columns of a different fibre
+$\rho'$. Then
 \[
- \lambda^{\top}B\kappa'\equiv\frac p{\rho'-\rho}\Bigl(\mu_1(\lambda)\mu_2(\kappa')-\mu_2(\lambda)\mu_1(\kappa')\Bigr)\pmod{p^2}.
+ \mathbf y^{\top}B\,\mathbf y'\equiv\frac p{\rho'-\rho}\Bigl(\sum_ay_a\sum_by'_bV(b)-\sum_ay_aV(a)\sum_by'_b\Bigr)\pmod{p^2}.
 \]
-In particular the pairing vanishes modulo $p^2$ whenever the moment pairs of $\lambda$ and $\kappa'$ are proportional.
+In particular the pairing vanishes modulo $p^2$ whenever the moment pairs of $\mathbf y$ and $\mathbf y'$ are proportional.
 \end{lemma}
 \begin{proof}
-Expand $\lambda^{\top}B\kappa'$ with \eqref{eq:firstorder}.
+Expand $\mathbf y^{\top}B\,\mathbf y'$ with \eqref{eq:firstorder}.
 \end{proof}
 
 The moment pairs are never both zero, by the displacement structure of L\"owner matrices.
@@ -558,14 +564,15 @@ The moment pairs are never both zero, by the displacement structure of L\"owner 
 \begin{lemma}[moment lemma]\label{lem:moment}
 Let $A$ be a matrix with rows indexed by a set $R_0$ of distinct integers and columns by a set $C_0$, $|R_0|=|C_0|+1$,
 whose off-diagonal entries are $A(d,e)=(L(e)-L(d))/(e-d)$ for some function $L$, and whose diagonal entries (on
-$R_0\cap C_0$) are arbitrary. Then $A$ has a nonzero left kernel vector $u$ with $(\sum u_i,\sum u_iL(i))\ne(0,0)$.
+$R_0\cap C_0$) are arbitrary. Then $A$ has a nonzero left kernel vector $\mathbf y$ with
+$(\sum_iy_i,\sum_iy_iL(i))\ne(0,0)$.
 \end{lemma}
 \begin{proof}
 With $D_R$, $D_C$ the diagonal matrices of the indices, $D_RA-AD_C=L_R\mathbf 1^{\top}-\mathbf 1L_C^{\top}$ (the diagonal
-entries cancel on common indices). The left kernel $\mathcal N$ is nonzero. If every $u\in\mathcal N$ had zero moment
-pair, multiplying on the left by $u^{\top}$ would give $u^{\top}D_RA=0$, so $D_R$ would preserve $\mathcal N$; as
-$D_R$ is diagonal with distinct entries, $\mathcal N$ would contain a standard vector $e_i$, whose moment pair is
-$(1,L(i))\ne(0,0)$.
+entries cancel on common indices). The left kernel $\mathcal N$ is nonzero. If every $\mathbf y\in\mathcal N$ had zero
+moment pair, multiplying on the left by $\mathbf y^{\top}$ would give $\mathbf y^{\top}D_RA=0$, so $D_R$ would preserve
+$\mathcal N$; as $D_R$ is diagonal with distinct entries, $\mathcal N$ would contain a standard vector $e_i$, whose moment
+pair is $(1,L(i))\ne(0,0)$.
 \end{proof}
 
 \subsection{The local bounds}
@@ -622,7 +629,8 @@ checked in the formal proof.
 For $p$ close to $r$ the reduction of the rescaled matrix has a large block of rank one per residue class, and the
 corank can be computed. We give the proof of (LP2). The bound (LP1), for the primes with $p\le r<p+k_p$ and $N\le2p$, is
 proved by the same method: with the potentials of (T2), the elimination of an invertible block of common nodes brings the
-reduction to the form $\begin{psmallmatrix}sI&G_Y\\ G_X&0\end{psmallmatrix}$, in which the border nodes below $p+k_p$
+reduction to the form $\begin{psmallmatrix}\tilde xI&G_Y\\ G_X&0\end{psmallmatrix}$, with $\tilde x$ the variable $x$ plus a
+constant, in which the border nodes below $p+k_p$
 contribute rows and columns proportional to unit vectors, and the Frobenius--K\"onig theorem bounds its rank. The saving over
 (T2) is $(\ell-m)_+$, where $\ell=\min(2m,p+k_p-r)$ is the number of border nodes below $p+k_p$; we refer to the formal proof
 for the details.
@@ -643,19 +651,18 @@ the other kind. If $c<k$, then $u(c)=0$, the partial sum over $(c,z]$ has valuat
 is prime to $p$; otherwise $u(c)\ge1$ and $v_p(M[c,z])\ge-2$. In both cases the rescaled entry is divisible by $p$.
 
 \emph{The remaining entries.} For nodes below $p+k$ the only poles are $k$ and $p$. With $B_0=[0,k)$ and $B_1=[k,r)$
-the reduction has the following blocks: on $B_0\times B_0$ the regular part plus $x$ on the diagonal; on
-$B_0\times B_1$ the entries $\nu\rho_k/(c-w)$ with $\rho_k=-q/j$ and $\nu$ the normalisation; on $B_1\times B_1$ the
-scalar matrix $\nu\rho_k^2I$; a border node $z\in[r,p)$ against $w\in B_0$ gives $-\nu\rho_k/(z-w)$; a border node
-$z\in[p,p+k)$ against $w\in B_0$ gives $\nu(\rho_k+1)$ if $w=z-p$ and $0$ otherwise; all other border entries vanish.
+the reduction has the following blocks, with $\omega=q^{-2}$ the normalisation of \eqref{eq:frames}: on $B_0\times B_0$ the
+regular part plus $x$ on the diagonal; on $B_0\times B_1$ the entries $-\omega q/(j(c-w))$; on $B_1\times B_1$ the scalar
+matrix $\omega(q/j)^2I$; a border node $z\in[r,p)$ against $w\in B_0$ gives $\omega q/(j(z-w))$; a border node
+$z\in[p,p+k)$ against $w\in B_0$ gives $\omega(1-q/j)$ if $w=z-p$ and $0$ otherwise; all other border entries vanish.
 
 \emph{Rank.} Delete the zero rows and columns found above; this does not change the rank. Eliminating the scalar block
-on $B_1$, the Schur complement on $B_0$ is $s\,I-\varkappa EE^{\top}$ with a constant $\varkappa$, $E_{w,i}=1/(w+i)$,
-$1\le i\le p-r$, and $s$ equal to
-$x$ plus a constant, by the reflection $H_{p-1-n}\equiv H_n\pmod p$ of harmonic numbers. The border nodes $z\in[r,p)$,
-indexed by $i=p-z$, are all present because $N>p$; even offsets are rows and odd offsets are columns, and together they
-cover $1\le i\le p-r$, so row and column operations remove $\varkappa EE^{\top}$ and leave
-$\begin{psmallmatrix}sI&G_Y\\ G_X&0\end{psmallmatrix}$. A Schur complement on $sI$ (here it is essential that $x$ is an
-indeterminate, so that $s$ is a unit) shows that its rank is $k+\rank(G_XG_Y)$. In $G_XG_Y$ the block between the high
+on $B_1$, the Schur complement on $B_0$ is $\tilde xI$ plus a constant multiple of $EE^{\top}$, where $E_{w,i}=1/(w+i)$,
+$1\le i\le p-r$, and $\tilde x$ is $x$ plus a constant, by the reflection $H_{p-1-n}\equiv H_n\pmod p$ of harmonic numbers.
+The border nodes $z\in[r,p)$, indexed by $i=p-z$, are all present because $N>p$; even offsets are rows and odd offsets are
+columns, and together they cover $1\le i\le p-r$, so row and column operations remove the multiple of $EE^{\top}$ and leave
+$\begin{psmallmatrix}\tilde xI&G_Y\\ G_X&0\end{psmallmatrix}$. A Schur complement on $\tilde xI$ (here it is essential that $x$
+is an indeterminate, so that $\tilde x$ is a unit) shows that its rank is $k+\rank(G_XG_Y)$. In $G_XG_Y$ the block between the high
 rows and the high columns is zero, since their offsets $z-p$ have opposite parities, so $\rank(G_XG_Y)\le p-r$. In
 total the rank of the reduction is at most $(r-k)+k+(p-r)=p$, the corank is at least $r+m-p$, and
 Lemma~\ref{lem:rank} gives $v(\det)\ge(r+m-p)-\tau'=-(2(r-k)+3m)$. Deleting a common node changes the potentials by at
@@ -668,7 +675,7 @@ the interval $r<p<r+m$ is automatic.
 
 \subsubsection{Pole-free windows: the bound (W)}\label{sssec:window}
 Like the rank bounds, the bound (W) does not come from the valuations of the entries alone. Between two consecutive poles
-the step function $\sigma$ of \eqref{eq:firstorder} is constant, and the reductions of the fibres of nearby residue classes
+the step function $V$ of \eqref{eq:firstorder} is constant, and the reductions of the fibres of nearby residue classes
 are then translates of one another. Kernel vectors can be transported from one fibre to the next, and their pairings vanish
 modulo $p^2$ by Lemma~\ref{lem:pairing}; the corner bound \eqref{eq:corner} turns this into a saving at second order.
 
@@ -697,13 +704,13 @@ determinant, so a bound for it bounds every member). Let $\rho<\rho'$ be two res
 Translation $t\mapsto t+\delta$ maps the nodes of the fibre $\rho$ bijectively onto those of the fibre $\rho'$: common
 nodes to common nodes, since no $t\equiv r$ lies in $(\rho,\rho']$; border nodes to border nodes, since both classes lie in
 the window range; and $X'$ to $Y'$ when $\delta$ is odd. Since there is no pole in $(\rho,\rho']$, the step function
-$\sigma$ and the diagonal residues are unchanged, and so are the differences of nodes. Hence the reduced block of the
+$V$ and the diagonal residues are unchanged, and so are the differences of nodes. Hence the reduced block of the
 fibre $\rho'$ equals that of $\rho$ for even $\delta$, and its transpose for odd $\delta$. In the window the fibres alternate
-between one more row than column and one more column than row. A nonzero left kernel vector $\lambda$ of one block,
+between one more row than column and one more column than row. A nonzero left kernel vector $\mathbf y$ of one block,
 transported to every fibre of the window, is a left kernel vector on the fibres with a surplus row and a right kernel
 vector on the others, with the same moment pair everywhere. By Lemma~\ref{lem:pairing} all pairings between these
-vectors vanish modulo $p^2$. Extending the $x$ row vectors and the $y$ column vectors, $x+y=b-a$, to unimodular matrices,
-\eqref{eq:corner} gives $v(\det B)\ge b-a$. Since $\det B=p^{2(r+m)}\det\Phi$, the theorem follows.
+vectors vanish modulo $p^2$. Extending the $n_1$ vectors on rows and the $n_2$ vectors on columns, $n_1+n_2=b-a$, to
+unimodular matrices, \eqref{eq:corner} gives $v(\det B)\ge b-a$. Since $\det B=p^{2(r+m)}\det\Phi$, the theorem follows.
 \end{proof}
 
 \subsubsection{The rank bound (R)}\label{sssec:rank}
@@ -728,7 +735,7 @@ and
 Every node is $t=x+pd$ with residue $x$ and digit $d$. Write $k(x)$ for the number of common nodes in the fibre $x$.
 Since the border has length $2m<p$, the fibre $x$ contains the common digits $0,\dots,k(x)-1$ and at most one border
 digit, namely $k(x)\in\{h,h+1\}$, which is a row or a column according to the parity of $x+pk(x)-r$; the step function
-$\sigma$ is constant on the fibre up to the bit $z(x)=\mathbf 1[x\ge\rho]$. Thus the reduced block of a fibre depends only
+$V$ is constant on the fibre up to the bit $z(x)=\mathbf 1[x\ge\rho]$. Thus the reduced block of a fibre depends only
 on $(k(x),z(x))$ and the role of its border digit, and its entries have the L\"owner form of Lemma~\ref{lem:moment}. A
 fibre with a border row (column) has a left (right) kernel vector with nonzero moment pair; for the digit $0$ below the
 pole the step function vanishes, so these fibres share the moment direction $(1,0)$, and a fibre of type $(1,0)$
@@ -797,7 +804,7 @@ The conditions of Theorem~\ref{thm:local} are linear inequalities $L\ge0$ or $L>
 intervals $U$ of $\theta$. At an endpoint the error $L-r\hat L(p/r)$ is a combination of $m-\alpha r$ and $k_p-\kappa p$.
 With the rounding $m=\lceil\alpha r-\frac12\rceil$ the endpoints $\theta=2\alpha$ (from $2m<p$) and $\theta=(1+2\alpha)/(1+\kappa)$
 (from $N\le p+k$) are \emph{exact}: the condition holds for every prime on the correct side. The other endpoints are exact
-or hold outside a strip $|p-er|\le V$ of bounded width, on which another bound must be used.
+or hold outside a strip of bounded width around $p=er$, on which another bound must be used.
 
 \subsection{The checker and the content theorem}\label{ssec:checker}
 For the root class $j$ let $\Phi_j(\theta)$ be the minimum of the homogenised bounds $\hat\tau_b(\theta)$ over the bounds $b$
@@ -895,8 +902,8 @@ counted with multiplicity.
 For a pair whose degrees are small enough, the discrete Wronskian
 $W(z)=Q(z)[q(z+1)p(z)-q(z)p(z+1)]-A(z)p(z)p(z+1)$, where $\delta=A/Q$ in lowest terms, has more prescribed zeros at the
 nodes than its degree allows, and so vanishes identically. Then $q/p$ would be a rational antidifference of $\delta$, which is
-impossible: the simple pole of $\delta$ at $-1$ is isolated in its class modulo $\Z$, because the other poles $-\mu_i$ are not
-congruent to $-1$ modulo $\Z$, and clearing denominators in $q(z+1)/p(z+1)-q(z)/p(z)=\delta(z)$ would propagate a root of
+impossible: the simple pole of $\delta$ at $-1$ is isolated in its class modulo $\Z$, because the other poles of $\delta$ (at
+$-s$ for $F_s$, and at $-\frac13$ and $-\frac12$ for $F_\chi$) are not congruent to $-1$ modulo $\Z$, and clearing denominators in $q(z+1)/p(z+1)-q(z)/p(z)=\delta(z)$ would propagate a root of
 the denominator indefinitely in one direction. Counting the zeros by chains of nodes of step $2$ bounds the dimension of
 the kernel, and so the corank of $\Phi_{r,\emptyset}(x_0)$, by a number $d_0$ depending only on $d$ and on the number of such
 chains, which is bounded independently of $r$.
@@ -926,16 +933,17 @@ parameter $c\le1$ and every frame of \eqref{eq:frames}.
 
 \subsection{A contour representation}
 Hermite's formula gives $\Lw_F[a,b]=\frac1{2\pi i}\oint F(z)v_a(z)v_b(z)\,dz$ with $v_a(z)=1/(z-a)$, the contour enclosing
-the nodes and no pole of $F$. Write $F=\sum_iw_i\psi(z+\mu_i)$, with $\sum_iw_i=0$; for $F_s$ the shifts are $\mu=(1,s)$ and
-the weights $(1,-1)$, for $F_\chi$ the shifts are $(\frac13,\frac12,1)$. The reflection formula
-$\psi(w)=\psi(1-w)-\pi\cot\pi w$ splits $F=\tilde F+E$, where $\tilde F$ is analytic in the left half-plane and $O(1/|z|)$
-there, and
+the nodes and no pole of $F$. Write $F=\sum_{u\in\mathcal T}w_u\psi(z+u)$, where $\mathcal T$ is the set of shifts of $F$ and
+$\sum_uw_u=0$: for $F_s$, $\mathcal T=\{1,s\}$ with the weights $w_1=1$ and $w_s=-1$, and for $F_\chi$,
+$\mathcal T=\{\frac13,\frac12,1\}$. The reflection formula $\psi(w)=\psi(1-w)-\pi\cot\pi w$ splits $F=\tilde F+E$, where
+$\tilde F$ is analytic in the left half-plane and $O(1/|z|)$ there, and
 \[
- E(z)=-\pi\sum_iw_i\cot\pi(z+\mu_i)
+ E(z)=-\pi\sum_{u\in\mathcal T}w_u\cot\pi(z+u)
 \]
-is $1$-periodic with $|E(x+iy)|\le C_Ee^{-2\pi|y|}$ for $|y|\ge1$, because the weights sum to zero. For $F_s$,
+is $1$-periodic with $|E(z)|\le C_Ee^{-2\pi|\Im z|}$ for $|\Im z|\ge1$, because the weights sum to zero. For $F_s$,
 $E_s(z)=\pi[\cot\pi(z+s)-\cot\pi z]$. Let $\Gamma$ be a polygonal path, symmetric under complex conjugation, which crosses
-the real axis at a point $x^*<0$ at distance at least $\delta_0>0$ from every pole $-(j+\mu_i)$, runs through the left
+the real axis at a point $x^*<0$ at distance at least $\delta_0>0$ from every pole $-(j+u)$, $j\ge0$, $u\in\mathcal T$,
+runs through the left
 half-plane and ends in two rays. Moving the contour to $\Gamma$ picks up the residues of $F$ at the poles in $(x^*,0)$, and
 the part of the integrand with $\tilde F$ integrates to $0$ over $\Gamma$. Hence, for all integers $a,b\ge0$,
 \begin{equation}\label{eq:gram}
@@ -945,8 +953,9 @@ the part of the integrand with $\tilde F$ integrates to $0$ over $\Gamma$. Hence
 a Gram representation with respect to a complex measure $m$ with finitely many atoms and an exponentially small
 density on $\Gamma$. After scaling by $r$, the atoms lie on a segment $[-r_0,0]$ with density $d$, the number of digamma
 terms of $F$ (two for $F_s$, three for $F_\chi$). The separation condition on $x^*$ is a finite check on the
-fractional parts of $\mu_i-x^*$.
-% Lean: d is SplineData.dim, required to equal Fr.d in altGeom_hasScaledDecay (the poles -(n + mu_i) give d atoms per unit length).
+fractional parts of $u-x^*$, $u\in\mathcal T$.
+% Lean: d is SplineData.dim, required to equal Fr.d in altGeom_hasScaledDecay (the poles -(n + u), u in T, give d atoms
+% per unit length); the shifts are Frame.mu.
 
 \subsection{Two-family Andr\'eief bound}
 For a member with common nodes $S=C\setminus I$ put $R_S=S\sqcup X'$, $Q_S=S\sqcup Y'$, $n=|S|+m$, and
@@ -977,13 +986,13 @@ of mass $b=1+c/2$.
 For a regularisation radius $\rho>0$ let $k_\rho(z,w)=-\frac12\log(|z-w|^2+\rho^2)\le-\log|z-w|$.
 
 \begin{lemma}[conditional positive definiteness]\label{lem:cpd}
-For points $p_1,\dots,p_N\in\C$ and real weights $q_\alpha$ with $\sum q_\alpha=0$,
-$\sum_{\alpha,\beta}q_\alpha q_\beta k_\rho(p_\alpha,p_\beta)\ge0$.
+For points $z_1,\dots,z_n\in\C$ and real numbers $c_1,\dots,c_n$ with $\sum_ic_i=0$,
+$\sum_{i,j}c_ic_jk_\rho(z_i,z_j)\ge0$.
 \end{lemma}
 \begin{proof}
-Frullani's integral $\log a=\int_0^\infty(e^{-t}-e^{-at})\,dt/t$ and $\sum q_\alpha=0$ give
-$\sum q_\alpha q_\beta(-\log(|p_\alpha-p_\beta|^2+\rho^2))=\int_0^\infty\frac{e^{-t\rho^2}}t\sum q_\alpha q_\beta e^{-t|p_\alpha-p_\beta|^2}dt$,
-and Gaussian kernels are positive definite: expanding $e^{2t\langle p,p'\rangle}$ in powers and the binomial theorem
+Frullani's integral $\log a=\int_0^\infty(e^{-t}-e^{-at})\,dt/t$ and $\sum_ic_i=0$ give
+$\sum_{i,j}c_ic_j(-\log(|z_i-z_j|^2+\rho^2))=\int_0^\infty\frac{e^{-t\rho^2}}t\sum_{i,j}c_ic_je^{-t|z_i-z_j|^2}dt$,
+and Gaussian kernels are positive definite: expanding $e^{2t\langle z,z'\rangle}$ in powers and the binomial theorem
 write the inner sum as a convergent sum of squares.
 \end{proof}
 
@@ -998,7 +1007,8 @@ $O(r\log r)$. With the external field one arrives at the function
 \[
  g(z)=b\,U^\sigma(z)-U^{\nu_c}(z)+(1-\varepsilon)\pi|\Im z|
 \]
-for a small fixed $\varepsilon>0$, where $U^\mu(z)=\int\log\frac1{|z-w|}\,d\mu(w)$. A certificate consists of $\sigma$ and
+for a small fixed $\varepsilon>0$, where $U^\sigma(z)=\int\log\frac1{|z-w|}\,d\sigma(w)$ is the logarithmic potential of
+$\sigma$, and $U^{\nu_c}$ that of $\nu_c$. A certificate consists of $\sigma$ and
 rational numbers $m'$, $g_{\min}$, $S$, $I_\sigma$, $I_\nu$ such that
 \begin{enumerate}[label=(\alph*),leftmargin=*]
 \item $g\ge m'$ on $\Gamma$;
@@ -1065,12 +1075,13 @@ checked in Lean with rational arithmetic only. The data play no role in the proo
 
 \begin{remark}[how good a certificate can be]\label{rem:certlimit}
 For a multiplier $B$ the certificate meets the exponent $B$ exactly when $B(D-\Lambda)-\gamma\ge0$. This quantity is a concave
-function of $\sigma$, and its maximum over all measures on $\Gamma\cup[-r_0,0]\cup[0,1]$ is attained at $\sigma^*=\mu^*/b$,
-where $\mu^*$ is the weighted equilibrium measure of the constrained energy problem on this set with the external field
-$(1-\varepsilon)\pi|\Im z|-U^{\nu_c}$ and the upper constraint $d\,dx$ on the segment \cite{SaffTotik}. Weak duality
-expresses the deficit of any certificate as a sum of nonnegative terms, the first of which is the energy of
-$2B(b\sigma-\mu^*)$, the difference between $2Bb\sigma$ and the optimal dual measure $2B\mu^*$. Thus a certificate close to
-the best possible one must be close to $\sigma^*$ in energy, and $g-m'$ is then a small ripple on the support of $\mu^*$;
+function of $\sigma$, and its maximum over all probability measures on $\Gamma\cup[-r_0,0]\cup[0,1]$ is attained at the
+measure $\sigma^*$ for which $b\sigma^*$ is the weighted equilibrium measure of the constrained energy problem on this set with
+the external field $(1-\varepsilon)\pi|\Im z|-U^{\nu_c}$ and the upper constraint $d\,dx$ on the segment \cite{SaffTotik}.
+Weak duality expresses the deficit of any certificate as a sum of nonnegative terms, the first of which is the energy of
+$2Bb(\sigma-\sigma^*)$, the difference between $2Bb\sigma$ and the optimal dual measure $2Bb\sigma^*$. Thus a certificate
+close to the best possible one must be close to $\sigma^*$ in energy, and $g-m'$ is then a small ripple on the support of
+$\sigma^*$;
 this is why a pointwise verification on a cover is needed. This remark is not used in the proof of Theorem~\ref{thm:main}
 and is not part of the formalization.
 \end{remark}
@@ -1126,8 +1137,8 @@ Every member of the alternating geometry of parameter $\frac12$ for $F_\chi$ sat
 following $\tau$.
 \begin{enumerate}[label=(\roman*),leftmargin=*]
 \item The bounds (T1) and (T1$'$): $2(r+m)$ and $2r+2m-\|m\|_p$.
-\item If $N\le2p$: $2r+2m-S_p$, where $S_p$ is the number of pairs $(A,\epsilon)$ of a regular node $A$ and a side
- $\epsilon$ (row or column) on which $A$ lies, such that $A+p$ is not a node of the other side.
+\item If $N\le2p$: $2r+2m-S_p$, where $S_p$ is the number of pairs formed by a regular node $A$ and a side (row or
+ column) on which $A$ lies, such that $A+p$ is not a node of the other side.
 \item If $N<\min(k_A,k_B)$: $0$.
 \item The bound $2r+2m-(b-a)$ of Theorem~\ref{thm:window}, for every $n$ and every window $[a,b)$ as there, with the
  cuts $t\equiv0$, $t\equiv k_A$, $t\equiv k_B$ and $t\equiv r\pmod p$.
@@ -1144,7 +1155,7 @@ poles are simple, and weight $0$ if both are regular. Two distinct congruent nod
 and regular nodes are smaller than $p$, at most one of them is regular; if the row node $A$ of such an entry is regular,
 its column node is $A+p$, so the potential on the row of $A$ is $1$, and symmetrically for a regular column node. For (iii), if $N<\min(k_A,k_B)$ then $N<p$, no index below $N$ is a
 pole and no two nodes are congruent modulo $p$, so every entry is $p$-integral. For (iv), the proof of
-Theorem~\ref{thm:window} uses the frame only through its poles: the step function $\sigma$ and the diagonal residues are
+Theorem~\ref{thm:window} uses the frame only through its poles: the step function $V$ and the diagonal residues are
 constant between consecutive cuts, which is what the translation between the fibres of the window needs.
 \end{proof}
 % Lean: Chi3.KContent.kcat_trop_valid (D1, D1x = (i); Z0, Z1 = (ii), with Z1 adding the regular nodes of the second
@@ -1205,11 +1216,11 @@ $\mu(\xi)\le\gamma/(D-\Lambda)$.
 \end{theorem}
 
 \begin{proof}
-Let $\eta=D-\Lambda$, let $\nu>\gamma/\eta$, and suppose $|\xi-p/q|<q^{-\nu}$ with $q$ large; put $L=\log q$. Choose $\delta>0$
-with $\nu>\gamma(1+\delta)/\eta$, and let $r$ be the least admissible scale with $r\ge(1+\delta)L/\eta$. By
+Let $\eta=D-\Lambda$, let $\mu_0>\gamma/\eta$, and suppose $|\xi-p/q|<q^{-\mu_0}$ with $q$ large; put $L=\log q$. Choose
+$\delta>0$ with $\mu_0>\gamma(1+\delta)/\eta$, and let $r$ be the least admissible scale with $r\ge(1+\delta)L/\eta$. By
 Theorem~\ref{thm:selection} with $x_0=p/q$ there is a member with $P_{r,I}(p/q)\ne0$. By Lemma~\ref{lem:integrality} and
-Theorem~\ref{thm:content}, $|d_{r,I}P_{r,I}(p/q)|\ge q^{-r}=e^{-rL}$. Write $p/q=\xi+t$ with $|t|<e^{-\nu L}\le e^{-\gamma r}$ (as
-$\gamma r\le\gamma(1+\delta)L/\eta+O(1)<\nu L$ for large $q$). By Theorems~\ref{thm:content} and~\ref{thm:decay},
+Theorem~\ref{thm:content}, $|d_{r,I}P_{r,I}(p/q)|\ge q^{-r}=e^{-rL}$. Write $p/q=\xi+t$ with $|t|<e^{-\mu_0L}\le e^{-\gamma r}$
+(as $\gamma r\le\gamma(1+\delta)L/\eta+O(1)<\mu_0L$ for large $q$). By Theorems~\ref{thm:content} and~\ref{thm:decay},
 $|d_{r,I}P_{r,I}(p/q)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2}=e^{-(\eta-o(1))r^2}$. Comparing,
 $(\eta-o(1))r^2\le rL$, whereas $\eta r\ge(1+\delta)L$; this is a contradiction for large $q$.
 \end{proof}
