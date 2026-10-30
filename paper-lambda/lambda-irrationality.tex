@@ -41,23 +41,27 @@
 \newcommand{\cO}{\mathcal O}
 
 % ---------------------------------------------------------------------------
-% Headline bounds: the rational numbers of the Lean `Bound` modules.
-% lambda 315113/10000, thirds 952671/100000, fifths 59983/2500, sevenths 70993/20, chi3 137486/10000.
-% Thirds, fifths and chi3 are proved; lambda (q = 4) and sevenths are PENDING the bank switch.
-\newcommand{\MuLamU}{31.5113}
-\newcommand{\MuThirdsU}{9.52671}
-\newcommand{\MuFifthsU}{23.9932}
-\newcommand{\MuSeventhsU}{3549.65}
-\newcommand{\MuChi}{13.7486}   % Lean: Chi3Rank.chi3_measure_L2_rank (137486/10000)
+% Headline bounds: the rational numbers of the Lean `Bound` modules (namespace CatalanCore.Uniform.Bank):
+% LambdaContent.Bound.lambda_measure 314411/10000; ThirdsContent.Bound.thirds_{plus,minus}_measure 95133/10000;
+% FifthsContent.Bound.fifths{1..4}_measure 47823/2000; SeventhsContent.Bound.sevenths_measure 2801;
+% Chi3.KContent.chi3_measure_L2_k 137046/10000.
+\newcommand{\MuLamU}{31.4411}
+\newcommand{\MuThirdsU}{9.5133}
+\newcommand{\MuFifthsU}{23.9115}
+\newcommand{\MuSeventhsU}{2801}
+\newcommand{\MuChi}{13.7046}
 % Per-family data (Table tab:data), rounded outward from the Lean rationals:
-% Lambda = bankData.Λ (*Content/AutoData.lean), D = Dchi.Dt (*/Cover/Env.lean), gamma = ccert (*/Final.lean).
-% (7 decimals, 10 for sevenths: the rounded values themselves give gamma/(D - Lambda) < B.)
-\newcommand{\LamFour}{3.5165356}  \newcommand{\DFour}{3.7447213}  \newcommand{\gFour}{7.1904273}  \newcommand{\ExpFour}{31.51128}
-\newcommand{\LamThree}{3.3124813} \newcommand{\DThree}{4.0291249} \newcommand{\gThree}{6.8272548} \newcommand{\ExpThree}{9.526709}
-\newcommand{\LamFive}{3.5149297}  \newcommand{\DFive}{3.8135797}  \newcommand{\gFive}{7.1655663}  \newcommand{\ExpFive}{23.99319}
-\newcommand{\LamSeven}{3.6403872411} \newcommand{\DSeven}{3.6424792669} \newcommand{\gSeven}{7.4259546075} \newcommand{\ExpSeven}{3549.648}
-\newcommand{\LamChi}{4.0976831}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.74859}
-\newcommand{\MuChiExact}{13.748588}
+% Lambda = bankData.Λ (Lambda/Fifths/SeventhsContent/AutoData.lean), ufData.Λ (ThirdsContent/AutoUFData.lean),
+%   kData.Λ (Chi3/KContent/Data.lean); D = Dchi.Dt (*/Cover/Env.lean); gamma = s_ccert (Common/Data/*/Data.lean),
+%   equal to cL, ctT, c5, c7 and to the literals of Chi3/KContent/Bound.lean `chi3_measureLB_k`.
+% (7 decimals, 10 for sevenths: the rounded values themselves give gamma/(D - Lambda) < B; ExpX is the exact quotient
+%  rounded up.)
+\newcommand{\LamFour}{3.5160256}  \newcommand{\DFour}{3.7447213}  \newcommand{\gFour}{7.1904273}  \newcommand{\ExpFour}{31.44102}
+\newcommand{\LamThree}{3.3114645} \newcommand{\DThree}{4.0291249} \newcommand{\gThree}{6.8272548} \newcommand{\ExpThree}{9.513211}
+\newcommand{\LamFive}{3.5139083}  \newcommand{\DFive}{3.8135797}  \newcommand{\gFive}{7.1655663}  \newcommand{\ExpFive}{23.91141}
+\newcommand{\LamSeven}{3.6398277162} \newcommand{\DSeven}{3.6424792669} \newcommand{\gSeven}{7.4259546075} \newcommand{\ExpSeven}{2800.609}
+\newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.70452}
+\newcommand{\MuChiExact}{13.704516}
 % ---------------------------------------------------------------------------
 
 \begin{document}
@@ -67,7 +71,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{October 23, 2026}
+\date{October 29, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -98,16 +102,15 @@ $\psi'(\frac a5)-\zeta(2)$ and $\psi'(\frac a7)-\zeta(2)$.
 The approximations come from determinants of \emph{rectangular} L\"owner matrices of digamma differences at integer
 nodes, with a long common block and an interleaved border whose length is the only parameter of the geometry. The
 denominators are bounded prime by prime by a finite list of local bounds (assignment problems, the rank of the
-reduction modulo $p$, and windows of the border free of poles, where the reduction is translation invariant), each an
-explicit integer expression in the scale, the border, the prime and its first pole; one theorem turns a finite table
-of affine pieces, checked by comparisons of rational numbers, into the content estimate for every shift with the same
+reduction modulo $p$, and windows of the border free of poles, where the reduction is translation invariant; for the
+small primes, which meet the border several times, the windows are read modulo $p$), each an explicit integer expression in the
+scale, the border, the prime and the first poles of the frame modulo $p$; one theorem turns a finite table of affine
+pieces, checked by comparisons of rational numbers, into the content estimate for every shift with the same
 denominator $q$. Nonvanishing follows from Hermite interpolation in characteristic zero, after deleting a bounded number
 of common nodes. The size is bounded with Andr\'eief's identity and a lower bound for a discrete logarithmic energy,
 obtained from a comparison measure and verified on a finite cover by cells.
 
 Every result is formalized in Lean~4, with no unproved steps and only the standard axioms.
-% TODO(verify): true for thirds, fifths and L(2,chi_{-3}); the rows q = 4 and q = 7 are pending the bank switch, and the
-% windows with n >= 1 (Theorem thm:window, prefix layer) are not yet in Lean.
 \end{abstract}
 
 \maketitle
@@ -182,7 +185,7 @@ most $B$.
 The rows are one construction with different shifts. The frame is the digamma difference
 $\psi(z+t)-\psi(z+s)$, or for $L(2,\chi_{-3})$ a combination of three of them; for the pairs
 $(\frac aq,1)$ the node geometry depends on $q$ only through one rational parameter. The shift
-$s=\frac12$ also belongs to the family, with $\Psi(\frac12,1)=\psi'(\frac12)-\zeta(2)=2\zeta(2)=\pi^2/3$. The
+$s=\frac12$ also belongs to the family, with $\Psi(\frac12,1)=\psi'(\frac12)-\zeta(2)=2\zeta(2)=\pi^2/3$, and the
 method applies to it, but the exponent it gives is larger than the known bounds for $\mu(\zeta(2))$
 \cite{Giraudin26,LBKWSK26}, so we do not state it. Theorem~\ref{thm:main}, together with every result in this
 paper, has been verified in the Lean~4 proof assistant, with no unproved steps and only the standard
@@ -320,13 +323,19 @@ As in the work of Rhin and Viola \cite{RhinViola96,RhinViola01}, we bound the $p
 $\den P$ prime by prime and sum the bounds against $\log p$ with the prime number theorem in arithmetic progressions.
 For a prime $p$ in the range $p\asymp r$ the relevant data are the scale $r$, the border size $m$, the prime, and the
 first index $k_p\ge1$ at which the second digamma term of $F_s$ has a pole modulo $p$; we have $k_p=\kappa p+O(1)$
-with $\kappa=j/q$, where $j\equiv ap^{-1}\pmod q$ is the \emph{root class} of $p$.
+with $\kappa=j/q$, where $j\equiv ap^{-1}\pmod q$ is the \emph{root class} of $p$. The frame of $L(2,\chi_{-3})$ has two
+such first poles, and on each class of primes modulo $6$ both are affine functions of one index of the same kind
+(Section~\ref{sec:chi3-quarter}).
 
 We prove a finite list of local bounds, each by its own mechanism: the assignment (tropical) bound with explicit
 potentials, three bounds for the rank of the reduction modulo $p$ of a rescaled matrix, and a bound from windows of
-consecutive border nodes free of poles, in which the reduction is translation invariant between residue classes.
+consecutive border nodes free of poles, in which the reduction is translation invariant between residue classes. The
+window bound also applies to the primes $p\le m$, which meet the border several times: reduced modulo $p$, the border
+covers an arc of residue classes once more than the others, and on this arc the translation argument improves the
+assignment bound.
 Every one of them is an explicit integer expression in $(r,m,p,k_p)$, built from affine forms with $\min$, $\max$,
-truncated subtraction and the distance to $p\Z$, and holds in a range of $p/r$ described by linear inequalities.
+truncated subtraction, the distance to $p\Z$ and the multiple $p\lfloor r/p\rfloor$, and holds in a range of $p/r$
+described by linear inequalities.
 Replacing $(r,m,p,k_p)$ by $(1,\alpha,\theta,\kappa\theta)$ turns each bound into a piecewise affine profile in
 $\theta=p/r$, up to an error bounded by an explicit constant. The content constant is then
 \[
@@ -436,8 +445,8 @@ $[r,r+2m)$ has length $cr+O(1)$. For a depth $d_0\ge0$, its \emph{members} are t
 with $|I|\le d_0$, and $P_{r,I}=\det\Phi_{r,I}$.
 \end{definition}
 
-For the frames $F_s$ we use $c=\frac15,\frac3{10},\frac29,\frac16$ for $q=4,3,5,7$; for $F_\chi$ the quarter border of
-Section~\ref{sec:chi3-quarter}, with $c=\frac12$. All $o(1)$ terms below are uniform over the members as $r\to\infty$.
+For the frames $F_s$ we use $c=\frac15,\frac3{10},\frac29,\frac16$ for $q=4,3,5,7$, and for $F_\chi$ we use $c=\frac12$
+(Section~\ref{sec:chi3-quarter}). All $o(1)$ terms below are uniform over the members as $r\to\infty$.
 
 \begin{lemma}[integrality]\label{lem:integrality}
 $P_{\mathcal G,I}$ has degree at most $|C\setminus I|$. If $d$ is a positive integer with $dP_{\mathcal G,I}\in\Z[x]$ and
@@ -608,14 +617,19 @@ checked in the formal proof.
 
 \subsubsection{Primes near $r$: the bounds (LP1) and (LP2)}\label{sssec:lp}
 For $p$ close to $r$ the reduction of the rescaled matrix has a large block of rank one per residue class, and the
-corank can be computed. We give the proof of (LP2); (LP1), for primes just below $r$, is proved by the same elimination and
-we refer to the formal proof for it.
-% TODO(verify): LP1 = `lp1Layer` (BankShared/TwoTerm/LP.lean); its proof is not described in the sources read.
+corank can be computed. We give the proof of (LP2). The bound (LP1), for the primes with $p\le r<p+k_p$ and $N\le2p$, is
+proved by the same method: with the potentials of (T2), the elimination of an invertible block of common nodes brings the
+reduction to the form $\begin{psmallmatrix}sI&G_Y\\ G_X&0\end{psmallmatrix}$, in which the border nodes below $p+k_p$
+contribute rows and columns proportional to unit vectors, and the Frobenius--K\"onig theorem bounds its rank. The saving over
+(T2) is $(\ell-m)_+$, where $\ell=\min(2m,p+k_p-r)$ is the number of border nodes below $p+k_p$; we refer to the formal proof
+for the details.
+% Lean: Content.Smith.LP1Hyp.gle; branch Content.BankShared.TwoTerm.lp1_gle_tt.
 
 \begin{theorem}\label{thm:lp2}
 Assume $r<p<r+m$, $k=k_p\le r$ and $N=r+2m\le2p$, and that every pole below $N$ is simple. Then
 $v(\det\Phi_{r,\emptyset})\ge-(2(r-k)+3m)$. The same holds for every member, with debit $1$ per deleted node.
 \end{theorem}
+% Lean: Content.BankShared.TwoTerm.LP2HypW.gle; branch lp2w_gle_tt (catalogue entry brLP2w).
 \begin{proof}
 Use the potentials $u(A)=\mathbf 1[k\le A]$ for common nodes $A<r$ and $u(A)=1+\mathbf 1[p\le A]$ for border nodes, of value
 $\tau'=2(r-k)+2m+(N-p)$. Since $N\le2p$, the poles below $N$ are $k$, $p$, and $p+k$ if $p+k<N$; each is simple, and the
@@ -650,6 +664,11 @@ nodes beyond $p+k$ only contribute rows and columns that vanish modulo $p$ allow
 the interval $r<p<r+m$ is automatic.
 
 \subsubsection{Pole-free windows: the bound (W)}\label{sssec:window}
+Like the rank bounds, the bound (W) does not come from the valuations of the entries alone. Between two consecutive poles
+the step function $\sigma$ of \eqref{eq:firstorder} is constant, and the reductions of the fibres of nearby residue classes
+are then translates of one another. Kernel vectors can be transported from one fibre to the next, and their pairings vanish
+modulo $p^2$ by Lemma~\ref{lem:pairing}; the corner bound \eqref{eq:corner} turns this into a saving at second order.
+
 A \emph{cut} is an integer $t$ with $t\equiv0$, $t\equiv k_p$ or $t\equiv r\pmod p$. A window $[a,b)$ of integers is
 \emph{cut-free} if no cut lies in the open interval $(a,b)$.
 
@@ -660,12 +679,14 @@ a cut-free window with $\max(r,N_n-p)\le a\le b\le\min(N_n,r+p)$. Then every mem
  e_p(r,I)\le2r+2m-(b-a).
 \]
 \end{theorem}
-% TODO(lean): the case n = 0 is in Lean (M3D windows, `m3_gap_tt`); the case n >= 1 (primes p <= m) is proved on paper
-% (prefix-rule-2026-10-29/PAPER.md) and its Lean layer is in progress.
+% Lean: Content.BankShared.TwoTerm.Pre.prefix_gle (any frame whose poles below N are simple); branches brWin (n = 0,
+% Check/Catalogue.lean) and brPre (Check/Prefix.lean).
 For $n=0$ the windows lie in the border above $\max(r,N-p)$, and the bound applies to primes $p>m$. For $n=\lfloor m/p\rfloor\ge1$
-it applies to the small primes $p\le m$, where the assignment bound is (T1$'$): read modulo $p$, the window range is the
-arc of residues that receive an odd number of border nodes, and the saving over (T1$'$) is $(L-\|m\|_p)_+$ for the
-longest cut-free run $L$ of this arc. For other $n$ the window range is empty.
+it applies to the small primes $p\le m$, where among the assignment bounds only (T1) and (T1$'$) are available. Read
+modulo $p$, the window range is then the arc of residues that receive an odd number of border nodes, and the saving over
+(T1$'$) is $(L-\|m\|_p)_+$ for the longest cut-free run $L$ of this arc. For other $n$ the window range is empty. The proof
+uses the frame only through its poles: for a frame with several digamma terms the same statement holds when the cuts are
+the residues of all the poles and of $r$.
 
 \begin{proof}
 Let $B=p^2\Phi$, with independent diagonal variables on the common nodes (every member is a coefficient of this
@@ -728,8 +749,8 @@ nonzero leading coefficient, and the border node is eliminated against $t_0$ wit
 residues of the window together with the residues of the eliminated border nodes gives an explicit bound: a minimum over
 the four choices of the window type $(k,z)\in\{h,h+1\}\times\{0,1\}$ of an expression in the lengths of the window and
 of its overlaps with the border and its two translates by $\pm p$.
-% TODO(verify): the closed formula is `closedPrice` / `closedBound` (Content/UFSimple/Closed.lean, `ufClosedLayer`, debit 1);
-% the paper states it only in words.
+% Lean: Content.UFSimple.closedPrice (the minimum of four closedBound candidates), layer ufClosedLayer (debit 1);
+% catalogue entry brS (Content/BankShared/Check/UF.lean).
 The resulting expression belongs to the same class of integer expressions as the others, and its profile is given in
 the formal proof.
 
@@ -804,18 +825,22 @@ units modulo $q$. Summing and using (C5) gives the theorem; the constants $C_P$ 
 
 The tables used in this paper are generated from the functions $\Phi_j$ themselves: the pieces are the maximal intervals
 on which $\Phi_j$ is affine and attained by one bound, so that $\Lambda_{\rm fin}=\frac1{\varphi(q)}\sum_j\int\Phi_j$ up to the
-prefix. On $(0,\alpha]$ only (T1$'$) and (W) are available; with (T1$'$) alone the prefix is the sawtooth
+prefix. Every bound of Theorem~\ref{thm:local} is available to the tables: (T1)--(T5), (LP1), (LP2), (R), (S), and the
+windows (W). The windows with $n=0$ are used for $m<p$, between consecutive cuts. On $(0,\alpha]$, that is for $p\le m$,
+the only other bounds are (T1) and (T1$'$); with (T1$'$) alone the profile there is the sawtooth
 $2+2\alpha-\theta\|\alpha/\theta\|$, whose integral is
 \[
  \int_0^\alpha\Bigl(2+2\alpha-\theta\Bigl\|\frac\alpha\theta\Bigr\|\Bigr)d\theta=2\alpha+\frac{\alpha^2}2+2\alpha^2\log2,
 \]
-since $\int_1^\infty\|x\|x^{-3}\,dx=\frac32-2\log2$. A table resolves this sawtooth into $n$ teeth and a constant piece near
-$0$, which costs $\alpha^2T_n$ with $0<T_n\le1/(4n^2)$; the number $\Lambda_{\rm fin}$ is then rational, and (C5) is an
-identity between rational numbers. The bounds depend on the member $a$ only through the root class, and their profiles
-only through $(q,j,\alpha)$, so one table serves all members.
-% TODO(verify): the bank tables of the formal proof (`*Content/AutoData`) use the layers T, LP1, LP2 (strict form N <= p + k),
-% the windows W with n = 0, R and S. The widened LP2 (Check/LP2W.lean, f91a80a) and the windows with n >= 1 enter the
-% tables at the bank switch; the constants of Table tab:data are to be updated then.
+since $\int_1^\infty\|x\|x^{-3}\,dx=\frac32-2\log2$. The windows with $n=\lfloor m/p\rfloor\ge1$ lower this profile on the
+strips $\alpha/(n+1)<\theta\le\alpha/n$; the tables use them for $n\le8$, again with each window running between two
+consecutive cuts. Below $\alpha/9$ a table resolves the sawtooth into teeth down to $\alpha/n_0$
+($n_0=100$ for $q=4,5,7$ and $n_0=50$ for $q=3$) and ends with a constant piece on $(0,\alpha/n_0]$, which costs $\alpha^2T_{n_0}$
+with $0<T_n\le1/(4n^2)$; the number $\Lambda_{\rm fin}$ is then rational, and (C5) is an identity between rational numbers.
+The bounds depend on the member $a$ only through the root class, and their profiles only through $(q,j,\alpha)$, so one
+table serves all members.
+% Lean: the catalogue tableT ++ [brLP1, brLP2w, brRank, brS] ++ windows brWin ++ brPre (1 <= n <= 8), cited through
+% Content.BankShared.Check.catValid_bankUFwP in each *Content/Auto.lean (thirds: ThirdsContent/AutoUF.lean).
 
 %% =====================================================================
 \section{Nonvanishing}\label{sec:nonvanishing}
@@ -828,7 +853,11 @@ bounded independently of $r$; this is the statement used in Section~\ref{sec:pro
 Normalise the frame so that the divided differences of $F$ at consecutive nodes have prefix values $f_t$, with
 $f_{t+1}-f_t=\delta(t)$, and the diagonal prefix $e_t$ satisfies $e_{t+1}-e_t=-\delta'(t)$. For $F_s$,
 \[
- \delta(z)=\omega\Bigl(\frac1{z+1}-\frac1{z+s}\Bigr)=\frac{\omega(s-1)}{(z+1)(z+s)} .
+ \delta(z)=\omega\Bigl(\frac1{z+1}-\frac1{z+s}\Bigr)=\frac{\omega(s-1)}{(z+1)(z+s)} ,
+\]
+and for $F_\chi$, with $\omega=-\frac16$,
+\[
+ \delta(z)=\frac{1-z}{216\,(z+1)(z+\frac13)(z+\frac12)} .
 \]
 
 \begin{theorem}[selection]\label{thm:selection}
@@ -854,20 +883,21 @@ the denominator indefinitely in one direction. Counting the zeros by chains of n
 the kernel, and so the corank of $\Phi_{r,\emptyset}(x_0)$, by a number $d_0$ depending only on $d$ and on the number of such
 chains, which is bounded independently of $r$.
 
-Finally, the left and right kernels map to the same interpolation space, and at a common node their coordinates are the same
-values $p(c)$ times nonzero factors. A nonzero kernel pair cannot vanish at every common node (dividing by the node
+Finally, the left and right kernels map to the same interpolation space, and at a common node $c$ their coordinates are the
+values $p(c)$ times nonzero factors. No nonzero kernel pair has $p$ vanishing at every common node (dividing by the node
 polynomial of the common nodes would give a pair of degree less than $m$ satisfying the value conditions at all $N$ nodes,
-and the Wronskian argument applies again). Hence a set $I$ of $|I|=\corank$ common nodes can be chosen so that the principal
-minor deleting $I$ is nonzero.
+and the Wronskian argument applies again). Hence there is a set $I$ of $|I|=\corank$ common nodes such that no nonzero left
+or right kernel vector vanishes on $I$. The rows outside $I$ then span the row space, the columns outside $I$ span the
+column space, and the principal minor deleting $I$ is nonzero.
 \end{proof}
-% TODO(verify): the sketch follows Theorem thm:chi3-charzero-selection (one deletion for chi_{-3}) and the Lean files
-% Uniform/NV/* and Frame/NVAdapter.lean; the exact form of the component count is in `selectionDepth`.
+% Lean: NVAdapter.finite_common_deletion_exact (the corank bound and the deletion) and BlockGeom.hasNV0; the depth is
+% BlockGeom.selectionDepth.
 
-For $L(2,\chi_{-3})$ with the quarter border, the same argument gives $d_0=1$ (Theorem~\ref{thm:chi3-charzero-selection}).
+The theorem applies to every frame of \eqref{eq:frames}; for $F_\chi$ the pole of $\delta$ at $-1$ is again isolated in its
+class modulo $\Z$, the other poles being $-\frac13$ and $-\frac12$. In the formal proof the depth is $d_0\le64$ for all the
+frames of this paper.
 
 %% =====================================================================
-\input{chi3-quarter-border}
-
 \section{Analytic decay}\label{sec:decay}
 
 In this section we bound $|P_{r,I}(x)|$ for $x$ near $\xi$. The argument is that of OpenAI \cite{OpenAI2026} for
@@ -898,7 +928,7 @@ a Gram representation with respect to a complex measure $m$ with finitely many a
 density on $\Gamma$. After scaling by $r$, the atoms lie on a segment $[-r_0,0]$ with density $d$, the number of digamma
 terms of $F$ (two for $F_s$, three for $F_\chi$). The separation condition on $x^*$ is a finite check on the
 fractional parts of $\mu_i-x^*$.
-% TODO(verify): d is `SplineData.dim = Fr.d` in Lean; the reading "density of the atoms" is from D1/PAPER.md.
+% Lean: d is SplineData.dim, required to equal Fr.d in altGeom_hasScaledDecay (the poles -(n + mu_i) give d atoms per unit length).
 
 \subsection{Two-family Andr\'eief bound}
 For a member with common nodes $S=C\setminus I$ put $R_S=S\sqcup X'$, $Q_S=S\sqcup Y'$, $n=|S|+m$, and
@@ -1025,6 +1055,9 @@ at most $2^{|S|}=e^{O(r)}$ terms, each at most $e^{-(D-o(1))r^2}$. The deletion 
 changes the energy by $O(r)$.
 
 %% =====================================================================
+\input{chi3-quarter-border}
+
+%% =====================================================================
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
 The three estimates combine as follows.
@@ -1050,8 +1083,8 @@ $(\eta-o(1))r^2\le rL$, whereas $\eta r\ge(1+\delta)L$; this is a contradiction 
 For each row of Table~\ref{tab:main} the frame, the geometry parameter and the constants are those of
 Table~\ref{tab:data}. The content constant is given by Theorem~\ref{thm:content} with the content table of the formal proof
 (for $L(2,\chi_{-3})$, by Section~\ref{sec:chi3-quarter}), the decay constants by Proposition~\ref{prop:cert}, and
-nonvanishing by Theorem~\ref{thm:selection} (for $L(2,\chi_{-3})$, by Theorem~\ref{thm:chi3-charzero-selection}). In every row
-$\gamma/(D-\Lambda)<B$, and Theorem~\ref{thm:deduction} gives $\mu(\xi)\le B$. Since $\xi$ is a nonzero rational multiple of
+nonvanishing by Theorem~\ref{thm:selection}. In every row $\gamma/(D-\Lambda)<B$, and Theorem~\ref{thm:deduction}, applied at
+the even scales, gives $\mu(\xi)\le B$. Since $\xi$ is a nonzero rational multiple of
 $\Psi(s,t)$ (\eqref{eq:frames}, and $\xi_\chi=\frac1{36}\Psi(\frac13,\frac23)$), this proves Theorem~\ref{thm:main}.
 \end{proof}
 
@@ -1074,9 +1107,6 @@ content constant $\Lambda$, the decay constant $D$, the window constant $\gamma$
 numbers of the formal proof, rounded outward ($\Lambda$ and $\gamma$ up, $D$ down) to the digits shown; the column $\gamma/(D-\Lambda)$
 is the exact quotient, rounded up.}\label{tab:data}
 \end{table}
-% TODO(verify): rows q = 4 and q = 7 are pending the bank switch (LambdaContent.Bound.lambda_measure,
-% SeventhsContent.Bound.sevenths_measure); their D and gamma are those of the built covers (Lambda/Cover/Env.lean,
-% Sevenths/Cover/Env.lean, Lambda/Final.lean cL, Sevenths/Final.lean c7).
 
 \begin{remark}[relation to linear independence criteria]
 The deduction is a one-dimensional version of the familiar scheme behind the criteria of Nesterenko
@@ -1124,18 +1154,14 @@ The four members share one content table, indexed by the four root classes, and 
 
 \subsection{The shifts $\frac a7$}\label{sec:sevenths}
 For $1\le a\le6$, likewise, $\psi'(\frac a7)-\zeta(2)$ is a combination of the values $L(2,\chi)$, $\chi\bmod7$, and of $\pi^2$.
-The geometry parameter is $c=\frac16$ and there are six root classes. Here $D-\Lambda$ is small, about $2\cdot10^{-3}$, and the
-exponent is correspondingly large.
-
-\subsection{The shift $\frac12$}
-For $s=\frac12$ the frame gives $\Psi(\frac12,1)=\pi^2/3$, and the method applies with $c=\frac3{10}$; the exponent it gives
-for $\pi^2$ is larger than the known bounds for $\mu(\zeta(2))$ \cite{Giraudin26,LBKWSK26}, so we do not state it.
+The geometry parameter is $c=\frac16$ and there are six root classes. Here $D-\Lambda$ is small, about $2.7\cdot10^{-3}$, and
+the exponent is correspondingly large.
 
 %% =====================================================================
 \section{Limits of the method}\label{sec:limits}
 
 The exponents are determined by three constants through $\gamma/(D-\Lambda)$. Since $\partial\mu/\partial D=-\gamma/\eta^2$, the
-exponent is most sensitive to the decay where $\eta$ is small: for $G\pm5\pi^2/48$, $\gamma/\eta^2\approx138$, and for the
+exponent is most sensitive to the decay where $\eta$ is small: for $G\pm5\pi^2/48$, $\gamma/\eta^2\approx137$, and for the
 shifts $\frac a7$ it exceeds $10^6$. On the arithmetic side, the profiles $\Phi_j$ are minima of the bounds of
 Theorem~\ref{thm:local}, and every further local bound lowers $\Lambda$ by the integral of the amount by which it lies below
 $\Phi_j$; the content constant of the method is the integral of the true exponent $e_p$, which the local bounds approximate
@@ -1157,32 +1183,33 @@ available at
 and combines analytic and arithmetic proofs with generated rational data and kernel checks for the content tables of
 Section~\ref{sec:content} and the decay certificates of Section~\ref{sec:decay}; numerical computations alone are not used as
 proof. The constants are written out as series, so the main statements use no definitions of the development: $G$ is
-$\sum_j(-1)^j/(2j+1)^2$ and $L(2,\chi_{-3})$ is $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$. The final theorems, each stating
-that for every $e>0$, all sufficiently large $q\in\N$ and all $p\in\Z$ coprime to $q$, $q^{-(B+e)}<|\xi-p/q|$, are the
-following (in the namespace \lean{CatalanCore.Uniform.Bank}):
-% TODO(verify): the public root files (ChallengeHybrid.lean / SolutionHybrid.lean) still state the retired theorems; the
-% names below are those of the uniform route; the root switch needs Sean's OK.
+$\sum_j(-1)^j/(2j+1)^2$, $L(2,\chi_{-3})$ is $\sum_k\bigl((3k+1)^{-2}-(3k+2)^{-2}\bigr)$, and $\psi'(\frac aq)-\zeta(2)$ is
+$\sum_{n\ge0}(n+\frac aq)^{-2}-\pi^2/6$. The final theorems, each stating that for every $e>0$, all sufficiently large
+$q\in\N$ and all $p\in\Z$ coprime to $q$, $q^{-(B+e)}<|\xi-p/q|$, are the following (in the namespace
+\lean{CatalanCore.Uniform.Bank}):
 \begin{itemize}
-\item \lean{LambdaContent.Bound.lambda_measure}: $G\pm5\pi^2/48$, $B=\MuLamU$;
-% TODO(verify): pending the bank switch.
-\item \lean{ThirdsContent.Bound.thirds_plus_measure}, \lean{thirds_minus_measure}: $L(2,\chi_{-3})\pm\pi^2/9$, $B=\MuThirdsU$;
-\item \lean{FifthsContent.Bound.fifths1_measure}, \dots, \lean{fifths4_measure}: $\psi'(\frac a5)-\zeta(2)$, $B=\MuFifthsU$;
-\item \lean{SeventhsContent.Bound.sevenths_measure}: $\psi'(\frac a7)-\zeta(2)$, $B=\MuSeventhsU$;
-% TODO(verify): pending the bank switch.
-\item \lean{Chi3Rank.chi3_measure_L2_rank}: $L(2,\chi_{-3})$, $B=\MuChi$.
+\item \lean{LambdaContent.Bound.lambda_measure}: $G\pm5\pi^2/48$ (the sign is a Boolean argument), $B=\MuLamU$;
+\item \lean{ThirdsContent.Bound.thirds_plus_measure}, \lean{ThirdsContent.Bound.thirds_minus_measure}:
+ $L(2,\chi_{-3})\pm\pi^2/9$, $B=\MuThirdsU$;
+\item \lean{FifthsContent.Bound.fifths1_measure}, \dots, \lean{FifthsContent.Bound.fifths4_measure}:
+ $\psi'(\frac a5)-\zeta(2)$ for $a=1,\dots,4$, $B=\MuFifthsU$;
+\item \lean{SeventhsContent.Bound.sevenths_measure}: $\psi'(\frac a7)-\zeta(2)$ for $a=1,\dots,6$, $B=\MuSeventhsU$;
+\item \lean{Chi3.KContent.chi3_measure_L2_k}: $L(2,\chi_{-3})$, $B=\MuChi$.
 \end{itemize}
 The shared results are (in the namespace \lean{CatalanCore.Uniform}):
 \begin{itemize}
 \item \lean{Content.BankShared.Check.hasScaledContent_of_check}: Theorem~\ref{thm:content}, with the local bounds of
- Theorem~\ref{thm:local} as the branch catalogue (\lean{Check/Catalogue.lean}, \lean{Check/LP2W.lean},
- \lean{TwoTerm/LP2W.lean}, \lean{TwoTerm/M3D.lean}, the closed rank bound and the separated-node bound);
+ Theorem~\ref{thm:local} as the catalogue (\lean{Check/Catalogue.lean}, \lean{Check/LP2W.lean}, \lean{Check/Prefix.lean},
+ \lean{Check/UF.lean} and the closed rank bound), and \lean{Content.BankShared.KTerm.hasScaledContent_of_kcheck}, its form
+ for frames with several first poles (Section~\ref{sec:chi3-quarter});
+\item \lean{Content.BankShared.TwoTerm.LP2HypW.gle}: Theorem~\ref{thm:lp2};
+\item \lean{Content.BankShared.TwoTerm.Pre.prefix_gle}: Theorem~\ref{thm:window};
 \item \lean{BlockGeom.hasNV0}: Theorem~\ref{thm:selection};
 \item \lean{Decay.AltDecay.altGeom_hasScaledDecay}: Theorem~\ref{thm:decay}, with the node energy check
  (\lean{Decay/Nodes/EnergyCheck.lean}), the contour check (\lean{Decay/ContourCheck.lean}) and the cell checks
  (\lean{Decay/PolyWire3});
-\item \lean{measure_of_family_nv0}: Theorem~\ref{thm:deduction}.
+\item \lean{measure_of_family_nv0_even}: Theorem~\ref{thm:deduction} at the even scales.
 \end{itemize}
-% TODO(lean): the windows of Theorem thm:window with n >= 1 (prefix layer) are not yet in Lean.
 The solution has no \lean{sorry} and no \lean{native_decide}, and the command \texttt{\#print axioms} reports only the
 three standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem in arithmetic
 progressions enters the content asymptotics. The formal source for it is the PNT+ project \cite{PNTPlus}, through

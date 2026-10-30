@@ -1,136 +1,90 @@
-% Quarter border and characteristic-zero selection.
-\section{The number $L(2,\chi_{-3})$}
+% The frame of L(2,chi_{-3}): two first poles, the local bounds, the content, decay and nonvanishing.
+\section{The number \texorpdfstring{$L(2,\chi_{-3})$}{L(2,chi-3)}}
 \label{sec:chi3-quarter}
 
-For the frame $F_\chi$ we use a quarter border: the alternating geometry of parameter $c=\frac12$ at
-the scales $r\equiv0\pmod4$, so that $4m=r$. We retain the full determinant together with its
-principal restrictions obtained by omitting one common node. Their degree budget is still $r$.
-The denominator and decay estimates below apply uniformly to every member.
+For the frame $F_\chi$ of \eqref{eq:frames} we use the alternating geometry of parameter $c=\frac12$, so that
+$\alpha=\frac14$ and $m=\lceil r/4-\frac12\rceil$, at all even scales $r$. The decay and the nonvanishing are given by the
+general Theorems~\ref{thm:decay} and~\ref{thm:selection}; what changes is the content. The frame has three digamma terms,
+so at a prime $p$ the increments $d(k)$ of \S\ref{sec:construction} have poles in three residue classes, and the local
+bounds of Section~\ref{sec:content} are expressions in two first poles instead of one. We first describe these poles, then
+the bounds that we use for $F_\chi$, and then the constants.
 
-\begin{theorem}[One common-node deletion]\label{thm:chi3-charzero-selection}
-For every $r\ge1$, $m\ge0$ and rational input, the full conductor-three
-determinant or one of its principal common-node deletions is nonzero.
-No prime-band restriction on $m/r$ is required.
-\end{theorem}
+\subsection{The first poles}
+Let $p>3$ be a prime. The increment $d(k)=\frac1{3k-2}-\frac1{2k-1}+\frac1{6k}$ has a pole modulo $p$ exactly when $p$
+divides $k$, $3k-2$ or $2k-1$. Let $k_A$ and $k_B$ be the least $k\ge1$ with $p\mid3k-2$ and with $p\mid2k-1$. Then
+\[
+ k_B=\frac{p+1}2,\qquad
+ k_A=\begin{cases}\frac{p+2}3,&p\equiv1\pmod6,\\[3pt]\frac{2p+2}3,&p\equiv5\pmod6,\end{cases}
+\]
+and the residues of $p\,d(k)$ at $k_A$ and $k_B$ are $1$ and $-1$ if $p\equiv1\pmod6$, and $\frac12$ and $-1$ if
+$p\equiv5\pmod6$. In the first case $k_A<k_B$ and the two residues cancel: the partial sums $\sum_{k\le t}d(k)$ are
+$p$-integral for $t<k_A$, and again for $k_B\le t<p$.
+
+Both first poles are affine in one index. Define $k_p$ by $6k_p=jp+5$ with $0<j<6$; then $j=1$ for $p\equiv1\pmod6$
+and $j=5$ for $p\equiv5\pmod6$, $k_p=\frac j6p+O(1)$, and
+\[
+ (k_A,k_B)=\begin{cases}(2k_p-1,\ 3k_p-2),&p\equiv1\pmod6,\\[2pt](2k_p-p-1,\ 3k_p-2p-2),&p\equiv5\pmod6.\end{cases}
+\]
+Thus $j$ plays the role of the root class of \S\ref{sec:content}, with $q$ replaced by $6$.
+
+\subsection{The local bounds}
+Fix a prime $p>6$ with $6N<p^2$, where $N=r+2m$; every pole below $N$ is then simple. Call a node $A$ \emph{regular} if
+$A<\min(k_A,k_B)$, or if $p\equiv1\pmod6$ and $A$ is a border node with $k_B\le A<p$. At a regular node the partial sum
+of the increments up to $A$ is $p$-integral, and when $A$ is a common node so is its diagonal entry.
+
+\begin{proposition}\label{prop:chi3-local}
+Every member of the alternating geometry of parameter $\frac12$ for $F_\chi$ satisfies $e_p(r,I)\le\tau$ for each of the
+following $\tau$.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item The bounds (T1) and (T1$'$): $2(r+m)$ and $2r+2m-\|m\|_p$.
+\item If $N\le2p$: $2r+2m-S_p$, where $S_p$ is the number of pairs $(A,\epsilon)$ of a regular node $A$ and a side
+ $\epsilon$ (row or column) on which $A$ lies, such that $A+p$ is not a node of the other side.
+\item If $N<\min(k_A,k_B)$: $0$.
+\item The bound $2r+2m-(b-a)$ of Theorem~\ref{thm:window}, for every $n$ and every window $[a,b)$ as there, with the
+ cuts $t\equiv0$, $t\equiv k_A$, $t\equiv k_B$ and $t\equiv r\pmod p$.
+\end{enumerate}
+\end{proposition}
 
 \begin{proof}
-Here is the interpolation argument underlying the certified selector.
-Write $N=r+2m$, $n=r+m$, and use the $r$ common nodes followed by the
-alternating row and column nodes in the consecutive tail. After the fixed
-normalization of the conductor-three frame, its divided differences have
-prefix values $f_i$, with
-\[
- f_{i+1}-f_i=\delta(i),\qquad
- \delta(z)=\frac{1-z}{216(z+1)(z+1/3)(z+1/2)}.
-\]
-The diagonal prefix $e_i$ satisfies
-$e_{i+1}-e_i=-\delta'(i)$. Barycentric interpolation identifies either
-kernel with pairs $(p,q)$ of degree less than $n$ satisfying
-$q(i)=f_i p(i)$ at all $N$ nodes, and
-$q'(c)=f_c p'(c)+(U-e_c)p(c)$ at the common nodes.
-
-Two such pairs have zero cross product: its degree is at most $2n-2$,
-while the value and first-jet conditions give $N+r=2n$ zeros counted
-with multiplicity. If the kernel had dimension at least two, a nonzero
-pair could therefore be chosen with both degrees at most $n-2$.
-The discrete Wronskian
-\begin{align*}
- W(z)={}&216(z+1)(z+1/3)(z+1/2)\\
- &\quad\cdot[q(z+1)p(z)-q(z)p(z+1)]\\
- &-(1-z)p(z)p(z+1).
-\end{align*}
-would have degree at most $2n-3$, but its prescribed values and first
-jets supply $2n-2$ zeros. Thus $W=0$. This would make $q/p$ a rational
-antidifference of $\delta$, which is impossible: the simple pole at $-1$
-is isolated in its integer-translation class. After cancellation of a
-numerator-denominator gcd, evaluating the cleared identity propagates
-a denominator root indefinitely in one direction, contradicting finite
-degree. The boundary case $n=1$ is immediate.
-
-If the full determinant is nonzero, retain it. Otherwise both kernels are one dimensional. A nonzero kernel pair cannot vanish at every common node. Dividing by
-their common node polynomial would give degree at most $m-1$ and the
-same value interpolation at all $N$ nodes; its Wronskian would again
-vanish by degree and root count. The left and right barycentric maps land in the same one-dimensional interpolation-pair space. At a common node their coordinates are the same $p(c)$ multiplied by nonzero punctured-node factors. Thus the same common index is nonzero on both sides, and their adjugate outer product has a nonzero diagonal entry there. That principal cofactor is the required deletion.
+(i) is proved as in \S\ref{sssec:trop}. For (ii) we apply Lemma~\ref{lem:trop} with the following potentials. At a node
+that is not regular, the potential is $1$ on its row and on its column. At a regular node $A$, the potential on its row is
+$1$ if $A+p$ is a column node and $0$ otherwise, and the potential on its column is $1$ if $A+p$ is a row node and $0$
+otherwise. Their sum is $2(r+m)-S_p$, and they dominate the weights $W$. Indeed, a diagonal weight is $0$ at a regular
+common node and at most $2$ in general. Two nodes that are not congruent modulo $p$ have weight at most $1$, since all
+poles are simple, and weight $0$ if both are regular. Two distinct congruent nodes have weight at most $2$. Since $N\le2p$
+and regular nodes are smaller than $p$, at most one of them is regular; if the row node $A$ of such an entry is regular,
+its column node is $A+p$, so the potential on the row of $A$ is $1$, and symmetrically for a regular column node. For (iii), if $N<\min(k_A,k_B)$ then $N<p$, no index below $N$ is a
+pole and no two nodes are congruent modulo $p$, so every entry is $p$-integral. For (iv), the proof of
+Theorem~\ref{thm:window} uses the frame only through its poles: the step function $\sigma$ and the diagonal residues are
+constant between consecutive cuts, which is what the translation between the fibres of the window needs.
 \end{proof}
+% Lean: Chi3.KContent.kcat_trop_valid (D1, D1x = (i); Z0, Z1 = (ii), with Z1 adding the regular nodes of the second
+% kind for p = 1 mod 6; T0 = (iii); potentials CatalanFrames.P6Hybrid.zu, zv, `p6_trop_Z`, S_p = `Sv`),
+% kbrWin_valid (n = 0) and kbrPre_valid (prefix_gle) for (iv).
 
-\subsection{The uniform arithmetic profile}
-The singular indices of $F_\chi$ are those $k$ with $p\mid k(3k-2)(2k-1)$, and the relevant
-classes of primes are modulo $6$. We first use assignment bounds with explicit potentials, as in
-\S\ref{sssec:trop}: the residue-class potentials of (T1$'$), and potentials in which only row
-potentials are raised, on nodes that have a congruent partner below the first pole. At a prime $p$
-put $u=p/r$. We always use the first bound, and the smaller of the two when $r+2m\le2p$, the range
-in which the second is proved. For the two classes of primes modulo $6$ this
-gives the piecewise linear profiles $w_1,w_5$ below; at a common endpoint the two
-neighbouring pieces agree.
-\[
-\begin{array}{c|c|c}
-\text{class}&\text{interval for }u&w(u)\\\hline
-1,5 &[0,1/4]&5/2\\
-1,5 &[1/4,1/2]&11/4-u\\
-1 &[1/2,15/16]&9/4\\
-1 &[15/16,9/8]&7/2-4u/3\\
-1 &[9/8,3/2]&5-8u/3\\
-1 &[3/2,2]&2-2u/3\\
-1 &[2,3]&1-u/6\\
-1 &[3,9/2]&3/2-u/3\\
-5 &[1/2,5/6]&9/4\\
-5 &[5/6,1]&7/2-3u/2\\
-5 &[1,3/2]&4-2u\\
-5 &[3/2,2]&5/2-u\\
-5 &[2,3]&3/2-u/2
-\end{array}
-\]
-Both profiles vanish beyond their last interval. Their integrals are $581/128$ and $355/96$,
-and the prime number theorem in the two classes gives
-\[
- \Lambda_0=\frac12\left(\frac{581}{128}+\frac{355}{96}\right)
-         =\frac{3163}{768}.
-\]
-For finite $r$ the proof uses affine bounds with a fixed additive allowance for the rounding
-of $m$ and of the residue endpoints; the contributions of prime powers and of the finitely
-many excluded primes are kept, and they are $o(r^2)$. The entrywise denominator clears every
-principal restriction, so this bound holds for the whole family with one deletion.
+The bounds (T2)--(T5), (LP1), (LP2), (R) and (S) of Theorem~\ref{thm:local} are not used for $F_\chi$.
 
-\paragraph{Small primes.}
-For odd primes $p\le m$ the profile above ignores the bound
+\subsection{The content}
+The checker of \S\ref{ssec:checker} and Theorem~\ref{thm:content} apply to $F_\chi$ with $q$ replaced by $6$, the root
+class $j\in\{1,5\}$ of the previous subsection, and the bounds of Proposition~\ref{prop:chi3-local}. These bounds are
+expressions of the class $\mathcal E$ in $r,p,m,k_A,k_B$; on each class of primes modulo $6$ the substitution above makes
+them expressions in $r,p,m,k_p$, and their homogenisations are taken with $\kappa=j/6$. The proof of
+Theorem~\ref{thm:content} uses the frame only through these bounds and the root class, and goes through with the bound
+(iii) in place of (T5) beyond the end of the table. The table of the formal proof starts at $t_1=\frac1{68}=\alpha/17$, with the trivial bound $\alpha_0r$, $\alpha_0=\frac52=2+2\alpha$,
+below it. On $(\alpha/17,\alpha]$ it uses the bounds (i) and the windows (iv) with $1\le n\le16$; beyond $\alpha$ it uses
+(i), (ii), the windows (iv) with $n=0$ between consecutive cuts, and the bound (iii), which ends the table. The checker
+accepts the table for the two classes $j=1,5$, and the content estimate holds for every even $r$ and every member with
+$|I|\le64$, with the content constant
 \[
- v_p(\operatorname{den})\le 2r+2m-\min(m\bmod p,\;p-m\bmod p),
+ \Lambda_\chi=4.09592776731\ldots,
 \]
-which holds at every level of the nodes and comes from the distance of $m$ to the nearest
-multiple of $p$. On each interval $m/(n+1)<p<m/n$, $n\ge1$, it gives the additional saving
-$\min\{m-np,(n+1)p-m\}$. The two affine pieces meet at $p=2m/(2n+1)$, and
-\[
- \int_{m/(n+1)}^{m/n}\min\{m-np,(n+1)p-m\}\,dp
- =\frac{m^2}{2n(n+1)(2n+1)}.
-\]
-Using the intervals with $n\le16$, the prime number theorem in the two classes modulo $6$
-gives the content constant
-\[
- \Lambda_{16}=\Lambda_0-\frac1{16}
-       \sum_{n=1}^{16}\frac1{2n(n+1)(2n+1)}
- =\frac{339258406689121}{82516315939200}.
-\]
-The finite-size argument is the same for every $n$, with a fixed additive rounding allowance.
-The same denominator clears every principal restriction, so the family of determinants and
-the selection of Theorem~\ref{thm:chi3-charzero-selection} are unchanged.
+an explicit rational number (its numerator and denominator have $117$ and $116$ digits).
+% Lean: Chi3.KContent.chi3_k_content (from Content.BankShared.KTerm.hasScaledContent_of_kcheck, kdata_check), with
+% Lambda_chi = kData.Λ (kData_Λ_eq in Chi3/KContent/Bound.lean).
 
-\paragraph{Windows and the rank bound.}
-The window bound of Theorem~\ref{thm:window} (with $n=0$) and the rank bound of
-\S\ref{sssec:rank} do not use the two-term structure: for a frame with several poles the bit $z$
-of a fibre becomes the index of the arc between consecutive pole classes, and the arc below the first
-pole still has a vanishing step function at the digit $0$. With the cuts $t\equiv0$, $t\equiv\frac23$
-and $t\equiv\frac12$ modulo $p$, the windows lower the content by $853129/196035840$. The rank bound, in
-the class $1\bmod 6$ on $\frac58\le u\le\frac56$ and in the class $5\bmod6$ on $\frac12\le u\le\frac58$, lowers
-the integrals of the two classes by $\frac1{64}$ and $\frac1{320}$, that is, the content by $\frac3{320}$. Altogether,
-\[
- \Lambda_\chi=\Lambda_{16}-\frac{853129}{196035840}-\frac3{320}=\frac{4733759984905769}{1155228423148800}=4.09768\ldots
-\]
-for the scales $r\equiv0\pmod4$.
-
-\subsection{The analytic certificate}
-The quarter border is the alternating geometry of parameter $c=\frac12$ at the scales $r\equiv0\pmod 4$, and the decay
-estimate is Theorem~\ref{thm:decay} for the frame $F_\chi$, with $d=3$ digamma terms.
-The node measure $\nu_{1/2}$ has mass $\frac54$ and energy
+\subsection{Decay and nonvanishing}
+The decay estimate is Theorem~\ref{thm:decay} for the frame $F_\chi$, with $d=3$ digamma terms and $c=\frac12$. The node
+measure $\nu_{1/2}$ has mass $\frac54$ and energy
 \[
  I(\nu_{1/2})=\frac{75}{32}-\frac98\log\frac32-\frac1{16}\log2 .
 \]
@@ -140,10 +94,11 @@ A certificate measure on a polygon, with a cover by cells accepted by the checks
  D=\frac{4643511791526209475773}{10^{21}}=4.64351\ldots,\\ \gamma=\frac{37521870783566737}{5\cdot10^{15}}=7.50437\ldots
 \end{gathered}
 \]
-Omitting one common node changes the energy only by a term linear in $r$, which is absorbed in the $o(r^2)$ error. By
-Theorem~\ref{thm:chi3-charzero-selection} a retained determinant does not vanish at any rational point, so no prime has to
-be chosen, and the deduction of Section~\ref{sec:proof} gives
+Nonvanishing is Theorem~\ref{thm:selection} for $F_\chi$, whose increment $\delta$ has its pole at $-1$ isolated in its
+class modulo $\Z$; the depth is $d_0\le64$. The deduction of Section~\ref{sec:proof}, at the even scales, gives
 \[
- \mu\bigl(L(2,\chi_{-3})\bigr)\le\frac\gamma{D-\Lambda_\chi}=\MuChiExact\ldots<\MuChi.
+ \mu\bigl(L(2,\chi_{-3})\bigr)\le\frac\gamma{D-\Lambda_\chi}=\MuChiExact\ldots<\MuChi,
 \]
-% Lean: CatalanCore.Uniform.Bank.Chi3Rank.chi3_measure_L2_rank (decay: Chi3New.chi3_decay; content: hasScaledContent_chi3_rank).
+since $L(2,\chi_{-3})=4\xi_\chi$.
+% Lean: CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k (decay Chi3New.chi3_decay through
+% Decay.AltDecay.altGeom_hasScaledDecay; nonvanishing chi3_nv0_even from BlockGeom.hasNV0; content chi3_content_G12).
