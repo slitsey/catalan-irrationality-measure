@@ -1,19 +1,39 @@
-# Formalization metadata for the hybrid results (separate from formalization.yaml, which describes the mu(G) result).
+# Formalization metadata for ChallengeHybrid.lean and SolutionHybrid.lean (differences of trigamma values);
+# formalization.yaml describes the mu(G) result.
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
 version: "v0.4"
 
 project:
-  name: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}), L(2, chi_{-3}) -/+ pi^2/9 and psi'(a/5) - pi^2/6"
+  name: "Irrationality measures for differences of trigamma values"
   description: >-
-    For Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 we prove mu(G - 5 pi^2/48) <= 32.44
-    and mu(G + 5 pi^2/48) <= 32.44, and for L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2)
-    we prove mu(L(2, chi_{-3})) <= 14.21, and mu(L(2, chi_{-3}) + pi^2/9) <= 10.61 and
-    mu(L(2, chi_{-3}) - pi^2/9) <= 10.61, and mu(psi'(a/5) - pi^2/6) <= 31.95 for a = 1, 2, 3, 4: for every e > 0, all large q and all p coprime to q,
-    |x - p/q| > q^(-(E+e)). The proofs use rectangular, bordered Loewner matrices of digamma
-    differences (library CatalanCore; the shifts 1/4, 3/4 give G, the shifts 1/3, 2/3 give
-    L(2, chi_{-3}) together with a multiple of pi^2, the shifts a/5 give psi'(a/5) - pi^2/6), nonvanishing modulo a prime and by characteristic-zero
-    selection, decay from Cauchy determinants and Andreief's identity, and kernel-checked
-    rational certificates.
+    For 0 < s < t <= 1 let Psi(s,t) = psi'(s) - psi'(t), where
+    psi'(x) = sum_{n>=0} 1/(n+x)^2 is the trigamma function. We prove
+    irrationality measures for Psi(a/q,1) = psi'(a/q) - zeta(2) with q in
+    {3,4,5,7} and gcd(a,q) = 1, and for Psi(1/3,2/3) = 9 L(2, chi_{-3}). With
+    Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 and
+    L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2), these are
+    mu(G - 5 pi^2/48) <= 31.4411 and mu(G + 5 pi^2/48) <= 31.4411;
+    mu(L(2, chi_{-3})) <= 13.7046; mu(L(2, chi_{-3}) + pi^2/9) <= 9.5133 and
+    mu(L(2, chi_{-3}) - pi^2/9) <= 9.5133; mu(psi'(a/5) - pi^2/6) <= 23.9115
+    for a = 1, 2, 3, 4; and mu(psi'(a/7) - pi^2/6) <= 2801 for a = 1, ..., 6.
+    Each statement says: for every e > 0 there is q0 such that
+    |x - p/q| > q^(-(B+e)) for all coprime integers p, q with q >= q0. The
+    approximations come from determinants of rectangular Loewner matrices of
+    digamma differences at integer nodes, with a long common block and an
+    interleaved border whose length is the only parameter of the geometry. The
+    denominators are bounded prime by prime by a finite list of local bounds
+    (assignment problems, the rank of the reduction modulo p, and windows of the
+    border free of poles, where the reduction is translation invariant), each an
+    explicit integer expression in the scale, the border, the prime and the
+    first poles of the frame modulo p; one theorem turns a finite table of
+    affine pieces, checked by comparisons of rational numbers, into the content
+    estimate for every shift with the same denominator q, using the prime number
+    theorem in arithmetic progressions. Nonvanishing follows from Hermite
+    interpolation in characteristic zero, after deleting a bounded number of
+    common nodes. The size is bounded with Andreief's identity and a lower bound
+    for a discrete logarithmic energy, obtained from a comparison measure and
+    verified on a finite cover by cells. All numerical bounds are ordinary
+    kernel-checked rational proofs.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -24,80 +44,76 @@ classification:
   arxiv: ["math.NT"]
   msc2020: ["11J82", "11J72"]
 
+sources:
+  - title: "Irrationality measures for differences of trigamma values"
+    type: original-proof
+    relationship: other
+    note: >-
+      The companion paper by S. Litsey (2026), whose arguments the Lean
+      development follows. LaTeX source and PDF are in paper-lambda/
+      (lambda-irrationality-hexagon.tex is the single-file version); Hexagon
+      preprint hexagon:2610.00401.
+  - title: "Catalan's constant is irrational"
+    authors:
+      - "OpenAI"
+    id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Catalans-constant-is-irrational-September-24-2026"
+    type: "preprint with Lean formalization"
+    location: "https://github.com/openai/math"
+    relationship: other
+    note: >-
+      Preprint dated September 24, 2026, released October 6, 2026. Supplies the
+      determinant method (decay through Cauchy determinants and Andreief's
+      identity, denominators bounded prime by prime) on which the measures are
+      built. These proofs import no file of OAI/.
+    license: "Apache-2.0"
+    author_endorsement: not-contacted
+  - title: "Arithmetic holonomy bounds and effective Diophantine approximation"
+    authors:
+      - "Frank Calegari"
+      - "Vesselin Dimitrov"
+      - "Yunqing Tang"
+    id: "arXiv:2510.04156"
+    type: preprint
+    location: "https://arxiv.org/abs/2510.04156"
+    relationship: background
+    note: >-
+      Theorem 5.1 gives mu(L(2, chi_{-3})) <= 24781, and the remark following it
+      gives the same bound for rational linear combinations of L(2, chi_{-3}) and
+      zeta(2). Not used in this proof.
+    author_endorsement: not-contacted
+
 related_formalizations:
   - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan"
     relationship: builds-on
     note: >-
-      The Loewner/Cauchy-determinant framework follows OpenAI's irrationality proof for
-      Catalan's constant; the prime number theorem in progressions is derived from the
-      vendored PNT+ Wiener-Ikehara theorem. The L(2, chi_{-3}) development is otherwise independent.
+      The determinant framework follows OpenAI's irrationality proof for
+      Catalan's constant; no file of OAI/ is imported. The prime number theorem
+      in arithmetic progressions is derived from the Wiener-Ikehara theorem in
+      the files that OpenAI's repository adds to PrimeNumberTheoremAnd (vendored
+      in PrimeNumberTheoremAnd/, see NOTICE).
 
 status:
   scope: >-
-    All nine advertised hybrid statements are fully proved (SolutionHybrid.lean, via
-    CatalanFrames.LambdaHybrid.lam_hyb_measure_final2, CatalanFrames.LambdaMirrorHybrid.mir_hyb_measure_final2
-    CatalanFrames.P6Hybrid.QuarterContour.Cert1421.chi3_measure, CatalanFrames.Thirds.chi3_plus_zeta2_measure_1061,
-    CatalanFrames.Thirds.chi3_minus_zeta2_measure_1061 and CatalanFrames.Fifths.fifths1_measure_3195, ...,
-    CatalanFrames.Fifths.fifths4_measure_3195). No sorry and
-    no native_decide. Axioms: propext, Classical.choice, Quot.sound only.
+    The fifteen statements of ChallengeHybrid.lean (namespace
+    TrigammaDifferences), with every constant written as a series, are fully
+    proved in SolutionHybrid.lean from
+    CatalanCore.Uniform.Bank.FourthsContent.Bound.lambda_measure (whose Boolean
+    argument selects the sign of 5 pi^2/48),
+    CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k,
+    CatalanCore.Uniform.Bank.ThirdsContent.Bound.thirds_plus_measure and
+    thirds_minus_measure,
+    CatalanCore.Uniform.Bank.FifthsContent.Bound.fifths1_measure, ...,
+    fifths4_measure, and
+    CatalanCore.Uniform.Bank.SeventhsContent.Bound.sevenths_measure (whose
+    argument a - 1 runs over Fin 6). Every theorem, proposition and lemma used in
+    the proof of the companion paper's main theorem is formalized; its remarks
+    and its section on the limits of the method are not. The solution has no
+    sorry and no native_decide; #print axioms reports only propext,
+    Classical.choice and Quot.sound. comparator-hybrid.json configures lake
+    comparator for these statements; the CI workflow does not run it.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
-
-fidelity:
-  divergences: >-
-    None known. The constants are written out as series; the measure is stated for p coprime
-    to q (IsCoprime p q) and q >= q0, with E = 811/25, 1421/100, 1061/100 and 639/20 as rationals cast to R.
-
-review:
-  status: "self-assessed"
-  reviewers: []
-
-alignment:
-  namespace: "CatalanHybridChallenge"
-  statements:
-    - source: "Litsey (2026), hybrid measure for G - 5 pi^2/48, exponent 32.44"
-      lean: "CatalanHybridChallenge.lam_hybrid_measure_3244"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for G + 5 pi^2/48, exponent 32.44"
-      lean: "CatalanHybridChallenge.mir_hybrid_measure_3244"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}), exponent 14.21"
-      lean: "CatalanHybridChallenge.chi3_hybrid_measure_1421"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}) + pi^2/9, exponent 10.61"
-      lean: "CatalanHybridChallenge.chi3_plus_pi2_hybrid_measure_1061"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for L(2, chi_{-3}) - pi^2/9, exponent 10.61"
-      lean: "CatalanHybridChallenge.chi3_minus_pi2_hybrid_measure_1061"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for psi'(1/5) - pi^2/6, exponent 31.95"
-      lean: "CatalanHybridChallenge.fifths1_hybrid_measure_3195"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for psi'(2/5) - pi^2/6, exponent 31.95"
-      lean: "CatalanHybridChallenge.fifths2_hybrid_measure_3195"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for psi'(3/5) - pi^2/6, exponent 31.95"
-      lean: "CatalanHybridChallenge.fifths3_hybrid_measure_3195"
-      module: "ChallengeHybrid"
-      status: proved
-    - source: "Litsey (2026), hybrid measure for psi'(4/5) - pi^2/6, exponent 31.95"
-      lean: "CatalanHybridChallenge.fifths4_hybrid_measure_3195"
-      module: "ChallengeHybrid"
-      status: proved
-
-sources:
-  - title: "Irrationality measures for G -/+ 5 pi^2/48, L(2, chi_{-3}), L(2, chi_{-3}) -/+ pi^2/9 and psi'(a/5) - pi^2/6"
-    type: original-proof
-    relationship: other
-    note: "Companion work by S. Litsey (2026)."
 
 automation:
   methods:
@@ -111,10 +127,111 @@ automation:
       framework: "Codex"
       tool_setup: >-
         AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
+  spend_usd: "subscription-based"
   notes: >-
-    The shared library CatalanCore and the certificate tooling are described in
-    archive/legacy-configs/formalization-lambda.yaml.
+    Both systems worked at the request of the human author, who posed the
+    problems, directed the work and is responsible for the submission.
+    Certificates use decide +kernel, without native_decide or additional axioms.
+
+fidelity:
+  divergences: >-
+    None known. The constants are written out as series: G as
+    sum_j (-1)^j/(2j+1)^2, L(2, chi_{-3}) as sum_k (1/(3k+1)^2 - 1/(3k+2)^2),
+    and psi'(a/q) - zeta(2) as sum_{n>=0} 1/(n + a/q)^2 - pi^2/6. The paper's
+    Theorem 1.1 is stated for Psi(s,t); each Lean statement is its form for the
+    number in the same row of the paper's Table 1, which differs from Psi(s,t)
+    by a rational affine map. The measure is stated for p coprime to q
+    (IsCoprime p q) and q >= q0, with the exponents 314411/10000,
+    137046/10000, 95133/10000, 47823/2000 and 2801 as rationals cast to R.
+
+review:
+  status: "self-assessed"
+  reviewers: []
+  notes: >-
+    The statements in ChallengeHybrid.lean were checked against Theorem 1.1 and
+    Table 1 of the companion paper, and the constants stated in the paper were
+    checked against the Lean development. No independent human review has been
+    performed.
+
+alignment:
+  namespace: "TrigammaDifferences"
+  statements:
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (3/4,1)"
+      lean: "TrigammaDifferences.lambda_minus_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "G - 5 pi^2/48, exponent 31.4411."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/4,1)"
+      lean: "TrigammaDifferences.lambda_plus_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "G + 5 pi^2/48, exponent 31.4411."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/3,2/3)"
+      lean: "TrigammaDifferences.chi3_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "L(2, chi_{-3}), exponent 13.7046."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/3,1)"
+      lean: "TrigammaDifferences.chi3_plus_pi2_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "L(2, chi_{-3}) + pi^2/9, exponent 9.5133."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (2/3,1)"
+      lean: "TrigammaDifferences.chi3_minus_pi2_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "L(2, chi_{-3}) - pi^2/9, exponent 9.5133."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/5,1)"
+      lean: "TrigammaDifferences.fifths1_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(1/5) - pi^2/6, exponent 23.9115."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (2/5,1)"
+      lean: "TrigammaDifferences.fifths2_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(2/5) - pi^2/6, exponent 23.9115."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (3/5,1)"
+      lean: "TrigammaDifferences.fifths3_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(3/5) - pi^2/6, exponent 23.9115."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (4/5,1)"
+      lean: "TrigammaDifferences.fifths4_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(4/5) - pi^2/6, exponent 23.9115."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/7,1)"
+      lean: "TrigammaDifferences.sevenths1_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(1/7) - pi^2/6, exponent 2801."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (2/7,1)"
+      lean: "TrigammaDifferences.sevenths2_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(2/7) - pi^2/6, exponent 2801."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (3/7,1)"
+      lean: "TrigammaDifferences.sevenths3_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(3/7) - pi^2/6, exponent 2801."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (4/7,1)"
+      lean: "TrigammaDifferences.sevenths4_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(4/7) - pi^2/6, exponent 2801."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (5/7,1)"
+      lean: "TrigammaDifferences.sevenths5_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(5/7) - pi^2/6, exponent 2801."
+    - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (6/7,1)"
+      lean: "TrigammaDifferences.sevenths6_measure"
+      module: "ChallengeHybrid"
+      status: proved
+      note: "psi'(6/7) - pi^2/6, exponent 2801."
 
 acknowledgements: >-
-  OpenAI's proof and Lean formalization of the irrationality of Catalan's constant; Lean 4,
-  Mathlib and the PNT+ project.
+  OpenAI's proof of the irrationality of Catalan's constant and its Lean
+  formalization; Lean 4, Mathlib and the PNT+ project.

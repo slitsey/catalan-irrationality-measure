@@ -5,24 +5,31 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G-a/b| > b^(-590) for every integer a and all sufficiently large b, so the
-    irrationality exponent of G is at most 590. The proof uses OpenAI's
+    |G-a/b| > b^(-532) for every integer a and all sufficiently large b, so the
+    irrationality exponent of G is at most 532. The proof uses OpenAI's
     determinant construction for an arbitrary design of five integer parameters,
     here (58,9,3,5,3), with a determinant of size 58N whose value is a polynomial
-    of degree 53N in the constant. A Gauss-type quadrature formula with 53N nodes
-    and an Andreief identity with fixed points bound the determinant on an
-    interval of length exp(-rho N) around G, with rho = 301.54258... Closed-form
-    rank deficiencies of the reduced matrix modulo the primes 12N < p <= 26N,
-    proved with antisymmetric row combinations, a reflection of Chebyshev
-    polynomials modulo p and Frobenius relations, make the coefficients divisible
-    by prime powers, a gain of 35369/1848 in units of N^2. The energy estimate
-    uses trial sequences with 160 Chebyshev coefficients and 75 geometric terms,
-    41 of them complex, verified on cells with an exact local Taylor expansion.
-    The decay rate is eta = 27.124717..., and the criterion with a free lower end
-    of the window of primes gives the limiting exponent 53 rho / eta = 589.19...
-    Denominator and content asymptotics and the choice of the prime use the prime
-    number theorem. All numerical bounds are ordinary kernel-checked rational
-    proofs.
+    of degree 53N in the constant. At a prime p the denominator of the
+    determinant is smaller by the dimension of the kernel of the reduction modulo
+    p of the matrix of rational parts. This dimension is bounded below by four
+    closed formulas, proved for every design with antisymmetric row
+    combinations, a reflection of Chebyshev polynomials modulo p and Frobenius
+    relations, for the primes 12N < p <= 26N. Below 12N further kernel vectors
+    come from a counting inequality for the nullity, which on 34 windows of
+    primes between 3N and 16.2N is applied to fixed rational subspaces whose
+    ranks are certified by stored integer kernel vectors. The resulting piecewise linear profile has 102 pieces on
+    (16/7, 53/2] and area 22.05972... in units of N^2. A Gauss quadrature
+    formula with 53N nodes and an identity of Andreief type with fixed points
+    bound the determinant on an interval of length exp(-rho N) around G, with
+    rho = 301.54258... The energy estimate uses trial sequences with 160
+    Chebyshev coefficients and 75 geometric terms, 41 of them complex, verified
+    on cells with an exact local Taylor expansion. The decay rate is
+    eta = 30.041, and a criterion with a free lower end of the window of primes
+    gives the exponent 532: its last condition reads
+    532 > d rho / (eta - 4 d delta) = 531.99924... with d = 53 and
+    delta = 2.9e-7. Denominator and content asymptotics and the choice of the
+    prime use the prime number theorem. All numerical bounds are ordinary
+    kernel-checked rational proofs.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"
@@ -85,11 +92,13 @@ related_formalizations:
   - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan"
     relationship: builds-on
     note: >-
-      OpenAI's formalization of the irrationality of Catalan's constant. The files
-      used here (479 in OAI/, and 10 files OpenAI added to PrimeNumberTheoremAnd)
-      are vendored, converted to Lean's module system and ported from Lean v4.34.1
-      to v4.35.0-rc2. Apart from comparison constants given to seven digits in 37
-      certificate files, their mathematical content is unchanged.
+      OpenAI's formalization of the irrationality of Catalan's constant. 479
+      files of it are vendored in OAI/, of which the proof imports 386, together
+      with the 10 files that OpenAI adds to PrimeNumberTheoremAnd; they were
+      converted to Lean's module system and ported from Lean v4.34.1 to
+      v4.35.0-rc2. Apart from comparison constants given to seven digits in 37
+      certificate files, which the proof does not import, their mathematical
+      content is unchanged.
   - id: "https://github.com/rohitkrjha/catalan-measure"
     relationship: independent
     note: >-
@@ -99,17 +108,20 @@ related_formalizations:
 status:
   scope: >-
     The statement in Challenge.lean, with Catalan's constant written as a series,
-    is fully proved in Solution.lean by CatalanMeasure.GenD.D58.catalan_irrationalityMeasure_590.
-    Every lemma of the companion paper used for this theorem is formalized,
-    including the degree and denominator bounds, the nonvanishing, the four rank
-    deficiencies and the divisibility of the coefficients, the quadrature
-    perturbation estimate, the energy bounds and their numerical certificates, and
-    the final choice of the prime. The prime number theorem comes from the PNT+
-    project through OpenAI's vendored formalization. The paper's remarks on the
-    limits of the method are not formalized. The solution has no sorry and no
-    native_decide; #print axioms reports only propext, Classical.choice and
-    Quot.sound. comparator.json configures lake comparator for this statement;
-    Comparator has not been run (it requires Linux).
+    is fully proved in Solution.lean by
+    CatalanMeasure.GenD.Uniform.Bank532.catalan_irrationalityMeasure_532.
+    Every result of the companion paper is formalized, including the degree and
+    denominator bounds, the nonvanishing, the closed formulas and the counting
+    inequality for the rank deficiencies with the stored kernel vectors, the
+    divisibility of the coefficients, the quadrature perturbation estimate, the
+    energy bounds and their numerical certificates, and the criterion with the
+    choice of the prime. The prime number theorem comes from the PNT+ project
+    through OpenAI's vendored formalization. The paper's remarks on the method
+    are not formalized. The solution has no sorry and no native_decide;
+    #print axioms reports only propext, Classical.choice and Quot.sound.
+    comparator.json configures lake comparator for this statement, and the
+    comparator job of the CI workflow runs it with Lean's kernel and the NanoDa
+    and con-ron kernels bundled with the toolchain.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -150,10 +162,10 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_590"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_532"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-590) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-532) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; the
