@@ -1,18 +1,19 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+module
 
-import CatalanCore.Uniform.Bank.FourthsContent.Bound
-import CatalanCore.Uniform.Bank.Chi3.KContent.Bound
-import CatalanCore.Uniform.Bank.ThirdsContent.Bound
-import CatalanCore.Uniform.Bank.FifthsContent.Bound
-import CatalanCore.Uniform.Bank.SeventhsContent.Bound
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.NumberTheory.Real.Irrational
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
+public import CatalanCore.Uniform.Bank.FourthsContent.Bound
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Bound
+public import CatalanCore.Uniform.Bank.ThirdsContent.Bound
+public import CatalanCore.Uniform.Bank.FifthsContent.Bound
+public import CatalanCore.Uniform.Bank.SeventhsContent.Bound
+
+public section
 
 /-!
-Not yet a `module` file: the bank closures are being converted to the module system; until then this file
-imports them as an ordinary file.
 Proofs of the statements in `ChallengeHybrid.lean`, from the `Bound` theorems of the trigamma-difference
 banks (`CatalanCore.Uniform.Bank.*Content.Bound` and `CatalanCore.Uniform.Bank.Chi3.KContent.Bound`).
 `MeasureLBAt` unfolds to the displayed statements; for `G ± 5π²/48` the target is rewritten first.
