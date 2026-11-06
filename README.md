@@ -161,7 +161,7 @@ every shift.
 
 Together they give `μ ≤ γ/(D − Λ)`:
 
-| number | (s, t) | c | Λ | D | γ | γ/(D − Λ) | B |
+| number | (s, t) | c | Λ | D | γ | γ/(D − Λ) | μ ≤ |
 |---|---|---|---|---|---|---|---|
 | G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7447213 | 7.1904273 | 31.28751 | 31.2876 |
 | L(2, χ₋₃) | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.7046 |
@@ -172,7 +172,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 
 Here `Λ` is the content constant, `D` the decay constant and `γ` the window constant. They are the
 rational numbers of the formal proof, rounded outward (`Λ` and `γ` up, `D` down); the column
-`γ/(D − Λ)` is the exact quotient, rounded up. The row for π² uses `Ψ(1/2, 1) = π²/3`. Its bound is
+`γ/(D − Λ)` is the exact quotient, rounded up. The last column is the bound stated in Lean. The row for π² uses `Ψ(1/2, 1) = π²/3`. Its bound is
 weaker than the known bounds for `μ(π²)` and is included for completeness.
 
 The shared results are in `CatalanCore/Uniform/` (namespace `CatalanCore.Uniform`): the content theorem
