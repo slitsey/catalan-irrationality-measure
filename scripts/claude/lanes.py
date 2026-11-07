@@ -84,7 +84,13 @@ def reserve(spec, used=(0.0, 0.0)):
     ec, ew = est(spec['target'])
     bb = float(spec.get('budget', 3))
     own = tpeaks().get(spec['target'])
-    if own is not None:
+    if spec['target'].startswith('job.'):
+        # 7 Nov: run jobs never learn their own peak (learn() reads Lean peaks only), so the
+        # class median of every past job (8-11.5 GB) was held for 1 GB Python jobs and stalled
+        # the queue with 15 GB free. A run job holds its declared budget; growth past it is
+        # still caught by the 1.25 x use rule below.
+        ew = max(bb, 1.0); ec = 1.75 * ew + 1.0
+    elif own is not None:
         # 7 Nov: a module with its own measured peak holds 1.25 x that, not a habitual 4 GB
         # budget (1.2 GB builds were reserving 4 GB and leaving the host idle).
         ew = max(1.25 * own, 1.0); ec = 1.75 * ew + 1.0
