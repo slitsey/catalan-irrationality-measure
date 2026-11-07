@@ -303,11 +303,11 @@ def drive():
                 proc.wait()
                 (RUN / f'{jid}.json').unlink(missing_ok=True)
                 tries = int(spec.get('shed', 0)) + 1
-                if tries <= 1:
-                    (Q / f'{jid}.json').write_text(json.dumps({k: spec[k] for k in spec if k not in ('started', 'out')} | {'shed': tries}), encoding='utf-8')
-                else:
-                    spec.update(rc=99, ended=time.time(), output='lanes: shed twice for memory; held')
-                    (DONE / f'{jid}.json').write_text(json.dumps(spec), encoding='utf-8')
+                # 7 Nov: a shed is the driver's choice, not the job's failure. rc 99 after two sheds
+                # left agents' output waiters hung for hours (ln-c3s, p2s-pot, p2s-lg0). Always
+                # requeue, with 1.5 x the budget so reserve() holds enough on the next admission.
+                nb = min(24.0, 1.5 * float(spec.get('budget', 3)))
+                (Q / f'{jid}.json').write_text(json.dumps({k: spec[k] for k in spec if k not in ('started', 'out')} | {'shed': tries, 'budget': nb}), encoding='utf-8')
                 log(f"shed {spec['target']} phys={phys0:.1f} commit={commit0:.1f} tries={tries}")
                 del running[jid]
                 last = time.time() + 30
