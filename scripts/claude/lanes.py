@@ -83,7 +83,12 @@ def reserve(spec, used=(0.0, 0.0)):
     already above that is growing, so it holds 1.25 x what it uses now."""
     ec, ew = est(spec['target'])
     bb = float(spec.get('budget', 3))
-    if bb > 3:
+    own = tpeaks().get(spec['target'])
+    if own is not None:
+        # 7 Nov: a module with its own measured peak holds 1.25 x that, not a habitual 4 GB
+        # budget (1.2 GB builds were reserving 4 GB and leaving the host idle).
+        ew = max(1.25 * own, 1.0); ec = 1.75 * ew + 1.0
+    elif bb > 3:
         ec, ew = max(ec, 1.75 * bb + 1.0), max(ew, bb)
     ws, cm = used
     if ws > ew: ew = 1.25 * ws
