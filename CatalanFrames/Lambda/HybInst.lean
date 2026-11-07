@@ -3,7 +3,7 @@ module
 public import CatalanFrames.Lambda.ContentData
 public import CatalanCore.Arith.Hybrid.SingLev
 public import CatalanCore.Arith.Hybrid.Values
-public import CatalanFrames.HybCommon.LogDhybT
+public import CatalanFrames.HybCommon.Trop
 
 @[expose] public section
 
@@ -115,20 +115,5 @@ theorem lam_badInfo : BadInfo lamInst 4 4 where
   two_mem := by simp [lamInst, HybInst.ofSing, lamCD]
   bad_le := fun b hb => by simp [lamInst, HybInst.ofSing, lamCD] at hb; omega
   cOf_le := lam_cOf_le
-
-/-- **The numerology parameters of λ** (`HybParams`): `L = 4`, `cOf ≤ 4`, modulus `4`, classes `{1, 3}`,
-`m = r / 8`, zero set `c < kq q`. -/
-noncomputable def lamParams : HybParams lamInst where
-  Lc := 4
-  cm := 4
-  bad := lam_badInfo
-  M := 4
-  Cs := {1, 3}
-  cls := cls_mod4 lam_badInfo
-  mf := fun r => r / 8
-  mf_le := fun r => Nat.div_le_self r 8
-  Gd := fun p => 5 ≤ p
-  Z := fun q c => c < lamInst.cd.kq q
-  levels := lam_tropFacts.toLevelFacts
 
 end CatalanFrames.Lambda

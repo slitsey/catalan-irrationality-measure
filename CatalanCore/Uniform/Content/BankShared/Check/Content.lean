@@ -23,83 +23,132 @@ set_option Elab.async false
 namespace CatalanCore.Uniform.Content.BankShared.Check
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
   CatalanCore.Uniform.Content.SmallPrimes CatalanCore.Uniform.Content.Member CatalanCore.Arith.Hybrid
-  CatalanCore.Basic Filter Finset
+  CatalanCore.Basic Filter Finset Polynomial
+
+/-- The family of the alternating geometry `altGeom c` for an arbitrary assignment `Q` of polynomials to the
+members `(r, S)` (degree budget `|S|`, admissible when at most `depth` common nodes are deleted).  The Loewner
+minors of a frame (`NodeFamily.family`) and of two sequences (`Support.seqFamily`) are the two instances. -/
+noncomputable abbrev AltFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) : PolyFamily where
+  const := const
+  ι := NodeFamily.Index (altGeom c hc).geometry
+  deg := fun i => i.2.card
+  Adm := fun i => ((altGeom c hc).geometry i.1).C.card - i.2.card ≤ depth
+  Q := Q
+
+/-- The alternating family at even scales, over an assignment `Q`. -/
+noncomputable abbrev AltEvenFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) :=
+  (AltFam c hc const depth Q).restrictAdm (fun i => i.1 % 2 = 0)
+
+/-- The even-scale family over `Q` above the scale `R0`. -/
+noncomputable abbrev AltRFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (R0 : ℕ) :=
+  (AltEvenFam c hc const depth Q).restrictAdm (fun i => R0 ≤ i.1)
 
 /-- The alternating family at even scales. -/
 noncomputable abbrev AltEven (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) :=
-  ((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)
+  AltEvenFam c hc Fr.const depth (NodeFamily.polynomial Fr (altGeom c hc).geometry)
 
 /-- The even-scale family above the scale `R0`. -/
 noncomputable abbrev AltR (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth R0 : ℕ) :=
-  (AltEven c hc Fr depth).restrictAdm (fun i => R0 ≤ i.1)
+  AltRFam c hc Fr.const depth (NodeFamily.polynomial Fr (altGeom c hc).geometry) R0
+
+/-- **What the content route asks of a family** `AltFam c hc const depth Q`: the degree budget bounds the degree,
+and every member of even scale is `p ^ Ecrude cF r p`-integral for every prime `p` (the crude clearing).  For
+a frame both are `NodeFamily.polynomial_degree` and `altGeom_gle_Ecrude`; for the Loewner family of two sequences
+they are the Blk-level analogues. -/
+structure AltQ (c : ℚ) (hc : 0 < c) (cF : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) : Prop where
+  deg : ∀ i, (Q i).natDegree ≤ i.2.card
+  crude : ∀ (i : NodeFamily.Index (altGeom c hc).geometry), i.1 % 2 = 0 → ∀ (p : ℕ) [Fact p.Prime],
+    GLE p (Ecrude cF i.1 p) (Q i)
+
+/-- A larger crude constant is weaker. -/
+theorem AltQ.mono {c : ℚ} {hc : 0 < c} {cF cF' : ℕ}
+    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]} (h : AltQ c hc cF Q) (hle : cF ≤ cF') :
+    AltQ c hc cF' Q :=
+  ⟨h.deg, fun i hi p _ => (h.crude i hi p).mono (by
+    unfold Ecrude
+    exact Nat.mul_le_mul_left _ (by omega))⟩
+
+/-- The frame instance of `AltQ` (the Loewner minors of `Fr`): `cFr Fr ≤ cF`, `0 < c ≤ 1`. -/
+theorem AltQ.ofFrame (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (Fr : Frame) {cF : ℕ} (hcF : cFr Fr ≤ cF) :
+    AltQ c hc cF (NodeFamily.polynomial Fr (altGeom c hc).geometry) :=
+  AltQ.mono (cF := cFr Fr) ⟨fun i => NodeFamily.polynomial_degree Fr (altGeom c hc).geometry i,
+    fun i hi p _ => altGeom_gle_Ecrude c hc hc1 Fr 0 i hi p⟩ hcF
 
 open Classical in
 /-- The optimal clearing exponent of a member at a prime (`0` at non-primes). -/
-noncomputable def lpOptA (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) (i : (AltEven c hc Fr depth).ι)
+noncomputable def lpOptA (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (i : (AltEvenFam c hc const depth Q).ι)
     (p : ℕ) : ℕ :=
   if hp : p.Prime then
     haveI : Fact p.Prime := ⟨hp⟩
-    if h : ∃ n, GLE p n ((AltEven c hc Fr depth).Q i) then Nat.find h else 0
+    if h : ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i) then Nat.find h else 0
   else 0
 
-theorem lpOptA_gle (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) (i : (AltEven c hc Fr depth).ι)
-    (p : ℕ) [hp : Fact p.Prime] (h : ∃ n, GLE p n ((AltEven c hc Fr depth).Q i)) :
-    GLE p (lpOptA c hc Fr depth i p) ((AltEven c hc Fr depth).Q i) := by
+theorem lpOptA_gle (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (i : (AltEvenFam c hc const depth Q).ι)
+    (p : ℕ) [hp : Fact p.Prime] (h : ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i)) :
+    GLE p (lpOptA c hc const depth Q i p) ((AltEvenFam c hc const depth Q).Q i) := by
   classical
   unfold lpOptA
   rw [dif_pos hp.out, dif_pos h]
   exact Nat.find_spec h
 
-theorem lpOptA_le (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) (i : (AltEven c hc Fr depth).ι)
-    (p : ℕ) [hp : Fact p.Prime] {n : ℕ} (h : GLE p n ((AltEven c hc Fr depth).Q i)) :
-    lpOptA c hc Fr depth i p ≤ n := by
+theorem lpOptA_le (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (i : (AltEvenFam c hc const depth Q).ι)
+    (p : ℕ) [hp : Fact p.Prime] {n : ℕ} (h : GLE p n ((AltEvenFam c hc const depth Q).Q i)) :
+    lpOptA c hc const depth Q i p ≤ n := by
   classical
   unfold lpOptA
   rw [dif_pos hp.out, dif_pos ⟨n, h⟩]
   exact Nat.find_min' _ h
 
 /-- **The generic content route** (the statement of `thirds_content_of_bounds` for every `altGeom c`). -/
-theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (Fr : Frame) (depth R0 : ℕ)
+theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (cF : ℕ) (const : ℝ) (depth R0 : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (hQ : AltQ c hc cF Q)
     (M : ℕ) [NeZero M] (Lam : ℝ)
     (B : SmallBudget) (tmpl : ℝ → ZMod M → Template) (τ : ℝ)
     (hmass : ∀ ε : ℝ, 0 < ε → contentConstant M (tmpl ε) ≤ Lam + ε)
     (tend_le : ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' → (tmpl ε c').tend ≤ τ)
-    (tail : ∀ ε : ℝ, 0 < ε → ∀ i, (AltR c hc Fr depth R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+    (tail : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
       ∀ p : ℕ, p.Prime → (p : ZMod M) = c' → ⌊(tmpl ε c').tend * (altGeom c hc).scale i⌋₊ < p →
-        ∀ [Fact p.Prime], GLE p 0 ((AltR c hc Fr depth R0).Q i))
-    (pre : ∀ ε : ℝ, 0 < ε → ∀ i, (AltR c hc Fr depth R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+        ∀ [Fact p.Prime], GLE p 0 ((AltRFam c hc const depth Q R0).Q i))
+    (pre : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
       ∀ p : ℕ, p ≤ ⌊(tmpl ε c').t1 * (altGeom c hc).scale i⌋₊ → p.Prime → (p : ZMod M) = c' →
-        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltR c hc Fr depth R0).Q i) ∧
+        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltRFam c hc const depth Q R0).Q i) ∧
           (n : ℝ) ≤ (tmpl ε c').α0 * (altGeom c hc).scale i + B.X ((altGeom c hc).scale i) p)
-    (cov : ∀ ε : ℝ, 0 < ε → ∀ i, (AltR c hc Fr depth R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+    (cov : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
       ∀ P ∈ (tmpl ε c').l, ∀ p : ℕ, ⌊P.s * (altGeom c hc).scale i⌋₊ < p →
         p ≤ ⌊P.t * (altGeom c hc).scale i⌋₊ → p.Prime → (p : ZMod M) = c' →
-        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltR c hc Fr depth R0).Q i) ∧
+        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltRFam c hc const depth Q R0).Q i) ∧
           (n : ℝ) ≤ P.α * (altGeom c hc).scale i + P.β * p + P.C) :
-    HasScaledContent (AltR c hc Fr depth R0) (altGeom c hc).scale Lam := by
+    HasScaledContent (AltRFam c hc const depth Q R0) (altGeom c hc).scale Lam := by
   classical
   let sc := (altGeom c hc).scale
-  let price : (AltR c hc Fr depth R0).ι → ℕ → ℕ := fun i p =>
-    if p ∣ M then Ecrude (cFr Fr) i.1 p else lpOptA c hc Fr depth i p
-  have hpr : ∀ i p, ¬ p ∣ M → price i p = lpOptA c hc Fr depth i p := fun i p h => by
+  let price : (AltRFam c hc const depth Q R0).ι → ℕ → ℕ := fun i p =>
+    if p ∣ M then Ecrude cF i.1 p else lpOptA c hc const depth Q i p
+  have hpr : ∀ i p, ¬ p ∣ M → price i p = lpOptA c hc const depth Q i p := fun i p h => by
     simp [price, h]
   have hnd : ∀ {p : ℕ} {c' : ZMod M}, p.Prime → IsUnit c' → (p : ZMod M) = c' → ¬ p ∣ M := by
     intro p c' hp hc' hpc
     rw [← ZMod.isUnit_prime_iff_not_dvd hp, hpc]; exact hc'
-  have hlcut : ∀ i, (AltR c hc Fr depth R0).Adm i → ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' →
+  have hlcut : ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' →
       ⌊(tmpl ε c').tend * sc i⌋₊ ≤ ⌊τ * sc i⌋₊ := by
     intro i _ ε hε c' hc'
     exact Nat.floor_le_floor (mul_le_mul_of_nonneg_right (tend_le ε hε c' hc') (Nat.cast_nonneg _))
-  refine hasScaledContent_budgeted_lim (AltR c hc Fr depth R0) sc M
-    (fun i => NodeFamily.family_degree Fr (altGeom c hc).geometry depth i) price
+  refine hasScaledContent_budgeted_lim (AltRFam c hc const depth Q R0) sc M
+    (fun i => hQ.deg i) price
     (fun i => max (⌊τ * sc i⌋₊ + 1) (M + 1)) ?_ ?_ B Lam tmpl hmass ?_ ?_ ?_ ?_
-    (exc_of_Ecrude (AltR c hc Fr depth R0) sc M price (cFr Fr) ?_)
+    (exc_of_Ecrude (AltRFam c hc const depth Q R0) sc M price cF ?_)
   · intro i hi p hpF
     by_cases h : p ∣ M
     · simp only [price, h, if_true]
-      exact altGeom_gle_Ecrude c hc hc1 Fr depth i hi.1.2 p
+      exact hQ.crude i hi.1.2 p
     · simp only [price, h, if_false]
-      exact lpOptA_gle c hc Fr depth i p ⟨_, altGeom_gle_Ecrude c hc hc1 Fr depth i hi.1.2 p⟩
+      exact lpOptA_gle c hc const depth Q i p ⟨_, hQ.crude i hi.1.2 p⟩
   · intro i hi p hp hcut
     have hM : ¬ p ∣ M := fun h => by
       have := Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne M)) h
@@ -112,11 +161,11 @@ theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (Fr : Frame)
       have := (le_max_left (⌊τ * sc i⌋₊ + 1) (M + 1)).trans hcut
       omega
     rw [hpr i p hM]
-    exact Nat.le_zero.1 (lpOptA_le c hc Fr depth i p (tail 1 one_pos i hi _ hunit p hp rfl hlt))
+    exact Nat.le_zero.1 (lpOptA_le c hc const depth Q i p (tail 1 one_pos i hi _ hunit p hp rfl hlt))
   · intro ε hε i hi c' hc' p hp hpc hlt
     haveI : Fact p.Prime := ⟨hp⟩
     rw [hpr i p (hnd hp hc' hpc)]
-    exact Nat.le_zero.1 (lpOptA_le c hc Fr depth i p (tail ε hε i hi c' hc' p hp hpc hlt))
+    exact Nat.le_zero.1 (lpOptA_le c hc const depth Q i p (tail ε hε i hi c' hc' p hp hpc hlt))
   · intro ε hε i hi c' hc'
     have := hlcut i hi ε hε c' hc'
     exact lt_of_le_of_lt this (lt_of_lt_of_le (Nat.lt_succ_self _) (le_max_left _ _))
@@ -124,13 +173,13 @@ theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (Fr : Frame)
     haveI : Fact p.Prime := ⟨hp⟩
     rw [hpr i p (hnd hp hc' hpc)]
     obtain ⟨n, hn, hb⟩ := pre ε hε i hi c' hc' p h1 hp hpc
-    exact (Nat.cast_le.2 (lpOptA_le c hc Fr depth i p hn)).trans hb
+    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
   · intro ε hε i hi c' hc' P hP p h1 h2 hp hpc
     haveI : Fact p.Prime := ⟨hp⟩
     show (price i p : ℝ) ≤ _
     rw [hpr i p (hnd hp hc' hpc)]
     obtain ⟨n, hn, hb⟩ := cov ε hε i hi c' hc' P hP p h1 h2 hp hpc
-    exact (Nat.cast_le.2 (lpOptA_le c hc Fr depth i p hn)).trans hb
+    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
   · intro i hi p hp
     have hd := Nat.dvd_of_mem_primeFactors hp
     simp only [price, hd, if_true]
@@ -179,24 +228,34 @@ theorem hasScaledContent_lift (Fam : PolyFamily) (sc : Fam.ι → ℕ) (Λ : ℝ
 
 /-! ### The branch and prefix statements consumed by Theorem D -/
 
-/-- **The branch catalogue is valid** for the member frame `Fr` with pole offset `o`.  `P_bad` is the explicit
-prime bound used by the check (it enters the constants); `N0` is a further bound that is never evaluated (for example
-C2L's choice-built `NFr` of the rank layer): Theorem D only uses the branches at scales so large that every prime of
-every piece exceeds it. -/
-def CatValid (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth q o Pbad N0 : ℕ) (cat : List Branch) : Prop :=
-  ∀ b ∈ cat, ∀ i : (AltEven c hc Fr depth).ι, (AltEven c hc Fr depth).Adm i → 0 < i.1 →
+/-- **The branch catalogue is valid** for the family `AltEvenFam c hc const depth Q` with pole offset `o`.  `P_bad`
+is the explicit prime bound used by the check (it enters the constants); `N0` is a further bound that is never
+evaluated (for example C2L's choice-built `NFr` of the rank layer): Theorem D only uses the branches at scales so
+large that every prime of every piece exceeds it. -/
+def CatValidFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (q o Pbad N0 : ℕ) (cat : List Branch) : Prop :=
+  ∀ b ∈ cat, ∀ i : (AltEvenFam c hc const depth Q).ι, (AltEvenFam c hc const depth Q).Adm i → 0 < i.1 →
     ∀ (p : ℕ) [Fact p.Prime], Pbad < p → N0 < p →
     q * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p →
     ∀ j k : ℕ, q * k = j * p + o → 0 < j → j < q → 0 < k → k < p →
     (∀ cd ∈ b.conds, cd.Holds i.1 p ((altGeom c hc).borderSize i.1) k) →
-    ∃ n, GLE p n ((AltEven c hc Fr depth).Q i) ∧
+    ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i) ∧
       n ≤ b.τ.evalN i.1 p ((altGeom c hc).borderSize i.1) k + b.debit * delCount (altGeom c hc) i
 
-/-- **The prefix bound** on `p ≤ t0 r` (`pre_gle` of the T layer). -/
+/-- **The prefix bound** on `p ≤ t0 r` (`pre_gle` of the T layer), over a family. -/
+def PreValidFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (M : ℕ) (B : SmallBudget) (t0 α0b : ℚ) : Prop :=
+  ∀ i : (AltEvenFam c hc const depth Q).ι, (AltEvenFam c hc const depth Q).Adm i → ∀ (p : ℕ) [Fact p.Prime],
+    ¬ p ∣ M → p ≤ ⌊(t0 : ℝ) * i.1⌋₊ →
+    ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i) ∧ (n : ℝ) ≤ (α0b : ℝ) * i.1 + B.X i.1 p
+
+/-- **The branch catalogue is valid** for the member frame `Fr` with pole offset `o`. -/
+def CatValid (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth q o Pbad N0 : ℕ) (cat : List Branch) : Prop :=
+  CatValidFam c hc Fr.const depth (NodeFamily.polynomial Fr (altGeom c hc).geometry) q o Pbad N0 cat
+
+/-- **The prefix bound** on `p ≤ t0 r` (`pre_gle` of the T layer) for the frame `Fr`. -/
 def PreValid (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth M : ℕ) (B : SmallBudget) (t0 α0b : ℚ) : Prop :=
-  ∀ i : (AltEven c hc Fr depth).ι, (AltEven c hc Fr depth).Adm i → ∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ M →
-    p ≤ ⌊(t0 : ℝ) * i.1⌋₊ →
-    ∃ n, GLE p n ((AltEven c hc Fr depth).Q i) ∧ (n : ℝ) ≤ (α0b : ℝ) * i.1 + B.X i.1 p
+  PreValidFam c hc Fr.const depth (NodeFamily.polynomial Fr (altGeom c hc).geometry) M B t0 α0b
 
 /-! ### Unit classes and the class sums -/
 
@@ -349,14 +408,15 @@ theorem tlo_exists {D : BankData} (hD : check D = true) :
   exact ⟨t, ht0, fun j T h => ht (j, T) (findT_mem j D.tmpls h)⟩
 
 set_option maxHeartbeats 1000000 in
-/-- **Theorem D** (finite form). -/
-theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
-    (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (hcα : c = 2 * D.α)
-    (Fr : Frame) (depth : ℕ) (hdepth : depth ≤ D.depth) (hcF : cFr Fr ≤ D.cF)
+/-- **Theorem D** (finite form), over a family `AltEvenFam c hc const depth Q` whose members satisfy `AltQ`. -/
+theorem hasScaledContent_of_checkFam (D : BankData) (hD : check D = true)
+    (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
+    (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (hdepth : depth ≤ D.depth) (hQ : AltQ c hc D.cF Q)
     (a : ℕ) (ha : a ∈ D.members) (B : SmallBudget)
-    (N0 : ℕ) (hcat : CatValid c hc Fr depth D.q (D.q - a) D.Pbad N0 D.cat)
-    (hpre : PreValid c hc Fr depth D.M B D.t0 D.α0b) :
-    HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) := by
+    (N0 : ℕ) (hcat : CatValidFam c hc const depth Q D.q (D.q - a) D.Pbad N0 D.cat)
+    (hpre : PreValidFam c hc const depth Q D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) := by
   classical
   obtain ⟨hq2, hqP, hM0, hMq, hα, hα0b, hα0⟩ := check_params hD
   haveI : NeZero D.M := ⟨by omega⟩
@@ -401,10 +461,10 @@ theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
     have : (N0 : ℝ) < p := by linarith
     exact_mod_cast this
   -- the branch statements at a member and a prime of the class `c'`
-  have hbranches : ∀ (i : (AltEven c hc Fr depth).ι), (AltEven c hc Fr depth).Adm i → 0 < i.1 →
+  have hbranches : ∀ (i : (AltEvenFam c hc const depth Q).ι), (AltEvenFam c hc const depth Q).Adm i → 0 < i.1 →
       ∀ (p : ℕ) [Fact p.Prime] (j k : ℕ), j < D.q → 0 < j → D.q * k = j * p + (D.q - a) → N0 < p →
       BranchesValid D.cat D.Pbad D.q i.1 p ((altGeom c hc).borderSize i.1) k (delCount (altGeom c hc) i)
-        (fun n => GLE p n ((AltEven c hc Fr depth).Q i)) := by
+        (fun n => GLE p n ((AltEvenFam c hc const depth Q).Q i)) := by
     intro i hi hr0 p _ j k hjq hj0 hk hN b hb hPb hqN hcond
     have hqp : D.q < p := lt_of_le_of_lt hqP hPb
     have hk0 : 0 < k := by
@@ -421,9 +481,9 @@ theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
           _ ≤ D.q * p := Nat.mul_le_mul_right p hjq
       exact Nat.lt_of_mul_lt_mul_left h1
     exact hcat b hb i hi hr0 p hPb hN hqN j k hk hj0 hjq hk0 hkp hcond
-  refine hasScaledContent_lift (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) R0
-    (fun i => NodeFamily.family_degree Fr (altGeom c hc).geometry depth i) ?_
-  refine altContent_of_bounds c hc hc1 Fr depth R0 D.M D.Λ B (fun _ => tmplOf D a) D.τ ?_ ?_ ?_ ?_ ?_
+  refine hasScaledContent_lift (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) R0
+    (fun i => hQ.deg i) ?_
+  refine altContent_of_bounds c hc D.cF const depth R0 Q hQ D.M D.Λ B (fun _ => tmplOf D a) D.τ ?_ ?_ ?_ ?_ ?_
   · -- hmass (D6)
     intro ε hε
     have hcc : contentConstant D.M (tmplOf D a) = D.Λ := by
@@ -449,8 +509,8 @@ theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
     intro ε hε i hi c' hc' p hp hpc hlt _
     have hr2 : i.1 % 2 = 0 := hi.1.2
     rcases Nat.eq_zero_or_pos i.1 with h0 | hr0
-    · have := altGeom_gle_Ecrude c hc hc1 Fr depth i hr2 p
-      have h00 : Ecrude (cFr Fr) i.1 p = 0 := by simp [Ecrude, h0]
+    · have := hQ.crude i hr2 p
+      have h00 : Ecrude D.cF i.1 p = 0 := by simp [Ecrude, h0]
       rw [h00] at this
       exact this
     obtain ⟨j, T, hj, hT⟩ := hclass c' hc'
@@ -591,23 +651,32 @@ theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
         linarith
       · exact h0
     have hrd := round_of c hc hcα hr2 hq2 ha0 haq hk (r := i.1)
-    have hcr : GLE p (2 * i.1 * (3 * Nat.log p (14 * i.1) + D.cF)) ((AltEven c hc Fr depth).Q i) := by
-      refine (altGeom_gle_Ecrude c hc hc1 Fr depth i hr2 p).mono ?_
-      unfold Ecrude
-      exact Nat.mul_le_mul_left _ (by omega)
+    have hcr : GLE p (2 * i.1 * (3 * Nat.log p (14 * i.1) + D.cF)) ((AltEvenFam c hc const depth Q).Q i) := by
+      exact hQ.crude i hr2 p
     have hodd : D.Pbad < p → p % 2 = 1 := by
       intro hPb
       rcases (Fact.out : p.Prime).eq_two_or_odd with h | h
       · omega
       · exact h
     have hdel : delCount (altGeom c hc) i ≤ D.depth :=
-      (delCount_le (altGeom c hc) Fr depth i hi.1.1).trans hdepth
-    obtain ⟨n, hn, hb⟩ := piece_sound x.1 x.2 hok (by omega) hα (fun n => GLE p n ((AltEven c hc Fr depth).Q i))
+      (show delCount (altGeom c hc) i ≤ depth from hi.1.1).trans hdepth
+    obtain ⟨n, hn, hb⟩ := piece_sound x.1 x.2 hok (by omega) hα (fun n => GLE p n ((AltEvenFam c hc const depth Q).Q i))
       hrd hodd (Fact.out : p.Prime).two_le hdel hcr (hbranches i hi.1 hr0 p j _ hjq hj0 hk (by
         obtain ⟨-, -, hch, hpcs', -⟩ := tmpl_facts hD hT
         have hge := (chain_ge T.pieces T.t1 hch hpcs').1 x hx
         exact hN0 i.1 p x.1.s hi.2 (le_trans (htlo j T hT) hge) hs)) hs ht
     exact ⟨n, hn, hb⟩
+
+/-- **Theorem D** (finite form) for a frame. -/
+theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
+    (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (hcα : c = 2 * D.α)
+    (Fr : Frame) (depth : ℕ) (hdepth : depth ≤ D.depth) (hcF : cFr Fr ≤ D.cF)
+    (a : ℕ) (ha : a ∈ D.members) (B : SmallBudget)
+    (N0 : ℕ) (hcat : CatValid c hc Fr depth D.q (D.q - a) D.Pbad N0 D.cat)
+    (hpre : PreValid c hc Fr depth D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) :=
+  hasScaledContent_of_checkFam D hD c hc hcα Fr.const depth _ hdepth (AltQ.ofFrame c hc hc1 Fr hcF) a ha B N0
+    hcat hpre
 
 end TheoremD
 

@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Fourths.Pipeline
-public import CatalanCore.Uniform.Bank.Fourths.Roots
 public import CatalanFrames.Thirds.Frame
 public import CatalanCore.Uniform.Content.Smith.LP1Table
 
@@ -34,17 +33,6 @@ theorem pipeline_twoTerm (a : ℕ) (ha : a = 1 ∨ a = 3) :
     rw [CatalanFrames.Thirds.Dsq_eq, he, div_pow, one_div_div]
     norm_num only [Nat.cast_ofNat]
 
-theorem one_based_pole4 (a p : ℕ) (ha : a = 1 ∨ a = 3) (hp29 : 29 ≤ p)
-    (hodd : p % 2 = 1) :
-    (root4 a p = 1 ∨ root4 a p = 3) ∧
-    4 * (pole4 a p + 1) = root4 a p * p + (4 - a) ∧
-    0 < pole4 a p + 1 ∧ pole4 a p + 1 < p ∧ 0 < root4 a p := by
-  obtain ⟨hj, hk, hkp⟩ := root4_spec a p ha hodd
-  have hroot : 4 * pole4 a p + a = root4 a p * p := by simpa [Nat.mul_comm] using hk
-  have hja : root4 a p ≤ 3 := by omega
-  have hjp : root4 a p * p ≤ 3 * p := Nat.mul_le_mul_right p hja
-  exact ⟨hj, by omega, by omega, by omega, by omega⟩
-
 theorem q4_simple_poles (a p N : ℕ) (ha : a = 1 ∨ a = 3)
     (hp29 : 29 ≤ p) (hN : N ≤ 2 * p) :
     ∀ t, 1 ≤ t → t < N → ¬ p ^ 2 ∣ 4 * t - (4 - a) := by
@@ -54,34 +42,5 @@ theorem q4_simple_poles (a p N : ℕ) (ha : a = 1 ∨ a = 3)
   have hlt : 4 * t - (4 - a) < 8 * p := by omega
   nlinarith
 
-theorem pipeline_lp1_hyp (a p r m : ℕ) [Fact p.Prime] (ha : a = 1 ∨ a = 3)
-    (hp29 : 29 ≤ p) (hodd : p % 2 = 1) (hN : r + 2 * m ≤ 2 * p)
-    (hrp : p ≤ r) (hUk : r < p + (pole4 a p + 1)) :
-    LP1Hyp (pipelineFrame a ha) p 4 (4 - a) r m (pole4 a p + 1) (root4 a p) := by
-  obtain ⟨hj, hk, hk0, hkp, hj0⟩ := one_based_pole4 a p ha hp29 hodd
-  refine ⟨⟨pipeline_twoTerm a ha, ⟨by omega, hk, hk0, hkp, hj0, hN⟩,
-    q4_simple_poles a p (r + 2 * m) ha hp29 hN, ?_, ?_⟩, hrp, hUk, by omega⟩
-  · change (1 : ℚ) ∈ S p
-    exact (S p).one_mem
-  · change red p (1 : ℚ) ≠ 0
-    rw [(Good.one (ℓ := p)).eq]
-    exact one_ne_zero
-
-theorem pipeline_lp2_hyp (a p r m : ℕ) [Fact p.Prime] (ha : a = 1 ∨ a = 3)
-    (hp29 : 29 ≤ p) (hodd : p % 2 = 1)
-    (hN : r + 2 * m ≤ p + (pole4 a p + 1)) (hrp : r < p) (hkr : pole4 a p + 1 ≤ r) :
-    LP2Hyp (pipelineFrame a ha) p 4 (4 - a) r m (pole4 a p + 1) (root4 a p) := by
-  obtain ⟨hj, hk, hk0, hkp, hj0⟩ := one_based_pole4 a p ha hp29 hodd
-  have hN2 : r + 2 * m ≤ 2 * p := by omega
-  refine ⟨⟨pipeline_twoTerm a ha, ⟨by omega, hk, hk0, hkp, hj0, hN⟩,
-    q4_simple_poles a p (r + 2 * m) ha hp29 hN2, ?_, ?_⟩, hrp, hkr, by omega⟩
-  · change (1 : ℚ) ∈ S p
-    exact (S p).one_mem
-  · change red p (1 : ℚ) ≠ 0
-    rw [(Good.one (ℓ := p)).eq]
-    exact one_ne_zero
-
 #print axioms pipeline_twoTerm
-#print axioms pipeline_lp1_hyp
-#print axioms pipeline_lp2_hyp
 end CatalanCore.Uniform.Bank.Fourths

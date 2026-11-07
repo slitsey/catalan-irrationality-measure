@@ -1,6 +1,5 @@
 module
 
-public import CatalanCore.Uniform.Bank.FourthsContent.Level3Mu
 public import CatalanCore.Uniform.Content.BankShared.Check.Normalise
 public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
 public import CatalanFrames.Lambda.HybInst
@@ -10,6 +9,11 @@ public import CatalanCore.Uniform.Bank.Fourths.Final
 public import CatalanCore.Uniform.Bank.Fourths.TwoTerm
 public import CatalanCore.Uniform.Bank.Fourths.Frame
 public import CatalanCore.Arith.Hybrid.PieceTools
+public import CatalanCore.Uniform.Bank.FourthsContent.Level3Data
+public import CatalanCore.Uniform.Bank.FourthsContent.Level3Data.Head
+public import CatalanCore.Uniform.Content.BankShared.Check.Prefix
+public import CatalanCore.Uniform.Content.UFSimple.PrefixBranches
+public import CatalanCore.Uniform.Content.UFSimple.WrapCheck
 
 @[expose] public section
 set_option Elab.async false

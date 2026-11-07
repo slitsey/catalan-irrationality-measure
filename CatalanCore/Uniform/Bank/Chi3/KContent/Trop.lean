@@ -2,6 +2,8 @@ module
 
 public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.Head
 public import CatalanCore.Uniform.Content.BankShared.KTerm.Content
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Trop
+public import CatalanCore.Uniform.Bank.Chi3Content.PoleData
 public import CatalanCore.Uniform.Content.BankShared.TwoTerm.Trop
 public import CatalanFrames.P6Hybrid.ZDual
 public import CatalanFrames.P6Hybrid.Level
@@ -14,7 +16,7 @@ set_option maxHeartbeats 1600000
 
 Adapters from the old P6 lemmas to `KCatValid`:
 
-* `p6_gle_trop`: at a prime `p ≥ 5` with `3 N < p²`, every member of `AltEven c p6Frame` is `p ^ tropVal (HW lev p r m)`-integral
+* `KBundle.gle_trop` (instance `chi3Bundle`): at a prime `p ≥ 5` with `3 N < p²`, every member of `AltEven c p6Frame` is `p ^ tropVal (HW lev p r m)`-integral
   for the P6 instance `p6Inst r m` of the scale (the T-layer bridge `T_gle` of `TwoTerm.Trop`, with the instance at `(r, m)`
   since `p6Inst` depends on them);
 * `D1` (`trop_D1`), `D1x` (`val_D1x`), `Z0`, `Z1` (`p6_trop_Z`, the `Sv` count with `k_q = min (k_A, k_B)`) and the
@@ -31,32 +33,19 @@ open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCo
 
 theorem c12_pos : (0 : ℚ) < 1 / 2 := by norm_num
 
-/-- **The tropical bridge at the instance `p6Inst r m`.** -/
-theorem p6_gle_trop (c : ℚ) (hc : 0 < c) (depth : ℕ) (i : ((altGeom c hc).family p6Frame depth).ι)
-    (hr : i.1 % 2 = 0) (hr1 : 1 ≤ i.1) (p : ℕ) [hp : Fact p.Prime] (h5 : 5 ≤ p)
-    (hsq : 3 * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p) :
-    GLE p (tropVal (HW (p6Inst i.1 ((altGeom c hc).borderSize i.1)).lev p i.1
-      ((altGeom c hc).borderSize i.1))) (((altGeom c hc).family p6Frame depth).Q i) := by
-  obtain ⟨r, S⟩ := i
-  set m := (altGeom c hc).borderSize r with hm
-  haveI := p6Inst_diagOK r m
-  have hQ := altGeom_member_commonMinor c hc p6Frame depth hr S
-  have hG0 := commonMinorPoly_gle (p6Inst r m) p r m (retainedFin (altGeom_hybShape c hc hr) S)
-  have hG : GLE p (tropExp (p6Inst r m) r m p) (((altGeom c hc).family p6Frame depth).Q ⟨r, S⟩) := hQ ▸ hG0
-  have hbad : p ∉ (p6Inst r m).cd.bad := by
-    intro hb
-    have := (p6_badInfo r m).bad_le p hb
-    omega
-  have hcnt : cntG (p6Inst r m) r m p = 0 := by
-    apply cntG_zero _ _ _ _ hp.out
-    rw [(p6_badInfo r m).L_eq, pow_two]
-    exact hsq
-  have hle := tropExp_le_good (p6Inst r m) r m p hr1 hp.out hbad
-  rw [hcnt] at hle
-  simp only [Nat.cast_zero, mul_zero, zero_add] at hle
-  have hle' : tropExp (p6Inst r m) r m p ≤ tropVal (HW (p6Inst r m).lev p r m) := by
-    exact_mod_cast hle
-  exact hG.mono hle'
+/-- **The pole bundle of chi_{-3}**: `p6Frame`, `ρ = 2` (denominators `k (3k - 2) (2k - 1)`), the instances
+`p6Inst r m`, `chi3PoleData`.  The tropical bridge, windows and prefix rule are the generic `KBundle` lemmas. -/
+noncomputable def chi3Bundle : KBundle where
+  Fr := p6Frame
+  ρ := 2
+  inst := p6Inst
+  diagOK := p6Inst_diagOK
+  badInfo := p6_badInfo
+  pole := fun _ _ _ h5 hN => Chi3Content.chi3PoleData h5 hN
+  singular_iff := fun p N _ h5 hN t => by
+    simp only [Chi3Content.chi3PoleData, Chi3Content.chi3Sing, Nat.cast_ofNat]
+
+theorem chi3Bundle_shifts : chi3Bundle.shifts = kShifts := rfl
 
 /-- The roots of the two shifts of chi_{-3} at a prime `p ≡ ±1 (6)`. -/
 theorem p6_roots {p k0 k1 : ℕ} (hp : p % 6 = 1 ∨ p % 6 = 5) (h7 : 7 ≤ p)
@@ -112,7 +101,7 @@ theorem kcat_trop_valid (depth : ℕ) (N0 : ℕ) :
     omega
   have hsq : 3 * (r + 2 * m) < p * p := by omega
   have hG : GLE p (tropVal (HW (p6Inst r m).lev p r m)) ((AltEven (1 / 2) c12_pos p6Frame depth).Q i) :=
-    p6_gle_trop (1 / 2) c12_pos depth i hr hr0 p (by omega) hsq
+    chi3Bundle.gle_trop (1 / 2) c12_pos depth i hr hr0 p (by omega) hsq
   have hr0' : (0 : ℕ) < kShifts.length := by decide
   have hk0 := hroots 0 (by decide)
   have hk1 := hroots 1 (by decide)

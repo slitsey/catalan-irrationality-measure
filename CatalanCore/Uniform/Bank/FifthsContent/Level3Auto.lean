@@ -6,6 +6,7 @@ public import CatalanFrames.Fifths.ContentHyb
 public import CatalanCore.Uniform.Bank.Fifths.Final
 public import CatalanCore.Uniform.Bank.Fifths.Frame
 public import CatalanCore.Arith.Hybrid.PieceTools
+public import CatalanFrames.Fifths.Instance
 
 @[expose] public section
 set_option Elab.async false

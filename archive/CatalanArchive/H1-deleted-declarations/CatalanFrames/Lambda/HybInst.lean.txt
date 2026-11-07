@@ -1,0 +1,17 @@
+-- H1 deletion (7 Nov 2026): declarations removed from CatalanFrames.Lambda.HybInst
+/-- **The numerology parameters of λ** (`HybParams`): `L = 4`, `cOf ≤ 4`, modulus `4`, classes `{1, 3}`,
+`m = r / 8`, zero set `c < kq q`. -/
+noncomputable def lamParams : HybParams lamInst where
+  Lc := 4
+  cm := 4
+  bad := lam_badInfo
+  M := 4
+  Cs := {1, 3}
+  cls := cls_mod4 lam_badInfo
+  mf := fun r => r / 8
+  mf_le := fun r => Nat.div_le_self r 8
+  Gd := fun p => 5 ≤ p
+  Z := fun q c => c < lamInst.cd.kq q
+  levels := lam_tropFacts.toLevelFacts
+
+

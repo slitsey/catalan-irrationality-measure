@@ -1,0 +1,6 @@
+-- H1 deletion (7 Nov 2026): declarations removed from CatalanCore.Uniform.Bank.FourthsContent.Level3Bound
+/-- **`μ(L(2, χ₋₄) ± 5π²/48) ≤ 78219 / 2500`** (`lambdaTarget sgn`; `true` is plus). -/
+theorem lambda_measure (sgn : Bool) : Measure.MeasureLBAt (lambdaTarget sgn) ((78219 / 2500 : ℚ) : ℝ) :=
+  lambda_measure_auto sgn (lambda_decay sgn)
+
+

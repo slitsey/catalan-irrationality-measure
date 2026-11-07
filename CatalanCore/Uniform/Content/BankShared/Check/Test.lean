@@ -1,13 +1,7 @@
 module
 
 public import CatalanCore.Uniform.Content.BankShared.Check.Bank
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl0
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl1
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.prefTmpl2
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_0
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl1_1
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_0
-public import CatalanCore.Uniform.Bank.ThirdsContent.Tmpl.profTmpl2_1
+public import CatalanCore.Arith.Hybrid.PieceTools
 
 @[expose] public section
 set_option Elab.async false
@@ -22,7 +16,7 @@ identify the real pieces with `prefTmpl*`, `profTmpl*`), with their own constant
 and the M3D windows used.  `thirds_check : check thirdsData = true`, each chunk by its own `decide +kernel`. -/
 
 namespace CatalanCore.Uniform.Content.BankShared.Check.Test
-open CatalanCore.Arith.Hybrid CatalanCore.Uniform.Content.BankShared.Check CatalanCore.Uniform.Bank.ThirdsContent
+open CatalanCore.Arith.Hybrid CatalanCore.Uniform.Content.BankShared.Check
 
 /-- `n / d`. -/
 def qq (n : ℤ) (d : ℕ) : ℚ := (n : ℚ) / d
@@ -311,15 +305,5 @@ theorem thirds_check : check thirdsData = true := by
   unfold check
   rw [thirds_params, thirds_tmpls, thirds_classes]
   rfl
-
-/-- The real pieces of `thirdsT1` are those of `Tmpl/*.lean`. -/
-theorem thirdsT1_real : thirdsT1.real = prefTmpl0 ++ (prefTmpl1 ++ (prefTmpl2 ++ (profTmpl1_0 ++ (profTmpl1_1)))) := by
-  simp only [QTmpl.real, thirdsT1, List.map_append, c1_profTmpl1_0, c1_profTmpl1_1, c_prefTmpl0, c_prefTmpl1, c_prefTmpl2,
-    List.map_cons, List.map_nil, toPiece_mkQ, prefTmpl0, prefTmpl1, prefTmpl2, profTmpl1_0, profTmpl1_1]
-
-/-- The real pieces of `thirdsT2` are those of `Tmpl/*.lean`. -/
-theorem thirdsT2_real : thirdsT2.real = prefTmpl0 ++ (prefTmpl1 ++ (prefTmpl2 ++ (profTmpl2_0 ++ (profTmpl2_1)))) := by
-  simp only [QTmpl.real, thirdsT2, List.map_append, c2_profTmpl2_0, c2_profTmpl2_1, c_prefTmpl0, c_prefTmpl1, c_prefTmpl2,
-    List.map_cons, List.map_nil, toPiece_mkQ, prefTmpl0, prefTmpl1, prefTmpl2, profTmpl2_0, profTmpl2_1]
 
 end CatalanCore.Uniform.Content.BankShared.Check.Test

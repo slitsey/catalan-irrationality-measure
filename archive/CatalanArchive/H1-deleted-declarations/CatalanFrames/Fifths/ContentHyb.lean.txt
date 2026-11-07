@@ -1,0 +1,29 @@
+-- H1 deletion (7 Nov 2026): declarations removed from CatalanFrames.Fifths.ContentHyb
+/-- Finite bad residues are checked directly; no closed ZMod disjunction simplification. -/
+lemma badPrimes_no_unitClass (b : ℕ) (hb : b∈badPrimes) : (b : ZMod 30)∉unitClasses := by
+  have hc : b=2 ∨ b=3 ∨ b=5 := by simpa [badPrimes] using hb
+  rcases hc with rfl|rfl|rfl <;> decide +kernel
+
+/-- Exact finite-table content price; arbitrary-Bd numerology uses the actual LN+8 cutoff. -/
+theorem fifths_log_content {ε : ℝ} (hε : 0<ε) :
+    ∀ᶠ r : ℕ in atTop,∀ m : ℕ,r≤8*m → 8*m≤r+9 →
+      Real.log (Dhyb (fifthsInst T) r m) ≤ ((fifthsPrice : ℝ)+ε)*(r : ℝ)^2 := by
+  have hclass := fifths_class_sum T (ε := ε/2) (by positivity)
+  have hextra := fifthsExtra_small (ε/2) (by positivity)
+  filter_upwards [hclass,hextra,eventually_ge_atTop 400] with r hcl hx hr m h1 h2
+  have hD := log_Dhyb_le_arbitrary (fifths_arithmetic T) (M := 30) unitClasses (fun _ => 7*r)
+    r m (by omega) (WGm (fifthsInst T) r m) (fun p => Nat.cast_nonneg _) (fun p _ => le_rfl)
+    (fun p hp hb => cls_mem_of_bad hp hb) (by
+      intro c hc b hb hbc
+      exfalso
+      exact badPrimes_no_unitClass b hb (by rw [hbc];exact hc)) (by
+      intro c hc p hp hb hpc hcut
+      have hp7 := prime_class_ge_seven hp (by rw [hpc];exact hc)
+      exact fifths_tail T hp hp7 hr h1 h2 hcut)
+  rw [fifths_badLog T] at hD
+  have hm : m≤r := by omega
+  have he := hx m hm
+  change extraG 5 Ecub 2 (Real.log 30) r m≤(ε/2)*(r : ℝ)^2 at he
+  have hc := hcl m h1 h2
+  nlinarith
+

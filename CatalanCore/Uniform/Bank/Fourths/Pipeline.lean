@@ -1,7 +1,7 @@
 module
 
-public import CatalanCore.Uniform.Bank.Fourths.PolePalette
 public import CatalanCore.Uniform.Content.Member.FrameDigamma
+public import CatalanFrames.P6.Frame
 
 @[expose] public section
 set_option Elab.async false
@@ -36,16 +36,4 @@ theorem hu4 (a : ℕ) (ha : a = 1 ∨ a = 3) (i : Fin 2) :
 theorem hq4 (i : Fin 2) : 0 < q4 i := by
   fin_cases i <;> norm_num [q4]
 
-theorem pipeline_digamma (a : ℕ) (ha : a = 1 ∨ a = 3) :
-    frameDigamma (pipelineFrame a ha) (u4 a) q4 = D4 a := by
-  unfold frameDigamma D4
-  congr 1
-  funext i
-  fin_cases i
-  · change ((-1 : ℤ) : ℚ) / 1 = (-1 : ℚ)
-    norm_num
-  · change ((1 : ℤ) : ℚ) / 1 = (1 : ℚ)
-    norm_num
-
-#print axioms pipeline_digamma
 end CatalanCore.Uniform.Bank.Fourths

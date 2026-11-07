@@ -1,0 +1,13 @@
+-- H1 deletion (7 Nov 2026): declarations removed from CatalanCore.Uniform.Bank.Fourths.Pipeline
+theorem pipeline_digamma (a : ℕ) (ha : a = 1 ∨ a = 3) :
+    frameDigamma (pipelineFrame a ha) (u4 a) q4 = D4 a := by
+  unfold frameDigamma D4
+  congr 1
+  funext i
+  fin_cases i
+  · change ((-1 : ℤ) : ℚ) / 1 = (-1 : ℚ)
+    norm_num
+  · change ((1 : ℤ) : ℚ) / 1 = (1 : ℚ)
+    norm_num
+
+

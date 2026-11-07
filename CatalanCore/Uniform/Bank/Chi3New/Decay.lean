@@ -4,7 +4,7 @@ public import CatalanCore.Uniform.Bank.Chi3.Env
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Check
 public import CatalanCore.Uniform.Decay.AltDecay
 public import CatalanCore.Uniform.Bank.Chi3New.Geom
-public import CatalanFrames.P6.Contour
+public import CatalanFrames.P6.Frame
 
 @[expose] public section
 set_option Elab.async false

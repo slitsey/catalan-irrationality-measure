@@ -1,0 +1,13 @@
+-- H1 deletion (7 Nov 2026): declarations removed from CatalanCore.Uniform.Content.BankShared.Check.Test
+/-- The real pieces of `thirdsT1` are those of `Tmpl/*.lean`. -/
+theorem thirdsT1_real : thirdsT1.real = prefTmpl0 ++ (prefTmpl1 ++ (prefTmpl2 ++ (profTmpl1_0 ++ (profTmpl1_1)))) := by
+  simp only [QTmpl.real, thirdsT1, List.map_append, c1_profTmpl1_0, c1_profTmpl1_1, c_prefTmpl0, c_prefTmpl1, c_prefTmpl2,
+    List.map_cons, List.map_nil, toPiece_mkQ, prefTmpl0, prefTmpl1, prefTmpl2, profTmpl1_0, profTmpl1_1]
+
+
+/-- The real pieces of `thirdsT2` are those of `Tmpl/*.lean`. -/
+theorem thirdsT2_real : thirdsT2.real = prefTmpl0 ++ (prefTmpl1 ++ (prefTmpl2 ++ (profTmpl2_0 ++ (profTmpl2_1)))) := by
+  simp only [QTmpl.real, thirdsT2, List.map_append, c2_profTmpl2_0, c2_profTmpl2_1, c_prefTmpl0, c_prefTmpl1, c_prefTmpl2,
+    List.map_cons, List.map_nil, toPiece_mkQ, prefTmpl0, prefTmpl1, prefTmpl2, profTmpl2_0, profTmpl2_1]
+
+

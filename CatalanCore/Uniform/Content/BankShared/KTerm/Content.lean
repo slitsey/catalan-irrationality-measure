@@ -21,19 +21,26 @@ set_option Elab.async false
 namespace CatalanCore.Uniform.Content.BankShared.KTerm
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
   CatalanCore.Uniform.Content.SmallPrimes CatalanCore.Uniform.Content.Member CatalanCore.Arith.Hybrid
-  CatalanCore.Basic Filter Finset CatalanCore.Uniform.Content.BankShared.Check
+  CatalanCore.Basic Filter Finset Polynomial CatalanCore.Uniform.Content.BankShared.Check
+
+/-- **The k-shift catalogue is valid** for the family `AltEvenFam c hc const depth Q` with shifts `sh`
+(`N0` is never evaluated). -/
+def KCatValidFam (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (sh : List Shift) (Q0 Pbad N0 : ℕ)
+    (cat : List KBranch) : Prop :=
+  ∀ b ∈ cat, ∀ i : (AltEvenFam c hc const depth Q).ι, (AltEvenFam c hc const depth Q).Adm i → 0 < i.1 →
+    ∀ (p : ℕ) [Fact p.Prime], Pbad < p → N0 < p →
+    Q0 * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p →
+    ∀ kv : ℕ → ℕ, (∀ n < sh.length, ∃ jn, (shAt sh n).q * kv n = jn * p + (shAt sh n).o ∧ 0 < jn ∧
+      jn < (shAt sh n).q ∧ 0 < kv n ∧ kv n < p) →
+    (∀ cd ∈ b.conds, cd.Holds i.1 p ((altGeom c hc).borderSize i.1) kv) →
+    ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i) ∧
+      n ≤ b.τ.evalN i.1 p ((altGeom c hc).borderSize i.1) kv + b.debit * delCount (altGeom c hc) i
 
 /-- **The k-shift catalogue is valid** for the frame `Fr` with shifts `sh` (`N0` is never evaluated). -/
 def KCatValid (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) (sh : List Shift) (Q Pbad N0 : ℕ)
     (cat : List KBranch) : Prop :=
-  ∀ b ∈ cat, ∀ i : (AltEven c hc Fr depth).ι, (AltEven c hc Fr depth).Adm i → 0 < i.1 →
-    ∀ (p : ℕ) [Fact p.Prime], Pbad < p → N0 < p →
-    Q * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p →
-    ∀ kv : ℕ → ℕ, (∀ n < sh.length, ∃ jn, (shAt sh n).q * kv n = jn * p + (shAt sh n).o ∧ 0 < jn ∧
-      jn < (shAt sh n).q ∧ 0 < kv n ∧ kv n < p) →
-    (∀ cd ∈ b.conds, cd.Holds i.1 p ((altGeom c hc).borderSize i.1) kv) →
-    ∃ n, GLE p n ((AltEven c hc Fr depth).Q i) ∧
-      n ≤ b.τ.evalN i.1 p ((altGeom c hc).borderSize i.1) kv + b.debit * delCount (altGeom c hc) i
+  KCatValidFam c hc Fr.const depth (NodeFamily.polynomial Fr (altGeom c hc).geometry) sh Q Pbad N0 cat
 
 /-- The two-term bank data carrying `Q` and `α` (to reuse `Check.round_of`). -/
 def KBankData.toBank (D : KBankData) : BankData :=
@@ -76,13 +83,14 @@ theorem ktlo_exists {D : KBankData} (hD : kcheck D = true) :
   exact ⟨t, ht0, fun j T h => ht (j, T) (findK_mem j D.tmpls h)⟩
 
 /-- **The compiled catalogue satisfies the branch hypothesis of Theorem B** at a master root. -/
-theorem branches_of_kcat {D : KBankData} (hD : kcheck D = true) {c : ℚ} {hc : 0 < c} {Fr : Frame}
-    {depth N0 : ℕ} (hcat : KCatValid c hc Fr depth D.shifts D.Q D.Pbad N0 D.kcat)
+theorem branches_of_kcat {D : KBankData} (hD : kcheck D = true) {c : ℚ} {hc : 0 < c} {const : ℝ}
+    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]} {depth N0 : ℕ}
+    (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
     {j : ℕ} (hjs : ∀ x ∈ D.shifts, x.s * j % x.q ≠ 0)
-    (i : (AltEven c hc Fr depth).ι) (hi : (AltEven c hc Fr depth).Adm i) (hr0 : 0 < i.1)
+    (i : (AltEvenFam c hc const depth Q).ι) (hi : (AltEvenFam c hc const depth Q).Adm i) (hr0 : 0 < i.1)
     (p : ℕ) [Fact p.Prime] (k : ℕ) (hk : D.Q * k = j * p + D.oM) (hN : N0 < p) :
     BranchesValid (D.cat j) D.Pbad D.Q i.1 p ((altGeom c hc).borderSize i.1) k (delCount (altGeom c hc) i)
-      (fun n => GLE p n ((AltEven c hc Fr depth).Q i)) := by
+      (fun n => GLE p n ((AltEvenFam c hc const depth Q).Q i)) := by
   intro b hb hPb hqN hcond
   obtain ⟨hq2, hqP, -, -, -, -, -, -, -, hsh⟩ := kcheck_params hD
   obtain ⟨kb, hkb, rfl⟩ := List.mem_map.1 hb
@@ -137,13 +145,15 @@ theorem branches_of_kcat {D : KBankData} (hD : kcheck D = true) {c : ℚ} {hc : 
   exact hnb
 
 set_option maxHeartbeats 1000000 in
-/-- **Theorem D for k-shift banks** (finite form). -/
-theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
-    (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (hcα : c = 2 * D.α)
-    (Fr : Frame) (depth : ℕ) (hdepth : depth ≤ D.depth) (hcF : cFr Fr ≤ D.cF) (B : SmallBudget)
-    (N0 : ℕ) (hcat : KCatValid c hc Fr depth D.shifts D.Q D.Pbad N0 D.kcat)
-    (hpre : PreValid c hc Fr depth D.M B D.t0 D.α0b) :
-    HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) := by
+/-- **Theorem D for k-shift banks** (finite form), over a family `AltEvenFam c hc const depth Q` whose members
+satisfy `AltQ`. -/
+theorem hasScaledContent_of_kcheckFam (D : KBankData) (hD : kcheck D = true)
+    (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
+    (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (hdepth : depth ≤ D.depth) (hQ : AltQ c hc D.cF Q) (B : SmallBudget)
+    (N0 : ℕ) (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
+    (hpre : PreValidFam c hc const depth Q D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) := by
   classical
   obtain ⟨hq2, hqP, hM0, hMq, ha0, haq, hα, hα0b, hα0, -⟩ := kcheck_params hD
   haveI : NeZero D.M := ⟨by omega⟩
@@ -193,9 +203,9 @@ theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
       linarith
     have : (N0 : ℝ) < p := by linarith
     exact_mod_cast this
-  refine hasScaledContent_lift (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) R0
-    (fun i => NodeFamily.family_degree Fr (altGeom c hc).geometry depth i) ?_
-  refine altContent_of_bounds c hc hc1 Fr depth R0 D.M D.Λ B (fun _ => ktmplOf D) D.τ ?_ ?_ ?_ ?_ ?_
+  refine hasScaledContent_lift (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) R0
+    (fun i => hQ.deg i) ?_
+  refine altContent_of_bounds c hc D.cF const depth R0 Q hQ D.M D.Λ B (fun _ => ktmplOf D) D.τ ?_ ?_ ?_ ?_ ?_
   · -- hmass (D6)
     intro ε hε
     have hcc : contentConstant D.M (ktmplOf D) = D.Λ := by
@@ -221,8 +231,8 @@ theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
     intro ε hε i hi c' hc' p hp hpc hlt _
     have hr2 : i.1 % 2 = 0 := hi.1.2
     rcases Nat.eq_zero_or_pos i.1 with h0 | hr0
-    · have := altGeom_gle_Ecrude c hc hc1 Fr depth i hr2 p
-      have h00 : Ecrude (cFr Fr) i.1 p = 0 := by simp [Ecrude, h0]
+    · have := hQ.crude i hr2 p
+      have h00 : Ecrude D.cF i.1 p = 0 := by simp [Ecrude, h0]
       rw [h00] at this
       exact this
     obtain ⟨j, T, hj, hT⟩ := hclass c' hc'
@@ -346,25 +356,34 @@ theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
         linarith
       · exact h0
     have hrd := round_of (D := D.toBank) c hc hcα hr2 hq2 ha0 haq hk (r := i.1)
-    have hcr : GLE p (2 * i.1 * (3 * Nat.log p (14 * i.1) + D.cF)) ((AltEven c hc Fr depth).Q i) := by
-      refine (altGeom_gle_Ecrude c hc hc1 Fr depth i hr2 p).mono ?_
-      unfold Ecrude
-      exact Nat.mul_le_mul_left _ (by omega)
+    have hcr : GLE p (2 * i.1 * (3 * Nat.log p (14 * i.1) + D.cF)) ((AltEvenFam c hc const depth Q).Q i) := by
+      exact hQ.crude i hr2 p
     have hodd : D.Pbad < p → p % 2 = 1 := by
       intro hPb
       rcases (Fact.out : p.Prime).eq_two_or_odd with h | h
       · omega
       · exact h
     have hdel : delCount (altGeom c hc) i ≤ D.depth :=
-      (delCount_le (altGeom c hc) Fr depth i hi.1.1).trans hdepth
+      (show delCount (altGeom c hc) i ≤ depth from hi.1.1).trans hdepth
     have hN : N0 < p := by
       have hge := (kchain_ge T.pieces T.t1 hch hpcs).1 x hx
       exact hN0 i.1 p x.1.s hi.2 (le_trans (htlo j T hT) hge) hs
     obtain ⟨n, hn, hb⟩ := piece_sound x.1 x.2 hok (by omega) hα
-      (fun n => GLE p n ((AltEven c hc Fr depth).Q i)) hrd hodd (Fact.out : p.Prime).two_le hdel hcr
+      (fun n => GLE p n ((AltEvenFam c hc const depth Q).Q i)) hrd hodd (Fact.out : p.Prime).two_le hdel hcr
       (branches_of_kcat hD hcat hjs i hi.1 hr0 p _ hk hN) hs ht
     exact ⟨n, hn, hb⟩
 
+/-- **Theorem D for k-shift banks** (finite form) for a frame. -/
+theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
+    (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (hcα : c = 2 * D.α)
+    (Fr : Frame) (depth : ℕ) (hdepth : depth ≤ D.depth) (hcF : cFr Fr ≤ D.cF) (B : SmallBudget)
+    (N0 : ℕ) (hcat : KCatValid c hc Fr depth D.shifts D.Q D.Pbad N0 D.kcat)
+    (hpre : PreValid c hc Fr depth D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale (D.Λ : ℝ) :=
+  hasScaledContent_of_kcheckFam D hD c hc hcα Fr.const depth _ hdepth (AltQ.ofFrame c hc hc1 Fr hcF) B N0
+    hcat hpre
+
 end CatalanCore.Uniform.Content.BankShared.KTerm
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.branches_of_kcat
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_kcheckFam
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_kcheck

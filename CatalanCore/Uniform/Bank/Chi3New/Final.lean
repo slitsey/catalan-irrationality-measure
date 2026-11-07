@@ -1,8 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Chi3New.Decay
-public import CatalanCore.Uniform.Bank.Chi3New.Content
-public import CatalanCore.Uniform.Bank.Chi3New.Reindex4
 public import CatalanCore.Uniform.Content.Bridge.Hybrid
 public import CatalanFrames.P6.Const
 public import CatalanCore.Measure.Scaling
@@ -19,7 +17,7 @@ gives the same exponent for `L(2, χ₋₃)`. -/
 
 namespace CatalanCore.Uniform.Bank.Chi3New
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanFrames.P6
-  CatalanCore.Uniform.Bank.Chi3 CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Bank.Chi3Content
+  CatalanCore.Uniform.Bank.Chi3 CatalanCore.Uniform.Decay.Cert
 
 theorem Dchi_Dt : Dchi.Dt = 4643511791526209475773 / 1000000000000000000000 := by decide +kernel
 theorem Dchi_ccert : Dchi.ccert = 37521870783566737 / 5000000000000000 := by decide +kernel

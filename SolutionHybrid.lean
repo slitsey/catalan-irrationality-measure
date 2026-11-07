@@ -12,6 +12,7 @@ public import CatalanCore.Uniform.Bank.FifthsContent.Level3Bound
 public import CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound
 public import CatalanCore.Uniform.Bank.HalvesContent.Bound
 public import CatalanCore.Uniform.Bank.Irrational
+public import CatalanCore.Uniform.Bank.FourthsContent.Level3Data
 
 public section
 
