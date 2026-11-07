@@ -16,7 +16,7 @@ Generic versions (design `P`, node count `J = (n0 - g0) N`) of
 * `realBaseMatrix P N`, `nodeAtomVectors`, `nodeAtomWeights`, `node_delta_matrix_eq`
   (`Δ_N(x) = det(B + (x - G) Σ_a Φ_a β_a)`);
 * `atomBaseBoundAt P target N δ = 2^n · prefactor · exp((n0 N)² (-target + log 2 / 2 + δ))`,
-  `atomColumnCost ρ N = 540000 N e^{ρ N}`;
+  `atomColumnCost Cc ρ N = Cc N e^{ρ N}` (the column-cost constant `Cc` is a parameter);
 * `joint_factor_of_cost_eventually`: at the critical radius the joint binomial factor is
   `exp (ε (n0 N)²)` (the constant `18 N` of P20 becomes `(n0 - g0) N`).
 -/
@@ -63,9 +63,9 @@ def atomBaseBoundAt (P : Parameters) (target : ℝ) (N : ℕ) (δ : ℝ) : ℝ :
   (2 : ℝ) ^ P.n N * sheetPrefactor P N *
     Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + δ))
 
-/-- Column cost of an atom: `540000 N e^{ρ N}`. -/
-def atomColumnCost (ρ : ℝ) (N : ℕ) : ℝ :=
-  540000 * (N : ℝ) * Real.exp (ρ * N)
+/-- Column cost of an atom: `Cc N e^{ρ N}`, with the column-cost constant `Cc` a parameter. -/
+def atomColumnCost (Cc ρ : ℝ) (N : ℕ) : ℝ :=
+  Cc * (N : ℝ) * Real.exp (ρ * N)
 
 /-- Row vectors of the atoms: original polynomial values at the nodes. -/
 def nodeAtomVectors (P : Parameters) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (N : ℕ) :
@@ -103,15 +103,16 @@ theorem node_delta_matrix_eq (P : Parameters) (hP : Admissible P)
   ring
 
 /-- At the critical radius the joint binomial factor has logarithm `O(N log N)`. -/
-theorem joint_factor_of_cost_eventually (P : Parameters) (hn0 : 0 < P.n0) (ρ : ℝ) {ε : ℝ}
+theorem joint_factor_of_cost_eventually (P : Parameters) (hn0 : 0 < P.n0) (Cc : ℝ) (hCc : 0 ≤ Cc)
+    (ρ : ℝ) {ε : ℝ}
     (hε : 0 < ε) :
     ∀ᶠ N : ℕ in atTop, ∀ δ : ℝ, |δ| ≤ Real.exp (-(ρ * (N : ℝ))) →
-      (1 + (((P.n0 - P.g0) * N : ℕ) : ℝ) * (|δ| * atomColumnCost ρ N)) ^ P.n N ≤
+      (1 + (((P.n0 - P.g0) * N : ℕ) : ℝ) * (|δ| * atomColumnCost Cc ρ N)) ^ P.n N ≤
         Real.exp (ε * ((P.n0 : ℝ) * (N : ℝ)) ^ 2) := by
   have hc : (0 : ℝ) < P.n0 := by exact_mod_cast hn0
   generalize hd : ((P.n0 - P.g0 : ℕ) : ℝ) = d
   have hd0 : 0 ≤ d := by rw [← hd]; exact Nat.cast_nonneg _
-  have hh := positive_polynomial_factor_eventually (540000 * d + 1) (by linarith only [hd0]) 2
+  have hh := positive_polynomial_factor_eventually (Cc * d + 1) (by have := mul_nonneg hCc hd0; linarith only [this]) 2
     (ε := (P.n0 : ℝ) * ε) (by positivity)
   filter_upwards [hh, eventually_gt_atTop (0 : ℕ)] with N hpoly hN δ hδ
   have hN1 : (1 : ℝ) ≤ N := by exact_mod_cast hN
@@ -120,19 +121,19 @@ theorem joint_factor_of_cost_eventually (P : Parameters) (hn0 : 0 < P.n0) (ρ : 
       _ ≤ Real.exp (-(ρ * (N : ℝ))) * Real.exp (ρ * (N : ℝ)) :=
         mul_le_mul_of_nonneg_right hδ (Real.exp_pos _).le
       _ = _ := by rw [← Real.exp_add]; simp
-  have hin : 1 + (((P.n0 - P.g0) * N : ℕ) : ℝ) * (|δ| * atomColumnCost ρ N) ≤
+  have hin : 1 + (((P.n0 - P.g0) * N : ℕ) : ℝ) * (|δ| * atomColumnCost Cc ρ N) ≤
       Real.exp ((P.n0 : ℝ) * ε * (N : ℝ)) := by
     calc
-      _ = 1 + 540000 * d * (N : ℝ) ^ 2 * (|δ| * Real.exp (ρ * (N : ℝ))) := by
+      _ = 1 + Cc * d * (N : ℝ) ^ 2 * (|δ| * Real.exp (ρ * (N : ℝ))) := by
         unfold atomColumnCost
         push_cast
         rw [hd]
         ring
-      _ ≤ 1 + 540000 * d * (N : ℝ) ^ 2 := by
+      _ ≤ 1 + Cc * d * (N : ℝ) ^ 2 := by
         nlinarith only [mul_le_mul_of_nonneg_left he
-          (mul_nonneg (mul_nonneg (by norm_num) hd0) (sq_nonneg (N : ℝ)) : (0 : ℝ) ≤ 540000 * d * (N : ℝ) ^ 2)]
-      _ ≤ (540000 * d + 1) * (N : ℝ) ^ 2 := by
-        nlinarith only [hN1, hd0]
+          (mul_nonneg (mul_nonneg hCc hd0) (sq_nonneg (N : ℝ)) : (0 : ℝ) ≤ Cc * d * (N : ℝ) ^ 2)]
+      _ ≤ (Cc * d + 1) * (N : ℝ) ^ 2 := by
+        nlinarith only [hN1, hd0, hCc, mul_nonneg hCc hd0]
       _ ≤ _ := hpoly
   calc
     _ ≤ (Real.exp ((P.n0 : ℝ) * ε * (N : ℝ))) ^ P.n N :=

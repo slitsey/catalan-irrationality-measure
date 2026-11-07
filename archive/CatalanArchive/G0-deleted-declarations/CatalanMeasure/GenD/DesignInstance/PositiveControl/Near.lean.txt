@@ -1,0 +1,11 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.DesignInstance.PositiveControl.Near
+theorem firstQ_data : (9 / 50 : ℚ) ≤ firstQ Pc P := by
+  unfold firstQ; decide +kernel
+
+
+theorem first_lower : (9 / 50 : ℝ) ≤ trialSeqS Pc P 1 := by
+  rw [trialSeqS_one]
+  have h : (((9 / 50 : ℚ)) : ℝ) ≤ ((firstQ Pc P : ℚ) : ℝ) := Rat.cast_le.mpr firstQ_data
+  push_cast at h
+  exact h
+

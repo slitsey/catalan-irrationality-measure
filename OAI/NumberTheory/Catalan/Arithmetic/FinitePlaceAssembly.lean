@@ -1,11 +1,9 @@
 module
 
 public import Mathlib.Algebra.BigOperators.Intervals
-public import OAI.NumberTheory.Catalan.Arithmetic.FinitePlaceNumerics
-public import OAI.NumberTheory.Catalan.Arithmetic.FinitePlacePartialAssembly
-public import OAI.NumberTheory.Catalan.Arithmetic.OddPrimeLossNormalization
-public import OAI.NumberTheory.Catalan.Arithmetic.OddPrimeUpperPoolEnumeration
-public import OAI.NumberTheory.Catalan.Determinants.OddLowerMinorTransfer
+public import Mathlib.Algebra.Order.Ring.Star
+public import OAI.NumberTheory.Catalan.Determinants.TwoAdicSmoothedMinor
+public import OAI.NumberTheory.Catalan.Estimates.OddPhysicalCombination
 
 @[expose] public section
 
@@ -837,50 +835,6 @@ namespace InternalCatalan
 open Classical
 open scoped BigOperators
 
-abbrev oddPrimeUpperExceptionalSize (p N : ℕ) :=
-  Fintype.card ↥(oddPrimeUpperExceptionalSet p N)
-
-theorem oddPrimeUpperExceptional_sum_eq (p N : ℕ) (f : ℕ → ℚ) :
-    (∑ l : Fin (oddPrimeUpperExceptionalSize p N),
-      f (((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm l).val)) =
-        ∑ ell ∈ Finset.range (H N - p),
-          if ¬oddPrimeRepresented p N ell then f ell else 0 := by
-  have hs : oddPrimeUpperExceptionalSet p N =
-      (Finset.range (H N - p)).filter (fun ell => ¬oddPrimeRepresented p N ell) := by
-    ext ell
-    constructor
-    · intro h
-      have he := (oddPrimeUpperExceptionalSet_mem_iff p N ell).mp h
-      exact Finset.mem_filter.mpr ⟨Finset.mem_range.mpr he.1, he.2⟩
-    · intro h
-      have he := Finset.mem_filter.mp h
-      exact (oddPrimeUpperExceptionalSet_mem_iff p N ell).mpr
-        ⟨Finset.mem_range.mp he.1, he.2⟩
-  calc
-    _ = ∑ ell : ↥(oddPrimeUpperExceptionalSet p N), f ell.val :=
-      Equiv.sum_comp (Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm
-        (fun ell => f ell.val)
-    _ = ∑ ell ∈ oddPrimeUpperExceptionalSet p N, f ell :=
-      Finset.sum_coe_sort (oddPrimeUpperExceptionalSet p N) f
-    _ = _ := by rw [hs, Finset.sum_filter]
-
-theorem oddPrimeUpperExceptional_combination_eq {p : ℕ} [Fact p.Prime]
-    (z : ℚ) (N r j : ℕ) :
-    (∑ l : Fin (oddPrimeUpperExceptionalSize p N),
-      (-1 / ((j - ((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm l).val : ℕ) : ℚ)) *
-        oddPrimeLeadingLiftRat p N r
-          ((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm l).val) =
-      oddPrimeExceptionalPartRat z p N r j := by
-  rw [oddPrimeUpperExceptional_sum_eq p N
-    (fun ell => (-1 / ((j - ell : ℕ) : ℚ)) * oddPrimeLeadingLiftRat p N r ell)]
-  unfold oddPrimeExceptionalPartRat
-  apply Finset.sum_congr rfl
-  intro ell hell
-  by_cases hex : ¬oddPrimeRepresented p N ell
-  · rw [ite_eq_left hex, ite_eq_left hex]
-    ring
-  · rw [ite_eq_right hex, ite_eq_right hex]
-
 end InternalCatalan
 
 end
@@ -894,172 +848,6 @@ namespace InternalCatalan
 open Classical
 open scoped BigOperators
 
-abbrev oddPrimeUpperRetainedSize (p N : ℕ) := Fintype.card ↥(oddPrimeUpperRetainedSet p N)
-abbrev oddPrimeUpperPairedSize (p N : ℕ) := Fintype.card ↥(oddPrimeUpperPairHighSet p N)
-abbrev oddPrimeUpperCentralSize (p N : ℕ) := Fintype.card ↥(oddPrimeUpperCentralSet p N)
-abbrev oddPrimeUpperPhysicalIndex (p N : ℕ) :=
-  oddPhysicalIndex (oddPrimeUpperRetainedSize p N) (oddPrimeUpperPairedSize p N)
-    (oddPrimeUpperCentralSize p N)
-
-def oddPrimeUpperRetainedVector (z : ℚ) (p N : ℕ)
-    (j : Fin (oddPrimeUpperRetainedSize p N)) (r : Fin (n N)) : ℚ :=
-  (p : ℚ) ^ 2 * rawEntryRat z N r.val
-    (((Fintype.equivFin ↥(oddPrimeUpperRetainedSet p N)).symm j).val)
-
-def oddPrimeUpperPairedVector (z : ℚ) (p N : ℕ)
-    (j : Fin (oddPrimeUpperPairedSize p N)) (r : Fin (n N)) : ℚ :=
-  let v := ((Fintype.equivFin ↥(oddPrimeUpperPairHighSet p N)).symm j).val
-  (p : ℚ) * (rawEntryRat z N r.val v + rawEntryRat z N r.val (v - p))
-
-def oddPrimeUpperIntegralVector (z : ℚ) (p N : ℕ) [Fact p.Prime]
-    (j : Fin (oddPrimeUpperCentralSize p N)) (r : Fin (n N)) : ℚ :=
-  oddPrimeCentralRemainderRat z p N r.val
-    (((Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j).val)
-
-def oddPrimeUpperExceptionalVector (p N : ℕ) [Fact p.Prime]
-    (ell : Fin (oddPrimeUpperExceptionalSize p N)) (r : Fin (n N)) : ℚ :=
-  oddPrimeLeadingLiftRat p N r.val
-    (((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm ell).val)
-
-def oddPrimeUpperExceptionalCoeff (p N : ℕ)
-    (j : Fin (oddPrimeUpperCentralSize p N))
-    (ell : Fin (oddPrimeUpperExceptionalSize p N)) : ℚ :=
-  let v := ((Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j).val
-  let l := ((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm ell).val
-  (-1 : ℚ) / ((v - l : ℕ) : ℚ)
-
-def oddPrimeUpperPhysicalColumn (z : ℚ) (p N : ℕ) [Fact p.Prime]
-    (j : oddPrimeUpperPhysicalIndex p N) (r : Fin (n N)) : ℚ :=
-  oddPhysicalColumn p (oddPrimeUpperRetainedVector z p N)
-    (oddPrimeUpperPairedVector z p N) (oddPrimeUpperIntegralVector z p N)
-    (oddPrimeUpperExceptionalVector p N) (oddPrimeUpperExceptionalCoeff p N) j r
-
-theorem oddPrimeUpperRetainedVector_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hHsq : H N < p ^ 2) (z : ℚ) (hz : (z.den : ZMod p) ≠ 0)
-    (j : Fin (oddPrimeUpperRetainedSize p N)) (r : Fin (n N)) :
-    ((oddPrimeUpperRetainedVector z p N j r).den : ZMod p) ≠ 0 := by
-  let v := (Fintype.equivFin ↥(oddPrimeUpperRetainedSet p N)).symm j
-  have hraw := oddPrimeUpperRetainedSet_subset_raw p N v.property
-  have hvL := (Finset.mem_Ico.mp hraw).2
-  have hvH : v.val < H N := by unfold L H at *; omega
-  exact (rawEntryRat_prime_digit_reduction (r := r.val) hp2 hHsq hvH z hz).1
-
-theorem oddPrimeUpperPairedVector_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (z : ℚ) (hz : (z.den : ZMod p) ≠ 0)
-    (j : Fin (oddPrimeUpperPairedSize p N)) (r : Fin (n N)) :
-    ((oddPrimeUpperPairedVector z p N j r).den : ZMod p) ≠ 0 := by
-  let v := (Fintype.equivFin ↥(oddPrimeUpperPairHighSet p N)).symm j
-  obtain ⟨ell, hb, hell, hveq⟩ :=
-    (oddPrimeUpperPairHighSet_mem_iff p N v.val).mp v.property
-  have hbounds := oddPrimeUpperPairIndex_bounds hN hpH hH
-    (Finset.mem_Ico.mpr ⟨hb, hell⟩)
-  have hsub : v.val - p = ell := by omega
-  have hwidth : H N ≤ ell + 2 * p := by omega
-  have hhigh : p + ell < H N := by have := hbounds.2.2.2; omega
-  have hA : ell ≤ A N := by omega
-  have hpair := rawEntryRat_pair_prime_scaled_den_ne_zero hp2 hN r.isLt
-    hbounds.2.2.1 hwidth hhigh hA z hz
-  change (((p : ℚ) * (rawEntryRat z N r.val v.val +
-    rawEntryRat z N r.val (v.val - p))).den : ZMod p) ≠ 0
-  rw [hsub, hveq, add_comm (rawEntryRat z N r.val (p + ell)) (rawEntryRat z N r.val ell)]
-  exact hpair
-
-theorem oddPrimeUpperIntegralVector_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (z : ℚ) (hz : (z.den : ZMod p) ≠ 0)
-    (j : Fin (oddPrimeUpperCentralSize p N)) (r : Fin (n N)) :
-    ((oddPrimeUpperIntegralVector z p N j r).den : ZMod p) ≠ 0 := by
-  let v := (Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j
-  have hv := (oddPrimeUpperCentralSet_mem_iff p N v.val).mp v.property
-  exact oddPrimeCentralRemainderRat_den_ne_zero hp2 hN r.isLt hpH hH
-    hv.2.2.1 hv.2.2.2 z hz
-
-theorem oddPrimeUpperExceptionalVector_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (ell : Fin (oddPrimeUpperExceptionalSize p N)) (r : Fin (n N)) :
-    ((oddPrimeUpperExceptionalVector p N ell r).den : ZMod p) ≠ 0 :=
-  (oddPrimeLeadingLiftRat_reduction (p := p) (N := N) (r := r.val)
-    (ell := ((Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm ell).val)).1
-
-theorem oddPrimeUpperExceptionalCoeff_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (j : Fin (oddPrimeUpperCentralSize p N))
-    (ell : Fin (oddPrimeUpperExceptionalSize p N)) :
-    ((oddPrimeUpperExceptionalCoeff p N j ell).den : ZMod p) ≠ 0 := by
-  let v := (Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j
-  let l := (Fintype.equivFin ↥(oddPrimeUpperExceptionalSet p N)).symm ell
-  have hv := (oddPrimeUpperCentralSet_mem_iff p N v.val).mp v.property
-  have hl := (oddPrimeUpperExceptionalSet_mem_iff p N l.val).mp l.property
-  have hdpos : 0 < v.val - l.val := by omega
-  have hdlt : v.val - l.val < p := by omega
-  have hd : ((v.val - l.val : ℕ) : ZMod p) ≠ 0 := by
-    intro hzero
-    exact (Nat.not_dvd_of_pos_of_lt hdpos hdlt)
-      ((ZMod.natCast_eq_zero_iff _ _).mp hzero)
-  have hf := nat_fraction_reduced_residue (p := p) 1 (v.val - l.val) hd
-  change (((-1 : ℚ) / ((v.val - l.val : ℕ) : ℚ)).den : ZMod p) ≠ 0
-  simpa only [Nat.cast_one, neg_div, Rat.neg_den] using hf.1
-
-theorem oddPrimeUpperExceptionalVector_combination {p N : ℕ} [Fact p.Prime]
-    (z : ℚ) (j : Fin (oddPrimeUpperCentralSize p N)) (r : Fin (n N)) :
-    (∑ ell : Fin (oddPrimeUpperExceptionalSize p N),
-      oddPrimeUpperExceptionalCoeff p N j ell * oddPrimeUpperExceptionalVector p N ell r) =
-      oddPrimeExceptionalPartRat z p N r.val
-        (((Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j).val) := by
-  simpa only [oddPrimeUpperExceptionalCoeff, oddPrimeUpperExceptionalVector] using
-    oddPrimeUpperExceptional_combination_eq (p := p) z N r.val
-      (((Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j).val)
-
-theorem oddPrimeUpperPhysicalColumn_eq_pool {p N : ℕ} [hp : Fact p.Prime]
-    (z : ℚ) (phys : oddPrimeUpperPhysicalIndex p N) (r : Fin (n N)) :
-    oddPrimeUpperPhysicalColumn z p N phys r =
-      oddPrimeUpperPoolRat z p N r.val ((oddPrimeUpperPoolEnumeration p N phys).val) := by
-  have hpq : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
-  rcases phys with j | (j | j)
-  · let v := (Fintype.equivFin ↥(oddPrimeUpperRetainedSet p N)).symm j
-    have hnot := (Finset.mem_sdiff.mp v.property).2
-    have hnotpair : ¬oddPrimeUpperPairIndex p N v.val := by
-      intro hpair
-      have hmem : v.val ∈ oddPrimeUpperPairHighSet p N := by
-        simpa only [oddPrimeUpperPairIndex, oddPrimeUpperPairHighSet, Finset.mem_Ico] using hpair
-      exact hnot (Finset.mem_union.mpr (Or.inl hmem))
-    have hnotcentral : ¬oddPrimeUpperCentralIndex p N v.val := by
-      intro hcentral
-      have hmem : v.val ∈ oddPrimeUpperCentralSet p N := by
-        simpa only [oddPrimeUpperCentralIndex, oddPrimeUpperCentralSet, Finset.mem_Ico] using hcentral
-      exact hnot (Finset.mem_union.mpr (Or.inr hmem))
-    simp only [oddPrimeUpperPhysicalColumn, oddPhysicalColumn,
-      oddPrimeUpperRetainedVector, oddPrimeUpperPoolEnumeration_retained_val]
-    change ((p : ℚ) ^ 2)⁻¹ * ((p : ℚ) ^ 2 * rawEntryRat z N r.val v.val) =
-      oddPrimeUpperPoolRat z p N r.val v.val
-    rw [oddPrimeUpperPoolRat, ite_eq_right hnotpair, ite_eq_right hnotcentral]
-    field_simp [hpq]
-  · let v := (Fintype.equivFin ↥(oddPrimeUpperPairHighSet p N)).symm j
-    have hpair : oddPrimeUpperPairIndex p N v.val := by
-      simpa only [oddPrimeUpperPairIndex, oddPrimeUpperPairHighSet, Finset.mem_Ico] using v.property
-    simp only [oddPrimeUpperPhysicalColumn, oddPhysicalColumn,
-      oddPrimeUpperPairedVector, oddPrimeUpperPoolEnumeration_pairHigh_val]
-    change (p : ℚ)⁻¹ * ((p : ℚ) * (rawEntryRat z N r.val v.val +
-      rawEntryRat z N r.val (v.val - p))) = oddPrimeUpperPoolRat z p N r.val v.val
-    rw [oddPrimeUpperPoolRat, ite_eq_left hpair]
-    field_simp [hpq]
-  · let v := (Fintype.equivFin ↥(oddPrimeUpperCentralSet p N)).symm j
-    have hcentral : oddPrimeUpperCentralIndex p N v.val := by
-      simpa only [oddPrimeUpperCentralIndex, oddPrimeUpperCentralSet, Finset.mem_Ico] using v.property
-    have hnotpair : ¬oddPrimeUpperPairIndex p N v.val := by
-      intro hpair
-      have hmem : v.val ∈ oddPrimeUpperPairHighSet p N := by
-        simpa only [oddPrimeUpperPairIndex, oddPrimeUpperPairHighSet, Finset.mem_Ico] using hpair
-      exact (Finset.disjoint_left.mp (oddPrimeUpperPairHighSet_disjoint_central p N)) hmem v.property
-    have hsum := oddPrimeUpperExceptionalVector_combination (p := p) (N := N) z j r
-    simp only [oddPrimeUpperPhysicalColumn, oddPhysicalColumn,
-      oddPrimeUpperPoolEnumeration_central_val]
-    rw [hsum]
-    change oddPrimeCentralRemainderRat z p N r.val v.val +
-      (p : ℚ)⁻¹ * oddPrimeExceptionalPartRat z p N r.val v.val =
-        oddPrimeUpperPoolRat z p N r.val v.val
-    rw [oddPrimeUpperPoolRat, ite_eq_right hnotpair, ite_eq_left hcentral]
-    exact (oddPrimeShearedRat_eq_remainder_add_exceptional (p := p) z N r.val v.val).symm
-
 end InternalCatalan
 
 end
@@ -1072,10 +860,6 @@ namespace InternalCatalan
 
 open Classical
 open scoped BigOperators
-
-def oddPrimeUpperDelta (p N : ℕ) (phys : oddPrimeUpperPhysicalIndex p N)
-    (j : ℕ) : ℚ :=
-  if (oddPrimeUpperPoolEnumeration p N phys).val = j then 1 else 0
 
 def oddPrimeUpperRepresentativeNumber (p N ell : ℕ) : ℕ :=
   if b N ≤ ell then ell else p + ell
@@ -1083,22 +867,6 @@ def oddPrimeUpperRepresentativeNumber (p N ell : ℕ) : ℕ :=
 def oddPrimeUpperRepresentativeSign (N ell : ℕ) : ℚ :=
   if b N ≤ ell then 1 else -1
 
-def oddPrimeUpperShearCoeff (p N : ℕ) (phys : oddPrimeUpperPhysicalIndex p N)
-    (j ell : ℕ) : ℚ :=
-  if oddPrimeRepresented p N ell then
-    (oddPrimeUpperRepresentativeSign N ell / ((j - ell : ℕ) : ℚ)) *
-      oddPrimeUpperDelta p N phys (oddPrimeUpperRepresentativeNumber p N ell)
-  else 0
-
-def oddPrimeUpperInverseCoeff (p N : ℕ) (phys : oddPrimeUpperPhysicalIndex p N)
-    (j : ℕ) : ℚ :=
-  oddPrimeUpperDelta p N phys j -
-    (if oddPrimeUpperPairIndex p N j then oddPrimeUpperDelta p N phys (j - p) else 0) -
-    (if oddPrimeUpperCentralIndex p N j then
-      (p : ℚ) * ∑ ell ∈ Finset.range (H N - p),
-        oddPrimeUpperShearCoeff p N phys j ell
-    else 0)
-
 end InternalCatalan
 
 end
@@ -1110,69 +878,10 @@ namespace InternalCatalan
 open Classical
 open scoped BigOperators
 
-private theorem upper_delta_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (phys : oddPrimeUpperPhysicalIndex p N) (j : ℕ) :
-    ((oddPrimeUpperDelta p N phys j).den : ZMod p) ≠ 0 := by
-  unfold oddPrimeUpperDelta
-  split_ifs <;> norm_num
-
 private theorem upper_sign_den_ne_zero {p : ℕ} [Fact p.Prime] (N ell : ℕ) :
     ((oddPrimeUpperRepresentativeSign N ell).den : ZMod p) ≠ 0 := by
   unfold oddPrimeUpperRepresentativeSign
   split_ifs <;> norm_num
-
-private theorem upper_shearCoeff_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (phys : oddPrimeUpperPhysicalIndex p N) (j ell : ℕ)
-    (hc : oddPrimeUpperCentralIndex p N j) (hell : ell ∈ Finset.range (H N - p)) :
-    ((oddPrimeUpperShearCoeff p N phys j ell).den : ZMod p) ≠ 0 := by
-  have hc' : max (b N) (H N - p) ≤ j ∧ j < min p (L N) := hc
-  have he : ell < H N - p := Finset.mem_range.mp hell
-  have hjlo : H N - p ≤ j := (Nat.le_max_right _ _).trans hc'.1
-  have hj : j < p := hc'.2.trans_le (Nat.min_le_left _ _)
-  have hdpos : 0 < j - ell := by omega
-  have hdlt : j - ell < p := by omega
-  have hd : ((j - ell : ℕ) : ZMod p) ≠ 0 := by
-    intro hzero
-    exact (Nat.not_dvd_of_pos_of_lt hdpos hdlt)
-      ((ZMod.natCast_eq_zero_iff _ _).mp hzero)
-  unfold oddPrimeUpperShearCoeff
-  split_ifs with hrep
-  · have hinv := nat_fraction_reduced_residue (p := p) 1 (j - ell) hd
-    simp only [Nat.cast_one] at hinv
-    have hsign := upper_sign_den_ne_zero (p := p) N ell
-    have hmul := rational_residue_mul hsign hinv.1
-    have hfrac :
-        ((oddPrimeUpperRepresentativeSign N ell / ((j - ell : ℕ) : ℚ)).den : ZMod p) ≠ 0 := by
-      have heq : oddPrimeUpperRepresentativeSign N ell / ((j - ell : ℕ) : ℚ) =
-          oddPrimeUpperRepresentativeSign N ell * (1 / ((j - ell : ℕ) : ℚ)) := by ring
-      rw [heq]
-      exact hmul.1
-    exact (rational_residue_mul hfrac
-      (upper_delta_den_ne_zero phys (oddPrimeUpperRepresentativeNumber p N ell))).1
-  · norm_num
-
-theorem oddPrimeUpperInverseCoeff_den_ne_zero {p N : ℕ} [Fact p.Prime]
-    (phys : oddPrimeUpperPhysicalIndex p N) (j : ℕ) :
-    ((oddPrimeUpperInverseCoeff p N phys j).den : ZMod p) ≠ 0 := by
-  have hbase := upper_delta_den_ne_zero phys j
-  have hpair :
-      ((if oddPrimeUpperPairIndex p N j then oddPrimeUpperDelta p N phys (j - p)
-        else 0).den : ZMod p) ≠ 0 := by
-    split_ifs
-    · exact upper_delta_den_ne_zero phys (j - p)
-    · norm_num
-  have hleft := rational_residue_sub hbase hpair
-  have hcentral :
-      ((if oddPrimeUpperCentralIndex p N j then
-          (p : ℚ) * ∑ ell ∈ Finset.range (H N - p), oddPrimeUpperShearCoeff p N phys j ell
-        else 0).den : ZMod p) ≠ 0 := by
-    split_ifs with hc
-    · have hsum := rational_residue_sum (Finset.range (H N - p))
-        (fun ell => oddPrimeUpperShearCoeff p N phys j ell)
-        (fun ell hell => upper_shearCoeff_den_ne_zero phys j ell hc hell)
-      exact (rational_residue_mul (a := (p : ℚ)) (by simp) hsum.1).1
-    · norm_num
-  exact (rational_residue_sub hleft.1 hcentral).1
 
 end InternalCatalan
 
@@ -1184,28 +893,6 @@ namespace InternalCatalan
 
 open Classical
 open scoped BigOperators
-
-theorem oddPrimeUpperDelta_sum {p N : ℕ} [Fact p.Prime]
-    (z : ℚ) (r : Fin (n N)) (j : ℕ) (hj : j ∈ Finset.Ico (b N) (L N)) :
-    (∑ phys : oddPrimeUpperPhysicalIndex p N,
-      oddPrimeUpperPhysicalColumn z p N phys r * oddPrimeUpperDelta p N phys j) =
-        oddPrimeUpperPoolRat z p N r.val j := by
-  let e := oddPrimeUpperPoolEnumeration p N
-  let v : ↥(Finset.Ico (b N) (L N)) := ⟨j, hj⟩
-  have htag (phys : oddPrimeUpperPhysicalIndex p N) :
-      (oddPrimeUpperPoolEnumeration p N phys).val = j ↔ phys = e.symm v := by
-    constructor
-    · intro h
-      have he : e phys = v := Subtype.ext h
-      calc
-        phys = e.symm (e phys) := (e.symm_apply_apply phys).symm
-        _ = e.symm v := congrArg e.symm he
-    · rintro rfl
-      exact congrArg Subtype.val (e.apply_symm_apply v)
-  simp only [oddPrimeUpperDelta, htag, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  simpa only [e, Equiv.apply_symm_apply] using
-    oddPrimeUpperPhysicalColumn_eq_pool z (e.symm v) r
 
 theorem oddPrimeUpperRepresentativeNumber_mem {p N ell : ℕ}
     (hN : 0 < N) (hH : H N ≤ 2 * p) (hell : ell < H N - p)
@@ -1229,93 +916,6 @@ theorem oddPrimeUpperRepresentativePoolRat_eq_sign (z : ℚ) (p N r ell : ℕ) :
     simp only [oddPrimeUpperRepresentativePoolRat, oddPrimeUpperRepresentativeSign,
       oddPrimeUpperRepresentativeNumber, hb, ite_true, ite_false, one_mul, neg_one_mul]
 
-theorem oddPrimeUpperShearCoeff_sum {p N : ℕ} [Fact p.Prime]
-    (hN : 0 < N) (hH : H N ≤ 2 * p) (z : ℚ) (r : Fin (n N))
-    (j ell : ℕ) (hell : ell < H N - p) :
-    (∑ phys : oddPrimeUpperPhysicalIndex p N,
-      oddPrimeUpperPhysicalColumn z p N phys r * oddPrimeUpperShearCoeff p N phys j ell) =
-      if oddPrimeRepresented p N ell then
-        oddPrimeUpperRepresentativePoolRat z p N r.val ell / ((j - ell : ℕ) : ℚ)
-      else 0 := by
-  by_cases hrep : oddPrimeRepresented p N ell
-  · simp only [oddPrimeUpperShearCoeff, ite_eq_left hrep]
-    calc
-      _ = (oddPrimeUpperRepresentativeSign N ell / ((j - ell : ℕ) : ℚ)) *
-          ∑ phys : oddPrimeUpperPhysicalIndex p N,
-            oddPrimeUpperPhysicalColumn z p N phys r *
-              oddPrimeUpperDelta p N phys (oddPrimeUpperRepresentativeNumber p N ell) := by
-        rw [Finset.mul_sum]
-        apply Finset.sum_congr rfl
-        intro phys _
-        ring
-      _ = _ := by
-        rw [oddPrimeUpperDelta_sum z r _
-          (oddPrimeUpperRepresentativeNumber_mem hN hH hell hrep),
-          oddPrimeUpperRepresentativePoolRat_eq_sign]
-        ring
-  · simp only [oddPrimeUpperShearCoeff, ite_eq_right hrep, mul_zero, Finset.sum_const_zero]
-
-theorem rawEntryRat_eq_upper_physical_sum {p N : ℕ} [Fact p.Prime]
-    (hN : 0 < N) (hH : H N ≤ 2 * p) (z : ℚ)
-    (j : ↥(Finset.Ico (b N) (L N))) (r : Fin (n N)) :
-    rawEntryRat z N r.val j.val =
-      ∑ phys : oddPrimeUpperPhysicalIndex p N,
-        oddPrimeUpperPhysicalColumn z p N phys r * oddPrimeUpperInverseCoeff p N phys j.val := by
-  have hpairSum :
-      (∑ phys : oddPrimeUpperPhysicalIndex p N,
-        oddPrimeUpperPhysicalColumn z p N phys r *
-          (if oddPrimeUpperPairIndex p N j.val then
-            oddPrimeUpperDelta p N phys (j.val - p) else 0)) =
-      if oddPrimeUpperPairIndex p N j.val then
-        oddPrimeUpperPoolRat z p N r.val (j.val - p) else 0 := by
-    by_cases hp : oddPrimeUpperPairIndex p N j.val
-    · simp only [ite_eq_left hp]
-      apply oddPrimeUpperDelta_sum
-      have hj := Finset.mem_Ico.mp j.property
-      unfold oddPrimeUpperPairIndex at hp
-      exact Finset.mem_Ico.mpr ⟨by omega, by omega⟩
-    · simp only [ite_eq_right hp, mul_zero, Finset.sum_const_zero]
-  have hcentralSum :
-      (∑ phys : oddPrimeUpperPhysicalIndex p N,
-        oddPrimeUpperPhysicalColumn z p N phys r *
-          (if oddPrimeUpperCentralIndex p N j.val then
-            (p : ℚ) * ∑ ell ∈ Finset.range (H N - p),
-              oddPrimeUpperShearCoeff p N phys j.val ell else 0)) =
-      if oddPrimeUpperCentralIndex p N j.val then
-        (p : ℚ) * ∑ ell ∈ Finset.range (H N - p),
-          if oddPrimeRepresented p N ell then
-            oddPrimeUpperRepresentativePoolRat z p N r.val ell / ((j.val - ell : ℕ) : ℚ)
-          else 0
-      else 0 := by
-    by_cases hc : oddPrimeUpperCentralIndex p N j.val
-    · simp only [ite_eq_left hc]
-      calc
-        _ = (p : ℚ) * ∑ phys : oddPrimeUpperPhysicalIndex p N,
-              ∑ ell ∈ Finset.range (H N - p),
-                oddPrimeUpperPhysicalColumn z p N phys r *
-                  oddPrimeUpperShearCoeff p N phys j.val ell := by
-          simp only [Finset.mul_sum]
-          apply Finset.sum_congr rfl
-          intro phys _
-          apply Finset.sum_congr rfl
-          intro ell _
-          ring
-        _ = (p : ℚ) * ∑ ell ∈ Finset.range (H N - p),
-              ∑ phys : oddPrimeUpperPhysicalIndex p N,
-                oddPrimeUpperPhysicalColumn z p N phys r *
-                  oddPrimeUpperShearCoeff p N phys j.val ell := by
-          rw [Finset.sum_comm]
-        _ = _ := by
-          congr 1
-          apply Finset.sum_congr rfl
-          intro ell hell
-          exact oddPrimeUpperShearCoeff_sum hN hH z r j.val ell (Finset.mem_range.mp hell)
-    · simp only [ite_eq_right hc, mul_zero, Finset.sum_const_zero]
-  rw [rawEntryRat_eq_upper_pool_inverse hH]
-  symm
-  simp only [oddPrimeUpperInverseCoeff, mul_sub, Finset.sum_sub_distrib]
-  rw [oddPrimeUpperDelta_sum z r j.val j.property, hpairSum, hcentralSum]
-
 end InternalCatalan
 
 end
@@ -1329,84 +929,6 @@ namespace InternalCatalan
 open Classical
 open scoped BigOperators
 
-theorem oddPrimeUpperPhysical_loss_eq {N p : ℕ} (hN : 0 < N)
-    (hpH : p ≤ H N) (hH : H N ≤ 2 * p) :
-    min (2 * n N) (min (n N + oddPrimeUpperRetainedSize p N)
-      (2 * oddPrimeUpperRetainedSize p N + oddPrimeUpperPairedSize p N +
-        oddPrimeUpperExceptionalSize p N)) = oddUpperCountLoss N p := by
-  have hR : oddPrimeUpperRetainedSize p N = oddUpperRankCount N p := by
-    simpa only [oddPrimeUpperRetainedSize, Fintype.card_coe,
-      oddPrimeUpperRetainedSet_card] using oddUpperRetainedCount_eq N p hN hpH hH
-  have hS : oddPrimeUpperPairedSize p N + oddPrimeUpperExceptionalSize p N =
-      oddUpperSimpleCount N p := by
-    simpa only [oddPrimeUpperPairedSize, oddPrimeUpperExceptionalSize, Fintype.card_coe,
-      oddPrimeUpperPairHighSet_card, oddPrimeUpperExceptionalSet_card] using
-        oddUpperSimplePhysicalCount_eq N p
-  unfold oddUpperCountLoss
-  omega
-
-theorem oddPrimeUpperPhysicalCombination_valuation_lower {N p : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (hHsq : H N < p ^ 2) (z : ℚ) (hz : (z.den : ZMod p) ≠ 0)
-    (g : oddPrimeUpperPhysicalIndex p N → Fin (n N) → ℚ)
-    (hg : ∀ i k, ((g i k).den : ZMod p) ≠ 0) :
-    -(oddUpperCountLoss N p : ℤ) ≤ padicValRat p
-      (Matrix.det (Matrix.of fun r k : Fin (n N) =>
-        ∑ i, oddPrimeUpperPhysicalColumn z p N i r * g i k)) := by
-  have h := oddPhysicalCombination_valuation_lower
-    (p := p) (n := n N) (R := oddPrimeUpperRetainedSize p N)
-    (B := oddPrimeUpperPairedSize p N) (C := oddPrimeUpperCentralSize p N)
-    (e := oddPrimeUpperExceptionalSize p N)
-    (oddPrimeUpperRetainedVector z p N) (oddPrimeUpperPairedVector z p N)
-    (oddPrimeUpperIntegralVector z p N) (oddPrimeUpperExceptionalVector p N)
-    (oddPrimeUpperExceptionalCoeff p N) g
-    (oddPrimeUpperRetainedVector_den_ne_zero hp2 hHsq z hz)
-    (oddPrimeUpperPairedVector_den_ne_zero hp2 hN hpH hH z hz)
-    (oddPrimeUpperIntegralVector_den_ne_zero hp2 hN hpH hH z hz)
-    oddPrimeUpperExceptionalVector_den_ne_zero
-    oddPrimeUpperExceptionalCoeff_den_ne_zero hg
-  simpa only [oddPrimeUpperPhysical_loss_eq hN hpH hH, oddPrimeUpperPhysicalColumn] using h
-
-theorem rawMinorRat_odd_upper_valuation {N p : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (hHsq : H N < p ^ 2) (z : ℚ) (hz : (z.den : ZMod p) ≠ 0)
-    (c : Fin (n N) → ↥(Finset.Ico (b N) (L N))) :
-    -(oddUpperCountLoss N p : ℤ) ≤ padicValRat p (rawMinorRat z N c) := by
-  have hmatrix :
-      (Matrix.of fun r k : Fin (n N) => rawEntryRat z N r.val (c k).val) =
-        (Matrix.of fun r k : Fin (n N) => ∑ i : oddPrimeUpperPhysicalIndex p N,
-          oddPrimeUpperPhysicalColumn z p N i r * oddPrimeUpperInverseCoeff p N i (c k).val) := by
-    ext r k
-    exact rawEntryRat_eq_upper_physical_sum hN hH z (c k) r
-  rw [rawMinorRat, hmatrix]
-  exact oddPrimeUpperPhysicalCombination_valuation_lower hp2 hN hpH hH hHsq z hz
-    (fun i k => oddPrimeUpperInverseCoeff p N i (c k).val)
-    (fun i k => oddPrimeUpperInverseCoeff_den_ne_zero i (c k).val)
-
-theorem determinantRat_odd_upper_valuation {N p : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (hHsq : H N < p ^ 2) (z : ℚ) (hz : (z.den : ZMod p) ≠ 0) :
-    -(oddUpperCountLoss N p : ℤ) ≤ padicValRat p (determinantRat z N) := by
-  rw [determinantRat_eq_sum_raw_choices]
-  apply prime_sum_valuation_lower _ _ _ (by omega)
-  intro c hc
-  have hminor := rawMinorRat_odd_upper_valuation hp2 hN hpH hH hHsq z hz c
-  have hint := int_prime_valuation_nonneg p (∏ k, rawFilterInt N (c k) k)
-  simpa only [zero_add] using prime_mul_valuation_lower
-    (((∏ k, rawFilterInt N (c k) k : ℤ) : ℚ)) (rawMinorRat z N c)
-    0 (-(oddUpperCountLoss N p : ℤ)) (by omega) hint hminor
-
-theorem determinantRat_odd_prime_loss_upper {N p : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N) (hpH : p ≤ H N) (hH : H N ≤ 2 * p)
-    (hHsq : H N < p ^ 2) (z : ℚ) (hz : (z.den : ZMod p) ≠ 0) :
-    -(N : ℝ) * oddPrimeLoss ((p : ℝ) / N) ≤
-      (padicValRat p (determinantRat z N) : ℝ) := by
-  have hv : -(oddUpperCountLoss N p : ℝ) ≤
-      (padicValRat p (determinantRat z N) : ℝ) := by
-    exact_mod_cast determinantRat_odd_upper_valuation hp2 hN hpH hH hHsq z hz
-  rw [oddUpperCountLoss_eq N p hN hH] at hv
-  simpa only [neg_mul] using hv
-
 end InternalCatalan
 
 end
@@ -1418,61 +940,6 @@ namespace InternalCatalan
 open Filter
 open scoped Topology BigOperators
 
-theorem determinantRat_odd_prime_large_loss_lower {p N : ℕ} [Fact p.Prime]
-    (hp2 : p ≠ 2) (hN : 0 < N)
-    (hcut : 2 * Real.sqrt (H N) < (p : ℝ))
-    (z : ℚ) (hz : (z.den : ZMod p) ≠ 0) :
-    -(N : ℝ) * oddPrimeLoss ((p : ℝ) / N) ≤
-      (padicValRat p (determinantRat z N) : ℝ) := by
-  have hsquare : H N < p ^ 2 := by
-    have h := large_prime_cutoff_square hcut
-    omega
-  by_cases hbelow : p ≤ H N
-  · by_cases hlower : 2 * p ≤ H N
-    · exact determinantRat_odd_lower_loss hp2 hN hlower hsquare z hz
-    · exact determinantRat_odd_prime_loss_upper hp2 hN hbelow (by omega) hsquare z hz
-  · exact determinantRat_odd_prime_loss_above_degrees hp2 hN (by omega) z hz
-
-theorem largeOddPrimeContribution_eventually_lower (z : ℚ)
-    {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ N : ℕ in atTop,
-      -(8609 / 4608 : ℝ) - ε ≤ largeOddPrimeContribution z N / (n N : ℝ) ^ 2 := by
-  filter_upwards [large_prime_witness_den_eventually z,
-    oddPrimeLoss_large_prime_normalized_eventually_upper hε,
-    eventually_gt_atTop (0 : ℕ)] with N hden hloss hN
-  have hn : 0 < (n N : ℝ) ^ 2 := by unfold n; positivity
-  have hsum : -(N : ℝ) *
-      (∑ p ∈ (Finset.Ioc 0 (H N)).filter
-        (fun p : ℕ => p.Prime ∧ 2 * Real.sqrt (H N) < (p : ℝ)),
-        oddPrimeLoss ((p : ℝ) / N) * Real.log p) ≤ largeOddPrimeContribution z N := by
-    unfold largeOddPrimeContribution
-    rw [Finset.mul_sum]
-    apply Finset.sum_le_sum
-    intro p hp
-    obtain ⟨_, hprime, hcut⟩ := Finset.mem_filter.mp hp
-    have : Fact p.Prime := ⟨hprime⟩
-    have hp2 : p ≠ 2 := by
-      intro heq
-      subst p
-      have h := (smallOddPrimeCutoff_bounds hN).1
-      norm_num only [Nat.cast_ofNat] at hcut
-      linarith
-    have hv := determinantRat_odd_prime_large_loss_lower hp2 hN hcut z (hden p hcut)
-    have hlog : 0 ≤ Real.log (p : ℝ) :=
-      Real.log_nonneg (by exact_mod_cast hprime.one_lt.le)
-    simpa only [mul_assoc] using mul_le_mul_of_nonneg_right hv hlog
-  have hnorm := div_le_div_of_nonneg_right hsum hn.le
-  have heq : -(N : ℝ) *
-      (∑ p ∈ (Finset.Ioc 0 (H N)).filter
-        (fun p : ℕ => p.Prime ∧ 2 * Real.sqrt (H N) < (p : ℝ)),
-        oddPrimeLoss ((p : ℝ) / N) * Real.log p) / (n N : ℝ) ^ 2 =
-      -((N : ℝ) *
-      (∑ p ∈ (Finset.Ioc 0 (H N)).filter
-        (fun p : ℕ => p.Prime ∧ 2 * Real.sqrt (H N) < (p : ℝ)),
-        oddPrimeLoss ((p : ℝ) / N) * Real.log p) / (n N : ℝ) ^ 2) := by ring
-  rw [heq] at hnorm
-  linarith
-
 end InternalCatalan
 
 end
@@ -1482,36 +949,6 @@ end
 namespace InternalCatalan
 open Filter
 open scoped Topology
-
-theorem determinantRat_finite_place_eventually_lower (z : ℚ)
-    {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ N : ℕ in atTop, determinantRat z N ≠ 0 →
-      -(8609 / 4608 : ℝ) - (505 / 4608 : ℝ) * Real.log 2 - ε ≤
-        Real.log |(determinantRat z N : ℝ)| / (n N : ℝ) ^ 2 := by
-  have he : (0 : ℝ) < ε / 2 := by positivity
-  filter_upwards [determinantRat_without_large_primes_eventually_lower z he,
-    largeOddPrimeContribution_eventually_lower z he] with N hpartial hlarge
-  intro hdet
-  have h := hpartial hdet
-  rw [sub_div] at h
-  linarith
-
-theorem determinantRat_finite_place_threshold (z : ℚ) :
-    ∀ᶠ N : ℕ in atTop, determinantRat z N ≠ 0 →
-      -(229084 / 100000 : ℝ) <
-        Real.log |(determinantRat z N : ℝ)| / (n N : ℝ) ^ 2 -
-          (1 / 2 : ℝ) * Real.log 2 := by
-  let gap : ℝ := -(8609 / 4608 : ℝ) -
-    ((1 / 2 : ℝ) + (505 / 4608 : ℝ)) * Real.log 2 + 229084 / 100000
-  have hgap : 0 < gap := by
-    dsimp [gap]
-    linarith [finitePlace_constant_gt_threshold]
-  filter_upwards [determinantRat_finite_place_eventually_lower z
-    (show 0 < gap / 2 by positivity)] with N hN
-  intro hdet
-  have h := hN hdet
-  dsimp [gap] at hgap h
-  nlinarith
 
 end InternalCatalan
 

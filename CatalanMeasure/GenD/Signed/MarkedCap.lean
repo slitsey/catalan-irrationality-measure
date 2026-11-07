@@ -1,8 +1,9 @@
 module
 
-public import CatalanMeasure.GenD.Signed.SheetNear
 public import OAI.NumberTheory.Catalan.Estimates.RealEnergyDiagonal
 public import CatalanMeasure.GenD.Analytic.GapNodes
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # `MarkedCap` for marked rows that are quadrature-node images

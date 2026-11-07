@@ -1,9 +1,9 @@
 module
 
-public import CatalanMeasure.GenD.Signed.LemmaT
-public import CatalanMeasure.GenD.Signed.TiltedTangent
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Algebra.QuadraticDiscriminant
+public import CatalanMeasure.PopulationDual
+public import Mathlib.Algebra.Order.Ring.Star
 
 /-!
 # Lemma K: the deficit identity and class containment (A4)
@@ -67,174 +67,7 @@ theorem completed_square_hasSum (a m : ℕ → ℝ) (ha : Summable (fun k => |a 
   field_simp
   ring
 
-/-- The tilted completed square, with the square kept (the identity behind
-`tilted_energy_tangent`): the gap `RHS - LHS` is exactly `Σ ((a - m) + k β / 2)² / k`. -/
-theorem tilted_completed_square_hasSum (a m β : ℕ → ℝ) (ha : Summable (fun k => |a k|)) {S : ℝ}
-    (hS : HasSum (fun k : ℕ => m (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)) S)
-    (hβ : Summable (fun k : ℕ => ((k + 1 : ℕ) : ℝ) * β (k + 1) ^ 2)) :
-    HasSum (fun k : ℕ => ((a (k + 1) - m (k + 1)) + ((k + 1 : ℕ) : ℝ) * β (k + 1) / 2) ^ 2 /
-        ((k + 1 : ℕ) : ℝ))
-      ((barrierTrialNormSq a - 2 * (∑' k : ℕ, a (k + 1) * m (k + 1) / ((k + 1 : ℕ) : ℝ)) +
-        (∑' k : ℕ, β (k + 1) * a (k + 1)) +
-        ∑' k : ℕ, ((k + 1 : ℕ) : ℝ) * β (k + 1) ^ 2 / 4) -
-        (-S + ∑' k : ℕ, β (k + 1) * m (k + 1))) := by
-  have hn : ∀ k : ℕ, (0 : ℝ) < ((k + 1 : ℕ) : ℝ) := fun k => by positivity
-  have huS := energy_trial_norm_summable a ha
-  have hbm : Summable (fun k : ℕ => β (k + 1) * m (k + 1)) :=
-    Summable.of_norm_bounded ((hβ.add hS.summable).div_const 2)
-      (fun k => by rw [Real.norm_eq_abs]; exact abs_mul_le_amgm _ _ _ (hn k))
-  have hba : Summable (fun k : ℕ => β (k + 1) * a (k + 1)) :=
-    Summable.of_norm_bounded ((hβ.add huS).div_const 2)
-      (fun k => by rw [Real.norm_eq_abs]; exact abs_mul_le_amgm _ _ _ (hn k))
-  have ham : Summable (fun k : ℕ => a (k + 1) * m (k + 1) / ((k + 1 : ℕ) : ℝ)) := by
-    refine Summable.of_norm_bounded ((huS.add hS.summable).div_const 2) (fun k => ?_)
-    rw [Real.norm_eq_abs, abs_div, abs_of_pos (hn k)]
-    have h1 : |a (k + 1) * m (k + 1)| ≤ (a (k + 1) ^ 2 + m (k + 1) ^ 2) / 2 := by
-      rw [abs_le]; constructor <;> nlinarith [sq_nonneg (a (k + 1) - m (k + 1)),
-        sq_nonneg (a (k + 1) + m (k + 1))]
-    calc |a (k + 1) * m (k + 1)| / ((k + 1 : ℕ) : ℝ)
-        ≤ ((a (k + 1) ^ 2 + m (k + 1) ^ 2) / 2) / ((k + 1 : ℕ) : ℝ) :=
-          div_le_div_of_nonneg_right h1 (hn k).le
-      _ = (a (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ) + m (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)) / 2 := by
-          ring
-  have H1 := hS.neg.add hbm.hasSum
-  have H2 := ((huS.hasSum.sub (ham.hasSum.mul_left 2)).add hba.hasSum).add
-    (hβ.div_const 4).hasSum
-  have H3 := H2.sub H1
-  unfold barrierTrialNormSq
-  convert H3 using 1
-  funext k
-  have hk := hn k
-  set n : ℝ := ((k + 1 : ℕ) : ℝ) with hnn
-  field_simp
-  ring
-
 /-! ### Part (i): particle-level statements with the squares kept -/
-
-/-- J1 (Lemma 3.4′) with the completed square kept. -/
-theorem pair_log_add_field_le_trial_sq {ν e : ℝ} (hν : 0 < ν)
-    (he : e ∈ Ioo (0 : ℝ) (1 / 8)) {s : ℕ} (hs : (s : ℝ) ≤ ν)
-    {u : Fin s → ℝ} (hu : ∀ i, u i ∈ Ioo (-1 : ℝ) 1) (hui : Function.Injective u)
-    (a : ℕ → ℝ) (ha : Summable (fun k => |a k|)) (Q : ℝ → ℝ) :
-    (∑ i : Fin s, ∑ j ∈ Ioi i, Real.log |u j - u i|) / ν ^ 2 + (∑ i, Q (u i)) / ν +
-        ∑' k : ℕ, (a (k + 1) - pinCosineMoment ν e u (k + 1)) ^ 2 / ((k + 1 : ℕ) : ℝ) ≤
-      -(1 / 2 : ℝ) * ((s : ℝ) / ν) ^ 2 * Real.log 2 + barrierTrialNormSq a +
-        (∑ i, (Q (u i) - 2 * barrierTrialT a (u i))) / ν + trialPairError ν e a := by
-  have hrx := population_cosine_regularization hν he hs hu hui
-  have hS : HasSum (fun k : ℕ => pinCosineMoment ν e u (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ))
-      (-((∑ i : Fin s, ∑ j : Fin s,
-          realEnergyCosineKernel (realEnergyTau e ^ 2) (u i) (u j)) / ν ^ 2 +
-        ((s : ℝ) / ν) ^ 2 * Real.log 2) / 2) := by
-    apply (hasSum_nat_add_iff
-      (f := fun k : ℕ => pinCosineMoment ν e u k ^ 2 / (k : ℝ)) 1).2
-    simpa using pin_hasSum_first_square hν he hu
-  have hd := (completed_square_hasSum a (pinCosineMoment ν e u) ha hS).tsum_eq
-  have hav := (pin_hasSum_trialTau_average a ha ν he hu).tsum_eq
-  have ht := pin_average_le_of_le_add hν hs
-    (fun i => -2 * realEnergyTrialTau a e (u i))
-    (fun i => -2 * barrierTrialT a (u i))
-    (c := 2 * e * (∑' k, |a k|))
-    (mul_nonneg (mul_nonneg (by norm_num) he.1.le) (tsum_nonneg fun _ => abs_nonneg _))
-    (fun i => by
-      have hh := (abs_le.mp (realEnergyTrialTau_sub_le a ha he (hu i))).1
-      linarith only [hh])
-  have hs1 : -2 * ((∑ i, realEnergyTrialTau a e (u i)) / ν) =
-      (∑ i, -2 * realEnergyTrialTau a e (u i)) / ν := by
-    rw [← mul_sum]; ring
-  have hsplit : (∑ i, (Q (u i) - 2 * barrierTrialT a (u i))) / ν =
-      (∑ i, Q (u i)) / ν + (∑ i, -2 * barrierTrialT a (u i)) / ν := by
-    rw [← add_div, ← sum_add_distrib]
-    congr 1
-    exact sum_congr rfl fun i _ => by ring
-  unfold trialPairError
-  rw [hsplit]
-  rw [hav] at hd
-  ring_nf at hrx hd ht hs1 ⊢
-  linarith only [hrx, hd, ht, hs1]
-
-/-- J2 (tilted, particle form) with the tilted completed square kept. -/
-theorem pair_log_add_cross_le_tilted_sq {ν e : ℝ} (hν : 0 < ν)
-    (he : e ∈ Ioo (0 : ℝ) (1 / 8)) {s n : ℕ} (hs : (s : ℝ) ≤ ν)
-    {u : Fin s → ℝ} (hu : ∀ i, u i ∈ Ioo (-1 : ℝ) 1) (hui : Function.Injective u)
-    (a : ℕ → ℝ) (ha : Summable (fun k => |a k|)) (w y : Fin n → ℝ) (hy : ∀ l, |y l| < 1) :
-    (∑ i : Fin s, ∑ j ∈ Ioi i, Real.log |u j - u i|) / ν ^ 2 +
-        (∑ i, ∑ l, w l * crossLog (realEnergyTau e ^ 2 * y l) (u i)) / ν +
-        ∑' k : ℕ, ((a (k + 1) - pinCosineMoment ν e u (k + 1)) +
-          ((k + 1 : ℕ) : ℝ) * crossBeta (realEnergyTau e) w y (k + 1) / 2) ^ 2 /
-            ((k + 1 : ℕ) : ℝ) ≤
-      -(1 / 2 : ℝ) * ((s : ℝ) / ν) ^ 2 * Real.log 2 + barrierTrialNormSq a +
-        (∑ i, -2 * barrierTrialT a (u i)) / ν +
-        (-2 * ∑ l, w l * barrierTrialS a (-(realEnergyTau e) * y l)) +
-        crossTiltNorm (realEnergyTau e) w y + trialPairError ν e a := by
-  have hτ := realEnergyTau_bounds he
-  have hτ' : realEnergyTau e ∈ Ioo (0 : ℝ) 1 := ⟨hτ.1, hτ.2⟩
-  have hrx := population_cosine_regularization hν he hs hu hui
-  have hS : HasSum (fun k : ℕ => pinCosineMoment ν e u (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ))
-      (-((∑ i : Fin s, ∑ j : Fin s,
-          realEnergyCosineKernel (realEnergyTau e ^ 2) (u i) (u j)) / ν ^ 2 +
-        ((s : ℝ) / ν) ^ 2 * Real.log 2) / 2) := by
-    apply (hasSum_nat_add_iff
-      (f := fun k : ℕ => pinCosineMoment ν e u k ^ 2 / (k : ℝ)) 1).2
-    simpa using pin_hasSum_first_square hν he hu
-  have hΛs := crossBeta_summable hτ' w y hy
-  have hβs : Summable (fun k : ℕ => ((k + 1 : ℕ) : ℝ) *
-      crossBeta (realEnergyTau e) w y (k + 1) ^ 2) := by
-    refine (hΛs.mul_left 4).congr (fun k => ?_)
-    have := crossBeta_sq (realEnergyTau e) w y (k + 1) (Nat.succ_pos k)
-    linarith only [this]
-  have ht := (tilted_completed_square_hasSum a (pinCosineMoment ν e u)
-    (crossBeta (realEnergyTau e) w y) ha hS hβs).tsum_eq
-  rw [(crossBeta_pairing_hasSum hν he u hu w y hy).tsum_eq,
-    (pin_hasSum_trialTau_average a ha ν he hu).tsum_eq] at ht
-  have hba : HasSum (fun k : ℕ => crossBeta (realEnergyTau e) w y (k + 1) * a (k + 1))
-      (-2 * ∑ l, w l * barrierTrialS a (-(realEnergyTau e) * y l)) := by
-    have hl : ∀ l, HasSum (fun k : ℕ => a (k + 1) * (-(realEnergyTau e) * y l) ^ (k + 1) /
-        ((k + 1 : ℕ) : ℝ)) (barrierTrialS a (-(realEnergyTau e) * y l)) := by
-      intro l
-      refine (barrierTrialS_summable a ha ?_).hasSum
-      rw [abs_mul, abs_neg, abs_of_pos hτ.1]
-      calc _ ≤ 1 * |y l| := mul_le_mul_of_nonneg_right hτ.2.le (abs_nonneg _)
-        _ ≤ 1 := by linarith [hy l]
-    have hsum := hasSum_sum (s := Finset.univ)
-      (fun l _ => ((hl l).mul_left (w l)).mul_left (-2 : ℝ))
-    have hconv : ∀ k : ℕ, crossBeta (realEnergyTau e) w y (k + 1) * a (k + 1) =
-        ∑ l, -2 * (w l * (a (k + 1) * (-(realEnergyTau e) * y l) ^ (k + 1) /
-          ((k + 1 : ℕ) : ℝ))) := by
-      intro k
-      have h1 : ∀ l, -2 * (w l * (a (k + 1) * (-(realEnergyTau e) * y l) ^ (k + 1) /
-          ((k + 1 : ℕ) : ℝ))) = (-2 * (-1) ^ (k + 1) * realEnergyTau e ^ (k + 1) *
-            a (k + 1) / ((k + 1 : ℕ) : ℝ)) * (w l * y l ^ (k + 1)) := by
-        intro l; rw [mul_pow, neg_pow]; ring
-      simp only [h1]
-      rw [← mul_sum]
-      unfold crossBeta
-      ring
-    have e1 : (fun k : ℕ => crossBeta (realEnergyTau e) w y (k + 1) * a (k + 1)) =
-        fun k : ℕ => ∑ l, -2 * (w l * (a (k + 1) * (-(realEnergyTau e) * y l) ^ (k + 1) /
-          ((k + 1 : ℕ) : ℝ))) := funext hconv
-    rw [e1]
-    convert hsum using 1
-    rw [mul_sum]
-  rw [hba.tsum_eq] at ht
-  have hq : (∑' k : ℕ, ((k + 1 : ℕ) : ℝ) * crossBeta (realEnergyTau e) w y (k + 1) ^ 2 / 4) =
-      crossTiltNorm (realEnergyTau e) w y := by
-    unfold crossTiltNorm
-    exact tsum_congr fun k => crossBeta_sq (realEnergyTau e) w y (k + 1) (Nat.succ_pos k)
-  rw [hq] at ht
-  have hav := pin_average_le_of_le_add hν hs
-    (fun i => -2 * realEnergyTrialTau a e (u i))
-    (fun i => -2 * barrierTrialT a (u i))
-    (c := 2 * e * (∑' k, |a k|))
-    (mul_nonneg (mul_nonneg (by norm_num) he.1.le) (tsum_nonneg fun _ => abs_nonneg _))
-    (fun i => by
-      have hh := (abs_le.mp (realEnergyTrialTau_sub_le a ha he (hu i))).1
-      linarith only [hh])
-  have hs1 : -2 * ((∑ i, realEnergyTrialTau a e (u i)) / ν) =
-      (∑ i, -2 * realEnergyTrialTau a e (u i)) / ν := by
-    rw [← mul_sum]; ring
-  unfold trialPairError
-  ring_nf at hrx ht hav hs1 ⊢
-  linarith only [hrx, ht, hav, hs1]
 
 /-! ### Part (ii): near-optimality bounds every component -/
 
@@ -483,30 +316,11 @@ theorem slope_of_class {n : ℕ} (hn : 0 < n) (x : Fin n → ℝ) (e : ℕ) {d v
       rw [div_le_iff₀ hnR] at h3; linarith
     exact lt_of_le_of_lt h4 (hbig t ht h)
 
-/-- The composite: the class condition gives Lemma T′'s conclusion `|y|^e ≤ ‖B(i y)‖`. -/
-theorem pow_le_norm_blaschke_of_class {n : ℕ} (hn : 0 < n) (x : Fin n → ℝ) {e : ℕ} (he : 1 ≤ e)
-    {d v : ℕ → ℝ} (hv : ∀ k, 0 < v k) {D Δ : ℝ} (hD : HasSum (fun k => d k ^ 2 / v k) D)
-    (hDΔ : D ≤ Δ) (F : ℝ → ℕ → ℝ) (H c ε : ℝ → ℝ)
-    (hH : ∀ t, HasSum (fun k => F t k ^ 2 * v k) (H t))
-    {a₀ t₀ φ : ℝ} (ha₀ : 0 < a₀) (ht₀ : 0 < t₀)
-    (hfew : ((Finset.univ.filter (fun a => |x a| < a₀)).card : ℝ) ≤ φ * n)
-    (hsmall : (n : ℝ) * (φ + t₀ ^ 2 / a₀ ^ 2) < e)
-    (hstat : ∀ t ∈ Ioc (0 : ℝ) 1, t₀ ≤ t →
-      |(∑ a, slopeKernel t (x a)) / n - (c t + ∑' k, F t k * d k)| ≤ ε t)
-    (hbig : ∀ t ∈ Ioc (0 : ℝ) 1, t₀ ≤ t →
-      (n : ℝ) * (c t + Real.sqrt (H t * Δ) + ε t) < e) :
-    ∀ y ∈ Icc (-1 : ℝ) 1, |y| ^ e ≤ 1 * ‖blaschke x ((y : ℂ) * Complex.I)‖ :=
-  pow_le_norm_blaschke_of_slope x he
-    (slope_of_class hn x e hv hD hDΔ F H c ε hH ha₀ ht₀ hfew hsmall hstat hbig)
-
 end
 
 end CatalanMeasure.Signed
 
 #print axioms CatalanMeasure.Signed.completed_square_hasSum
-#print axioms CatalanMeasure.Signed.tilted_completed_square_hasSum
-#print axioms CatalanMeasure.Signed.pair_log_add_field_le_trial_sq
-#print axioms CatalanMeasure.Signed.pair_log_add_cross_le_tilted_sq
 #print axioms CatalanMeasure.Signed.near_optimal_components
 #print axioms CatalanMeasure.Signed.fraction_le_of_field_bracket
 #print axioms CatalanMeasure.Signed.tsum_mul_sq_le
@@ -514,4 +328,3 @@ end CatalanMeasure.Signed
 #print axioms CatalanMeasure.Signed.mass_lower_bound
 #print axioms CatalanMeasure.Signed.sum_slopeKernel_le_of_few_small
 #print axioms CatalanMeasure.Signed.slope_of_class
-#print axioms CatalanMeasure.Signed.pow_le_norm_blaschke_of_class

@@ -1,0 +1,30 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.Parametric.PolynomialFunctional
+theorem polynomialFunctional_common_factor_le (P : Parameters) (N k : ℕ) (R : ℝ[X])
+    (hdeg : ∀ i, P.H N ≤ i → (rowCommonFactor P N*R).coeff i=0)
+    {radius B : ℝ} (hradius : 1≤radius)
+    (hB : ∀ z : ℂ, ‖z‖=radius →
+      ‖((R*(1-X)^(P.h N+P.q N)).map (algebraMap ℝ ℂ)).eval z‖ ≤ B) :
+    |polynomialFunctional P N k (rowCommonFactor P N*R)| ≤ 4*(P.H N)*B := by
+  have hB0 : 0≤B := (norm_nonneg _).trans (hB (radius:ℂ) (by
+    rw [Complex.norm_real,Real.norm_eq_abs,
+      abs_of_pos (lt_of_lt_of_le zero_lt_one hradius)]))
+  rw [polynomialFunctional_eq_coeff P N k _ hdeg,abs_mul]
+  rw [abs_of_pos (by norm_num : (0:ℝ)<4)]
+  calc
+    _ ≤ 4*∑ d ∈ range (P.H N), B := by
+      apply mul_le_mul_of_nonneg_left _ (by norm_num)
+      apply (abs_sum_le_sum_abs _ _).trans
+      apply sum_le_sum
+      intro d _
+      rw [abs_mul]
+      have hc := common_factor_filtered_coeff_le R (P.A N) (P.h N) (P.q N)
+        hradius hB (P.b N+k+d+P.q N)
+      change |(((X^(P.A N)*(1-X)^(P.h N))*R)*(X-1)^(P.q N)).coeff
+        (P.b N+k+d+P.q N)| ≤ B at hc
+      calc
+        _ ≤ 1*B := mul_le_mul (OAI.InternalCatalan.centralCoeffKernel_abs_le_one _)
+          hc (by positivity) zero_le_one
+        _ = B := one_mul _
+    _ = 4*(P.H N)*B := by simp [mul_assoc]
+
+

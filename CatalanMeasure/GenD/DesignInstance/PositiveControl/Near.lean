@@ -2,8 +2,8 @@ module
 
 public import CatalanMeasure.Cert.FieldEval
 public import CatalanMeasure.CellCert.Scaled
-public import CatalanMeasure.GenD.DesignInstance.PositiveControl.Data
 public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import CatalanMeasure.CellCert.ScaledSeries
 
 @[expose] public section
 
@@ -228,14 +228,6 @@ theorem trialSeqS_one (cs : List ℤ) (tail : List TailQ) :
 
 -- BEGIN GENERATED FIRSTQ (phase2-data/consts/firstq_emit.py)
 -- kcost: 0.067 s estimated; first coefficient plus 56 tails, about 12 rational operations/tail.
-theorem firstQ_data : (9 / 50 : ℚ) ≤ firstQ Pc P := by
-  unfold firstQ; decide +kernel
-
-theorem first_lower : (9 / 50 : ℝ) ≤ trialSeqS Pc P 1 := by
-  rw [trialSeqS_one]
-  have h : (((9 / 50 : ℚ)) : ℝ) ≤ ((firstQ Pc P : ℚ) : ℝ) := Rat.cast_le.mpr firstQ_data
-  push_cast at h
-  exact h
 -- END GENERATED FIRSTQ
 
 end
@@ -252,5 +244,3 @@ end CatalanMeasure.GenD.D58.Cert
 #print axioms CatalanMeasure.GenD.D58.Cert.near_residual_field_le_d58
 #print axioms CatalanMeasure.GenD.D58.Cert.tailSum_one
 #print axioms CatalanMeasure.GenD.D58.Cert.trialSeqS_one
-#print axioms CatalanMeasure.GenD.D58.Cert.firstQ_data
-#print axioms CatalanMeasure.GenD.D58.Cert.first_lower

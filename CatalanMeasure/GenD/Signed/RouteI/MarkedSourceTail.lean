@@ -3396,105 +3396,10 @@ def streamTail (W : Profile) (Lr La : ℕ) : ℝ :=
   absum W.Ps (fun g => betaT Lr (qr (rR g.hi)) (qr (rR g.lo))) +
     absum W.Po (anaT W.qD La) + absum W.Po (anaT W.qO La) + 2 * absum W.Pc (anaT W.qC La)
 
-/-- **All five streams.** -/
-theorem Dphys_approx {S : CapSource} (hS : S.Admissible) {W : Profile} {sg t : ℝ}
-    (hsg : sg = 1 ∨ sg = -1) (hW : W.OK S sg) (h0 : 0 < t) (h1 : t ≤ 1) {N : ℕ} (hN : 1 ≤ N)
-    (Lr La : ℕ) :
-    |Dphys S (sg * t) - streamSum W N Lr La (2 * t - 1)| ≤
-      2 / N * dirV N W.Ps W.Es t + streamTail W Lr La := by
-  have ht : 2 * t - 1 ∈ Icc (-1 : ℝ) 1 := ⟨by linarith, by linarith⟩
-  have s1 := dir_stream hN hW.atoms_s hW.supp_s hW.atoms_y h0 h1
-  have s2 := refl_stream hW.supp_s h0 h1 Lr
-  have s3 := odir_stream hW.supp_o (qm := W.qD) (fun g hg => (hW.rad_D g hg).2.1)
-    (fun g hg => qm_D (hW.supp_o g hg).1 (hW.rad_D g hg).1 (hW.rad_D g hg).2.1 (hW.rad_D g hg).2.2)
-    h0 h1 La
-  have s4 := ana_stream (κ := -1) (P := W.Po) (q := qc rO) (Lq := Lqc rO) (Lp := Lpc rO)
-    (fun g hg => curveO (hW.supp_o g hg).1) (fun g hg => (hW.supp_o g hg).2.le) (qm := W.qO)
-    (fun g hg => (hW.rad_O g hg).2.1)
-    (fun g hg => qm_O (hW.supp_o g hg).1 (hW.rad_O g hg).1 (hW.rad_O g hg).2.1 (hW.rad_O g hg).2.2)
-    ht La
-  have s5 := col_stream hW.supp_c (qm := W.qC) (fun g hg => (hW.rad_C g hg).2.1)
-    (fun g hg => qm_C (hW.supp_c g hg).1 (hW.supp_c g hg).2.2 (hW.rad_C g hg).1
-      (hW.rad_C g hg).2.1 (hW.rad_C g hg).2.2) ht La
-  have p1 : pint W.Ps (rowK t) = pint W.Ps (fun y => Real.log |t - YCell.physX y|) +
-      pint W.Ps (fun y => Real.log |1 - YCell.physX y * t|) := by
-    refine pint_split (fun g hg => (hW.supp_s g hg).2.le)
-      (fun g hg => rowlog2_int (hW.supp_s g hg).1 (hW.supp_s g hg).2 h0 h1)
-      (fun g hg => rowlog_int (hW.supp_s g hg).1 (hW.supp_s g hg).2 h0 h1) ?_
-    intro g _ y _
-    unfold rowK
-    rw [mul_comm t]
-  have p2 : pint W.Po (rowK (-t)) = pint W.Po (fun y => Real.log |t + YCell.physX y|) +
-      pint W.Po (fun y => KQ (qc rO y) t) := by
-    have q1 : pint W.Po (fun y => KQ (qc rO y) t) =
-        pint W.Po (fun y => Real.log |1 + YCell.physX y * t|) := by
-      unfold pint
-      congr 1
-      refine List.map_congr_left fun g hg => ?_
-      congr 1
-      refine intervalIntegral.integral_congr fun y hy => ?_
-      rw [uIcc_of_le (hW.supp_o g hg).2.le] at hy
-      exact KO_eq ((hW.supp_o g hg).1.trans hy.1) t
-    rw [q1]
-    refine pint_split (fun g hg => (hW.supp_o g hg).2.le)
-      (fun g hg => rowlog4_int (hW.supp_o g hg).1 (hW.supp_o g hg).2 h0)
-      (fun g hg => rowlog3_int (hW.supp_o g hg).1 (hW.supp_o g hg).2 h0) ?_
-    intro g _ y _
-    unfold rowK
-    have e1 : -t - YCell.physX y = -(t + YCell.physX y) := by ring
-    have e2 : 1 - -t * YCell.physX y = 1 + YCell.physX y * t := by ring
-    rw [e1, e2, abs_neg]
-  rw [Dphys_eq hS hsg hW h0, p1, p2]
-  unfold streamSum streamTail
-  have e3 : ∑ k ∈ Finset.range (La + 1),
-      (evS W.Po (AD k) + evS W.Po (QS (-1) (qc rO) k) - 2 * evS W.Pc (QS 2 qC k)) *
-        basis k (2 * t - 1) =
-      ∑ k ∈ Finset.range (La + 1), evS W.Po (AD k) * basis k (2 * t - 1) +
-      ∑ k ∈ Finset.range (La + 1), evS W.Po (QS (-1) (qc rO) k) * basis k (2 * t - 1) -
-      ∑ k ∈ Finset.range (La + 1), 2 * evS W.Pc (QS 2 qC k) * basis k (2 * t - 1) := by
-    rw [← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
-    exact Finset.sum_congr rfl fun k _ => by ring
-  rw [e3]
-  rw [abs_le] at s1 s2 s3 s4 s5 ⊢
-  constructor <;> linarith [s1.1, s1.2, s2.1, s2.2, s3.1, s3.2, s4.1, s4.2, s5.1, s5.2]
-
 /-! ### The ideal stream in endpoint form, and the final bound -/
 
 /-- A stream list from a coefficient function. -/
 def strm (L : ℕ) (a : ℕ → ℝ) : List ℝ := (List.range L).map a
-
-theorem rawSumR_range' (a : ℕ → ℝ) (x : ℝ) (L s : ℕ) :
-    rawSumR ((List.range' s L).map a) s x =
-      ∑ k ∈ Finset.range L, a (s + k) * basis (s + k) x := by
-  induction L generalizing s with
-  | zero => simp [rawSumR]
-  | succ L ih =>
-    simp only [List.range'_succ, List.map_cons, rawSumR, ih (s + 1)]
-    rw [Finset.sum_range_succ', add_zero, add_comm]
-    have e : ∀ k, s + 1 + k = s + (k + 1) := fun k => by omega
-    simp only [e]
-
-theorem rawSumR_strm (L : ℕ) (a : ℕ → ℝ) (x : ℝ) :
-    rawSumR (strm L a) 0 x = ∑ k ∈ Finset.range L, a k * basis k x := by
-  unfold strm
-  rw [List.range_eq_range', rawSumR_range']
-  simp
-
-/-- The ideal coefficient list, from the atoms alone. -/
-def idealL (W : Profile) (N Lr La : ℕ) : List ℝ :=
-  addR (addR (strm (N + 1) fun k => -evE W.Es (Adir k))
-    (strm (Lr + 1) fun k => -evE W.Es (QS 1 (qc rR) k)))
-    (strm (La + 1) fun k => -evE W.Eo (AD k) - evE W.Eo (QS (-1) (qc rO) k) +
-      2 * evE W.Ec (QS 2 qC k))
-
-theorem rawSumR_idealL {W : Profile} {S : CapSource} {sg : ℝ} (hW : W.OK S sg) (N Lr La : ℕ)
-    (x : ℝ) : rawSumR (idealL W N Lr La) 0 x = streamSum W N Lr La x := by
-  unfold idealL streamSum
-  rw [rawSumR_addR, rawSumR_addR, rawSumR_strm, rawSumR_strm, rawSumR_strm]
-  simp only [hW.atoms_s _, hW.atoms_o _, hW.atoms_c _]
-  congr 1
-  refine Finset.sum_congr rfl fun k _ => ?_
-  ring
 
 /-- The sign `σ` as a real. -/
 def sgOf : Sign → ℝ
@@ -3516,39 +3421,6 @@ theorem x_eq_sg_abs {x : ℝ} {σ : Sign} (hx : x ∈ CapSource.rowDom) (hs : si
     rw [this, abs_of_pos a]
     simp only [sgOf]
     exact ⟨by ring, a, b.le⟩
-
-/-- **Source soundness, physical form.** -/
-theorem Dphys_le_chebSum {S : CapSource} (hS : S.Admissible) {σ : Sign} {W : Profile}
-    (hW : W.OK S (sgOf σ)) {N : ℕ} (hN : 1 ≤ N) {Lr La : ℕ} {Mx δ tail : ℝ} {p : List ℤ} {dP : ℕ}
-    (hV : ∀ t ∈ Ioc (0 : ℝ) 1, dirV N W.Ps W.Es t ≤ Mx)
-    (hd : l1dist dP (idealL W N Lr La) p ≤ δ)
-    (ht : 2 / N * Mx + streamTail W Lr La + δ ≤ tail) :
-    ∀ x ∈ CapSource.rowDom, signOf x = σ → Dphys S x ≤ chebSum p dP (2 * |x| - 1) + tail := by
-  intro x hx hs
-  obtain ⟨e, h0, h1⟩ := x_eq_sg_abs hx hs
-  have a := Dphys_approx hS (sgOf_cases σ) hW h0 h1 hN Lr La
-  rw [← e] at a
-  have b := abs_rawSumR_sub_le dP (idealL W N Lr La) p 0
-    (MarkedTransferSource.two_abs_sub_one_mem hx)
-  rw [rawSumR_idealL hW] at b
-  have c := hV |x| ⟨h0, h1⟩
-  have hNp : (0 : ℝ) < 2 / N := by
-    have : (0 : ℝ) < N := by exact_mod_cast hN
-    positivity
-  have c' := mul_le_mul_of_nonneg_left c hNp.le
-  have a2 := (abs_le.mp a).2
-  have b2 := (abs_le.mp b).2
-  have : chebSum p dP (2 * |x| - 1) = rawSum p 0 (2 * |x| - 1) / dP := rfl
-  linarith
-
-/-- **C53 source soundness**: the real source satisfies `SourceMajorant`. -/
-theorem sourceMajorant_of_profile {S : CapSource} (hS : S.Admissible) {σ : Sign} {W : Profile}
-    (hW : W.OK S (sgOf σ)) {N : ℕ} (hN : 1 ≤ N) {Lr La : ℕ} {Mx δ tail : ℝ} {p : List ℤ} {dP : ℕ}
-    (hV : ∀ t ∈ Ioc (0 : ℝ) 1, dirV N W.Ps W.Es t ≤ Mx)
-    (hd : l1dist dP (idealL W N Lr La) p ≤ δ)
-    (ht : 2 / N * Mx + streamTail W Lr La + δ ≤ tail) :
-    SourceMajorant S σ p dP tail :=
-  SourceMajorant.of_Dphys hS (Dphys_le_chebSum hS hW hN hV hd ht)
 
 end
 
@@ -4454,73 +4326,6 @@ theorem evE_sub_le (E : List (ℝ × ℝ)) (F G : ℝ → ℝ) (d : ℝ → ℝ)
     rw [abs_mul]
     exact mul_le_mul_of_nonneg_left (h e List.mem_cons_self) (abs_nonneg _)
 
-theorem addR_range (a b : ℕ → ℝ) (L M s : ℕ) :
-    addR ((List.range' s L).map a) ((List.range' s M).map b) =
-      (List.range' s (max L M)).map fun k =>
-        (if k < s + L then a k else 0) + (if k < s + M then b k else 0) := by
-  induction L generalizing M s with
-  | zero =>
-    simp only [List.range'_zero, List.map_nil, addR, Nat.zero_max]
-    refine List.map_congr_left fun k hk => ?_
-    have := (List.mem_range'_1.mp hk)
-    rw [if_neg (by omega), if_pos (by omega), zero_add]
-  | succ L ih =>
-    rcases M with _ | M
-    · simp only [List.range'_zero, List.map_nil, Nat.max_zero, List.range'_succ, List.map_cons,
-        addR]
-      rw [if_pos (by omega), if_neg (by omega), add_zero]
-      refine congrArg _ (List.map_congr_left fun k hk => ?_)
-      have := (List.mem_range'_1.mp hk)
-      rw [if_pos (by omega), if_neg (by omega), add_zero]
-    · have e : max (L + 1) (M + 1) = max L M + 1 := by omega
-      simp only [e, List.range'_succ, List.map_cons, addR, ih M (s + 1)]
-      rw [if_pos (by omega), if_pos (by omega)]
-      have e1 : s + 1 + L = s + (L + 1) := by omega
-      have e2 : s + 1 + M = s + (M + 1) := by omega
-      rw [e1, e2]
-
-theorem addR_strm (L M : ℕ) (a b : ℕ → ℝ) :
-    addR (strm L a) (strm M b) = strm (max L M) fun k =>
-      (if k < L then a k else 0) + (if k < M then b k else 0) := by
-  unfold strm
-  simp only [List.range_eq_range']
-  rw [addR_range]
-  simp only [zero_add]
-
-theorem l1dist_range_le (dP : ℕ) (a : ℕ → ℝ) (L s : ℕ) (p : List ℤ) (hp : p.length ≤ L) :
-    l1dist dP ((List.range' s L).map a) p ≤
-      ∑ k ∈ Finset.range L, |a (s + k) - ((p.getD k 0 : ℤ) : ℝ) / dP| := by
-  induction L generalizing s p with
-  | zero =>
-    have : p = [] := List.length_eq_zero_iff.mp (by omega)
-    subst this
-    simp [l1dist]
-  | succ L ih =>
-    rw [Finset.sum_range_succ']
-    simp only [List.range'_succ, List.map_cons]
-    have e : ∀ k, a (s + (k + 1)) = a (s + 1 + k) := fun k => by
-      rw [show s + (k + 1) = s + 1 + k by omega]
-    rcases p with _ | ⟨b, u⟩
-    · have h := ih (s + 1) [] (by simp)
-      simp only [l1dist]
-      simp only [List.getD_nil, Int.cast_zero, zero_div, sub_zero, add_zero] at h ⊢
-      simp only [e]
-      linarith
-    · have h := ih (s + 1) u (by simpa using hp)
-      simp only [l1dist, List.getD_cons_succ, List.getD_cons_zero, add_zero]
-      simp only [e]
-      linarith
-
-/-- The l1 charge from per-coefficient enclosures of the ideal stream. -/
-theorem l1dist_strm_le (dP : ℕ) {a e : ℕ → ℝ} {L : ℕ} {p : List ℤ} (hp : p.length ≤ L)
-    (h : ∀ k < L, |a k - ((p.getD k 0 : ℤ) : ℝ) / dP| ≤ e k) :
-    l1dist dP (strm L a) p ≤ ∑ k ∈ Finset.range L, e k := by
-  unfold strm
-  rw [List.range_eq_range']
-  refine (l1dist_range_le dP a L 0 p hp).trans (Finset.sum_le_sum fun k hk => ?_)
-  rw [zero_add]
-  exact h k (Finset.mem_range.mp hk)
-
 /-- The ideal list of the source as one coefficient stream. -/
 def idealCoef (W : Profile) (N Lr La : ℕ) (k : ℕ) : ℝ :=
   ((if k < N + 1 then -evE W.Es (Adir k) else 0) +
@@ -4528,23 +4333,8 @@ def idealCoef (W : Profile) (N Lr La : ℕ) (k : ℕ) : ℝ :=
   (if k < La + 1 then -evE W.Eo (AD k) - evE W.Eo (QS (-1) (qc rO) k) +
     2 * evE W.Ec (QS 2 qC k) else 0)
 
-theorem idealL_eq (W : Profile) (N Lr La : ℕ) :
-    idealL W N Lr La = strm (max (max (N + 1) (Lr + 1)) (La + 1)) (idealCoef W N Lr La) := by
-  unfold idealL
-  rw [addR_strm, addR_strm]
-  refine congrArg (strm _) (funext fun k => ?_)
-  unfold idealCoef
-  by_cases h : k < max (N + 1) (Lr + 1)
-  · rw [if_pos h]
-  · have h1 : ¬ k < N + 1 := by omega
-    have h2 : ¬ k < Lr + 1 := by omega
-    rw [if_neg h, if_neg h1, if_neg h2]
-    simp
-
 end
 
-#print axioms Dphys_le_chebSum
-#print axioms sourceMajorant_of_profile
 #print axioms dirV_le_of_bins
 #print axioms dirV_le_of_packed
 #print axioms conv_guard
@@ -4552,8 +4342,6 @@ end
 #print axioms recT_err
 #print axioms rec2_err
 #print axioms rec1_err
-#print axioms l1dist_strm_le
-#print axioms idealL_eq
 
 end
 

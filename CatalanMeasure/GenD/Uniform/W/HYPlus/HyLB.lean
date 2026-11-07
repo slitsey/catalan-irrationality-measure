@@ -1,7 +1,6 @@
 module
 public import CatalanMeasure.GenD.Uniform.W.HYPlus.HyVal
-public import CatalanMeasure.GenD.Uniform.W.HYPlus.Cell
-public import CatalanMeasure.GenD.Uniform.W.SlotsT.Combine
+public import CatalanMeasure.GenD.Uniform.W.HYPlus.CellZmod
 @[expose] public section
 set_option Elab.async false
 
@@ -70,18 +69,6 @@ def mLB' (P : Parameters) (hP : Admissible P) : NullityLB P :=
       · intro q _ h2 hc H hH'; exact hyCell_9 h2 hc (by omega)
       · intro q _ h2 hc H hH'; exact hyCell_10 h2 hc (by omega)
       · intro q _ h2 hc H hH'; exact hyCell_11 h2 hc (by omega))
-
-/-- `thinLB4 := supList [thinLB3; mLB']`. -/
-def thinLB4 (P : Parameters) (hP : Admissible P) : NullityLB P :=
-  NullityLB.supList P [thinLB3 P hP, mLB' P hP]
-
-theorem thinLB3_le_thinLB4 (P : Parameters) (hP : Admissible P) (N p : ℕ) :
-    (thinLB3 P hP).kap N p ≤ (thinLB4 P hP).kap N p :=
-  NullityLB.le_supList_kap (by simp [thinLB4]) N p
-
-theorem mLB'_le_thinLB4 (P : Parameters) (hP : Admissible P) (N p : ℕ) :
-    (mLB' P hP).kap N p ≤ (thinLB4 P hP).kap N p :=
-  NullityLB.le_supList_kap (by simp [thinLB4]) N p
 
 end
 end CatalanMeasure.GenD.Uniform.W.HYPlus

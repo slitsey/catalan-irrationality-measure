@@ -13,15 +13,15 @@ noncomputable section
 
 /-! The built final assembly, with only the primed payment criterion changed. -/
 structure DesignData' (P : Parameters) where
-  /-- Target exponent. -/
-  B : ℕ
+  /-- Target exponent `μ`, a rational number. -/
+  μ : ℚ
   Z : Normalizer P
   w : ℝ
   ρ : ℝ
   η : ℝ
   κ : ℝ
   δ : ℝ
-  pay : PayW' w ((P.n0 - P.g0 : ℕ) : ℝ) ρ η κ δ (B : ℝ)
+  pay : PayW' w ((P.n0 - P.g0 : ℕ) : ℝ) ρ η κ δ (μ : ℝ)
   /-- Growth of the denominator: `log D_N ≤ (gD + ε) N²`. -/
   gD : ℝ
   D_growth : ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, Real.log (Z.D N) ≤ (gD + ε) * (N : ℝ) ^ 2
@@ -38,7 +38,7 @@ structure DesignData' (P : Parameters) where
 
 /-- **The design-generic measure theorem.** -/
 theorem measure_of_design' (P : Parameters) (D : DesignData' P) :
-    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(D.B : ℝ)) < |catalan - (a : ℝ) / b| := by
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ, (b : ℝ) ^ (-(D.μ : ℝ)) < |catalan - (a : ℝ) / b| := by
   obtain ⟨hB, hη, hρ, hw0, hκ, hδ, hδ3, hcross, hwin, hlin, hpay⟩ := D.pay
   have hadm := D.Z.adm
   have hd0 : 0 < P.n0 - P.g0 := by have := hadm.2.2.2.2; omega
@@ -105,7 +105,7 @@ noncomputable section
 theorem catalan_irrationalityMeasure_of_design' (dc : DesignConst)
     (D : DesignData' dc.toParameters) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(D.B : ℝ)) <
+      (b : ℝ) ^ (-(D.μ : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2*j+1 : ℕ) : ℝ)^2) - a/b| := by
   simpa [catalan] using measure_of_design' dc.toParameters D
 

@@ -1,7 +1,6 @@
 module
 
 public import CatalanMeasure.GenD.KapHelpers
-public import CatalanMeasure.GenD.DesignInstance.Ramps
 public import CatalanMeasure.GenD.DesignInstance.OddProfile
 
 @[expose] public section
@@ -133,31 +132,6 @@ theorem cell7 {N p : ℕ} (hN : 0 < N) (hodd : p % 2 = 1) (h1 : 24 * N < p) (h2 
     (by norm_num) (by norm_num)
   rw [prof_eval_nil]
   omega
-
-theorem segExp_le_famKap {N p : ℕ} (hN : 0 < N) (hodd : p % 2 = 1) :
-    segExp segs N p ≤ famKap Odd.design N p + 1 := by
-  apply segExp_le
-  intro s hs hc
-  simp only [segs, profSegs, cellProfs, List.map_cons, List.map_nil, List.mem_cons,
-    List.not_mem_nil, or_false] at hs
-  rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;>
-    obtain ⟨hc1, hc2⟩ := hc <;> dsimp only at hc1 hc2 ⊢
-  · exact cell0 hN hodd (by exact_mod_cast (by linarith : (12 : ℝ) * N < p))
-      (by exact_mod_cast (by linarith : (p : ℝ) ≤ 13 * N))
-  · exact cell1 hN hodd (by exact_mod_cast (by linarith : (13 : ℝ) * N < p))
-      (by exact_mod_cast (by linarith : (11 : ℝ) * p ≤ 146 * N))
-  · exact cell2 hN hodd (by exact_mod_cast (by linarith : (50 : ℝ) * N < 3 * p))
-      (by exact_mod_cast (by linarith : (4 : ℝ) * p ≤ 69 * N))
-  · exact cell3 hN hodd (by exact_mod_cast (by linarith : (69 : ℝ) * N < 4 * p))
-      (by exact_mod_cast (by linarith : (2 : ℝ) * p ≤ 35 * N))
-  · exact cell4 hN hodd (by exact_mod_cast (by linarith : (35 : ℝ) * N < 2 * p))
-      (by exact_mod_cast (by linarith : (7 : ℝ) * p ≤ 128 * N))
-  · exact cell5 hN hodd (by exact_mod_cast (by linarith : (64 : ℝ) * N < 3 * p))
-      (by exact_mod_cast (by linarith : (p : ℝ) ≤ 23 * N))
-  · exact cell6 hN hodd (by exact_mod_cast (by linarith : (23 : ℝ) * N < p))
-      (by exact_mod_cast (by linarith : (p : ℝ) ≤ 24 * N))
-  · exact cell7 hN hodd (by exact_mod_cast (by linarith : (24 : ℝ) * N < p))
-      (by exact_mod_cast (by linarith : (p : ℝ) ≤ 26 * N))
 
 end
 

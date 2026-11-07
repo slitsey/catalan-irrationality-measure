@@ -1,0 +1,74 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Analytic.MarkedMixedMajorant
+/-- The selected filtered-column and Cauchy factors do not depend on the atom
+row type. This is the original/P-only counterpart of MixedMajorant. -/
+theorem original_poly_atoms_mixedDouble_le {P : Parameters} (hP : Admissible P)
+    {N p m : ℕ} (hN : 0 < N) (hpm : p + m = P.n N)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ)
+    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
+    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
+    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) :
+    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
+      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| ≤
+      (∏ j : Fin p, (1 + s j)) ^ m *
+        |(markedLaurentMatrix (P.g N)
+          (fun i => Fin.append x y (Fin.cast hpm.symm i))
+          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
+        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s := by
+  have hGV := CatalanMeasure.genVandermonde_abs_le_product s
+    (fun j => ⟨(hs j).1.le, (hs j).2.le⟩) E hE hEn
+  have hm : P.n N - p = m := by omega
+  rw [hm] at hGV
+  exact original_poly_atoms_mixedDouble_le_of_vand hP hN hpm E x y s hx hx0 hy hy0 hs hGV
+
+
+theorem original_poly_atoms_mixedDouble_mul_weight_le {P : Parameters} (hP : Admissible P)
+    {N p m : ℕ} (hN : 0 < N) (hpm : p + m = P.n N)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ) (β : Fin m → ℝ)
+    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
+    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
+    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) {Q : ℝ}
+    (hweight : ∀ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| ≤ Q) :
+    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
+      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| * (∏ j, |β j|) ≤
+      markedSheetProduct P N hpm x y s * Q ^ m := by
+  let C := ∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))|
+  have hc (j : Fin m) : 0 < |(rowCommonFactor P N).eval (realCoordinateInv (y j))| := by
+    apply abs_pos.mpr
+    apply rowCommonFactor_eval_ne_zero_of P N
+    · unfold realCoordinateInv
+      exact div_ne_zero (mul_ne_zero (by norm_num) (hy0 j)) (by positivity)
+    · exact (sub_pos.mp (one_sub_realCoordinateInv_pos (hy j))).ne
+  have hC : 0 < C := prod_pos fun j _ => hc j
+  have hp : 0 ≤ markedSheetProduct P N hpm x y s := by
+    unfold markedSheetProduct
+    apply div_nonneg
+    · exact mul_nonneg (mul_nonneg (mul_nonneg
+        (pow_nonneg (prod_nonneg fun i _ => by linarith [(hs i).1]) _) (abs_nonneg _))
+        (prod_nonneg fun j _ => paramRowNodeWeight_nonneg P N (hy j)))
+        (paramPinPrincipal_nonneg P N x s hx hs)
+    · exact hC.le
+  have hbase := original_poly_atoms_mixedDouble_le hP hN hpm E hE hEn x y s hx hx0 hy hy0 hs
+  have hprod : (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j|) ≤ Q ^ m := by
+    calc
+      _ ≤ ∏ _j : Fin m, Q := prod_le_prod₀
+        (fun j _ => mul_nonneg (abs_nonneg _) (abs_nonneg _)) (fun j _ => hweight j)
+      _ = _ := by simp only [prod_const, card_univ, Fintype.card_fin]
+  have heq : markedSheetProduct P N hpm x y s *
+      (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j|) =
+      ((∏ j : Fin p, (1 + s j)) ^ m *
+        |(markedLaurentMatrix (P.g N)
+          (fun i => Fin.append x y (Fin.cast hpm.symm i))
+          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
+        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s) * ∏ j, |β j| := by
+    rw [prod_mul_distrib]
+    unfold markedSheetProduct
+    change (_ / C) * (C * _) = _
+    rw [← mul_assoc, div_mul_cancel₀ _ hC.ne']
+  calc
+    _ ≤ _ := mul_le_mul_of_nonneg_right hbase (prod_nonneg fun j _ => abs_nonneg _)
+    _ = _ := heq.symm
+    _ ≤ _ := mul_le_mul_of_nonneg_left hprod hp
+
+

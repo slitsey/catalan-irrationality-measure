@@ -145,28 +145,6 @@ theorem original_poly_atoms_mixedDouble_le_of_vand {P : Parameters} (hP : Admiss
   unfold paramPinPrincipal
   ring
 
-/-- The selected filtered-column and Cauchy factors do not depend on the atom
-row type. This is the original/P-only counterpart of MixedMajorant. -/
-theorem original_poly_atoms_mixedDouble_le {P : Parameters} (hP : Admissible P)
-    {N p m : ℕ} (hN : 0 < N) (hpm : p + m = P.n N)
-    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
-    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ)
-    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
-    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
-    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) :
-    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
-      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| ≤
-      (∏ j : Fin p, (1 + s j)) ^ m *
-        |(markedLaurentMatrix (P.g N)
-          (fun i => Fin.append x y (Fin.cast hpm.symm i))
-          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
-        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s := by
-  have hGV := CatalanMeasure.genVandermonde_abs_le_product s
-    (fun j => ⟨(hs j).1.le, (hs j).2.le⟩) E hE hEn
-  have hm : P.n N - p = m := by omega
-  rw [hm] at hGV
-  exact original_poly_atoms_mixedDouble_le_of_vand hP hN hpm E x y s hx hx0 hy hy0 hs hGV
-
 /-- Binomial form (Lemma V, PROOF-RHO 2.1): the Vandermonde factor is the product of `β(k)` over
 the columns `k` not selected by `E`, independent of `s`. -/
 theorem original_poly_atoms_mixedDouble_le_binom {P : Parameters} (hP : Admissible P)
@@ -188,55 +166,6 @@ theorem original_poly_atoms_mixedDouble_le_binom {P : Parameters} (hP : Admissib
   have hm : P.n N - p = m := by omega
   rw [hm] at hGV
   exact original_poly_atoms_mixedDouble_le_of_vand hP hN hpm E x y s hx hx0 hy hy0 hs hGV
-
-theorem original_poly_atoms_mixedDouble_mul_weight_le {P : Parameters} (hP : Admissible P)
-    {N p m : ℕ} (hN : 0 < N) (hpm : p + m = P.n N)
-    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
-    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ) (β : Fin m → ℝ)
-    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
-    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
-    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) {Q : ℝ}
-    (hweight : ∀ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| ≤ Q) :
-    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
-      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| * (∏ j, |β j|) ≤
-      markedSheetProduct P N hpm x y s * Q ^ m := by
-  let C := ∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))|
-  have hc (j : Fin m) : 0 < |(rowCommonFactor P N).eval (realCoordinateInv (y j))| := by
-    apply abs_pos.mpr
-    apply rowCommonFactor_eval_ne_zero_of P N
-    · unfold realCoordinateInv
-      exact div_ne_zero (mul_ne_zero (by norm_num) (hy0 j)) (by positivity)
-    · exact (sub_pos.mp (one_sub_realCoordinateInv_pos (hy j))).ne
-  have hC : 0 < C := prod_pos fun j _ => hc j
-  have hp : 0 ≤ markedSheetProduct P N hpm x y s := by
-    unfold markedSheetProduct
-    apply div_nonneg
-    · exact mul_nonneg (mul_nonneg (mul_nonneg
-        (pow_nonneg (prod_nonneg fun i _ => by linarith [(hs i).1]) _) (abs_nonneg _))
-        (prod_nonneg fun j _ => paramRowNodeWeight_nonneg P N (hy j)))
-        (paramPinPrincipal_nonneg P N x s hx hs)
-    · exact hC.le
-  have hbase := original_poly_atoms_mixedDouble_le hP hN hpm E hE hEn x y s hx hx0 hy hy0 hs
-  have hprod : (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j|) ≤ Q ^ m := by
-    calc
-      _ ≤ ∏ _j : Fin m, Q := prod_le_prod₀
-        (fun j _ => mul_nonneg (abs_nonneg _) (abs_nonneg _)) (fun j _ => hweight j)
-      _ = _ := by simp only [prod_const, card_univ, Fintype.card_fin]
-  have heq : markedSheetProduct P N hpm x y s *
-      (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j|) =
-      ((∏ j : Fin p, (1 + s j)) ^ m *
-        |(markedLaurentMatrix (P.g N)
-          (fun i => Fin.append x y (Fin.cast hpm.symm i))
-          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
-        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s) * ∏ j, |β j| := by
-    rw [prod_mul_distrib]
-    unfold markedSheetProduct
-    change (_ / C) * (C * _) = _
-    rw [← mul_assoc, div_mul_cancel₀ _ hC.ne']
-  calc
-    _ ≤ _ := mul_le_mul_of_nonneg_right hbase (prod_nonneg fun j _ => abs_nonneg _)
-    _ = _ := heq.symm
-    _ ≤ _ := mul_le_mul_of_nonneg_left hprod hp
 
 /-- The unselected columns `k_j` (injective, below `n`, disjoint from `E`) exhaust the complement. -/
 theorem range_sdiff_image_eq_image_of_injective {n p m : ℕ} (hpm : p + m = n)
@@ -319,6 +248,97 @@ theorem original_poly_atoms_mixedDouble_binom_mul_weight_le {P : Parameters} (hP
     _ = _ := heq.symm
     _ ≤ _ := mul_le_mul_of_nonneg_left hprod hp
 
+/-- ζ form (GP Theorem 3.1 into the mixed integrand): the Vandermonde factor is
+`(∏ (1 + ζ s_l))^m ∏_{k ∉ E} β_ζ(p, m, k)`. -/
+theorem original_poly_atoms_mixedDouble_le_zeta {P : Parameters} (hP : Admissible P)
+    {N p m : ℕ} {ζ : ℝ} (hζ : 0 < ζ) (hN : 0 < N) (hpm : p + m = P.n N)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ)
+    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
+    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
+    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) :
+    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
+      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| ≤
+      (∏ l, (1 + ζ * s l)) ^ m *
+        (∏ k ∈ Finset.range (P.n N) \ Finset.univ.image E,
+          CatalanMeasure.zetaBeta ζ p m k) *
+        |(markedLaurentMatrix (P.g N)
+          (fun i => Fin.append x y (Fin.cast hpm.symm i))
+          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
+        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s := by
+  have hGV := CatalanMeasure.genVandermonde_abs_le_zeta hζ s (fun j => (hs j).1.le) E hE hEn
+  have hm : P.n N - p = m := by omega
+  rw [hm] at hGV
+  exact original_poly_atoms_mixedDouble_le_of_vand hP hN hpm E x y s hx hx0 hy hy0 hs
+    (F := (∏ l, (1 + ζ * s l)) ^ m * ∏ k ∈ Finset.range (P.n N) \ Finset.univ.image E,
+      CatalanMeasure.zetaBeta ζ p m k) (by simpa only [mul_assoc] using hGV)
+
+/-- **GP Lemma 3.3 (per-node `Q`).**  If, for every marked node `j`, the joint weight times
+`β_ζ(p, m, k_j)` is at most `Q j`, then the mixed integrand times the weights is at most
+`(∏ (1 + ζ s_l))^m · markedSheetFree · ∏_j Q j`.  The `Q j` need not be assumed nonnegative. -/
+theorem original_poly_atoms_mixedDouble_zeta_mul_weight_le {P : Parameters} (hP : Admissible P)
+    {N p m : ℕ} {ζ : ℝ} (hζ : 0 < ζ) (hN : 0 < N) (hpm : p + m = P.n N)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ) (β : Fin m → ℝ) (k : Fin m → ℕ)
+    (hk : Function.Injective k) (hkn : ∀ j, k j < P.n N) (hkE : ∀ j i, k j ≠ E i)
+    (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
+    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
+    (hs : ∀ j, s j ∈ Ioo (0 : ℝ) 1) {Q : Fin m → ℝ}
+    (hweight : ∀ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+      CatalanMeasure.zetaBeta ζ p m (k j) ≤ Q j) :
+    |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
+      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| * (∏ j, |β j|) ≤
+      (∏ l, (1 + ζ * s l)) ^ m * (markedSheetFree P N hpm x y s * ∏ j, Q j) := by
+  let C := ∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))|
+  have hc (j : Fin m) : 0 < |(rowCommonFactor P N).eval (realCoordinateInv (y j))| := by
+    apply abs_pos.mpr
+    apply rowCommonFactor_eval_ne_zero_of P N
+    · unfold realCoordinateInv
+      exact div_ne_zero (mul_ne_zero (by norm_num) (hy0 j)) (by positivity)
+    · exact (sub_pos.mp (one_sub_realCoordinateInv_pos (hy j))).ne
+  have hC : 0 < C := prod_pos fun j _ => hc j
+  have hp : 0 ≤ markedSheetFree P N hpm x y s := by
+    unfold markedSheetFree
+    apply div_nonneg
+    · exact mul_nonneg (mul_nonneg (abs_nonneg _)
+        (prod_nonneg fun j _ => paramRowNodeWeight_nonneg P N (hy j)))
+        (paramPinPrincipal_nonneg P N x s hx hs)
+    · exact hC.le
+  have hZ : 0 ≤ (∏ l, (1 + ζ * s l)) ^ m :=
+    pow_nonneg (prod_nonneg fun l _ => by have := (hs l).1; positivity) _
+  have hbase := original_poly_atoms_mixedDouble_le_zeta hP hζ hN hpm E hE hEn x y s hx hx0 hy hy0 hs
+  rw [range_sdiff_image_eq_image_of_injective hpm E hE hEn k hk hkn hkE,
+    Finset.prod_image (fun a _ b _ h => hk h)] at hbase
+  have hterm : ∀ j, 0 ≤ |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+      CatalanMeasure.zetaBeta ζ p m (k j) := fun j =>
+    mul_nonneg (mul_nonneg (abs_nonneg _) (abs_nonneg _)) (CatalanMeasure.zetaBeta_nonneg hζ _ _ _)
+  have hprod : (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+      CatalanMeasure.zetaBeta ζ p m (k j)) ≤ ∏ j, Q j :=
+    prod_le_prod₀ (fun j _ => hterm j) (fun j _ => hweight j)
+  have heq : markedSheetFree P N hpm x y s *
+      (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+        CatalanMeasure.zetaBeta ζ p m (k j)) =
+      ((∏ j, CatalanMeasure.zetaBeta ζ p m (k j)) *
+        |(markedLaurentMatrix (P.g N)
+          (fun i => Fin.append x y (Fin.cast hpm.symm i))
+          (fun i => Fin.addCases (fun _ => false) (fun _ => true) (Fin.cast hpm.symm i))).det| *
+        (∏ j, paramRowNodeWeight P N (y j)) * paramPinPrincipal P N x s) * ∏ j, |β j| := by
+    rw [prod_mul_distrib, prod_mul_distrib]
+    unfold markedSheetFree
+    change (_ / C) * ((C * _) * _) = _
+    field_simp
+  have hb2 : |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
+      (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| * (∏ j, |β j|) ≤
+      (∏ l, (1 + ζ * s l)) ^ m * (markedSheetFree P N hpm x y s *
+        (∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+          CatalanMeasure.zetaBeta ζ p m (k j))) := by
+    calc _ ≤ _ := mul_le_mul_of_nonneg_right hbase (prod_nonneg fun j _ => abs_nonneg _)
+      _ = _ := by
+        rw [heq]
+        ring
+  refine hb2.trans ?_
+  exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hprod hp) hZ
+
 /-- Duplicate original P-only atoms give identical fixed columns. This does
 not assert any collision zero between positive atoms and actual free nodes. -/
 theorem original_poly_atoms_rowDet_eq_zero_of_not_injective (P : Parameters)
@@ -353,3 +373,7 @@ end CatalanMeasure.GenD
 #print axioms CatalanMeasure.GenD.Analytic.original_poly_atoms_mixedDouble_le_binom
 
 #print axioms CatalanMeasure.GenD.Analytic.original_poly_atoms_mixedDouble_binom_mul_weight_le
+
+#print axioms CatalanMeasure.GenD.Analytic.original_poly_atoms_mixedDouble_le_zeta
+
+#print axioms CatalanMeasure.GenD.Analytic.original_poly_atoms_mixedDouble_zeta_mul_weight_le

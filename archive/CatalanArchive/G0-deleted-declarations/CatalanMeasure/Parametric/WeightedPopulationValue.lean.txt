@@ -1,0 +1,17 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.Parametric.WeightedPopulationValue
+theorem log_populationTwoProduct_weighted {P : Parameters} (hP : Admissible P)
+    {N p m : ℕ} (hN : 0<N) (hpm : p+m=P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ)
+    (hz : ∀ c,Fin.append x y c ∈ Ioo (-1:ℝ) 1)
+    (hz0 : ∀ c,Fin.append x y c≠0) (hs : ∀ i,s i ∈ Ioo (0:ℝ) 1)
+    (hxi : Function.Injective x) (hsi : Function.Injective s)
+    (hzi : Function.Injective (fun c : Fin (P.n N) =>Fin.append x y (Fin.cast hpm.symm c))) :
+    Real.log (populationTwoProduct P N hpm x y s)-∑ j,populationCommonLog P N (y j)=
+      (P.n N:ℝ)^2*weightedPopulationTwoValue P N ((m:ℝ)/(P.n N:ℝ)) x y s :=by
+  have hn : (P.n N:ℝ)≠0 :=by exact_mod_cast (n_pos hP hN).ne'
+  rw [log_populationTwoProduct_physical hP hN hpm x y s hz hz0 hs hxi hsi hzi]
+  unfold weightedPopulationTwoValue
+  rw [populationValue_sub_fixed hn]
+  rfl
+
+

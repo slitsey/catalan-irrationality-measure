@@ -3,7 +3,7 @@ module
 public import CatalanMeasure.Parametric.GoodPrimes
 public import CatalanMeasure.Parametric.BlockAlgebra
 public import CatalanMeasure.Parametric.Polynomial
-public import CatalanMeasure.SquareNonvanishing
+public import CatalanMeasure.RationalDenUnit
 
 @[expose] public section
 

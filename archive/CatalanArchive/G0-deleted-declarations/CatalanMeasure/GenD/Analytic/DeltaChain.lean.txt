@@ -1,0 +1,55 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Analytic.DeltaChain
+/-- G2's marked-sheet bound feeds G3's weighted-atom point (`ρ = r + w`). -/
+theorem weighted_atom_point {P : Parameters} (hP : Admissible P)
+    {target c residual nearCap cost r w : ℝ}
+    (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ)
+    (F : FirstTrialBounds P target c) (G : ℝ → Prop)
+    (D : SecondTrialBounds P target residual nearCap cost G)
+    (hweights : ∀ᶠ N : ℕ in atTop, ∀ (k : ℕ) (a : Fin ((P.n0 - P.g0) * N)),
+      |(rowCommonFactor P N).eval (τ N a)| * |restrictedWeight P N k (τ N) a| ≤
+        108000 * (N : ℝ) * Real.exp (w * N))
+    (hfc : (P.n0 : ℝ) * c ≤ r) (hsc : (P.n0 : ℝ) * cost ≤ r) :
+    WeightedAtomPoint P τ G target (r + w) :=
+  weighted_atom_point_of_sheet P hP τ G
+    (fun _ hε => marked_sheet_on hP F G D hfc hsc hε) hweights
+
+
+/-- **The wired chain.**  With `a = 2g/(1+g²)` (the gap `g ≤ |realCoordinate τ|`), the circle
+certificate `GapCircleBound P a rc C wc` with `wc < w`, the first-trial bounds `F` and the
+second-population certificate `S` (with `G u := g ≤ |u|`), `delta_small` holds with
+`tΔ = n0² (target - log 2 / 2)` and every `ρ ≥ r + w`, `r ≥ n0 · max(c, cost)`. -/
+theorem delta_small_of_certificates {P : Parameters} (hP : Admissible P)
+    {g rc C wc w : ℝ} (hg0 : 0 < g) (hg1 : g < 1)
+    (ha4 : 1 - (2 * g / (1 + g ^ 2)) ^ 2 ≤ 4 * (2 * g / (1 + g ^ 2)))
+    (hr1 : 1 < rc) (hr2 : rc ≤ 2)
+    (hcirc : GapCircleBound P (2 * g / (1 + g ^ 2)) rc C wc) (hw : wc < w)
+    {target c residual nearCap cost r ρ tΔ : ℝ}
+    (F : FirstTrialBounds P target c)
+    (S : SecondFieldCert P target residual nearCap cost (fun u => g ≤ |u|))
+    (hfc : (P.n0 : ℝ) * c ≤ r) (hsc : (P.n0 : ℝ) * cost ≤ r) (hρ : r + w ≤ ρ)
+    (hT : tΔ = (P.n0 : ℝ) ^ 2 * (target - Real.log 2 / 2)) :
+    ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ x : ℝ,
+      |x - catalan| ≤ Real.exp (-(ρ * (N : ℝ))) →
+        |aeval x (CatalanMeasure.Parametric.deltaPoly P N)| ≤
+          Real.exp (-((tΔ - ε) * (N : ℝ) ^ 2)) := by
+  have hd : 0 < 1 + g ^ 2 := by positivity
+  have ha0 : 0 < 2 * g / (1 + g ^ 2) := by positivity
+  have ha1 : 2 * g / (1 + g ^ 2) < 1 := by
+    rw [div_lt_one hd]; nlinarith only [pow_pos (sub_pos.mpr hg1) 2]
+  have hg : P.g0 ≤ P.n0 := by have := hP.2.2.2.2; omega
+  have hweights : GapWeightBounds P (gapNodesD P (2 * g / (1 + g ^ 2))) w :=
+    gap_weight_bounds P hg ha0 ha1 ha4 hr1 hr2 hcirc hw
+  have hpoint := weighted_atom_point hP (gapNodesD P (2 * g / (1 + g ^ 2))) F
+    (fun u => g ≤ |u|) (S.bounds hP) hweights hfc hsc
+  have hd0 := delta_small P hP (gapNodesD P (2 * g / (1 + g ^ 2))) (fun u => g ≤ |u|)
+    (fun N => gap_nodes_injective ha0 ha1 _)
+    (fun N i => (gap_nodes_bounds ha0 ha1 _ i).1)
+    (fun N i => gap_nodes_ne_zero ha0 ha1 _ i)
+    (fun N i => (gap_nodes_coordinate hg0 hg1 _ i).2) target (r + w) tΔ hT hpoint
+  intro ε hε
+  filter_upwards [hd0 ε hε] with N hN x hx
+  refine hN x (hx.trans (Real.exp_le_exp.mpr ?_))
+  have : (0 : ℝ) ≤ N := Nat.cast_nonneg N
+  nlinarith only [hρ, this]
+
+

@@ -1,6 +1,5 @@
 module
 public import CatalanMeasure.Parametric.PolynomialFunctional
-public import CatalanMeasure.Parametric.RadiusQuadrature
 public import CatalanMeasure.GenD.Signed.Keyhole
 @[expose] public section
 namespace CatalanMeasure.Parametric
@@ -42,20 +41,6 @@ theorem proposed_common_basis_coeff_zero (N : ℕ) (a : Fin (89*N)) (i : ℕ)
   have hN : 0<N := by have := a.isLt; omega
   omega
 
-theorem proposed_restricted_functional_le (N k : ℕ) (a : Fin (89*N)) :
-    |polynomialFunctional proposed N k (rowCommonFactor proposed N *
-      OAI.InternalCatalan.quadBasis (CatalanMeasure.chebNode (89*N)) a)| ≤
-      260000*N*(residualCircleK:ℝ)^N := by
-  have hh := polynomialFunctional_common_factor_le proposed N k
-    (OAI.InternalCatalan.quadBasis (CatalanMeasure.chebNode (89*N)) a)
-    (proposed_common_basis_coeff_zero N a)
-    (radius := (residualRadius:ℝ)) (B := 500*(residualCircleK:ℝ)^N)
-    (by norm_num [residualRadius]) (fun z hz => by
-      simpa only [Parameters.h,Parameters.q,proposed,show 5*N+7*N=12*N by ring] using
-        norm_restricted_filtered_basis_le N a z hz)
-  rw [proposed_H] at hh
-  convert hh using 1 <;> push_cast <;> ring
-
 def restrictedWeight (P : Parameters) (N k : ℕ) {J : ℕ} (τ : Fin J → ℝ) (a : Fin J) : ℝ :=
   polynomialFunctional P N k (rowCommonFactor P N * OAI.InternalCatalan.quadBasis τ a) /
     (rowCommonFactor P N).eval (τ a)
@@ -64,15 +49,6 @@ theorem rowCommonFactor_eval_ne_zero (P : Parameters) (N : ℕ) {t : ℝ} (ht : 
     (rowCommonFactor P N).eval t ≠ 0 := by
   simp only [rowCommonFactor,eval_mul,eval_pow,eval_X,eval_sub,eval_one]
   exact mul_ne_zero (pow_ne_zero _ ht.ne) (pow_ne_zero _ (by linarith))
-
-/-- The weights must be bounded jointly with the common-factor node weight. -/
-theorem proposed_restrictedWeight_joint_le (N k : ℕ) (a : Fin (89*N)) :
-    |(rowCommonFactor proposed N).eval (CatalanMeasure.chebNode (89*N) a)| *
-      |restrictedWeight proposed N k (CatalanMeasure.chebNode (89*N)) a| ≤
-      260000*N*(residualCircleK:ℝ)^N := by
-  have hn := rowCommonFactor_eval_ne_zero proposed N (CatalanMeasure.chebNode_mem a).2
-  rw [restrictedWeight,abs_div,mul_comm,div_mul_cancel₀ _ (abs_ne_zero.mpr hn)]
-  exact proposed_restricted_functional_le N k a
 
 theorem pow_le_max_one_mul_pow {r x : ℝ} (hr : 0 < r) (hx : r ≤ |x|) (hx1 : |x| ≤ 1) (A I : ℕ) :
     |x| ^ A ≤ max 1 (r ^ A / r ^ I) * |x| ^ I := by

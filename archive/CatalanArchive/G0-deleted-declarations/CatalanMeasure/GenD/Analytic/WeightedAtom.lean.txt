@@ -1,0 +1,48 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Analytic.WeightedAtom
+theorem weighted_atom_point_of_sheet {target r w : ℝ} (P : Parameters) (hP : Admissible P)
+    (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
+    (hsheet : MarkedSheetBound P G target r)
+    (hweights : ∀ᶠ N : ℕ in atTop, ∀ (k : ℕ) (a : Fin ((P.n0 - P.g0) * N)),
+      |(rowCommonFactor P N).eval (τ N a)| *
+        |restrictedWeight P N k (τ N) a| ≤
+          108000*(N : ℝ)*Real.exp (w*N)) : WeightedAtomPoint P τ G target (r + w) := by
+  intro ε hε
+  filter_upwards [hsheet ε hε,
+      hweights, eventually_gt_atTop (0 : ℕ)]
+    with N hsheet_N hw hN p m hpm E hEi hEn x y s k a hx hx0 hy hy0 hGy hs hzi hsi hcoord
+  let β := fun j => restrictedWeight P N (k j) (τ N) (a j)
+  let Q : ℝ := 108000 * N * Real.exp (w * N)
+  have hweight (j : Fin m) :
+      |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| ≤ Q := by
+    rw [hcoord j]
+    exact hw (k j) (a j)
+  have hbase := original_poly_atoms_mixedDouble_mul_weight_le hP hN hpm
+    E hEi hEn x y s β hx hx0 hy hy0 hs hweight
+  have hp := hsheet_N p m hpm x y s hx hx0 hy hy0 hGy hs hzi hsi
+  have hQ : 0 ≤ Q ^ m := by dsimp [Q]; positivity
+  have hc : (5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m = (540000 * (N : ℝ)) ^ m := by
+    rw [← mul_pow]
+    congr 1
+    ring
+  have he : Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
+      (-target + Real.log 2 / 2 + ε) + r * N * m) *
+      Real.exp (w * (N : ℝ)) ^ m =
+      Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
+        (-target + Real.log 2 / 2 + ε) + (r+w) * N * m) := by
+    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    congr 1
+    ring
+  calc
+    _ ≤ markedSheetProduct P N hpm x y s * Q ^ m := hbase
+    _ ≤ ((5 : ℝ) ^ m * sheetPrefactor P N *
+        Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          r * N * m)) * Q ^ m := mul_le_mul_of_nonneg_right hp hQ
+    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m) *
+        (Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          r * N * m) * Real.exp (w * (N : ℝ)) ^ m) := by
+      dsimp [Q]
+      rw [mul_pow]
+      ring
+    _ = _ := by rw [hc, he]
+
+

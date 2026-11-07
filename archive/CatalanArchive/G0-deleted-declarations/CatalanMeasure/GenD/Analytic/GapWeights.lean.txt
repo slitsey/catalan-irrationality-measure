@@ -1,0 +1,82 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Analytic.GapWeights
+/-- Weight functional of the cardinal polynomial. -/
+theorem gap_functional_le (P : Parameters) (hg : P.g0 ≤ P.n0) {a r C wc : ℝ}
+    (ha0 : 0 < a) (ha1 : a < 1) (ha4 : 1 - a ^ 2 ≤ 4 * a)
+    (hr1 : 1 < r) (hr2 : r ≤ 2) (hcirc : GapCircleBound P a r C wc)
+    (N k : ℕ) (j : Fin ((P.n0 - P.g0) * N)) :
+    |polynomialFunctional P N k (rowCommonFactor P N * quadBasis (gapNodesD P a N) j)| ≤
+      4 * (P.H N : ℝ) * (2 * (C * Real.exp (wc * N)) / (r - 1) ^ 2) := by
+  have hJ : 0 < (P.n0 - P.g0) * N := lt_of_le_of_lt (Nat.zero_le _) j.isLt
+  have hN : 0 < N := Nat.pos_of_ne_zero (by rintro rfl; simp at hJ)
+  have hd := gapSq_pos ha0 ha1
+  have hD : 1 ≤ 4 * ((((P.n0 - P.g0) * N + 1) / 2 : ℕ) : ℝ) * a / (1 - a ^ 2) := by
+    rw [le_div_iff₀ hd]
+    have : (1 : ℝ) ≤ ((((P.n0 - P.g0) * N + 1) / 2 : ℕ) : ℝ) := by
+      exact_mod_cast (show 1 ≤ ((P.n0 - P.g0) * N + 1) / 2 by omega)
+    nlinarith only [this, ha4, ha0]
+  apply polynomialFunctional_common_factor_le P N k _
+    (gap_common_basis_coeff_zero P hg N ha0 ha1 j) (radius := r) hr1.le
+  intro z hz
+  have hc := gap_cardinal_norm_le ha0 ha1 hJ hD hr1 hr2 j z hz
+  have hb := hcirc N z hN hz
+  simp only [Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_sub, Polynomial.map_one,
+    Polynomial.map_X, eval_mul, eval_pow, eval_sub, eval_one, eval_X, norm_mul, norm_pow,
+    Complex.coe_algebraMap]
+  have hr : 0 < (r - 1) ^ 2 := by positivity
+  calc _ ≤ (2 * ‖((gapPolyK a (((P.n0 - P.g0) * N + 1) / 2)).map (algebraMap ℝ ℂ)).eval z‖ /
+        (r - 1) ^ 2) * ‖(1 : ℂ) - z‖ ^ (P.h N + P.q N) :=
+        mul_le_mul_of_nonneg_right hc (by positivity)
+    _ = 2 / (r - 1) ^ 2 * (‖((gapPolyK a (((P.n0 - P.g0) * N + 1) / 2)).map
+          (algebraMap ℝ ℂ)).eval z‖ * ‖(1 : ℂ) - z‖ ^ (P.h N + P.q N)) := by ring
+    _ ≤ 2 / (r - 1) ^ 2 * (C * Real.exp (wc * N)) :=
+        mul_le_mul_of_nonneg_left hb (by positivity)
+    _ = _ := by ring
+
+
+theorem gap_weight_joint_le (P : Parameters) (hg : P.g0 ≤ P.n0) {a r C wc : ℝ}
+    (ha0 : 0 < a) (ha1 : a < 1) (ha4 : 1 - a ^ 2 ≤ 4 * a)
+    (hr1 : 1 < r) (hr2 : r ≤ 2) (hcirc : GapCircleBound P a r C wc)
+    (N k : ℕ) (j : Fin ((P.n0 - P.g0) * N)) :
+    |(rowCommonFactor P N).eval (gapNodesD P a N j)| *
+      |restrictedWeight P N k (gapNodesD P a N) j| ≤
+      4 * (P.H N : ℝ) * (2 * (C * Real.exp (wc * N)) / (r - 1) ^ 2) := by
+  have hn := rowCommonFactor_eval_ne_zero_of P N (gap_nodes_ne_zero ha0 ha1 _ j)
+    (gap_nodes_ne_one ha0 ha1 _ j)
+  have key : ∀ x y : ℝ, x ≠ 0 → |x| * (|y| / |x|) = |y| := fun x y hx => by
+    have := abs_ne_zero.mpr hx
+    field_simp
+  rw [restrictedWeight, abs_div]
+  exact le_of_eq_of_le (key _ _ hn) (gap_functional_le P hg ha0 ha1 ha4 hr1 hr2 hcirc N k j)
+
+
+/-- The weight bound `108000 N exp(w N)` for any `w > wc`, eventually in `N`; any parity of `d0 N`. -/
+theorem gap_weight_bounds (P : Parameters) (hg : P.g0 ≤ P.n0) {a r C wc w : ℝ}
+    (ha0 : 0 < a) (ha1 : a < 1) (ha4 : 1 - a ^ 2 ≤ 4 * a)
+    (hr1 : 1 < r) (hr2 : r ≤ 2) (hcirc : GapCircleBound P a r C wc) (hw : wc < w) :
+    GapWeightBounds P (gapNodesD P a) w := by
+  set c0 : ℝ := 8 * (P.H 1 : ℝ) * C / (r - 1) ^ 2 with hc0
+  have ht : Filter.Tendsto (fun N : ℕ => Real.exp ((w - wc) * N)) Filter.atTop Filter.atTop :=
+    Real.tendsto_exp_atTop.comp
+      (Filter.Tendsto.const_mul_atTop (sub_pos.mpr hw) tendsto_natCast_atTop_atTop)
+  filter_upwards [ht.eventually_ge_atTop (c0 / 108000), Filter.eventually_gt_atTop 0]
+    with N hN hN0 k j
+  refine (gap_weight_joint_le P hg ha0 ha1 ha4 hr1 hr2 hcirc N k j).trans ?_
+  have hH : (P.H N : ℝ) = (P.H 1 : ℝ) * N := by
+    simp only [Parameters.H, Parameters.C, Parameters.L, Parameters.n, Parameters.b,
+      Parameters.q, Parameters.g, Parameters.h]
+    push_cast; ring
+  have hexp : Real.exp (w * N) = Real.exp (wc * N) * Real.exp ((w - wc) * N) := by
+    rw [← Real.exp_add]; congr 1; ring
+  have hN1 : (0 : ℝ) < N := by exact_mod_cast hN0
+  rw [hH, hexp]
+  have he := Real.exp_pos (wc * N)
+  have hmul := mul_le_mul_of_nonneg_left ((div_le_iff₀ (by norm_num : (0 : ℝ) < 108000)).mp hN)
+    (mul_nonneg hN1.le he.le)
+  have hr : 0 < (r - 1) ^ 2 := by positivity
+  have : 4 * ((P.H 1 : ℝ) * N) * (2 * (C * Real.exp (wc * N)) / (r - 1) ^ 2) =
+      c0 * (N * Real.exp (wc * N)) := by
+    rw [hc0]; field_simp; ring
+  rw [this]
+  nlinarith only [hmul]
+
+

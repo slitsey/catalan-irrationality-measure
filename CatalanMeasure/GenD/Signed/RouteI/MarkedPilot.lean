@@ -1220,15 +1220,6 @@ theorem pilot_hV : ∀ t ∈ Set.Ioc (0 : ℝ) 1,
 /-- The spatial bound of the negative row, as the real `Mx`. -/
 def pilotMx : ℝ := (pilotM : ℝ) / (2 ^ 64 * 2 ^ (64 + 64))
 
-/-- **Interface of the negative row.** The spatial tail is proved; the coefficient charge `hd`
-and the numeric tail inequality `ht` are what is still owed. -/
-theorem pilot_majorant {p : List ℤ} {dP : ℕ} {δ tail : ℝ}
-    (hd : l1dist dP (idealL pilotW 2048 512 128) p ≤ δ)
-    (ht : 2 / (2048 : ℕ) * pilotMx + streamTail pilotW 512 128 + δ ≤ tail) :
-    SourceMajorant capSource Sign.neg p dP tail :=
-  sourceMajorant_of_profile capSource_admissible pilot_ok (by norm_num)
-    (fun t ht' => pilot_hV t ht') hd ht
-
 /-! ### A fixed-point logarithm with a rigorous error: `log w = 2 atanh ((w-1)/(w+1))` -/
 
 theorem atanh_partial (s : ℝ) (n : ℕ) :
@@ -1556,38 +1547,9 @@ theorem logFx_spec {F n n2 P Q : ℕ} (hP : 0 < P) (hQ : 0 < Q) (hok : lnormOK P
         rw [abs_mul]
         exact add_le_add (mul_le_mul_of_nonneg_left a1' (abs_nonneg _)) a2
 
-/-- The coefficient charge from enclosures `|a_k - c_k| <= e_k` of the ideal stream. The
-enclosures `c`, `e` are what the fixed-point streams must supply. -/
-theorem hd_of_enclosures (W : Profile) (N Lr La : ℕ) {dP : ℕ} {p : List ℤ}
-    (hp : p.length ≤ max (max (N + 1) (Lr + 1)) (La + 1)) (c e : ℕ → ℝ)
-    (hc : ∀ k < max (max (N + 1) (Lr + 1)) (La + 1), |idealCoef W N Lr La k - c k| ≤ e k) :
-    l1dist dP (idealL W N Lr La) p ≤
-      ∑ k ∈ Finset.range (max (max (N + 1) (Lr + 1)) (La + 1)),
-        (|c k - ((p.getD k 0 : ℤ) : ℝ) / dP| + e k) := by
-  rw [idealL_eq]
-  refine l1dist_strm_le dP hp fun k hk => ?_
-  have h1 := hc k hk
-  have h2 := abs_sub_le (idealCoef W N Lr La k) (c k) (((p.getD k 0 : ℤ) : ℝ) / dP)
-  have h3 := abs_sub_comm (c k) (((p.getD k 0 : ℤ) : ℝ) / dP)
-  linarith
-
-/-- **The negative row, reduced to its two numeric obligations.** Spatial tail: proved
-(`pilot_hV`); profile: proved (`pilot_ok`). Owed: the enclosures `hc` of the five coefficient
-streams and the numeric inequality `ht` (with `streamTail` bounded). -/
-theorem pilot_majorant_enclosed {p : List ℤ} {dP : ℕ} {tail : ℝ}
-    (hp : p.length ≤ max (max (2048 + 1) (512 + 1)) (128 + 1)) (c e : ℕ → ℝ)
-    (hc : ∀ k < max (max (2048 + 1) (512 + 1)) (128 + 1),
-      |idealCoef pilotW 2048 512 128 k - c k| ≤ e k)
-    (ht : 2 / (2048 : ℕ) * pilotMx + streamTail pilotW 512 128 +
-      ∑ k ∈ Finset.range (max (max (2048 + 1) (512 + 1)) (128 + 1)),
-        (|c k - ((p.getD k 0 : ℤ) : ℝ) / dP| + e k) ≤ tail) :
-    SourceMajorant capSource Sign.neg p dP tail :=
-  pilot_majorant (hd_of_enclosures pilotW 2048 512 128 hp c e hc) ht
-
 #print axioms pilot_ok
 #print axioms pilot_hV
 #print axioms logFx_spec
-#print axioms pilot_majorant_enclosed
 
 end
 

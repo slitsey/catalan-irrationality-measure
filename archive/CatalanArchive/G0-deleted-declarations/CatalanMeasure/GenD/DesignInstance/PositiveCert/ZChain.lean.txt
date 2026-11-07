@@ -1,0 +1,6 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.DesignInstance.PositiveCert.ZChain
+theorem uClenN_Vc : uClenN Vc.reverse ([], []) = uVcN4 :=
+  uClenN_chain (Vc.reverse) 40 uVcN_c0 (uClenN_chain ((Vc.reverse).drop 40) 40 uVcN_c1 (uClenN_chain (((Vc.reverse).drop 40).drop 40) 40 uVcN_c2 (uClenN_chain ((((Vc.reverse).drop 40).drop 40).drop 40) 40 uVcN_c3 (uVcN_end))))
+
+theorem uSum_Vc : uSum Vc = shl 2 uVcN4.1 := uSum_of_N Vc uClenN_Vc
+

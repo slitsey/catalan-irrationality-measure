@@ -452,6 +452,7 @@ def GroupedFreeProductCostOn (P : Parameters) (α1 target cost : ℝ) (G : ℝ �
       ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
       (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
       (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, G (x i)) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, G (y i)) →
       (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
       Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
       α1 * (P.n N : ℝ) ≤ ((a + b : ℕ) : ℝ) →
@@ -549,7 +550,7 @@ theorem second_marked_sheet_free_on {P : Parameters} (hP : Admissible P)
       rw [marked_selection_near_nodes] at hh
       exact hh
     have habR : (a : ℝ) + b = m := by exact_mod_cast hab
-    have henergy := he p a b hcount x ya yb s hx hx0 hya (fun i => hyG _) hyb hs hxi hai hbi hsi
+    have henergy := he p a b hcount x ya yb s hx hx0 hya (fun i => hyG _) hyb (fun i => hyG _) hs hxi hai hbi hsi
       (by rw [Nat.cast_add, habR]; exact hm1)
     rw [hab, habR] at henergy
     have hsel := marked_selected_sheet_le_grouped hP hN hpm hab e ty
@@ -601,6 +602,7 @@ def GroupedFreeProductCostOnRestr (P : Parameters) (target cost : ℝ) (G : ℝ 
       ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
       (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
       (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, G (x i)) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, G (y i)) →
       (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
       Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
       Q N r a b z x y s →
@@ -701,7 +703,7 @@ theorem second_marked_sheet_free_on_restr {P : Parameters} (hP : Admissible P)
       rw [marked_selection_near_nodes] at hh
       exact hh
     have habR : (a : ℝ) + b = m := by exact_mod_cast hab
-    have henergy := he p a b hcount x ya yb s hx hx0 hya (fun i => hyG _) hyb hs hxi hai hbi hsi
+    have henergy := he p a b hcount x ya yb s hx hx0 hya (fun i => hyG _) hyb (fun i => hyG _) hs hxi hai hbi hsi
       (hQ a b hab e)
     rw [hab, habR] at henergy
     have hsel := marked_selected_sheet_le_grouped hP hN hpm hab e ty
@@ -795,16 +797,19 @@ theorem weighted_one_value_eq {P : Parameters} {N p m : ℕ}
 /-- Grouped product bound for the endpoint column field, `(∏ (1 + s_i))^(a+b)` kept explicit. -/
 theorem grouped_free_product_end {P : Parameters} (hP : Admissible P)
     {α1 target residual nearCap cost : ℝ} {G : ℝ → Prop}
-    (D : SecondTrialBoundsEnd P α1 target residual nearCap cost G) :
+    (D : SecondTrialBoundsEnd0 P α1 target residual nearCap cost G) :
     GroupedFreeProductCostOn P α1 target ((P.n0 : ℝ) * cost) G := by
   intro ε hε
   filter_upwards [second_energy_end hP D hε, eventually_gt_atTop (0 : ℕ)]
-    with N he hN r a b hcount z x y s hz hz0 hx hxG hy hs hzi hxi hyi hsi hα1
+    with N he hN r a b hcount z x y s hz hz0 hx hxG hy hyG hs hzi hxi hyi hsi hα1
   have hy' : ∀ i, y i ∈ Ioo (-1 : ℝ) 1 := fun i => ⟨by linarith [(hy i).1], (hy i).2⟩
   have hy0 : ∀ i, y i ≠ 0 := fun i => (hy i).1.ne'
   have hlog := log_groupedProduct hP hN z x y s
     hz hx hy' hs hz0 hy0 hzi hxi hyi hsi
-  have hval := he r a b hcount z x y s hz hz0 hx hxG hy hs hzi hxi hyi hsi hα1
+  have hνpos' : (0 : ℝ) < P.n N := by exact_mod_cast n_pos hP hN
+  have hval := he r a b hcount z x y s hz hz0 hx hxG hy hyG hs hzi hxi hyi hsi
+    (by rw [Set.mem_Ici, le_div_iff₀ hνpos']; exact hα1)
+  simp only [add_zero] at hval
   have hn : (P.n N : ℝ) = (P.n0 : ℝ) * N := n_cast P N
   have hn0 : (P.n0 : ℝ) ≠ 0 := (n0_pos hP).ne'
   have hNR : (N : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
@@ -854,7 +859,7 @@ theorem grouped_free_product_end {P : Parameters} (hP : Admissible P)
 (n0 * cost) α1` by `exact`): second case, `m ≥ α1 n`, endpoint column field, cost `n0 · cost`. -/
 theorem free_large_bound_end {P : Parameters} (hP : Admissible P)
     {α1 target residual nearCap cost : ℝ} {G : ℝ → Prop}
-    (D : SecondTrialBoundsEnd P α1 target residual nearCap cost G) :
+    (D : SecondTrialBoundsEnd0 P α1 target residual nearCap cost G) :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = P.n N)
       (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
       α1 * (P.n N : ℝ) ≤ (m : ℝ) →
@@ -875,7 +880,7 @@ theorem free_large_bound_end {P : Parameters} (hP : Admissible P)
 /-- **`FreeFirstBound` from the energy route** (unfolded statement; `FreeFirstBound P target
 (n0 * c)` by `exact`): first case (field sum `> -1`), endpoint column field, cost `n0 · c`. -/
 theorem free_first_bound_end {P : Parameters} (hP : Admissible P) {target c : ℝ}
-    (D : FirstTrialBoundsEnd P target c) :
+    (D : FirstTrialBoundsEnd0 P target c) :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = P.n N)
       (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
       (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
@@ -906,7 +911,8 @@ theorem free_first_bound_end {P : Parameters} (hP : Admissible P) {target c : �
   have hcp : 0 < ∏ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| :=
     prod_pos fun j _ => hc j
   have hlog := log_populationOneProduct_weighted hP hN hpm x y s hz hz0 hs hxi hsi
-  have hval := he p m hpm x y s hx hx0 hy hy0 hs hxi hsi hcase
+  have hval := he p m hpm x y s hx hx0 hy hy0 (fun _ => trivial) hs hxi hsi hcase (Set.mem_univ _)
+  simp only [add_zero] at hval
   have hweq := weighted_one_value_eq (P := P) (N := N) x y s
   have hn : (P.n N : ℝ) = (P.n0 : ℝ) * N := n_cast P N
   have hn0 : (P.n0 : ℝ) ≠ 0 := (n0_pos hP).ne'

@@ -4,7 +4,7 @@ public import CatalanMeasure.GenD.Analytic.AtomBase
 public import CatalanMeasure.GenD.Analytic.MarkedMixedMajorant
 public import CatalanMeasure.GenD.Analytic.MarkedSecond
 public import CatalanMeasure.Parametric.MarkedAtomAlmostEverywhere
-public import CatalanMeasure.Lemma6
+public import CatalanMeasure.WeightedAtomHelpers
 
 @[expose] public section
 
@@ -15,7 +15,7 @@ Generic versions of `GapAtomCost`:
 
 * `MarkedSheetBound P G target r` -- the output of group 2's `marked_sheet_on`
   (`markedSheetProduct ≤ 5^m · sheetPrefactor · exp((n0 N)² (-target + log 2/2 + ε) + r N m)`);
-* `WeightedAtomPoint P τ G target ρ` -- generic `WeightedAtomPointOn`;
+* `WeightedAtomPoint P Cc τ G target ρ` -- generic `WeightedAtomPointOn`;
 * `weighted_atom_point_of_sheet` -- generic `weighted_atom_point_on` from the sheet bound and
   the node-weight bound (group 4's `GapWeightBounds`);
 * `weighted_atom_det` -- generic `weighted_atom_det_on`.
@@ -42,7 +42,7 @@ def MarkedSheetBound (P : Parameters) (G : ℝ → Prop) (target r : ℝ) : Prop
           Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
             r * N * m)
 
-def WeightedAtomPoint (P : Parameters) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop) (target ρ : ℝ) : Prop :=
+def WeightedAtomPoint (P : Parameters) (Cc : ℝ) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop) (target ρ : ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε →
     ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (_hpm : p + m = P.n N)
       (E : Fin p → ℕ), Function.Injective E → (∀ i, E i < P.n N) →
@@ -55,55 +55,9 @@ def WeightedAtomPoint (P : Parameters) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * 
       |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
         (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| *
         (∏ j, |restrictedWeight P N (k j) (τ N) (a j)|) ≤
-      sheetPrefactor P N * (540000 * (N : ℝ)) ^ m *
+      sheetPrefactor P N * (Cc * (N : ℝ)) ^ m *
         Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           ρ * N * m)
-
-theorem weighted_atom_point_of_sheet {target r w : ℝ} (P : Parameters) (hP : Admissible P)
-    (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
-    (hsheet : MarkedSheetBound P G target r)
-    (hweights : ∀ᶠ N : ℕ in atTop, ∀ (k : ℕ) (a : Fin ((P.n0 - P.g0) * N)),
-      |(rowCommonFactor P N).eval (τ N a)| *
-        |restrictedWeight P N k (τ N) a| ≤
-          108000*(N : ℝ)*Real.exp (w*N)) : WeightedAtomPoint P τ G target (r + w) := by
-  intro ε hε
-  filter_upwards [hsheet ε hε,
-      hweights, eventually_gt_atTop (0 : ℕ)]
-    with N hsheet_N hw hN p m hpm E hEi hEn x y s k a hx hx0 hy hy0 hGy hs hzi hsi hcoord
-  let β := fun j => restrictedWeight P N (k j) (τ N) (a j)
-  let Q : ℝ := 108000 * N * Real.exp (w * N)
-  have hweight (j : Fin m) :
-      |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| ≤ Q := by
-    rw [hcoord j]
-    exact hw (k j) (a j)
-  have hbase := original_poly_atoms_mixedDouble_mul_weight_le hP hN hpm
-    E hEi hEn x y s β hx hx0 hy hy0 hs hweight
-  have hp := hsheet_N p m hpm x y s hx hx0 hy hy0 hGy hs hzi hsi
-  have hQ : 0 ≤ Q ^ m := by dsimp [Q]; positivity
-  have hc : (5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m = (540000 * (N : ℝ)) ^ m := by
-    rw [← mul_pow]
-    congr 1
-    ring
-  have he : Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
-      (-target + Real.log 2 / 2 + ε) + r * N * m) *
-      Real.exp (w * (N : ℝ)) ^ m =
-      Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
-        (-target + Real.log 2 / 2 + ε) + (r+w) * N * m) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
-    congr 1
-    ring
-  calc
-    _ ≤ markedSheetProduct P N hpm x y s * Q ^ m := hbase
-    _ ≤ ((5 : ℝ) ^ m * sheetPrefactor P N *
-        Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
-          r * N * m)) * Q ^ m := mul_le_mul_of_nonneg_right hp hQ
-    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m) *
-        (Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
-          r * N * m) * Real.exp (w * (N : ℝ)) ^ m) := by
-      dsimp [Q]
-      rw [mul_pow]
-      ring
-    _ = _ := by rw [hc, he]
 
 /-- Factor-free sheet bound (S1): the same shape as `MarkedSheetBound`, for the sheet product
 `markedSheetFree` taken **without** the factor `(∏ (1 + s_i))^m`.  The cost `r` is the
@@ -123,7 +77,7 @@ def MarkedSheetFreeBound (P : Parameters) (G : ℝ → Prop) (target r : ℝ) : 
 /-- `WeightedAtomPoint` for the column indices `k_j` that enumerate (injectively) columns of
 `{0, …, n-1}` not selected by `E` -- exactly the columns the atom determinant leaves free
 (`weighted_atom_det`). -/
-def WeightedAtomPointBinom (P : Parameters)
+def WeightedAtomPointBinom (P : Parameters) (Cc : ℝ)
     (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop) (target ρ : ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε →
     ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (_hpm : p + m = P.n N)
@@ -138,27 +92,28 @@ def WeightedAtomPointBinom (P : Parameters)
       |CatalanMeasure.mixedDoubleWithAtoms (paramPinRowFun P N) (originalPolyAtoms P N y)
         (paramPinColFun P N E) paramPinKernel (realCoordinateInv ∘ x) s| *
         (∏ j, |restrictedWeight P N (k j) (τ N) (a j)|) ≤
-      sheetPrefactor P N * (540000 * (N : ℝ)) ^ m *
+      sheetPrefactor P N * (Cc * (N : ℝ)) ^ m *
         Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           ρ * N * m)
 
 /-- **S1, weight-side assembly.**  The factor-free sheet bound and the combined per-column weight
-bound `|common(τ_a)| |weight_k(τ_a)| β_{p,m}(k) ≤ 108000 N exp(Ψ N)`, uniform in `m`, give the
+bound `|common(τ_a)| |weight_k(τ_a)| β_{p,m}(k) ≤ Cw N exp(Ψ N)`, uniform in `m`, give the
 weighted atom point with cost `r + Ψ`. -/
 theorem weighted_atom_point_of_sheet_binom {target r w : ℝ} (P : Parameters) (hP : Admissible P)
+    (Cw : ℝ) (hCw : 0 ≤ Cw)
     (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
     (hsheet : MarkedSheetFreeBound P G target r)
     (hweights : ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ), p + m = P.n N →
       ∀ (k : ℕ), k < P.n N → ∀ (a : Fin ((P.n0 - P.g0) * N)),
       |(rowCommonFactor P N).eval (τ N a)| * |restrictedWeight P N k (τ N) a| *
-        (CatalanMeasure.binomBeta p m k : ℝ) ≤ 108000 * (N : ℝ) * Real.exp (w * N)) :
-    WeightedAtomPointBinom P τ G target (r + w) := by
+        (CatalanMeasure.binomBeta p m k : ℝ) ≤ Cw * (N : ℝ) * Real.exp (w * N)) :
+    WeightedAtomPointBinom P (5 * Cw) τ G target (r + w) := by
   intro ε hε
   filter_upwards [hsheet ε hε, hweights, eventually_gt_atTop (0 : ℕ)]
     with N hsheet_N hw hN p m hpm E hEi hEn x y s k a hki hkn hkE hx hx0 hy hy0 hGy hs hzi hsi
       hcoord
   let β := fun j => restrictedWeight P N (k j) (τ N) (a j)
-  let Q : ℝ := 108000 * N * Real.exp (w * N)
+  let Q : ℝ := Cw * N * Real.exp (w * N)
   have hweight (j : Fin m) :
       |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
         (CatalanMeasure.binomBeta p m (k j) : ℝ) ≤ Q := by
@@ -168,7 +123,7 @@ theorem weighted_atom_point_of_sheet_binom {target r w : ℝ} (P : Parameters) (
     E hEi hEn x y s β k hki hkn hkE hx hx0 hy hy0 hs hweight
   have hp := hsheet_N p m hpm x y s hx hx0 hy hy0 hGy hs hzi hsi
   have hQ : 0 ≤ Q ^ m := by dsimp [Q]; positivity
-  have hc : (5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m = (540000 * (N : ℝ)) ^ m := by
+  have hc : (5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m = (5 * Cw * (N : ℝ)) ^ m := by
     rw [← mul_pow]
     congr 1
     ring
@@ -185,7 +140,7 @@ theorem weighted_atom_point_of_sheet_binom {target r w : ℝ} (P : Parameters) (
     _ ≤ ((5 : ℝ) ^ m * sheetPrefactor P N *
         Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           r * N * m)) * Q ^ m := mul_le_mul_of_nonneg_right hp hQ
-    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m) *
+    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m) *
         (Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           r * N * m) * Real.exp (w * (N : ℝ)) ^ m) := by
       dsimp [Q]
@@ -265,9 +220,9 @@ theorem eventually_mul_pow_le_exp (C : ℝ) (d : ℕ) {ε : ℝ} (hε : 0 < ε) 
 /-- **Weight side of S1, glue.**  A per-column bound
 `|common(τ_a)| |weight_k(τ_a)| ≤ C₀ N^d exp(n ω(k/n))` together with
 `ω(κ) + H~(κ) ≤ Ψ` on `[0,1]` gives, for every `w > n₀ Ψ`, the combined bound
-`|common| |weight_k| β_{p,m}(k) ≤ 108000 N exp(w N)` for all splits `p + m = n`, eventually in `N`
+`|common| |weight_k| β_{p,m}(k) ≤ Cw N exp(w N)` for all splits `p + m = n`, eventually in `N`
 (the hypothesis `hweights` of `weighted_atom_point_of_sheet_binom`). -/
-theorem binom_hweights_of_column_bound (P : Parameters)
+theorem binom_hweights_of_column_bound (P : Parameters) (Cw : ℝ) (hCw : 0 < Cw)
     (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) {C₀ Ψ w : ℝ} (d : ℕ) (ω : ℝ → ℝ)
     (hC₀ : 0 ≤ C₀)
     (hW : ∀ᶠ N : ℕ in atTop, ∀ k : ℕ, k < P.n N → ∀ a : Fin ((P.n0 - P.g0) * N),
@@ -277,9 +232,9 @@ theorem binom_hweights_of_column_bound (P : Parameters)
     ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ), p + m = P.n N →
       ∀ (k : ℕ), k < P.n N → ∀ (a : Fin ((P.n0 - P.g0) * N)),
       |(rowCommonFactor P N).eval (τ N a)| * |restrictedWeight P N k (τ N) a| *
-        (CatalanMeasure.binomBeta p m k : ℝ) ≤ 108000 * (N : ℝ) * Real.exp (w * N) := by
+        (CatalanMeasure.binomBeta p m k : ℝ) ≤ Cw * (N : ℝ) * Real.exp (w * N) := by
   have hε : 0 < w - (P.n0 : ℝ) * Ψ := by linarith
-  filter_upwards [hW, eventually_mul_pow_le_exp (C₀ * (P.n0 : ℝ) / 108000) d hε,
+  filter_upwards [hW, eventually_mul_pow_le_exp (C₀ * (P.n0 : ℝ) / Cw) d hε,
     eventually_gt_atTop (0 : ℕ)] with N hWN hgrow hN p m hpm k hk a
   have hn : (P.n N : ℝ) = (P.n0 : ℝ) * N := n_cast P N
   have hNR : (0 : ℝ) < N := by exact_mod_cast hN
@@ -303,11 +258,11 @@ theorem binom_hweights_of_column_bound (P : Parameters)
         gcongr
     _ = (C₀ * (P.n0 : ℝ) * (N : ℝ) ^ d) * N * Real.exp ((P.n0 : ℝ) * Ψ * N) := by
         rw [hn]; ring_nf
-    _ ≤ (108000 * Real.exp ((w - (P.n0 : ℝ) * Ψ) * N)) * N * Real.exp ((P.n0 : ℝ) * Ψ * N) := by
-        have h1 : C₀ * (P.n0 : ℝ) * (N : ℝ) ^ d ≤ 108000 * Real.exp ((w - (P.n0 : ℝ) * Ψ) * N) := by
-          have := mul_le_mul_of_nonneg_left hgrow (by norm_num : (0 : ℝ) ≤ 108000)
+    _ ≤ (Cw * Real.exp ((w - (P.n0 : ℝ) * Ψ) * N)) * N * Real.exp ((P.n0 : ℝ) * Ψ * N) := by
+        have h1 : C₀ * (P.n0 : ℝ) * (N : ℝ) ^ d ≤ Cw * Real.exp ((w - (P.n0 : ℝ) * Ψ) * N) := by
+          have := mul_le_mul_of_nonneg_left hgrow hCw.le
           calc C₀ * (P.n0 : ℝ) * (N : ℝ) ^ d
-              = 108000 * (C₀ * (P.n0 : ℝ) / 108000 * (N : ℝ) ^ d) := by ring
+              = Cw * (C₀ * (P.n0 : ℝ) / Cw * (N : ℝ) ^ d) := by field_simp
             _ ≤ _ := this
         gcongr
     _ = _ := by
@@ -362,13 +317,13 @@ def FreeNearBound (P : Parameters) (G : ℝ → Prop)
 
 /-- Conformance: `free_first_bound_end` is `FreeFirstBound` at cost `n0 * c`. -/
 theorem freeFirstBound_of_end {P : Parameters} (hP : Admissible P) {target c : ℝ}
-    (D : FirstTrialBoundsEnd P target c) : FreeFirstBound P target ((P.n0 : ℝ) * c) :=
+    (D : FirstTrialBoundsEnd0 P target c) : FreeFirstBound P target ((P.n0 : ℝ) * c) :=
   free_first_bound_end hP D
 
 /-- Conformance: `free_large_bound_end` is `FreeLargeBound` at cost `n0 * cost`. -/
 theorem freeLargeBound_of_end {P : Parameters} (hP : Admissible P)
     {α1 target residual nearCap cost : ℝ} {G : ℝ → Prop}
-    (D : SecondTrialBoundsEnd P α1 target residual nearCap cost G) :
+    (D : SecondTrialBoundsEnd0 P α1 target residual nearCap cost G) :
     FreeLargeBound P G target ((P.n0 : ℝ) * cost) α1 :=
   free_large_bound_end hP D
 
@@ -378,7 +333,7 @@ theorem freeLargeBound_of_end {P : Parameters} (hP : Admissible P)
 `m ≥ α₁ n` (`FreeLargeBound`), each with cost at most `r`; the per-column binomial weight bound
 `hweights` (`binom_hweights_of_column_bound`) has rate `w`.  Conclusion: cost `r + w`. -/
 theorem weighted_atom_point_binom_of_signed {target r w c₁ c₂ c₃ α₁ : ℝ} (P : Parameters)
-    (hP : Admissible P) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
+    (hP : Admissible P) (Cw : ℝ) (hCw : 0 ≤ Cw) (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
     (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop)
     (hNd : ∀ N m (y : Fin m → ℝ) (a : Fin m → Fin ((P.n0 - P.g0) * N)), Function.Injective a →
       (∀ j, realCoordinateInv (y j) = τ N (a j)) → Nd N m y)
@@ -388,14 +343,14 @@ theorem weighted_atom_point_binom_of_signed {target r w c₁ c₂ c₃ α₁ : �
     (hweights : ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ), p + m = P.n N →
       ∀ (k : ℕ), k < P.n N → ∀ (a : Fin ((P.n0 - P.g0) * N)),
       |(rowCommonFactor P N).eval (τ N a)| * |restrictedWeight P N k (τ N) a| *
-        (CatalanMeasure.binomBeta p m k : ℝ) ≤ 108000 * (N : ℝ) * Real.exp (w * N)) :
-    WeightedAtomPointBinom P τ G target (r + w) := by
+        (CatalanMeasure.binomBeta p m k : ℝ) ≤ Cw * (N : ℝ) * Real.exp (w * N)) :
+    WeightedAtomPointBinom P (5 * Cw) τ G target (r + w) := by
   intro ε hε
   filter_upwards [hfirst ε hε, hnear ε hε, hlarge ε hε, hweights, eventually_gt_atTop (0 : ℕ)]
     with N hfirst_N hnear_N hlarge_N hw hN p m hpm E hEi hEn x y s k a hki hkn hkE hx hx0 hy hy0
       hGy hs hzi hsi hcoord
   let β := fun j => restrictedWeight P N (k j) (τ N) (a j)
-  let Q : ℝ := 108000 * N * Real.exp (w * N)
+  let Q : ℝ := Cw * N * Real.exp (w * N)
   have hweight (j : Fin m) :
       |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
         (CatalanMeasure.binomBeta p m (k j) : ℝ) ≤ Q := by
@@ -456,7 +411,7 @@ theorem weighted_atom_point_binom_of_signed {target r w c₁ c₂ c₃ α₁ : �
         · exact (Real.exp_pos _).le
         · positivity
   have hQ : 0 ≤ Q ^ m := by dsimp [Q]; positivity
-  have hc : (5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m = (540000 * (N : ℝ)) ^ m := by
+  have hc : (5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m = (5 * Cw * (N : ℝ)) ^ m := by
     rw [← mul_pow]
     congr 1
     ring
@@ -473,7 +428,7 @@ theorem weighted_atom_point_binom_of_signed {target r w c₁ c₂ c₃ α₁ : �
     _ ≤ ((5 : ℝ) ^ m * sheetPrefactor P N *
         Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           r * N * m)) * Q ^ m := mul_le_mul_of_nonneg_right hp hQ
-    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (108000 * (N : ℝ)) ^ m) *
+    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m) *
         (Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
           r * N * m) * Real.exp (w * (N : ℝ)) ^ m) := by
       dsimp [Q]
@@ -481,18 +436,191 @@ theorem weighted_atom_point_binom_of_signed {target r w c₁ c₂ c₃ α₁ : �
       ring
     _ = _ := by rw [hc, he]
 
+/-! ### The paired form (GP Theorem 4.3)
+
+The three factor-free bounds with the column factor `Z = (∏ (1 + ζ s_l))^m` kept and the node
+field `δ` carried on the right: `Z · markedSheetFree ≤ … exp(… - N ∑_j δ(t(y_j)))`, where
+`t = realCoordinateInv`.  They hold on the hypothesis `G (y j)` (`G` is the window on which `δ`
+is controlled). -/
+
+/-- First-case bound with `Z` and `δ`. -/
+def FreeFirstBoundZ (P : Parameters) (G : ℝ → Prop) (ζ : ℝ) (δ : ℝ → ℝ) (target c : ℝ) : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+    (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+    (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) → (∀ j, G (y j)) →
+    (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective x → Function.Injective s →
+    (-1 < ∑ i : Fin (p + m), paramCaseField P N (Fin.append x y i)) →
+    (∏ l, (1 + ζ * s l)) ^ m * markedSheetFree P N hpm x y s ≤
+      ((3 / 2 : ℝ) ^ P.n N * (P.n N : ℝ) ^ ((P.n N : ℝ) / 2)) *
+        Real.exp (((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) + c * N * m -
+          N * ∑ j, δ (realCoordinateInv (y j)))
+
+/-- Second-case bound for `m ≥ α₁ n` with `Z` and `δ`. -/
+def FreeLargeBoundZ (P : Parameters) (G : ℝ → Prop) (ζ : ℝ) (δ : ℝ → ℝ) (target c α1 : ℝ) :
+    Prop :=
+  ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ) (hpm : p + m = P.n N)
+    (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+    α1 * (P.n N : ℝ) ≤ (m : ℝ) →
+    (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+    (∀ j, y j ∈ Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) → (∀ j, G (y j)) →
+    (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective (Fin.append x y) → Function.Injective s →
+    (∑ i : Fin (p + m), paramCaseField P N (Fin.append x y i)) ≤ -1 →
+    (∏ l, (1 + ζ * s l)) ^ m * markedSheetFree P N hpm x y s ≤
+      5 ^ m * (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N *
+        Real.exp (((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) + c * N * m -
+          N * ∑ j, δ (realCoordinateInv (y j)))
+
+/-- Second-case bound for `m ≤ α₁ n` (signed, rows restricted by `Nd`) with `Z` and `δ`. -/
+def FreeNearBoundZ (P : Parameters) (G : ℝ → Prop)
+    (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop) (ζ : ℝ) (δ : ℝ → ℝ) (target c alpha1 : ℝ) : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∀ᶠ N : ℕ in atTop,
+    ∀ (p m : ℕ) (hpm : p + m = P.n N)
+      (x : Fin p → ℝ) (y : Fin m → ℝ) (s : Fin p → ℝ),
+      (m : ℝ) ≤ alpha1 * (P.n N : ℝ) →
+      (∀ i, x i ∈ Set.Ioo (-1 : ℝ) 1) → (∀ i, x i ≠ 0) →
+      (∀ j, y j ∈ Set.Ioo (-1 : ℝ) 1) → (∀ j, y j ≠ 0) → (∀ j, G (y j)) → Nd N m y →
+      (∀ i, s i ∈ Set.Ioo (0 : ℝ) 1) →
+      Function.Injective (Fin.append x y) → Function.Injective s →
+      (∑ i : Fin (p + m), paramCaseField P N (Fin.append x y i)) ≤ -1 →
+      (∏ l, (1 + ζ * s l)) ^ m * markedSheetFree P N hpm x y s ≤
+        5 ^ m * (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N *
+          Real.exp (((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) + c * N * m -
+            N * ∑ j, δ (realCoordinateInv (y j)))
+
+/-- **GP Theorem 4.3 (pairing).**  For every function `δ`, the three bounds with `Z` and `δ` at
+costs `c₁, c₂, c₃ ≤ r` and the weight bound
+`|common(τ_a)| |w_k(τ_a)| β_ζ(p, m, k) ≤ Cw N exp((w + δ(τ_a)) N)` give
+`WeightedAtomPointBinom P (5 Cw) τ G target (r + w)`: the sum of `δ` cancels exactly. -/
+theorem weighted_atom_point_zeta_of_signed {target r w c₁ c₂ c₃ α₁ ζ : ℝ} (P : Parameters)
+    (hP : Admissible P) (hζ : 0 < ζ) (Cw : ℝ) (hCw : 0 ≤ Cw) (δ : ℝ → ℝ)
+    (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
+    (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop)
+    (hNd : ∀ N m (y : Fin m → ℝ) (a : Fin m → Fin ((P.n0 - P.g0) * N)), Function.Injective a →
+      (∀ j, realCoordinateInv (y j) = τ N (a j)) → Nd N m y)
+    (hfirst : FreeFirstBoundZ P G ζ δ target c₁) (hnear : FreeNearBoundZ P G Nd ζ δ target c₂ α₁)
+    (hlarge : FreeLargeBoundZ P G ζ δ target c₃ α₁)
+    (hc₁ : c₁ ≤ r) (hc₂ : c₂ ≤ r) (hc₃ : c₃ ≤ r)
+    (hweights : ∀ᶠ N : ℕ in atTop, ∀ (p m : ℕ), p + m = P.n N →
+      ∀ (k : ℕ), k < P.n N → ∀ (a : Fin ((P.n0 - P.g0) * N)),
+      |(rowCommonFactor P N).eval (τ N a)| * |restrictedWeight P N k (τ N) a| *
+        CatalanMeasure.zetaBeta ζ p m k ≤ Cw * (N : ℝ) * Real.exp ((w + δ (τ N a)) * N)) :
+    WeightedAtomPointBinom P (5 * Cw) τ G target (r + w) := by
+  intro ε hε
+  filter_upwards [hfirst ε hε, hnear ε hε, hlarge ε hε, hweights, eventually_gt_atTop (0 : ℕ)]
+    with N hfirst_N hnear_N hlarge_N hw hN p m hpm E hEi hEn x y s k a hki hkn hkE hx hx0 hy hy0
+      hGy hs hzi hsi hcoord
+  let β := fun j => restrictedWeight P N (k j) (τ N) (a j)
+  let Q : Fin m → ℝ := fun j => Cw * N * Real.exp ((w + δ (realCoordinateInv (y j))) * N)
+  have hweight (j : Fin m) :
+      |(rowCommonFactor P N).eval (realCoordinateInv (y j))| * |β j| *
+        CatalanMeasure.zetaBeta ζ p m (k j) ≤ Q j := by
+    have h := hw p m hpm (k j) (hkn j) (a j)
+    simp only [Q]
+    rw [hcoord j]
+    exact h
+  have hbase := original_poly_atoms_mixedDouble_zeta_mul_weight_le hP hζ hN hpm
+    E hEi hEn x y s β k hki hkn hkE hx hx0 hy hy0 hs hweight
+  have hxi : Function.Injective x := by
+    intro i j hij
+    exact Fin.castAdd_injective _ _ (hzi (by simpa using hij))
+  have hai : Function.Injective a := by
+    intro i j hij
+    have h1 := hcoord i
+    have h2 := hcoord j
+    rw [hij] at h1
+    have h3 : realCoordinateInv (y i) = realCoordinateInv (y j) := h1.trans h2.symm
+    have hyij : y i = y j := by
+      rw [← realCoordinate_left_inverse (hy i), h3, realCoordinate_left_inverse (hy j)]
+    exact Fin.natAdd_injective _ _ (hzi (by simpa using hyij))
+  have hNdy : Nd N m y := hNd N m y a hai hcoord
+  have h5 : (1 : ℝ) ≤ 5 ^ m := one_le_pow₀ (by norm_num)
+  have hH : 0 ≤ sheetPrefactor P N := by unfold sheetPrefactor; positivity
+  have hF : (3 / 2 : ℝ) ^ P.n N * (P.n N : ℝ) ^ ((P.n N : ℝ) / 2) ≤ sheetPrefactor P N := by
+    unfold sheetPrefactor
+    exact le_add_of_nonneg_right (by positivity)
+  have hI : (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N ≤ sheetPrefactor P N := by
+    unfold sheetPrefactor
+    exact le_add_of_nonneg_left (by positivity)
+  have hNm : (0 : ℝ) ≤ N * m := by positivity
+  set D : ℝ := ∑ j, δ (realCoordinateInv (y j)) with hD
+  have hp : (∏ l, (1 + ζ * s l)) ^ m * markedSheetFree P N hpm x y s ≤
+      (5 : ℝ) ^ m * sheetPrefactor P N *
+        Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + r * N * m -
+          N * D) := by
+    by_cases hcase : -1 < ∑ i : Fin (p + m), paramCaseField P N (Fin.append x y i)
+    · have hh := hfirst_N p m hpm x y s hx hx0 hy hy0 hGy hs hxi hsi hcase
+      apply hh.trans
+      apply mul_le_mul
+      · exact hF.trans (le_mul_of_one_le_left hH h5)
+      · apply Real.exp_le_exp.mpr
+        nlinarith only [mul_le_mul_of_nonneg_right hc₁ hNm]
+      · exact (Real.exp_pos _).le
+      · positivity
+    · have hcase' := le_of_not_gt hcase
+      by_cases hmm : (m : ℝ) ≤ α₁ * (P.n N : ℝ)
+      · have hh := hnear_N p m hpm x y s hmm hx hx0 hy hy0 hGy hNdy hs hzi hsi hcase'
+        apply hh.trans
+        apply mul_le_mul
+        · exact mul_le_mul_of_nonneg_left hI (pow_nonneg (by norm_num) _)
+        · apply Real.exp_le_exp.mpr
+          nlinarith only [mul_le_mul_of_nonneg_right hc₂ hNm]
+        · exact (Real.exp_pos _).le
+        · positivity
+      · have hh := hlarge_N p m hpm x y s (le_of_not_ge hmm) hx hx0 hy hy0 hGy hs hzi hsi hcase'
+        apply hh.trans
+        apply mul_le_mul
+        · exact mul_le_mul_of_nonneg_left hI (pow_nonneg (by norm_num) _)
+        · apply Real.exp_le_exp.mpr
+          nlinarith only [mul_le_mul_of_nonneg_right hc₃ hNm]
+        · exact (Real.exp_pos _).le
+        · positivity
+  have hQ0 : ∀ j, 0 ≤ Q j := fun j => by simp only [Q]; positivity
+  have hQ : 0 ≤ ∏ j, Q j := prod_nonneg fun j _ => hQ0 j
+  have hprodQ : ∏ j, Q j = (Cw * (N : ℝ)) ^ m * Real.exp (w * N * m + N * D) := by
+    simp only [Q]
+    rw [prod_mul_distrib, prod_const, card_univ, Fintype.card_fin, ← Real.exp_sum, hD]
+    congr 2
+    rw [← Finset.sum_mul, Finset.sum_add_distrib]
+    simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul, ← mul_sum]
+    ring
+  have hc : (5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m = (5 * Cw * (N : ℝ)) ^ m := by
+    rw [← mul_pow]
+    congr 1
+    ring
+  have he : Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
+      (-target + Real.log 2 / 2 + ε) + r * N * m - N * D) *
+      Real.exp (w * N * m + N * D) =
+      Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 *
+        (-target + Real.log 2 / 2 + ε) + (r + w) * N * m) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  calc
+    _ ≤ (∏ l, (1 + ζ * s l)) ^ m * (markedSheetFree P N hpm x y s * ∏ j, Q j) := hbase
+    _ = ((∏ l, (1 + ζ * s l)) ^ m * markedSheetFree P N hpm x y s) * ∏ j, Q j := by ring
+    _ ≤ ((5 : ℝ) ^ m * sheetPrefactor P N *
+        Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          r * N * m - N * D)) * ∏ j, Q j := mul_le_mul_of_nonneg_right hp hQ
+    _ = sheetPrefactor P N * ((5 : ℝ) ^ m * (Cw * (N : ℝ)) ^ m) *
+        (Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+          r * N * m - N * D) * Real.exp (w * N * m + N * D)) := by
+      rw [hprodQ]
+      ring
+    _ = _ := by rw [hc, he]
+
 /-- Generic `weighted_atom_det_on`: the atom determinants are bounded by the weighted atom point. -/
-theorem weighted_atom_det (P : Parameters)
+theorem weighted_atom_det (P : Parameters) (Cc : ℝ) (hCc : 0 ≤ Cc)
     (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
     (hτinj : ∀ N, Function.Injective (τ N))
     (hτmem : ∀ N i, τ N i ∈ Ioo (-1 : ℝ) 1)
     (hτzero : ∀ N i, τ N i ≠ 0)
     (hτG : ∀ N i, G (realCoordinate (τ N i))) (target ρ : ℝ)
-    (hpoint : WeightedAtomPoint P τ G target ρ) {ε : ℝ} (hε : 0 < ε) :
+    (hpoint : WeightedAtomPoint P Cc τ G target ρ) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ N : ℕ in atTop, ∀ f : Fin (P.n N) → Option (Fin ((P.n0 - P.g0) * N)),
       (∏ k, (f k).elim 1 (fun a => |nodeAtomWeights P τ N a k|)) *
         |(CatalanMeasure.atomMatrix (realBaseMatrix P N) (nodeAtomVectors P τ N) f).det| ≤
-      atomBaseBoundAt P target N ε * ∏ k, (f k).elim 1 (fun _ => atomColumnCost ρ N) := by
+      atomBaseBoundAt P target N ε * ∏ k, (f k).elim 1 (fun _ => atomColumnCost Cc ρ N) := by
   filter_upwards [hpoint ε hε,
     eventually_gt_atTop (0 : ℕ)] with N hbound hN f
   classical
@@ -533,7 +661,7 @@ theorem weighted_atom_det (P : Parameters)
   have hav (j : Fin m) : f (e (Fin.natAdd p j)) = some (av j) :=
     Classical.choose_spec (Option.ne_none_iff_exists'.mp (he2 j))
   have hR : 0 ≤ atomBaseBoundAt P target N ε *
-      ∏ k, (f k).elim 1 (fun _ => atomColumnCost ρ N) := by
+      ∏ k, (f k).elim 1 (fun _ => atomColumnCost Cc ρ N) := by
     apply mul_nonneg
     · unfold atomBaseBoundAt sheetPrefactor
       positivity
@@ -605,7 +733,7 @@ theorem weighted_atom_det (P : Parameters)
     simp only [paramPinRowFun, paramPinColFun, paramPinKernel]
     ring
   let W : ℝ := ∏ j, |restrictedWeight P N (kv j) (τ N) (av j)|
-  let Bd : ℝ := sheetPrefactor P N * (540000*(N : ℝ))^m *
+  let Bd : ℝ := sheetPrefactor P N * (Cc*(N : ℝ))^m *
     Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2*(-target+Real.log 2/2+ε)+ρ*N*m)
   have hW : 0 ≤ W := prod_nonneg (fun j _ => abs_nonneg _)
   have hae : ∀ᵐ w ∂CatalanMeasure.pairMeasure realPlaceMeasure
@@ -632,7 +760,7 @@ theorem weighted_atom_det (P : Parameters)
     intro j _
     simp only [hav, Option.elim, nodeAtomWeights, W, kv]
   rw [hprodW]
-  let c := atomColumnCost ρ N
+  let c := atomColumnCost Cc ρ N
   have hprod : (∏ k, (f k).elim 1 (fun _ => c)) = c^m := by
     have hh : ∀ k, (f k).elim 1 (fun _ => c) = if Pr k then 1 else c := by
       intro k
@@ -661,17 +789,17 @@ theorem weighted_atom_det (P : Parameters)
 
 /-- `weighted_atom_det` from the binomial weighted atom point (S1): the free columns `kv` are
 injective, below `n`, and disjoint from the selected columns `E`. -/
-theorem weighted_atom_det_binom (P : Parameters)
+theorem weighted_atom_det_binom (P : Parameters) (Cc : ℝ) (hCc : 0 ≤ Cc)
     (τ : (N : ℕ) → Fin ((P.n0 - P.g0) * N) → ℝ) (G : ℝ → Prop)
     (hτinj : ∀ N, Function.Injective (τ N))
     (hτmem : ∀ N i, τ N i ∈ Ioo (-1 : ℝ) 1)
     (hτzero : ∀ N i, τ N i ≠ 0)
     (hτG : ∀ N i, G (realCoordinate (τ N i))) (target ρ : ℝ)
-    (hpoint : WeightedAtomPointBinom P τ G target ρ) {ε : ℝ} (hε : 0 < ε) :
+    (hpoint : WeightedAtomPointBinom P Cc τ G target ρ) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ N : ℕ in atTop, ∀ f : Fin (P.n N) → Option (Fin ((P.n0 - P.g0) * N)),
       (∏ k, (f k).elim 1 (fun a => |nodeAtomWeights P τ N a k|)) *
         |(CatalanMeasure.atomMatrix (realBaseMatrix P N) (nodeAtomVectors P τ N) f).det| ≤
-      atomBaseBoundAt P target N ε * ∏ k, (f k).elim 1 (fun _ => atomColumnCost ρ N) := by
+      atomBaseBoundAt P target N ε * ∏ k, (f k).elim 1 (fun _ => atomColumnCost Cc ρ N) := by
   filter_upwards [hpoint ε hε,
     eventually_gt_atTop (0 : ℕ)] with N hbound hN f
   classical
@@ -712,7 +840,7 @@ theorem weighted_atom_det_binom (P : Parameters)
   have hav (j : Fin m) : f (e (Fin.natAdd p j)) = some (av j) :=
     Classical.choose_spec (Option.ne_none_iff_exists'.mp (he2 j))
   have hR : 0 ≤ atomBaseBoundAt P target N ε *
-      ∏ k, (f k).elim 1 (fun _ => atomColumnCost ρ N) := by
+      ∏ k, (f k).elim 1 (fun _ => atomColumnCost Cc ρ N) := by
     apply mul_nonneg
     · unfold atomBaseBoundAt sheetPrefactor
       positivity
@@ -784,7 +912,7 @@ theorem weighted_atom_det_binom (P : Parameters)
     simp only [paramPinRowFun, paramPinColFun, paramPinKernel]
     ring
   let W : ℝ := ∏ j, |restrictedWeight P N (kv j) (τ N) (av j)|
-  let Bd : ℝ := sheetPrefactor P N * (540000*(N : ℝ))^m *
+  let Bd : ℝ := sheetPrefactor P N * (Cc*(N : ℝ))^m *
     Real.exp (((P.n0 : ℝ) * (N : ℝ)) ^ 2*(-target+Real.log 2/2+ε)+ρ*N*m)
   have hW : 0 ≤ W := prod_nonneg (fun j _ => abs_nonneg _)
   have hae : ∀ᵐ w ∂CatalanMeasure.pairMeasure realPlaceMeasure
@@ -821,7 +949,7 @@ theorem weighted_atom_det_binom (P : Parameters)
     intro j _
     simp only [hav, Option.elim, nodeAtomWeights, W, kv]
   rw [hprodW]
-  let c := atomColumnCost ρ N
+  let c := atomColumnCost Cc ρ N
   have hprod : (∏ k, (f k).elim 1 (fun _ => c)) = c^m := by
     have hh : ∀ k, (f k).elim 1 (fun _ => c) = if Pr k then 1 else c := by
       intro k
@@ -863,3 +991,5 @@ end CatalanMeasure.GenD
 
 #print axioms CatalanMeasure.GenD.Analytic.weighted_atom_det_binom
 #print axioms CatalanMeasure.GenD.Analytic.weighted_atom_point_binom_of_signed
+
+#print axioms CatalanMeasure.GenD.Analytic.weighted_atom_point_zeta_of_signed

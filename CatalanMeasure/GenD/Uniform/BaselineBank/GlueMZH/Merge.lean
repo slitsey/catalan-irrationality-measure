@@ -186,14 +186,5 @@ theorem partial_growth4 {ε : ℝ} (hε : 0 < ε) :
 theorem gain4_ge : (213120 / 10000 : ℝ) ≤ gain4 := by
   unfold gain4; norm_num
 
-/-- **The gate for `wins4` plus anything the remaining family (Theorem Z, Law_L (4)) adds:
-`extra >= 0.2963` suffices.** -/
-theorem gate_of_remaining4 (extra : ℝ) (h : 2963 / 10000 ≤ extra) :
-    PayW (3 / 4) D58.d0 Bank540.rho etaG Bank540.kappa D58.delta Bank540.B ∧
-      etaG < Bank540.tDelta - gDg (gain4 + extra) := by
-  refine gate (gain4 + extra) ?_
-  have := gain4_ge
-  linarith
-
 end
 end CatalanMeasure.GenD.Uniform.Bank540.Ledger4

@@ -1,7 +1,7 @@
 module
 
-public import CatalanMeasure.GenD.Uniform.LedgerW.Field
 public import CatalanMeasure.GenD.DesignInstance.Normalizer
+public import CatalanMeasure.GenD.Uniform.LedgerW.Growth
 
 @[expose] public section
 set_option Elab.async false

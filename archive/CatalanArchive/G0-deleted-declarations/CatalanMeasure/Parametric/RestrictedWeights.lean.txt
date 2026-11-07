@@ -1,0 +1,26 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.Parametric.RestrictedWeights
+theorem proposed_restricted_functional_le (N k : ℕ) (a : Fin (89*N)) :
+    |polynomialFunctional proposed N k (rowCommonFactor proposed N *
+      OAI.InternalCatalan.quadBasis (CatalanMeasure.chebNode (89*N)) a)| ≤
+      260000*N*(residualCircleK:ℝ)^N := by
+  have hh := polynomialFunctional_common_factor_le proposed N k
+    (OAI.InternalCatalan.quadBasis (CatalanMeasure.chebNode (89*N)) a)
+    (proposed_common_basis_coeff_zero N a)
+    (radius := (residualRadius:ℝ)) (B := 500*(residualCircleK:ℝ)^N)
+    (by norm_num [residualRadius]) (fun z hz => by
+      simpa only [Parameters.h,Parameters.q,proposed,show 5*N+7*N=12*N by ring] using
+        norm_restricted_filtered_basis_le N a z hz)
+  rw [proposed_H] at hh
+  convert hh using 1 <;> push_cast <;> ring
+
+
+/-- The weights must be bounded jointly with the common-factor node weight. -/
+theorem proposed_restrictedWeight_joint_le (N k : ℕ) (a : Fin (89*N)) :
+    |(rowCommonFactor proposed N).eval (CatalanMeasure.chebNode (89*N) a)| *
+      |restrictedWeight proposed N k (CatalanMeasure.chebNode (89*N)) a| ≤
+      260000*N*(residualCircleK:ℝ)^N := by
+  have hn := rowCommonFactor_eval_ne_zero proposed N (CatalanMeasure.chebNode_mem a).2
+  rw [restrictedWeight,abs_div,mul_comm,div_mul_cancel₀ _ (abs_ne_zero.mpr hn)]
+  exact proposed_restricted_functional_le N k a
+
+

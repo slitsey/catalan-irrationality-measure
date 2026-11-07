@@ -1,6 +1,7 @@
 module
 
 public import CatalanMeasure.GenD.Uniform.BaselineBank.Partial.Cells
+public import CatalanMeasure.GenD.Uniform.LedgerW.Main
 
 @[expose] public section
 set_option Elab.async false

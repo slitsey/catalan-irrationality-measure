@@ -3,9 +3,9 @@ module
 public import CatalanMeasure.PinSupDual
 public import CatalanMeasure.GenVandermondeSharp
 public import CatalanMeasure.MixedAndreief
-public import OAI.NumberTheory.Catalan.Determinants.RealDeterminantCore
 public import OAI.NumberTheory.Catalan.Analysis.RealEnergyLogMajorants
 public import OAI.NumberTheory.Catalan.Analysis.RealFactoredIntegral
+public import OAI.NumberTheory.Catalan.Energy.RealTwoSheetIntegralBound
 
 @[expose] public section
 

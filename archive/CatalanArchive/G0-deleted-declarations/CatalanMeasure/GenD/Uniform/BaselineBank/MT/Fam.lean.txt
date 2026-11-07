@@ -1,0 +1,9 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Uniform.BaselineBank.MT.Fam
+/-- **Gate for windows certified against any list of families**: if the total area is at least
+`21.6083`, the payment hypotheses hold and `eta = 29.596 < tDelta - gDg gain`. -/
+theorem gate_of_families (gain : ℝ) (hgain : 216083 / 10000 ≤ gain) :
+    PayW (3 / 4) D58.d0 Bank540.rho etaG Bank540.kappa D58.delta Bank540.B ∧
+      etaG < Bank540.tDelta - gDg gain :=
+  gate gain hgain
+
+

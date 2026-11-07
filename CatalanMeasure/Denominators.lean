@@ -3,6 +3,7 @@ module
 public import Mathlib.NumberTheory.Chebyshev
 public import Mathlib.Data.Nat.Factorization.Basic
 public import OAI.NumberTheory.Catalan.Arithmetic.FinitePlaceAssembly
+public import OAI.NumberTheory.Catalan.Polynomial.RawCoefficientEntryBound
 
 @[expose] public section
 
@@ -103,89 +104,6 @@ theorem twoAdicBound_nonneg {N : ℕ} (hN : 0 < N) : 0 ≤ twoAdicBound N := by
   have harg : (1 : ℝ) ≤ 8 * discrepancyNormFactor 0 * (H N : ℝ) ^ 2 := by nlinarith
   have hlog := Real.logb_nonneg (b := 2) (by norm_num) harg
   positivity
-
-/-- The local estimates at an integer point, in the form `-(denomExp N ℓ) ≤ v_ℓ(Δ_N(i))`. -/
-theorem padicValRat_determinantRat_natCast_lower {N : ℕ} (hN : 0 < N) (i : ℕ)
-    {ℓ : ℕ} [hℓ : Fact ℓ.Prime] (hd : determinantRat (i : ℚ) N ≠ 0) :
-    -(denomExp N ℓ : ℤ) ≤ padicValRat ℓ (determinantRat (i : ℚ) N) := by
-  unfold denomExp
-  split_ifs with h2 hsmall
-  · subst h2
-    have hv := determinantRat_two_adic_valuation_lower (i : ℚ) hN hd
-    have hF := discrepancyNormFactor_natCast_le i
-    have hFi := one_le_discrepancyNormFactor (i : ℚ)
-    have hH : (0 : ℝ) < (H N : ℝ) := by exact_mod_cast (show 0 < H N by unfold H; omega)
-    have hH2 : (0 : ℝ) < (H N : ℝ) ^ 2 := pow_pos hH 2
-    have hlog : Real.logb 2 (8 * discrepancyNormFactor (i : ℚ) * (H N : ℝ) ^ 2) ≤
-        Real.logb 2 (8 * discrepancyNormFactor 0 * (H N : ℝ) ^ 2) := by
-      apply Real.logb_le_logb_of_le (by norm_num)
-      · exact mul_pos (mul_pos (by norm_num) (by linarith)) hH2
-      · exact mul_le_mul_of_nonneg_right (by linarith) hH2.le
-    have hceil := Nat.le_ceil (twoAdicBound N)
-    have hn : (0 : ℝ) ≤ n N := by positivity
-    have hmul := mul_le_mul_of_nonneg_left hlog hn
-    have hTB : twoAdicBound N = (505 / 4608 : ℝ) * (n N : ℝ) ^ 2 + 2 * (n N : ℝ) +
-        (n N : ℝ) * Real.logb 2 (8 * discrepancyNormFactor 0 * (H N : ℝ) ^ 2) := rfl
-    have hreal : -(⌈twoAdicBound N⌉₊ : ℝ) ≤ (padicValRat 2 (determinantRat (i : ℚ) N) : ℝ) := by
-      linarith
-    exact_mod_cast hreal
-  · have hv := determinantRat_odd_prime_log_lower h2 (i : ℚ) N
-    rw [natCast_den_one, padicValNat.one] at hv
-    push_cast at hv ⊢
-    linarith
-  · have hcut : 2 * Real.sqrt (H N) < (ℓ : ℝ) := not_le.mp hsmall
-    have hv := determinantRat_odd_prime_large_loss_lower h2 hN hcut (i : ℚ)
-      (natCast_den_zmod_ne_zero i ℓ)
-    have hceil := Nat.le_ceil ((N : ℝ) * oddPrimeLoss ((ℓ : ℝ) / N))
-    have hreal : -(⌈(N : ℝ) * oddPrimeLoss ((ℓ : ℝ) / N)⌉₊ : ℝ) ≤
-        (padicValRat ℓ (determinantRat (i : ℚ) N) : ℝ) := by
-      have heq : -(N : ℝ) * oddPrimeLoss ((ℓ : ℝ) / N) =
-          -((N : ℝ) * oddPrimeLoss ((ℓ : ℝ) / N)) := by ring
-      linarith
-    exact_mod_cast hreal
-
-theorem den_dvd_denomBound {N : ℕ} (hN : 0 < N) (i : ℕ)
-    (hd : determinantRat (i : ℚ) N ≠ 0) :
-    (determinantRat (i : ℚ) N).den ∣ denomBound N := by
-  have hM := denomBound_ne_zero N
-  rw [← Nat.factorization_le_iff_dvd (Rat.den_pos _).ne' hM, Finsupp.le_def]
-  intro ℓ
-  by_cases hp : ℓ.Prime
-  · haveI : Fact ℓ.Prime := ⟨hp⟩
-    rw [Nat.factorization_def _ hp]
-    by_cases hS : ℓ ∈ measurePrimes N
-    · have h1 := padicValNat_den_le_of_padicValRat
-        (padicValRat_determinantRat_natCast_lower hN i (ℓ := ℓ) hd)
-      have h2 : denomExp N ℓ ≤ (denomBound N).factorization ℓ := by
-        apply (hp.pow_dvd_iff_le_factorization hM).mp
-        unfold denomBound
-        exact Finset.dvd_prod_of_mem (fun ℓ => ℓ ^ denomExp N ℓ) hS
-      exact h1.trans h2
-    · have hH : H N < ℓ := by
-        by_contra hle
-        push Not at hle
-        exact hS (Finset.mem_filter.mpr ⟨Finset.mem_Ioc.mpr ⟨hp.pos, hle⟩, hp⟩)
-      have h2 : ℓ ≠ 2 := by
-        unfold H at hH
-        omega
-      have hv := determinantRat_above_degrees_local_integral h2 hN hH.le (i : ℚ)
-        (natCast_den_zmod_ne_zero i ℓ)
-      have h0 := padicValNat_den_le_of_padicValRat (e := 0) (by simpa using hv)
-      omega
-  · rw [Nat.factorization_eq_zero_of_not_prime _ hp]
-    exact Nat.zero_le _
-
-/-- `D_N · Δ_N(i)` is an integer for every natural number `i`. -/
-theorem exists_int_denomBound_mul {N : ℕ} (hN : 0 < N) (i : ℕ) :
-    ∃ m : ℤ, (denomBound N : ℚ) * determinantRat (i : ℚ) N = m := by
-  by_cases hd : determinantRat (i : ℚ) N = 0
-  · exact ⟨0, by rw [hd, mul_zero, Int.cast_zero]⟩
-  · obtain ⟨c, hc⟩ := den_dvd_denomBound hN i hd
-    refine ⟨(c : ℤ) * (determinantRat (i : ℚ) N).num, ?_⟩
-    rw [hc]
-    push_cast
-    have h := Rat.mul_den_eq_num (determinantRat (i : ℚ) N)
-    linear_combination (c : ℚ) * h
 
 /-! ### Size of the common denominator -/
 
@@ -301,64 +219,5 @@ theorem log_denomBound_le {N : ℕ} (hN : 0 < N) :
       intro ℓ hℓ _
       simp only [measurePrimes, Finset.mem_filter] at hℓ
       exact Real.log_nonneg (by exact_mod_cast hℓ.2.one_lt.le)
-
-/-- **Proposition 3.**  `log D_N ≤ (8609/4608 + (505/4608) log 2 + ε) n²` for all large `N`. -/
-theorem log_denomBound_eventually_le {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ N : ℕ in atTop, Real.log (denomBound N) ≤
-      (8609 / 4608 + 505 / 4608 * Real.log 2 + ε) * (n N : ℝ) ^ 2 := by
-  have h2 := (tendsto_order.mp (tendsto_twoAdic_log_error 0)).2 (ε / 8) (by positivity)
-  have hs := (tendsto_order.mp (smallOddPrimeError_div_sq_tendsto_zero 1)).2 (ε / 4)
-    (by positivity)
-  have hl := oddPrimeLoss_large_prime_normalized_eventually_upper (ε := ε / 4) (by positivity)
-  obtain ⟨K, hK⟩ := exists_nat_gt (131 / ε)
-  filter_upwards [h2, hs, hl, eventually_ge_atTop K, eventually_gt_atTop 0]
-    with N h2N hsN hlN hKN hN
-  have hNR : (0 : ℝ) < N := by exact_mod_cast hN
-  have hnN : (n N : ℝ) = 48 * N := by simp [n]
-  have hHN : (H N : ℝ) = 65 * N := by simp [H]
-  have hn : (0 : ℝ) < n N := by rw [hnN]; positivity
-  have hn2 : (0 : ℝ) < (n N : ℝ) ^ 2 := by positivity
-  have hεN : 131 < ε * N := by
-    have hKR : (K : ℝ) ≤ N := by exact_mod_cast hKN
-    have h1 := (div_lt_iff₀ hε).mp hK
-    nlinarith [mul_le_mul_of_nonneg_right hKR hε.le]
-  -- 2-adic term
-  have hlog2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
-  have hlog2' : Real.log 2 < 1 := by
-    have := Real.log_lt_sub_one_of_pos (by norm_num : (0 : ℝ) < 2) (by norm_num)
-    linarith
-  have h2N' : 2 + Real.logb 2 (8 * discrepancyNormFactor 0 * (H N : ℝ) ^ 2) < ε / 8 * n N :=
-    (div_lt_iff₀ hn).mp h2N
-  have hN1 : (1 : ℝ) ≤ N := by exact_mod_cast hN
-  have hone : 1 ≤ ε / 8 * (n N : ℝ) ^ 2 := by
-    rw [hnN]
-    nlinarith [mul_lt_mul_of_pos_right hεN hNR]
-  have hT2 : (twoAdicBound N + 1) * Real.log 2 ≤
-      (505 / 4608 * Real.log 2 + ε / 4) * (n N : ℝ) ^ 2 := by
-    have hb : twoAdicBound N + 1 ≤ (505 / 4608 + ε / 4) * (n N : ℝ) ^ 2 := by
-      unfold twoAdicBound
-      nlinarith [mul_lt_mul_of_pos_left h2N' hn]
-    have hb0 : 0 ≤ twoAdicBound N + 1 := by linarith [twoAdicBound_nonneg hN]
-    have hεn : 0 ≤ ε / 4 * (n N : ℝ) ^ 2 := by positivity
-    nlinarith [mul_le_mul_of_nonneg_right hb hlog2.le,
-      mul_le_mul_of_nonneg_left hlog2'.le hεn]
-  -- small odd primes
-  have hS : smallOddPrimeError 1 N ≤ ε / 4 * (n N : ℝ) ^ 2 :=
-    ((div_lt_iff₀ hn2).mp hsN).le
-  -- large odd primes
-  have hL := ((div_lt_iff₀ hn2).mp hlN).le
-  -- Chebyshev term
-  have hθ : Chebyshev.theta (H N : ℝ) ≤ ε / 4 * (n N : ℝ) ^ 2 := by
-    have h := Chebyshev.theta_le_log4_mul_x (show (0 : ℝ) ≤ H N by positivity)
-    have hlog4 : Real.log 4 < 2 := by
-      have h4 : Real.log 4 = 2 * Real.log 2 := by
-        rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]
-        norm_num
-      linarith
-    rw [hHN] at h
-    rw [hHN, hnN]
-    nlinarith [mul_lt_mul_of_pos_right hεN hNR, mul_lt_mul_of_pos_right hlog4 hNR]
-  have hmain := log_denomBound_le hN
-  linarith
 
 end OAI.InternalCatalan

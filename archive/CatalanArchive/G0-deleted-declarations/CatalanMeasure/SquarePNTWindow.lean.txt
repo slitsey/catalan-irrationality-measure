@@ -1,0 +1,81 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.SquarePNTWindow
+/-- **Irrationality-measure criterion, prime number theorem version.** -/
+theorem irrationality_measure_of_polynomials_square_pnt (G : ℝ) (d : ℕ) {η ρ ε c : ℝ}
+    (hη : 0 < η) (hρ : 0 < ρ) (hε : 0 < ε) (hc : 1 < c) (Q : ℕ → ℤ[X]) (P₀ : ℕ)
+    (hdeg : ∀ p, (Q p).natDegree ≤ d * p)
+    (hnz : ∀ p, P₀ ≤ p → p.Prime → ∀ (a : ℤ) (b : ℕ), 0 < b → ¬ p ^ 2 ∣ b →
+        aeval ((a : ℝ) / b) (Q p) ≠ 0)
+    (hsmall : ∀ p, P₀ ≤ p → p.Prime → ∀ x : ℝ, |x - G| ≤ exp (-(ρ * p)) →
+        |aeval x (Q p)| ≤ exp (-(η * (p : ℝ) ^ 2))) :
+    ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-((1 + ε) * ρ * max ((d : ℝ) / η) (c / (2 * ε)))) < |G - a / b| := by
+  have hc0 : 0 < c := by linarith
+  set κ : ℝ := max ((d : ℝ) / η) (c / (2 * ε)) with hκ
+  have hκε : c / (2 * ε) ≤ κ := le_max_right _ _
+  have hκd : (d : ℝ) / η ≤ κ := le_max_left _ _
+  have hκ0 : 0 < κ := by
+    have : 0 < c / (2 * ε) := by positivity
+    linarith
+  have hεκ : c ≤ 2 * ε * κ := by
+    have h := mul_le_mul_of_nonneg_left hκε (by positivity : (0 : ℝ) ≤ 2 * ε)
+    rw [mul_div_cancel₀ _ (by positivity : (2 * ε : ℝ) ≠ 0)] at h
+    linarith
+  have hlogb : Tendsto (fun b : ℕ => κ * log b) atTop atTop :=
+    Tendsto.const_mul_atTop hκ0 (Real.tendsto_log_atTop.comp tendsto_natCast_atTop_atTop)
+  have hev : ∀ᶠ b : ℕ in atTop,
+      (∀ b' : ℕ, 0 < b' → log b' ≤ 2 * ε * (κ * log b) / c →
+        ∃ p : ℕ, p.Prime ∧ κ * log b < p ∧ (p : ℝ) ≤ (1 + ε) * (κ * log b) ∧ ¬ p ^ 2 ∣ b') ∧
+      max (P₀ : ℝ) 1 ≤ κ * log b :=
+    (hlogb.eventually (eventually_prime_window_not_square_dvd hε hc)).and
+      (hlogb.eventually (eventually_ge_atTop _))
+  filter_upwards [hev, eventually_ge_atTop 2] with b hb hb2 a
+  obtain ⟨hwin, hbig⟩ := hb
+  by_contra hcon
+  push Not at hcon
+  have hb0 : 0 < b := by omega
+  have hbR : (1 : ℝ) < b := by exact_mod_cast (show 1 < b by omega)
+  have hb0R : (0 : ℝ) < b := by linarith
+  have hlogpos : 0 < log (b : ℝ) := Real.log_pos hbR
+  have hlogX : log b ≤ 2 * ε * (κ * log b) / c := by
+    rw [le_div_iff₀ hc0]
+    nlinarith [mul_le_mul_of_nonneg_right hεκ hlogpos.le]
+  obtain ⟨p, hp, hXp, hpX, hpb⟩ := hwin b hb0 hlogX
+  have hP₀ : P₀ ≤ p := by
+    have h : (P₀ : ℝ) < p := lt_of_le_of_lt (le_trans (le_max_left _ _) hbig) hXp
+    exact_mod_cast h.le
+  have hppos : (0 : ℝ) < p := by exact_mod_cast hp.pos
+  have hclose : |(a : ℝ) / b - G| ≤ exp (-(ρ * p)) := by
+    rw [abs_sub_comm]
+    refine hcon.trans ?_
+    rw [Real.rpow_def_of_pos hb0R]
+    apply Real.exp_le_exp.mpr
+    have h : ρ * p ≤ ρ * ((1 + ε) * (κ * log b)) := mul_le_mul_of_nonneg_left hpX hρ.le
+    nlinarith
+  have hQ := hsmall p hP₀ hp _ hclose
+  have hne := hnz p hP₀ hp a b hb0 hpb
+  have h1 := one_le_pow_mul_abs_aeval (Q p) (hdeg p) a hb0 hne
+  have hpow : (b : ℝ) ^ (d * p) = exp ((d : ℝ) * p * log b) := by
+    rw [← Real.rpow_natCast, Real.rpow_def_of_pos hb0R]
+    congr 1
+    push_cast
+    ring
+  have hdlog : (d : ℝ) * log b < η * p := by
+    have h' : (d : ℝ) / η * log b < p :=
+      lt_of_le_of_lt (mul_le_mul_of_nonneg_right hκd hlogpos.le) hXp
+    calc (d : ℝ) * log b = η * ((d : ℝ) / η * log b) := by field_simp
+      _ < η * p := mul_lt_mul_of_pos_left h' hη
+  have hlt : (d : ℝ) * p * log b - η * (p : ℝ) ^ 2 < 0 := by
+    nlinarith [mul_lt_mul_of_pos_right hdlog hppos]
+  have hsmall' : (b : ℝ) ^ (d * p) * |aeval ((a : ℝ) / b) (Q p)| < 1 := by
+    calc (b : ℝ) ^ (d * p) * |aeval ((a : ℝ) / b) (Q p)|
+        ≤ exp ((d : ℝ) * p * log b) * exp (-(η * (p : ℝ) ^ 2)) := by
+          rw [hpow]
+          exact mul_le_mul_of_nonneg_left hQ (exp_pos _).le
+      _ = exp ((d : ℝ) * p * log b - η * (p : ℝ) ^ 2) := by
+          rw [← Real.exp_add]
+          ring_nf
+      _ < 1 := Real.exp_lt_one_iff.mpr hlt
+  linarith
+
+
+

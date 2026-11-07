@@ -12,10 +12,10 @@ public import Mathlib.MeasureTheory.Function.L2Space
 public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
 public import Mathlib.MeasureTheory.Integral.CircleAverage
 public import OAI.NumberTheory.Catalan.Energy.FirstSheetBoundaryMeasure
-public import OAI.NumberTheory.Catalan.Energy.FirstSheetHilbertDeterminant
 public import OAI.NumberTheory.Catalan.Energy.FirstSheetReproducingKernel
-public import OAI.NumberTheory.Catalan.Energy.RealSheetIntegralBound
 public import OAI.NumberTheory.Catalan.Estimates.BlaschkeUniformInterpolation
+public import OAI.NumberTheory.Catalan.Estimates.RealEnergyTwoProduct
+public import OAI.NumberTheory.Catalan.Energy.FirstSheetHilbertDeterminant
 
 @[expose] public section
 
@@ -903,59 +903,6 @@ open Set
 open scoped BigOperators
 
 namespace InternalCatalan
-
-theorem abs_determinant_le_of_two_majorant_bounds {N : ℕ} (hN : 0 < N)
-    {M₁ M₂ : ℝ} (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
-    (hbound₁ : ∀ x s : Fin (n N) → ℝ,
-      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ j, s j ∈ Ioo (0 : ℝ) 1) →
-      (∀ i, x i ≠ 0) → Function.Injective x → Function.Injective s →
-      (((n N - 1 - 2 * g N : ℕ) : ℝ) <
-        ∑ i : Fin (n N), (1 - x i ^ 2) / (1 + x i ^ 2)) →
-      realEnergyMajorantOne N x s ≤ M₁)
-    (hbound₂ : ∀ x s : Fin (n N) → ℝ,
-      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ j, s j ∈ Ioo (0 : ℝ) 1) →
-      (∀ i, x i ≠ 0) → Function.Injective x → Function.Injective s →
-      ((∑ i : Fin (n N), (1 - x i ^ 2) / (1 + x i ^ 2)) ≤
-        ((n N - 1 - 2 * g N : ℕ) : ℝ)) →
-      realEnergyMajorantTwo N x s ≤ M₂) :
-    |determinant N| ≤
-      ((2 : ℝ) ^ n N *
-        max ((1 + 10 * Real.exp 12 * (n N : ℝ)) ^ n N)
-          ((3 / 2 : ℝ) ^ n N * (n N : ℝ) ^ ((n N : ℝ) / 2)) /
-        (((n N).factorial : ℝ) ^ 2)) * max M₁ M₂ := by
-  let K₁ : ℝ := (1 + 10 * Real.exp 12 * (n N : ℝ)) ^ n N
-  let K₂ : ℝ := (3 / 2 : ℝ) ^ n N * (n N : ℝ) ^ ((n N : ℝ) / 2)
-  have hK₁ : 0 ≤ K₁ := by dsimp [K₁]; positivity
-  have hK₂ : 0 ≤ K₂ := by
-    exact mul_nonneg (pow_nonneg (by norm_num) _)
-      (Real.rpow_nonneg (Nat.cast_nonneg (n N)) _)
-  have hK : 0 ≤ max K₁ K₂ := hK₁.trans (le_max_left _ _)
-  have hM : 0 ≤ max M₁ M₂ := hM₁.trans (le_max_left _ _)
-  have hsheet : ∀ x s : Fin (n N) → ℝ,
-      (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ j, s j ∈ Ioo (0 : ℝ) 1) →
-      (∀ i, x i ≠ 0) → Function.Injective x → Function.Injective s →
-      |sheetRealIntegrand N x s| ≤ max K₁ K₂ * max M₁ M₂ := by
-    intro x s hx hs hx0 hxi hsi
-    by_cases hcase : (∑ i : Fin (n N), (1 - x i ^ 2) / (1 + x i ^ 2)) ≤
-        ((n N - 1 - 2 * g N : ℕ) : ℝ)
-    · calc
-        _ ≤ K₁ * realEnergyMajorantTwo N x s :=
-          abs_sheetRealIntegrand_le_majorantTwo hN x s hx hx0 hxi hs hcase
-        _ ≤ K₁ * M₂ :=
-          mul_le_mul_of_nonneg_left (hbound₂ x s hx hs hx0 hxi hsi hcase) hK₁
-        _ ≤ max K₁ K₂ * max M₁ M₂ :=
-          mul_le_mul (le_max_left _ _) (le_max_right _ _) hM₂ hK
-    · calc
-        _ ≤ K₂ * realEnergyMajorantOne N x s :=
-          abs_sheetRealIntegrand_le_majorantOne hN x s hx hx0 hs
-        _ ≤ K₂ * M₁ :=
-          mul_le_mul_of_nonneg_left (hbound₁ x s hx hs hx0 hxi hsi (lt_of_not_ge hcase)) hK₂
-        _ ≤ max K₁ K₂ * max M₁ M₂ :=
-          mul_le_mul (le_max_right _ _) (le_max_left _ _) hM₁ hK
-  have hi := abs_determinant_le_of_sheetRealIntegrand_bound hN (mul_nonneg hK hM) hsheet
-  apply hi.trans_eq
-  dsimp [K₁, K₂]
-  ring
 
 end InternalCatalan
 

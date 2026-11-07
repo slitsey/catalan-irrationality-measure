@@ -3,6 +3,7 @@ module
 public import CatalanMeasure.GenD.Uniform.BaselineBank.MT.Cells1
 public import CatalanMeasure.GenD.Uniform.BaselineBank.MT.Cells2
 public import CatalanMeasure.GenD.Uniform.BaselineBank.MT.Fam
+public import CatalanMeasure.GenD.Uniform.BaselineBank.ExactHP.Instance
 
 @[expose] public section
 set_option Elab.async false

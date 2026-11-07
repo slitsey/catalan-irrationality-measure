@@ -1,11 +1,12 @@
 module
 
-public import CatalanMeasure.GenD.Signed.RouteI.MarkedTransfer
 public import CatalanMeasure.GenD.Signed.RouteI.PackedPolynomial
 public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 public import Mathlib.Tactic.FieldSimp
 public import Mathlib.Tactic.LinearCombination
 public import Mathlib.Tactic.Positivity
+public import CatalanMeasure.GenD.Signed.ChebSquare
+public import CatalanMeasure.GenD.Signed.RouteI.CapFields
 
 @[expose] public section
 set_option Elab.async false
@@ -40,12 +41,6 @@ noncomputable section
 
 /-! ### Part 1: the packed adapter -/
 
-theorem ofList_eq (l : List ℤ) :
-    MarkedTransfer.ofList l = PackedPolynomial.ofList l := by
-  induction l with
-  | nil => rfl
-  | cons a t ih => simp [MarkedTransfer.ofList, PackedPolynomial.ofList, ih]
-
 theorem pack_eq_packZ (B : ℤ) (l : List ℤ) : PackedPolynomial.pack B l = packZ B l := by
   induction l with
   | nil => rfl
@@ -56,39 +51,6 @@ theorem l1_eq (l : List ℤ) : (PackedPolynomial.l1 l : ℤ) = CatalanMeasure.Si
   | nil => rfl
   | cons a t ih => simp [PackedPolynomial.l1, CatalanMeasure.Signed.ChebSquare.l1, ← ih, Int.natCast_natAbs]
 
-/-- `LaurentBound` from one packed identity. The remaining hypotheses are structural (lengths,
-margin) or the guard data of `laurent_poly_of_packed_eval` (degree bound `n`, centred digits of
-`H`, mass `k (4 l1 A^2 + 4 l1 B^2) + l1 R < K`). -/
-theorem LaurentBound.of_packed {p a b rt : List ℤ} {dP Df e k : ℕ} {capN tailN rc : ℤ}
-    (hdP : 0 < dP) (hDf : 0 < Df) (he : e * dP = Df)
-    (hp : p.tail.length = 2 * a.tail.length) (hb : b.tail.length + 1 = a.tail.length)
-    (hr : rt.length = p.tail.length) (hmar : 2 * CatalanMeasure.Signed.ChebSquare.l1 rt < rc)
-    {K : ℤ} (hK : 0 < K) (n : ℕ)
-    (hH : (Hlist e capN tailN p).length ≤ n) (hA : 2 * ((lift a).length - 1) < n)
-    (hB : 4 + 2 * ((lift b).length - 1) < n) (hR : (liftC rc rt).length ≤ n)
-    (hgH : PackedPolynomial.Guard K (Hlist e capN tailN p))
-    (hmass : ((k * (4 * PackedPolynomial.l1 (lift a) ^ 2 + 4 * PackedPolynomial.l1 (lift b) ^ 2) +
-      PackedPolynomial.l1 (liftC rc rt) : ℕ) : ℤ) < K)
-    (hcheck : packZ (2 * K) (Hlist e capN tailN p) =
-      (k : ℤ) * (4 * packZ (2 * K) (lift a) ^ 2 - (1 - (2 * K) ^ 2) ^ 2 * packZ (2 * K) (lift b) ^ 2) +
-        packZ (2 * K) (liftC rc rt)) :
-    LaurentBound p a b rt dP Df e k capN tailN rc where
-  dP_pos := hdP
-  Df_pos := hDf
-  e_mul := he
-  len_p := hp
-  len_b := hb
-  len_r := hr
-  margin := hmar
-  poly := by
-    simp only [ofList_eq]
-    have h := PackedPolynomial.laurent_poly_of_packed_eval hK (k : ℤ) (Hlist e capN tailN p)
-      (lift a) (lift b) (liftC rc rt) n hH hA hB hR hgH
-      (by simpa [Int.natAbs_natCast] using hmass)
-      (by simpa only [pack_eq_packZ] using hcheck)
-    exact h
-
-#print axioms LaurentBound.of_packed
 
 /-! ### Part 2: the physical-kernel identity -/
 
@@ -323,27 +285,6 @@ theorem potL_dil2 (l : List YCell) {x : ℝ} (hx : x ≠ 0) :
     simp only [potL, avgL, massL, List.map_cons, List.sum_cons] at ih hc ⊢
     linarith
 
-/-- **Physical-kernel identity.** For an admissible source and `x != 0`,
-`refDiff S x = Dphys S x`: the reference difference is the difference of the cell averages of the
-explicit kernels `log|x - s| + log|1 - x s|` (rows) and `log|1 - 2 c x + x^2|` (columns). All
-`log|x|` terms cancel by `mass R1 - mass R0 = mass C1 - mass C0 = -1/50`. -/
-theorem refDiff_eq_Dphys {S : CapSource} (hS : S.Admissible) {x : ℝ} (hx : x ≠ 0) :
-    refDiff S x = Dphys S x := by
-  have r0 := potL_phys_row (l := S.refRow 0) (fun c hc => hS.ref_away 0 c hc) hx
-  have r1 := potL_phys_row (l := S.refRow 1) (fun c hc => hS.ref_away 1 c hc) hx
-  have c0 := potL_dil2 (S.refCol 0) hx
-  have c1 := potL_dil2 (S.refCol 1) hx
-  have m0 := hS.ref_row_mass0
-  have m1 := hS.ref_row_mass1
-  have n0 := hS.ref_col_mass0
-  have n1 := hS.ref_col_mass1
-  unfold refDiff Dphys
-  rw [m0] at r0
-  rw [m1] at r1
-  rw [n0] at c0
-  rw [n1] at c1
-  linarith
-
 /-- The mass differences: `mass(R1 - R0) = mass(C1 - C0) = -1/50`. -/
 theorem mass_diff {S : CapSource} (hS : S.Admissible) :
     massL (S.refRow 1) - massL (S.refRow 0) = -1 / 50 ∧
@@ -354,22 +295,6 @@ theorem mass_diff {S : CapSource} (hS : S.Admissible) :
   have := hS.ref_col_mass1
   constructor <;> linarith
 
-/-- `SourceMajorant` is equivalent to the same inequality for `Dphys` (nonzero `x` in the
-free-row domain). -/
-theorem SourceMajorant.of_Dphys {S : CapSource} (hS : S.Admissible) {σ : Sign} {p : List ℤ}
-    {dP : ℕ} {tail : ℝ}
-    (h : ∀ x ∈ CapSource.rowDom, signOf x = σ → Dphys S x ≤ chebSum p dP (2 * |x| - 1) + tail) :
-    SourceMajorant S σ p dP tail := by
-  intro x hx hs
-  have hx0 : x ≠ 0 := by
-    rcases hx with ⟨_, h2⟩ | ⟨h1, _⟩
-    · exact h2.ne
-    · exact h1.ne'
-  rw [refDiff_eq_Dphys hS hx0]
-  exact h x hx hs
-
-#print axioms refDiff_eq_Dphys
-#print axioms SourceMajorant.of_Dphys
 
 end
 

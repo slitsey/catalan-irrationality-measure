@@ -1,5 +1,5 @@
 module
-public import CatalanMeasure.GenD.Uniform.W.SlotsT.ProfDeg
+public import CatalanMeasure.GenD.Uniform.W.SlotsT.GlueOne
 @[expose] public section
 set_option Elab.async false
 

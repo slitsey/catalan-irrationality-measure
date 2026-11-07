@@ -1,8 +1,9 @@
 module
 
-public import CatalanMeasure.Integrality
 public import Mathlib.Data.Nat.Prime.Basic
 public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Analysis.Normed.Field.Basic
 
 @[expose] public section
 

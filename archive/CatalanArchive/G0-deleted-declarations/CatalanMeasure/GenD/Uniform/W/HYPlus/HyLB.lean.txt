@@ -1,0 +1,16 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Uniform.W.HYPlus.HyLB
+/-- `thinLB4 := supList [thinLB3; mLB']`. -/
+def thinLB4 (P : Parameters) (hP : Admissible P) : NullityLB P :=
+  NullityLB.supList P [thinLB3 P hP, mLB' P hP]
+
+
+theorem thinLB3_le_thinLB4 (P : Parameters) (hP : Admissible P) (N p : ℕ) :
+    (thinLB3 P hP).kap N p ≤ (thinLB4 P hP).kap N p :=
+  NullityLB.le_supList_kap (by simp [thinLB4]) N p
+
+
+theorem mLB'_le_thinLB4 (P : Parameters) (hP : Admissible P) (N p : ℕ) :
+    (mLB' P hP).kap N p ≤ (thinLB4 P hP).kap N p :=
+  NullityLB.le_supList_kap (by simp [thinLB4]) N p
+
+

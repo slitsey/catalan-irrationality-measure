@@ -1,7 +1,6 @@
 module
 
 public import CatalanMeasure.CellCert.CellW
-public import CatalanMeasure.CellCert.CellPieces
 
 @[expose] public section
 

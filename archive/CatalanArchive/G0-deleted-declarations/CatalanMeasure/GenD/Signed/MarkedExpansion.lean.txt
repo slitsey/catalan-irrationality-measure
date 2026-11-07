@@ -1,0 +1,499 @@
+-- G0 deletion (7 Nov 2026): declarations removed from CatalanMeasure.GenD.Signed.MarkedExpansion
+/-- **Lemma T on the sign-split index with marked rows**: only the free positives enter the
+Loewner form (the marked rows have weight `1`, no `D_p` term). -/
+theorem lemmaT_sum_form_marked {n k q e : ℕ} (σ : Fin k ⊕ Fin q ≃ Fin n) (x : Fin n → ℝ)
+    (mk : Fin n → Bool)
+    (hneg : ∀ b, x (σ (Sum.inl b)) < 0) (hpos : ∀ p, 0 < x (σ (Sum.inr p)))
+    (hT : ∀ c : Fin n → ℝ, |∑ a ∈ Finset.univ.filter (fun a => 0 < x a ∧ mk a = false),
+        CatalanMeasure.Signed.bDeriv x a * x a ^ e * c a ^ 2| ≤
+        (3 / 2) * ∑ a, ∑ b, c a * c b / (1 - x a * x b)) :
+    ∀ u : Fin k ⊕ Fin q → ℝ,
+      |∑ a, (Sum.elim (fun _ => (0 : ℝ))
+          (fun p => if mk (σ (Sum.inr p)) = true then 0 else
+            bdr (fun i => x (σ i)) (Sum.inr p) * x (σ (Sum.inr p)) ^ e) a) * u a ^ 2| ≤
+        (3 / 2) * ∑ a, ∑ b, u a * u b / (1 - x (σ a) * x (σ b)) := by
+  classical
+  intro u
+  have h := hT (fun a => u (σ.symm a))
+  have hl : ∑ a ∈ Finset.univ.filter (fun a => 0 < x a ∧ mk a = false),
+      CatalanMeasure.Signed.bDeriv x a * x a ^ e * (u (σ.symm a)) ^ 2 =
+      ∑ a, (Sum.elim (fun _ => (0 : ℝ))
+        (fun p => if mk (σ (Sum.inr p)) = true then 0 else
+          bdr (fun i => x (σ i)) (Sum.inr p) * x (σ (Sum.inr p)) ^ e) a) * u a ^ 2 := by
+    rw [Finset.sum_filter, ← Equiv.sum_comp σ, Fintype.sum_sum_type, Fintype.sum_sum_type]
+    have hn' : ∀ b, ¬ (0 < x (σ (Sum.inl b)) ∧ mk (σ (Sum.inl b)) = false) :=
+      fun b hb => absurd (hneg b) (not_lt.mpr hb.1.le)
+    simp only [Equiv.symm_apply_apply, Sum.elim_inl, Sum.elim_inr, zero_mul,
+      Finset.sum_const_zero, zero_add, hn', if_false]
+    refine Finset.sum_congr rfl fun p _ => ?_
+    cases hm : mk (σ (Sum.inr p)) <;> simp [hm, hpos p, bdr_comp]
+  have hr : ∑ a, ∑ b, u (σ.symm a) * u (σ.symm b) / (1 - x a * x b) =
+      ∑ a, ∑ b, u a * u b / (1 - x (σ a) * x (σ b)) := by
+    rw [← Equiv.sum_comp σ]
+    refine Finset.sum_congr rfl fun a _ => ?_
+    rw [← Equiv.sum_comp σ]
+    refine Finset.sum_congr rfl fun b _ => ?_
+    simp
+  rw [hl, hr] at h
+  exact h
+
+
+/-- **Cauchy's determinant in logarithmic form**:
+`log det (1/(1 - t_a t_b)) = Σ_{a ≠ b} log |t_a - t_b| - Σ_{a,b} log (1 - t_a t_b)`. -/
+theorem log_det_kR {κ : Type*} [Fintype κ] [DecidableEq κ] (t : κ → ℝ)
+    (hinj : Function.Injective t) (ht : ∀ a, |t a| < 1) :
+    0 < (kR t).det ∧
+      Real.log (kR t).det = (∑ a, ∑ b, lgd t a b) - ∑ a, ∑ b, lgc t a b := by
+  classical
+  let e : Fin (Fintype.card κ) ≃ κ := (Fintype.equivFin κ).symm
+  set t' : Fin (Fintype.card κ) → ℝ := fun i => t (e i) with ht'
+  have hinj' : Function.Injective t' := hinj.comp e.injective
+  have hden : ∀ i j, 1 - t' i * t' j ≠ 0 := fun i j => (one_sub_node_mul_pos (ht _) (ht _)).ne'
+  have hden0 : 0 < ∏ i : Fin (Fintype.card κ), ∏ j : Fin (Fintype.card κ), (1 - t' i * t' j) :=
+    Finset.prod_pos fun i _ => Finset.prod_pos fun j _ => one_sub_node_mul_pos (ht _) (ht _)
+  have h1 : (kR t').det = (kR t).det := by
+    have : kR t' = (kR t).submatrix e e := by ext i j; simp [kR, ht']
+    rw [this, Matrix.det_submatrix_equiv_self]
+  have hdet : (kR t).det =
+      ((∏ i, ∏ j ∈ Finset.Ioi i, (t' j - t' i)) * (∏ i, ∏ j ∈ Finset.Ioi i, (t' j - t' i))) /
+        ∏ i : Fin (Fintype.card κ), ∏ j : Fin (Fintype.card κ), (1 - t' i * t' j) := by
+    rw [← h1]
+    exact cauchy_det_eq_prod t' t' hden
+  have hV : (∏ i : Fin (Fintype.card κ), ∏ j ∈ Finset.Ioi i, (t' j - t' i)) ≠ 0 := by
+    apply Finset.prod_ne_zero_iff.mpr
+    intro i _
+    apply Finset.prod_ne_zero_iff.mpr
+    intro j hj
+    exact sub_ne_zero.mpr (fun h => absurd (hinj' h) (ne_of_gt (Finset.mem_Ioi.mp hj)))
+  have hVV : 0 < (∏ i : Fin (Fintype.card κ), ∏ j ∈ Finset.Ioi i, (t' j - t' i)) *
+      (∏ i : Fin (Fintype.card κ), ∏ j ∈ Finset.Ioi i, (t' j - t' i)) := mul_self_pos.mpr hV
+  refine ⟨by rw [hdet]; exact div_pos hVV hden0, ?_⟩
+  have hVa := abs_mul_abs_self (∏ i : Fin (Fintype.card κ), ∏ j ∈ Finset.Ioi i, (t' j - t' i))
+  have hlogden : Real.log (∏ i : Fin (Fintype.card κ), ∏ j : Fin (Fintype.card κ),
+      (1 - t' i * t' j)) = ∑ i : Fin (Fintype.card κ), ∑ j : Fin (Fintype.card κ),
+        Real.log (1 - t' i * t' j) := by
+    rw [Real.log_prod (fun i _ => (Finset.prod_pos fun j _ =>
+      one_sub_node_mul_pos (ht _) (ht _)).ne')]
+    exact Finset.sum_congr rfl fun i _ => Real.log_prod (fun j _ =>
+      (one_sub_node_mul_pos (ht _) (ht _)).ne')
+  rw [hdet, Real.log_div hVV.ne' hden0.ne', ← hVa, Real.log_mul (abs_pos.mpr hV).ne'
+    (abs_pos.mpr hV).ne', log_abs_vandermonde t' hinj', hlogden]
+  have hoff := sum_offdiag_eq_two_mul (p := Fintype.card κ)
+    (fun i j => Real.log |t' i - t' j|) (fun i j => by rw [abs_sub_comm])
+  have hoff' : (∑ i : Fin (Fintype.card κ), ∑ j ∈ Finset.Ioi i, Real.log |t' j - t' i|) =
+      ∑ i : Fin (Fintype.card κ), ∑ j ∈ Finset.Ioi i, Real.log |t' i - t' j| :=
+    Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by rw [abs_sub_comm]
+  have hD : (∑ a, ∑ b, lgd t a b) = ∑ i : Fin (Fintype.card κ), ∑ j : Fin (Fintype.card κ),
+      if i = j then (0 : ℝ) else Real.log |t' i - t' j| := by
+    rw [← Equiv.sum_comp e]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [← Equiv.sum_comp e]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    simp [lgd, ht', e.injective.eq_iff]
+  have hC : (∑ a, ∑ b, lgc t a b) =
+      ∑ i : Fin (Fintype.card κ), ∑ j : Fin (Fintype.card κ), Real.log (1 - t' i * t' j) := by
+    rw [← Equiv.sum_comp e]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [← Equiv.sum_comp e]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    simp [lgc, ht']
+  rw [hD, hC]
+  linarith [hoff, hoff']
+
+
+theorem Wdet_pos (z : ι → ℝ) (hinj : Function.Injective z) (hz1 : ∀ a, |z a| < 1)
+    (hz0 : ∀ a, z a ≠ 0) (e : ℕ) (T : Finset ι) : 0 < Wdet z e T := by
+  have hK := (log_det_kR z hinj hz1).1
+  have hS := (log_det_kR (fun a : {a // a ∉ T} => z a.1)
+    (fun a b h => Subtype.ext (hinj h)) (fun a => hz1 a.1)).1
+  unfold Wdet
+  refine div_pos (mul_pos (Finset.prod_pos fun a _ => ?_) hS) hK
+  exact abs_pos.mpr (mul_ne_zero (bdr_ne_zero hinj hz1 a) (pow_ne_zero _ (hz0 a)))
+
+
+/-- **The pair identity of Lemma 17.43.1**: `|V(z)| · W_T = exp (lamS z e T)`, i.e.
+`|V(z)| W_T = |V(z_{Tᶜ})| |V(z_T)| ∏_{a ∈ T, b ∉ T} (1 - z_a z_b) ∏_{a ∈ T} |z_a|^e`. -/
+theorem exp_vand_mul_Wdet (z : ι → ℝ) (hinj : Function.Injective z) (hz1 : ∀ a, |z a| < 1)
+    (hz0 : ∀ a, z a ≠ 0) (e : ℕ) (T : Finset ι) :
+    Real.exp ((1 / 2) * ∑ a, ∑ b, lgd z a b) * Wdet z e T = Real.exp (lamS z e T) := by
+  have hW := Wdet_pos z hinj hz1 hz0 e T
+  obtain ⟨hKp, hKl⟩ := log_det_kR z hinj hz1
+  obtain ⟨hSp, hSl⟩ := log_det_kR (fun a : {a // a ∉ T} => z a.1)
+    (fun a b h => Subtype.ext (hinj h)) (fun a => hz1 a.1)
+  have hprod : 0 < ∏ a ∈ T, |bdr z a * z a ^ e| :=
+    Finset.prod_pos fun a _ => abs_pos.mpr (mul_ne_zero (bdr_ne_zero hinj hz1 a)
+      (pow_ne_zero _ (hz0 a)))
+  have hlogprod : Real.log (∏ a ∈ T, |bdr z a * z a ^ e|) =
+      ∑ a ∈ T, ((∑ c, lgd z a c) - (∑ c, lgc z c a) + (e : ℝ) * Real.log |z a|) := by
+    rw [Real.log_prod (fun a _ => (abs_pos.mpr (mul_ne_zero (bdr_ne_zero hinj hz1 a)
+      (pow_ne_zero _ (hz0 a)))).ne')]
+    refine Finset.sum_congr rfl fun a _ => ?_
+    rw [abs_mul, Real.log_mul (abs_pos.mpr (bdr_ne_zero hinj hz1 a)).ne'
+      (abs_pos.mpr (pow_ne_zero _ (hz0 a))).ne', log_abs_bdr z hz1 hinj a, abs_pow, Real.log_pow]
+  have hlogW : Real.log (Wdet z e T) =
+      ∑ a ∈ T, ((∑ c, lgd z a c) - (∑ c, lgc z c a) + (e : ℝ) * Real.log |z a|) +
+        Real.log (kR (fun a : {a // a ∉ T} => z a.1)).det - Real.log (kR z).det := by
+    unfold Wdet
+    rw [Real.log_div (mul_pos hprod hSp).ne' hKp.ne', Real.log_mul hprod.ne' hSp.ne', hlogprod]
+  rw [← Real.exp_log hW, ← Real.exp_add]
+  congr 1
+  have hlgc_sub : ∀ a b : {a // a ∉ T},
+      lgc (fun a : {a // a ∉ T} => z a.1) a b = lgc z a.1 b.1 := fun a b => rfl
+  rw [hlogW, hSl, hKl]
+  simp only [lgd_sub, hlgc_sub]
+  rw [sum_sub_compl T (lgd z), sum_sub_compl T (lgc z)]
+  have hsplit_d := sum_sum_split T (lgd z)
+  have hsplit_c := sum_sum_split T (lgc z)
+  have hsd := sum_cross_symm T (lgd z) (lgd_symm z)
+  have hsc := sum_cross_symm T (lgc z) (lgc_symm z)
+  have hrowsplit : ∀ f : ι → ι → ℝ, ∑ a ∈ T, ∑ c, f a c =
+      (∑ a ∈ T, ∑ c ∈ T, f a c) + ∑ a ∈ T, ∑ c ∈ Tᶜ, f a c := by
+    intro f
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun a _ => (Finset.sum_add_sum_compl T (f a)).symm
+  have h1 := hrowsplit (lgd z)
+  have h2 : ∑ a ∈ T, ∑ c, lgc z c a = ∑ a ∈ T, ∑ c, lgc z a c :=
+    Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun c _ => lgc_symm z c a
+  have h3 := hrowsplit (lgc z)
+  have h4 : ∑ a ∈ T, ((∑ c, lgd z a c) - (∑ c, lgc z c a) + (e : ℝ) * Real.log |z a|) =
+      (∑ a ∈ T, ∑ c, lgd z a c) - (∑ a ∈ T, ∑ c, lgc z c a) +
+        (e : ℝ) * ∑ a ∈ T, Real.log |z a| := by
+    rw [Finset.sum_add_distrib, Finset.sum_sub_distrib, ← Finset.mul_sum]
+  unfold lamS
+  rw [h4]
+  linarith
+
+
+theorem abs_vandermonde_eq_exp {n : ℕ} (x : Fin n → ℝ) (hinj : Function.Injective x) :
+    |(Matrix.vandermonde x).det| = Real.exp ((1 / 2) * ∑ a, ∑ b, lgd x a b) := by
+  have hpos : 0 < |(Matrix.vandermonde x).det| :=
+    abs_pos.mpr (Matrix.det_vandermonde_ne_zero_iff.mpr hinj)
+  have hlog : Real.log |(Matrix.vandermonde x).det| = (1 / 2) * ∑ a, ∑ b, lgd x a b := by
+    rw [Matrix.det_vandermonde, log_abs_vandermonde x hinj]
+    have hoff := sum_offdiag_eq_two_mul (fun i j => Real.log |x i - x j|)
+      (fun i j => by rw [abs_sub_comm])
+    have h3 : ∑ i : Fin n, ∑ j ∈ Finset.Ioi i, Real.log |x j - x i| =
+        ∑ i : Fin n, ∑ j ∈ Finset.Ioi i, Real.log |x i - x j| :=
+      Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by rw [abs_sub_comm]
+    have h2 : (∑ a, ∑ b, lgd x a b) =
+        ∑ i : Fin n, ∑ j : Fin n, if i = j then (0 : ℝ) else Real.log |x i - x j| := rfl
+    rw [h2, hoff, h3]
+    ring
+  rw [← hlog, Real.exp_log hpos]
+
+
+/-- **Lemma 17.43.1 (determinant side).**  For the marked Laurent matrix, from Lemma T for ALL
+positive nodes (`hT`), the determinant is bounded by the sum over the subsets `S` of the marked
+positives of `6^{|S|} 11^{q-|S|}` times `exp (lamS)`, the near-type (second-sheet) product
+`|V(z_{Sᶜ})| |V(z_S)| ∏_{a ∈ S, b ∉ S} (1 - z_a z_b) ∏_{a ∈ S} |z_a|^{n-1-2g}`. -/
+theorem abs_det_laurent_le_marked_expand {n k q g : ℕ} (σ : Fin k ⊕ Fin q ≃ Fin n)
+    (x : Fin n → ℝ) (mk : Fin n → Bool)
+    (hinj : Function.Injective x) (hx1 : ∀ i, |x i| < 1) (hx0 : ∀ i, x i ≠ 0)
+    (hneg : ∀ b, x (σ (Sum.inl b)) < 0) (hpos : ∀ p, 0 < x (σ (Sum.inr p)))
+    (hk : 0 < k) (hq : 2 * g < q)
+    (hT : ∀ c : Fin n → ℝ, |∑ a ∈ Finset.univ.filter (fun a => 0 < x a),
+        CatalanMeasure.Signed.bDeriv x a * x a ^ (n - 1 - 2 * g) * c a ^ 2| ≤
+        (3 / 2) * ∑ a, ∑ b, c a * c b / (1 - x a * x b)) :
+    |(markedLaurentMatrix g x mk).det| ≤
+      (∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ))) *
+        Real.exp (logRatioZ (q - g) (fun b => x (σ (Sum.inl b))) (fun p => x (σ (Sum.inr p)))) *
+        ∑ S : Finset (Fin q),
+          (if ∀ p ∈ S, mk (σ (Sum.inr p)) = true then
+            (6 : ℝ) ^ S.card * 11 ^ (q - S.card) *
+              Real.exp (lamS (fun i => x (σ i)) (n - 1 - 2 * g)
+                (S.map Function.Embedding.inr)) else 0) := by
+  classical
+  have hcard := Fintype.card_congr σ
+  simp only [Fintype.card_sum, Fintype.card_fin] at hcard
+  have hg : 2 * g + 1 ≤ n := by omega
+  -- node data on the sign-split index type
+  obtain ⟨z, hz⟩ : ∃ z : Fin k ⊕ Fin q → ℝ, z = fun i => x (σ i) := ⟨_, rfl⟩
+  obtain ⟨xn, hxn⟩ : ∃ xn : Fin k → ℝ, xn = fun b => x (σ (Sum.inl b)) := ⟨_, rfl⟩
+  obtain ⟨gp, hgp⟩ : ∃ gp : Fin q → ℝ, gp = fun p => x (σ (Sum.inr p)) := ⟨_, rfl⟩
+  have hzx : ∀ i, z i = x (σ i) := fun i => by rw [hz]
+  have hxnx : ∀ b, xn b = x (σ (Sum.inl b)) := fun b => by rw [hxn]
+  have hgpx : ∀ p, gp p = x (σ (Sum.inr p)) := fun p => by rw [hgp]
+  have hzl : ∀ b, z (Sum.inl b) = xn b := fun b => by rw [hzx, hxnx]
+  have hzr : ∀ p, z (Sum.inr p) = gp p := fun p => by rw [hzx, hgpx]
+  rw [← hxn, ← hgp]
+  have hzinj : Function.Injective z := by rw [hz]; exact hinj.comp σ.injective
+  have hz1 : ∀ i, |z i| < 1 := fun i => by rw [hzx]; exact hx1 _
+  have hz0 : ∀ i, z i ≠ 0 := fun i => by rw [hzx]; exact hx0 _
+  have hxninj : Function.Injective xn := fun a b h => by
+    rw [hxn] at h; exact Sum.inl_injective (σ.injective (hinj h))
+  have hxn1 : ∀ b, |xn b| < 1 := fun b => by rw [hxnx]; exact hx1 _
+  have hxn0 : ∀ b, xn b ≠ 0 := fun b => by rw [hxnx]; exact hx0 _
+  have hgp1 : ∀ p, |gp p| < 1 := fun p => by rw [hgpx]; exact hx1 _
+  -- Laurent matrix to the weighted Vandermonde-type matrix
+  have hL := abs_det_laurent_eq_marked hg x mk hx0
+  have h51 := lemma51_weighted (omegaM x mk) (n - 1 - 2 * g) x hinj hx0 hx1
+  have hV : (Matrix.vandermonde x).det ≠ 0 := Matrix.det_vandermonde_ne_zero_iff.mpr hinj
+  have hKx : 0 < (kMat x).det := kR_det_pos hinj hx0 hx1
+  -- the reindexed real matrix
+  obtain ⟨d, hd⟩ : ∃ d : Fin k ⊕ Fin q → ℝ,
+      d = fun i => bdr z i * z i ^ (n - 1 - 2 * g) := ⟨_, rfl⟩
+  have hbd : ∀ i, bdr z i = CatalanMeasure.Signed.bDeriv x (σ i) := fun i => by
+    rw [hz]; exact bdr_comp σ x i
+  have hnb : ∀ a, negBlaschkeDeriv x a = CatalanMeasure.Signed.bDeriv x a := fun a => rfl
+  obtain ⟨dg, hdg⟩ : ∃ dg : Fin q → ℝ,
+      dg = fun p => if mk (σ (Sum.inr p)) = true then 0 else d (Sum.inr p) := ⟨_, rfl⟩
+  obtain ⟨dF, hdF⟩ : ∃ dF : Fin k ⊕ Fin q → ℝ,
+      dF = Sum.elim (fun b => d (Sum.inl b)) (fun p => d (Sum.inr p) - 6 * dg p) := ⟨_, rfl⟩
+  have hMι : (kMat x + dW (omegaM x mk) (n - 1 - 2 * g) x).submatrix σ σ =
+      kR z + Matrix.diagonal dF := by
+    ext i j
+    simp only [Matrix.submatrix_apply, Matrix.add_apply, kMat, kR, Matrix.of_apply, dW,
+      Matrix.diagonal_apply, σ.injective.eq_iff]
+    by_cases hij : i = j
+    · subst hij
+      simp only [if_true]
+      rw [hz]
+      rcases i with b | p
+      · have h1 : omegaM x mk (σ (Sum.inl b)) = 1 := by simp [omegaM, hneg b]
+        simp only [hdF, hd, Sum.elim_inl, h1, hnb, ← hbd, hz]
+        ring
+      · by_cases hm : mk (σ (Sum.inr p)) = true
+        · have h1 : omegaM x mk (σ (Sum.inr p)) = 1 := by simp [omegaM, hm]
+          simp only [hdF, hd, hdg, Sum.elim_inr, h1, hnb, ← hbd, hz, hm, if_true]
+          ring
+        · have h1 : omegaM x mk (σ (Sum.inr p)) = -5 := by
+            simp [omegaM, hm, not_lt.mpr (hpos p).le]
+          have hm' : mk (σ (Sum.inr p)) = false := by simpa using hm
+          simp only [hdF, hd, hdg, Sum.elim_inr, h1, hnb, ← hbd, hz, hm', Bool.false_eq_true,
+            if_false]
+          ring
+    · rw [if_neg hij, if_neg hij, hz]
+  have hdet1 : (kMat x + dW (omegaM x mk) (n - 1 - 2 * g) x).det =
+      (kR z + Matrix.diagonal dF).det := by
+    rw [← hMι, Matrix.det_submatrix_equiv_self]
+  have hdetK : (kMat x).det = (kR z).det := by
+    have : (kMat x).submatrix σ σ = kR z := by
+      ext i j; simp [kMat, kR, hz]
+    rw [← this, Matrix.det_submatrix_equiv_self]
+  -- complex positivity data
+  have hKc : (kC z).PosDef := kC_posDef hzinj hz0 hz1
+  have h1c : (kC z + diagC d).PosSemidef := by
+    rw [hd]; exact pick_F_nonneg hzinj hz0 hz1 (n - 1 - 2 * g)
+  have h2c : (kC z - diagC d).PosSemidef := by
+    rw [hd]; exact pick_F_le_two_K hzinj hz0 hz1 (n - 1 - 2 * g)
+  -- Lemma T for ALL positives, as complex Loewner inequalities
+  obtain ⟨dgA, hdgA⟩ : ∃ dgA : Fin q → ℝ, dgA = fun p => d (Sum.inr p) := ⟨_, rfl⟩
+  have hTι : ∀ u : Fin k ⊕ Fin q → ℝ,
+      |∑ a, (Sum.elim (fun _ => (0 : ℝ)) dgA a) * u a ^ 2| ≤
+        (3 / 2) * ∑ a, ∑ b, u a * u b / (1 - z a * z b) := by
+    have h := lemmaT_sum_form_marked σ x (fun _ => false) hneg hpos (by simpa using hT)
+    rw [hdgA, hd, hz]
+    simpa using h
+  obtain ⟨h3c, h4c⟩ := lemmaT_loewner_complex z (Sum.elim (fun _ => 0) dgA) hTι
+  -- the negative block
+  have hs2 : q < 2 * (q - g) := by omega
+  have he2 : (n - 1 - 2 * g) + q + 1 = 2 * (q - g) + k := by omega
+  have hnb' := negBlock_posDef z hzinj hz0 hz1 (q - g) (n - 1 - 2 * g) hk hs2 he2
+  have hxz : (fun b => z (Sum.inl b)) = xn := funext hzl
+  have hgz : (fun p => z (Sum.inr p)) = gp := funext hzr
+  rw [hxz, hgz] at hnb'
+  obtain ⟨hM1', hA', hM1pos⟩ := hnb'
+  have hM1 : (kC z).submatrix Sum.inl Sum.inl + diagC (fun a => d (Sum.inl a)) =
+      (kMat xn + dMinus (hOfRoots gp) q (n - 1 - 2 * g) xn).map (fun r : ℝ => (r : ℂ)) := by
+    rw [hd]; exact hM1'
+  have hA : ((kC z).submatrix Sum.inl Sum.inl + diagC (fun a => d (Sum.inl a))).PosDef := by
+    rw [hd]; exact hA'
+  have hR0 := route_ratio_pos gp hgp1 (q - g) k (n - 1 - 2 * g) hk hs2 he2 xn hxninj hxn0 hxn1
+  have hK11 : 0 < (kMat xn).det := kR_det_pos hxninj hxn0 hxn1
+  have hsub11 : (kC z).submatrix Sum.inl Sum.inl = (kR xn).map (fun r : ℝ => (r : ℂ)) := by
+    ext a b
+    simp [kC, kR, hzl]
+  have hGramS := fun S : Finset (Fin q) =>
+    norm_det_gram_le_sub (kC z) d dgA hKc hA h1c h2c (τ := 3 / 2) (by norm_num) h3c h4c S
+  -- assemble
+  have hexp : Real.exp (logRatioZ (q - g) xn gp) =
+      (kMat xn + dMinus (hOfRoots gp) q (n - 1 - 2 * g) xn).det / (kMat xn).det := by
+    rw [← log_route_two gp hgp1 (q - g) k (n - 1 - 2 * g) hk hs2 he2 xn hxninj hxn0 hxn1]
+    exact Real.exp_log hR0
+  rw [hexp]
+  set Dw := (kMat x + dW (omegaM x mk) (n - 1 - 2 * g) x).det with hDw
+  set Dm := (dMatW (omegaM x mk) (n - 1 - 2 * g + n - 1) x).det with hDm
+  set M1d := (kMat xn + dMinus (hOfRoots gp) q (n - 1 - 2 * g) xn).det with hM1d
+  have hDmeq : Dm = (Matrix.vandermonde x).det * (Dw / (kMat x).det) := by
+    rw [h51]; field_simp
+  have hDmabs : |Dm| = |(Matrix.vandermonde x).det| * (|Dw| / (kMat x).det) := by
+    rw [hDmeq, abs_mul, abs_div, abs_of_pos hKx]
+  -- the expansion of the determinant
+  obtain ⟨δ, hδ⟩ : ∃ δ : Fin q → ℝ,
+      δ = fun p => if mk (σ (Sum.inr p)) = true then 6 * d (Sum.inr p) else 0 := ⟨_, rfl⟩
+  obtain ⟨dX, hdX⟩ : ∃ dX : Fin k ⊕ Fin q → ℝ,
+      dX = Sum.elim (fun a => d (Sum.inl a)) (fun p => d (Sum.inr p) - 6 * dgA p) := ⟨_, rfl⟩
+  have hsplitF : kR z + Matrix.diagonal dF =
+      (kR z + Matrix.diagonal dX) + Matrix.diagonal (Sum.elim (fun _ : Fin k => (0 : ℝ)) δ) := by
+    rw [add_assoc, Matrix.diagonal_add]
+    congr 2
+    funext a
+    rcases a with b | p
+    · simp [hdF, hdX]
+    · by_cases hm : mk (σ (Sum.inr p)) = true
+      · simp [hdF, hdX, hdg, hdgA, hδ, hm] <;> ring
+      · simp [hdF, hdX, hdg, hdgA, hδ, hm]
+  have hExp := det_add_diagonal_sum_expand (kR z + Matrix.diagonal dX) δ
+  rw [← hsplitF] at hExp
+  have hDwE : Dw = ∑ S : Finset (Fin q), (∏ p ∈ S, δ p) *
+      ((kR z + Matrix.diagonal dX).submatrix (tailEmb S) (tailEmb S)).det := by
+    exact hdet1.trans hExp
+  -- the bound of one term
+  have hterm : ∀ S : Finset (Fin q),
+      |((kR z + Matrix.diagonal dX).submatrix (tailEmb S) (tailEmb S)).det| ≤
+        11 ^ (q - S.card) * (M1d / (kMat xn).det) *
+          ((kR z).submatrix (tailEmb S) (tailEmb S)).det := by
+    intro S
+    have hG := hGramS S
+    have hX : ((kC z + diagC dX).submatrix (tailEmb S) (tailEmb S)) =
+        ((kR z + Matrix.diagonal dX).submatrix (tailEmb S) (tailEmb S)).map
+          (fun r : ℝ => (r : ℂ)) := by
+      ext a b
+      by_cases h : tailEmb S a = tailEmb S b <;>
+        simp [kC, kR, diagC, Matrix.diagonal_apply, Matrix.submatrix_apply, h]
+    have hKS : ((kC z).submatrix (tailEmb S) (tailEmb S)) =
+        ((kR z).submatrix (tailEmb S) (tailEmb S)).map (fun r : ℝ => (r : ℂ)) := by
+      ext a b
+      simp [kC, kR, Matrix.submatrix_apply]
+    have hXd : (kC z + diagC (Sum.elim (fun a => d (Sum.inl a))
+        (fun p => d (Sum.inr p) - 6 * dgA p))) = kC z + diagC dX := by rw [hdX]
+    rw [hXd, hX, hKS, hM1, hsub11, det_map_ofReal, det_map_ofReal,
+      det_map_ofReal, det_map_ofReal, Complex.norm_real, Real.norm_eq_abs,
+      Complex.ofReal_re, Complex.ofReal_re, Complex.ofReal_re] at hG
+    have h11 : (2 + 6 * (3 / 2 : ℝ)) = 11 := by norm_num
+    have hcardS : Fintype.card {p : Fin q // p ∉ S} = q - S.card := by
+      rw [Fintype.card_subtype_compl, Fintype.card_fin, Fintype.card_coe]
+    rw [h11, hcardS] at hG
+    have hb : |((kR z + Matrix.diagonal dX).submatrix (tailEmb S) (tailEmb S)).det| ≤
+        11 ^ (q - S.card) * M1d * ((kR z).submatrix (tailEmb S) (tailEmb S)).det /
+          (kMat xn).det := (le_div_iff₀ hK11).mpr hG
+    calc _ ≤ _ := hb
+      _ = _ := by ring
+  have hWd : ∀ S : Finset (Fin q),
+      Wdet z (n - 1 - 2 * g) (S.map Function.Embedding.inr) =
+        (∏ p ∈ S, |d (Sum.inr p)|) * ((kR z).submatrix (tailEmb S) (tailEmb S)).det /
+          (kR z).det := by
+    intro S
+    unfold Wdet
+    rw [Finset.prod_map]
+    congr 2
+    · refine Finset.prod_congr rfl fun p _ => ?_
+      simp [hd]
+    · have e : (kR z).submatrix (tailEmb S) (tailEmb S) =
+          (kR (fun a : {a // a ∉ S.map Function.Embedding.inr} => z a.1)).submatrix
+            (tailEquiv (m := Fin k) S) (tailEquiv (m := Fin k) S) := by
+        ext a b; rfl
+      rw [e, Matrix.det_submatrix_equiv_self]
+  have hVz : |(Matrix.vandermonde x).det| =
+      Real.exp ((1 / 2) * ∑ a, ∑ b, lgd z a b) := by
+    rw [abs_vandermonde_eq_exp x hinj]
+    congr 2
+    rw [← Equiv.sum_comp σ]
+    refine Finset.sum_congr rfl fun a _ => ?_
+    rw [← Equiv.sum_comp σ]
+    refine Finset.sum_congr rfl fun b _ => ?_
+    simp [lgd, hz, σ.injective.eq_iff]
+  obtain ⟨E, hEdef⟩ : ∃ E : ℝ, E = Real.exp ((1 / 2) * ∑ a, ∑ b, lgd z a b) := ⟨_, rfl⟩
+  rw [← hEdef] at hVz
+  -- the bound of the sum over S
+  have hDwb : |Dw| / (kMat x).det ≤ ∑ S : Finset (Fin q),
+      (M1d / (kMat xn).det) *
+        ((if ∀ p ∈ S, mk (σ (Sum.inr p)) = true then
+            (6 : ℝ) ^ S.card * 11 ^ (q - S.card) else 0) *
+          Wdet z (n - 1 - 2 * g) (S.map Function.Embedding.inr)) := by
+    rw [div_le_iff₀ hKx, hDwE]
+    refine (Finset.abs_sum_le_sum_abs _ _).trans ?_
+    rw [Finset.sum_mul]
+    refine Finset.sum_le_sum fun S _ => ?_
+    rw [abs_mul]
+    have hWS := hWd S
+    rw [hWS]
+    have hKp : 0 < (kR z).det := by rw [← hdetK]; exact hKx
+    by_cases hm : ∀ p ∈ S, mk (σ (Sum.inr p)) = true
+    · rw [if_pos hm]
+      have hprod : |∏ p ∈ S, δ p| = (6 : ℝ) ^ S.card * ∏ p ∈ S, |d (Sum.inr p)| := by
+        rw [Finset.abs_prod]
+        have : ∀ p ∈ S, |δ p| = 6 * |d (Sum.inr p)| := by
+          intro p hp
+          rw [hδ]; simp only [hm p hp, if_true, abs_mul]; norm_num
+        rw [Finset.prod_congr rfl this, Finset.prod_mul_distrib, Finset.prod_const]
+      rw [hprod]
+      have h1 := hterm S
+      have hdd : 0 ≤ (6 : ℝ) ^ S.card * ∏ p ∈ S, |d (Sum.inr p)| :=
+        mul_nonneg (by positivity) (Finset.prod_nonneg fun p _ => abs_nonneg _)
+      calc (6 : ℝ) ^ S.card * (∏ p ∈ S, |d (Sum.inr p)|) *
+            |((kR z + Matrix.diagonal dX).submatrix (tailEmb S) (tailEmb S)).det|
+          ≤ (6 : ℝ) ^ S.card * (∏ p ∈ S, |d (Sum.inr p)|) *
+            (11 ^ (q - S.card) * (M1d / (kMat xn).det) *
+              ((kR z).submatrix (tailEmb S) (tailEmb S)).det) := by
+            exact mul_le_mul_of_nonneg_left h1 hdd
+        _ = _ := by
+            rw [hdetK]; field_simp
+    · rw [if_neg hm]
+      push_neg at hm
+      obtain ⟨p, hpS, hpm⟩ := hm
+      have : ∏ p ∈ S, δ p = 0 := by
+        apply Finset.prod_eq_zero hpS
+        rw [hδ]; simp [hpm]
+      rw [this]
+      simp
+  -- final assembly
+  have hexpv : ∀ S : Finset (Fin q), E *
+      Wdet z (n - 1 - 2 * g) (S.map Function.Embedding.inr) =
+        Real.exp (lamS (fun i => x (σ i)) (n - 1 - 2 * g) (S.map Function.Embedding.inr)) := by
+    intro S
+    have := exp_vand_mul_Wdet z hzinj hz1 hz0 (n - 1 - 2 * g) (S.map Function.Embedding.inr)
+    rw [← hEdef, hz] at this
+    rw [hz]
+    exact this
+  have hPi : ∏ i, |lamM x mk i| * |x i| ^ ((g : ℤ) - (n - 1 : ℕ)) ≤
+      ∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ)) := by
+    rw [Finset.prod_mul_distrib]
+    have h1 : ∏ i, |lamM x mk i| ≤ 1 :=
+      Finset.prod_le_one₀ (fun i _ => abs_nonneg _)
+        (fun i _ => (abs_lamM_le x mk i).trans (by norm_num))
+    have h2 : 0 ≤ ∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ)) :=
+      Finset.prod_nonneg fun i _ => zpow_nonneg (abs_nonneg _) _
+    nlinarith
+  have hPi1 : 0 ≤ ∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ)) :=
+    Finset.prod_nonneg fun i _ => zpow_nonneg (abs_nonneg _) _
+  have hM1p : 0 ≤ M1d / (kMat xn).det := hR0.le
+  rw [hL, hDmabs, hVz]
+  have hsum : ∑ S : Finset (Fin q), (M1d / (kMat xn).det) *
+      ((if ∀ p ∈ S, mk (σ (Sum.inr p)) = true then
+            (6 : ℝ) ^ S.card * 11 ^ (q - S.card) else 0) *
+        Wdet z (n - 1 - 2 * g) (S.map Function.Embedding.inr)) =
+      (M1d / (kMat xn).det) * E⁻¹ *
+        ∑ S : Finset (Fin q), (if ∀ p ∈ S, mk (σ (Sum.inr p)) = true then
+            (6 : ℝ) ^ S.card * 11 ^ (q - S.card) *
+              Real.exp (lamS (fun i => x (σ i)) (n - 1 - 2 * g)
+                (S.map Function.Embedding.inr)) else 0) := by
+    rw [mul_assoc]
+    simp only [Finset.mul_sum]
+    refine Finset.sum_congr rfl fun S _ => ?_
+    have hE := hexpv S
+    have hEp : 0 < E := by rw [hEdef]; exact Real.exp_pos _
+    by_cases hm : ∀ p ∈ S, mk (σ (Sum.inr p)) = true
+    · simp only [if_pos hm]
+      rw [← hE]
+      field_simp
+    · simp [hm]
+  have hEp : 0 < E := by rw [hEdef]; exact Real.exp_pos _
+  calc (∏ i, |lamM x mk i| * |x i| ^ ((g : ℤ) - (n - 1 : ℕ))) *
+        (E * (|Dw| / (kMat x).det))
+      ≤ (∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ))) *
+        (E * (|Dw| / (kMat x).det)) :=
+        mul_le_mul_of_nonneg_right hPi (by positivity)
+    _ ≤ (∏ i, |x i| ^ ((g : ℤ) - (n - 1 : ℕ))) *
+        (E * ∑ S : Finset (Fin q),
+          (M1d / (kMat xn).det) *
+            ((if ∀ p ∈ S, mk (σ (Sum.inr p)) = true then
+                (6 : ℝ) ^ S.card * 11 ^ (q - S.card) else 0) *
+              Wdet z (n - 1 - 2 * g) (S.map Function.Embedding.inr))) := by
+        refine mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hDwb hEp.le) hPi1
+    _ = _ := by
+        rw [hsum]
+        have hE0 := hEp.ne'
+        field_simp
+
+

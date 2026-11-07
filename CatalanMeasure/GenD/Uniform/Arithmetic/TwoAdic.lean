@@ -2,9 +2,9 @@ module
 
 public import CatalanMeasure.GenD.Uniform.Ledger
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import OAI.NumberTheory.Catalan.Estimates.TwoAdicSelectorExponent
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import CatalanMeasure.Parametric.TwoAdicCoefficientEntryBounds
+public import OAI.NumberTheory.Catalan.Estimates.DistinctIndexSums
 
 @[expose] public section
 

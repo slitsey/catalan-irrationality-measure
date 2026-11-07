@@ -58,12 +58,16 @@ theorem abs_coeff_mul_X_pow_le_binomBetaTerm {p : ℕ} (P : ℝ[X])
   · rw [if_neg hik, abs_zero]
     exact Nat.cast_nonneg _
 
-/-- **Lemma V (binomial generalized Vandermonde).** -/
-theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
-    (hs : ∀ l, s l ∈ Set.Icc (0 : ℝ) 1)
-    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < n) :
+/-- **Row form of the Ω–Γ factorisation.** If row `k` of `Q = [X^{k}](P X^i)`, `P = ∏ (X - s_l)`,
+has entries bounded by `t k i`, then `|det [s_l ^ E_i]| ≤ ∏_{k ∈ K} (∑_{i<m} t k i) · |V(s)|`.
+The size of the nodes plays no role: only the bound `t` on the coefficients of `P` does. -/
+theorem genVandermonde_abs_le_of_rows {p n : ℕ} (s : Fin p → ℝ)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < n)
+    (t : ℕ → ℕ → ℝ)
+    (ht : ∀ kk i : ℕ, |(newtonBasis (fun k => if h : k < p then s ⟨k, h⟩ else 0) p * X ^ i).coeff kk|
+      ≤ t kk i) :
     |(Matrix.of fun l i : Fin p => s l ^ E i).det| ≤
-      (∏ k ∈ range n \ univ.image E, (binomBeta p (n - p) k : ℝ)) *
+      (∏ k ∈ range n \ univ.image E, ∑ i ∈ range (n - p), t k i) *
         |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)| := by
   classical
   have hpn : p ≤ n := by
@@ -74,12 +78,6 @@ theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
   have hpm : p + m = n := by omega
   -- the nodes as a sequence and the polynomial `P`
   let σ : ℕ → ℝ := fun k => if h : k < p then s ⟨k, h⟩ else 0
-  have hσ : ∀ k, σ k ∈ Set.Icc (0 : ℝ) 1 := by
-    intro k
-    simp only [σ]
-    split_ifs
-    · exact hs _
-    · exact ⟨le_rfl, zero_le_one⟩
   have hσs : ∀ l : Fin p, σ l.val = s l := by
     intro l
     simp [σ, l.isLt]
@@ -242,20 +240,17 @@ theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
       · simp
   -- bound for the block `Q`, by rows
   set Q : Matrix (Fin m) (Fin m) ℝ := Matrix.of fun j i => (P * X ^ (i : ℕ)).coeff (k j : ℕ) with hQ
-  have hPb : ∀ a, |P.coeff a| ≤ (p.choose a : ℝ) := (newtonBasis_bounds σ hσ p).2
-  have hQb : |Q.det| ≤ ∏ j : Fin m, (binomBeta p m (k j : ℕ) : ℝ) := by
+  have hQb : |Q.det| ≤ ∏ j : Fin m, ∑ i ∈ range m, t (k j : ℕ) i := by
     calc |Q.det| = |Q.transpose.det| := by rw [Matrix.det_transpose]
       _ ≤ ∏ j, ∑ i, |Q.transpose i j| := abs_det_le_prod_col_sum Q.transpose
-      _ ≤ ∏ j : Fin m, (binomBeta p m (k j : ℕ) : ℝ) := by
+      _ ≤ ∏ j : Fin m, ∑ i ∈ range m, t (k j : ℕ) i := by
           apply prod_le_prod₀ (fun j _ => sum_nonneg fun _ _ => abs_nonneg _)
           intro j _
           have e1 : ∑ i : Fin m, |Q.transpose i j| =
               ∑ i ∈ range m, |(P * X ^ i).coeff (k j : ℕ)| :=
             Fin.sum_univ_eq_sum_range (fun i => |(P * X ^ i).coeff (k j : ℕ)|) m
           rw [e1]
-          unfold binomBeta
-          push_cast
-          exact sum_le_sum fun i _ => abs_coeff_mul_X_pow_le_binomBetaTerm P hPb i _
+          exact sum_le_sum fun i _ => ht _ i
   -- reindex the product over `K`
   have hK : (range n \ univ.image E) = Mset.map Fin.valEmbedding := by
     ext x
@@ -266,12 +261,12 @@ theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
       exact ⟨⟨x, hx⟩, fun i h => hx2 i (by simpa [Ef] using congrArg Fin.val h), rfl⟩
     · rintro ⟨a, ha, rfl⟩
       exact ⟨a.isLt, fun i h => ha i (Fin.ext (by simpa [Ef] using h))⟩
-  have hprodK : ∏ k' ∈ range n \ univ.image E, (binomBeta p m k' : ℝ) =
-      ∏ j : Fin m, (binomBeta p m (k j : ℕ) : ℝ) := by
+  have hprodK : ∏ k' ∈ range n \ univ.image E, ∑ i ∈ range m, t k' i =
+      ∏ j : Fin m, ∑ i ∈ range m, t (k j : ℕ) i := by
     rw [hK, Finset.prod_map]
     simp only [Fin.valEmbedding_apply]
-    rw [← Finset.prod_coe_sort Mset (fun a : Fin n => (binomBeta p m (a : ℕ) : ℝ))]
-    exact (Equiv.prod_comp kEq (fun b : Mset => (binomBeta p m ((b : Fin n) : ℕ) : ℝ))).symm
+    rw [← Finset.prod_coe_sort Mset (fun a : Fin n => ∑ i ∈ range m, t (a : ℕ) i)]
+    exact (Equiv.prod_comp kEq (fun b : Mset => ∑ i ∈ range m, t ((b : Fin n) : ℕ) i)).symm
   -- assemble
   have hmain : (Matrix.of fun l i : Fin p => s l ^ E i).det * (Γ.submatrix π id).det =
       (∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)) * Q.det := by
@@ -281,6 +276,29 @@ theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
   rw [abs_mul, abs_mul, hdetΓ, mul_one] at habs
   rw [habs, mul_comm, hprodK]
   exact mul_le_mul_of_nonneg_right hQb (abs_nonneg _)
+
+/-- **Lemma V (binomial generalized Vandermonde).** -/
+theorem genVandermonde_abs_le_binom {p n : ℕ} (s : Fin p → ℝ)
+    (hs : ∀ l, s l ∈ Set.Icc (0 : ℝ) 1)
+    (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < n) :
+    |(Matrix.of fun l i : Fin p => s l ^ E i).det| ≤
+      (∏ k ∈ range n \ univ.image E, (binomBeta p (n - p) k : ℝ)) *
+        |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)| := by
+  have h := genVandermonde_abs_le_of_rows s E hE hEn (fun kk i => (binomBetaTerm p kk i : ℝ))
+    (fun kk i => by
+      have hσ' : ∀ k, (fun k => if h : k < p then s ⟨k, h⟩ else 0) k ∈ Set.Icc (0 : ℝ) 1 := by
+        intro k
+        simp only
+        split_ifs
+        · exact hs _
+        · exact ⟨le_rfl, zero_le_one⟩
+      exact abs_coeff_mul_X_pow_le_binomBetaTerm _ (fun a => (newtonBasis_bounds _ hσ' p).2 a) i kk)
+  have hsum : ∀ k, ∑ i ∈ range (n - p), (binomBetaTerm p k i : ℝ) = (binomBeta p (n - p) k : ℝ) := by
+    intro k
+    unfold binomBeta
+    push_cast
+    rfl
+  simpa only [hsum] using h
 
 /-! ### Consequences of Lemma V -/
 
@@ -480,7 +498,212 @@ theorem log_binomBeta_le_entropy (p m n k : ℕ) (hpm : p + m = n) (hm : 1 ≤ m
           gcongr; exact log_choose_le_mul_binEntropy n j hjn
       _ ≤ Real.log m + n * Real.binEntropy ((k : ℝ) / n) := by gcongr
 
+/-! ### The ζ-weighted form (GP Theorem 3.1, Lemma 3.2)
+
+For `0 < ζ`, nonnegative nodes of any size: `|det [s_l ^ E_i]| ≤ (∏ (1 + ζ s_l)) ^ m ∏_{k ∈ K}
+β_ζ(p, m, k) |V(s)|`, with `β_ζ(p, m, k) = ∑_{i<m, k-p ≤ i ≤ k} ζ^{-(p+i-k)}`. -/
+
+/-- Term `i` of `β_ζ(p, m, k)`: `ζ^{-(p+i-k)}` when `0 ≤ p + i - k ≤ p`, else `0`. -/
+noncomputable def zetaBetaTerm (ζ : ℝ) (p k i : ℕ) : ℝ :=
+  if k ≤ p + i ∧ i ≤ k then ζ⁻¹ ^ (p + i - k) else 0
+
+/-- `β_ζ(p, m, k) = ∑_{i<m} ζ^{-(p+i-k)}` over the terms with `0 ≤ p + i - k ≤ p`. -/
+noncomputable def zetaBeta (ζ : ℝ) (p m k : ℕ) : ℝ := ∑ i ∈ range m, zetaBetaTerm ζ p k i
+
+theorem zetaBetaTerm_nonneg {ζ : ℝ} (hζ : 0 < ζ) (p k i : ℕ) : 0 ≤ zetaBetaTerm ζ p k i := by
+  unfold zetaBetaTerm
+  split_ifs
+  · positivity
+  · exact le_rfl
+
+theorem zetaBeta_nonneg {ζ : ℝ} (hζ : 0 < ζ) (p m k : ℕ) : 0 ≤ zetaBeta ζ p m k :=
+  sum_nonneg fun i _ => zetaBetaTerm_nonneg hζ p k i
+
+theorem newtonBasis_natDegree (σ : ℕ → ℝ) (p : ℕ) : (newtonBasis σ p).natDegree = p := by
+  rw [newtonBasis, natDegree_prod_of_monic _ _ fun l _ => monic_X_sub_C _]
+  simp
+
+/-- Coefficients of `∏_{l<k} (X - σ_l)`: `|c_a| ζ^{k-a} ≤ ∏ (1 + ζ σ_l)` for `σ ≥ 0`, `ζ ≥ 0`. -/
+theorem abs_coeff_newtonBasis_mul_le {ζ : ℝ} (hζ : 0 ≤ ζ) (σ : ℕ → ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (k a : ℕ) :
+    |(newtonBasis σ k).coeff a| * ζ ^ (k - a) ≤ ∏ l ∈ range k, (1 + ζ * σ l) := by
+  have hz : ∀ k, 0 ≤ ∏ l ∈ range k, (1 + ζ * σ l) := fun k =>
+    prod_nonneg fun l _ => by have := hσ l; positivity
+  have hdeg : ∀ k a, k < a → (newtonBasis σ k).coeff a = 0 := fun k a h =>
+    coeff_eq_zero_of_natDegree_lt (by rw [newtonBasis_natDegree]; exact h)
+  induction k generalizing a with
+  | zero =>
+    simp only [newtonBasis, range_zero, prod_empty, coeff_one]
+    rcases a with _ | a <;> simp
+  | succ k ih =>
+    rw [newtonBasis_succ, prod_range_succ]
+    set z := ∏ l ∈ range k, (1 + ζ * σ l) with hzdef
+    have hzk : 0 ≤ z := hz k
+    have hs := hσ k
+    rcases a with _ | a
+    · rw [mul_coeff_zero, coeff_sub, coeff_X_zero, coeff_C_zero, zero_sub, mul_neg, abs_neg,
+        abs_mul, abs_of_nonneg hs]
+      have h0 := ih 0
+      simp only [Nat.sub_zero] at h0 ⊢
+      calc |(newtonBasis σ k).coeff 0| * σ k * ζ ^ (k + 1)
+          = (ζ * σ k) * (|(newtonBasis σ k).coeff 0| * ζ ^ k) := by ring
+        _ ≤ (ζ * σ k) * z := mul_le_mul_of_nonneg_left h0 (by positivity)
+        _ ≤ z * (1 + ζ * σ k) := by nlinarith [mul_nonneg hζ hs]
+    · rw [coeff_mul_X_sub_C]
+      have e : k + 1 - (a + 1) = k - a := by omega
+      rw [e]
+      have h1 := ih a
+      have h2 : |(newtonBasis σ k).coeff (a + 1)| * σ k * ζ ^ (k - a) ≤ (ζ * σ k) * z := by
+        rcases Nat.lt_or_ge a k with hak | hak
+        · have h3 := ih (a + 1)
+          have e2 : k - a = (k - (a + 1)) + 1 := by omega
+          calc |(newtonBasis σ k).coeff (a + 1)| * σ k * ζ ^ (k - a)
+              = (ζ * σ k) * (|(newtonBasis σ k).coeff (a + 1)| * ζ ^ (k - (a + 1))) := by
+                rw [e2]; ring
+            _ ≤ (ζ * σ k) * z := mul_le_mul_of_nonneg_left h3 (by positivity)
+        · rw [hdeg k (a + 1) (by omega)]
+          simp only [abs_zero, zero_mul]
+          positivity
+      calc |(newtonBasis σ k).coeff a - (newtonBasis σ k).coeff (a + 1) * σ k| * ζ ^ (k - a)
+          ≤ (|(newtonBasis σ k).coeff a| + |(newtonBasis σ k).coeff (a + 1)| * σ k) *
+              ζ ^ (k - a) := by
+            gcongr
+            calc |(newtonBasis σ k).coeff a - (newtonBasis σ k).coeff (a + 1) * σ k|
+                ≤ |(newtonBasis σ k).coeff a| + |(newtonBasis σ k).coeff (a + 1) * σ k| :=
+                  abs_sub _ _
+              _ = _ := by rw [abs_mul, abs_of_nonneg hs]
+        _ = |(newtonBasis σ k).coeff a| * ζ ^ (k - a) +
+              |(newtonBasis σ k).coeff (a + 1)| * σ k * ζ ^ (k - a) := by ring
+        _ ≤ z + (ζ * σ k) * z := add_le_add h1 h2
+        _ = z * (1 + ζ * σ k) := by ring
+
+/-- Row bound for the ζ form. -/
+theorem abs_coeff_mul_X_pow_le_zetaBetaTerm {ζ : ℝ} (hζ : 0 < ζ) (σ : ℕ → ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (p i kk : ℕ) :
+    |(newtonBasis σ p * X ^ i).coeff kk| ≤
+      (∏ l ∈ range p, (1 + ζ * σ l)) * zetaBetaTerm ζ p kk i := by
+  have hz : 0 ≤ ∏ l ∈ range p, (1 + ζ * σ l) :=
+    prod_nonneg fun l _ => by have := hσ l; positivity
+  rw [coeff_mul_X_pow']
+  unfold zetaBetaTerm
+  by_cases hik : i ≤ kk
+  · rw [if_pos hik]
+    by_cases hkp : kk - i ≤ p
+    · have h := abs_coeff_newtonBasis_mul_le hζ.le σ hσ p (kk - i)
+      rw [if_pos ⟨by omega, hik⟩]
+      have e : p + i - kk = p - (kk - i) := by omega
+      rw [e]
+      have hpow : 0 < ζ ^ (p - (kk - i)) := by positivity
+      rw [inv_pow, mul_comm, ← div_eq_inv_mul, le_div_iff₀ hpow]
+      exact h
+    · rw [coeff_eq_zero_of_natDegree_lt (by rw [newtonBasis_natDegree]; omega), abs_zero]
+      rw [if_neg (by omega)]
+      simp
+  · rw [if_neg hik, abs_zero, if_neg (by omega)]
+    simp
+
+/-- **GP Theorem 3.1 (ζ energy).** -/
+theorem genVandermonde_abs_le_zeta {p n : ℕ} {ζ : ℝ} (hζ : 0 < ζ) (s : Fin p → ℝ)
+    (hs : ∀ l, 0 ≤ s l) (E : Fin p → ℕ) (hE : Function.Injective E) (hEn : ∀ i, E i < n) :
+    |(Matrix.of fun l i : Fin p => s l ^ E i).det| ≤
+      (∏ l, (1 + ζ * s l)) ^ (n - p) *
+        (∏ k ∈ range n \ univ.image E, zetaBeta ζ p (n - p) k) *
+          |∏ i : Fin p, ∏ j ∈ Ioi i, (s j - s i)| := by
+  classical
+  have hpn : p ≤ n := by
+    have h := Finset.card_le_card_of_injOn E (s := (univ : Finset (Fin p))) (t := range n)
+      (fun i _ => mem_range.mpr (hEn i)) (fun a _ b _ h => hE h)
+    simpa using h
+  set z : ℝ := ∏ l, (1 + ζ * s l) with hz
+  have hz0 : 0 ≤ z := prod_nonneg fun l _ => by have := hs l; positivity
+  have h := genVandermonde_abs_le_of_rows s E hE hEn (fun kk i => z * zetaBetaTerm ζ p kk i)
+    (fun kk i => by
+      have hσ : ∀ k, 0 ≤ (fun k => if h : k < p then s ⟨k, h⟩ else 0 : ℕ → ℝ) k := by
+        intro k
+        simp only
+        split_ifs
+        · exact hs _
+        · exact le_rfl
+      refine (abs_coeff_mul_X_pow_le_zetaBetaTerm hζ _ hσ p i kk).trans (le_of_eq ?_)
+      congr 1
+      rw [hz, ← Fin.prod_univ_eq_prod_range (fun l => 1 + ζ * (if h : l < p then s ⟨l, h⟩ else 0)) p]
+      refine prod_congr rfl fun l _ => ?_
+      simp [l.isLt])
+  have hcard : (range n \ univ.image E).card = n - p := by
+    rw [card_sdiff_of_subset (fun x hx => by
+      obtain ⟨i, _, rfl⟩ := mem_image.mp hx
+      exact mem_range.mpr (hEn i)), card_range, card_image_of_injective _ hE]
+    simp
+  have hrow : ∀ k, ∑ i ∈ range (n - p), z * zetaBetaTerm ζ p k i = z * zetaBeta ζ p (n - p) k := by
+    intro k
+    rw [zetaBeta, mul_sum]
+  simp only [hrow] at h
+  rw [prod_mul_distrib, prod_const, hcard] at h
+  exact h
+
+/-- Geometric sum with ratio `ζ⁻¹ > 1`. -/
+theorem geom_sum_zeta_inv_le {ζ : ℝ} (hζ : 0 < ζ) (hζ1 : ζ < 1) (M : ℕ) :
+    ∑ r ∈ range (M + 1), ζ⁻¹ ^ r ≤ ζ⁻¹ ^ M / (1 - ζ) := by
+  have hq : 1 < ζ⁻¹ := one_lt_inv_iff₀.mpr ⟨hζ, hζ1⟩
+  have hq0 : 0 < ζ⁻¹ - 1 := by linarith
+  have h1 : 0 < 1 - ζ := by linarith
+  rw [geom_sum_eq hq.ne']
+  rw [div_le_div_iff₀ hq0 h1]
+  have e : ζ * ζ⁻¹ ^ (M + 1) = ζ⁻¹ ^ M := by
+    rw [pow_succ]
+    field_simp
+  have e2 : ζ⁻¹ ^ (M + 1) = ζ⁻¹ ^ M * ζ⁻¹ := pow_succ _ _
+  nlinarith [e, e2]
+
+/-- **GP Lemma 3.2.** `β_ζ(p, m, k) ≤ ζ^{-(n-1-k)} / (1 - ζ)` for `k < n = p + m`, `0 < ζ < 1`. -/
+theorem zetaBeta_le {p m n k : ℕ} {ζ : ℝ} (hζ : 0 < ζ) (hζ1 : ζ < 1) (hpm : p + m = n)
+    (hk : k < n) : zetaBeta ζ p m k ≤ ζ⁻¹ ^ (n - 1 - k) / (1 - ζ) := by
+  classical
+  set S : Finset ℕ := (range m).filter (fun i => k ≤ p + i ∧ i ≤ k) with hS
+  have h1 : zetaBeta ζ p m k = ∑ i ∈ S, ζ⁻¹ ^ (p + i - k) := by
+    unfold zetaBeta zetaBetaTerm
+    rw [hS, Finset.sum_filter]
+  have hinj : Set.InjOn (fun i => p + i - k) (S : Set ℕ) := by
+    intro a ha b hb hab
+    have ha' := (mem_filter.mp ha).2.1
+    have hb' := (mem_filter.mp hb).2.1
+    simp only at hab
+    omega
+  have h2 : ∑ i ∈ S, ζ⁻¹ ^ (p + i - k) = ∑ r ∈ S.image (fun i => p + i - k), ζ⁻¹ ^ r :=
+    (Finset.sum_image hinj).symm
+  have hsub : S.image (fun i => p + i - k) ⊆ range (n - k) := by
+    intro r hr
+    obtain ⟨i, hi, rfl⟩ := mem_image.mp hr
+    have := mem_range.mp (mem_filter.mp hi).1
+    have := (mem_filter.mp hi).2.1
+    exact mem_range.mpr (by omega)
+  have hq0 : ∀ r, 0 ≤ ζ⁻¹ ^ r := fun r => by positivity
+  have h3 : ∑ r ∈ S.image (fun i => p + i - k), ζ⁻¹ ^ r ≤ ∑ r ∈ range (n - k), ζ⁻¹ ^ r :=
+    sum_le_sum_of_subset_of_nonneg hsub (fun r _ _ => hq0 r)
+  have hN : n - k = (n - 1 - k) + 1 := by omega
+  rw [h1, h2]
+  refine h3.trans ?_
+  rw [hN]
+  exact geom_sum_zeta_inv_le hζ hζ1 _
+
+/-- The exponential form of Lemma 3.2: `β_ζ ≤ (ζ / (1 - ζ)) exp((n - k) log ζ⁻¹)`. -/
+theorem zetaBeta_le_exp {p m n k : ℕ} {ζ : ℝ} (hζ : 0 < ζ) (hζ1 : ζ < 1) (hpm : p + m = n)
+    (hk : k < n) :
+    zetaBeta ζ p m k ≤ ζ / (1 - ζ) * Real.exp (((n : ℝ) - k) * Real.log ζ⁻¹) := by
+  refine (zetaBeta_le hζ hζ1 hpm hk).trans (le_of_eq ?_)
+  have hN : ((n - k : ℕ) : ℝ) = (n : ℝ) - k := by
+    rw [Nat.cast_sub hk.le]
+  have e : Real.exp (((n : ℝ) - k) * Real.log ζ⁻¹) = ζ⁻¹ ^ (n - k) := by
+    rw [← hN, Real.exp_nat_mul, Real.exp_log (inv_pos.mpr hζ)]
+  rw [e]
+  have hN2 : n - k = (n - 1 - k) + 1 := by omega
+  rw [hN2, pow_succ]
+  field_simp
+
 #print axioms genVandermonde_abs_le_binom
+#print axioms genVandermonde_abs_le_zeta
+#print axioms zetaBeta_le
+#print axioms zetaBeta_le_exp
 #print axioms binomBeta_le_two_pow
 #print axioms log_binomBeta_le
 #print axioms binomBeta_le_mul_window

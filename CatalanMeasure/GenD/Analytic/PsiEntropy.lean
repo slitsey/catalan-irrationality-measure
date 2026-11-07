@@ -5,7 +5,7 @@ public import Mathlib.Tactic.FieldSimp
 public import Mathlib.Tactic.Linarith
 public import Mathlib.Tactic.Positivity
 public import Mathlib.Tactic.Ring
-public import CatalanMeasure.GenD.Analytic.PsiSelector
+public import CatalanMeasure.GenD.Analytic.WeightedAtom
 
 @[expose] public section
 namespace CatalanMeasure.GenD.Analytic

@@ -1,0 +1,16 @@
+-- G1 GD2 (7 Nov 2026): removed from CatalanMeasure.GenD.Signed.Gate; the D72 instance fixes 66, 29/10^8 and 400, and no root reaches it
+/-- D72 payment instance; certificate-dependent inequalities remain named inputs. -/
+theorem pay400_w2750 (rho eta : ℝ) (hrho : 0 < rho) (heta : 0 < eta)
+    (heta2 : eta < 132) (hk : 2 * (27 / 50) * rho < 400)
+    (hwin : rho < 2 * ((27 / 50) * rho -
+      (29 / 100000000) * (800 - (27 / 50) * rho)))
+    (hpay : 66 * rho + 4 * 66 * (29 / 100000000) * 400 < eta * 400) :
+    PayW (27 / 50) (dc72.d0 : ℝ) rho eta (400 / rho) (29 / 100000000) 400 := by
+  apply Generic.payB dc72 (27 / 50) rho eta (29 / 100000000) 400 hrho
+    (by norm_num) (by norm_num) heta
+  · simpa only [dc72_d0, Nat.cast_ofNat, show (2 : ℝ) * 66 = 132 by norm_num] using heta2
+  · exact hk
+  · simpa only [show (2 : ℝ) * 400 = 800 by norm_num] using hwin
+  · simpa using hpay
+
+

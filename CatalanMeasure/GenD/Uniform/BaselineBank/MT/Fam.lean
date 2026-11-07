@@ -1,7 +1,7 @@
 module
 
-public import CatalanMeasure.GenD.Uniform.BaselineBank.ExactHP.Gate
 public import CatalanMeasure.GenD.Uniform.BaselineBank.MT.MTCell
+public import CatalanMeasure.GenD.Uniform.BaselineBank.Partial.Gate
 
 @[expose] public section
 set_option Elab.async false
@@ -62,13 +62,6 @@ theorem growth_of_families (fams : List (NullityLB design)) (ws : List KapWindow
     (fun w hw => by
       obtain ⟨lb, hlb, h⟩ := hcert w hw
       exact (WinCert.lift hlb h)) hε
-
-/-- **Gate for windows certified against any list of families**: if the total area is at least
-`21.6083`, the payment hypotheses hold and `eta = 29.596 < tDelta - gDg gain`. -/
-theorem gate_of_families (gain : ℝ) (hgain : 216083 / 10000 ≤ gain) :
-    PayW (3 / 4) D58.d0 Bank540.rho etaG Bank540.kappa D58.delta Bank540.B ∧
-      etaG < Bank540.tDelta - gDg gain :=
-  gate gain hgain
 
 end
 end CatalanMeasure.GenD.Uniform.Bank540.Ledger3
