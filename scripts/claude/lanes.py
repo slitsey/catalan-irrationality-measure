@@ -78,6 +78,17 @@ def est(t):
         sib = sorted(v for k, v in tp.items() if cls(k) == cls(t))
         ws = sib[len(sib) // 2] if sib else peaks().get(cls(t))
     return (1.75 * ws + 1.0, ws) if ws else (7.0, 3.5)
+def reserve(spec, used=(0.0, 0.0)):
+    """(commit, working set) GB held for a job: the larger of forecast and declared budget; a job
+    already above that is growing, so it holds 1.25 x what it uses now."""
+    ec, ew = est(spec['target'])
+    bb = float(spec.get('budget', 3))
+    if bb > 3:
+        ec, ew = max(ec, 1.75 * bb + 1.0), max(ew, bb)
+    ws, cm = used
+    if ws > ew: ew = 1.25 * ws
+    if cm > ec: ec = 1.25 * cm
+    return ec, ew
 def learn(t, out, rc=0):
     m = re.search(r'"lean_process_peak_working_sets_bytes": \{([^}]*)\}', out)
     if not m or rc != 0: return
@@ -345,8 +356,13 @@ def drive():
             # cover the REMAINING forecast peaks of every running job plus the new one.
             use = tree_usage([proc.pid for proc, _ in running.values()])
             own_ws = sum(u[0] for u in use.values()); own_c = sum(u[1] for u in use.values())
-            need_c = sum(est(s['target'])[0] for _, s in running.values())
-            need_w = sum(est(s['target'])[1] for _, s in running.values())
+            # 7 Nov (Sean: control reserved memory): each running job holds its declared budget
+            # for life. Before, running jobs were charged only the class forecast (3.5 GB default
+            # for `run` jobs, whatever budget they declared), while their actual use was added to
+            # the envelope, so a job over its forecast made the host look emptier.
+            res = [reserve(s, use.get(proc.pid, (0.0, 0.0))) for proc, s in running.values()]
+            need_c = sum(r[0] for r in res)
+            need_w = sum(r[1] for r in res)
             env_w = min(24.0, phys + own_ws - FLOOR - MARGIN)
             env_c = commit + own_c - FLOOR - MARGIN
             # Backfill: the first queued job (priority order) that fits starts, so light
@@ -374,10 +390,7 @@ def drive():
                         if pending_rank is None:
                             pending_rank = _key(qf)[0]
                         continue   # preflight still running in the background
-                ec, ew = est(s['target'])
-                bb = float(s.get('budget', 3))
-                if bb > 3:   # an explicit large budget (assembly roots) overrides a light class peak
-                    ec, ew = max(ec, 1.75 * bb + 1.0), max(ew, bb)
+                ec, ew = reserve(s)
                 if need_w + ew <= env_w and need_c + ec <= env_c:
                     pick, spec = qf, s
                     break
