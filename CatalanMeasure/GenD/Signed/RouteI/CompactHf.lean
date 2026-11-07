@@ -745,7 +745,7 @@ theorem list_sum_comm {α : Type*} (l : List α) (s : Finset ℕ) (g : α → �
 
 theorem near_unfold (S : CapSource) (y : ℝ) :
     S.nearField (Trunc.finite 384) y = 48 / 58 * Real.log y - 53 / 58 * Real.log (1 + y ^ 2) -
-      29557 / 200000 - S.R900 y + ∑ k ∈ Finset.range 384, radCoef S (k + 1) * y ^ (k + 1) +
+      kappa Sign.pos - S.reflPoly y + ∑ k ∈ Finset.range 384, radCoef S (k + 1) * y ^ (k + 1) +
       S.auxTail (Trunc.finite 384) Sign.pos := by
   have key : ((S.aux Sign.pos).map fun e => e.w * ∑ k ∈ Finset.range 384,
       S.coef (k + 1) * (S.rad e.rad * y) ^ (k + 1) * Real.cos (((k + 1 : ℕ) : ℝ) * e.phase)).sum =
@@ -761,14 +761,15 @@ theorem near_unfold (S : CapSource) (y : ℝ) :
     ring
   unfold CapSource.nearField
   simp only [Trunc.sum]
-  have hk : kappa Sign.pos = 29557 / 200000 := rfl
-  rw [hk, key]
+  rw [key]
 
-theorem R900_ge (S : CapSource) (hS : S.Admissible) {y : ℝ} (hy : 0 ≤ y) :
-    ∑ k ∈ Finset.range 32, S.reflMoment (k + 1) * y ^ (k + 1) / ((k : ℝ) + 1) ≤ S.R900 y := by
-  unfold CapSource.R900
-  rw [show (900 : ℕ) = 32 + 868 from rfl, Finset.sum_range_add]
-  have : 0 ≤ ∑ k ∈ Finset.range 868, S.reflMoment (32 + k + 1) * y ^ (32 + k + 1) /
+theorem reflPoly_ge (S : CapSource) (hS : S.Admissible) (hdeg : 31 ≤ S.reflDeg) {y : ℝ}
+    (hy : 0 ≤ y) :
+    ∑ k ∈ Finset.range 32, S.reflMoment (k + 1) * y ^ (k + 1) / ((k : ℝ) + 1) ≤
+      S.reflPoly y := by
+  unfold CapSource.reflPoly
+  rw [show S.reflDeg + 1 = 32 + (S.reflDeg + 1 - 32) by omega, Finset.sum_range_add]
+  have : 0 ≤ ∑ k ∈ Finset.range (S.reflDeg + 1 - 32), S.reflMoment (32 + k + 1) * y ^ (32 + k + 1) /
       (((32 + k : ℕ) : ℝ) + 1) := by
     refine Finset.sum_nonneg (fun k _ => ?_)
     have := CompactSource.reflMoment_nonneg S hS (32 + k + 1)
@@ -782,11 +783,11 @@ structure NearData (S : CapSource) : Prop where
   radial : ∀ k, 1 ≤ k → k ≤ 32 → |radCoef S k - (alL.getD k 0 : ℚ)| ≤ 1 / 10000
   tail : ∑ i ∈ Finset.range 352, |radCoef S (32 + i + 1)| ≤ 1 / 200
 
-theorem poly_part (S : CapSource) (hS : S.Admissible) (hd : NearData S) {y : ℝ} (hy0 : 0 ≤ y)
-    (hy1 : y ≤ 1) :
-    -S.R900 y + ∑ k ∈ Finset.range 384, radCoef S (k + 1) * y ^ (k + 1) ≤
+theorem poly_part (S : CapSource) (hS : S.Admissible) (hdeg : 31 ≤ S.reflDeg) (hd : NearData S)
+    {y : ℝ} (hy0 : 0 ≤ y) (hy1 : y ≤ 1) :
+    -S.reflPoly y + ∑ k ∈ Finset.range 384, radCoef S (k + 1) * y ^ (k + 1) ≤
       polyR betaL y - (betaFun 0 : ℝ) + 7 / 1000 + 1 / 200 := by
-  have h1 := R900_ge S hS hy0
+  have h1 := reflPoly_ge S hS hdeg hy0
   rw [show (384 : ℕ) = 32 + 352 from rfl, Finset.sum_range_add]
   have htail : ∑ i ∈ Finset.range 352, radCoef S (32 + i + 1) * y ^ (32 + i + 1) ≤ 1 / 200 := by
     refine le_trans (Finset.sum_le_sum (fun i _ => ?_)) hd.tail
@@ -953,14 +954,15 @@ theorem rawQ_gTilde (x : ℝ) :
   push_cast
   ring
 
-theorem near_pointwise (S : CapSource) (hS : S.Admissible) (hd : NearData S)
+theorem near_pointwise (S : CapSource) (hS : S.Admissible) (hdeg : 31 ≤ S.reflDeg)
+    (hκ : kappa Sign.pos = 29557 / 200000) (hd : NearData S)
     (haux : S.auxTail (Trunc.finite 384) Sign.pos ≤ 1 / 5000)
     {u : ℝ} (hu : u ∈ Icc (-1 : ℝ) 1) :
     S.nearField (Trunc.finite 384) (11 / 20 + 9 / 20 * u) ≤ rawQ gTilde 0 u + (Etot : ℝ) := by
   have hy0 : 0 ≤ 11 / 20 + 9 / 20 * u := by linarith [hu.1]
   have hy1 : 11 / 20 + 9 / 20 * u ≤ 1 := by linarith [hu.2]
-  rw [near_unfold]
-  have hp := poly_part S hS hd hy0 hy1
+  rw [near_unfold, hκ]
+  have hp := poly_part S hS hdeg hd hy0 hy1
   have hly := log_y_le hu
   have hlq := log_sq_ge hu
   rw [rawQ_gTilde]
@@ -972,7 +974,8 @@ theorem near_pointwise (S : CapSource) (hS : S.Admissible) (hd : NearData S)
 
 /-- **`NearHf`**: the source Near field is below the pinned degree-128 majorant plus its tail,
 from the data-side facts `NearData` and the seed bounds. -/
-theorem nearHf (S : CapSource) (hS : S.Admissible) (hd : NearData S)
+theorem nearHf (S : CapSource) (hS : S.Admissible) (hdeg : 31 ≤ S.reflDeg)
+    (hκ : kappa Sign.pos = 29557 / 200000) (hd : NearData S)
     (hε1 : 1 / 10 ≤ S.eps) (hε2 : S.eps ≤ 3 / 20)
     (hmass : 63 / 100 ≤ massL (S.gas Sign.pos)) :
     CompactInstance.NearHf S (Trunc.finite 384) := by
@@ -983,7 +986,7 @@ theorem nearHf (S : CapSource) (hS : S.Admissible) (hd : NearData S)
   set u := CompactCap.affine (1 / 10) y with hudef
   have hyu : y = 11 / 20 + 9 / 20 * u := by
     rw [hudef]; unfold CompactCap.affine; field_simp; ring
-  have h1 := near_pointwise S hS hd haux hu
+  have h1 := near_pointwise S hS hdeg hκ hd haux hu
   rw [← hyu] at h1
   have h2 := abs_rawQ_sub_le D gTilde nearP 0 u hu
   have h3 := final_check
@@ -1011,11 +1014,12 @@ theorem NearDataClosed.toNearData {S : CapSource} (hS : S.Admissible) (h : NearD
   tail := h.tail
 
 /-- `NearHf` from the closed-form data-side facts. -/
-theorem nearHf_closed (S : CapSource) (hS : S.Admissible) (hd : NearDataClosed S)
+theorem nearHf_closed (S : CapSource) (hS : S.Admissible) (hdeg : 31 ≤ S.reflDeg)
+    (hκ : kappa Sign.pos = 29557 / 200000) (hd : NearDataClosed S)
     (hε1 : 1 / 10 ≤ S.eps) (hε2 : S.eps ≤ 3 / 20)
     (hmass : 63 / 100 ≤ massL (S.gas Sign.pos)) :
     CompactInstance.NearHf S (Trunc.finite 384) :=
-  nearHf S hS (hd.toNearData hS) hε1 hε2 hmass
+  nearHf S hS hdeg hκ (hd.toNearData hS) hε1 hε2 hmass
 
 end CatalanMeasure.GenD.Signed.RouteI.CompactHf
 

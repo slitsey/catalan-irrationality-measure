@@ -187,7 +187,7 @@ def _root_.CatalanMeasure.GenD.Analytic.SecondTrialBounds.toEndAt {P : Parameter
       (-gC0 P + gC1 P * a - a ^ 2 + t - t ^ 2) * Real.log 2 +
         D.normCap + (1 - a) * D.fieldCap + (a - t) * residual + t * nearCap ≤
           -target' + Real.log 2 / 2 + cost' * a) :
-    SecondTrialBoundsEnd P α1 target' residual nearCap cost' G where
+    SecondTrialBoundsEnd0 P α1 target' residual nearCap cost' G where
   p := D.p
   v := D.v
   MX := D.MX
@@ -200,9 +200,9 @@ def _root_.CatalanMeasure.GenD.Analytic.SecondTrialBounds.toEndAt {P : Parameter
   field_sum := D.field_sum
   row := D.row
   column := D.column
-  marked := D.marked
-  near := D.near
-  budget := hbud
+  marked := fun {_} hN {_} hx hG => by simpa using D.marked hN hx hG
+  near := fun {_} hN {_} hy hG => by simpa using D.near hN hy
+  budget := fun {a t} ha h0 ht => hbud ha h0 ht
 
 /-- The factor-free (endpoint column field) old-route trial from an old-route trial and an endpoint
 budget without `a (1 - a) log 2` (for K590: `K590.second_budget'_log2`, cost `secondCost'`): the
@@ -213,7 +213,7 @@ def SecondTrialBounds.toEnd {P : Parameters} {target residual nearCap cost : ℝ
       (-gC0 P + gC1 P * a - a ^ 2 + t - t ^ 2) * Real.log 2 +
         D.normCap + (1 - a) * D.fieldCap + (a - t) * residual + t * nearCap ≤
           -target + Real.log 2 / 2 + cost' * a) :
-    SecondTrialBoundsEnd P 0 target residual nearCap cost' G :=
+    SecondTrialBoundsEnd0 P 0 target residual nearCap cost' G :=
   D.toEndAt (α1 := 0) (target' := target) cost' (fun _ ha ht => hbud ha ht)
 
 set_option maxHeartbeats 1600000 in
@@ -230,7 +230,6 @@ theorem grouped_value_phys_end {P : Parameters} {N r a b : ℕ}
       ((((a + b : ℕ) : ℝ) / (P.n N : ℝ)) * ∑ i, Real.log (1 + s i)) / (P.n N : ℝ) :=
   CatalanMeasure.GenD.Analytic.grouped_value_physical_eq z x y s
 
-set_option maxHeartbeats 1600000 in
 end HL
 
 section HL2
@@ -395,7 +394,6 @@ section HL6
 open CatalanMeasure.GenD CatalanMeasure.GenD.Analytic CatalanMeasure.Parametric
   OAI.InternalCatalan
 
-set_option maxHeartbeats 1600000 in
 end HL6
 
 section HL7
@@ -412,7 +410,6 @@ Phase2 record and SignedNearBounds assembly are reused. The new node route needs
 only an eventual cap, so it never asserts the N>=10 result at smaller N.
 -/
 open CatalanMeasure.Parametric CatalanMeasure.GenD CatalanMeasure.GenD.Analytic OAI.InternalCatalan
-set_option maxHeartbeats 1600000 in
 end
 
 end CatalanMeasure.Signed

@@ -1646,6 +1646,107 @@ def anchorRowField (b : ℝ) (a v : ℕ → ℝ) (x : ℝ) : ℝ :=
 def anchorColumnField (b : ℝ) (v : ℕ → ℝ) (s : ℝ) : ℝ :=
   -2*b*Real.log 2 + 2*barrierTrialT v s
 
+
+/-! ### GP Lemma 5.1: the intercept along a finitely supported move
+
+`anchorIntercept b a v = (3/2) b² log 2 + ‖a‖² + ‖v‖²/2` with `‖u‖² = ∑ u_k² / k`.  Polarisation of
+the weighted inner product `⟨u, w⟩ = ∑ u_k w_k / k` along the move `a + da⁰ + τ da¹`,
+`v + dv⁰ + τ dv¹` with `da^i`, `dv^i` of finite support. -/
+
+/-- The weighted inner product of two moment sequences. -/
+def barrierInner (u w : ℕ → ℝ) : ℝ := ∑' k : ℕ, u (k + 1) * w (k + 1) / ((k + 1 : ℕ) : ℝ)
+
+theorem barrierTrialNormSq_eq_inner (u : ℕ → ℝ) : barrierTrialNormSq u = barrierInner u u := by
+  unfold barrierTrialNormSq barrierInner
+  congr 1
+  ext k
+  ring
+
+theorem summable_inner_of_support (u : ℕ → ℝ) {w : ℕ → ℝ} {K : ℕ} (hw : ∀ k, K ≤ k → w k = 0) :
+    Summable (fun k : ℕ => u (k + 1) * w (k + 1) / ((k + 1 : ℕ) : ℝ)) := by
+  refine summable_of_ne_finset_zero (s := Finset.range K) fun k hk => ?_
+  have : K ≤ k + 1 := by
+    have := Finset.mem_range.not.mp hk
+    omega
+  simp [hw (k + 1) this]
+
+theorem barrierInner_add_right (u : ℕ → ℝ) {w z : ℕ → ℝ} {K : ℕ} (hw : ∀ k, K ≤ k → w k = 0)
+    (hz : ∀ k, K ≤ k → z k = 0) :
+    barrierInner u (fun k => w k + z k) = barrierInner u w + barrierInner u z := by
+  unfold barrierInner
+  rw [← (summable_inner_of_support u hw).tsum_add (summable_inner_of_support u hz)]
+  congr 1
+  ext k
+  ring
+
+theorem barrierInner_smul_right (u : ℕ → ℝ) {w : ℕ → ℝ} (τ : ℝ) :
+    barrierInner u (fun k => τ * w k) = τ * barrierInner u w := by
+  unfold barrierInner
+  rw [← tsum_mul_left]
+  congr 1
+  ext k
+  ring
+
+theorem barrierInner_comm (u w : ℕ → ℝ) : barrierInner u w = barrierInner w u := by
+  unfold barrierInner
+  congr 1
+  ext k
+  ring
+
+theorem barrierTrialNormSq_add {u w : ℕ → ℝ} {K : ℕ}
+    (hu : Summable (fun k : ℕ => u (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)))
+    (hw : ∀ k, K ≤ k → w k = 0) :
+    barrierTrialNormSq (fun k => u k + w k) =
+      barrierTrialNormSq u + 2 * barrierInner u w + barrierTrialNormSq w := by
+  have h1 := summable_inner_of_support u hw
+  have h2 : Summable (fun k : ℕ => w (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)) := by
+    have := summable_inner_of_support w hw
+    simpa [sq] using this
+  unfold barrierTrialNormSq barrierInner
+  have e : ∀ k : ℕ, (u (k + 1) + w (k + 1)) ^ 2 / ((k + 1 : ℕ) : ℝ) =
+      u (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ) + 2 * (u (k + 1) * w (k + 1) / ((k + 1 : ℕ) : ℝ)) +
+        w (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ) := fun k => by ring
+  simp only [e]
+  rw [(hu.add (h1.mul_left 2)).tsum_add h2, hu.tsum_add (h1.mul_left 2), tsum_mul_left]
+
+/-- **GP Lemma 5.1 (intercept polarisation).**  Along the move `w⁰ + τ w¹` of finite support,
+`anchorIntercept b (a + da⁰ + τ da¹) (v + dv⁰ + τ dv¹) = I₀ + (L₀ + Q₀₀) + τ (L₁ + 2 Q₀₁) + τ² Q₁₁`
+with `L_i = 2⟨a, da^i⟩ + ⟨v, dv^i⟩` and `Q_ij = ⟨da^i, da^j⟩ + ½⟨dv^i, dv^j⟩`. -/
+theorem anchorIntercept_move (b : ℝ) {a v da0 da1 dv0 dv1 : ℕ → ℝ} {K : ℕ}
+    (ha : Summable (fun k : ℕ => a (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)))
+    (hv : Summable (fun k : ℕ => v (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)))
+    (ha0 : ∀ k, K ≤ k → da0 k = 0) (ha1 : ∀ k, K ≤ k → da1 k = 0)
+    (hv0 : ∀ k, K ≤ k → dv0 k = 0) (hv1 : ∀ k, K ≤ k → dv1 k = 0) (τ : ℝ) :
+    anchorIntercept b (fun k => a k + (da0 k + τ * da1 k)) (fun k => v k + (dv0 k + τ * dv1 k)) =
+      anchorIntercept b a v +
+        ((2 * barrierInner a da0 + barrierInner v dv0) +
+          (barrierInner da0 da0 + barrierInner dv0 dv0 / 2)) +
+        τ * ((2 * barrierInner a da1 + barrierInner v dv1) +
+          2 * (barrierInner da0 da1 + barrierInner dv0 dv1 / 2)) +
+        τ ^ 2 * (barrierInner da1 da1 + barrierInner dv1 dv1 / 2) := by
+  have hwa : ∀ k, K ≤ k → da0 k + τ * da1 k = 0 := fun k hk => by simp [ha0 k hk, ha1 k hk]
+  have hwv : ∀ k, K ≤ k → dv0 k + τ * dv1 k = 0 := fun k hk => by simp [hv0 k hk, hv1 k hk]
+  have hs1 : ∀ k, K ≤ k → τ * da1 k = 0 := fun k hk => by simp [ha1 k hk]
+  have hs2 : ∀ k, K ≤ k → τ * dv1 k = 0 := fun k hk => by simp [hv1 k hk]
+  have lin : ∀ (u d0 d1 : ℕ → ℝ), (∀ k, K ≤ k → d0 k = 0) → (∀ k, K ≤ k → d1 k = 0) →
+      barrierInner u (fun k => d0 k + τ * d1 k) = barrierInner u d0 + τ * barrierInner u d1 :=
+    fun u d0 d1 h0 h1 => by
+      rw [barrierInner_add_right u h0 (fun k hk => by simp [h1 k hk]),
+        barrierInner_smul_right u τ]
+  have quad : ∀ (d0 d1 : ℕ → ℝ), (∀ k, K ≤ k → d0 k = 0) → (∀ k, K ≤ k → d1 k = 0) →
+      barrierTrialNormSq (fun k => d0 k + τ * d1 k) =
+        barrierInner d0 d0 + 2 * τ * barrierInner d0 d1 + τ ^ 2 * barrierInner d1 d1 :=
+    fun d0 d1 h0 h1 => by
+      rw [barrierTrialNormSq_eq_inner, lin _ d0 d1 h0 h1,
+        barrierInner_comm (fun k => d0 k + τ * d1 k) d0,
+        barrierInner_comm (fun k => d0 k + τ * d1 k) d1,
+        lin d0 d0 d1 h0 h1, lin d1 d0 d1 h0 h1, barrierInner_comm d1 d0]
+      ring
+  unfold anchorIntercept
+  rw [barrierTrialNormSq_add ha hwa, barrierTrialNormSq_add hv hwv,
+    quad da0 da1 ha0 ha1, quad dv0 dv1 hv0 hv1, lin a da0 da1 ha0 ha1, lin v dv0 dv1 hv0 hv1]
+  ring
+
 /-- For one fixed prefix and damping the free pin interaction has the anchor tangent, with the
 mass square retained, the two endpoint logarithms kept, and the regularization error explicit. -/
 theorem free_pin_prefix_tangent {ν e : ℝ} (hν : 0<ν) (he : e ∈ Ioo (0:ℝ) (1/8))
@@ -2607,8 +2708,8 @@ variable {S : CapSource}
 
 /-! ### The reflection tail -/
 
-/-- The primitive in `Eref900`. -/
-def reflPrim (x : ℝ) : ℝ := x ^ 900 / 900 + x ^ 901 / 901
+/-- The primitive in `reflTail` (cut `e + 1`). -/
+def reflPrim (e : ℕ) (x : ℝ) : ℝ := x ^ (e + 1) / ((e : ℝ) + 1) + x ^ (e + 2) / ((e : ℝ) + 2)
 
 theorem phys_pow_nonneg {c : YCell} (hc : 2 ≤ c.lo) (k : ℕ) : 0 ≤ c.phys fun u => u ^ k := by
   rw [cell_phys_eq]
@@ -2633,28 +2734,28 @@ theorem physX_anti {c : YCell} (hc : 2 ≤ c.lo) : physX c.hi ≤ physX c.lo := 
   have := c.lo_lt
   linarith
 
-theorem geom_tail {t : ℝ} {K : ℕ} (hK : 900 ≤ K) :
-    (∑ n ∈ Finset.Ico 900 K, t ^ (n + 1)) * (1 - t) = t ^ 901 - t ^ (K + 1) := by
+theorem geom_tail {t : ℝ} {e K : ℕ} (hK : e + 1 ≤ K) :
+    (∑ n ∈ Finset.Ico (e + 1) K, t ^ (n + 1)) * (1 - t) = t ^ (e + 2) - t ^ (K + 1) := by
   induction K, hK using Nat.le_induction with
   | base => simp
   | succ K hK ih =>
     rw [Finset.sum_Ico_succ_top hK, add_mul, ih]
     ring
 
-theorem tail_kernel {t : ℝ} (h0 : 0 < t) (h1 : t ≤ 1) {K : ℕ} (hK : 900 ≤ K) :
-    -((∑ n ∈ Finset.Ico 900 K, t ^ (n + 1)) * yDer t) ≤ t ^ 899 + t ^ 900 := by
+theorem tail_kernel {t : ℝ} (h0 : 0 < t) (h1 : t ≤ 1) {e K : ℕ} (hK : e + 1 ≤ K) :
+    -((∑ n ∈ Finset.Ico (e + 1) K, t ^ (n + 1)) * yDer t) ≤ t ^ e + t ^ (e + 1) := by
   have hg := geom_tail (t := t) hK
-  have e : -((∑ n ∈ Finset.Ico 900 K, t ^ (n + 1)) * yDer t) =
-      ((∑ n ∈ Finset.Ico 900 K, t ^ (n + 1)) * (1 - t)) * (1 + t) / t ^ 2 := by
+  have e' : -((∑ n ∈ Finset.Ico (e + 1) K, t ^ (n + 1)) * yDer t) =
+      ((∑ n ∈ Finset.Ico (e + 1) K, t ^ (n + 1)) * (1 - t)) * (1 + t) / t ^ 2 := by
     unfold yDer
     field_simp
     ring
-  rw [e, hg, div_le_iff₀ (by positivity)]
+  rw [e', hg, div_le_iff₀ (by positivity)]
   have hp : 0 ≤ t ^ (K + 1) := by positivity
-  have : (t ^ 901 - t ^ (K + 1)) * (1 + t) ≤ t ^ 901 * (1 + t) := by
+  have : (t ^ (e + 2) - t ^ (K + 1)) * (1 + t) ≤ t ^ (e + 2) * (1 + t) := by
     apply mul_le_mul_of_nonneg_right _ (by linarith)
     linarith
-  calc _ ≤ t ^ 901 * (1 + t) := this
+  calc _ ≤ t ^ (e + 2) * (1 + t) := this
     _ = _ := by ring
 
 theorem yDer_continuousOn {a b : ℝ} (hb : 0 < b) (hab : b ≤ a) : ContinuousOn yDer (uIcc b a) := by
@@ -2664,10 +2765,10 @@ theorem yDer_continuousOn {a b : ℝ} (hb : 0 < b) (hab : b ≤ a) : ContinuousO
   have : 0 < t := hb.trans_le ht.1
   positivity
 
-theorem tail_cell {c : YCell} (hc : 2 ≤ c.lo) {x : ℝ} (hx : x ∈ Ioo (0 : ℝ) 1) {K : ℕ}
-    (hK : 900 ≤ K) :
-    ∑ n ∈ Finset.Ico 900 K, (c.phys fun u => u ^ (n + 1)) * x ^ (n + 1) / ((n + 1 : ℕ) : ℝ) ≤
-      c.w / (c.hi - c.lo) * (reflPrim (physX c.lo) - reflPrim (physX c.hi)) / 901 := by
+theorem tail_cell {c : YCell} (hc : 2 ≤ c.lo) {x : ℝ} (hx : x ∈ Ioo (0 : ℝ) 1) {e K : ℕ}
+    (hK : e + 1 ≤ K) :
+    ∑ n ∈ Finset.Ico (e + 1) K, (c.phys fun u => u ^ (n + 1)) * x ^ (n + 1) / ((n + 1 : ℕ) : ℝ) ≤
+      c.w / (c.hi - c.lo) * (reflPrim e (physX c.lo) - reflPrim e (physX c.hi)) / ((e : ℝ) + 2) := by
   have hrc : RowCell c := Or.inl hc
   have hs := cell_scale_nonneg c
   set a := physX c.lo with ha
@@ -2675,24 +2776,24 @@ theorem tail_cell {c : YCell} (hc : 2 ≤ c.lo) {x : ℝ} (hx : x ∈ Ioo (0 : �
   obtain ⟨a0, a1, -⟩ := physX_spec_pos hc
   obtain ⟨b0, b1, -⟩ := physX_spec_pos (hc.trans c.lo_lt.le)
   have hab : b ≤ a := physX_anti hc
-  set F : ℝ → ℝ := fun t => ∑ n ∈ Finset.Ico 900 K, t ^ (n + 1) with hF
+  set F : ℝ → ℝ := fun t => ∑ n ∈ Finset.Ico (e + 1) K, t ^ (n + 1) with hF
   have hFc : Continuous F := by
     simp only [hF]
     fun_prop
-  have step1 : ∑ n ∈ Finset.Ico 900 K, (c.phys fun u => u ^ (n + 1)) * x ^ (n + 1) /
-      ((n + 1 : ℕ) : ℝ) ≤ (∑ n ∈ Finset.Ico 900 K, (c.phys fun u => u ^ (n + 1))) / 901 := by
+  have step1 : ∑ n ∈ Finset.Ico (e + 1) K, (c.phys fun u => u ^ (n + 1)) * x ^ (n + 1) /
+      ((n + 1 : ℕ) : ℝ) ≤ (∑ n ∈ Finset.Ico (e + 1) K, (c.phys fun u => u ^ (n + 1))) / ((e : ℝ) + 2) := by
     rw [Finset.sum_div]
     refine Finset.sum_le_sum fun n hn => ?_
     have hn' := (Finset.mem_Ico.mp hn).1
     have hm := phys_pow_nonneg hc (n + 1)
     have hx1 : x ^ (n + 1) ≤ 1 := pow_le_one₀ hx.1.le hx.2.le
-    have hd : (901 : ℝ) ≤ ((n + 1 : ℕ) : ℝ) := by
-      have : 901 ≤ n + 1 := by omega
+    have hd : ((e : ℝ) + 2) ≤ ((n + 1 : ℕ) : ℝ) := by
+      have : e + 2 ≤ n + 1 := by omega
       exact_mod_cast this
     calc _ ≤ (c.phys fun u => u ^ (n + 1)) * 1 / ((n + 1 : ℕ) : ℝ) := by gcongr
-      _ ≤ (c.phys fun u => u ^ (n + 1)) * 1 / 901 := by gcongr
+      _ ≤ (c.phys fun u => u ^ (n + 1)) * 1 / ((e : ℝ) + 2) := by gcongr
       _ = _ := by ring
-  have step2 : ∑ n ∈ Finset.Ico 900 K, (c.phys fun u => u ^ (n + 1)) = c.phys F := by
+  have step2 : ∑ n ∈ Finset.Ico (e + 1) K, (c.phys fun u => u ^ (n + 1)) = c.phys F := by
     simp only [cell_phys_eq, hF]
     rw [integral_finset_sum]
     intro n _
@@ -2700,32 +2801,32 @@ theorem tail_cell {c : YCell} (hc : 2 ≤ c.lo) {x : ℝ} (hx : x ∈ Ioo (0 : �
   have step3 : c.phys F = c.w / (c.hi - c.lo) * ∫ t in a..b, F t * yDer t := by
     unfold YCell.phys YCell.avg
     rw [cell_change_of_variable hrc hFc]
-  have step4 : ∫ t in a..b, F t * yDer t ≤ reflPrim a - reflPrim b := by
+  have step4 : ∫ t in a..b, F t * yDer t ≤ reflPrim e a - reflPrim e b := by
     rw [intervalIntegral.integral_symm, ← intervalIntegral.integral_neg]
     have hyc := yDer_continuousOn b0 hab
     have i1 : IntervalIntegrable (fun t => -(F t * yDer t)) volume b a :=
       ((hFc.continuousOn.mul hyc).neg).intervalIntegrable
-    have i2 : IntervalIntegrable (fun t : ℝ => t ^ 899 + t ^ 900) volume b a :=
-      (by fun_prop : Continuous fun t : ℝ => t ^ 899 + t ^ 900).intervalIntegrable _ _
+    have i2 : IntervalIntegrable (fun t : ℝ => t ^ e + t ^ (e + 1)) volume b a :=
+      (by fun_prop : Continuous fun t : ℝ => t ^ e + t ^ (e + 1)).intervalIntegrable _ _
     have hm := intervalIntegral.integral_mono_on hab i1 i2 fun t ht =>
       tail_kernel (b0.trans_le ht.1) (ht.2.trans a1) hK
     refine hm.trans_eq ?_
-    have c1 : IntervalIntegrable (fun t : ℝ => t ^ 899) volume b a :=
-      (by fun_prop : Continuous fun t : ℝ => t ^ 899).intervalIntegrable _ _
-    have c2 : IntervalIntegrable (fun t : ℝ => t ^ 900) volume b a :=
-      (by fun_prop : Continuous fun t : ℝ => t ^ 900).intervalIntegrable _ _
+    have c1 : IntervalIntegrable (fun t : ℝ => t ^ e) volume b a :=
+      (by fun_prop : Continuous fun t : ℝ => t ^ e).intervalIntegrable _ _
+    have c2 : IntervalIntegrable (fun t : ℝ => t ^ (e + 1)) volume b a :=
+      (by fun_prop : Continuous fun t : ℝ => t ^ (e + 1)).intervalIntegrable _ _
     rw [intervalIntegral.integral_add c1 c2, integral_pow, integral_pow]
     unfold reflPrim
-    norm_num
+    push_cast
     ring
   rw [step2, step3] at step1
-  exact step1.trans (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left step4 hs) (by norm_num))
+  exact step1.trans (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left step4 hs) (by positivity))
 
 theorem tail_list {l : List YCell} (hl : ∀ c ∈ l, 2 ≤ c.lo) {x : ℝ} (hx : x ∈ Ioo (0 : ℝ) 1)
-    {K : ℕ} (hK : 900 ≤ K) :
-    ∑ n ∈ Finset.Ico 900 K, physL l (fun u => u ^ (n + 1)) * x ^ (n + 1) / ((n + 1 : ℕ) : ℝ) ≤
+    {e K : ℕ} (hK : e + 1 ≤ K) :
+    ∑ n ∈ Finset.Ico (e + 1) K, physL l (fun u => u ^ (n + 1)) * x ^ (n + 1) / ((n + 1 : ℕ) : ℝ) ≤
       (l.map fun c => c.w / (c.hi - c.lo) *
-        (reflPrim (physX c.lo) - reflPrim (physX c.hi)) / 901).sum := by
+        (reflPrim e (physX c.lo) - reflPrim e (physX c.hi)) / ((e : ℝ) + 2)).sum := by
   induction l with
   | nil => simp [physL]
   | cons c l ih =>
@@ -2750,41 +2851,42 @@ theorem physL_pow_nonneg {l : List YCell} (hl : ∀ c ∈ l, 2 ≤ c.lo) (k : �
     rw [physL_cons]
     exact add_nonneg (phys_pow_nonneg (hl c (by simp)) k) (ih fun d hd => hl d (by simp [hd]))
 
-theorem R900_eq (x : ℝ) :
-    S.R900 x = ∑ n ∈ Finset.range 900,
+theorem reflPoly_eq (x : ℝ) :
+    S.reflPoly x = ∑ n ∈ Finset.range (S.reflDeg + 1),
       physL (S.gas Sign.pos) (fun u => u ^ (n + 1)) * x ^ (n + 1) / ((n + 1 : ℕ) : ℝ) := by
-  unfold CapSource.R900 CapSource.reflMoment
+  unfold CapSource.reflPoly CapSource.reflMoment
   refine Finset.sum_congr rfl fun n _ => ?_
   push_cast
   rfl
 
-theorem Eref_eq : S.Eref900 = ((S.gas Sign.pos).map fun c => c.w / (c.hi - c.lo) *
-    (reflPrim (physX c.lo) - reflPrim (physX c.hi)) / 901).sum := rfl
+theorem Eref_eq : S.reflTail = ((S.gas Sign.pos).map fun c => c.w / (c.hi - c.lo) *
+    (reflPrim S.reflDeg (physX c.lo) - reflPrim S.reflDeg (physX c.hi)) /
+      ((S.reflDeg : ℝ) + 2)).sum := rfl
 
 theorem reflection_le (hS : S.Admissible) {x : ℝ} (hx : x ∈ Ioo (0 : ℝ) 1) :
     -((S.gas Sign.pos).map fun c => ∫ Y, Real.log |1 - x * physX Y| ∂cellM c).sum ≤
-      S.R900 x + S.Eref900 := by
+      S.reflPoly x + S.reflTail := by
   have hx' : x ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hx.1], hx.2⟩
   have hs := refl_hasSum (l := S.gas Sign.pos) (fun c hc => Or.inl (hS.gas_pos c hc)) hx'
   refine le_of_tendsto hs.tendsto_sum_nat ?_
-  filter_upwards [eventually_ge_atTop 900] with K hK
-  rw [← Finset.sum_range_add_sum_Ico _ hK, ← R900_eq, Eref_eq]
+  filter_upwards [eventually_ge_atTop (S.reflDeg + 1)] with K hK
+  rw [← Finset.sum_range_add_sum_Ico _ hK, ← reflPoly_eq, Eref_eq]
   exact add_le_add le_rfl (tail_list hS.gas_pos hx hK)
 
 theorem reflection_ge (hS : S.Admissible) {y : ℝ} (hy : y ∈ Ioo (0 : ℝ) 1) :
-    ((S.gas Sign.pos).map fun c => ∫ Y, Real.log |1 - y * physX Y| ∂cellM c).sum ≤ -S.R900 y := by
+    ((S.gas Sign.pos).map fun c => ∫ Y, Real.log |1 - y * physX Y| ∂cellM c).sum ≤ -S.reflPoly y := by
   have hy' : y ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hy.1], hy.2⟩
   have hs := refl_hasSum (l := S.gas Sign.pos) (fun c hc => Or.inl (hS.gas_pos c hc)) hy'
-  have h := sum_le_hasSum (Finset.range 900) (fun n _ => div_nonneg
+  have h := sum_le_hasSum (Finset.range (S.reflDeg + 1)) (fun n _ => div_nonneg
     (mul_nonneg (physL_pow_nonneg hS.gas_pos _) (pow_nonneg hy.1.le _)) (Nat.cast_nonneg _)) hs
-  rw [← R900_eq] at h
+  rw [← reflPoly_eq] at h
   linarith
 
 /-- The positive row potential. -/
 theorem qP_row (hS : S.Admissible) {x : ℝ} (hx : x ∈ Ioo (0 : ℝ) 1) :
     planarPot (qP S) (x : ℂ) ≤
       physL (S.gas Sign.pos) (fun u => Real.log |u|) + potL (S.gas Sign.pos) (x + 1 / x) +
-        massL (S.gas Sign.pos) * Real.log |x| + S.R900 x + S.Eref900 +
+        massL (S.gas Sign.pos) * Real.log |x| + S.reflPoly x + S.reflTail +
         S.radialA Trunc.exact Sign.pos x := by
   have hx' : x ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hx.1], hx.2⟩
   have hx0 : x ≠ 0 := hx.1.ne'
@@ -2809,7 +2911,7 @@ theorem circ_zero (r : ℝ) : circ r 0 = (r : ℂ) := by
 
 /-- The potential at the reciprocal of a selected row. -/
 theorem qP_near (hS : S.Admissible) {y : ℝ} (hy : y ∈ Ioo (0 : ℝ) 1) :
-    planarPot (qP S) ((1 / y : ℝ) : ℂ) ≤ -Real.log y - S.R900 y +
+    planarPot (qP S) ((1 / y : ℝ) : ℂ) ≤ -Real.log y - S.reflPoly y +
       ((S.aux Sign.pos).map fun e => e.w * Trunc.exact.sum (fun k => S.coef k *
         (S.rad e.rad * y) ^ k * Real.cos (k * e.phase))).sum := by
   have hy' : y ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hy.1], hy.2⟩
@@ -3845,10 +3947,10 @@ theorem radialA_bounded (hS : S.Admissible) (σ : Sign) {x : ℝ} (hx : |x| ≤ 
   rw [List.sum_map_mul_right]
   ring
 
-theorem R900_bounded : ∃ M : ℝ, 0 ≤ M ∧ ∀ x : ℝ, |x| ≤ 1 → |S.R900 x| ≤ M := by
-  refine ⟨∑ k ∈ Finset.range 900, |S.reflMoment (k + 1)| / ((k : ℝ) + 1),
+theorem reflPoly_bounded : ∃ M : ℝ, 0 ≤ M ∧ ∀ x : ℝ, |x| ≤ 1 → |S.reflPoly x| ≤ M := by
+  refine ⟨∑ k ∈ Finset.range (S.reflDeg + 1), |S.reflMoment (k + 1)| / ((k : ℝ) + 1),
     Finset.sum_nonneg fun k _ => by positivity, fun x hx => ?_⟩
-  unfold CapSource.R900
+  unfold CapSource.reflPoly
   refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun k _ => ?_)
   have hk : (0 : ℝ) < (k : ℝ) + 1 := by positivity
   rw [abs_div, abs_mul, abs_pow, abs_of_pos hk]
@@ -3901,7 +4003,7 @@ theorem free_decomp (σ : Sign) (a : Fin 2) (x : ℝ) :
       (physL (S.gas σ) (fun u => Real.log |u|) + potL (S.gas σ) (x + 1 / x) +
         massL (S.gas σ) * Real.log |x|) - kappa σ +
       11 / 29 * Real.log |x| - 39 / 29 * Real.log (1 + x ^ 2) + 3 / 29 * Real.log (1 - x) +
-      (if σ = Sign.pos then S.R900 x + S.Eref900 else 0) + S.radialA Trunc.exact σ x := by
+      (if σ = Sign.pos then S.reflPoly x + S.reflTail else 0) + S.radialA Trunc.exact σ x := by
   simp only [CapSource.rowField, CapSource.refR, CapSource.refC, Flavor.free, CapSource.auxTail]
   ring
 
@@ -3910,7 +4012,7 @@ theorem ord_decomp (σ : Sign) (x : ℝ) :
     S.ordField Trunc.exact σ x =
       (physL (S.gas σ) (fun u => Real.log |u|) + potL (S.gas σ) (x + 1 / x) +
         massL (S.gas σ) * Real.log |x|) - kappa σ - 53 / 58 * Real.log (1 + x ^ 2) +
-      (if σ = Sign.pos then S.R900 x + S.Eref900 else 0) + S.radialA Trunc.exact σ x := by
+      (if σ = Sign.pos then S.reflPoly x + S.reflTail else 0) + S.radialA Trunc.exact σ x := by
   simp only [CapSource.ordField, CapSource.rowField, CapSource.refR, CapSource.refC, Flavor.marked,
     CapSource.auxTail, physL, potL, List.map_nil, List.sum_nil]
   ring
@@ -3927,9 +4029,9 @@ theorem free_row_bounded (hS : S.Admissible) (a : Fin 2) :
       physL (S.gas σ) (fun u => Real.log |u|) + potL (S.gas σ) (x + 1 / x) +
         massL (S.gas σ) * Real.log |x| ≤ M := fun σ => gas_row_bounded (gas_cell hS σ)
   choose Mg hMg using hg
-  obtain ⟨Mr, hr0, hMr⟩ := R900_bounded (S := S)
+  obtain ⟨Mr, hr0, hMr⟩ := reflPoly_bounded (S := S)
   refine ⟨|aB S a * Real.log 2| + 2 * M1 + M2 + (|Mg Sign.pos| + |Mg Sign.neg|) +
-    (|kappa Sign.pos| + |kappa Sign.neg|) + (Mr + |S.Eref900|) +
+    (|kappa Sign.pos| + |kappa Sign.neg|) + (Mr + |S.reflTail|) +
     (|2 * coefSum S * S.auxMass Sign.pos| + |2 * coefSum S * S.auxMass Sign.neg|),
     fun x hx hx0 => ?_⟩
   have hxa : |x| ≤ 1 := abs_le.mpr ⟨hx.1.le, hx.2.le⟩
@@ -3948,7 +4050,7 @@ theorem free_row_bounded (hS : S.Admissible) (a : Fin 2) :
   have n4 := abs_nonneg (kappa Sign.neg)
   have n5 := abs_nonneg (2 * coefSum S * S.auxMass Sign.pos)
   have n6 := abs_nonneg (2 * coefSum S * S.auxMass Sign.neg)
-  have n7 := abs_nonneg S.Eref900
+  have n7 := abs_nonneg S.reflTail
   unfold CapSource.freeRow
   rw [free_decomp, hA]
   cases hσ : signOf x with
@@ -3968,7 +4070,7 @@ theorem free_row_bounded (hS : S.Admissible) (a : Fin 2) :
     have g4 := neg_abs_le (kappa Sign.pos)
     have g5 := le_abs_self (2 * coefSum S * S.auxMass Sign.pos)
     have g6 := (abs_le.mp (hMr x hxa)).2
-    have g7 := le_abs_self S.Eref900
+    have g7 := le_abs_self S.reflTail
     linarith
 
 include hcol in
@@ -4152,10 +4254,37 @@ noncomputable section
 
 variable {S : CapSource}
 
-/-- The D58 parameters. -/
-abbrev P58 : Parameters := ⟨58, 9, 3, 5, 3⟩
+/-- The shape of the family the cap sources are written for (GD4): `n = 58 N`, `b = 9 N`,
+`q = 3 N`, `g = 5 N`, `h = 3 N` as fields of the parameter record.  The instance for the design
+family lives in `RouteI.Family`. -/
+class Shape58 (P : Parameters) : Prop where
+  n0_eq : P.n0 = 58
+  b0_eq : P.b0 = 9
+  q0_eq : P.q0 = 3
+  g0_eq : P.g0 = 5
+  h0_eq : P.h0 = 3
 
-theorem P58_admissible : CatalanMeasure.Parametric.Admissible P58 := by decide
+namespace Shape58
+variable {P : Parameters} [Shape58 P]
+
+theorem n_eq (N : ℕ) : P.n N = 58 * N := by simp [Parameters.n, n0_eq]
+theorem b_eq (N : ℕ) : P.b N = 9 * N := by simp [Parameters.b, b0_eq]
+theorem q_eq (N : ℕ) : P.q N = 3 * N := by simp [Parameters.q, q0_eq]
+theorem g_eq (N : ℕ) : P.g N = 5 * N := by simp [Parameters.g, g0_eq]
+theorem h_eq (N : ℕ) : P.h N = 3 * N := by simp [Parameters.h, h0_eq]
+theorem C_eq (N : ℕ) : P.C N = 75 * N := by
+  simp only [Parameters.C, Parameters.L, n_eq, b_eq, q_eq, g_eq]; ring
+theorem H_eq (N : ℕ) : P.H N = 78 * N := by
+  simp only [Parameters.H, C_eq, h_eq]; ring
+theorem A_eq (N : ℕ) : P.A N = 22 * N := by
+  simp only [Parameters.A, b_eq, q_eq, g_eq]; ring
+theorem adm : CatalanMeasure.Parametric.Admissible P := by
+  unfold CatalanMeasure.Parametric.Admissible
+  rw [n0_eq (P := P), b0_eq (P := P), q0_eq (P := P), g0_eq (P := P), h0_eq (P := P)]
+  decide
+end Shape58
+
+variable {P : Parameters} [Shape58 P]
 
 /-- The negative gas constant. -/
 def cNeg (S : CapSource) : ℝ := kappa Sign.neg - 53 / 58 * Real.log 2 - cM S
@@ -4185,15 +4314,18 @@ theorem n_ge (hN : 0 < N) : (58 : ℝ) ≤ ((58 * N : ℕ) : ℝ) := by
 variable (hcol : ∀ a, ∀ c ∈ S.refCol a, ColCell c)
 
 include hcol in
-/-- The total of a free row, with the fixed cap and a remainder independent of `N`. -/
-theorem free_total (hS : S.Admissible) (a : Fin 2) {c H : ℝ}
-    (hcap : S.FreeRowCap Trunc.exact a c)
+/-- The total of a free row at the moved anchor `(A, V)`, whose row field is the base anchor field
+plus a bounded `fR` (GP Lemma 5.3, row part), with the fixed cap `c` of `F_R + fR`. -/
+theorem free_total (hS : S.Admissible) (a : Fin 2) {c H : ℝ} {A V : ℕ → ℝ} {fR : ℝ → ℝ}
+    (hcap : ∀ x ∈ CapSource.rowDom, S.freeRow Trunc.exact a x + fR x ≤ c)
+    (hmv : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
+      anchorRowField (aB S a) A V x = anchorRowField (aB S a) (aT S a) (aV S a) x + fR x)
     (hH : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
-      S.freeRow Trunc.exact a x - 3 / 29 * Real.log (1 - x) - 11 / 29 * Real.log |x| ≤ H)
+      S.freeRow Trunc.exact a x + fR x - 3 / 29 * Real.log (1 - x) - 11 / 29 * Real.log |x| ≤ H)
     (hN : 0 < N) (hD : D + 1 = 53 * N) {x : ℝ} (hx : x ∈ Ioo (-1 : ℝ) 1) (hx0 : x ≠ 0) :
     (75 * (N : ℝ) - 1) * Real.log |x| + 6 * (N : ℝ) * Real.log (1 - x) -
       (78 * (N : ℝ) - 2) * Real.log (1 + x ^ 2) +
-      ((58 * N : ℕ) : ℝ) * anchorRowField (aB S a) (aT S a) (aV S a) x -
+      ((58 * N : ℕ) : ℝ) * anchorRowField (aB S a) A V x -
       1 / 2 * Real.log (1 - x) +
       (if 0 ≤ x then pRow S (kappa Sign.pos) D N x else mRow S (cNeg S) N x) ≤
     ((58 * N : ℕ) : ℝ) * c + (29 / 6 * (H - c) + 2 * Real.log 2) := by
@@ -4205,29 +4337,36 @@ theorem free_total (hS : S.Admissible) (a : Fin 2) {c H : ℝ}
   have hlx : Real.log |x| ≤ 0 :=
     Real.log_nonpos (abs_nonneg _) (abs_le.mpr ⟨hx.1.le, hx.2.le⟩)
   have hb := hH x hx hx0
+  have hm := hmv x hx hx0
+  rw [hm]
   rcases lt_or_gt_of_ne hx0 with hneg | hpos
   · rw [if_neg (not_le.mpr hneg)]
     have e := free_neg_row hS hD a ⟨hx.1, hneg⟩ hA
-    have hFc : S.freeRow Trunc.exact a x ≤ c := hcap x (Or.inl ⟨hx.1.le, hneg⟩)
+    have hFc : S.freeRow Trunc.exact a x + fR x ≤ c := hcap x (Or.inl ⟨hx.1.le, hneg⟩)
     have t := row_transfer (t := 1 - x) (v := |x|) hn hFc (H := H) (by linarith)
     unfold cNeg
     linarith
   · rw [if_pos hpos.le]
     have e := free_pos_row hS hD a ⟨hpos, hx.2⟩ hA
-    have hFc : S.freeRow Trunc.exact a x ≤ c := hcap x (Or.inr ⟨hpos, hx.2⟩)
+    have hFc : S.freeRow Trunc.exact a x + fR x ≤ c := hcap x (Or.inr ⟨hpos, hx.2⟩)
     have t := row_transfer (t := 1 - x) (v := 1) hn hFc (H := H)
       (by rw [Real.log_one]; linarith)
     rw [Real.log_one] at t
     linarith
 
 include hcol in
-/-- The total of a free column. -/
-theorem col_total (hS : S.Admissible) (a : Fin 2) {c H : ℝ}
-    (hcap : S.FreeColCap a c)
-    (hH : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s - 3 / 58 * Real.log (1 - s) ≤ H)
+/-- The total of a free column at the moved anchor, with the column factor `γ log (1 + ζ s)`
+(GP Lemma 5.3, column part and `log Z`). -/
+theorem col_total (hS : S.Admissible) (a : Fin 2) {c H γ ζ : ℝ} {V : ℕ → ℝ} {fC : ℝ → ℝ}
+    (hcap : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s + fC s + γ * Real.log (1 + ζ * s) ≤ c)
+    (hmv : ∀ s ∈ Ioo (0 : ℝ) 1,
+      anchorColumnField (aB S a) V s = anchorColumnField (aB S a) (aV S a) s + fC s)
+    (hH : ∀ s ∈ Ioo (0 : ℝ) 1,
+      S.colField a s + fC s + γ * Real.log (1 + ζ * s) - 3 / 58 * Real.log (1 - s) ≤ H)
     (hN : 0 < N) {s : ℝ} (hs : s ∈ Ioo (0 : ℝ) 1) :
     9 * (N : ℝ) * Real.log s + 3 * (N : ℝ) * Real.log (1 - s) +
-      ((58 * N : ℕ) : ℝ) * anchorColumnField (aB S a) (aV S a) s - Real.log (1 - s) ≤
+      ((58 * N : ℕ) : ℝ) * anchorColumnField (aB S a) V s - Real.log (1 - s) +
+      ((58 * N : ℕ) : ℝ) * (γ * Real.log (1 + ζ * s)) ≤
     ((58 * N : ℕ) : ℝ) * c + 58 / 3 * (H - c) := by
   have hn : (58 / 3 : ℝ) ≤ ((58 * N : ℕ) : ℝ) := by
     have := n_ge hN
@@ -4239,16 +4378,19 @@ theorem col_total (hS : S.Admissible) (a : Fin 2) {c H : ℝ}
     rw [col_anchor hcol hS a hs]
     push_cast
     ring
+  rw [hmv s hs]
   linarith
 
-/-- The total of a marked row. -/
-theorem mark_total (hS : S.Admissible) {M : ℝ} (hp : S.OrdCap Trunc.exact Sign.pos M)
-    (hm : S.OrdCap Trunc.exact Sign.neg M) (hnr : S.NearCap Trunc.exact M)
-    (hD : D + 1 = 53 * N) {y g : ℝ} (hy : y ∈ Ioo (-1 : ℝ) 1)
+/-- The total of a marked row, with the node correction `d` (GP Lemma 5.3, marks). -/
+theorem mark_total (hS : S.Admissible) {M : ℝ} {d : ℝ → ℝ} {G : ℝ → Prop}
+    (hp : S.OrdCap Trunc.exact Sign.pos d G M)
+    (hm : S.OrdCap Trunc.exact Sign.neg d G M) (hnr : S.NearCap Trunc.exact d G M)
+    (hD : D + 1 = 53 * N) {y g : ℝ} (hy : y ∈ Ioo (-1 : ℝ) 1) (hGy : G y)
     (hdom : (0 < y → y ∈ CapSource.ordDom Sign.pos) ∧ (y < 0 → -y ∈ CapSource.ordDom Sign.neg))
     (hg : (0 < y ∧ (g = pRow S (kappa Sign.pos) D N y ∨ g = pRow S (kappa Sign.pos) D N y⁻¹)) ∨
       (y < 0 ∧ g = mRow S (cNeg S) N y)) :
-    markScal D y + g ≤ (D : ℝ) * Real.log 2 + ((58 * N : ℕ) : ℝ) * M + markE := by
+    markScal D y + g + ((58 * N : ℕ) : ℝ) * d y ≤
+      (D : ℝ) * Real.log 2 + ((58 * N : ℕ) : ℝ) * M + markE := by
   have hn0 : (0 : ℝ) ≤ ((58 * N : ℕ) : ℝ) := Nat.cast_nonneg _
   have hq := log_half_row hy
   have ha : Real.log (19501 / 100000) ≤ 0 := Real.log_nonpos (by norm_num) (by norm_num)
@@ -4257,23 +4399,23 @@ theorem mark_total (hS : S.Admissible) {M : ℝ} (hp : S.OrdCap Trunc.exact Sign
   rcases hg with ⟨hy0, h | h⟩ | ⟨hy0, h⟩
   · have hd := hdom.1 hy0
     have e := marked_pos_row (N := N) hS hD (y := y) ⟨hy0, hy.2⟩
-    have hc : S.ordField Trunc.exact Sign.pos y ≤ M := by
-      have := hp y hd
+    have hc : S.ordField Trunc.exact Sign.pos y + d y ≤ M := by
+      have := hp y hd (by simpa using hGy)
       simpa using this
     have := mul_le_mul_of_nonneg_left hc hn0
     rw [h]
     linarith
   · have hd := hdom.1 hy0
     have e := near_row (N := N) hS hD (y := y) ⟨hy0, hy.2⟩
-    have hc := hnr y ⟨hy0, hy.2⟩
+    have hc := hnr y ⟨hy0, hy.2⟩ hGy
     have := mul_le_mul_of_nonneg_left hc hn0
     have hl : Real.log (98749 / 1000000) ≤ Real.log y := Real.log_le_log (by norm_num) hd.1
     rw [h]
     linarith
   · have hd := hdom.2 hy0
     have e := marked_neg_row (N := N) hS hD (y := y) ⟨hy.1, hy0⟩
-    have hc : S.ordField Trunc.exact Sign.neg y ≤ M := by
-      have := hm (-y) hd
+    have hc : S.ordField Trunc.exact Sign.neg y + d y ≤ M := by
+      have := hm (-y) hd (by simpa using hGy)
       simpa using this
     have := mul_le_mul_of_nonneg_left hc hn0
     have hl : Real.log (19501 / 100000) ≤ Real.log |y| := by
@@ -4288,18 +4430,6 @@ end totals
 
 /-! ### The scalar in logarithms -/
 
-theorem P58_C (N : ℕ) : P58.C N = 75 * N := by
-  change 58 * N + 9 * N + 3 * N + 5 * N = 75 * N
-  ring
-
-theorem P58_H (N : ℕ) : P58.H N = 78 * N := by
-  change 58 * N + 9 * N + 3 * N + 5 * N + 3 * N = 78 * N
-  ring
-
-theorem P58_A (N : ℕ) : P58.A N = 22 * N := by
-  change 9 * N + 3 * N + 2 * (5 * N) = 22 * N
-  ring
-
 theorem log_abs_coord {y : ℝ} (hy0 : y ≠ 0) :
     Real.log |realCoordinateInv y| = Real.log 2 + Real.log |y| - Real.log (1 + y ^ 2) := by
   rw [abs_realCoordinateInv, Real.log_div (by positivity) (by positivity),
@@ -4307,19 +4437,19 @@ theorem log_abs_coord {y : ℝ} (hy0 : y ≠ 0) :
 
 theorem row_ratio {N D : ℕ} (hN : 0 < N) (hD : D + 1 = 53 * N) {y : ℝ}
     (hy : y ∈ Ioo (-1 : ℝ) 1) (hy0 : y ≠ 0) :
-    Real.log (paramRowNodeWeight P58 N y) -
-      Real.log |(rowCommonFactor P58 N).eval (realCoordinateInv y)| = markScal D y := by
+    Real.log (paramRowNodeWeight P N y) -
+      Real.log |(rowCommonFactor P N).eval (realCoordinateInv y)| = markScal D y := by
   have hR : realCoordinateInv y ≠ 0 := by
     unfold realCoordinateInv
     exact div_ne_zero (mul_ne_zero (by norm_num) hy0) (by positivity)
   have h1 := one_sub_realCoordinateInv_pos hy
   have hRa : |realCoordinateInv y| ≠ 0 := abs_ne_zero.mpr hR
-  have he : |(rowCommonFactor P58 N).eval (realCoordinateInv y)| =
-      |realCoordinateInv y| ^ P58.A N * (1 - realCoordinateInv y) ^ P58.h N := by
+  have he : |(rowCommonFactor P N).eval (realCoordinateInv y)| =
+      |realCoordinateInv y| ^ P.A N * (1 - realCoordinateInv y) ^ P.h N := by
     simp only [rowCommonFactor, Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_X,
       Polynomial.eval_sub, Polynomial.eval_one, abs_mul, abs_pow, abs_of_pos h1]
-  have hc : P58.C N - 1 = P58.A N + D := by
-    rw [P58_C, P58_A]
+  have hc : P.C N - 1 = P.A N + D := by
+    rw [Shape58.C_eq, Shape58.A_eq]
     omega
   unfold paramRowNodeWeight
   rw [he, hc, Real.log_mul (pow_ne_zero _ hRa) (pow_ne_zero _ h1.ne'),
@@ -4333,13 +4463,13 @@ theorem scalar_pos {N p m : ℕ} (hN : 0 < N) {x : Fin p → ℝ} {y : Fin m →
     (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
     (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0) (hs : ∀ i, s i ∈ Ioo (0 : ℝ) 1)
     (hxi : Function.Injective x) (hsi : Function.Injective s) :
-    0 < selectedScalar P58 N x y s := by
+    0 < selectedScalar P N x y s := by
   unfold selectedScalar
   have hR : ∀ j, realCoordinateInv (y j) ≠ 0 := fun j => by
     unfold realCoordinateInv
     exact div_ne_zero (mul_ne_zero (by norm_num) (hy0 j)) (by positivity)
-  refine div_pos (mul_pos (Finset.prod_pos fun j _ => paramRowNodeWeight_pos P58 N (hy j) (hy0 j))
-    (paramPinPrincipal_pos P58_admissible hN x s hx hs hx0 hxi hsi))
+  refine div_pos (mul_pos (Finset.prod_pos fun j _ => paramRowNodeWeight_pos P N (hy j) (hy0 j))
+    (paramPinPrincipal_pos (Shape58.adm (P := P)) hN x s hx hs hx0 hxi hsi))
     (Finset.prod_pos fun j _ => abs_pos.mpr ?_)
   simp only [rowCommonFactor, Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_X,
     Polynomial.eval_sub, Polynomial.eval_one]
@@ -4350,27 +4480,27 @@ theorem log_scalar {N D p m : ℕ} (hN : 0 < N) (hD : D + 1 = 53 * N) {x : Fin p
     (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
     (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0) (hs : ∀ i, s i ∈ Ioo (0 : ℝ) 1)
     (hxi : Function.Injective x) (hsi : Function.Injective s) :
-    Real.log (selectedScalar P58 N x y s) =
-      ∑ j, markScal D (y j) + Real.log (paramPinPrincipal P58 N x s) := by
+    Real.log (selectedScalar P N x y s) =
+      ∑ j, markScal D (y j) + Real.log (paramPinPrincipal P N x s) := by
   have hR : ∀ j, realCoordinateInv (y j) ≠ 0 := fun j => by
     unfold realCoordinateInv
     exact div_ne_zero (mul_ne_zero (by norm_num) (hy0 j)) (by positivity)
-  have hw : ∀ j, paramRowNodeWeight P58 N (y j) ≠ 0 := fun j =>
-    (paramRowNodeWeight_pos P58 N (hy j) (hy0 j)).ne'
-  have he : ∀ j, |(rowCommonFactor P58 N).eval (realCoordinateInv (y j))| ≠ 0 := fun j => by
+  have hw : ∀ j, paramRowNodeWeight P N (y j) ≠ 0 := fun j =>
+    (paramRowNodeWeight_pos P N (hy j) (hy0 j)).ne'
+  have he : ∀ j, |(rowCommonFactor P N).eval (realCoordinateInv (y j))| ≠ 0 := fun j => by
     refine abs_ne_zero.mpr ?_
     simp only [rowCommonFactor, Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_X,
       Polynomial.eval_sub, Polynomial.eval_one]
     exact mul_ne_zero (pow_ne_zero _ (hR j))
       (pow_ne_zero _ (one_sub_realCoordinateInv_pos (hy j)).ne')
-  have hp := paramPinPrincipal_pos P58_admissible hN x s hx hs hx0 hxi hsi
+  have hp := paramPinPrincipal_pos (Shape58.adm (P := P)) hN x s hx hs hx0 hxi hsi
   unfold selectedScalar
   rw [Real.log_div (mul_ne_zero (Finset.prod_ne_zero_iff.mpr fun j _ => hw j) hp.ne')
     (Finset.prod_ne_zero_iff.mpr fun j _ => he j),
     Real.log_mul (Finset.prod_ne_zero_iff.mpr fun j _ => hw j) hp.ne',
     Real.log_prod (fun j _ => hw j), Real.log_prod (fun j _ => he j)]
-  have : ∑ j, markScal D (y j) = ∑ j, Real.log (paramRowNodeWeight P58 N (y j)) -
-      ∑ j, Real.log |(rowCommonFactor P58 N).eval (realCoordinateInv (y j))| := by
+  have : ∑ j, markScal D (y j) = ∑ j, Real.log (paramRowNodeWeight P N (y j)) -
+      ∑ j, Real.log |(rowCommonFactor P N).eval (realCoordinateInv (y j))| := by
     rw [← Finset.sum_sub_distrib]
     exact Finset.sum_congr rfl fun j _ => (row_ratio hN hD (hy j) (hy0 j)).symm
   rw [this]
@@ -4391,7 +4521,7 @@ open CatalanMeasure.GenD.Signed.PhysicalPick CatalanMeasure.Parametric
 
 noncomputable section
 
-variable {S : CapSource}
+variable {S : CapSource} {P : Parameters} [Shape58 P]
 
 /-! ### Final arithmetic -/
 
@@ -4514,29 +4644,41 @@ theorem gas_master' (hS : S.Admissible) (hF : FoldSeed S) {κp κm : ℝ}
   subst hn
   exact H N D hN hD z T hz hdet
 
-/-- The whole logarithmic estimate for one configuration at one anchor. -/
+set_option maxHeartbeats 800000 in
+/-- The whole logarithmic estimate for one configuration at one moved anchor `(A, V)` (GP Lemma
+5.3).  The left side carries `log Z` (`Z = (∏ (1 + ζ s))^m`, bounded through the column field
+`γ log (1 + ζ s)` with `m ≤ γ n`) and the node correction `58 N ∑ d(y_j)`; the right side has the
+moved caps `r`, `c`, the moved intercept `anchorIntercept b A V` and the marks cap `M` (with `d`). -/
 theorem config_bound (hS : S.Admissible) (hcol : ∀ a, ∀ c ∈ S.refCol a, ColCell c) (a : Fin 2)
+    {A V : ℕ → ℝ} {fR fC : ℝ → ℝ} {d : ℝ → ℝ} {G : ℝ → Prop} {γ ζ : ℝ}
     {r c M Hr Hc C0 η εt α : ℝ} {N D p m : ℕ} (hN : 0 < N) (hD : D + 1 = 53 * N)
-    (hrc : S.FreeRowCap Trunc.exact a r) (hcc : S.FreeColCap a c)
-    (hop : S.OrdCap Trunc.exact Sign.pos M) (hom : S.OrdCap Trunc.exact Sign.neg M)
-    (hnr : S.NearCap Trunc.exact M)
+    (hζ : 0 ≤ ζ) (hγ : (m : ℝ) ≤ 58 * (N : ℝ) * γ)
+    (hmR : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
+      anchorRowField (aB S a) A V x = anchorRowField (aB S a) (aT S a) (aV S a) x + fR x)
+    (hmC : ∀ s ∈ Ioo (0 : ℝ) 1,
+      anchorColumnField (aB S a) V s = anchorColumnField (aB S a) (aV S a) s + fC s)
+    (hrc : ∀ x ∈ CapSource.rowDom, S.freeRow Trunc.exact a x + fR x ≤ r)
+    (hcc : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s + fC s + γ * Real.log (1 + ζ * s) ≤ c)
+    (hop : S.OrdCap Trunc.exact Sign.pos d G M) (hom : S.OrdCap Trunc.exact Sign.neg d G M)
+    (hnr : S.NearCap Trunc.exact d G M)
     (hHr : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
-      S.freeRow Trunc.exact a x - 3 / 29 * Real.log (1 - x) - 11 / 29 * Real.log |x| ≤ Hr)
-    (hHc : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s - 3 / 58 * Real.log (1 - s) ≤ Hc)
+      S.freeRow Trunc.exact a x + fR x - 3 / 29 * Real.log (1 - x) - 11 / 29 * Real.log |x| ≤ Hr)
+    (hHc : ∀ s ∈ Ioo (0 : ℝ) 1,
+      S.colField a s + fC s + γ * Real.log (1 + ζ * s) - 3 / 58 * Real.log (1 - s) ≤ Hc)
     (hp58 : (p : ℝ) = 58 * (N : ℝ) * (1 - α))
     {x : Fin p → ℝ} {y : Fin m → ℝ} {s : Fin p → ℝ}
     (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hx0 : ∀ i, x i ≠ 0)
-    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0)
+    (hy : ∀ j, y j ∈ Ioo (-1 : ℝ) 1) (hy0 : ∀ j, y j ≠ 0) (hyG : ∀ j, G (y j))
     (hdom : ∀ j, (0 < y j → y j ∈ CapSource.ordDom Sign.pos) ∧
       (y j < 0 → -y j ∈ CapSource.ordDom Sign.neg))
     (hs : ∀ i, s i ∈ Ioo (0 : ℝ) 1)
     (hxi : Function.Injective x) (hsi : Function.Injective s)
     (sel : Fin (p + m) → Bool)
     (htan : pinOffDiagonalInteraction (58 * (N : ℝ)) 1 x s ≤
-      anchorIntercept (aB S a) (aT S a) (aV S a) -
+      anchorIntercept (aB S a) A V -
         (3 / 2 : ℝ) * ((p : ℝ) / (58 * (N : ℝ)) - aB S a) ^ 2 * Real.log 2 +
-        (∑ i, anchorRowField (aB S a) (aT S a) (aV S a) (x i)) / (58 * (N : ℝ)) +
-        (∑ j, anchorColumnField (aB S a) (aV S a) (s j)) / (58 * (N : ℝ)) -
+        (∑ i, anchorRowField (aB S a) A V (x i)) / (58 * (N : ℝ)) +
+        (∑ j, anchorColumnField (aB S a) V (s j)) / (58 * (N : ℝ)) -
         (∑ i, Real.log (1 - x i)) / (2 * (58 * (N : ℝ)) ^ 2) -
         (∑ j, Real.log (1 - s j)) / (58 * (N : ℝ)) ^ 2 + εt)
     {dt : ℝ}
@@ -4544,9 +4686,10 @@ theorem config_bound (hS : S.Admissible) (hcol : ∀ a, ∀ c ∈ S.refCol a, Co
       2 * ∑ i, gasRow S (kappa Sign.pos) (cNeg S) D N (Fin.append x y) (selectedRows x y sel) i +
         gasK S (kappa Sign.pos) (cNeg S) D N + 4 * ((58 * N : ℕ) : ℝ) ^ 2 * η +
         C0 * ((58 * N : ℕ) : ℝ)) :
-    Real.log (selectedScalar P58 N x y s) + dt ≤
+    Real.log (selectedScalar P N x y s) + dt + (m : ℝ) * (∑ i, Real.log (1 + ζ * s i)) +
+        ((58 * N : ℕ) : ℝ) * ∑ j, d (y j) ≤
       ((p : ℝ) * (75 * (N : ℝ) - 1) + (p : ℝ) * ((p : ℝ) - 1) / 2) * Real.log 2 +
-      (58 * (N : ℝ)) ^ 2 * (anchorIntercept (aB S a) (aT S a) (aV S a) -
+      (58 * (N : ℝ)) ^ 2 * (anchorIntercept (aB S a) A V -
         3 / 2 * (1 - α - aB S a) ^ 2 * Real.log 2 + εt) +
       (p : ℝ) * (58 * (N : ℝ) * r + (29 / 6 * (Hr - r) + 2 * Real.log 2)) +
       (p : ℝ) * (58 * (N : ℝ) * c + 58 / 3 * (Hc - c)) +
@@ -4564,29 +4707,29 @@ theorem config_bound (hS : S.Admissible) (hcol : ∀ a, ∀ c ∈ S.refCol a, Co
     have : ((D + 1 : ℕ) : ℝ) = ((53 * N : ℕ) : ℝ) := by rw [hD]
     push_cast at this
     linarith
-  have hl1 := log_scalar hN hD hx hx0 hy hy0 hs hxi hsi
-  have hl2 := log_paramPinPrincipal P58_admissible hN x s hx hs hx0 hxi hsi
-  have c1 : ((P58.C N - 1 : ℕ) : ℝ) = 75 * (N : ℝ) - 1 := by
-    rw [P58_C, Nat.cast_sub (by omega)]
+  have hl1 := log_scalar (P := P) hN hD hx hx0 hy hy0 hs hxi hsi
+  have hl2 := log_paramPinPrincipal (Shape58.adm (P := P)) hN x s hx hs hx0 hxi hsi
+  have c1 : ((P.C N - 1 : ℕ) : ℝ) = 75 * (N : ℝ) - 1 := by
+    rw [Shape58.C_eq, Nat.cast_sub (by omega)]
     push_cast
     ring
-  have c2 : ((2 * P58.h N : ℕ) : ℝ) = 6 * (N : ℝ) := by
-    change ((2 * (3 * N) : ℕ) : ℝ) = _
+  have c2 : ((2 * P.h N : ℕ) : ℝ) = 6 * (N : ℝ) := by
+    rw [Shape58.h_eq]
     push_cast
     ring
-  have c3 : ((P58.H N - 2 : ℕ) : ℝ) = 78 * (N : ℝ) - 2 := by
-    rw [P58_H, Nat.cast_sub (by omega)]
+  have c3 : ((P.H N - 2 : ℕ) : ℝ) = 78 * (N : ℝ) - 2 := by
+    rw [Shape58.H_eq, Nat.cast_sub (by omega)]
     push_cast
     ring
-  have c4 : ((P58.b N : ℕ) : ℝ) = 9 * (N : ℝ) := by
-    change ((9 * N : ℕ) : ℝ) = _
+  have c4 : ((P.b N : ℕ) : ℝ) = 9 * (N : ℝ) := by
+    rw [Shape58.b_eq]
     push_cast
     ring
-  have c5 : ((P58.q N : ℕ) : ℝ) = 3 * (N : ℝ) := by
-    change ((3 * N : ℕ) : ℝ) = _
+  have c5 : ((P.q N : ℕ) : ℝ) = 3 * (N : ℝ) := by
+    rw [Shape58.q_eq]
     push_cast
     ring
-  have c6 : ((p * (P58.C N - 1) + p.choose 2 : ℕ) : ℝ) =
+  have c6 : ((p * (P.C N - 1) + p.choose 2 : ℕ) : ℝ) =
       (p : ℝ) * (75 * (N : ℝ) - 1) + (p : ℝ) * ((p : ℝ) - 1) / 2 := by
     rw [Nat.cast_add, Nat.cast_mul, c1, Nat.cast_choose_two]
   rw [c6, c4, c5, c1, c2, c3] at hl2
@@ -4607,20 +4750,30 @@ theorem config_bound (hS : S.Admissible) (hcol : ∀ a, ∀ c ∈ S.refCol a, Co
   -- the rows
   have hrow : ∑ i, ((75 * (N : ℝ) - 1) * Real.log |x i| + 6 * (N : ℝ) * Real.log (1 - x i) -
       (78 * (N : ℝ) - 2) * Real.log (1 + x i ^ 2) +
-      ((58 * N : ℕ) : ℝ) * anchorRowField (aB S a) (aT S a) (aV S a) (x i) -
+      ((58 * N : ℕ) : ℝ) * anchorRowField (aB S a) A V (x i) -
       1 / 2 * Real.log (1 - x i) +
       (if 0 ≤ x i then pRow S (kappa Sign.pos) D N (x i) else mRow S (cNeg S) N (x i))) ≤
       ∑ _i : Fin p, (((58 * N : ℕ) : ℝ) * r + (29 / 6 * (Hr - r) + 2 * Real.log 2)) :=
-    Finset.sum_le_sum fun i _ => free_total hcol hS a hrc hHr hN hD (hx i) (hx0 i)
+    Finset.sum_le_sum fun i _ => free_total hcol hS a hrc hmR hHr hN hD (hx i) (hx0 i)
   have hcolS : ∑ j, (9 * (N : ℝ) * Real.log (s j) + 3 * (N : ℝ) * Real.log (1 - s j) +
-      ((58 * N : ℕ) : ℝ) * anchorColumnField (aB S a) (aV S a) (s j) - Real.log (1 - s j)) ≤
+      ((58 * N : ℕ) : ℝ) * anchorColumnField (aB S a) V (s j) - Real.log (1 - s j) +
+      ((58 * N : ℕ) : ℝ) * (γ * Real.log (1 + ζ * s j))) ≤
       ∑ _j : Fin p, (((58 * N : ℕ) : ℝ) * c + 58 / 3 * (Hc - c)) :=
-    Finset.sum_le_sum fun j _ => col_total hcol hS a hcc hHc hN (hs j)
+    Finset.sum_le_sum fun j _ => col_total hcol hS a hcc hmC hHc hN (hs j)
   have hmark : ∑ j, (markScal D (y j) + gasRow S (kappa Sign.pos) (cNeg S) D N (Fin.append x y)
-      (selectedRows x y sel) (Fin.natAdd p j)) ≤
+      (selectedRows x y sel) (Fin.natAdd p j) + ((58 * N : ℕ) : ℝ) * d (y j)) ≤
       ∑ _j : Fin m, ((D : ℝ) * Real.log 2 + ((58 * N : ℕ) : ℝ) * M + markE) :=
-    Finset.sum_le_sum fun j _ => mark_total hS hop hom hnr hD (hy j) (hdom j)
+    Finset.sum_le_sum fun j _ => mark_total hS hop hom hnr hD (hy j) (hyG j) (hdom j)
       (gasRow_mark _ _ D N x y sel j (hy0 j))
+  -- log Z against the column field
+  have hg0 : ∀ i, 0 ≤ Real.log (1 + ζ * s i) := fun i =>
+    Real.log_nonneg (by have := mul_nonneg hζ (hs i).1.le; linarith)
+  have hZ : (m : ℝ) * (∑ i, Real.log (1 + ζ * s i)) ≤
+      58 * (N : ℝ) * (γ * ∑ i, Real.log (1 + ζ * s i)) := by
+    calc (m : ℝ) * (∑ i, Real.log (1 + ζ * s i)) ≤
+        (58 * (N : ℝ) * γ) * ∑ i, Real.log (1 + ζ * s i) :=
+          mul_le_mul_of_nonneg_right hγ (Finset.sum_nonneg fun i _ => hg0 i)
+      _ = _ := by ring
   have hsplit := Fin.sum_univ_add (fun i => gasRow S (kappa Sign.pos) (cNeg S) D N
     (Fin.append x y) (selectedRows x y sel) i)
   simp only [gasRow_free] at hsplit
@@ -4630,8 +4783,8 @@ theorem config_bound (hS : S.Admissible) (hcol : ∀ a, ∀ c ∈ S.refCol a, Co
     Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hrow hcolS hmark hl2
   rw [hDr] at hgm hmark
   unfold cNeg at hgm hrow hmark
-  push_cast at hrow hcolS hmark hgm
-  linarith
+  push_cast at hrow hcolS hmark hgm ⊢
+  linarith [hZ]
 
 end
 end CatalanMeasure.GenD.Signed.RouteI.CompletedGas
@@ -4648,10 +4801,11 @@ open CatalanMeasure.GenD.Signed.PhysicalPick CatalanMeasure.Parametric
 
 noncomputable section
 
-variable {S : CapSource}
+variable {S : CapSource} {P : Parameters} [Shape58 P]
 
 /-- The common cap of the marked rows. -/
-def markCap {gasI : ℝ} {anchI : Fin 2 → ℝ} (B : S.CapBundle Trunc.exact gasI anchI) : ℝ :=
+def markCap {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ} {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle Trunc.exact d G gasI anchI) : ℝ :=
   max (max (B.ordCap Sign.pos) (B.ordCap Sign.neg)) B.nearCap
 
 /-- The explicit constant of the completed gas: the angular constants, the fold constant, the two
@@ -4660,74 +4814,112 @@ def gasConst (S : CapSource) : ℝ :=
   kappa Sign.pos + 53 / 58 * (kappa Sign.neg - cM S) - (53 / 58) ^ 2 / 2 * Real.log 2 -
     (planarEnergy (qP S) + planarEnergy (qM S)) / 2 - tauInt S / (2 * 58 ^ 2)
 
-/-- The budget at anchor `a` and marked fraction `α`, retaining the mass square. -/
-def capBudget {gasI : ℝ} {anchI : Fin 2 → ℝ} (B : S.CapBundle Trunc.exact gasI anchI)
-    (a : Fin 2) (α : ℝ) : ℝ :=
-  B.anchICap a - 3 / 2 * (1 - α - aB S a) ^ 2 * Real.log 2 +
-    (1 - α) * (B.rowCap a + B.colCap a) + α * markCap B +
+/-- The budget at a moved anchor with base mass `b`, intercept cap `I`, row cap `r`, column cap
+`c` and marked fraction `α`, retaining the mass square (GP §11.1: the three values are
+arguments). -/
+def capBudget {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ} {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle Trunc.exact d G gasI anchI) (b I r c α : ℝ) : ℝ :=
+  I - 3 / 2 * (1 - α - b) ^ 2 * Real.log 2 +
+    (1 - α) * (r + c) + α * markCap B +
     Real.log 2 * (75 / 58 * (1 - α) + (1 - α) ^ 2 / 2 + 53 / 58 * α) + B.gasICap
 
-/-- **The comparison bound on the near sheet.**  The cutoff is chosen before the configuration
-and the selector; the Pick window is not used. -/
+/-- **The comparison bound on the near sheet, one cell.**  The anchor is the moved anchor `(A, V)`
+of the cell (`anchorRowField` and `anchorColumnField` are the base fields plus the bounded `fR`,
+`fC`), the caps are the cell's `r`, `c`, `I` with the column factor `γ log (1 + ζ s)` (`γ` at least
+the marked fractions of the window `W`), and `d = δ ∘ t / 58` is the node correction.  The cutoff is
+chosen before the configuration and the selector; the Pick window is not used. -/
 theorem selected_comparison (hS : S.Admissible) (hF : FoldSeed S)
     (hcol : ∀ a, ∀ c ∈ S.refCol a, ColCell c)
-    {gasI : ℝ} {anchI : Fin 2 → ℝ} (B : S.CapBundle Trunc.exact gasI anchI)
+    {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ} {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle Trunc.exact d G gasI anchI)
     (hang : ∀ σ, B.angCap σ ≤ kappa σ)
     (hgas : gasConst S ≤ gasI)
-    (hI : ∀ a, anchorIntercept (aB S a) (aT S a) (aV S a) ≤ anchI a)
-    {target cost α₁ : ℝ}
-    (hbud : ∀ α ∈ Icc (0 : ℝ) α₁, ∃ a, capBudget B a α ≤ -target + Real.log 2 / 2 + cost * α / 58)
-    {G : ℝ → Prop} {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
+    (a : Fin 2) {A V : ℕ → ℝ} {fR fC : ℝ → ℝ} {K : ℝ}
+    (hA : ∀ k, k ≠ 0 → |A k| ≤ K / k) (hV : ∀ k, k ≠ 0 → |V k| ≤ K / k)
+    (hmR : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
+      anchorRowField (aB S a) A V x = anchorRowField (aB S a) (aT S a) (aV S a) x + fR x)
+    (hmC : ∀ s ∈ Ioo (0 : ℝ) 1,
+      anchorColumnField (aB S a) V s = anchorColumnField (aB S a) (aV S a) s + fC s)
+    (hfR : ∃ Bf, ∀ x ∈ Ioo (-1 : ℝ) 1, |fR x| ≤ Bf)
+    (hfC : ∃ Bf, ∀ s ∈ Ioo (0 : ℝ) 1, |fC s| ≤ Bf)
+    {r c I γ ζ : ℝ} (hζ : 0 ≤ ζ) (hγ0 : 0 ≤ γ)
+    (hrc : ∀ x ∈ CapSource.rowDom, S.freeRow Trunc.exact a x + fR x ≤ r)
+    (hcc : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s + fC s + γ * Real.log (1 + ζ * s) ≤ c)
+    (hI : anchorIntercept (aB S a) A V ≤ I)
+    {target cost : ℝ} {W : Set ℝ} (hWγ : ∀ α ∈ W, α ≤ γ)
+    (hbud : ∀ α ∈ W, capBudget B (aB S a) I r c α ≤ -target + Real.log 2 / 2 + cost * α / 58)
+    {δ : ℝ → ℝ} (hdδ : ∀ u, d u = δ (realCoordinateInv u) / 58)
     (hG : ∀ y, G y → (0 < y → y ∈ CapSource.ordDom Sign.pos) ∧
       (y < 0 → -y ∈ CapSource.ordDom Sign.neg))
-    (hQ : ∀ N p m x y s, Q N p m x y s → (m : ℝ) ≤ α₁ * (P58.n N : ℝ)) :
-    SelectedComparisonOnPick P58 target cost G Q := by
+    {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
+    (hQ : ∀ N p m x y s, Q N p m x y s → ((m : ℝ) / (P.n N : ℝ)) ∈ W) :
+    SelectedComparisonOnPick P ζ δ target cost G Q := by
   intro ε hε
   have hAp : S.AngCap Trunc.exact Sign.pos (kappa Sign.pos) := fun i hi θ =>
     (B.ang Sign.pos i hi θ).trans (hang _)
   have hAm : S.AngCap Trunc.exact Sign.neg (kappa Sign.neg) := fun i hi θ =>
     (B.ang Sign.neg i hi θ).trans (hang _)
   obtain ⟨C0, hC0, hgm⟩ := gas_master' hS hF hAp hAm (η := ε / 8) (by positivity)
-  have hT : ∀ a : Fin 2, ∃ ν₀ : ℝ, 0 < ν₀ ∧ ∀ ν : ℝ, ν₀ ≤ ν → ∀ (p : ℕ), (p : ℝ) ≤ ν →
+  obtain ⟨ν, hν0, hν⟩ : ∃ ν₀ : ℝ, 0 < ν₀ ∧ ∀ ν : ℝ, ν₀ ≤ ν → ∀ (p : ℕ), (p : ℝ) ≤ ν →
       ∀ (x s : Fin p → ℝ), (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ j, s j ∈ Ioo (0 : ℝ) 1) →
       Function.Injective x → Function.Injective s →
       pinOffDiagonalInteraction ν 1 x s ≤
-        anchorIntercept (aB S a) (aT S a) (aV S a) -
+        anchorIntercept (aB S a) A V -
           (3 / 2 : ℝ) * ((p : ℝ) / ν - aB S a) ^ 2 * Real.log 2 +
-          (∑ i, anchorRowField (aB S a) (aT S a) (aV S a) (x i)) / ν +
-          (∑ j, anchorColumnField (aB S a) (aV S a) (s j)) / ν -
+          (∑ i, anchorRowField (aB S a) A V (x i)) / ν +
+          (∑ j, anchorColumnField (aB S a) V (s j)) / ν -
           (∑ i, Real.log (1 - x i)) / (2 * ν ^ 2) - (∑ j, Real.log (1 - s j)) / ν ^ 2 + ε / 4 := by
-    intro a
-    obtain ⟨K, -, hK⟩ := anchor_moment_bound (ref_cell hS a) (hcol a)
-    have h1 := summable_of_moment_bound (u := aT S a) (C := K) (fun k hk => (hK k hk).1)
-    have h2 := summable_of_moment_bound (u := aV S a) (C := K) (fun k hk => (hK k hk).2)
-    exact free_pin_anchor_tangent (aB S a) (aT S a) (aV S a) h1.1 h2.1 h1.2 h2.2
-      (ε := ε / 4) (by positivity)
-  choose ν hν0 hν using hT
-  choose Hr hHr using fun a => free_row_bounded hcol hS a
-  choose Hc hHc using fun a => free_col_bounded hcol hS a
+    have h1 := summable_of_moment_bound (u := A) (C := K) hA
+    have h2 := summable_of_moment_bound (u := V) (C := K) hV
+    exact free_pin_anchor_tangent (aB S a) A V h1.1 h2.1 h1.2 h2.2 (ε := ε / 4) (by positivity)
+  obtain ⟨Hr0, hHr0⟩ := free_row_bounded hcol hS a
+  obtain ⟨Hc0, hHc0⟩ := free_col_bounded hcol hS a
+  obtain ⟨Bf, hBf⟩ := hfR
+  obtain ⟨Bc, hBc⟩ := hfC
+  set Hr : ℝ := Hr0 + Bf with hHrdef
+  set Hc : ℝ := Hc0 + Bc + γ * Real.log (1 + ζ) with hHcdef
+  have hHr : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
+      S.freeRow Trunc.exact a x + fR x - 3 / 29 * Real.log (1 - x) - 11 / 29 * Real.log |x| ≤ Hr :=
+    fun x hx hx0 => by
+      have h1 := hHr0 x hx hx0
+      have h2 := (le_abs_self (fR x)).trans (hBf x hx)
+      rw [hHrdef]
+      linarith
+  have hHc : ∀ s ∈ Ioo (0 : ℝ) 1,
+      S.colField a s + fC s + γ * Real.log (1 + ζ * s) - 3 / 58 * Real.log (1 - s) ≤ Hc :=
+    fun s hs => by
+      have h1 := hHc0 s hs
+      have h2 := (le_abs_self (fC s)).trans (hBc s hs)
+      have h3 : Real.log (1 + ζ * s) ≤ Real.log (1 + ζ) :=
+        Real.log_le_log (by have := mul_nonneg hζ hs.1.le; linarith)
+          (by have := mul_le_mul_of_nonneg_left hs.2.le hζ; linarith)
+      have h4 := mul_le_mul_of_nonneg_left h3 hγ0
+      rw [hHcdef]
+      linarith
   set M := markCap B with hMdef
-  have hop : S.OrdCap Trunc.exact Sign.pos M := fun s hs =>
-    (B.ord Sign.pos s hs).trans ((le_max_left _ _).trans (le_max_left _ _))
-  have hom : S.OrdCap Trunc.exact Sign.neg M := fun s hs =>
-    (B.ord Sign.neg s hs).trans ((le_max_right _ _).trans (le_max_left _ _))
-  have hnr : S.NearCap Trunc.exact M := fun y hy => (B.near y hy).trans (le_max_right _ _)
-  set Et : Fin 2 → ℝ := fun a => |29 / 6 * (Hr a - B.rowCap a) + 2 * Real.log 2| +
-    |58 / 3 * (Hc a - B.colCap a)| + |markE| + C0 / 2 with hEt
-  have hEt0 : ∀ a, 0 ≤ Et a := fun a => by
+  have hop : S.OrdCap Trunc.exact Sign.pos d G M := fun s hs hGs =>
+    (B.ord Sign.pos s hs hGs).trans ((le_max_left _ _).trans (le_max_left _ _))
+  have hom : S.OrdCap Trunc.exact Sign.neg d G M := fun s hs hGs =>
+    (B.ord Sign.neg s hs hGs).trans ((le_max_right _ _).trans (le_max_left _ _))
+  have hnr : S.NearCap Trunc.exact d G M := fun y hy hGy =>
+    (B.near y hy hGy).trans (le_max_right _ _)
+  set Et : ℝ := |29 / 6 * (Hr - r) + 2 * Real.log 2| +
+    |58 / 3 * (Hc - c)| + |markE| + C0 / 2 with hEt
+  have hEt0 : 0 ≤ Et := by
     simp only [hEt]
     positivity
-  filter_upwards [eventually_ge_atTop 1, eventually_ge_atTop ⌈ν 0⌉₊, eventually_ge_atTop ⌈ν 1⌉₊,
-    eventually_ge_atTop ⌈(Et 0 + Et 1) * 2 / ε⌉₊] with N hN1 hNa hNb hNE
+  filter_upwards [eventually_ge_atTop 1, eventually_ge_atTop ⌈ν⌉₊,
+    eventually_ge_atTop ⌈Et * 2 / ε⌉₊] with N hN1 hNa hNE
   intro p m hpm x y s hx hx0 hy hy0 hyG hs hzi hsi hcase hQc sel _
-  change p + m = 58 * N at hpm
+  have hn58 : ∀ M : ℕ, P.n M = 58 * M := fun M => Shape58.n_eq (P := P) M
+  have hpm' : p + m = 58 * N := by rw [← hn58]; exact hpm
   have hN : 0 < N := hN1
   have hNr : (0 : ℝ) < N := by exact_mod_cast hN
   have hNr1 : (1 : ℝ) ≤ N := by exact_mod_cast hN1
   obtain ⟨D, hD⟩ : ∃ D, D + 1 = 53 * N := ⟨53 * N - 1, by omega⟩
   have hn0 : (0 : ℝ) < 58 * (N : ℝ) := by positivity
   have hpmr : (p : ℝ) + m = 58 * (N : ℝ) := by
-    have : ((p + m : ℕ) : ℝ) = ((58 * N : ℕ) : ℝ) := by rw [hpm]
+    have : ((p + m : ℕ) : ℝ) = ((58 * N : ℕ) : ℝ) := by rw [hpm']
     push_cast at this
     exact this
   set α : ℝ := (m : ℝ) / (58 * (N : ℝ)) with hα
@@ -4742,16 +4934,16 @@ theorem selected_comparison (hS : S.Admissible) (hF : FoldSeed S)
     rw [hα, div_le_one hn0]
     have : (0 : ℝ) ≤ p := Nat.cast_nonneg _
     linarith
-  have hαQ : α ≤ α₁ := by
+  have hnR : ((P.n N : ℕ) : ℝ) = 58 * (N : ℝ) := by
+    rw [hn58]
+    push_cast
+    ring
+  have hαW : α ∈ W := by
     have h := hQ N p m x y s hQc
-    have e : ((P58.n N : ℕ) : ℝ) = 58 * (N : ℝ) := by
-      change ((58 * N : ℕ) : ℝ) = _
-      push_cast
-      ring
-    rw [e] at h
-    rw [hα, div_le_iff₀ hn0]
-    exact h
-  obtain ⟨a, ha⟩ := hbud α ⟨hα0, hαQ⟩
+    rwa [hnR] at h
+  have hmγ : (m : ℝ) ≤ 58 * (N : ℝ) * γ := by
+    rw [hm']
+    exact mul_le_mul_of_nonneg_left (hWγ α hαW) hn0.le
   have hxi : Function.Injective x := by
     intro i j h
     have h2 : Fin.append x y (Fin.castAdd m i) = Fin.append x y (Fin.castAdd m j) := by
@@ -4761,79 +4953,83 @@ theorem selected_comparison (hS : S.Admissible) (hF : FoldSeed S)
     Fin.addCases (fun j => by simpa using hx0 j) (fun j => by simpa using hy0 j) i
   have hdom : ∀ j, (0 < y j → y j ∈ CapSource.ordDom Sign.pos) ∧
       (y j < 0 → -y j ∈ CapSource.ordDom Sign.neg) := fun j => hG _ (hyG j)
-  by_cases hdet : (comparisonLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det = 0
-  · rw [hdet, abs_zero, mul_zero]
+  have hgN : P.g N = 5 * N := Shape58.g_eq (P := P) N
+  rw [hgN]
+  by_cases hdet : (comparisonLaurent (5 * N) (Fin.append x y) (selectedRows x y sel)).det = 0
+  · rw [hdet, abs_zero, mul_zero, mul_zero]
     unfold selectedCap
     positivity
-  have hpos := scalar_pos hN hx hx0 hy hy0 hs hxi hsi
-  have hg := hgm N D (p + m) hN hD hpm (Fin.append x y) (selectedRows x y sel) hz0 hdet
-  have hνa : ν a ≤ 58 * (N : ℝ) := by
-    have h0 : ν 0 ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNa)
-    have h1 : ν 1 ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNb)
-    fin_cases a
-    · change ν 0 ≤ _
-      linarith
-    · change ν 1 ≤ _
-      linarith
+  have hpos := scalar_pos (P := P) hN hx hx0 hy hy0 hs hxi hsi
+  have hg := hgm N D (p + m) hN hD hpm' (Fin.append x y) (selectedRows x y sel) hz0 hdet
+  have hνa : ν ≤ 58 * (N : ℝ) := by
+    have h0 : ν ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNa)
+    linarith
   have hple : (p : ℝ) ≤ 58 * (N : ℝ) := by
     have : (0 : ℝ) ≤ m := Nat.cast_nonneg _
     linarith
-  have htan := hν a (58 * (N : ℝ)) hνa p hple x s hx hs hxi hsi
-  have hcfg := config_bound hS hcol a (r := B.rowCap a) (c := B.colCap a) (M := M) (C0 := C0)
-    (η := ε / 8) (εt := ε / 4) (α := α) hN hD (B.row a) (B.col a) hop hom hnr (hHr a) (hHc a) hp'
-    hx hx0 hy hy0 hdom hs hxi hsi sel htan hg
-  have hE : 58 * (N : ℝ) * (|29 / 6 * (Hr a - B.rowCap a) + 2 * Real.log 2| +
-      |58 / 3 * (Hc a - B.colCap a)| + |markE| + C0 / 2) ≤ (58 * (N : ℝ)) ^ 2 * (ε / 2) := by
-    have h1 : (Et 0 + Et 1) * 2 / ε ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNE)
-    have h2 : (Et 0 + Et 1) ≤ (N : ℝ) * (ε / 2) := by
+  have htan := hν (58 * (N : ℝ)) hνa p hple x s hx hs hxi hsi
+  have hcfg := config_bound (P := P) hS hcol a (A := A) (V := V) (fR := fR) (fC := fC) (d := d) (G := G)
+    (γ := γ) (ζ := ζ) (r := r) (c := c) (M := M) (C0 := C0) (η := ε / 8) (εt := ε / 4)
+    (α := α) hN hD hζ hmγ hmR hmC hrc hcc hop hom hnr hHr hHc hp'
+    hx hx0 hy hy0 hyG hdom hs hxi hsi sel htan hg
+  have hE : 58 * (N : ℝ) * (|29 / 6 * (Hr - r) + 2 * Real.log 2| +
+      |58 / 3 * (Hc - c)| + |markE| + C0 / 2) ≤ (58 * (N : ℝ)) ^ 2 * (ε / 2) := by
+    have h1 : Et * 2 / ε ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNE)
+    have h2 : Et ≤ (N : ℝ) * (ε / 2) := by
       rw [div_le_iff₀ hε] at h1
       linarith
-    have h3 : Et a ≤ Et 0 + Et 1 := by
-      have := hEt0 0
-      have := hEt0 1
-      fin_cases a
-      · change Et 0 ≤ _
-        linarith
-      · change Et 1 ≤ _
-        linarith
-    have h4 : Et a ≤ 58 * (N : ℝ) * (ε / 2) := by
+    have h4 : Et ≤ 58 * (N : ℝ) * (ε / 2) := by
       have : (N : ℝ) * (ε / 2) ≤ 58 * (N : ℝ) * (ε / 2) := by
         have : 0 < (N : ℝ) * (ε / 2) := by positivity
         linarith
       linarith
-    calc 58 * (N : ℝ) * Et a ≤ 58 * (N : ℝ) * (58 * (N : ℝ) * (ε / 2)) :=
+    calc 58 * (N : ℝ) * Et ≤ 58 * (N : ℝ) * (58 * (N : ℝ) * (ε / 2)) :=
           mul_le_mul_of_nonneg_left h4 hn0.le
       _ = _ := by ring
-  have hfin := final_arith (X := Real.log (selectedScalar P58 N x y s) +
-      Real.log |(comparisonLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det|)
+  have hfin := final_arith
+    (X := Real.log (selectedScalar P N x y s) +
+      Real.log |(comparisonLaurent (5 * N) (Fin.append x y) (selectedRows x y sel)).det| +
+      (m : ℝ) * (∑ i, Real.log (1 + ζ * s i)) + ((58 * N : ℕ) : ℝ) * ∑ j, d (y j))
     (L := Real.log 2) (N := (N : ℝ)) (α := α) (p := (p : ℝ)) (m := (m : ℝ))
-    (I := anchorIntercept (aB S a) (aT S a) (aV S a)) (Ic := B.anchICap a) (b := aB S a)
-    (r := B.rowCap a) (c := B.colCap a) (M := M)
-    (E1 := 29 / 6 * (Hr a - B.rowCap a) + 2 * Real.log 2) (E2 := 58 / 3 * (Hc a - B.colCap a))
+    (I := anchorIntercept (aB S a) A V) (Ic := I) (b := aB S a)
+    (r := r) (c := c) (M := M)
+    (E1 := 29 / 6 * (Hr - r) + 2 * Real.log 2) (E2 := 58 / 3 * (Hc - c))
     (E3 := markE) (C0 := C0) (η := ε / 8) (εt := ε / 4) (κ := kappa Sign.pos)
     (κm := kappa Sign.neg) (cm := cM S) (Ep := planarEnergy (qP S))
     (Em := planarEnergy (qM S)) (Tau := tauInt S) (Gas := gasConst S) (Gc := B.gasICap)
     (target := target) (cost := cost) (ε := ε)
-    hNr (Real.log_nonneg (by norm_num)) hp' hm' hα0 hα1 hcfg ((hI a).trans (B.anchI_le a)) rfl
-    (hgas.trans B.gasI_le) ha hE rfl rfl
-  have hprefix : (1 : ℝ) ≤ (1 + 10 * Real.exp 12 * (P58.n N : ℝ)) ^ P58.n N :=
-    one_le_pow₀ (by
-      have : 0 ≤ 10 * Real.exp 12 * (P58.n N : ℝ) := by positivity
-      linarith)
-  have hcast : ((P58.n0 : ℝ) * N) = 58 * (N : ℝ) := by norm_num [P58]
-  unfold selectedCap
-  rw [hcast]
-  have habs : 0 < |(comparisonLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det| :=
+    hNr (Real.log_nonneg (by norm_num)) hp' hm' hα0 hα1 hcfg hI rfl
+    (hgas.trans B.gasI_le) (hbud α hαW) hE rfl rfl
+  -- back to the product
+  have hZpos : 0 < (∏ l, (1 + ζ * s l)) ^ m :=
+    pow_pos (prod_pos fun i _ => by have := mul_nonneg hζ (hs i).1.le; linarith) _
+  have hZlog : Real.log ((∏ l, (1 + ζ * s l)) ^ m) = (m : ℝ) * ∑ i, Real.log (1 + ζ * s i) := by
+    rw [Real.log_pow, Real.log_prod (fun i _ => by
+      have := mul_nonneg hζ (hs i).1.le; exact (by linarith : (1 + ζ * s i) ≠ 0))]
+  have habs : 0 < |(comparisonLaurent (5 * N) (Fin.append x y) (selectedRows x y sel)).det| :=
     abs_pos.mpr hdet
-  calc selectedScalar P58 N x y s *
-        |(comparisonLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det| =
-      Real.exp (Real.log (selectedScalar P58 N x y s) +
-        Real.log |(comparisonLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det|) := by
-        rw [Real.exp_add, Real.exp_log hpos, Real.exp_log habs]
-    _ ≤ Real.exp ((58 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + cost * N * m) :=
-        Real.exp_le_exp.mpr hfin
-    _ = 1 * Real.exp ((58 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + cost * N * m) :=
-        (one_mul _).symm
+  have hprefix : (1 : ℝ) ≤ (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N :=
+    one_le_pow₀ (by
+      have : 0 ≤ 10 * Real.exp 12 * (P.n N : ℝ) := by positivity
+      linarith)
+  have hcast : ((P.n0 : ℝ) * N) = 58 * (N : ℝ) := by rw [Shape58.n0_eq (P := P)]; norm_num
+  have hE' : ((58 * N : ℕ) : ℝ) * ∑ j, d (y j) = (N : ℝ) * ∑ j, δ (realCoordinateInv (y j)) := by
+    simp only [hdδ, ← Finset.sum_div]
+    push_cast
+    ring
+  unfold selectedCap
+  rw [hcast, ← hE']
+  calc (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+        |(comparisonLaurent (5 * N) (Fin.append x y) (selectedRows x y sel)).det|) =
+      Real.exp (Real.log ((∏ l, (1 + ζ * s l)) ^ m) + Real.log (selectedScalar P N x y s) +
+        Real.log |(comparisonLaurent (5 * N) (Fin.append x y) (selectedRows x y sel)).det|) := by
+        rw [Real.exp_add, Real.exp_add, Real.exp_log hZpos, Real.exp_log hpos,
+          Real.exp_log habs, mul_assoc]
+    _ ≤ Real.exp ((58 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + cost * N * m -
+          ((58 * N : ℕ) : ℝ) * ∑ j, d (y j)) :=
+        Real.exp_le_exp.mpr (by rw [hZlog]; linarith only [hfin])
+    _ = 1 * Real.exp ((58 * (N : ℝ)) ^ 2 * (-target + Real.log 2 / 2 + ε) + cost * N * m -
+          ((58 * N : ℕ) : ℝ) * ∑ j, d (y j)) := (one_mul _).symm
     _ ≤ _ := mul_le_mul_of_nonneg_right hprefix (Real.exp_pos _).le
 
 end
@@ -4853,7 +5049,7 @@ open scoped BigOperators Topology
 
 noncomputable section
 
-variable {S : CapSource}
+variable {S : CapSource} {P : Parameters} [Shape58 P]
 
 theorem sum_append_split (φ : ℝ → ℝ) {p a b m : ℕ} (x : Fin p → ℝ) (y : Fin m → ℝ)
     (eq : Fin a ⊕ Fin b ≃ Fin m) :
@@ -4869,7 +5065,7 @@ theorem arctan_pair : Real.arctan 4 + Real.arctan (1 / 4) = Real.pi / 2 := by
   rw [h2, h]
   ring
 
-/-- The phase margin, per row, in the normalisation of `P58`. -/
+/-- The phase margin, per row, in the normalisation of `P`. -/
 theorem phase_arith {ν Nr e R A1 A4 Cc ξ η Z αF L hc : ℝ}
     (hν : ν = 58 * Nr) (he : e = 48 * Nr - 1) (hpair : A4 + A1 = Real.pi / 2)
     (hA4 : A4 < Real.pi / 2) (hR : R = A1 + 5 / 29 * A4 + Cc)
@@ -4895,7 +5091,7 @@ theorem phase_arith {ν Nr e R A1 A4 Cc ξ η Z αF L hc : ℝ}
   rw [h3]
   nlinarith only [h1, h2, hL, hpi, hA4, h4]
 
-/-- The one-point margin, per row, in the normalisation of `P58`. -/
+/-- The one-point margin, per row, in the normalisation of `P`. -/
 theorem onepoint_arith {ν Nr e α u2 sq η ξ Sf Sm Sn W B : ℝ} {p a b : ℝ}
     (hν : ν = 58 * Nr) (he : e = 48 * Nr - 1) (hξ : 0 < ξ) (hNξ : 1 ≤ Nr * ξ) (hη : η = ξ / 4)
     (hcount : p + a + b = ν) (hα : ν * α = a + b) (ha : 0 ≤ a)
@@ -4920,25 +5116,30 @@ theorem onepoint_arith {ν Nr e α u2 sq η ξ Sf Sm Sn W B : ℝ} {p a b : ℝ}
   nlinarith only [h1, h2, hW, hWd, hSm, hSn, hB, hcount, hα, ha]
 
 set_option maxHeartbeats 1600000 in
-/-- **Low branch or physical Pick window on the selected sheet of `P58`.**  The cutoff is chosen
+/-- **Low branch or physical Pick window on the selected sheet of `P`.**  The cutoff is chosen
 in the order fixed test, fixed damping `e`, eventual `N`, and depends only on `ε`. -/
-theorem selected_low_or_pick {α₁ t₀ residual nearCap c₀ target cost : ℝ} {G : ℝ → Prop}
-    (D : SecondTrialBoundsEnd P58 α₁ t₀ residual nearCap c₀ G) (T : PhaseTest)
+theorem selected_low_or_pick {W : Set ℝ} {γ ζ : ℝ} {dc : ℝ → ℝ}
+    {t₀ residual nearCap c₀ target cost : ℝ} {G : ℝ → Prop} (hζ : 0 ≤ ζ)
+    (hWγ : ∀ α ∈ W, α ≤ γ)
+    (D : SecondTrialBoundsEnd P W
+      (fun N u => populationEndpointColumnField P N 0 u + γ * Real.log (1 + ζ * u)) dc
+      t₀ residual nearCap c₀ G) (T : PhaseTest)
+    {δ : ℝ → ℝ} (hdδ : ∀ u, dc u = δ (realCoordinateInv u) / 58)
     {Δ : ℝ → ℝ} {ξ d : ℝ} (hξ : 0 < ξ) (hd : 0 < d)
-    (hΔ : ∀ α ∈ Icc 0 α₁, ∀ β ∈ Icc 0 α,
-      oldBound P58 D.normCap D.fieldCap residual nearCap α β ≤
+    (hΔ : ∀ α ∈ W, ∀ β ∈ Icc 0 α,
+      oldBound P D.normCap D.fieldCap residual nearCap α β ≤
         -target + Real.log 2 / 2 + cost / 58 * α + Δ α)
-    (hphase : ∀ α ∈ Icc 0 α₁,
+    (hphase : ∀ α ∈ W,
       Real.arctan (1 / 4) + 5 / 29 * Real.arctan 4 +
           (17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2) + ξ ≤
         T.F 0 / 2 + (∑' k : ℕ, T.F (k + 1) * D.p (k + 1)) - Real.sqrt (T.H * (Δ α / 2)) -
           α * T.F 0 / 4 - T.h₀ * (Δ α / d))
-    (hone : ∀ α ∈ Icc 0 α₁,
+    (hone : ∀ α ∈ W,
       1 - (1 - α + D.p 2 - Real.sqrt (2 * (Δ α / 2))) / 2 + ξ ≤ 5 / 6 * (48 / 58))
-    (hsup : ∀ᶠ N : ℕ in atTop, ∀ x ∈ Ioo (-T.a₀) 0, freeRowX P58 N D.p D.v x ≤ D.MX - d)
+    (hsup : ∀ᶠ N : ℕ in atTop, ∀ x ∈ Ioo (-T.a₀) 0, freeRowX P N D.p D.v x ≤ D.MX - d)
     (hGneg : ∀ y, G y → y < 0 → y ≤ -T.a₀)
     {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
-    (hQ : ∀ N p m x y s, Q N p m x y s → (m : ℝ) ≤ α₁ * (P58.n N : ℝ))
+    (hQ : ∀ N p m x y s, Q N p m x y s → ((m : ℝ) / (P.n N : ℝ)) ∈ W)
     (hpick : ∀ {n : ℕ} (w : Fin n → ℝ) (e : ℕ), Function.Injective w → (∀ i, w i ≠ 0) →
       (∀ i, |w i| < 1) →
       ∑ i ∈ Finset.univ.filter (fun i => 0 < w i), (1 - w i ^ 2) / (1 + w i ^ 2) ≤
@@ -4950,7 +5151,7 @@ theorem selected_low_or_pick {α₁ t₀ residual nearCap c₀ target cost : ℝ
           ∑ i ∈ Finset.univ.filter (fun i => 0 < w i),
             Real.arctan (4 * ((1 - w i) / (1 + w i))) →
       PickWindow (1 / 100) e w) :
-    SelectedLowOrPick P58 target cost G Q := by
+    SelectedLowOrPick P ζ δ target cost G Q := by
   intro ε hε
   have hη : 0 < ξ / 4 := by linarith only [hξ]
   set Cst : ℝ := 4 * (∑' j, |D.p j|) + 4 * (∑' j, |D.v j|) + |D.p 1| + 20 with hCst
@@ -4974,95 +5175,133 @@ theorem selected_low_or_pick {α₁ t₀ residual nearCap c₀ target cost : ℝ
     linarith only [this]
   have habel' : ∀ w ∈ Icc (-1 : ℝ) 1,
       |dampedT T.F (realEnergyTau e) w - dampedT T.F 1 w| ≤ ξ / 4 := habel
-  filter_upwards [second_energy_sq_end P58_admissible D hε he hec, hsup,
+  filter_upwards [second_energy_sq_end (Shape58.adm (P := P)) D hε he hec, hsup,
     eventually_ge_atTop 48, eventually_ge_atTop ⌈1 / ξ⌉₊] with N henergy hsupN hN48 hNc
   intro p m hpm x y s hx hx0 hy hy0 hG hs hinj hsi hcase hq sel
   obtain ⟨a, b, hab, eq, hnear, hinj2, hyb, hsheet⟩ :=
-    selected_sheet_grouped P58_admissible hN48 hpm x y s hx hx0 hy hy0 hs hinj hcase sel
-  have hcount : p + a + b = P58.n N := by omega
+    selected_sheet_grouped (Shape58.adm (P := P)) hN48 hpm x y s hx hx0 hy hy0 hs hinj hcase sel
+  have hcount : p + a + b = P.n N := by omega
   have hxi : Function.Injective x := fun i j h => by
     have h2 := @hinj2 (Fin.castAdd a i) (Fin.castAdd a j) (by simpa using h)
     exact Fin.castAdd_injective _ _ h2
   have hya : ∀ i, y (eq (Sum.inl i)) ∈ Ioo (-1 : ℝ) 1 := fun i => hy _
   have hNpos : 0 < N := by omega
   obtain ⟨hE, hbr0, hXz⟩ := henergy p a b hcount x (fun i => y (eq (Sum.inl i)))
-    (fun i => y (eq (Sum.inr i))) s hx hx0 hya (fun i => hG _) hnear hs hxi hinj2 hyb hsi
-  have hν : 0 < (P58.n N : ℝ) := by exact_mod_cast n_pos P58_admissible hNpos
-  have hνN : (P58.n N : ℝ) = 58 * (N : ℝ) := by
-    show (((58 * N : ℕ)) : ℝ) = _
+    (fun i => y (eq (Sum.inr i))) s hx hx0 hya (fun i => hG _) hnear (fun i => hG _) hs hxi hinj2 hyb hsi
+  have hν : 0 < (P.n N : ℝ) := by exact_mod_cast n_pos (Shape58.adm (P := P)) hNpos
+  have hνN : (P.n N : ℝ) = 58 * (N : ℝ) := by
+    rw [Shape58.n_eq (P := P)]
     push_cast
     ring
-  have hcR : (p : ℝ) + a + b = (P58.n N : ℝ) := by exact_mod_cast hcount
+  have hcR : (p : ℝ) + a + b = (P.n N : ℝ) := by exact_mod_cast hcount
   have habR : (a : ℝ) + b = m := by exact_mod_cast hab
-  set α : ℝ := ((a + b : ℕ) : ℝ) / (P58.n N : ℝ) with hαd
-  set β : ℝ := (b : ℝ) / (P58.n N : ℝ) with hβd
-  have hαν : (P58.n N : ℝ) * α = (a : ℝ) + b := by
+  set α : ℝ := ((a + b : ℕ) : ℝ) / (P.n N : ℝ) with hαd
+  set β : ℝ := (b : ℝ) / (P.n N : ℝ) with hβd
+  have hαν : (P.n N : ℝ) * α = (a : ℝ) + b := by
     rw [hαd, Nat.cast_add]
     field_simp
-  have hαm : α ∈ Icc 0 α₁ := by
-    refine ⟨div_nonneg (Nat.cast_nonneg _) hν.le, ?_⟩
-    rw [hαd, div_le_iff₀ hν, hab]
-    exact hQ N p m x y s hq
+  have hαm : α ∈ W := by
+    have h := hQ N p m x y s hq
+    rw [← hab] at h
+    simpa [hαd] using h
   have hβm : β ∈ Icc 0 α := by
     refine ⟨div_nonneg (Nat.cast_nonneg _) hν.le, ?_⟩
     rw [hαd, hβd]
     refine div_le_div_of_nonneg_right ?_ hν.le
     exact_mod_cast (show b ≤ a + b by omega)
-  by_cases hV : groupedValueWithFields (P58.n N : ℝ) (groupedConstant P58 N p a b)
-      (populationPhysicalFreeField P58 N) (groupedMarkedField P58 N)
-      (groupedNearField P58 N) (populationEndpointColumnField P58 N 0) x
+  by_cases hV : groupedValueWithFields (P.n N : ℝ) (groupedConstant P N p a b)
+      (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + dc u)
+      (fun u => groupedNearField P N u + dc u)
+      (fun u => populationEndpointColumnField P N 0 u + α * Real.log (1 + ζ * u)) x
       (fun i => y (eq (Sum.inl i))) (fun i => y (eq (Sum.inr i))) s ≤
       -target + Real.log 2 / 2 + cost / 58 * α + ε
   · left
-    have hl := low_of_value P58_admissible hNpos hcount hx hx0 hya hnear hs
+    have hl := low_of_value (Shape58.adm (P := P)) hNpos hcount hζ hx hx0 hya hnear hs
       (fun i j h => hxi h) hinj2 hyb hsi hV
     have hPr : 0 < ∏ i, (1 + s i) := Finset.prod_pos fun i _ => by linarith [(hs i).1]
     have hPm : 0 < (∏ i, (1 + s i)) ^ m := pow_pos hPr _
-    have hK : 0 ≤ (1 + 10 * Real.exp 12 * (P58.n N : ℝ)) ^ P58.n N := by positivity
-    have hcost : (((P58.n0 : ℕ) : ℝ) * (cost / 58)) * N * ((a : ℝ) + b) = cost * N * m := by
-      rw [habR]
-      show (((58 : ℕ) : ℝ) * (cost / 58)) * N * m = _
+    have hK : 0 ≤ (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N := by positivity
+    have hZ : 0 ≤ (∏ i, (1 + ζ * s i)) ^ m :=
+      pow_nonneg (Finset.prod_nonneg fun i _ => by
+        have := mul_nonneg hζ (hs i).1.le; linarith) _
+    have hcost : (((P.n0 : ℕ) : ℝ) * (cost / 58)) * N * ((a : ℝ) + b) = cost * N * m := by
+      rw [habR, Shape58.n0_eq (P := P)]
       push_cast
       ring
-    rw [hcost, hab] at hl
+    have hEs : (P.n N : ℝ) * ((∑ i, dc (y (eq (Sum.inl i)))) + ∑ i, dc (y (eq (Sum.inr i)))) =
+        (N : ℝ) * ∑ j, δ (realCoordinateInv (y j)) := by
+      have h1 : ∑ j, dc (y j) =
+          (∑ i, dc (y (eq (Sum.inl i)))) + ∑ i, dc (y (eq (Sum.inr i))) := by
+        rw [← Equiv.sum_comp eq, Fintype.sum_sum_type]
+      rw [← h1, hνN]
+      simp only [hdδ, ← Finset.sum_div]
+      ring
+    rw [hcost, hEs, hab] at hl
     unfold selectedCap
     refine le_of_mul_le_mul_left ?_ hPm
-    calc (∏ i, (1 + s i)) ^ m * (selectedScalar P58 N x y s *
-          |(selectedLaurent (P58.g N) (Fin.append x y) (selectedRows x y sel)).det|)
-        ≤ _ := hsheet
+    calc (∏ i, (1 + s i)) ^ m * ((∏ i, (1 + ζ * s i)) ^ m * (selectedScalar P N x y s *
+          |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|))
+        = (∏ i, (1 + ζ * s i)) ^ m * ((∏ i, (1 + s i)) ^ m * (selectedScalar P N x y s *
+          |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|)) := by ring
+      _ ≤ (∏ i, (1 + ζ * s i)) ^ m * ((1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N *
+          groupedProduct P N x (fun i => y (eq (Sum.inl i))) (fun i => y (eq (Sum.inr i))) s) :=
+        mul_le_mul_of_nonneg_left hsheet hZ
+      _ = (1 + 10 * Real.exp 12 * (P.n N : ℝ)) ^ P.n N * ((∏ i, (1 + ζ * s i)) ^ m *
+          groupedProduct P N x (fun i => y (eq (Sum.inl i))) (fun i => y (eq (Sum.inr i))) s) := by
+        ring
       _ ≤ _ := mul_le_mul_of_nonneg_left hl hK
       _ = _ := by ring
   · right
     have hlt := not_le.1 hV
+    have hmono : groupedValueWithFields (P.n N : ℝ) (groupedConstant P N p a b)
+        (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + dc u)
+        (fun u => groupedNearField P N u + dc u)
+        (fun u => populationEndpointColumnField P N 0 u + α * Real.log (1 + ζ * u)) x
+        (fun i => y (eq (Sum.inl i))) (fun i => y (eq (Sum.inr i))) s ≤
+        groupedValueWithFields (P.n N : ℝ) (groupedConstant P N p a b)
+        (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + dc u)
+        (fun u => groupedNearField P N u + dc u)
+        (fun u => populationEndpointColumnField P N 0 u + γ * Real.log (1 + ζ * u)) x
+        (fun i => y (eq (Sum.inl i))) (fun i => y (eq (Sum.inr i))) s := by
+      unfold groupedValueWithFields
+      have hsum : ∑ i, (populationEndpointColumnField P N 0 (s i) + α * Real.log (1 + ζ * s i)) ≤
+          ∑ i, (populationEndpointColumnField P N 0 (s i) + γ * Real.log (1 + ζ * s i)) :=
+        Finset.sum_le_sum fun i _ => by
+          have hg0 : 0 ≤ Real.log (1 + ζ * s i) :=
+            Real.log_nonneg (by have := mul_nonneg hζ (hs i).1.le; linarith)
+          have := mul_le_mul_of_nonneg_right (hWγ α hαm) hg0
+          linarith
+      have := div_le_div_of_nonneg_right hsum hν.le
+      linarith
     have hOB := hΔ α hαm β hβm
     have hsqs : ∀ i, y (eq (Sum.inr i)) ∈ Ioo (-1 : ℝ) 1 := fun i => hy _
     have hzx := append_mem hx hya
     have hcos := (cosineSquares_nonneg hν he hzx hsqs D.p D.p_summable).2
-    have hq1 := sqTail_nonneg D.p (pinCosineMoment (P58.n N : ℝ) e x)
-    have hq2 := sqTail_nonneg D.v (fun j => pinPowerMoment (P58.n N : ℝ) e x j -
-      2 * pinColumnMoment (P58.n N : ℝ) e s j)
-    have hsplit : groupedSquares (P58.n N : ℝ) e D.p D.p D.v (Fin.append x
+    have hq1 := sqTail_nonneg D.p (pinCosineMoment (P.n N : ℝ) e x)
+    have hq2 := sqTail_nonneg D.v (fun j => pinPowerMoment (P.n N : ℝ) e x j -
+      2 * pinColumnMoment (P.n N : ℝ) e s j)
+    have hsplit : groupedSquares (P.n N : ℝ) e D.p D.p D.v (Fin.append x
         (fun i => y (eq (Sum.inl i)))) (fun i => y (eq (Sum.inr i))) x s =
-      cosineSquares (P58.n N : ℝ) e D.p (Fin.append x (fun i => y (eq (Sum.inl i))))
+      cosineSquares (P.n N : ℝ) e D.p (Fin.append x (fun i => y (eq (Sum.inl i))))
           (fun i => y (eq (Sum.inr i))) +
-        (sqTail D.p (pinCosineMoment (P58.n N : ℝ) e x) +
-          sqTail D.v (fun j => pinPowerMoment (P58.n N : ℝ) e x j -
-            2 * pinColumnMoment (P58.n N : ℝ) e s j) / 2) := rfl
+        (sqTail D.p (pinCosineMoment (P.n N : ℝ) e x) +
+          sqTail D.v (fun j => pinPowerMoment (P.n N : ℝ) e x j -
+            2 * pinColumnMoment (P.n N : ℝ) e s j) / 2) := rfl
     rw [hsplit] at hE
-    have hΔ2 : sqTail D.p (pinCosineMoment (P58.n N : ℝ) e x) +
-        cosineSquares (P58.n N : ℝ) e D.p (Fin.append x (fun i => y (eq (Sum.inl i))))
+    have hΔ2 : sqTail D.p (pinCosineMoment (P.n N : ℝ) e x) +
+        cosineSquares (P.n N : ℝ) e D.p (Fin.append x (fun i => y (eq (Sum.inl i))))
           (fun i => y (eq (Sum.inr i))) ≤ Δ α := by
-      linarith only [hE, hlt, hOB, hbr0, hq2]
-    have hbrΔ : bracketSlack (P58.n N : ℝ) (D.MX + ε / 4)
-        (fun i => freeRowX P58 N D.p D.v (x i)) ≤ Δ α := by
-      linarith only [hE, hlt, hOB, hcos, hq1, hq2]
-    have hcard := card_mul_le_bracket hν (fun i => freeRowX P58 N D.p D.v (x i))
+      linarith only [hE, hlt, hmono, hOB, hbr0, hq2]
+    have hbrΔ : bracketSlack (P.n N : ℝ) (D.MX + ε / 4)
+        (fun i => freeRowX P N D.p D.v (x i)) ≤ Δ α := by
+      linarith only [hE, hlt, hmono, hOB, hcos, hq1, hq2]
+    have hcard := card_mul_le_bracket hν (fun i => freeRowX P N D.p D.v (x i))
       (Finset.univ.filter (fun i => x i ∈ Ioo (-T.a₀) 0)) (cap := D.MX + ε / 4) (d := d) hXz
       (fun i hi => by
         have h1 := hsupN (x i) (Finset.mem_filter.mp hi).2
         linarith only [h1, hε])
     have hc : ((Finset.univ.filter (fun i => x i ∈ Ioo (-T.a₀) 0)).card : ℝ) ≤
-        (P58.n N : ℝ) * (Δ α / d) := by
+        (P.n N : ℝ) * (Δ α / d) := by
       rw [← mul_div_assoc, le_div_iff₀ hd]
       exact hcard.trans (mul_le_mul_of_nonneg_left hbrΔ hν.le)
     have hlow := phase_sum_lower T hν he habel' hcR hx hx0 hya (fun i => hy0 _)
@@ -5071,15 +5310,15 @@ theorem selected_low_or_pick {α₁ t₀ residual nearCap c₀ target cost : ℝ
     have hNξ : 1 ≤ (N : ℝ) * ξ := by
       have h1 : 1 / ξ ≤ (N : ℝ) := (Nat.le_ceil _).trans (by exact_mod_cast hNc)
       rwa [div_le_iff₀ hξ] at h1
-    have hg : P58.g N = 5 * N := rfl
-    have hn : P58.n N = 58 * N := rfl
-    have heN : ((p + m - 1 - 2 * P58.g N : ℕ) : ℝ) = 48 * (N : ℝ) - 1 := by
-      have h : (p + m - 1 - 2 * P58.g N) + 1 = 48 * N := by
+    have hg : P.g N = 5 * N := Shape58.g_eq (P := P) N
+    have hn : P.n N = 58 * N := Shape58.n_eq (P := P) N
+    have heN : ((p + m - 1 - 2 * P.g N : ℕ) : ℝ) = 48 * (N : ℝ) - 1 := by
+      have h : (p + m - 1 - 2 * P.g N) + 1 = 48 * N := by
         rw [hg]
         omega
-      have h2 : (((p + m - 1 - 2 * P58.g N : ℕ) : ℝ)) + 1 = 48 * (N : ℝ) := by exact_mod_cast h
+      have h2 : (((p + m - 1 - 2 * P.g N : ℕ) : ℝ)) + 1 = 48 * (N : ℝ) := by exact_mod_cast h
       linarith only [h2]
-    have hpm' : ((p + m : ℕ) : ℝ) = (P58.n N : ℝ) := by exact_mod_cast hpm
+    have hpm' : ((p + m : ℕ) : ℝ) = (P.n N : ℝ) := by exact_mod_cast hpm
     have hw0 : ∀ i, Fin.append x y i ≠ 0 := fun i => by
       refine Fin.addCases (fun j => ?_) (fun j => ?_) i
       · simpa using hx0 j
@@ -5099,50 +5338,66 @@ theorem selected_low_or_pick {α₁ t₀ residual nearCap c₀ target cost : ℝ
     · refine hstat_of_sum hw0 _ ?_
       rw [sum_append_split phasePlus x y eq, heN, hpm']
       have hA4 : Real.arctan 4 < Real.pi / 2 := Real.arctan_lt_pi_div_two 4
-      have hL : (P58.n N : ℝ) * (T.F 0 / 2 + (∑' k : ℕ, T.F (k + 1) * D.p (k + 1)) -
-            Real.sqrt (T.H * (Δ α / 2)) - ξ / 4) - (P58.n N : ℝ) * (α * T.F 0 / 4) -
-            (P58.n N : ℝ) * (T.h₀ * (Δ α / d)) ≤
+      have hL : (P.n N : ℝ) * (T.F 0 / 2 + (∑' k : ℕ, T.F (k + 1) * D.p (k + 1)) -
+            Real.sqrt (T.H * (Δ α / 2)) - ξ / 4) - (P.n N : ℝ) * (α * T.F 0 / 4) -
+            (P.n N : ℝ) * (T.h₀ * (Δ α / d)) ≤
           (∑ i, phasePlus (x i)) + (∑ i, phasePlus (y (eq (Sum.inl i)))) +
             ∑ i, phasePlus (y (eq (Sum.inr i))) := by
-        have h1 : (P58.n N : ℝ) * (α * T.F 0 / 4) = ((a : ℝ) + b) * T.F 0 / 4 := by
+        have h1 : (P.n N : ℝ) * (α * T.F 0 / 4) = ((a : ℝ) + b) * T.F 0 / 4 := by
           rw [← hαν]
           ring
         rw [h1]
         linarith only [hlow]
       have := phase_arith (Cc := (17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2))
         hνN rfl arctan_pair hA4 rfl hξ hNξ rfl (hphase α hαm) hL
-      have hC : (17 / 4) * (P58.n N : ℝ) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2) =
-          (P58.n N : ℝ) * ((17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2)) := by ring
+      have hC : (17 / 4) * (P.n N : ℝ) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2) =
+          (P.n N : ℝ) * ((17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2)) := by ring
       rw [hC]
       exact this
 
-/-- **The selected free-product cost for `P58`:** the exact consumer of `Wrappers`. -/
+/-- **The selected free-product cost for `P`, one cell:** the exact consumer of `Wrappers`, with the
+column factor `Z` and the node field `δ`. -/
 theorem selected_free_product (hS : S.Admissible) (hF : FoldSeed S)
     (hcol : ∀ a, ∀ c ∈ S.refCol a, ColCell c)
-    {gasI : ℝ} {anchI : Fin 2 → ℝ} (B : S.CapBundle Trunc.exact gasI anchI)
+    {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ} {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle Trunc.exact d G gasI anchI)
     (hang : ∀ σ, B.angCap σ ≤ kappa σ) (hgas : gasConst S ≤ gasI)
-    (hI : ∀ a, anchorIntercept (aB S a) (aT S a) (aV S a) ≤ anchI a)
-    {target cost α₁ t₀ residual nearCap c₀ : ℝ}
-    (hbud : ∀ α ∈ Icc 0 α₁, ∃ a, capBudget B a α ≤ -target + Real.log 2 / 2 + cost * α / 58)
-    {G : ℝ → Prop}
+    (a : Fin 2) {A V : ℕ → ℝ} {fR fC : ℝ → ℝ} {K : ℝ}
+    (hA : ∀ k, k ≠ 0 → |A k| ≤ K / k) (hV : ∀ k, k ≠ 0 → |V k| ≤ K / k)
+    (hmR : ∀ x ∈ Ioo (-1 : ℝ) 1, x ≠ 0 →
+      anchorRowField (aB S a) A V x = anchorRowField (aB S a) (aT S a) (aV S a) x + fR x)
+    (hmC : ∀ s ∈ Ioo (0 : ℝ) 1,
+      anchorColumnField (aB S a) V s = anchorColumnField (aB S a) (aV S a) s + fC s)
+    (hfR : ∃ Bf, ∀ x ∈ Ioo (-1 : ℝ) 1, |fR x| ≤ Bf)
+    (hfC : ∃ Bf, ∀ s ∈ Ioo (0 : ℝ) 1, |fC s| ≤ Bf)
+    {r c I γ ζ : ℝ} (hζ : 0 ≤ ζ) (hγ0 : 0 ≤ γ)
+    (hrc : ∀ x ∈ CapSource.rowDom, S.freeRow Trunc.exact a x + fR x ≤ r)
+    (hcc : ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s + fC s + γ * Real.log (1 + ζ * s) ≤ c)
+    (hI : anchorIntercept (aB S a) A V ≤ I)
+    {target cost : ℝ} {W : Set ℝ} (hWγ : ∀ α ∈ W, α ≤ γ)
+    (hbud : ∀ α ∈ W, capBudget B (aB S a) I r c α ≤ -target + Real.log 2 / 2 + cost * α / 58)
+    {δ : ℝ → ℝ} (hdδ : ∀ u, d u = δ (realCoordinateInv u) / 58)
     (hG : ∀ y, G y → (0 < y → y ∈ CapSource.ordDom Sign.pos) ∧
       (y < 0 → -y ∈ CapSource.ordDom Sign.neg))
-    (D : SecondTrialBoundsEnd P58 α₁ t₀ residual nearCap c₀ G) (T : PhaseTest)
-    {Δ : ℝ → ℝ} {ξ d : ℝ} (hξ : 0 < ξ) (hd : 0 < d)
-    (hΔ : ∀ α ∈ Icc 0 α₁, ∀ β ∈ Icc 0 α,
-      oldBound P58 D.normCap D.fieldCap residual nearCap α β ≤
+    {t₀ residual nearCap c₀ : ℝ}
+    (D : SecondTrialBoundsEnd P W
+      (fun N u => populationEndpointColumnField P N 0 u + γ * Real.log (1 + ζ * u)) d
+      t₀ residual nearCap c₀ G) (T : PhaseTest)
+    {Δ : ℝ → ℝ} {ξ dm : ℝ} (hξ : 0 < ξ) (hdm : 0 < dm)
+    (hΔ : ∀ α ∈ W, ∀ β ∈ Icc 0 α,
+      oldBound P D.normCap D.fieldCap residual nearCap α β ≤
         -target + Real.log 2 / 2 + cost / 58 * α + Δ α)
-    (hphase : ∀ α ∈ Icc 0 α₁,
+    (hphase : ∀ α ∈ W,
       Real.arctan (1 / 4) + 5 / 29 * Real.arctan 4 +
           (17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2) + ξ ≤
         T.F 0 / 2 + (∑' k : ℕ, T.F (k + 1) * D.p (k + 1)) - Real.sqrt (T.H * (Δ α / 2)) -
-          α * T.F 0 / 4 - T.h₀ * (Δ α / d))
-    (hone : ∀ α ∈ Icc 0 α₁,
+          α * T.F 0 / 4 - T.h₀ * (Δ α / dm))
+    (hone : ∀ α ∈ W,
       1 - (1 - α + D.p 2 - Real.sqrt (2 * (Δ α / 2))) / 2 + ξ ≤ 5 / 6 * (48 / 58))
-    (hsup : ∀ᶠ N : ℕ in atTop, ∀ x ∈ Ioo (-T.a₀) 0, freeRowX P58 N D.p D.v x ≤ D.MX - d)
+    (hsup : ∀ᶠ N : ℕ in atTop, ∀ x ∈ Ioo (-T.a₀) 0, freeRowX P N D.p D.v x ≤ D.MX - dm)
     (hGneg : ∀ y, G y → y < 0 → y ≤ -T.a₀)
     {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
-    (hQ : ∀ N p m x y s, Q N p m x y s → (m : ℝ) ≤ α₁ * (P58.n N : ℝ))
+    (hQ : ∀ N p m x y s, Q N p m x y s → ((m : ℝ) / (P.n N : ℝ)) ∈ W)
     (hpick : ∀ {n : ℕ} (w : Fin n → ℝ) (e : ℕ), Function.Injective w → (∀ i, w i ≠ 0) →
       (∀ i, |w i| < 1) →
       ∑ i ∈ Finset.univ.filter (fun i => 0 < w i), (1 - w i ^ 2) / (1 + w i ^ 2) ≤
@@ -5154,12 +5409,52 @@ theorem selected_free_product (hS : S.Admissible) (hF : FoldSeed S)
           ∑ i ∈ Finset.univ.filter (fun i => 0 < w i),
             Real.arctan (4 * ((1 - w i) / (1 + w i))) →
       PickWindow (1 / 100) e w) :
-    SelectedFreeProductCostOnRestr P58 target cost G Q :=
-  selectedFree_of_lowOrPick P58_admissible
-    (selected_low_or_pick D T hξ hd hΔ hphase hone hsup hGneg hQ hpick)
-    (selected_comparison hS hF hcol B hang hgas hI hbud hG hQ)
+    SelectedFreeProductCostOnRestr P ζ δ target cost G Q :=
+  selectedFree_of_lowOrPick (Shape58.adm (P := P)) hζ
+    (selected_low_or_pick hζ hWγ D T hdδ hξ hdm hΔ hphase hone hsup hGneg hQ hpick)
+    (selected_comparison hS hF hcol B hang hgas a hA hV hmR hmC hfR hfC hζ hγ0 hrc hcc hI
+      hWγ hbud hdδ hG hQ)
+
+/-! ### GP Lemma 5.4: convexity in place of subadditivity (chords)
+
+The moved row field `F + h⁰ + τ h¹` and the moved column field `F + k⁰ + τ k¹ + γ g` are affine in
+`τ` (resp. in `γ`); two (resp. three) endpoint caps therefore bound them along the whole segment by
+the chord. -/
+
+/-- Rows: `(R0)` and `(R1)` give `(R)` at every `τ ∈ [0, 1]` with the chord cap. -/
+theorem chord_row {F h0 h1 c0 c1 τ : ℝ} (hτ0 : 0 ≤ τ) (hτ1 : τ ≤ 1)
+    (R0 : F + h0 ≤ c0) (R1 : F + h0 + h1 ≤ c1) :
+    F + (h0 + τ * h1) ≤ (1 - τ) * c0 + τ * c1 := by
+  nlinarith [mul_nonneg hτ0 (sub_nonneg.mpr R1), mul_nonneg (sub_nonneg.mpr hτ1) (sub_nonneg.mpr R0)]
+
+/-- Columns, first chord: `(C0)` and `(C1)` give `(C)` at `(τ, γ = τ α_e)` with the chord cap. -/
+theorem chord_col {F k0 k1 g c0 c1 ae τ : ℝ} (hτ0 : 0 ≤ τ) (hτ1 : τ ≤ 1)
+    (C0 : F + k0 ≤ c0) (C1 : F + k0 + k1 + ae * g ≤ c1) :
+    F + (k0 + τ * k1) + (τ * ae) * g ≤ (1 - τ) * c0 + τ * c1 := by
+  nlinarith [mul_nonneg hτ0 (sub_nonneg.mpr C1), mul_nonneg (sub_nonneg.mpr hτ1) (sub_nonneg.mpr C0)]
+
+/-- Columns, second chord: at `τ = 1` and `γ ∈ [α_e, α₁]` the field is affine in `γ`, so `(C1)`
+and `(C2)` bound it by the chord of `c₁`, `c₂` at `γ`. -/
+theorem chord_col_gamma {F g c1 c2 ae a1 γ : ℝ} (hae : ae < a1) (hγ0 : ae ≤ γ) (hγ1 : γ ≤ a1)
+    (C1 : F + ae * g ≤ c1) (C2 : F + a1 * g ≤ c2) :
+    F + γ * g ≤ ((a1 - γ) * c1 + (γ - ae) * c2) / (a1 - ae) := by
+  have hd : 0 < a1 - ae := sub_pos.mpr hae
+  rw [le_div_iff₀ hd]
+  nlinarith [mul_nonneg (sub_nonneg.mpr hγ1) (sub_nonneg.mpr C1),
+    mul_nonneg (sub_nonneg.mpr hγ0) (sub_nonneg.mpr C2)]
 
 end
 end CatalanMeasure.GenD.Signed.RouteI.CompletedGas
 
 
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.config_bound
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.free_total
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.col_total
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.mark_total
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.selected_comparison
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.selected_low_or_pick
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.selected_free_product
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.anchorIntercept_move
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.chord_row
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.chord_col
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.chord_col_gamma

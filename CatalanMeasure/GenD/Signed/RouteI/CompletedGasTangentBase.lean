@@ -52,14 +52,15 @@ def selectedRows {p m : ℕ} (x : Fin p → ℝ) (y : Fin m → ℝ) (sel : Fin 
     (sel i && (Fin.addCases (fun _ => false) (fun _ => true) i) &&
       decide (0≤Fin.append x y i)) = true
 
-/-- The common right side of the near-sheet bound. -/
-def selectedCap (P : Parameters) (target cost : ℝ) (N m : ℕ) (ε : ℝ) : ℝ :=
+/-- The common right side of the near-sheet bound.  `E` is the node field `N ∑_j δ(t(y_j))`
+(GP §11.1); `E = 0` is the original cap. -/
+def selectedCap (P : Parameters) (target cost : ℝ) (N m : ℕ) (ε E : ℝ) : ℝ :=
   (1+10*Real.exp 12*(P.n N:ℝ))^P.n N *
-    Real.exp (((P.n0:ℝ)*N)^2*(-target+Real.log 2/2+ε)+cost*N*m)
+    Real.exp (((P.n0:ℝ)*N)^2*(-target+Real.log 2/2+ε)+cost*N*m - E)
 
 /-- Low branch or physical Pick window, for every selector of every configuration, with the
 cutoff before configurations. -/
-def SelectedLowOrPick (P : Parameters) (target cost : ℝ) (G : ℝ → Prop)
+def SelectedLowOrPick (P : Parameters) (ζ : ℝ) (δ : ℝ → ℝ) (target cost : ℝ) (G : ℝ → Prop)
     (Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop) : Prop :=
   ∀ ε : ℝ, 0<ε → ∀ᶠ N : ℕ in atTop,
     ∀ (p m : ℕ), p+m=P.n N →
@@ -70,13 +71,14 @@ def SelectedLowOrPick (P : Parameters) (target cost : ℝ) (G : ℝ → Prop)
     Function.Injective (Fin.append x y) → Function.Injective s →
     (∑ i : Fin (p+m), paramCaseField P N (Fin.append x y i))≤-1 →
     Q N p m x y s → ∀ sel : Fin (p+m) → Bool,
-    selectedScalar P N x y s *
-      |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det| ≤
-        selectedCap P target cost N m ε ∨
+    (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+      |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|) ≤
+        selectedCap P target cost N m ε (N * ∑ j, δ (realCoordinateInv (y j))) ∨
     PickWindow (1/100) (p+m-1-2*P.g N) (Fin.append x y)
 
 /-- The `w = 0` comparison bound on the Pick class. -/
-def SelectedComparisonOnPick (P : Parameters) (target cost : ℝ) (G : ℝ → Prop)
+def SelectedComparisonOnPick (P : Parameters) (ζ : ℝ) (δ : ℝ → ℝ) (target cost : ℝ)
+    (G : ℝ → Prop)
     (Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop) : Prop :=
   ∀ ε : ℝ, 0<ε → ∀ᶠ N : ℕ in atTop,
     ∀ (p m : ℕ), p+m=P.n N →
@@ -88,18 +90,18 @@ def SelectedComparisonOnPick (P : Parameters) (target cost : ℝ) (G : ℝ → P
     (∑ i : Fin (p+m), paramCaseField P N (Fin.append x y i))≤-1 →
     Q N p m x y s → ∀ sel : Fin (p+m) → Bool,
     PickWindow (1/100) (p+m-1-2*P.g N) (Fin.append x y) →
-    selectedScalar P N x y s *
-      |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det| ≤
-        selectedCap P target cost N m ε
+    (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+      |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|) ≤
+        selectedCap P target cost N m ε (N * ∑ j, δ (realCoordinateInv (y j)))
 
-theorem selectedCap_mono {P : Parameters} {target cost : ℝ} {N m : ℕ} {a b : ℝ} (hab : a ≤ b) :
-    selectedCap P target cost N m a ≤ selectedCap P target cost N m b := by
+theorem selectedCap_mono {P : Parameters} {target cost : ℝ} {N m : ℕ} {a b E : ℝ} (hab : a ≤ b) :
+    selectedCap P target cost N m a E ≤ selectedCap P target cost N m b E := by
   unfold selectedCap
   gcongr
 
-theorem selectedCap_absorb {P : Parameters} (hP : Admissible P) {target cost ε : ℝ}
+theorem selectedCap_absorb {P : Parameters} (hP : Admissible P) {target cost ε E : ℝ}
     (hε : 0 < ε) {N m : ℕ} (hN : 2 * Real.log 499 / ε ≤ (N:ℝ)) :
-    (499:ℝ)^P.n N * selectedCap P target cost N m (ε/2) ≤ selectedCap P target cost N m ε := by
+    (499:ℝ)^P.n N * selectedCap P target cost N m (ε/2) E ≤ selectedCap P target cost N m ε E := by
   have hn0 : (1:ℝ) ≤ (P.n0:ℝ) := by exact_mod_cast hP.1
   have hlog : 0 < Real.log 499 := Real.log_pos (by norm_num)
   have hNpos : 0 ≤ (N:ℝ) := Nat.cast_nonneg N
@@ -117,24 +119,24 @@ theorem selectedCap_absorb {P : Parameters} (hP : Admissible P) {target cost ε 
     nlinarith
   unfold selectedCap
   rw [← hn]
-  have hexp : Real.exp (n^2*(-target+Real.log 2/2+ε)+cost*N*m) =
-      Real.exp (n^2 * (ε/2)) * Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m) := by
+  have hexp : Real.exp (n^2*(-target+Real.log 2/2+ε)+cost*N*m - E) =
+      Real.exp (n^2 * (ε/2)) * Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m - E) := by
     rw [← Real.exp_add]; congr 1; ring
   rw [hexp]
   calc (499:ℝ)^P.n N * ((1+10*Real.exp 12*(P.n N:ℝ))^P.n N *
-        Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m))
+        Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m - E))
       ≤ Real.exp (n^2 * (ε/2)) * ((1+10*Real.exp 12*(P.n N:ℝ))^P.n N *
-        Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m)) := by gcongr
+        Real.exp (n^2*(-target+Real.log 2/2+ε/2)+cost*N*m - E)) := by gcongr
     _ = _ := by ring
 
 /-- **Terminal branch assembly.** The two branch predicates give exactly the consumer of
 `hnear296`. The cutoff is chosen before configurations and selectors. -/
-theorem selectedFree_of_lowOrPick {P : Parameters} (hP : Admissible P) {target cost : ℝ}
-    {G : ℝ → Prop}
+theorem selectedFree_of_lowOrPick {P : Parameters} (hP : Admissible P) {target cost ζ : ℝ}
+    {δ : ℝ → ℝ} (hζ : 0 ≤ ζ) {G : ℝ → Prop}
     {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
-    (hlow : SelectedLowOrPick P target cost G Q)
-    (hcmp : SelectedComparisonOnPick P target cost G Q) :
-    SelectedFreeProductCostOnRestr P target cost G Q := by
+    (hlow : SelectedLowOrPick P ζ δ target cost G Q)
+    (hcmp : SelectedComparisonOnPick P ζ δ target cost G Q) :
+    SelectedFreeProductCostOnRestr P ζ δ target cost G Q := by
   intro ε hε
   have hε2 : 0 < ε/2 := by positivity
   filter_upwards [hlow (ε/2) hε2, hcmp (ε/2) hε2,
@@ -156,9 +158,11 @@ theorem selectedFree_of_lowOrPick {P : Parameters} (hP : Admissible P) {target c
     ext i r
     simp only [selectedLaurent, selectedRows, Matrix.of_apply, Finset.mem_filter,
       Finset.mem_univ, true_and]
-  have hgoal : selectedScalar P N x y s *
-      |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det| ≤
-        selectedCap P target cost N m ε := by
+  have hZ : 0 ≤ (∏ l, (1 + ζ * s l)) ^ m :=
+    pow_nonneg (prod_nonneg fun i _ => by nlinarith [(hs i).1, (hs i).2]) _
+  have hgoal : (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+      |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|) ≤
+        selectedCap P target cost N m ε (N * ∑ j, δ (realCoordinateInv (y j))) := by
     rcases h1 p m hpm x y s hx hx0 hy hy0 hyG hs hzi hsi hcase hQ sel with hl | hpick
     · exact hl.trans (selectedCap_mono (by linarith))
     · have hg : 2 * P.g N + 1 ≤ p + m := by
@@ -176,15 +180,16 @@ theorem selectedFree_of_lowOrPick {P : Parameters} (hP : Admissible P) {target c
       have hc := selected_laurent_comparison hg (Fin.append x y) hzi hz0 hz1 hpick
         (selectedRows x y sel)
       have h3 := h2 p m hpm x y s hx hx0 hy hy0 hyG hs hzi hsi hcase hQ sel hpick
-      calc selectedScalar P N x y s *
-            |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|
-          ≤ selectedScalar P N x y s * ((499:ℝ)^(p+m) *
-            |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|) := by
+      calc (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+            |(selectedLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|)
+          ≤ (∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s * ((499:ℝ)^(p+m) *
+            |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|)) := by
             gcongr
-        _ = (499:ℝ)^(p+m) * (selectedScalar P N x y s *
-            |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|) := by ring
-        _ ≤ (499:ℝ)^(p+m) * selectedCap P target cost N m (ε/2) := by gcongr
-        _ ≤ selectedCap P target cost N m ε := by
+        _ = (499:ℝ)^(p+m) * ((∏ l, (1 + ζ * s l)) ^ m * (selectedScalar P N x y s *
+            |(comparisonLaurent (P.g N) (Fin.append x y) (selectedRows x y sel)).det|)) := by ring
+        _ ≤ (499:ℝ)^(p+m) * selectedCap P target cost N m (ε/2)
+              (N * ∑ j, δ (realCoordinateInv (y j))) := by gcongr
+        _ ≤ selectedCap P target cost N m ε (N * ∑ j, δ (realCoordinateInv (y j))) := by
             rw [hpm]; exact selectedCap_absorb hP hε hNr
   rw [hmat]
   exact hgoal
@@ -555,19 +560,20 @@ set_option maxHeartbeats 1600000 in
 /-- The factor-free grouped energy with the free-row bracket and the squares kept, before the
 budget is applied. -/
 theorem second_energy_sq_end {P : Parameters} (hP : CatalanMeasure.Parametric.Admissible P)
-    {α1 target residual nearCap cost : ℝ} {G : ℝ → Prop}
-    (D : SecondTrialBoundsEnd P α1 target residual nearCap cost G) {δ e : ℝ} (hδ : 0 < δ)
+    {W : Set ℝ} {Cf : ℕ → ℝ → ℝ} {d : ℝ → ℝ} {target residual nearCap cost : ℝ} {G : ℝ → Prop}
+    (D : SecondTrialBoundsEnd P W Cf d target residual nearCap cost G) {δ e : ℝ} (hδ : 0 < δ)
     (he : e ∈ Ioo (0 : ℝ) (1 / 8))
     (hec : e * (4 * (∑' j, |D.p j|) + 4 * (∑' j, |D.v j|) + |D.p 1| + 20) < δ / 2) :
     ∀ᶠ N : ℕ in atTop, ∀ (r a b : ℕ), r + a + b = P.n N →
       ∀ (z : Fin r → ℝ) (x : Fin a → ℝ) (y : Fin b → ℝ) (s : Fin r → ℝ),
       (∀ i, z i ∈ Ioo (-1 : ℝ) 1) → (∀ i, z i ≠ 0) →
       (∀ i, x i ∈ Ioo (-1 : ℝ) 1) → (∀ i, G (x i)) → (∀ i, y i ∈ Ioo (0 : ℝ) 1) →
+      (∀ i, G (y i)) →
       (∀ i, s i ∈ Ioo (0 : ℝ) 1) → Function.Injective z →
       Function.Injective (Fin.append z x) → Function.Injective y → Function.Injective s →
       (groupedValueWithFields (P.n N : ℝ) (groupedConstant P N r a b)
-        (populationPhysicalFreeField P N) (groupedMarkedField P N)
-        (groupedNearField P N) (populationEndpointColumnField P N 0) z x y s +
+        (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + d u)
+        (fun u => groupedNearField P N u + d u) (Cf N) z x y s +
         bracketSlack (P.n N : ℝ) (D.MX + δ / 4) (fun i => freeRowX P N D.p D.v (z i)) +
         groupedSquares (P.n N : ℝ) e D.p D.p D.v (Fin.append z x) y z s ≤
         oldBound P D.normCap D.fieldCap residual nearCap (((a + b : ℕ) : ℝ) / (P.n N : ℝ))
@@ -581,7 +587,7 @@ theorem second_energy_sq_end {P : Parameters} (hP : CatalanMeasure.Parametric.Ad
       (fun _ h => h.le)
   filter_upwards [D.row hε, D.column hε,
       log_reciprocal_eventually hP hε, herr, eventually_gt_atTop (0 : ℕ)]
-    with N hrow hcol hsmall herror hN r a b hcount z x y s hz hz0 hx hxG hy hs hzi hxi hyi hsi
+    with N hrow hcol hsmall herror hN r a b hcount z x y s hz hz0 hx hxG hy hyG hs hzi hxi hyi hsi
   have hν : 0 < (P.n N : ℝ) := by exact_mod_cast n_pos hP hN
   set α : ℝ := ((a + b : ℕ) : ℝ) / (P.n N : ℝ) with hαd
   set β : ℝ := (b : ℝ) / (P.n N : ℝ) with hβd
@@ -598,8 +604,8 @@ theorem second_energy_sq_end {P : Parameters} (hP : CatalanMeasure.Parametric.Ad
     (by exact_mod_cast (show r + a ≤ P.n N by omega))
     (by exact_mod_cast (show b ≤ P.n N by omega)) z x y s hz hx hy' hs hzi hxi hyi hsi
     D.p D.p D.v D.p_summable D.p_summable D.v_summable
-    (populationPhysicalFreeField P N) (groupedMarkedField P N)
-    (groupedNearField P N) (populationEndpointColumnField P N 0)
+    (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + d u)
+    (fun u => groupedNearField P N u + d u) (Cf N)
     (D.MX + δ / 4) (residual + δ / 4) (nearCap + δ / 4) (D.MY + δ / 4)
   have hconst := grouped_constant_le hP hN hcount
   have hnorm := D.norm_le
@@ -615,11 +621,15 @@ theorem second_energy_sq_end {P : Parameters} (hP : CatalanMeasure.Parametric.Ad
     have := hrow (z i) hzi'
     unfold freeRowX
     linarith
-  have hM : ∀ i, groupedMarkedField P N (x i) - 2 * barrierTrialT D.p (x i) ≤ residual + δ / 4 :=
-    fun i => (D.marked hN ⟨(hx i).1.le, (hx i).2.le⟩ (hxG i)).trans (by linarith)
-  have hL : ∀ i, groupedNearField P N (y i) - D.p 1 * y i ≤ nearCap + δ / 4 :=
-    fun i => (D.near hN (hy i)).trans (by linarith)
-  have hC : ∀ i, populationEndpointColumnField P N 0 (s i) + 2 * barrierTrialT D.v (s i) -
+  have hM : ∀ i, (groupedMarkedField P N (x i) + d (x i)) - 2 * barrierTrialT D.p (x i) ≤
+      residual + δ / 4 := fun i => by
+    have := D.marked hN ⟨(hx i).1.le, (hx i).2.le⟩ (hxG i)
+    linarith
+  have hL : ∀ i, (groupedNearField P N (y i) + d (y i)) - D.p 1 * y i ≤ nearCap + δ / 4 :=
+    fun i => by
+    have := D.near hN (hy i) (hyG i)
+    linarith
+  have hC : ∀ i, Cf N (s i) + 2 * barrierTrialT D.v (s i) -
       Real.log (1 - s i) / (P.n N : ℝ) ≤ D.MY + δ / 4 := fun i => hcol (s i) (hs i)
   have hb2 := bracketSlack_nonneg hν hM
   have hb3 := bracketSlack_nonneg hν hL
@@ -642,10 +652,12 @@ theorem second_energy_sq_end {P : Parameters} (hP : CatalanMeasure.Parametric.Ad
   unfold oldBound
   linarith only [hb, hconst, hnorm, herror, hf2, hf3, hαδ, hb2, hb3, hb4]
 
-/-- A grouped value at most the target gives the selected cap. -/
+/-- A grouped value at most the target gives the selected cap, with the column factor
+`(∏ (1 + ζ s))^(a+b)` and the node correction `d` (the value carries the column field
+`endpoint + ((a+b)/n) log (1 + ζ s)` and the marked and near fields plus `d`). -/
 theorem low_of_value {P : Parameters} (hP : CatalanMeasure.Parametric.Admissible P)
     {N r a b : ℕ} (hN : 0 < N) (hcount : r + a + b = P.n N)
-    {target cost' ε : ℝ}
+    {target cost' ε ζ : ℝ} (hζ : 0 ≤ ζ) {d : ℝ → ℝ}
     {z : Fin r → ℝ} {x : Fin a → ℝ} {y : Fin b → ℝ} {s : Fin r → ℝ}
     (hz : ∀ i, z i ∈ Ioo (-1 : ℝ) 1) (hz0 : ∀ i, z i ≠ 0)
     (hx : ∀ i, x i ∈ Ioo (-1 : ℝ) 1) (hy : ∀ i, y i ∈ Ioo (0 : ℝ) 1)
@@ -653,12 +665,15 @@ theorem low_of_value {P : Parameters} (hP : CatalanMeasure.Parametric.Admissible
     (hxi : Function.Injective (Fin.append z x)) (hyi : Function.Injective y)
     (hsi : Function.Injective s)
     (hval : groupedValueWithFields (P.n N : ℝ) (groupedConstant P N r a b)
-        (populationPhysicalFreeField P N) (groupedMarkedField P N)
-        (groupedNearField P N) (populationEndpointColumnField P N 0) z x y s ≤
+        (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + d u)
+        (fun u => groupedNearField P N u + d u)
+        (fun u => populationEndpointColumnField P N 0 u +
+          (((a + b : ℕ) : ℝ) / (P.n N : ℝ)) * Real.log (1 + ζ * u)) z x y s ≤
       -target + Real.log 2 / 2 + cost' * (((a + b : ℕ) : ℝ) / (P.n N : ℝ)) + ε) :
-    groupedProduct P N z x y s ≤ (∏ i, (1 + s i)) ^ (a + b) *
+    (∏ i, (1 + ζ * s i)) ^ (a + b) * groupedProduct P N z x y s ≤
+      (∏ i, (1 + s i)) ^ (a + b) *
       Real.exp (((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) +
-        ((P.n0 : ℝ) * cost') * N * (a + b)) := by
+        ((P.n0 : ℝ) * cost') * N * (a + b) - (P.n N : ℝ) * ((∑ i, d (x i)) + ∑ j, d (y j))) := by
   have hy' : ∀ i, y i ∈ Ioo (-1 : ℝ) 1 := fun i => ⟨by linarith [(hy i).1], (hy i).2⟩
   have hy0 : ∀ i, y i ≠ 0 := fun i => (hy i).1.ne'
   have hlog := log_groupedProduct hP hN z x y s hz hx hy' hs hz0 hy0 hzi hxi hyi hsi
@@ -666,17 +681,13 @@ theorem low_of_value {P : Parameters} (hP : CatalanMeasure.Parametric.Admissible
   have hn0 : (P.n0 : ℝ) ≠ 0 := (n0_pos hP).ne'
   have hNR : (N : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
   have hνpos : (0 : ℝ) < P.n N := by exact_mod_cast n_pos hP hN
-  have hid : (P.n N : ℝ) ^ 2 *
-      (-target + Real.log 2 / 2 + cost' * (((a + b : ℕ) : ℝ) / P.n N) + ε) =
-      ((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) +
-        ((P.n0 : ℝ) * cost') * N * (a + b) := by
-    rw [hn, Nat.cast_add]
-    field_simp
-    ring
-  have hbound := mul_le_mul_of_nonneg_left hval (sq_nonneg (P.n N : ℝ))
+  have hs1 : ∀ i, 0 < 1 + s i := fun i => by linarith [(hs i).1]
+  have hsζ : ∀ i, 0 < 1 + ζ * s i := fun i => by
+    have := mul_nonneg hζ (hs i).1.le
+    linarith
   have hpos : 0 < groupedProduct P N z x y s := by
     have hS : 0 < (∏ i, (1 + s i)) ^ (a + b) :=
-      pow_pos (prod_pos fun i _ => by linarith [(hs i).1]) _
+      pow_pos (prod_pos fun i _ => hs1 i) _
     have hZ : 0 < ∏ i, |z i| ^ ((P.g N : ℤ) - (P.n N - 1 : ℕ)) :=
       prod_pos fun i _ => zpow_pos (abs_pos.mpr (hz0 i)) _
     have hX : 0 < ∏ i, markedSheetWeight P N (x i) :=
@@ -690,21 +701,51 @@ theorem low_of_value {P : Parameters} (hP : CatalanMeasure.Parametric.Admissible
           (fun j => by simpa using hx j) i)) (fun i => abs_lt.mpr (hy' i)) hxi hyi
     exact mul_pos (mul_pos (mul_pos (mul_pos (mul_pos hS hZ) hX) hY) hPair)
       (paramPinPrincipal_pos hP hN z s hz hs hz0 hzi hsi)
-  have hprod : (∏ i, (1 + s i)) ^ (a + b) =
-      Real.exp (((a + b : ℕ) : ℝ) * ∑ i, Real.log (1 + s i)) := by
-    have hp : 0 < ∏ i, (1 + s i) := prod_pos fun i _ => by linarith [(hs i).1]
+  have hprod : ∀ c : ℝ → ℝ, (∀ i, 0 < c (s i)) →
+      (∏ i, c (s i)) ^ (a + b) =
+        Real.exp (((a + b : ℕ) : ℝ) * ∑ i, Real.log (c (s i))) := by
+    intro c hc
+    have hp : 0 < ∏ i, c (s i) := prod_pos fun i _ => hc i
     rw [← Real.exp_log (pow_pos hp (a + b)), Real.log_pow,
-      Real.log_prod (fun i _ => (show 0 < 1 + s i by linarith [(hs i).1]).ne')]
+      Real.log_prod (fun i _ => (hc i).ne')]
   have hphys := grouped_value_physical_eq (P := P) (N := N) z x y s
-  rw [← Real.exp_log hpos, hprod, ← Real.exp_add]
-  apply Real.exp_le_exp.mpr
-  rw [hlog, hphys]
-  have hk : (P.n N : ℝ) ^ 2 * (((((a + b : ℕ) : ℝ) / (P.n N : ℝ)) *
+  have hsplit : groupedValueWithFields (P.n N : ℝ) (groupedConstant P N r a b)
+        (populationPhysicalFreeField P N) (fun u => groupedMarkedField P N u + d u)
+        (fun u => groupedNearField P N u + d u)
+        (fun u => populationEndpointColumnField P N 0 u +
+          (((a + b : ℕ) : ℝ) / (P.n N : ℝ)) * Real.log (1 + ζ * u)) z x y s =
+      groupedValueWithFields (P.n N : ℝ) (groupedConstant P N r a b)
+        (populationPhysicalFreeField P N) (groupedMarkedField P N)
+        (groupedNearField P N) (populationEndpointColumnField P N 0) z x y s +
+      ((∑ i, d (x i)) + (∑ j, d (y j)) +
+        (((a + b : ℕ) : ℝ) / (P.n N : ℝ)) * ∑ i, Real.log (1 + ζ * s i)) / (P.n N : ℝ) := by
+    unfold groupedValueWithFields
+    simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+    ring
+  rw [hsplit] at hval
+  have hid : (P.n N : ℝ) ^ 2 *
+      (-target + Real.log 2 / 2 + cost' * (((a + b : ℕ) : ℝ) / P.n N) + ε) =
+      ((P.n0 : ℝ) * N) ^ 2 * (-target + Real.log 2 / 2 + ε) +
+        ((P.n0 : ℝ) * cost') * N * (a + b) := by
+    rw [hn, Nat.cast_add]
+    field_simp
+    ring
+  have hbound := mul_le_mul_of_nonneg_left hval (sq_nonneg (P.n N : ℝ))
+  have hk1 : (P.n N : ℝ) ^ 2 * (((((a + b : ℕ) : ℝ) / (P.n N : ℝ)) *
       ∑ i, Real.log (1 + s i)) / (P.n N : ℝ)) =
       ((a + b : ℕ) : ℝ) * ∑ i, Real.log (1 + s i) := by
     field_simp
-  rw [hid] at hbound
-  rw [mul_add, hk]
+  have hk2 : (P.n N : ℝ) ^ 2 * (((∑ i, d (x i)) + (∑ j, d (y j)) +
+      (((a + b : ℕ) : ℝ) / (P.n N : ℝ)) * ∑ i, Real.log (1 + ζ * s i)) / (P.n N : ℝ)) =
+      (P.n N : ℝ) * ((∑ i, d (x i)) + ∑ j, d (y j)) +
+        ((a + b : ℕ) : ℝ) * ∑ i, Real.log (1 + ζ * s i) := by
+    field_simp
+  rw [hid, mul_add, hk2] at hbound
+  rw [← Real.exp_log hpos, hprod (fun u => 1 + ζ * u) (fun i => hsζ i),
+    hprod (fun u => 1 + u) (fun i => hs1 i), ← Real.exp_add, ← Real.exp_add]
+  apply Real.exp_le_exp.mpr
+  rw [hlog, hphys]
+  rw [mul_add, hk1]
   linarith only [hbound]
 
 end
@@ -5441,3 +5482,6 @@ theorem jcirc_eucl {f : ℝ → ℝ} {F : ℝ} (hF0 : 0 ≤ F) (hF : ∀ φ, f �
 
 end
 end CatalanMeasure.GenD.Signed.RouteI.CompletedGas
+#print axioms CatalanMeasure.GenD.Signed.RouteI.selectedFree_of_lowOrPick
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.low_of_value
+#print axioms CatalanMeasure.GenD.Signed.RouteI.CompletedGas.second_energy_sq_end

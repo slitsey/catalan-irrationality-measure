@@ -698,56 +698,68 @@ noncomputable def ordCapC : Sign → ℝ := fun _ => -9783 / 10000
 /-- Near cap constant `-9783/10000 - 187/10000`. -/
 noncomputable def nearCapC : ℝ := -997 / 1000
 
-theorem ord_pos (S : CapSource) (t : Trunc) (h : PosHf S t) :
-    S.OrdCap t Sign.pos (-9783 / 10000) := by
-  have := ordCap_pos_of_square S t posP posQ [] posR D D_pos capQ posEps pos_identity pos_hm h
-  rwa [capQ_real] at this
+theorem ord_pos (S : CapSource) (t : Trunc) (h : PosHf S t) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c - (-9783 / 10000)) :
+    S.OrdCap t Sign.pos d G c :=
+  ordCap_pos_of_square S t posP posQ [] posR D D_pos capQ posEps pos_identity pos_hm h d G c
+    (fun u hu hG => by have := hd u hu hG; rwa [capQ_real])
 
-theorem ord_neg (S : CapSource) (t : Trunc) (h : NegHf S t) :
-    S.OrdCap t Sign.neg (-9783 / 10000) := by
-  have := ordCap_neg_of_square S t negP negQ [] negR D D_pos capQ negEps neg_identity neg_hm h
-  rwa [capQ_real] at this
+theorem ord_neg (S : CapSource) (t : Trunc) (h : NegHf S t) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c - (-9783 / 10000)) :
+    S.OrdCap t Sign.neg d G c :=
+  ordCap_neg_of_square S t negP negQ [] negR D D_pos capQ negEps neg_identity neg_hm h d G c
+    (fun u hu hG => by have := hd u hu hG; rwa [capQ_real])
 
-/-- `S.OrdCap t sigma (-9783/10000)` for both signs: the `ord` field of `CapBundle`. -/
-theorem ord_caps (S : CapSource) (t : Trunc) (hp : PosHf S t) (hn : NegHf S t) :
-    ∀ σ, S.OrdCap t σ (ordCapC σ) := by
+/-- `S.OrdCap t σ d G (c σ)` for both signs (the `ord` field of `CapBundle`), where the node
+correction is bounded by `c σ + 9783/10000` on the window. -/
+theorem ord_caps (S : CapSource) (t : Trunc) (hp : PosHf S t) (hn : NegHf S t) (d : ℝ → ℝ)
+    (G : ℝ → Prop) (c : Sign → ℝ)
+    (hdp : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c Sign.pos - (-9783 / 10000))
+    (hdn : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c Sign.neg - (-9783 / 10000)) :
+    ∀ σ, S.OrdCap t σ d G (c σ) := by
   intro σ
   cases σ
-  · exact ord_neg S t hn
-  · exact ord_pos S t hp
+  · exact ord_neg S t hn d G _ hdn
+  · exact ord_pos S t hp d G _ hdp
 
-/-- `S.NearCap t (-997/1000)`: the `near` field of `CapBundle`. -/
+/-- `S.NearCap t d G c`: the `near` field of `CapBundle`, with `d ≤ c - nearCapC` on the window. -/
 theorem near_cap (S : CapSource) (hS : S.Admissible) (t : Trunc)
     (hs : S.strength ≤ 1 / 10) (hc : S.curvature ≤ 1 / 10)
     (hM : S.auxMass Sign.pos ≤ 37 / 100) (hE : S.auxTail t Sign.pos ≤ 1 / 100)
-    (h : NearHf S t) : S.NearCap t nearCapC := by
+    (hκ : (1 / 10 : ℝ) ≤ kappa Sign.pos)
+    (h : NearHf S t) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ y ∈ Ioo (0 : ℝ) 1, G y → d y ≤ c - nearCapC) : S.NearCap t d G c := by
   have hcap : (-9783 / 10000 : ℝ) ≤ ((capQ : ℚ) : ℝ) := by rw [capQ_real]
-  have := nearCap_of_square S hS t hs hc hM hE nearP nearQ [] nearR D D_pos capQ nearEps
-    near_identity h (187 / 10000) (by simpa using near_margin) (by norm_num) hcap
   have e : ((capQ : ℚ) : ℝ) - 187 / 10000 = nearCapC := by
     rw [capQ_real]; unfold nearCapC; norm_num
-  rwa [e] at this
+  exact nearCap_of_square S hS t hs hc hM hE nearP nearQ [] nearR D D_pos capQ nearEps
+    near_identity h (187 / 10000) (by simpa using near_margin) (by norm_num) hcap hκ d G c
+    (fun y hy hG => by have := hd y hy hG; rwa [← e] at this)
 
 /-- The `ord` and `near` fields of `CapBundle` at `Trunc.finite 384`. -/
 theorem compact_caps_384 (S : CapSource) (hS : S.Admissible)
     (hs : S.strength ≤ 1 / 10) (hc : S.curvature ≤ 1 / 10)
     (hM : S.auxMass Sign.pos ≤ 37 / 100)
-    (hE : S.auxTail (Trunc.finite 384) Sign.pos ≤ 1 / 100)
+    (hE : S.auxTail (Trunc.finite 384) Sign.pos ≤ 1 / 100) (hκ : (1 / 10 : ℝ) ≤ kappa Sign.pos)
     (hp : PosHf S (Trunc.finite 384)) (hn : NegHf S (Trunc.finite 384))
-    (hy : NearHf S (Trunc.finite 384)) :
-    (∀ σ, S.OrdCap (Trunc.finite 384) σ (ordCapC σ)) ∧
-      S.NearCap (Trunc.finite 384) nearCapC :=
-  ⟨ord_caps S _ hp hn, near_cap S hS _ hs hc hM hE hy⟩
+    (hy : NearHf S (Trunc.finite 384)) (d : ℝ → ℝ) (G : ℝ → Prop) (c : Sign → ℝ) (cn : ℝ)
+    (hdp : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c Sign.pos - (-9783 / 10000))
+    (hdn : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c Sign.neg - (-9783 / 10000))
+    (hdy : ∀ y ∈ Ioo (0 : ℝ) 1, G y → d y ≤ cn - nearCapC) :
+    (∀ σ, S.OrdCap (Trunc.finite 384) σ d G (c σ)) ∧ S.NearCap (Trunc.finite 384) d G cn :=
+  ⟨ord_caps S _ hp hn d G c hdp hdn, near_cap S hS _ hs hc hM hE hκ hy d G cn hdy⟩
 
-/-- The `ord` and `near` fields of `CapBundle` at `Trunc.finite 384`, with the four numeric
-hypotheses replaced by plain facts: `1/10 <= eps <= 3/20` and `63/100 <= ` positive gas mass. -/
+/-- The `ord` and `near` fields of `CapBundle` at `Trunc.finite 384`, with the numeric hypotheses
+replaced by plain facts: `1/10 <= eps <= 3/20` and `63/100 <=` positive gas mass. -/
 theorem compact_caps_384_seed (S : CapSource) (hS : S.Admissible)
     (hε1 : 1 / 10 ≤ S.eps) (hε2 : S.eps ≤ 3 / 20)
-    (hmass : 63 / 100 ≤ massL (S.gas Sign.pos))
+    (hmass : 63 / 100 ≤ massL (S.gas Sign.pos)) (hκ : (1 / 10 : ℝ) ≤ kappa Sign.pos)
     (hp : PosHf S (Trunc.finite 384)) (hn : NegHf S (Trunc.finite 384))
-    (hy : NearHf S (Trunc.finite 384)) :
-    (∀ σ, S.OrdCap (Trunc.finite 384) σ (ordCapC σ)) ∧
-      S.NearCap (Trunc.finite 384) nearCapC := by
+    (hy : NearHf S (Trunc.finite 384)) (d : ℝ → ℝ) (G : ℝ → Prop) (c : Sign → ℝ) (cn : ℝ)
+    (hdp : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c Sign.pos - (-9783 / 10000))
+    (hdn : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c Sign.neg - (-9783 / 10000))
+    (hdy : ∀ y ∈ Ioo (0 : ℝ) 1, G y → d y ≤ cn - nearCapC) :
+    (∀ σ, S.OrdCap (Trunc.finite 384) σ d G (c σ)) ∧ S.NearCap (Trunc.finite 384) d G cn := by
   have hpos : 0 < S.eps := hS.eps_pos
   obtain ⟨hs, hc⟩ := strength_curvature_le S hpos hε2
   have hM : S.auxMass Sign.pos ≤ 37 / 100 := by rw [hS.aux_pos_mass]; linarith
@@ -767,17 +779,20 @@ theorem compact_caps_384_seed (S : CapSource) (hS : S.Admissible)
     obtain ⟨h1, h2⟩ := r_bounds S hε2 hpos
     have : 0 < 1 - S.q ^ 2 := by linarith
     positivity
-  exact compact_caps_384 S hS hs hc hM (auxTail_pos_le S hs hc hs0 hc0 hε1 hM hM0) hp hn hy
+  exact compact_caps_384 S hS hs hc hM (auxTail_pos_le S hs hc hs0 hc0 hε1 hM hM0) hκ hp hn hy d G c cn hdp hdn hdy
 
 /-- Exact-field version (via `Dominates`, `CompactSource`). -/
 theorem compact_caps_exact (S : CapSource) (hS : S.Admissible)
     (hs : S.strength ≤ 1 / 10) (hc : S.curvature ≤ 1 / 10)
     (hM : S.auxMass Sign.pos ≤ 37 / 100)
-    (hE : S.auxTail (Trunc.finite 384) Sign.pos ≤ 1 / 100)
+    (hE : S.auxTail (Trunc.finite 384) Sign.pos ≤ 1 / 100) (hκ : (1 / 10 : ℝ) ≤ kappa Sign.pos)
     (hp : PosHf S (Trunc.finite 384)) (hn : NegHf S (Trunc.finite 384))
-    (hy : NearHf S (Trunc.finite 384)) :
-    (∀ σ, S.OrdCap Trunc.exact σ (ordCapC σ)) ∧ S.NearCap Trunc.exact nearCapC := by
-  obtain ⟨h1, h2⟩ := compact_caps_384 S hS hs hc hM hE hp hn hy
+    (hy : NearHf S (Trunc.finite 384)) (d : ℝ → ℝ) (G : ℝ → Prop) (c : Sign → ℝ) (cn : ℝ)
+    (hdp : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c Sign.pos - (-9783 / 10000))
+    (hdn : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c Sign.neg - (-9783 / 10000))
+    (hdy : ∀ y ∈ Ioo (0 : ℝ) 1, G y → d y ≤ cn - nearCapC) :
+    (∀ σ, S.OrdCap Trunc.exact σ d G (c σ)) ∧ S.NearCap Trunc.exact d G cn := by
+  obtain ⟨h1, h2⟩ := compact_caps_384 S hS hs hc hM hE hκ hp hn hy d G c cn hdp hdn hdy
   exact ⟨fun σ => ordCap_exact S hS (h1 σ), nearCap_exact S hS h2⟩
 
 end CatalanMeasure.GenD.Signed.RouteI.CompactInstance

@@ -57,10 +57,11 @@ def Flavor.free : Flavor := ⟨11 / 29, 3 / 29, 39 / 29⟩
 /-- `marked=True`: `AL=BE=0`, `gamma=53/58`. -/
 def Flavor.marked : Flavor := ⟨0, 0, 53 / 58⟩
 
-/-- Angular constants `kappa_sigma` (negative `5489/100000`, positive `29557/200000`). -/
+/-- Angular constants `kappa_sigma` (design C literals, GU §3: negative `5463909/10^8`, positive
+`14762657/10^8`; they clear the Jensen polynomial plus the true square loss on all 32 radii). -/
 def kappa : Sign → ℝ
-  | Sign.neg => 5489 / 100000
-  | Sign.pos => 29557 / 200000
+  | Sign.neg => 5463909 / 100000000
+  | Sign.pos => 14762657 / 100000000
 
 /-- Exact infinite series versus finite degree-`K` polynomial upper surrogate. -/
 inductive Trunc
@@ -128,6 +129,9 @@ structure CapSource where
   radial : ℕ → ℝ
   nRad : ℕ
   eps : ℝ
+  /-- The reflection polynomial `reflPoly` has degree `reflDeg + 1` and `reflTail` retains the
+  nonnegative remainder after it (GD3: the design value lives in the instance). -/
+  reflDeg : ℕ
 
 namespace CapSource
 variable (S : CapSource)
@@ -194,15 +198,18 @@ def radialA (t : Trunc) (σ : Sign) (x : ℝ) : ℝ :=
 /-- Positive-species reflection moment `m_k = int x^k dmu_+`. -/
 def reflMoment (k : ℕ) : ℝ := physL (S.gas Sign.pos) fun x => x ^ k
 
-/-- Reflection polynomial `R900(x) = sum_{k<=900} m_k x^k / k`. -/
-def R900 (x : ℝ) : ℝ :=
-  ∑ k ∈ Finset.range 900, S.reflMoment (k + 1) * x ^ (k + 1) / ((k : ℝ) + 1)
+/-- Reflection polynomial `reflPoly(x) = sum_{k<=reflDeg+1} m_k x^k / k`
+(GD3: the degree is the field `reflDeg`; the design value lives in the instance). -/
+def reflPoly (x : ℝ) : ℝ :=
+  ∑ k ∈ Finset.range (S.reflDeg + 1), S.reflMoment (k + 1) * x ^ (k + 1) / ((k : ℝ) + 1)
 
-/-- Retained nonnegative reflection tail `Eref900`. -/
-def Eref900 : ℝ :=
+/-- Retained nonnegative reflection tail `reflTail`. -/
+def reflTail : ℝ :=
   ((S.gas Sign.pos).map fun c =>
-    let prim : ℝ → ℝ := fun x => x ^ 900 / 900 + x ^ 901 / 901
-    c.w / (c.hi - c.lo) * (prim (YCell.physX c.lo) - prim (YCell.physX c.hi)) / 901).sum
+    let prim : ℝ → ℝ := fun x => x ^ (S.reflDeg + 1) / ((S.reflDeg : ℝ) + 1) +
+      x ^ (S.reflDeg + 2) / ((S.reflDeg : ℝ) + 2)
+    c.w / (c.hi - c.lo) * (prim (YCell.physX c.lo) - prim (YCell.physX c.hi)) /
+      ((S.reflDeg : ℝ) + 2)).sum
 
 /-- Row reference lists (`none` = empty references, the ordinary marked branch). -/
 def refR : Option (Fin 2) → List YCell
@@ -214,7 +221,7 @@ def refC : Option (Fin 2) → List YCell
 
 /-- The row field of pc29 `RowField` (exact point-integral expression, no interval allowances):
 `L(R)+L(G_s)-kappa_s + Pot(G_s+R-2C, Y x) + (m_s+AL) log|x| - gamma log(1+x^2)
- + BE log(1-x) + [pos] (R900+Eref900) + A_s(x) + tail`. -/
+ + BE log(1-x) + [pos] (reflPoly+reflTail) + A_s(x) + tail`. -/
 def rowField (t : Trunc) (σ : Sign) (fl : Flavor) (ref : Option (Fin 2)) (x : ℝ) : ℝ :=
   physL (S.refR ref) (fun u => Real.log |u|) + physL (S.gas σ) (fun u => Real.log |u|) -
     kappa σ +
@@ -222,7 +229,7 @@ def rowField (t : Trunc) (σ : Sign) (fl : Flavor) (ref : Option (Fin 2)) (x : �
     potL ((S.refC ref).map YCell.dil2) (x + 1 / x)) +
   (massL (S.gas σ) + fl.al) * Real.log |x| - fl.gamma * Real.log (1 + x ^ 2) +
   fl.be * Real.log (1 - x) +
-  (if σ = Sign.pos then S.R900 x + S.Eref900 else 0) +
+  (if σ = Sign.pos then S.reflPoly x + S.reflTail else 0) +
   S.radialA t σ x + S.auxTail t σ
 
 /-- Free row at anchor `a` (`marked=False`); species by the sign of `x`. -/
@@ -241,7 +248,7 @@ def colField (a : Fin 2) (s : ℝ) : ℝ :=
 /-- Near marked source field `(48/58)log y-(53/58)log(1+y^2)-kappa_+ - R900(y)
 + sum_j P_j(r_j y) + Eaux_+`. -/
 def nearField (t : Trunc) (y : ℝ) : ℝ :=
-  48 / 58 * Real.log y - 53 / 58 * Real.log (1 + y ^ 2) - kappa Sign.pos - S.R900 y +
+  48 / 58 * Real.log y - 53 / 58 * Real.log (1 + y ^ 2) - kappa Sign.pos - S.reflPoly y +
   ((S.aux Sign.pos).map fun e =>
     e.w * t.sum (fun k => S.coef k * (S.rad e.rad * y) ^ k * Real.cos (k * e.phase))).sum +
   S.auxTail t Sign.pos
@@ -278,19 +285,22 @@ def FreeRowCap (t : Trunc) (a : Fin 2) (c : ℝ) : Prop :=
 /-- `anchorFreeColumn(a,c)` on `0<s<1`. -/
 def FreeColCap (a : Fin 2) (c : ℝ) : Prop :=
   ∀ s ∈ Ioo (0 : ℝ) 1, S.colField a s ≤ c
-/-- `ordinaryMarked(sign,t)`. -/
-def OrdCap (t : Trunc) (σ : Sign) (c : ℝ) : Prop :=
-  ∀ s ∈ ordDom σ, S.ordField t σ ((if σ = Sign.neg then -1 else 1) * s) ≤ c
-/-- `nearMarked(y)` on `0<y<1`. -/
-def NearCap (t : Trunc) (c : ℝ) : Prop :=
-  ∀ y ∈ Ioo (0 : ℝ) 1, S.nearField t y ≤ c
+/-- `ordinaryMarked(sign,t)` with the node correction `d` (GP §11.1: `δ̂/58`) on the window `G`:
+`ordField + d ≤ c` wherever `G` holds.  `d = 0`, `G = True` is the original cap. -/
+def OrdCap (t : Trunc) (σ : Sign) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ) : Prop :=
+  ∀ s ∈ ordDom σ, G ((if σ = Sign.neg then -1 else 1) * s) →
+    S.ordField t σ ((if σ = Sign.neg then -1 else 1) * s) +
+      d ((if σ = Sign.neg then -1 else 1) * s) ≤ c
+/-- `nearMarked(y)` on `0<y<1` with the node correction `d` on the window `G`. -/
+def NearCap (t : Trunc) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ) : Prop :=
+  ∀ y ∈ Ioo (0 : ℝ) 1, G y → S.nearField t y + d y ≤ c
 /-- `angular(sign,i,theta)`: every active radius index, every real angle. -/
 def AngCap (t : Trunc) (σ : Sign) (c : ℝ) : Prop :=
   ∀ i, i < S.nRad → ∀ θ : ℝ, S.angular t σ i θ ≤ c
 
 /-- The cap bundle consumed by the completed-gas / two-anchor tangent. `gasI` and `anchI` are the
 exact intercept values owned by C8/C9 (bound by their own modules to the same source). -/
-structure CapBundle (t : Trunc) (gasI : ℝ) (anchI : Fin 2 → ℝ) where
+structure CapBundle (t : Trunc) (d : ℝ → ℝ) (G : ℝ → Prop) (gasI : ℝ) (anchI : Fin 2 → ℝ) where
   rowCap : Fin 2 → ℝ
   colCap : Fin 2 → ℝ
   ordCap : Sign → ℝ
@@ -300,8 +310,8 @@ structure CapBundle (t : Trunc) (gasI : ℝ) (anchI : Fin 2 → ℝ) where
   anchICap : Fin 2 → ℝ
   row : ∀ a, S.FreeRowCap t a (rowCap a)
   col : ∀ a, S.FreeColCap a (colCap a)
-  ord : ∀ σ, S.OrdCap t σ (ordCap σ)
-  near : S.NearCap t nearCap
+  ord : ∀ σ, S.OrdCap t σ d G (ordCap σ)
+  near : S.NearCap t d G nearCap
   ang : ∀ σ, S.AngCap t σ (angCap σ)
   gasI_le : gasI ≤ gasICap
   anchI_le : ∀ a, anchI a ≤ anchICap a
@@ -316,8 +326,9 @@ structure Dominates (K : ℕ) : Prop where
   ang : ∀ σ, ∀ i, i < S.nRad → ∀ θ : ℝ, S.angular Trunc.exact σ i θ ≤ S.angular (Trunc.finite K) σ i θ
 
 /-- A bundle for the finite upper surrogates gives the bundle for the exact fields. -/
-def CapBundle.toExact {K : ℕ} (hd : S.Dominates K) {gasI : ℝ} {anchI : Fin 2 → ℝ}
-    (B : S.CapBundle (Trunc.finite K) gasI anchI) : S.CapBundle Trunc.exact gasI anchI where
+def CapBundle.toExact {K : ℕ} (hd : S.Dominates K) {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ}
+    {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle (Trunc.finite K) d G gasI anchI) : S.CapBundle Trunc.exact d G gasI anchI where
   rowCap := B.rowCap
   colCap := B.colCap
   ordCap := B.ordCap
@@ -327,8 +338,8 @@ def CapBundle.toExact {K : ℕ} (hd : S.Dominates K) {gasI : ℝ} {anchI : Fin 2
   anchICap := B.anchICap
   row a x hx := (hd.row a x hx).trans (B.row a x hx)
   col := B.col
-  ord σ s hs := (hd.ord σ s hs).trans (B.ord σ s hs)
-  near y hy := (hd.near y hy).trans (B.near y hy)
+  ord σ s hs hG := (add_le_add_left (hd.ord σ s hs) _).trans (B.ord σ s hs hG)
+  near y hy hG := (add_le_add_left (hd.near y hy) _).trans (B.near y hy hG)
   ang σ i hi θ := (hd.ang σ i hi θ).trans (B.ang σ i hi θ)
   gasI_le := B.gasI_le
   anchI_le := B.anchI_le

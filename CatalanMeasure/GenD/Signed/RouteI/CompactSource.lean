@@ -17,9 +17,9 @@ For an admissible `CapSource S` (module `RouteI.CapFields`):
   and the tail of that majorant is exactly the retained `auxTail`;
 * hence `Dominates` (exact field <= finite degree-`K` upper surrogate) holds for the free rows,
   the ordinary marked rows and the Near field (`row_dominates`, `ord_dominates`, `near_dominates`);
-* the reflection moments of the positive species are nonnegative, so `R900 y >= 0` for `y >= 0`;
+* the reflection moments of the positive species are nonnegative, so `reflPoly y >= 0` for `y >= 0`;
 * zero geometry of the Near source: for `0 < y <= 1/10`,
-  `nearField t y <= (24/29) log y + log (1+y) - 29557/200000 + auxTail t pos`
+  `nearField t y <= (24/29) log y + log (1+y) - kappa pos + auxTail t pos`
   (the fixed tail is retained; the version without it is false).
 
 Nothing here depends on cell data. The hypotheses `strength <= 1/10`, `curvature <= 1/10`,
@@ -313,7 +313,7 @@ theorem near_dominates (hS : S.Admissible) (K : ℕ) :
   simp only [if_neg (by decide : ¬ (Sign.pos = Sign.neg)), mul_one]
   linarith
 
-/-! ### Reflection moments and `R900 >= 0` -/
+/-! ### Reflection moments and `reflPoly >= 0` -/
 
 theorem physX_nonneg {Y : ℝ} (h : 0 ≤ Y) : 0 ≤ YCell.physX Y := by
   unfold YCell.physX
@@ -333,8 +333,8 @@ theorem reflMoment_nonneg (hS : S.Admissible) (k : ℕ) : 0 ≤ S.reflMoment k :
   obtain ⟨c, hc, rfl⟩ := List.mem_map.mp ha
   exact phys_pow_nonneg c (hS.gas_pos c hc) k
 
-theorem R900_nonneg (hS : S.Admissible) {y : ℝ} (hy : 0 ≤ y) : 0 ≤ S.R900 y := by
-  unfold CapSource.R900
+theorem reflPoly_nonneg (hS : S.Admissible) {y : ℝ} (hy : 0 ≤ y) : 0 ≤ S.reflPoly y := by
+  unfold CapSource.reflPoly
   refine Finset.sum_nonneg fun k _ => ?_
   have := reflMoment_nonneg S hS (k + 1)
   positivity
@@ -409,7 +409,7 @@ theorem near_radial_abs_le (hS : S.Admissible) (hs : S.strength ≤ 1 / 10)
 theorem near_zero_geometry (hS : S.Admissible) (t : Trunc) (hs : S.strength ≤ 1 / 10)
     (hc : S.curvature ≤ 1 / 10) (hM : S.auxMass Sign.pos ≤ 37 / 100) {y : ℝ} (hy0 : 0 < y)
     (hy1 : y ≤ 1 / 10) :
-    S.nearField t y ≤ (24 / 29) * Real.log y + Real.log (1 + y) - 29557 / 200000 +
+    S.nearField t y ≤ (24 / 29) * Real.log y + Real.log (1 + y) - kappa Sign.pos +
       S.auxTail t Sign.pos := by
   have hrad := list_sum_le (S.aux Sign.pos)
     (fun e => e.w * t.sum (fun k => S.coef k * (S.rad e.rad * y) ^ k * Real.cos (k * e.phase)))
@@ -433,11 +433,9 @@ theorem near_zero_geometry (hS : S.Admissible) (t : Trunc) (hs : S.strength ≤ 
     linarith
   have h2 : 4033 / 8100 * y ≤ y / (1 + y) := by
     rw [le_div_iff₀ (by linarith)]; nlinarith
-  have hR := R900_nonneg S hS hy0.le
+  have hR := reflPoly_nonneg S hS hy0.le
   have hlog2 : 0 ≤ Real.log (1 + y ^ 2) := Real.log_nonneg (by nlinarith [sq_nonneg y])
-  have hk : kappa Sign.pos = 29557 / 200000 := rfl
   unfold CapSource.nearField
-  rw [hk]
   have e48 : (48 : ℝ) / 58 = 24 / 29 := by norm_num
   rw [e48]
   linarith

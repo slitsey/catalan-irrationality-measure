@@ -3119,7 +3119,6 @@ open Real MeasureTheory Filter Set intervalIntegral Topology
 open scoped Interval
 open CatalanMeasure.GenD.Signed.RouteI CatalanMeasure.GenD.Signed.RouteI.CapFields
 open CatalanMeasure.GenD.Signed.RouteI.MarkedSourceBound
-open CatalanMeasure.GenD.Signed.RouteI.MarkedTransferSource
 open CatalanMeasure.Signed.ChebSquare
 
 /-! ### From the cells to the signed profile -/
@@ -3846,7 +3845,6 @@ open Real MeasureTheory Filter Set intervalIntegral Topology
 open scoped Interval
 open CatalanMeasure.GenD.Signed.RouteI CatalanMeasure.GenD.Signed.RouteI.CapFields
 open CatalanMeasure.GenD.Signed.RouteI.MarkedSourceBound
-open CatalanMeasure.GenD.Signed.RouteI.MarkedTransferSource
 open CatalanMeasure.Signed.ChebSquare
 
 /-! ### The cell potential in closed form -/

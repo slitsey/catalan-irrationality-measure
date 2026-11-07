@@ -37,7 +37,7 @@ namespace CatalanMeasure.GenD.Signed.RouteI.MarkedPilot
 noncomputable section
 
 open CatalanMeasure.GenD.Signed.RouteI.CapFields CatalanMeasure.GenD.Signed.RouteI.CapSourceData
-open CatalanMeasure.GenD.Signed.RouteI.MarkedSourceTail CatalanMeasure.GenD.Signed.RouteI.MarkedTransferSource
+open CatalanMeasure.GenD.Signed.RouteI.MarkedSourceTail
 open CatalanMeasure.Signed.ChebSquare
 
 /-! ### Atoms with integer keys and rational weights -/

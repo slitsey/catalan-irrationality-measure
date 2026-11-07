@@ -31,8 +31,7 @@ Data-free. Two parts.
 namespace CatalanMeasure.GenD.Signed.RouteI.MarkedSourceBound
 
 open CatalanMeasure.GenD.Signed.RouteI
-open CatalanMeasure.GenD.Signed.RouteI.CapFields CatalanMeasure.GenD.Signed.RouteI.MarkedTransferSource
-open CatalanMeasure.GenD.Signed.RouteI.MarkedTransfer
+open CatalanMeasure.GenD.Signed.RouteI.CapFields
 open CatalanMeasure.Signed.ChebSquare
 open MeasureTheory intervalIntegral Polynomial
 open scoped Interval

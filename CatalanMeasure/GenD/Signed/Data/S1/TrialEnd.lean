@@ -36,12 +36,13 @@ noncomputable section
 
 /-- The factor-free first-population trial from an old one and an endpoint budget without
 `a (1 - a) log 2`.  The output target `target'` is free: only the budget field mentions it. -/
-def _root_.CatalanMeasure.GenD.Analytic.FirstTrialBounds.toEnd {P : Parameters} {target cost : ℝ} (D : FirstTrialBounds P target cost)
+def _root_.CatalanMeasure.GenD.Analytic.FirstTrialBounds.toEnd {P : Parameters} (hP : Admissible P)
+    {target cost : ℝ} (D : FirstTrialBounds P target cost)
     {target' : ℝ} (cost' : ℝ)
     (hbud : ∀ a : ℝ, (-gC0 P + gC1 P * a - a ^ 2) * Real.log 2 + D.normCap +
       (1 - a) * D.fieldCap + a * (2 * D.lambda * ((P.g0 : ℝ) / P.n0)) ≤
         -target' + Real.log 2 / 2 + cost' * a) :
-    FirstTrialBoundsEnd P target' cost' where
+    FirstTrialBoundsEnd0 P target' cost' where
   p := D.p
   v := D.v
   lambda := D.lambda
@@ -49,14 +50,24 @@ def _root_.CatalanMeasure.GenD.Analytic.FirstTrialBounds.toEnd {P : Parameters} 
   MY := D.MY
   normCap := D.normCap
   fieldCap := D.fieldCap
+  M₁ := 2 * D.lambda * ((P.g0 : ℝ) / P.n0)
   lambda_nonneg := D.lambda_nonneg
   p_summable := D.p_summable
   v_summable := D.v_summable
   norm_le := D.norm_le
   field_sum := D.field_sum
   row := D.row
+  marked := fun {N} hN {x} _ _ _ => by
+    have hg := ratio_g P hP hN
+    have h0 : 0 ≤ 2 * x ^ 2 / (1 + x ^ 2) := by positivity
+    have h1 : 2 * (P.g N : ℝ) / (P.n N : ℝ) = 2 * ((P.g0 : ℝ) / P.n0) := by
+      rw [mul_div_assoc, hg]
+    have h2 := mul_nonneg D.lambda_nonneg h0
+    simp only [paramCaseField, add_zero]
+    rw [h1]
+    nlinarith only [h2]
   column := D.column
-  budget := hbud
+  budget := fun a _ => hbud a
 
 -- `SecondTrialBounds.toEndAt` is defined in `Phase2Contract` (with `toEnd` its instance `α1 = 0`).
 
@@ -89,7 +100,7 @@ theorem firstEnd_budget_K590 {normCap fieldCap lambda : ℝ} (hN : normCap = n1)
 def secondEnd (S : SecondFieldCert Odd.design K590.target K590.residualCap nearCap K590.secondCost
       (fun x => (401 / 2500 : ℝ) ≤ |x|))
     (hN : S.normCap = K590.normCap) (hF : S.fieldCap = K590.fieldCap) :
-    SecondTrialBoundsEnd Odd.design 0 K590.target K590.residualCap nearCap K590.secondCost'
+    SecondTrialBoundsEnd0 Odd.design 0 K590.target K590.residualCap nearCap K590.secondCost'
       (fun x => (401 / 2500 : ℝ) ≤ |x|) :=
   CatalanMeasure.Signed.SecondTrialBounds.toEnd (S.bounds Odd.design_admissible) K590.secondCost'
     (fun ha ht => secondEnd_budget_K590 hN hF ha ht)
@@ -97,8 +108,8 @@ def secondEnd (S : SecondFieldCert Odd.design K590.target K590.residualCap nearC
 /-- The S1 first trial from the old certificate (`Bank540.first`): cost `firstCost'`. -/
 def firstEnd (F : FirstTrialBounds Odd.design K590.target K590.firstCost)
     (hN : F.normCap = n1) (hF : F.fieldCap = F1) (hl : F.lambda = 168493357 / 100000000) :
-    FirstTrialBoundsEnd Odd.design K590.target K590.firstCost' :=
-  F.toEnd K590.firstCost' (fun a => firstEnd_budget_K590 hN hF hl a)
+    FirstTrialBoundsEnd0 Odd.design K590.target K590.firstCost' :=
+  F.toEnd Odd.design_admissible K590.firstCost' (fun a => firstEnd_budget_K590 hN hF hl a)
 
 /-! ### Theorem A: the End trials at `target0 = K590.target + A / 58²` (`A = 8.29824`)
 
@@ -134,7 +145,7 @@ theorem firstEnd_budget_K590_target0 {normCap fieldCap lambda : ℝ} (hN : normC
 def secondEnd0 (S : SecondFieldCert Odd.design K590.target K590.residualCap nearCap K590.secondCost
       (fun x => (401 / 2500 : ℝ) ≤ |x|))
     (hN : S.normCap = K590.normCap) (hF : S.fieldCap = K590.fieldCap) :
-    SecondTrialBoundsEnd Odd.design (1 / 16) K590.target0 K590.residualCap nearCap K590.secondCost'
+    SecondTrialBoundsEnd0 Odd.design (1 / 16) K590.target0 K590.residualCap nearCap K590.secondCost'
       (fun x => (401 / 2500 : ℝ) ≤ |x|) :=
   (S.bounds Odd.design_admissible).toEndAt K590.secondCost'
     (fun ha _ ht => secondEnd_budget_K590_target0 hN hF ha ht)
@@ -142,8 +153,8 @@ def secondEnd0 (S : SecondFieldCert Odd.design K590.target K590.residualCap near
 /-- The Theorem A first trial at `target0` (cost `secondCost'`, see `first_budget'_log2_target0`). -/
 def firstEnd0 (F : FirstTrialBounds Odd.design K590.target K590.firstCost)
     (hN : F.normCap = n1) (hF : F.fieldCap = F1) (hl : F.lambda = 168493357 / 100000000) :
-    FirstTrialBoundsEnd Odd.design K590.target0 K590.secondCost' :=
-  F.toEnd K590.secondCost' (fun a => firstEnd_budget_K590_target0 hN hF hl a)
+    FirstTrialBoundsEnd0 Odd.design K590.target0 K590.secondCost' :=
+  F.toEnd Odd.design_admissible K590.secondCost' (fun a => firstEnd_budget_K590_target0 hN hF hl a)
 
 /-- `FreeFirstBound` at `target0`, in the form `weighted_atom_point_binom_of_signed` consumes
 (`c₁ = n0 * secondCost'`). -/

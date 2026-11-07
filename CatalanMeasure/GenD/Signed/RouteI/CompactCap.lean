@@ -12,7 +12,7 @@ set_option Elab.async false
 
 Plan row C4, theorem side. For an admissible `CapSource S` and truncation `t`:
 
-* `ordCap_of_square`: `OrdCap t σ cap` on `ordDom σ` (`σ = pos`: `[98749/10^6, 1]`, the field
+* `ordCap_of_square`: `OrdCap t σ d G cap` on `ordDom σ` (`σ = pos`: `[98749/10^6, 1]`, the field
   carries `R900 + Eref900`; `σ = neg`: `[19501/10^5, 1]` at `x = -s`, field carries the radial
   mirror), from the source bound `hf : field <= chebSum p D (affine a s) + eps` and the exact
   integer `SquareIdentity` (built X1, `Signed/ChebSquare`).
@@ -108,16 +108,42 @@ theorem ord_le_margin (S : CapSource) (t : Trunc) (σ : Sign) (p q s r : List �
   exact (hf u (by rwa [ordDom_eq])).trans
     (square_margin p q s r D hD cap ε hid (affine_mem (ordLo_lt_one σ) hu.1 hu.2))
 
-/-- `OrdCap t σ cap` (any sign) from one square certificate. -/
+/-- `OrdCap t σ d G c` (any sign) from one square certificate at `cap` and a constant bound
+`d ≤ c - cap` of the node correction on the window `G` (GP Lemma 7.5 with `d` bounded on the whole
+band; the cell form is `ordCap_of_cells`). -/
 theorem ordCap_of_square (S : CapSource) (t : Trunc) (σ : Sign) (p q s r : List ℤ) (D : ℕ)
     (hD : 0 < D) (cap ε : ℚ) (hid : SquareIdentity p q s r D cap ε)
     (hm : l1 r.tail < r.headD 0)
     (hf : ∀ u ∈ ordDom σ, S.ordField t σ ((if σ = Sign.neg then -1 else 1) * u) ≤
-      chebSum p D (affine (ordLo σ) u) + ε) :
-    S.OrdCap t σ cap := by
-  intro u hu
+      chebSum p D (affine (ordLo σ) u) + ε)
+    (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ u ∈ ordDom σ, G ((if σ = Sign.neg then -1 else 1) * u) →
+      d ((if σ = Sign.neg then -1 else 1) * u) ≤ c - cap) :
+    S.OrdCap t σ d G c := by
+  intro u hu hG
   have := ord_le_margin S t σ p q s r D hD cap ε hid hf u hu
   have := margin_pos (r := r) D hD hm
+  have := hd u hu hG
+  linarith
+
+/-- **GP Lemma 7.5, consumer.**  `OrdCap t σ d G c` from a finite cover of the band by cells on which
+the node correction is bounded by a function `dseg i` (the affine chord of `δ̂/58`) with
+`ordField + dseg i ≤ c`: the cell inequalities are the finite data. -/
+theorem ordCap_of_cells (S : CapSource) (t : Trunc) (σ : Sign) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    {ι : Type*} (cells : Finset ι) (lo hi : ι → ℝ) (dseg : ι → ℝ → ℝ)
+    (hcov : ∀ u ∈ ordDom σ, G ((if σ = Sign.neg then -1 else 1) * u) →
+      ∃ i ∈ cells, u ∈ Icc (lo i) (hi i))
+    (hd : ∀ i ∈ cells, ∀ u ∈ Icc (lo i) (hi i), u ∈ ordDom σ →
+      G ((if σ = Sign.neg then -1 else 1) * u) →
+      d ((if σ = Sign.neg then -1 else 1) * u) ≤ dseg i ((if σ = Sign.neg then -1 else 1) * u))
+    (hf : ∀ i ∈ cells, ∀ u ∈ Icc (lo i) (hi i), u ∈ ordDom σ →
+      S.ordField t σ ((if σ = Sign.neg then -1 else 1) * u) +
+        dseg i ((if σ = Sign.neg then -1 else 1) * u) ≤ c) :
+    S.OrdCap t σ d G c := by
+  intro u hu hG
+  obtain ⟨i, hi, hui⟩ := hcov u hu hG
+  have := hd i hi u hui hu hG
+  have := hf i hi u hui hu
   linarith
 
 /-- Positive ordinary cap on `[98749/10^6, 1]` (field with `R900 + Eref900`). -/
@@ -125,27 +151,56 @@ theorem ordCap_pos_of_square (S : CapSource) (t : Trunc) (p q s r : List ℤ) (D
     (hD : 0 < D) (cap ε : ℚ) (hid : SquareIdentity p q s r D cap ε)
     (hm : l1 r.tail < r.headD 0)
     (hf : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, S.ordField t Sign.pos u ≤
-      chebSum p D (affine (98749 / 1000000) u) + ε) :
-    S.OrdCap t Sign.pos cap :=
+      chebSum p D (affine (98749 / 1000000) u) + ε)
+    (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ u ∈ Icc (98749 / 1000000 : ℝ) 1, G u → d u ≤ c - cap) :
+    S.OrdCap t Sign.pos d G c :=
   ordCap_of_square S t Sign.pos p q s r D hD cap ε hid hm (by
     intro u hu
-    simpa [ordLo] using hf u hu)
+    simpa [ordLo] using hf u hu) d G c (by
+    intro u hu hG
+    simpa [ordDom] using hd u (by simpa [ordDom] using hu) (by simpa using hG))
 
 /-- Negative ordinary cap on `[19501/10^5, 1]` at `x = -u` (radial mirror in the field). -/
 theorem ordCap_neg_of_square (S : CapSource) (t : Trunc) (p q s r : List ℤ) (D : ℕ)
     (hD : 0 < D) (cap ε : ℚ) (hid : SquareIdentity p q s r D cap ε)
     (hm : l1 r.tail < r.headD 0)
     (hf : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, S.ordField t Sign.neg (-u) ≤
-      chebSum p D (affine (19501 / 100000) u) + ε) :
-    S.OrdCap t Sign.neg cap :=
+      chebSum p D (affine (19501 / 100000) u) + ε)
+    (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ u ∈ Icc (19501 / 100000 : ℝ) 1, G (-u) → d (-u) ≤ c - cap) :
+    S.OrdCap t Sign.neg d G c :=
   ordCap_of_square S t Sign.neg p q s r D hD cap ε hid hm (by
     intro u hu
-    simpa [ordLo] using hf u hu)
+    simpa [ordLo] using hf u hu) d G c (by
+    intro u hu hG
+    simpa [ordDom] using hd u (by simpa [ordDom] using hu) (by simpa using hG))
 
 /-! ### Near cap -/
 
-theorem NearCap.mono {S : CapSource} {t : Trunc} {c c' : ℝ} (h : S.NearCap t c) (hc : c ≤ c') :
-    S.NearCap t c' := fun y hy => (h y hy).trans hc
+theorem NearCap.mono {S : CapSource} {t : Trunc} {d : ℝ → ℝ} {G : ℝ → Prop} {c c' : ℝ}
+    (h : S.NearCap t d G c) (hc : c ≤ c') : S.NearCap t d G c' :=
+  fun y hy hG => (h y hy hG).trans hc
+
+/-- **GP Lemma 7.5 (near field), consumer:** cells with an affine bound `dseg i` of `d`. -/
+theorem nearCap_of_cells (S : CapSource) (t : Trunc) (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    {ι : Type*} (cells : Finset ι) (lo hi : ι → ℝ) (dseg : ι → ℝ → ℝ)
+    (hcov : ∀ y ∈ Ioo (0 : ℝ) 1, G y → ∃ i ∈ cells, y ∈ Icc (lo i) (hi i))
+    (hd : ∀ i ∈ cells, ∀ y ∈ Icc (lo i) (hi i), y ∈ Ioo (0 : ℝ) 1 → G y → d y ≤ dseg i y)
+    (hf : ∀ i ∈ cells, ∀ y ∈ Icc (lo i) (hi i), y ∈ Ioo (0 : ℝ) 1 →
+      S.nearField t y + dseg i y ≤ c) :
+    S.NearCap t d G c := by
+  intro y hy hG
+  obtain ⟨i, hi, hyi⟩ := hcov y hy hG
+  have := hd i hi y hyi hy hG
+  have := hf i hi y hyi hy
+  linarith
+
+/-- Zero region of the near field, generic in the angular constant `κ ≥ 1/10`. -/
+theorem zero_near_gen {y κ : ℝ} (h0 : 0 < y) (h1 : y ≤ 1 / 10) (hκ : 1 / 10 ≤ κ) :
+    (24 / 29) * Real.log y + Real.log (1 + y) - κ ≤ -19 / 10 := by
+  have := AnalyticZero.zero_near_cap_sharp y h0 h1
+  linarith
 
 /-- Near consumer: `[1/10,1]` by the square, `(0,1/10]` by the zero geometry (fixed tail kept).
 `m` is any real below the square margin and below `9/10`; `cap >= -9783/10000`. -/
@@ -155,12 +210,16 @@ theorem nearCap_of_square (S : CapSource) (hS : S.Admissible) (t : Trunc)
     (p q s r : List ℤ) (D : ℕ) (hD : 0 < D) (cap ε : ℚ)
     (hid : SquareIdentity p q s r D cap ε)
     (hf : ∀ y ∈ Icc (1 / 10 : ℝ) 1, S.nearField t y ≤ chebSum p D (affine (1 / 10) y) + ε)
-    (m : ℝ) (hm1 : m ≤ margin r D) (hm2 : m ≤ 9 / 10) (hcap : (-9783 / 10000 : ℝ) ≤ cap) :
-    S.NearCap t ((cap : ℝ) - m) := by
-  intro y hy
+    (m : ℝ) (hm1 : m ≤ margin r D) (hm2 : m ≤ 9 / 10) (hcap : (-9783 / 10000 : ℝ) ≤ cap)
+    (hkap : (1 / 10 : ℝ) ≤ kappa Sign.pos)
+    (d : ℝ → ℝ) (G : ℝ → Prop) (c : ℝ)
+    (hd : ∀ y ∈ Ioo (0 : ℝ) 1, G y → d y ≤ c - ((cap : ℝ) - m)) :
+    S.NearCap t d G c := by
+  intro y hy hG
+  have hdy := hd y hy hG
   by_cases h : y ≤ 1 / 10
   · have g := near_zero_geometry S hS t hs hc hM hy.1 h
-    have z := AnalyticZero.zero_near_cap_sharp y hy.1 h
+    have z := zero_near_gen hy.1 h hkap
     linarith
   · push_neg at h
     have hy' : y ∈ Icc (1 / 10 : ℝ) 1 := ⟨h.le, hy.2.le⟩
@@ -170,13 +229,14 @@ theorem nearCap_of_square (S : CapSource) (hS : S.Admissible) (t : Trunc)
 
 /-! ### Exact fields from finite surrogates -/
 
-theorem ordCap_exact (S : CapSource) (hS : S.Admissible) {K : ℕ} {σ : Sign} {c : ℝ}
-    (h : S.OrdCap (Trunc.finite K) σ c) : S.OrdCap Trunc.exact σ c :=
-  fun s hs => (ord_dominates S hS K σ s hs).trans (h s hs)
+theorem ordCap_exact (S : CapSource) (hS : S.Admissible) {K : ℕ} {σ : Sign} {d : ℝ → ℝ}
+    {G : ℝ → Prop} {c : ℝ}
+    (h : S.OrdCap (Trunc.finite K) σ d G c) : S.OrdCap Trunc.exact σ d G c :=
+  fun s hs hG => (add_le_add_left (ord_dominates S hS K σ s hs) _).trans (h s hs hG)
 
-theorem nearCap_exact (S : CapSource) (hS : S.Admissible) {K : ℕ} {c : ℝ}
-    (h : S.NearCap (Trunc.finite K) c) : S.NearCap Trunc.exact c :=
-  fun y hy => (near_dominates S hS K y hy).trans (h y hy)
+theorem nearCap_exact (S : CapSource) (hS : S.Admissible) {K : ℕ} {d : ℝ → ℝ} {G : ℝ → Prop}
+    {c : ℝ} (h : S.NearCap (Trunc.finite K) d G c) : S.NearCap Trunc.exact d G c :=
+  fun y hy hG => (add_le_add_left (near_dominates S hS K y hy) _).trans (h y hy hG)
 
 /-! ### Finite-N corrections (scalar, no trial assumed) -/
 
@@ -213,9 +273,9 @@ theorem near_terminal_compact (N : ℕ) (hN : 3 ≤ N) {y H F cap m : ℝ}
   linarith
 
 /-- Zero region, every `N >= 1`: from the source geometry for `H`, with the fixed tail `E <= 1/100`. -/
-theorem near_terminal_zero (N : ℕ) (hN : 1 ≤ N) {y H E cap : ℝ} (hy0 : 0 < y) (hy1 : y ≤ 1 / 10)
-    (hE : E ≤ 1 / 100)
-    (hH : H ≤ (24 / 29) * Real.log y + Real.log (1 + y) - 29557 / 200000 + E)
+theorem near_terminal_zero (N : ℕ) (hN : 1 ≤ N) {y H E cap κ : ℝ} (hy0 : 0 < y)
+    (hy1 : y ≤ 1 / 10) (hκ : 1 / 10 ≤ κ) (hE : E ≤ 1 / 100)
+    (hH : H ≤ (24 / 29) * Real.log y + Real.log (1 + y) - κ + E)
     (hcap : (-9783 / 10000 : ℝ) ≤ cap) :
     H + (Real.log (1 + y ^ 2) - Real.log y) / (58 * N) ≤ cap + Real.log 2 / (58 * N) := by
   have hN' : (1 : ℝ) ≤ N := by exact_mod_cast hN
