@@ -5,6 +5,7 @@ public import CatalanMeasure.GenD.Signed.RouteI.CapSourceData
 public import CatalanMeasure.GenD.Signed.RouteI.InterceptSource
 public import CatalanMeasure.GenD.Signed.RouteI.Literals
 public import CatalanMeasure.GenD.DesignInstance.PositiveCert.Data
+public import CatalanMeasure.GenD.Signed.RouteI.GasEnergyHi
 
 @[expose] public section
 
@@ -18,8 +19,13 @@ The concrete test and the instance of the near bound at the source record of `Ca
   minorants are certified by an exact integer subdivision check (`checkZ`).
 * `anchorIntercept_refQuad`: PROOF-RI 12.26, the anchor intercept in moment form is
   `- refQuad`.
-* `selected_free_capSource`, `freeNear_capSource`: the instance.  The budget uses anchor `0` alone,
-  with the retained mass square.
+* Design C (G27, 7 Nov 2026): the 295 proof shape (`phaseDelta`, `delta_bound`, `phase_margin`,
+  `one_margin`, `budget_anchor0`, `selected_free_capSource`, `freeNear_capSource`; archived in
+  `archive/CatalanArchive/GenD/Signed/RouteI/T4Instance295.lean.txt`) is replaced by the cover of
+  GP §9: `QP`/`PolyNonneg`/`polyNonneg_of_ints` (a leaf proves `checkZ zs f 0 0 = true` by a kernel decision on an integer list),
+  `net_cells` (Lemma 8.1), and the discharges `sig_cells1/2`, `hbud_of_sigV`, `hI_of_moves` (a),
+  `wV_cells`, `oldBound_budget_of_wV`, `first_budget_of_wV` (b), (e), `phys_cells`, `hphase_arith`,
+  `hone_arith` (c), (d).  Every literal is a parameter.
 -/
 
 namespace CatalanMeasure.GenD.Signed.RouteI.T4Instance
@@ -1088,49 +1094,6 @@ theorem aB_zero : aB capSource 0 = 1 := by
   rw [h]
   field_simp
 
-/-! ### The deficit -/
-
-/-- The piecewise deficit. -/
-def phaseDelta (α : ℝ) : ℝ := if α ≤ 143 / 2000 then 11 / 1600 else 177 / 50000
-
-theorem T296_eq : T296 = 563964709 / 250000000 + 57783 / 2500 / 58 ^ 2 := by
-  norm_num [T296, K590.target, shift296]
-
-theorem delta_bound {Nc Fc r nc α β : ℝ} (hN : Nc ≤ 1547241039 / 2000000000)
-    (hF : Fc ≤ -253949899 / 100000000) (hr : r ≤ -315531 / 5000000) (hn : nc ≤ -7563 / 10000)
-    (hα : α ∈ Set.Icc (0 : ℝ) (51 / 500)) (hβ : β ∈ Set.Icc (0 : ℝ) α) :
-    oldBound P58 Nc Fc r nc α β ≤
-      -T296 + Real.log 2 / 2 + 58 * cost296 / 58 * α + phaseDelta α := by
-  obtain ⟨hα0, hα1⟩ := hα
-  obtain ⟨hβ0, hβ1⟩ := hβ
-  have g0 : gC0 P58 = 6 / 29 := Instances.d58_gC0
-  have g1 : gC1 P58 = 47 / 29 := Instances.d58_gC1
-  have hlo := Real.log_two_gt_d9
-  have hhi := Real.log_two_lt_d9
-  unfold oldBound
-  rw [g0, g1, T296_eq]
-  set L := Real.log 2
-  have a1 : (1 - α) * Fc ≤ (1 - α) * (-253949899 / 100000000) :=
-    mul_le_mul_of_nonneg_left hF (by linarith)
-  have a2 : (α - β) * r ≤ (α - β) * (-315531 / 5000000) :=
-    mul_le_mul_of_nonneg_left hr (by linarith)
-  have a3 : β * nc ≤ β * (-7563 / 10000) := mul_le_mul_of_nonneg_left hn hβ0
-  have b0 : (1 - β) * L + 315531 / 5000000 - 7563 / 10000 ≤ 0 := by nlinarith
-  have b1 : β * ((1 - β) * L + 315531 / 5000000 - 7563 / 10000) ≤ 0 :=
-    mul_nonpos_of_nonneg_of_nonpos hβ0 b0
-  have c1 : α * L ≤ α * 0.6931471808 := mul_le_mul_of_nonneg_left hhi.le hα0
-  have c2 : α ^ 2 * 0.6931471803 ≤ α ^ 2 * L :=
-    mul_le_mul_of_nonneg_left hlo.le (by positivity)
-  have ec : 58 * cost296 / 58 = 3596893 / 1000000 := by norm_num [cost296]
-  rw [ec]
-  unfold phaseDelta
-  split_ifs with hc
-  · nlinarith [sq_nonneg (α - 1 / 480)]
-  · have hc' : 143 / 2000 < α := not_le.mp hc
-    nlinarith [mul_nonneg hα0 (sub_nonneg.mpr hc'.le)]
-
-/-! ### Phase margins -/
-
 theorem testF_zero_val : testF 0 = 992223195 / 2 ^ 30 := by
   have e : Cl.getD 0 0 = 992223195 := by decide +kernel
   simp only [testF, if_true, e]
@@ -1166,85 +1129,6 @@ theorem phase_rhs_le : Real.arctan (1 / 4) + 5 / 29 * Real.arctan 4 +
   norm_num
   linarith
 
-theorem phase_margin {p : ℕ → ℝ} (hp : p = trialSeqS Cert590.Pc Cert590.P) {α : ℝ}
-    (hα : α ∈ Set.Icc (0 : ℝ) (51 / 500)) :
-    Real.arctan (1 / 4) + 5 / 29 * Real.arctan 4 +
-        (17 / 4) * (1 / 100) ^ 2 / (1 - (1 / 100) ^ 2) + 1 / 1000 ≤
-      testF 0 / 2 + (∑' k : ℕ, testF (k + 1) * p (k + 1)) -
-        Real.sqrt (testT.H * (phaseDelta α / 2)) - α * testF 0 / 4 -
-          (0 : ℝ) * (phaseDelta α / 1) := by
-  have hU := U_lower
-  rw [← hp] at hU
-  have hH := testH_le
-  have hH0 := testH_nonneg
-  have h0 := phase_rhs_le
-  obtain ⟨hα0, hα1⟩ := hα
-  rw [testF_zero_val]
-  unfold phaseDelta
-  split_ifs with hc
-  · have hs : Real.sqrt (testT.H * (11 / 1600 / 2)) ≤ 521 / 10000 := by
-      rw [Real.sqrt_le_iff]
-      constructor
-      · norm_num
-      · nlinarith
-    norm_num at hs ⊢
-    nlinarith
-  · have hs : Real.sqrt (testT.H * (177 / 50000 / 2)) ≤ 374 / 10000 := by
-      rw [Real.sqrt_le_iff]
-      constructor
-      · norm_num
-      · nlinarith
-    norm_num at hs ⊢
-    nlinarith
-
-theorem one_margin {p : ℕ → ℝ} (hp : p = trialSeqS Cert590.Pc Cert590.P) {α : ℝ}
-    (hα : α ∈ Set.Icc (0 : ℝ) (51 / 500)) :
-    1 - (1 - α + p 2 - Real.sqrt (2 * (phaseDelta α / 2))) / 2 + 1 / 1000 ≤ 5 / 6 * (48 / 58) := by
-  have hu := u2_lower
-  rw [← hp] at hu
-  obtain ⟨hα0, hα1⟩ := hα
-  unfold phaseDelta
-  split_ifs with hc
-  · have hs : Real.sqrt (2 * (11 / 1600 / 2)) ≤ 83 / 1000 := by
-      rw [Real.sqrt_le_iff]
-      norm_num
-    norm_num at hs ⊢
-    linarith
-  · have hs : Real.sqrt (2 * (177 / 50000 / 2)) ≤ 6 / 100 := by
-      rw [Real.sqrt_le_iff]
-      norm_num
-    norm_num at hs ⊢
-    linarith
-
-/-! ### The budget, from the caps at anchor `0` -/
-
-theorem budget_anchor0 {gasI : ℝ} {anchI : Fin 2 → ℝ}
-    (B : capSource.CapBundle Trunc.exact gasI anchI)
-    (hrc : B.rowCap 0 + B.colCap 0 ≤ -5526387 / 1000000)
-    (hm : markCap B ≤ -976 / 1000) (hi : B.anchICap 0 + B.gasICap ≤ 2367346 / 1000000) :
-    ∀ α ∈ Set.Icc (0 : ℝ) (51 / 500), ∃ a, capBudget B a α ≤
-      -T296 + Real.log 2 / 2 + 58 * cost296 * α / 58 := by
-  intro α hα
-  refine ⟨0, ?_⟩
-  obtain ⟨hα0, hα1⟩ := hα
-  unfold capBudget
-  rw [aB_zero, T296_eq]
-  have hlo := Real.log_two_gt_d9
-  have hhi := Real.log_two_lt_d9
-  set L := Real.log 2
-  have a1 : (1 - α) * (B.rowCap 0 + B.colCap 0) ≤ (1 - α) * (-5526387 / 1000000) :=
-    mul_le_mul_of_nonneg_left hrc (by linarith)
-  have a2 : α * markCap B ≤ α * (-976 / 1000) := mul_le_mul_of_nonneg_left hm hα0
-  have c1 : α * 0.6931471803 ≤ α * L := mul_le_mul_of_nonneg_left hlo.le hα0
-  have c2 : 0 ≤ α ^ 2 * L := by positivity
-  have ec : 58 * cost296 * α / 58 = 3596893 / 1000000 * α := by
-    norm_num [cost296]
-    ring
-  rw [ec]
-  nlinarith
-
-/-! ### The instance -/
-
 /-- `G58` inside `[-1,1]`. -/
 def G58in (y : ℝ) : Prop := G58 y ∧ y ∈ Set.Icc (-1 : ℝ) 1
 
@@ -1263,85 +1147,588 @@ theorem G58in_ord (y : ℝ) (h : G58in y) :
     · linarith
     · linarith
 
-/-- The retained second bounds on the smaller set. -/
-def restrictG {P : CatalanMeasure.Parametric.Parameters} {α1 t r nc c : ℝ} {G G' : ℝ → Prop}
-    (h : ∀ y, G' y → G y) (D : SecondTrialBoundsEnd P α1 t r nc c G) :
-    SecondTrialBoundsEnd P α1 t r nc c G' :=
-  { D with marked := fun {_} hN {_} hx hg => D.marked hN hx (h _ hg) }
-
-theorem selected_restrict {P : CatalanMeasure.Parametric.Parameters} {t c : ℝ} {G G' : ℝ → Prop}
+theorem selected_restrict {P : CatalanMeasure.Parametric.Parameters} {ζ : ℝ} {δ : ℝ → ℝ}
+    {target cost : ℝ} {G G' : ℝ → Prop}
     {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
     (h : ∀ y ∈ Set.Ioo (-1 : ℝ) 1, G y → G' y)
-    (hs : SelectedFreeProductCostOnRestr P t c G' Q) : SelectedFreeProductCostOnRestr P t c G Q := by
+    (hs : SelectedFreeProductCostOnRestr P ζ δ target cost G' Q) :
+    SelectedFreeProductCostOnRestr P ζ δ target cost G Q := by
   intro ε hε
   filter_upwards [hs ε hε] with N hN
-  intro p m hpm x y s hx hx0 hy hy0 hyG
-  exact hN p m hpm x y s hx hx0 hy hy0 fun j => h _ (hy j) (hyG j)
+  intro p m hpm x y s hx hx0 hy hy0 hyG hs' hzi hsi hcase hQ sel
+  exact hN p m hpm x y s hx hx0 hy hy0 (fun j => h _ (hy j) (hyG j)) hs' hzi hsi hcase hQ sel
 
 /-- The intercept of the completed gas at the two anchors. -/
 def anchorVal (a : Fin 2) : ℝ := anchorIntercept (aB capSource a) (aT capSource a) (aV capSource a)
 
-/-- **`selected_free_product` at `capSource`.**  What remains: the caps of `B` with the three
-scalar values at anchor `0`, the retained second bounds with the K590 values, and `PhaseHole`. -/
-theorem selected_free_capSource
-    (B : capSource.CapBundle Trunc.exact (gasConst capSource) anchorVal)
-    (hang : ∀ σ, B.angCap σ ≤ kappa σ)
-    (hrc : B.rowCap 0 + B.colCap 0 ≤ -5526387 / 1000000)
-    (hm : markCap B ≤ -976 / 1000) (hi : B.anchICap 0 + B.gasICap ≤ 2367346 / 1000000)
-    {t₀ residual nearCap c₀ : ℝ}
-    (D : SecondTrialBoundsEnd P58 alpha296 t₀ residual nearCap c₀ G58)
-    (hDp : D.p = trialSeqS Cert590.Pc Cert590.P)
-    (hDn : D.normCap ≤ 1547241039 / 2000000000) (hDf : D.fieldCap ≤ -253949899 / 100000000)
-    (hres : residual ≤ -315531 / 5000000) (hnear : nearCap ≤ -7563 / 10000)
-    {Q : ∀ (N p m : ℕ), (Fin p → ℝ) → (Fin m → ℝ) → (Fin p → ℝ) → Prop}
-    (hQ : ∀ N p m x y s, Q N p m x y s → (m : ℝ) ≤ alpha296 * (P58.n N : ℝ))
-    (hole : CatalanMeasure.GenD.Signed.PhysicalPick.PhaseHole) :
-    SelectedFreeProductCostOnRestr P58 T296 (58 * cost296) G58 Q := by
-  refine selected_restrict (G' := G58in) (fun y hy hg => ⟨hg, hy.1.le, hy.2.le⟩) ?_
-  let D' := restrictG (G' := G58in) (fun y h => h.1) D
-  exact selected_free_product capSource_admissible foldSeed_capSource colCell_capSource B hang
-    le_rfl (fun _ => le_rfl) (budget_anchor0 B hrc hm hi) G58in_ord D' testT
-    (ξ := 1 / 1000) (d := 1) (Δ := phaseDelta) (by norm_num) one_pos
-    (fun α hα β hβ => delta_bound hDn hDf hres hnear hα hβ)
-    (fun α hα => phase_margin hDp hα) (fun α hα => one_margin hDp hα)
-    (Filter.Eventually.of_forall fun N x hx => by simp [testT] at hx)
-    (fun y _ hy => by simpa [testT] using hy.le) hQ
-    (fun w e hinj h0 h1 _ hstat =>
-      CatalanMeasure.GenD.Signed.PhysicalPick.pickWindow_of_phaseHole hole hinj h0 h1 e hstat)
 
-/-- The near bound of `Theorem296`, for any node restriction. -/
-theorem freeNear_capSource
-    (B : capSource.CapBundle Trunc.exact (gasConst capSource) anchorVal)
-    (hang : ∀ σ, B.angCap σ ≤ kappa σ)
-    (hrc : B.rowCap 0 + B.colCap 0 ≤ -5526387 / 1000000)
-    (hm : markCap B ≤ -976 / 1000) (hi : B.anchICap 0 + B.gasICap ≤ 2367346 / 1000000)
-    {t₀ residual nearCap c₀ : ℝ}
-    (D : SecondTrialBoundsEnd P58 alpha296 t₀ residual nearCap c₀ G58)
-    (hDp : D.p = trialSeqS Cert590.Pc Cert590.P)
-    (hDn : D.normCap ≤ 1547241039 / 2000000000) (hDf : D.fieldCap ≤ -253949899 / 100000000)
-    (hres : residual ≤ -315531 / 5000000) (hnear : nearCap ≤ -7563 / 10000)
-    (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop)
-    (hole : CatalanMeasure.GenD.Signed.PhysicalPick.PhaseHole) :
-    FreeNearBound P58 G58 Nd T296 (58 * cost296) alpha296 :=
-  hnear296 (selected_free_capSource B hang hrc hm hi D hDp hDn hDf hres hnear
-    (fun _ _ _ _ _ _ h => h.1) hole)
+/-! ### Design-C T4 cover, layer 1: rational polynomials, a cover check, and the cell net
 
-end
-end CatalanMeasure.GenD.Signed.RouteI.T4Instance
+`QP` is a rational polynomial (constant term first).  `polyNonneg_of_ints` is what a leaf
+module uses: it rescales `p` on `[A, B]` to `[0, 1]`, clears denominators in Python (integer list
+`zs`) and runs `checkZ` from the root cell.  `net_cells` is Lemma 8.1 of the package in the form the cells of
+`Family` need: a finite partition on which the diagonal check survives at the right end. -/
 
-namespace CatalanMeasure.GenD.Signed.RouteI.T4Instance
 
-open Finset Filter CatalanMeasure.GenD.Signed.RouteI.CompletedGas CatalanMeasure.CellCert
-open CatalanMeasure.GenD CatalanMeasure.GenD.D58 CatalanMeasure.GenD.Analytic
-open CatalanMeasure.GenD.Signed.RouteI.CapFields CatalanMeasure.GenD.Signed.RouteI.CapSourceData
-open CatalanMeasure.GenD.Signed.RouteI.InterceptSource
+section CoverLayer
+open Set
 
-noncomputable section
+abbrev QP := List ℚ
 
-/-! ### Anchor `1` needs no data
+def evalQ : QP → ℝ → ℝ
+  | [], _ => 0
+  | a :: p, x => (a : ℝ) + x * evalQ p x
 
-The budget uses anchor `0` alone, so the anchor-`1` entries of `CapBundle` only have to exist.  The
-free fields are bounded above at every anchor; no value is needed. -/
+def addQ : QP → QP → QP
+  | [], q => q
+  | a :: p, [] => a :: p
+  | a :: p, b :: q => (a + b) :: addQ p q
+
+def smulQ (c : ℚ) (p : QP) : QP := p.map (c * ·)
+
+def mulQ : QP → QP → QP
+  | [], _ => []
+  | a :: p, q => addQ (smulQ a q) (0 :: mulQ p q)
+
+/-- `p (A + B w)`. -/
+def compQ (A B : ℚ) : QP → QP
+  | [] => []
+  | a :: p => addQ [a] (mulQ [A, B] (compQ A B p))
+
+@[simp] theorem evalQ_nil (x : ℝ) : evalQ [] x = 0 := rfl
+@[simp] theorem evalQ_cons (a : ℚ) (p : QP) (x : ℝ) : evalQ (a :: p) x = (a : ℝ) + x * evalQ p x := rfl
+
+theorem evalQ_addQ (p q : QP) (x : ℝ) : evalQ (addQ p q) x = evalQ p x + evalQ q x := by
+  induction p generalizing q with
+  | nil => simp [addQ]
+  | cons a p ih =>
+    cases q with
+    | nil => simp [addQ]
+    | cons b q => simp only [addQ, evalQ_cons, ih]; push_cast; ring
+
+theorem evalQ_smulQ (c : ℚ) (p : QP) (x : ℝ) : evalQ (smulQ c p) x = c * evalQ p x := by
+  induction p with
+  | nil => simp [smulQ]
+  | cons a p ih =>
+    simp only [smulQ, List.map_cons, evalQ_cons] at ih ⊢
+    rw [ih]; push_cast; ring
+
+theorem evalQ_mulQ (p q : QP) (x : ℝ) : evalQ (mulQ p q) x = evalQ p x * evalQ q x := by
+  induction p with
+  | nil => simp [mulQ]
+  | cons a p ih =>
+    simp only [mulQ, evalQ_addQ, evalQ_smulQ, evalQ_cons, ih]; ring
+
+theorem evalQ_compQ (A B : ℚ) (p : QP) (w : ℝ) : evalQ (compQ A B p) w = evalQ p (A + B * w) := by
+  induction p with
+  | nil => simp [compQ]
+  | cons a p ih =>
+    simp only [compQ, evalQ_addQ, evalQ_mulQ, evalQ_cons, ih, evalQ_nil]; ring
+
+/-- The statement a leaf proves. -/
+def PolyNonneg (p : QP) (A B : ℚ) : Prop := ∀ x : ℝ, (A : ℝ) ≤ x → x ≤ B → 0 ≤ evalQ p x
+
+/-- A leaf.  `zs` is the integer list of `w ↦ D · p (A + (B - A) w)` (the identity `hz` is proved by
+`norm_num` on the coefficients; the kernel never does rational arithmetic, which it cannot
+normalise in this setting), and `checkZ zs f 0 0` is the kernel check from the root cell. -/
+theorem polyNonneg_of_ints {p : QP} {A B D : ℚ} (hAB : A < B) (hD : 0 < D) {zs : List ℤ} {f : ℕ}
+    (hz : ∀ w : ℝ, evalZ zs w = D * evalQ p (A + (B - A) * w))
+    (h : checkZ zs f 0 0 = true) : PolyNonneg p A B := by
+  intro x hx1 hx2
+  have hBA : (0 : ℝ) < (B : ℝ) - A := by
+    have : (A : ℝ) < B := by exact_mod_cast hAB
+    linarith
+  set w : ℝ := (x - A) / ((B : ℝ) - A) with hw
+  have hw0 : (0 : ℝ) / 2 ^ 0 ≤ w := by
+    simp only [pow_zero, div_one, zero_div]; exact div_nonneg (by linarith) hBA.le
+  have hw1 : w ≤ (((0 : ℤ) : ℝ) + 1) / 2 ^ 0 := by
+    simp only [Int.cast_zero, zero_add, pow_zero, div_one]
+    rw [hw, div_le_one hBA]; linarith
+  have hz0 := checkZ_sound (m := 0) (s := 0) h (by simpa using hw0) hw1
+  rw [hz] at hz0
+  have hD' : (0 : ℝ) < D := by exact_mod_cast hD
+  have hx : (A : ℝ) + ((B : ℝ) - A) * w = x := by
+    rw [hw]; field_simp; ring
+  rw [hx] at hz0
+  by_contra hneg
+  have := mul_neg_of_pos_of_neg hD' (not_le.mp hneg)
+  linarith
+
+/-- **Lemma 8.1, strict form.**  If `S` is continuous and positive on the diagonal of `[A, B]`,
+the uniform partition into `n` cells has `S α b_i ≥ 0` for every `α` of the cell `i` (right end
+`b_i`). -/
+theorem net_cells {A B : ℝ} (hAB : A < B) {S : ℝ → ℝ → ℝ}
+    (hS : ContinuousOn (fun q : ℝ × ℝ => S q.1 q.2) (Icc A B ×ˢ Icc A B))
+    (hdiag : ∀ α ∈ Icc A B, 0 < S α α) :
+    ∃ n : ℕ, 0 < n ∧ ∀ i : ℕ, i < n →
+      ∀ α ∈ Icc (A + (B - A) * i / n) (A + (B - A) * (i + 1) / n),
+        0 ≤ S α (A + (B - A) * (i + 1) / n) := by
+  have hK : IsCompact (Icc A B) := isCompact_Icc
+  have hd : ContinuousOn (fun α => S α α) (Icc A B) :=
+    hS.comp (continuousOn_id.prodMk continuousOn_id) (fun α hα => ⟨hα, hα⟩)
+  obtain ⟨α0, hα0, hmin⟩ := hK.exists_isMinOn ⟨A, left_mem_Icc.mpr hAB.le⟩ hd
+  set η := S α0 α0 with hη
+  have hηpos : 0 < η := hdiag α0 hα0
+  have hKK : IsCompact (Icc A B ×ˢ Icc A B) := hK.prod hK
+  have huc := hKK.uniformContinuousOn_of_continuous hS
+  rw [Metric.uniformContinuousOn_iff] at huc
+  obtain ⟨δ, hδ, hu⟩ := huc η hηpos
+  obtain ⟨n, hn⟩ := exists_nat_gt ((B - A) / δ)
+  have hn0 : 0 < n := by
+    have : 0 < (B - A) / δ := div_pos (by linarith) hδ
+    exact_mod_cast this.trans hn
+  have hnR : (0 : ℝ) < n := by exact_mod_cast hn0
+  refine ⟨n, hn0, fun i hi α hα => ?_⟩
+  set h : ℝ := (B - A) / n with hh
+  have hhδ : h < δ := by
+    rw [hh, div_lt_iff₀ hnR]
+    have := (div_lt_iff₀ hδ).mp hn
+    linarith
+  have hiR : (i : ℝ) + 1 ≤ n := by exact_mod_cast hi
+  have hhpos : 0 < h := div_pos (by linarith) hnR
+  have e1 : A + (B - A) * (i : ℝ) / n = A + h * i := by rw [hh]; ring
+  have e2 : A + (B - A) * ((i : ℝ) + 1) / n = A + h * ((i : ℝ) + 1) := by rw [hh]; ring
+  rw [e1, e2] at hα
+  rw [e2]
+  have hbB : A + h * ((i : ℝ) + 1) ≤ B := by
+    have : h * ((i : ℝ) + 1) ≤ h * n := mul_le_mul_of_nonneg_left hiR hhpos.le
+    have e : h * (n : ℝ) = B - A := by rw [hh]; field_simp
+    linarith
+  have hbA : A ≤ A + h * ((i : ℝ) + 1) := by
+    have : 0 ≤ h * ((i : ℝ) + 1) := by positivity
+    linarith
+  have hαm : α ∈ Icc A B := ⟨by
+    have : 0 ≤ h * (i : ℝ) := by positivity
+    linarith [hα.1], by linarith [hα.2]⟩
+  have hdist : dist (α, α) (α, A + h * ((i : ℝ) + 1)) < δ := by
+    rw [Prod.dist_eq]
+    simp only [dist_self, Real.dist_eq]
+    refine max_lt hδ ?_
+    rw [abs_of_nonpos (by linarith [hα.2])]
+    have : h * ((i : ℝ) + 1) - h * (i : ℝ) = h := by ring
+    linarith [hα.1]
+  have hk := hu (α, α) ⟨hαm, hαm⟩ (α, A + h * ((i : ℝ) + 1)) ⟨hαm, hbA, hbB⟩ hdist
+  rw [Real.dist_eq] at hk
+  have h1 := (abs_lt.mp hk).2
+  have h2 : η ≤ S α α := hmin hαm
+  simp only at h1
+  linarith
+
+end CoverLayer
+
+/-! ### Layer 2: GP §9(a), the signed budget on `[0, α₁]`
+
+The literals of the signed cover (`SigLits`) are parameters: the cap literals `c₀ᴿ … c₂ᶜ` are F until
+the certified row, `I₁` is `GasEnergyHi.hi_final`, and `L₀ … Q₁₁` are the moved-intercept moments of
+`anchorIntercept_move` (E2).  The check polynomials `sigP1`, `sigP2` are `σ α − η − V` for the two
+pieces `[0, α_e]` (with `t = α/α_e`) and `[α_e, α₁]`; a leaf proves `PolyNonneg` of each by
+`polyNonneg_of_ints`. -/
+
+section SignedCover
+open Set CatalanMeasure.GenD CatalanMeasure.GenD.D58
+
+def hiQ : ℚ := 6931471808 / 10000000000
+def tQ : ℚ := 563964709 / 250000000 + (616 / 25) / 3364
+def c2Q : ℚ := 3596893 / 1000000
+def MQ : ℚ := -976 / 1000
+def aeQ : ℚ := 1 / 25
+def a1Q : ℚ := 51 / 500
+
+structure SigLits where
+  σ : ℚ
+  η : ℚ
+  I1 : ℚ
+  L0 : ℚ
+  L1 : ℚ
+  Q00 : ℚ
+  Q01 : ℚ
+  Q11 : ℚ
+  c0R : ℚ
+  c1R : ℚ
+  c0C : ℚ
+  c1C : ℚ
+  c2C : ℚ
+
+theorem T296_eq' : T296 = (tQ : ℝ) := by
+  norm_num [T296, K590.target, shift296, tQ]
+
+/-- `V_S = Bud − σ α` at the cell constants (`J` the intercept plus gas constant, `r`, `c` the row and
+column caps), with `log 2` replaced by its upper bound and the marked cap by `-976/1000`. -/
+def sigV (J r c α : ℝ) : ℝ :=
+  J - 3 / 2 * α ^ 2 * hiQ + (1 - α) * (r + c) + α * MQ +
+    hiQ * (75 / 58 * (1 - α) + (1 - α) ^ 2 / 2 + 53 / 58 * α) + tQ - hiQ / 2 - c2Q * α
+
+/-- Piece 1, `α ∈ [0, α_e]`, `t = β / α_e`. -/
+def sigJ1 (l : SigLits) (β : ℝ) : ℝ :=
+  (l.I1 + l.L0 + l.Q00) + (β / aeQ) * (l.L1 + 2 * l.Q01) + (β / aeQ) ^ 2 * l.Q11
+def sigR1 (l : SigLits) (β : ℝ) : ℝ := l.c0R + (β / aeQ) * (l.c1R - l.c0R)
+def sigC1 (l : SigLits) (β : ℝ) : ℝ := l.c0C + (β / aeQ) * (l.c1C - l.c0C)
+/-- Piece 2, `α ∈ [α_e, α₁]`, `τ = 1`, `u = (β - α_e) / (α₁ - α_e)`. -/
+def sigJ2 (l : SigLits) : ℝ := l.I1 + l.L0 + l.Q00 + l.L1 + 2 * l.Q01 + l.Q11
+def sigC2 (l : SigLits) (β : ℝ) : ℝ := l.c1C + ((β - aeQ) / (a1Q - aeQ)) * (l.c2C - l.c1C)
+
+/-- The polynomial `α ↦ V_S(α)` of the two pieces, as `QP`. -/
+def sigVq (J r c : QP) : QP :=
+  addQ J (addQ (smulQ (-(3 / 2) * hiQ) (mulQ [0, 1] [0, 1]))
+    (addQ (mulQ [1, -1] (addQ r c))
+      (addQ (smulQ MQ [0, 1])
+        (addQ (smulQ hiQ (addQ (smulQ (75 / 58) [1, -1]) (addQ (smulQ (1 / 2) (mulQ [1, -1] [1, -1]))
+          (smulQ (53 / 58) [0, 1]))))
+          [tQ - hiQ / 2, -c2Q]))))
+
+theorem evalQ_sigVq (J r c : QP) (α : ℝ) :
+    evalQ (sigVq J r c) α = sigV (evalQ J α) (evalQ r α) (evalQ c α) α := by
+  simp only [sigVq, sigV, evalQ_addQ, evalQ_smulQ, evalQ_mulQ, evalQ_cons, evalQ_nil]
+  push_cast
+  ring
+
+def sigJ1q (l : SigLits) : QP :=
+  [l.I1 + l.L0 + l.Q00, 25 * (l.L1 + 2 * l.Q01), 625 * l.Q11]
+def sigR1q (l : SigLits) : QP := [l.c0R, 25 * (l.c1R - l.c0R)]
+def sigC1q (l : SigLits) : QP := [l.c0C, 25 * (l.c1C - l.c0C)]
+def sigC2q (l : SigLits) : QP :=
+  [l.c1C - aeQ / (a1Q - aeQ) * (l.c2C - l.c1C), (l.c2C - l.c1C) / (a1Q - aeQ)]
+
+/-- The check polynomial of piece 1: `σ α − η − V_S`. -/
+def sigP1 (l : SigLits) : QP :=
+  addQ [-l.η] (addQ (smulQ l.σ [0, 1]) (smulQ (-1) (sigVq (sigJ1q l) (sigR1q l) (sigC1q l))))
+def sigP2 (l : SigLits) : QP :=
+  addQ [-l.η] (addQ (smulQ l.σ [0, 1]) (smulQ (-1) (sigVq [l.I1 + l.L0 + l.Q00 + l.L1 + 2 * l.Q01 + l.Q11]
+    [l.c1R] (sigC2q l))))
+
+theorem sigP1_eval (l : SigLits) (α : ℝ) :
+    evalQ (sigP1 l) α = l.σ * α - l.η - sigV (sigJ1 l α) (sigR1 l α) (sigC1 l α) α := by
+  simp only [sigP1, evalQ_addQ, evalQ_smulQ, evalQ_sigVq, evalQ_cons, evalQ_nil, sigJ1q, sigR1q,
+    sigC1q, sigJ1, sigR1, sigC1, aeQ]
+  push_cast
+  ring_nf
+
+theorem sigP2_eval (l : SigLits) (α : ℝ) :
+    evalQ (sigP2 l) α = l.σ * α - l.η - sigV (sigJ2 l) l.c1R (sigC2 l α) α := by
+  simp only [sigP2, evalQ_addQ, evalQ_smulQ, evalQ_sigVq, evalQ_cons, evalQ_nil, sigC2q, sigC2,
+    sigJ2, aeQ, a1Q]
+  push_cast
+  ring_nf
+
+/-- **Piece 1 of GP §9(a).**  The check on `[0, α_e]` gives a partition on which the budget polynomial
+at the cell constants (taken at the right end `b_i`, `τ_i = b_i / α_e`, `γ_i = b_i`) is `≤ σ α`. -/
+theorem sig_cells1 (l : SigLits) (hη : 0 < l.η) (hP : PolyNonneg (sigP1 l) 0 aeQ) :
+    ∃ n : ℕ, 0 < n ∧ ∀ i : ℕ, i < n →
+      ∀ α ∈ Icc (0 + ((aeQ : ℝ) - 0) * i / n) (0 + ((aeQ : ℝ) - 0) * (i + 1) / n),
+        sigV (sigJ1 l (0 + ((aeQ : ℝ) - 0) * (i + 1) / n)) (sigR1 l (0 + ((aeQ : ℝ) - 0) * (i + 1) / n))
+          (sigC1 l (0 + ((aeQ : ℝ) - 0) * (i + 1) / n)) α ≤ l.σ * α := by
+  have hae : (0 : ℝ) < aeQ := by norm_num [aeQ]
+  obtain ⟨n, hn, h⟩ := net_cells (A := 0) (B := (aeQ : ℝ)) hae
+    (S := fun α β => l.σ * α - sigV (sigJ1 l β) (sigR1 l β) (sigC1 l β) α)
+    (by unfold sigV sigJ1 sigR1 sigC1; fun_prop)
+    (fun α hα => by
+      have := hP α (by simpa using hα.1) (by exact hα.2)
+      rw [sigP1_eval] at this
+      beta_reduce
+      have hη' : (0 : ℝ) < l.η := by exact_mod_cast hη
+      linarith)
+  exact ⟨n, hn, fun i hi α hα => by have := h i hi α hα; beta_reduce at this; linarith⟩
+
+theorem sig_cells2 (l : SigLits) (hη : 0 < l.η) (hP : PolyNonneg (sigP2 l) aeQ a1Q) :
+    ∃ n : ℕ, 0 < n ∧ ∀ i : ℕ, i < n →
+      ∀ α ∈ Icc ((aeQ : ℝ) + ((a1Q : ℝ) - aeQ) * i / n) ((aeQ : ℝ) + ((a1Q : ℝ) - aeQ) * (i + 1) / n),
+        sigV (sigJ2 l) l.c1R (sigC2 l ((aeQ : ℝ) + ((a1Q : ℝ) - aeQ) * (i + 1) / n)) α ≤ l.σ * α := by
+  have hae : (aeQ : ℝ) < a1Q := by norm_num [aeQ, a1Q]
+  obtain ⟨n, hn, h⟩ := net_cells (A := (aeQ : ℝ)) (B := (a1Q : ℝ)) hae
+    (S := fun α β => l.σ * α - sigV (sigJ2 l) l.c1R (sigC2 l β) α)
+    (by unfold sigV sigC2; fun_prop)
+    (fun α hα => by
+      have := hP α hα.1 hα.2
+      rw [sigP2_eval] at this
+      beta_reduce
+      have hη' : (0 : ℝ) < l.η := by exact_mod_cast hη
+      linarith)
+  exact ⟨n, hn, fun i hi α hα => by have := h i hi α hα; beta_reduce at this; linarith⟩
+
+/-- From `V_S ≤ σ α` to the budget of `capBudget` at `b = 1`. -/
+theorem budget_of_sigV {ℓ J M r c α I gI σ : ℝ} (hlo : 6931471803 / 10000000000 < ℓ)
+    (hhi : ℓ < 6931471808 / 10000000000) (hα0 : 0 ≤ α) (hα1 : α ≤ 51 / 500)
+    (hM : M ≤ -976 / 1000) (hJ : I + gI ≤ J) (hV : sigV J r c α ≤ σ * α) :
+    I - 3 / 2 * (1 - α - 1) ^ 2 * ℓ + (1 - α) * (r + c) + α * M +
+        ℓ * (75 / 58 * (1 - α) + (1 - α) ^ 2 / 2 + 53 / 58 * α) + gI ≤
+      -((tQ : ℝ)) + ℓ / 2 + (c2Q + σ) * α := by
+  unfold sigV at hV
+  have hκ : 0 ≤ -(3 / 2) * α ^ 2 + 75 / 58 * (1 - α) + (1 - α) ^ 2 / 2 + 53 / 58 * α - 1 / 2 := by
+    nlinarith
+  have h1 : (ℓ - hiQ) * (-(3 / 2) * α ^ 2 + 75 / 58 * (1 - α) + (1 - α) ^ 2 / 2 + 53 / 58 * α - 1 / 2) ≤ 0 :=
+    mul_nonpos_of_nonpos_of_nonneg (by norm_num [hiQ] at *; linarith) hκ
+  have h2 : α * M ≤ α * MQ := mul_le_mul_of_nonneg_left (by norm_num [MQ]; linarith) hα0
+  norm_num [hiQ, MQ, c2Q] at h1 h2 hV ⊢
+  nlinarith [h1, h2, hV, hJ]
+
+end SignedCover
+
+/-! ### Layer 3: the unsigned cells, GP §9(b), (c), (d), (e)
+
+All four are one real function.  With the cell constants `nC` (norm cap), `fC` (field cap), `rs`
+(residual), `np` (`NP = ℓ + nearCap`) and `ℓ ≥ lo`,
+`wV nC fC rs np α = (coefficient of log 2)·lo + T′ − c₂ α + nC + (1−α) fC + α rs + (np − rs)²/(4 lo)`
+bounds the budget minus `(c₂ + σ) α − ℓ/2` for every `t` (AM-GM in `t`).  The first-case budget
+(e) is the instance `np = rs = M₁`.  The check polynomials are built from `QP`s that give the four
+constants as polynomials in the variable (`τ(α)` and `Ŷ(α)` are polynomials on a piece). -/
+
+section UnsignedCover
+open Set CatalanMeasure.GenD CatalanMeasure.GenD.D58 CatalanMeasure.GenD.Analytic CatalanMeasure.Parametric
+  CatalanMeasure.GenD.Signed.RouteI.CompletedGas
+
+def loQ : ℚ := 6931471803 / 10000000000
+
+theorem continuous_evalQ (p : QP) : Continuous (evalQ p) := by
+  induction p with
+  | nil => simpa [evalQ] using continuous_const
+  | cons a p ih =>
+    have e : evalQ (a :: p) = fun x => (a : ℝ) + x * evalQ p x := rfl
+    rw [e]; exact continuous_const.add (continuous_id.mul ih)
+
+/-- The diagonal function of §9(b), (c), (e). -/
+def wV (nC fC rs np α : ℝ) : ℝ :=
+  (-(6 / 29) - 1 / 2 + 47 / 29 * α - α ^ 2) * loQ + tQ - c2Q * α + nC + (1 - α) * fC + α * rs +
+    (np - rs) ^ 2 / (4 * loQ)
+
+def wVq (nC fC rs np : QP) : QP :=
+  addQ [(-(6 / 29) - 1 / 2) * loQ + tQ, (47 / 29 * loQ - c2Q), -loQ]
+    (addQ nC (addQ (mulQ [1, -1] fC) (addQ (mulQ [0, 1] rs)
+      (smulQ (1 / (4 * loQ)) (mulQ (addQ np (smulQ (-1) rs)) (addQ np (smulQ (-1) rs)))))))
+
+theorem evalQ_wVq (nC fC rs np : QP) (α : ℝ) :
+    evalQ (wVq nC fC rs np) α = wV (evalQ nC α) (evalQ fC α) (evalQ rs α) (evalQ np α) α := by
+  simp only [wVq, wV, evalQ_addQ, evalQ_smulQ, evalQ_mulQ, evalQ_cons, evalQ_nil]
+  push_cast
+  field_simp
+  ring
+
+/-- The check polynomial of a piece: `σ α + Δ − η − wV`. -/
+def wPq (σ η Δ : ℚ) (nC fC rs np : QP) : QP :=
+  addQ [Δ - η] (addQ (smulQ σ [0, 1]) (smulQ (-1) (wVq nC fC rs np)))
+
+theorem wPq_eval (σ η Δ : ℚ) (nC fC rs np : QP) (α : ℝ) :
+    evalQ (wPq σ η Δ nC fC rs np) α =
+      σ * α + Δ - η - wV (evalQ nC α) (evalQ fC α) (evalQ rs α) (evalQ np α) α := by
+  simp only [wPq, evalQ_addQ, evalQ_smulQ, evalQ_wVq, evalQ_cons, evalQ_nil]
+  push_cast
+  ring
+
+/-- **A piece of the unsigned cover.**  The check on `[A, B]` gives a partition on which `wV` at the
+cell constants (evaluated at the right end `b_i`) is `≤ σ α + Δ`. -/
+theorem wV_cells {A B : ℚ} (hAB : A < B) {σ η Δ : ℚ} (hη : 0 < η) {nC fC rs np : QP}
+    (hP : PolyNonneg (wPq σ η Δ nC fC rs np) A B) :
+    ∃ n : ℕ, 0 < n ∧ ∀ i : ℕ, i < n →
+      ∀ α ∈ Icc ((A : ℝ) + ((B : ℝ) - A) * i / n) ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n),
+        wV (evalQ nC ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ fC ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ rs ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ np ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n)) α ≤ σ * α + Δ := by
+  have hAB' : (A : ℝ) < B := by exact_mod_cast hAB
+  have hη' : (0 : ℝ) < η := by exact_mod_cast hη
+  obtain ⟨n, hn, h⟩ := net_cells hAB' (S := fun α β => σ * α + Δ -
+      wV (evalQ nC β) (evalQ fC β) (evalQ rs β) (evalQ np β) α)
+    (by
+      unfold wV
+      have := continuous_evalQ nC; have := continuous_evalQ fC
+      have := continuous_evalQ rs; have := continuous_evalQ np
+      fun_prop)
+    (fun α hα => by
+      have := hP α hα.1 hα.2
+      rw [wPq_eval] at this
+      beta_reduce
+      linarith)
+  exact ⟨n, hn, fun i hi α hα => by have := h i hi α hα; beta_reduce at this; linarith⟩
+
+/-- `wV ≤ σ α + Δ` gives the second-case budget / the `hΔ` of the window: for every `t` (`β`). -/
+theorem oldBound_budget_of_wV {P : Parameters} (hg0 : gC0 P = 6 / 29) (hg1 : gC1 P = 47 / 29)
+    {ℓ nC fC rs np α β σ Δ : ℝ} (hℓd : ℓ = Real.log 2) (hlo : (loQ : ℝ) < ℓ)
+    (hV : wV nC fC rs np α ≤ σ * α + Δ) :
+    oldBound P nC fC rs (np - ℓ) α β ≤ -(tQ : ℝ) + ℓ / 2 + (c2Q + σ) * α + Δ := by
+  have hlo0 : (0 : ℝ) < loQ := by norm_num [loQ]
+  have hℓ : 0 < ℓ := hlo0.trans hlo
+  unfold oldBound
+  rw [hg0, hg1, ← hℓd]
+  have hco : -(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2 ≤ 0 := by nlinarith [sq_nonneg (α - 47 / 58)]
+  have h1 : (-(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2) * ℓ ≤
+      (-(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2) * loQ :=
+    mul_le_mul_of_nonpos_left hlo.le hco
+  have hc : (np - rs) ^ 2 / (4 * ℓ) ≤ (np - rs) ^ 2 / (4 * loQ) :=
+    div_le_div_of_nonneg_left (sq_nonneg _) (by positivity) (by linarith)
+  have hq : 0 ≤ (np - rs - 2 * β * ℓ) ^ 2 / (4 * ℓ) := by positivity
+  have he : (np - rs - 2 * β * ℓ) ^ 2 / (4 * ℓ) =
+      (np - rs) ^ 2 / (4 * ℓ) - β * (np - rs) + β ^ 2 * ℓ := by
+    field_simp; ring
+  unfold wV at hV
+  linarith [h1, hc, hq, he, hV]
+
+/-- The first-case budget (e) from `wV` with `np = rs = M₁`. -/
+theorem first_budget_of_wV {P : Parameters} (hg0 : gC0 P = 6 / 29) (hg1 : gC1 P = 47 / 29)
+    {ℓ nC fC M1 α σ : ℝ} (hlo : (loQ : ℝ) < ℓ)
+    (hV : wV nC fC M1 M1 α ≤ σ * α + 0) :
+    (-gC0 P + gC1 P * α - α ^ 2) * ℓ + nC + (1 - α) * fC + α * M1 ≤
+      -(tQ : ℝ) + ℓ / 2 + (c2Q + σ) * α := by
+  rw [hg0, hg1]
+  have hco : -(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2 ≤ 0 := by nlinarith [sq_nonneg (α - 47 / 58)]
+  have h1 : (-(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2) * ℓ ≤
+      (-(6 / 29 : ℝ) - 1 / 2 + 47 / 29 * α - α ^ 2) * loQ :=
+    mul_le_mul_of_nonpos_left hlo.le hco
+  unfold wV at hV
+  simp only [sub_self, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_div,
+    add_zero] at hV
+  nlinarith [h1, hV]
+
+end UnsignedCover
+
+/-! ### Layer 4: the physical window, GP §9(c), (d): the three consumer hypotheses on one cell
+
+On a step `[a, b]` of the 64-step cover of `[0, α₁]` the deficit is the constant `Δ` and the trial
+parameter of a cell is `τ = b_i / α₁`.  One partition serves `hΔ` (through `wV`), `hphase` and
+`hone`: the slack of each is continuous, positive on the diagonal, and the three are
+combined by `min`. -/
+
+section PhysicalCover
+open Set CatalanMeasure.GenD CatalanMeasure.GenD.D58 CatalanMeasure.GenD.Analytic
+  CatalanMeasure.Parametric CatalanMeasure.GenD.Signed.RouteI.CompletedGas
+
+/-- Phase slack at the cell: `F₀/2 − F₀ α/4 + U + τ·FU − s − .4752`, `τ = β/α₁`. -/
+def phiS (F0 U FU s : ℝ) (α β : ℝ) : ℝ :=
+  F0 / 2 - F0 * α / 4 + U + (β / a1Q) * FU - s - 4752 / 10000
+
+/-- `hone` slack: `5/6·48/58 − [1 − (1 − α + p₂ − s')/2 + 1/1000]`, `p₂ = p₀₂ + τ du₂`. -/
+def omS (p2 du2 s' : ℝ) (α β : ℝ) : ℝ :=
+  5 / 6 * (48 / 58) - (1 - (1 - α + (p2 + (β / a1Q) * du2) - s') / 2 + 1 / 1000)
+
+def phiQ (F0 U FU s : ℚ) : QP := [F0 / 2 + U - s - 4752 / 10000, -F0 / 4 + FU / a1Q]
+def omQ (p2 du2 s' : ℚ) : QP :=
+  [5 / 6 * (48 / 58) - 1 + (1 + p2 - s') / 2 - 1 / 1000, (-1 + du2 / a1Q) / 2]
+
+theorem evalQ_phiQ (F0 U FU s : ℚ) (α : ℝ) :
+    evalQ (phiQ F0 U FU s) α = phiS F0 U FU s α α := by
+  simp only [phiQ, phiS, evalQ_cons, evalQ_nil]; push_cast; ring
+
+theorem evalQ_omQ (p2 du2 s' : ℚ) (α : ℝ) :
+    evalQ (omQ p2 du2 s') α = omS p2 du2 s' α α := by
+  simp only [omQ, omS, evalQ_cons, evalQ_nil]; push_cast; ring
+
+/-- **One step of the physical window.**  `PolyNonneg` of the three diagonal polynomials on `[A, B]`
+gives one partition with `hΔ` (as `wV`), `hphase` and `hone` slacks nonnegative at the cell
+constants, each `α` of the cell, `τ_i = b_i / α₁`. -/
+theorem phys_cells {A B : ℚ} (hAB : A < B) {σ η Δ : ℚ} (hη : 0 < η) {nC fC rs np : QP}
+    {F0 U FU s p2 du2 s' : ℚ}
+    (hP : PolyNonneg (wPq σ η Δ nC fC rs np) A B)
+    (hφ : PolyNonneg (addQ [-η] (phiQ F0 U FU s)) A B)
+    (hω : PolyNonneg (addQ [-η] (omQ p2 du2 s')) A B) :
+    ∃ n : ℕ, 0 < n ∧ ∀ i : ℕ, i < n →
+      ∀ α ∈ Icc ((A : ℝ) + ((B : ℝ) - A) * i / n) ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n),
+        wV (evalQ nC ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ fC ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ rs ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n))
+          (evalQ np ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n)) α ≤ σ * α + Δ ∧
+        0 ≤ phiS F0 U FU s α ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n) ∧
+        0 ≤ omS p2 du2 s' α ((A : ℝ) + ((B : ℝ) - A) * (i + 1) / n) := by
+  have hAB' : (A : ℝ) < B := by exact_mod_cast hAB
+  have hη' : (0 : ℝ) < η := by exact_mod_cast hη
+  have ha1 : (a1Q : ℝ) ≠ 0 := by norm_num [a1Q]
+  obtain ⟨n, hn, h⟩ := net_cells hAB'
+    (S := fun α β => min (σ * α + Δ - wV (evalQ nC β) (evalQ fC β) (evalQ rs β) (evalQ np β) α)
+      (min (phiS F0 U FU s α β) (omS p2 du2 s' α β)))
+    (by
+      unfold wV phiS omS
+      have := continuous_evalQ nC; have := continuous_evalQ fC
+      have := continuous_evalQ rs; have := continuous_evalQ np
+      fun_prop)
+    (fun α hα => by
+      have h1 := hP α hα.1 hα.2
+      rw [wPq_eval] at h1
+      have h2 := hφ α hα.1 hα.2
+      rw [evalQ_addQ, evalQ_phiQ] at h2
+      have h3 := hω α hα.1 hα.2
+      rw [evalQ_addQ, evalQ_omQ] at h3
+      simp only [evalQ_cons, evalQ_nil, mul_zero, add_zero] at h2 h3
+      push_cast at h2 h3
+      beta_reduce
+      refine lt_min (by linarith) (lt_min (by linarith) (by linarith)))
+  refine ⟨n, hn, fun i hi α hα => ?_⟩
+  have := h i hi α hα
+  beta_reduce at this
+  have h1 := (le_min_iff.mp this).1
+  have h2 := (le_min_iff.mp (le_min_iff.mp this).2).1
+  have h3 := (le_min_iff.mp (le_min_iff.mp this).2).2
+  exact ⟨by linarith, h2, h3⟩
+
+/-- `hphase` from the slack: the arithmetic of `T4Instance.phase_margin` with the constants of a cell.
+`Ssum` is `∑' F_{k+1} p(k+1)` (at least `U + τ·FU`) and `sqrt (H Δ / 2) ≤ s`. -/
+theorem hphase_arith {F0 U FU s τ α Hh Δ Ssum : ℝ} (hS : U + τ * FU ≤ Ssum)
+    (hs : Real.sqrt (Hh * (Δ / 2)) ≤ s)
+    (hsl : 0 ≤ F0 / 2 - F0 * α / 4 + U + τ * FU - s - 4752 / 10000) {RHS : ℝ}
+    (hR : RHS ≤ 4752 / 10000) :
+    RHS ≤ F0 / 2 + Ssum - Real.sqrt (Hh * (Δ / 2)) - α * F0 / 4 - 0 * (Δ / 1) := by
+  linarith
+
+/-- `hone` from the slack. -/
+theorem hone_arith {α p2 Δ s' : ℝ} {p2lo : ℝ} (hp : p2lo ≤ p2) (hs : Real.sqrt (2 * (Δ / 2)) ≤ s')
+    (hsl : 0 ≤ 5 / 6 * (48 / 58) - (1 - (1 - α + p2lo - s') / 2 + 1 / 1000)) :
+    1 - (1 - α + p2 - Real.sqrt (2 * (Δ / 2))) / 2 + 1 / 1000 ≤ 5 / 6 * (48 / 58) := by
+  linarith
+
+end PhysicalCover
+
+/-! ### Layer 5: the signed cell against the built consumer `selected_comparison`
+
+`hbud_of_sigV` is the `hbud` of `selected_comparison` / `selected_free_product` for one cell, from
+the diagonal polynomial bound `sigV ≤ σ α` of `sig_cells1/2`; `hI_of_moves` is its `hI` at the moved
+anchor `(a + da⁰ + τ da¹, v + dv⁰ + τ dv¹)` from the E2 moment bounds.  The cell constants are
+`J` (intercept cap plus gas constant), `r`, `c` (chord caps of `chord_row`, `chord_col`,
+`chord_col_gamma`). -/
+
+section SignedConsumer
+open Set CatalanMeasure.GenD.Signed.RouteI.CompletedGas CatalanMeasure.GenD.Signed.RouteI.CapFields
+
+theorem hbud_of_sigV {S : CapSource} {d : ℝ → ℝ} {G : ℝ → Prop} {gasI : ℝ} {anchI : Fin 2 → ℝ}
+    (B : S.CapBundle Trunc.exact d G gasI anchI) {b I r c J α σ : ℝ} (hb : b = 1)
+    (hα0 : 0 ≤ α) (hα1 : α ≤ 51 / 500) (hM : markCap B ≤ -976 / 1000)
+    (hJ : I + B.gasICap ≤ J) (hV : sigV J r c α ≤ σ * α) :
+    capBudget B b I r c α ≤ -(tQ : ℝ) + Real.log 2 / 2 + (c2Q + σ) * α := by
+  subst hb
+  have hlo := Real.log_two_gt_d9
+  have hhi := Real.log_two_lt_d9
+  unfold capBudget
+  exact budget_of_sigV (by norm_num at hlo ⊢; linarith) (by norm_num at hhi ⊢; linarith)
+    hα0 hα1 hM hJ hV
+
+/-- The moved intercept (GP Lemma 5.1) against the E2 bounds. -/
+theorem hI_of_moves (b : ℝ) {a v da0 da1 dv0 dv1 : ℕ → ℝ} {K : ℕ}
+    (ha : Summable (fun k : ℕ => a (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)))
+    (hv : Summable (fun k : ℕ => v (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)))
+    (ha0 : ∀ k, K ≤ k → da0 k = 0) (ha1 : ∀ k, K ≤ k → da1 k = 0)
+    (hv0 : ∀ k, K ≤ k → dv0 k = 0) (hv1 : ∀ k, K ≤ k → dv1 k = 0)
+    {L0 L1 Q00 Q01 Q11 τ : ℝ} (hτ : 0 ≤ τ)
+    (hL0 : 2 * barrierInner a da0 + barrierInner v dv0 ≤ L0)
+    (hL1 : 2 * barrierInner a da1 + barrierInner v dv1 ≤ L1)
+    (hQ00 : barrierInner da0 da0 + barrierInner dv0 dv0 / 2 = Q00)
+    (hQ01 : barrierInner da0 da1 + barrierInner dv0 dv1 / 2 = Q01)
+    (hQ11 : barrierInner da1 da1 + barrierInner dv1 dv1 / 2 = Q11) :
+    anchorIntercept b (fun k => a k + (da0 k + τ * da1 k)) (fun k => v k + (dv0 k + τ * dv1 k)) ≤
+      anchorIntercept b a v + (L0 + Q00) + τ * (L1 + 2 * Q01) + τ ^ 2 * Q11 := by
+  rw [anchorIntercept_move b ha hv ha0 ha1 hv0 hv1 τ, hQ00, hQ11]
+  have : τ * (2 * barrierInner a da1 + barrierInner v dv1 + 2 * (barrierInner da0 da1 + barrierInner dv0 dv1 / 2)) ≤
+      τ * (L1 + 2 * Q01) := by
+    rw [hQ01]; exact mul_le_mul_of_nonneg_left (by linarith) hτ
+  nlinarith [this]
+
+end SignedConsumer
+
+/-! ### The design-C instance helpers
+
+`I1_cap` is `GasEnergyHi.hi_final` in the form `selected_comparison` consumes (`hI`, `hgas`):
+the intercept of the source anchor plus the gas constant is at most `2366997/10^6`.  `bundle0`
+packages the anchor-`0` caps with the cap bundle of design C (`d`, `G`). -/
+
+theorem I1_cap : anchorVal 0 + gasConst capSource ≤ 2366997 / 1000000 := by
+  have e : anchorVal 0 = -CatalanMeasure.GenD.Signed.RouteI.InterceptSource.refQuad capSource 0 :=
+    anchorIntercept_refQuad capSource_admissible colCell_capSource 0
+  rw [e]
+  exact CatalanMeasure.GenD.Signed.RouteI.GasEnergy.hi_final
 
 theorem row_cap_exists (a : Fin 2) : ∃ c, capSource.FreeRowCap Trunc.exact a c := by
   obtain ⟨H, hH⟩ := free_row_bounded colCell_capSource capSource_admissible a
@@ -1374,11 +1761,12 @@ theorem col_cap_exists (a : Fin 2) : ∃ c, capSource.FreeColCap a c := by
   linarith
 
 /-- The cap bundle from the anchor-`0` caps.  The intercept caps are the intercepts. -/
-def bundle0 {R C nc : ℝ} {oc : Sign → ℝ} (hR : capSource.FreeRowCap Trunc.exact 0 R)
-    (hC : capSource.FreeColCap 0 C) (ho : ∀ σ, capSource.OrdCap Trunc.exact σ (oc σ))
-    (hn : capSource.NearCap Trunc.exact nc)
+def bundle0 {d : ℝ → ℝ} {G : ℝ → Prop} {R C nc : ℝ} {oc : Sign → ℝ}
+    (hR : capSource.FreeRowCap Trunc.exact 0 R)
+    (hC : capSource.FreeColCap 0 C) (ho : ∀ σ, capSource.OrdCap Trunc.exact σ d G (oc σ))
+    (hn : capSource.NearCap Trunc.exact d G nc)
     (ha : ∀ σ, capSource.AngCap Trunc.exact σ (kappa σ)) :
-    capSource.CapBundle Trunc.exact (gasConst capSource) anchorVal where
+    capSource.CapBundle Trunc.exact d G (gasConst capSource) anchorVal where
   rowCap := ![R, Classical.choose (row_cap_exists 1)]
   colCap := ![C, Classical.choose (col_cap_exists 1)]
   ordCap := oc
@@ -1400,34 +1788,17 @@ def bundle0 {R C nc : ℝ} {oc : Sign → ℝ} (hR : capSource.FreeRowCap Trunc.
   gasI_le := le_rfl
   anchI_le _ := le_rfl
 
-/-- The near bound from the anchor-`0` caps alone. -/
-theorem freeNear_anchor0 {R C nc : ℝ} {oc : Sign → ℝ}
-    (hR : capSource.FreeRowCap Trunc.exact 0 R) (hC : capSource.FreeColCap 0 C)
-    (ho : ∀ σ, capSource.OrdCap Trunc.exact σ (oc σ)) (hn : capSource.NearCap Trunc.exact nc)
-    (ha : ∀ σ, capSource.AngCap Trunc.exact σ (kappa σ))
-    (hrc : R + C ≤ -5526387 / 1000000) (hoc : ∀ σ, oc σ ≤ -976 / 1000) (hnc : nc ≤ -976 / 1000)
-    (hi : -refQuad capSource 0 + gasConst capSource ≤ 2367346 / 1000000)
-    {t₀ residual nearCap c₀ : ℝ}
-    (D : SecondTrialBoundsEnd P58 alpha296 t₀ residual nearCap c₀ G58)
-    (hDp : D.p = trialSeqS Cert590.Pc Cert590.P)
-    (hDn : D.normCap ≤ 1547241039 / 2000000000) (hDf : D.fieldCap ≤ -253949899 / 100000000)
-    (hres : residual ≤ -315531 / 5000000) (hnear : nearCap ≤ -7563 / 10000)
-    (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop)
-    (hole : CatalanMeasure.GenD.Signed.PhysicalPick.PhaseHole) :
-    FreeNearBound P58 G58 Nd T296 (58 * cost296) alpha296 := by
-  refine freeNear_capSource (bundle0 hR hC ho hn ha) (fun _ => le_rfl) hrc ?_ ?_ D hDp hDn hDf
-    hres hnear Nd hole
-  · exact max_le (max_le (hoc _) (hoc _)) hnc
-  · have e : anchorVal 0 = -refQuad capSource 0 :=
-      anchorIntercept_refQuad capSource_admissible colCell_capSource 0
-    change anchorVal 0 + gasConst capSource ≤ _
-    rw [e]
-    exact hi
 
 end
 end CatalanMeasure.GenD.Signed.RouteI.T4Instance
 
-#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.freeNear_anchor0
-#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.selected_free_capSource
-#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.freeNear_capSource
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.sig_cells1
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.sig_cells2
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.hbud_of_sigV
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.hI_of_moves
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.wV_cells
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.oldBound_budget_of_wV
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.first_budget_of_wV
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.phys_cells
+#print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.I1_cap
 #print axioms CatalanMeasure.GenD.Signed.RouteI.T4Instance.anchorIntercept_refQuad
