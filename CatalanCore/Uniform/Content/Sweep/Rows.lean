@@ -33,44 +33,46 @@ namespace CatalanCore.Uniform.Content.Sweep
 
 section Tropical
 
-variable (p : ℕ)
+variable (p : ℕ) (u : ℤ)
 
 /-- The potential `φ`: `0` on the cell `(0,0)`, `1` on `(0,1)`, `3` on periods `≥ 1`. -/
-def phi (t : ℕ) : ℕ := if 1 ≤ t / p then 3 else half p t
+def phi (t : ℕ) : ℕ := if 1 ≤ t / p then 3 else half p u t
 
-theorem half_le_one (t : ℕ) : half p t ≤ 1 := by unfold half; split_ifs <;> omega
+theorem half_le_one (t : ℕ) : half p u t ≤ 1 := by unfold half; split_ifs <;> omega
 
-theorem Wt_le_three' (a b : ℕ) : Wt p a b ≤ 3 := by
+theorem Wt_le_three' (a b : ℕ) : Wt p u a b ≤ 3 := by
   unfold Wt Wd w3; split_ifs <;> omega
 
-theorem phi_of_period {t : ℕ} (h : 1 ≤ t / p) : phi p t = 3 := by simp [phi, h]
+theorem phi_of_period {t : ℕ} (h : 1 ≤ t / p) : phi p u t = 3 := by simp [phi, h]
 
-theorem phi_of_lt {t : ℕ} (h : t < p) : phi p t = half p t := by
+theorem phi_of_lt {t : ℕ} (h : t < p) : phi p u t = half p u t := by
   have : ¬ 1 ≤ t / p := by rw [Nat.div_eq_of_lt h]; omega
   simp [phi, this]
 
 /-- The weight table is covered by `φ + φ`. -/
-theorem Wt_le_phi (a b : ℕ) : Wt p a b ≤ phi p a + phi p b := by
+theorem Wt_le_phi (a b : ℕ) : Wt p u a b ≤ phi p u a + phi p u b := by
   rcases Nat.eq_zero_or_pos p with hp0 | hp0
   · subst hp0
-    unfold Wt Wd w3 phi half cell
+    have h3a := half_le_one 0 u a
+    have h3b := half_le_one 0 u b
+    unfold Wt Wd w3 phi cell
     simp
-    split_ifs <;> omega
+    split_ifs <;> first | omega | (subst_vars; omega)
   by_cases h1 : 1 ≤ a / p
-  · have := Wt_le_three' p a b; rw [phi_of_period p h1]; omega
+  · have := Wt_le_three' p u a b; rw [phi_of_period p u h1]; omega
   by_cases h2 : 1 ≤ b / p
-  · have := Wt_le_three' p a b; rw [phi_of_period p h2]; omega
+  · have := Wt_le_three' p u a b; rw [phi_of_period p u h2]; omega
   have ha : a < p := by
     by_contra h; apply h1; exact (Nat.one_le_div_iff hp0).2 (by omega)
   have hb : b < p := by
     by_contra h; apply h2; exact (Nat.one_le_div_iff hp0).2 (by omega)
-  rw [phi_of_lt p ha, phi_of_lt p hb]
+  rw [phi_of_lt p u ha, phi_of_lt p u hb]
   have hma : a % p = a := Nat.mod_eq_of_lt ha
   have hmb : b % p = b := Nat.mod_eq_of_lt hb
   have hda : a / p = 0 := Nat.div_eq_of_lt ha
   have hdb : b / p = 0 := Nat.div_eq_of_lt hb
-  have h3a := half_le_one p a
-  have h3b := half_le_one p b
+  have h3a := half_le_one p u a
+  have h3b := half_le_one p u b
   unfold Wt Wd w3 cell
   by_cases hab : a = b
   · subst hab
@@ -83,9 +85,9 @@ theorem Wt_le_phi (a b : ℕ) : Wt p a b ≤ phi p a + phi p b := by
 
 
 /-- The partial sums of `φ`. -/
-def Tphi (n : ℕ) : ℕ := ∑ t ∈ range n, phi p t
+def Tphi (n : ℕ) : ℕ := ∑ t ∈ range n, phi p u t
 
-theorem Tphi_le (hodd : p % 2 = 1) : ∀ {n : ℕ}, n ≤ p → Tphi p n = n - (p + 1) / 2 := by
+theorem Tphi_le (hu : u ≠ 0) (hodd : p % 2 = 1) : ∀ {n : ℕ}, n ≤ p → Tphi p u n = n - (p + 1) / 2 := by
   intro n
   induction n with
   | zero => intro _; simp [Tphi]
@@ -93,16 +95,16 @@ theorem Tphi_le (hodd : p % 2 = 1) : ∀ {n : ℕ}, n ≤ p → Tphi p n = n - (
     intro hn
     have h1 := ih (by omega)
     have hlt : n < p := by omega
-    rw [Tphi, Finset.sum_range_succ, ← Tphi, h1, phi_of_lt p hlt]
+    rw [Tphi, Finset.sum_range_succ, ← Tphi, h1, phi_of_lt p u hlt]
     unfold half
-    rw [Nat.mod_eq_of_lt hlt]
+    rw [Nat.mod_eq_of_lt hlt, if_neg hu]
     split_ifs <;> omega
 
-theorem Tphi_ge (hodd : p % 2 = 1) : ∀ {n : ℕ}, p ≤ n → Tphi p n = (p - 1) / 2 + 3 * (n - p) := by
+theorem Tphi_ge (hu : u ≠ 0) (hodd : p % 2 = 1) : ∀ {n : ℕ}, p ≤ n → Tphi p u n = (p - 1) / 2 + 3 * (n - p) := by
   intro n hn
   induction n, hn using Nat.le_induction with
   | base =>
-    rw [Tphi_le p hodd le_rfl]; omega
+    rw [Tphi_le p u hu hodd le_rfl]; omega
   | succ n hn ih =>
     rw [Tphi, Finset.sum_range_succ, ← Tphi, ih, phi_of_period]
     · omega
@@ -112,7 +114,7 @@ end Tropical
 
 section Rows
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0)
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ)
 
 /-- **Tropical potential bound** (Prop 2.3, rows P4 to P7).  For a member of the plane 2 family with
 retained common nodes `cn` (injective, below `r`) and the alternating window
@@ -120,33 +122,33 @@ retained common nodes `cn` (injective, below `r`) and the alternating window
 determinant is `p^{T(r) + T(N)}`-integral, `T(n) = ∑_{t<n} φ(t)`. -/
 theorem det_gle_phi {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ) (hinj : Function.Injective cn)
     {r m : ℕ} (hcr : ∀ a, cn a < r) (hN : 2 * (r + 2 * m) < p * p) :
-    GLE p (Tphi p r + Tphi p (r + 2 * m))
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e cn
+    GLE p (Tphi p u r + Tphi p u (r + 2 * m))
+      (seqFullN (fS v u) (eS v u) cn
         (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   have hc : ∀ a, cn a < r + 2 * m := fun a => by have := hcr a; omega
   have hx : ∀ i : Fin m, r + 2 * (i : ℕ) < r + 2 * m := fun i => by have := i.2; omega
   have hy : ∀ i : Fin m, r + 2 * (i : ℕ) + 1 < r + 2 * m := fun i => by have := i.2; omega
-  have h := det_gle_of_dual v u hv hu hN cn (fun i : Fin m => r + 2 * (i : ℕ))
+  have h := det_gle_of_dual v u hN cn (fun i : Fin m => r + 2 * (i : ℕ))
     (fun i : Fin m => r + 2 * (i : ℕ) + 1) hc hx hy
-    (fun a => phi p (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ)) a))
-    (fun b => phi p (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ) + 1) b))
-    (fun a b => Wt_le_phi p _ _)
+    (fun a => phi p u (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ)) a))
+    (fun b => phi p u (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ) + 1) b))
+    (fun a b => Wt_le_phi p u _ _)
   refine h.mono ?_
   rw [Fintype.sum_sum_type, Fintype.sum_sum_type]
   simp only [Sum.elim_inl, Sum.elim_inr]
   -- common nodes
-  have hcom : ∑ a : ι, phi p (cn a) ≤ Tphi p r := by
-    rw [← Finset.sum_image (f := fun t => phi p t) (g := cn) (s := Finset.univ) (fun a _ b _ h => hinj h)]
+  have hcom : ∑ a : ι, phi p u (cn a) ≤ Tphi p u r := by
+    rw [← Finset.sum_image (f := fun t => phi p u t) (g := cn) (s := Finset.univ) (fun a _ b _ h => hinj h)]
     unfold Tphi
     apply Finset.sum_le_sum_of_subset
     intro t ht
     obtain ⟨a, _, rfl⟩ := Finset.mem_image.1 ht
     exact Finset.mem_range.2 (hcr a)
   -- the window
-  have hwin : ∑ i : Fin m, phi p (r + 2 * (i : ℕ)) + ∑ i : Fin m, phi p (r + 2 * (i : ℕ) + 1) =
-      Tphi p (r + 2 * m) - Tphi p r := by
-    have step : ∀ k : ℕ, ∑ i ∈ range k, phi p (r + 2 * i) + ∑ i ∈ range k, phi p (r + 2 * i + 1) =
-        ∑ t ∈ range (2 * k), phi p (r + t) := by
+  have hwin : ∑ i : Fin m, phi p u (r + 2 * (i : ℕ)) + ∑ i : Fin m, phi p u (r + 2 * (i : ℕ) + 1) =
+      Tphi p u (r + 2 * m) - Tphi p u r := by
+    have step : ∀ k : ℕ, ∑ i ∈ range k, phi p u (r + 2 * i) + ∑ i ∈ range k, phi p u (r + 2 * i + 1) =
+        ∑ t ∈ range (2 * k), phi p u (r + t) := by
       intro k
       induction k with
       | zero => simp
@@ -156,12 +158,12 @@ theorem det_gle_phi {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ) 
         have := ih
         simp only [Nat.add_assoc] at this ⊢
         omega
-    have e : Tphi p (r + 2 * m) = Tphi p r + ∑ t ∈ range (2 * m), phi p (r + t) := by
+    have e : Tphi p u (r + 2 * m) = Tphi p u r + ∑ t ∈ range (2 * m), phi p u (r + t) := by
       unfold Tphi; rw [Finset.sum_range_add]
-    rw [Fin.sum_univ_eq_sum_range (fun i => phi p (r + 2 * i)), Fin.sum_univ_eq_sum_range
-      (fun i => phi p (r + 2 * i + 1)), step, e]
+    rw [Fin.sum_univ_eq_sum_range (fun i => phi p u (r + 2 * i)), Fin.sum_univ_eq_sum_range
+      (fun i => phi p u (r + 2 * i + 1)), step, e]
     omega
-  have hle : Tphi p r ≤ Tphi p (r + 2 * m) := by
+  have hle : Tphi p u r ≤ Tphi p u (r + 2 * m) := by
     unfold Tphi; apply Finset.sum_le_sum_of_subset; intro t ht
     exact Finset.mem_range.2 (by have := Finset.mem_range.1 ht; omega)
   omega
@@ -171,7 +173,7 @@ theorem det_gle_phi {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ) 
 
 /-- The member determinant of the window geometry. -/
 noncomputable abbrev rowDet {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ) (r m : ℕ) : ℚ[X] :=
-  (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e cn
+  (seqFullN (fS v u) (eS v u) cn
     (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det
 
 theorem odd_of_five (hp5 : 5 ≤ p) : p % 2 = 1 := by
@@ -180,45 +182,45 @@ theorem odd_of_five (hp5 : 5 ≤ p) : p % 2 = 1 := by
   · exact h
 
 variable {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ) (hinj : Function.Injective cn)
-  {r m : ℕ} (hcr : ∀ a, cn a < r) (hN : 2 * (r + 2 * m) < p * p) (hm : 2 * m ≤ r) (hp5 : 5 ≤ p)
+  {r m : ℕ} (hcr : ∀ a, cn a < r) (hN : 2 * (r + 2 * m) < p * p) (hm : 2 * m ≤ r) (hp5 : 5 ≤ p) (hu : u ≠ 0)
 
-include hinj hcr hN hp5 in
+include hu hinj hcr hN hp5 in
 /-- **Row P4** (`p ≤ r`): `v_p(den) ≤ 6r + 6m - 5p`. -/
-theorem row_P4 (hpr : p ≤ r) : GLE p (6 * r + 6 * m - 5 * p) (rowDet v u hv hu cn r m) := by
-  refine (det_gle_phi v u hv hu cn hinj hcr hN).mono ?_
+theorem row_P4 (hpr : p ≤ r) : GLE p (6 * r + 6 * m - 5 * p) (rowDet v u cn r m) := by
+  refine (det_gle_phi v u cn hinj hcr hN).mono ?_
   have ho := odd_of_five (p := p) hp5
-  rw [Tphi_ge p ho hpr, Tphi_ge p ho (by omega)]
+  rw [Tphi_ge p u hu ho hpr, Tphi_ge p u hu ho (by omega)]
   omega
 
-include hinj hcr hN hp5 hm in
+include hu hinj hcr hN hp5 hm in
 /-- **Row P5** (`r ≤ p ≤ N`): `v_p(den) ≤ r + 3N - 3p`.  (With `2m ≤ r`; without it the row is false,
 for example `(p, r, m) = (7, 1, 3)`.) -/
 theorem row_P5 (hrp : r ≤ p) (hpN : p ≤ r + 2 * m) :
-    GLE p (r + 3 * (r + 2 * m) - 3 * p) (rowDet v u hv hu cn r m) := by
-  refine (det_gle_phi v u hv hu cn hinj hcr hN).mono ?_
+    GLE p (r + 3 * (r + 2 * m) - 3 * p) (rowDet v u cn r m) := by
+  refine (det_gle_phi v u cn hinj hcr hN).mono ?_
   have ho := odd_of_five (p := p) hp5
-  rw [Tphi_le p ho hrp, Tphi_ge p ho hpN]
+  rw [Tphi_le p u hu ho hrp, Tphi_ge p u hu ho hpN]
   omega
 
-include hinj hcr hN hp5 hm in
+include hu hinj hcr hN hp5 hm in
 /-- **Row P6** (`N ≤ p ≤ 2r`): `v_p(den) ≤ 2r + 2m - p + 1`. -/
 theorem row_P6 (hNp : r + 2 * m ≤ p) (hp2 : p ≤ 2 * r) :
-    GLE p (2 * r + 2 * m + 1 - p) (rowDet v u hv hu cn r m) := by
-  refine (det_gle_phi v u hv hu cn hinj hcr hN).mono ?_
+    GLE p (2 * r + 2 * m + 1 - p) (rowDet v u cn r m) := by
+  refine (det_gle_phi v u cn hinj hcr hN).mono ?_
   have ho := odd_of_five (p := p) hp5
-  rw [Tphi_le p ho (by omega), Tphi_le p ho hNp]
+  rw [Tphi_le p u hu ho (by omega), Tphi_le p u hu ho hNp]
   omega
 
-include hinj hcr hN hp5 hm in
+include hu hinj hcr hN hp5 hm in
 /-- **Row P7** (`p ≥ 2r`): `v_p(den) ≤ (N - (p-1)/2)₊`. -/
 theorem row_P7 (hp2 : 2 * r ≤ p) :
-    GLE p (r + 2 * m - (p - 1) / 2) (rowDet v u hv hu cn r m) := by
-  refine (det_gle_phi v u hv hu cn hinj hcr hN).mono ?_
+    GLE p (r + 2 * m - (p - 1) / 2) (rowDet v u cn r m) := by
+  refine (det_gle_phi v u cn hinj hcr hN).mono ?_
   have ho := odd_of_five (p := p) hp5
-  rw [Tphi_le p ho (by omega)]
+  rw [Tphi_le p u hu ho (by omega)]
   by_cases hNp : r + 2 * m ≤ p
-  · rw [Tphi_le p ho hNp]; omega
-  · rw [Tphi_ge p ho (by omega)]; omega
+  · rw [Tphi_le p u hu ho hNp]; omega
+  · rw [Tphi_ge p u hu ho (by omega)]; omega
 
 /-! ### Row P1: the residue-class potentials -/
 
@@ -250,11 +252,11 @@ theorem uRow_cong {p N a b : ℕ} (ha : a < N) (hb : b < N) (h : a % p = b % p) 
   unfold uRow; rw [hm]
 
 theorem Wt_le_uRow_uCol (p N : ℕ) {a b : ℕ} (ha : a < N) (hb : b < N) :
-    Wt p a b ≤ uRow p N a + uCol p N b := by
+    Wt p u a b ≤ uRow p N a + uCol p N b := by
   by_cases hab : a = b
   · subst hab
     have := uRow_add_uCol p N a
-    have : Wd p a ≤ 3 := by unfold Wd; split_ifs <;> omega
+    have : Wd p u a ≤ 3 := by unfold Wd; split_ifs <;> omega
     unfold Wt; rw [if_pos rfl]; omega
   by_cases hm : a % p = b % p
   · have := uRow_cong ha hb hm
@@ -262,7 +264,7 @@ theorem Wt_le_uRow_uCol (p N : ℕ) {a b : ℕ} (ha : a < N) (hb : b < N) :
     unfold Wt; rw [if_neg hab, if_pos hm]; omega
   · have h1 : 1 ≤ uRow p N a := by unfold uRow; split_ifs <;> omega
     have h2 : 1 ≤ uCol p N b := by unfold uCol; split_ifs <;> omega
-    have : w3 (cell p a) (cell p b) ≤ 2 := by unfold w3; split_ifs <;> omega
+    have : w3 (cell p u a) (cell p u b) ≤ 2 := by unfold w3; split_ifs <;> omega
     unfold Wt; rw [if_neg hab, if_neg hm]; omega
 
 /-- `∑_{j<n} (⌊j/p⌋ mod 2)`. -/
@@ -369,22 +371,22 @@ end Rows
 
 section P1Row
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0)
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ)
   {ι : Type} [Fintype ι] [DecidableEq ι]
 
 /-- **Row P1** (Prop 2.3): `v_p(den) ≤ 3 (r + m) - ‖m‖_p`, with `‖m‖_p = min (m mod p, p - m mod p)`. -/
 theorem row_P1 (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ} (hcr : ∀ a, cn a < r)
     (hN : 2 * (r + 2 * m) < p * p) (hp5 : 5 ≤ p) :
-    GLE p (3 * (r + m) - min (m % p) (p - m % p)) (rowDet v u hv hu cn r m) := by
+    GLE p (3 * (r + m) - min (m % p) (p - m % p)) (rowDet v u cn r m) := by
   have hodd := odd_of_five (p := p) hp5
   have hc : ∀ a, cn a < r + 2 * m := fun a => by have := hcr a; omega
   have hx : ∀ i : Fin m, r + 2 * (i : ℕ) < r + 2 * m := fun i => by have := i.2; omega
   have hy : ∀ i : Fin m, r + 2 * (i : ℕ) + 1 < r + 2 * m := fun i => by have := i.2; omega
-  have h := det_gle_of_dual v u hv hu hN cn (fun i : Fin m => r + 2 * (i : ℕ))
+  have h := det_gle_of_dual v u hN cn (fun i : Fin m => r + 2 * (i : ℕ))
     (fun i : Fin m => r + 2 * (i : ℕ) + 1) hc hx hy
     (fun a => uRow p (r + 2 * m) (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ)) a))
     (fun b => uCol p (r + 2 * m) (Sum.elim cn (fun i : Fin m => r + 2 * (i : ℕ) + 1) b))
-    (fun a b => Wt_le_uRow_uCol p _ (by rcases a with a | i; exacts [hc a, hx i])
+    (fun a b => Wt_le_uRow_uCol u p _ (by rcases a with a | i; exacts [hc a, hx i])
       (by rcases b with b | i; exacts [hc b, hy i]))
   refine h.mono ?_
   rw [Fintype.sum_sum_type, Fintype.sum_sum_type]

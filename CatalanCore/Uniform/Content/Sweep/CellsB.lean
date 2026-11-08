@@ -86,6 +86,31 @@ def WtB (s t : ℕ) : ℕ := if s = t then WdB p s else if s % p = t % p then 3 
 theorem WtB_le_three (a b : ℕ) : WtB p a b ≤ 3 := by
   unfold WtB WdB w3B; split_ifs <;> omega
 
+/-! ### The generic chain at `u = 0` is this table
+
+`Sweep.Cells` carries the half map `half p u`, which is `0` for `u = 0`: cells are periods.  So at `u = 0`
+the generic weights `Wd`, `Wt`, `w3` are exactly `WdB`, `WtB`, `w3B`, and `fS v 0`, `eS v 0` are `fB`, `eB`. -/
+
+theorem fB_eq_fS (v : ℤ) : fB v = fS v 0 := rfl
+theorem eB_eq_eS (v : ℤ) : eB v = eS v 0 := rfl
+
+theorem half_zero (t : ℕ) : half p 0 t = 0 := by simp [half]
+
+theorem cell_zero (t : ℕ) : cell p 0 t = (t / p, 0) := by simp [cell, half]
+
+theorem w3_zero (s t : ℕ) : w3 (cell p 0 s) (cell p 0 t) = w3B p s t := by
+  unfold w3 w3B
+  simp only [cell_zero, Prod.mk.injEq, and_true]
+  split_ifs <;> simp_all
+
+theorem Wd_zero (t : ℕ) : Wd p 0 t = WdB p t := by
+  unfold Wd WdB
+  simp [half_zero]
+
+theorem Wt_zero (s t : ℕ) : Wt p 0 s t = WtB p s t := by
+  unfold Wt WtB
+  rw [Wd_zero, w3_zero]
+
 
 section TableB
 

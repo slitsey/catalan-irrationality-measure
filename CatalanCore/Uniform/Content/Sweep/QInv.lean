@@ -110,24 +110,24 @@ end Piv
 
 section QMat
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] (κ k' π : ℕ)
 
 /-- The pivot block `Q = p³ H[𝒫_r, 𝒫_c]` over `R`. -/
 noncomputable def Qp (ξ : R) : Matrix (PivIdx p κ k') (PivIdx p κ k') R :=
-  Matrix.of fun x y => Qent (p := p) v u hv hu ξ (rowNode p κ k' π x) (colNode p κ k' π y)
+  Matrix.of fun x y => Qent (p := p) v u ξ (rowNode p κ k' π x) (colNode p κ k' π y)
 
 variable {κ k' π}
 
 /-- Entries of the same residue are the class matrix entries, modulo `p`. -/
 theorem Qp_congr (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
     (hH : (κ + 2 * k') * p ≤ N) (ξ : R) {x y : PivIdx p κ k'} (hxy : x.1 = y.1) :
-    (p : R) ∣ Qp (p := p) v u hv hu κ k' π ξ x y -
-      BclR (p := p) v u κ k' ξ (half p x.1) (oc p κ π x.1) x.2 y.2 := by
+    (p : R) ∣ Qp (p := p) v u κ k' π ξ x y -
+      BclR (p := p) v u κ k' ξ (half p u x.1) (oc p κ π x.1) x.2 y.2 := by
   have hp0 : 0 < p := hp.out.pos
-  have h := F1 v u hv hu hodd hp5 hN ξ (rowNode_lt (π := π) hH x) (colNode_lt (π := π) hH y)
+  have h := F1 v u hodd hp5 hN ξ (rowNode_lt (π := π) hH x) (colNode_lt (π := π) hH y)
     (by rw [rowNode_mod, colNode_mod, hxy])
-  have e1 : half p (rowNode p κ k' π x) = half p x.1 := by
+  have e1 : half p u (rowNode p κ k' π x) = half p u x.1 := by
     unfold rowNode; rw [half_node hp0 _ _ x.1.2]
   rw [e1, rowNode_div hp0, colNode_div hp0, ← hxy] at h
   exact (dvd_pow_self (p : R) (two_ne_zero)).trans h
@@ -135,15 +135,15 @@ theorem Qp_congr (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
 /-- Entries of different residues are divisible by `p`. -/
 theorem Qp_noncong (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
     (hH : (κ + 2 * k') * p ≤ N) (ξ : R) {x y : PivIdx p κ k'} (hxy : x.1 ≠ y.1) :
-    (p : R) ∣ Qp (p := p) v u hv hu κ k' π ξ x y := by
-  have h := F2 v u hv hu hodd hp5 hN ξ (rowNode_lt (π := π) hH x) (colNode_lt (π := π) hH y)
+    (p : R) ∣ Qp (p := p) v u κ k' π ξ x y := by
+  have h := F2 v u hodd hp5 hN ξ (rowNode_lt (π := π) hH x) (colNode_lt (π := π) hH y)
     (by rw [rowNode_mod, colNode_mod]; exact fun h => hxy (Fin.ext h))
-  have h1 : (p : R) ∣ Qent (p := p) v u hv hu ξ (rowNode p κ k' π x) (colNode p κ k' π y) -
-      (p : R) * (sigR (p := p) v u (cell p (colNode p κ k' π y)) - sigR (p := p) v u (cell p (rowNode p κ k' π x))) *
+  have h1 : (p : R) ∣ Qent (p := p) v u ξ (rowNode p κ k' π x) (colNode p κ k' π y) -
+      (p : R) * (sigR (p := p) v u (cell p u (colNode p κ k' π y)) - sigR (p := p) v u (cell p u (rowNode p κ k' π x))) *
         toR p ((((colNode p κ k' π y : ℕ) : ℚ) - (rowNode p κ k' π x : ℕ))⁻¹) :=
     (dvd_pow_self (p : R) (two_ne_zero)).trans h
-  have h2 : (p : R) ∣ (p : R) * (sigR (p := p) v u (cell p (colNode p κ k' π y)) -
-      sigR (p := p) v u (cell p (rowNode p κ k' π x))) *
+  have h2 : (p : R) ∣ (p : R) * (sigR (p := p) v u (cell p u (colNode p κ k' π y)) -
+      sigR (p := p) v u (cell p u (rowNode p κ k' π x))) *
         toR p ((((colNode p κ k' π y : ℕ) : ℚ) - (rowNode p κ k' π x : ℕ))⁻¹) :=
     Dvd.dvd.mul_right (dvd_mul_right (p : R) _) _
   have := dvd_add h1 h2
@@ -173,22 +173,22 @@ end QMat
 
 section QInv
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] (κ k' π : ℕ) (ξ : R)
 
 /-- The block inverse `W`: `W((ω,b),(ω',c)) = [ω = ω'] (B^{h(ω)}_{o(ω)})⁻¹(b,c)`. -/
 noncomputable def Wp : Matrix (PivIdx p κ k') (PivIdx p κ k') R :=
   Matrix.of fun y z =>
-    if y.1 = z.1 then ((BclR (p := p) v u κ k' ξ (half p y.1) (oc p κ π y.1))⁻¹) y.2 z.2 else 0
+    if y.1 = z.1 then ((BclR (p := p) v u κ k' ξ (half p u y.1) (oc p κ π y.1))⁻¹) y.2 z.2 else 0
 
 /-- The inverse of the pivot block. -/
-noncomputable def Zp : Matrix (PivIdx p κ k') (PivIdx p κ k') R := (Qp (p := p) v u hv hu κ k' π ξ)⁻¹
+noncomputable def Zp : Matrix (PivIdx p κ k') (PivIdx p κ k') R := (Qp (p := p) v u κ k' π ξ)⁻¹
 
 variable {κ k' π ξ}
 
-theorem Qp_mul_Wp (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem Qp_mul_Wp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N) (x z : PivIdx p κ k') :
-    (p : R) ∣ (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ) x z - (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) x z := by
+    (p : R) ∣ (Qp (p := p) v u κ k' π ξ * Wp (p := p) v u κ k' π ξ) x z - (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) x z := by
   rw [Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_eq_single z.1]
   swap
   · intro a _ ha
@@ -202,57 +202,57 @@ theorem Qp_mul_Wp (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 
     obtain ⟨z1, z2⟩ := z
     simp only at hxz
     subst hxz
-    have hh : half p (x1 : ℕ) ≤ 1 := half_le_one' _
-    have hdet := isUnit_det_BclR v u κ k' hU hodd hN hh (oc_le (π := π) (κ := κ) (p := p) x1) hH hpv
+    have hh : half p u (x1 : ℕ) ≤ 1 := half_le_one' _
+    have hdet := hU _ _ hh (oc_le (π := π) (κ := κ) (p := p) x1)
     have hmul := Matrix.mul_nonsing_inv _ hdet
-    have e1 : ∑ b, Qp (p := p) v u hv hu κ k' π ξ (x1, x2) (x1, b) * Wp (p := p) v u κ k' π ξ (x1, b) (x1, z2) -
+    have e1 : ∑ b, Qp (p := p) v u κ k' π ξ (x1, x2) (x1, b) * Wp (p := p) v u κ k' π ξ (x1, b) (x1, z2) -
         (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) (x1, x2) (x1, z2) =
-        ∑ b, (Qp (p := p) v u hv hu κ k' π ξ (x1, x2) (x1, b) -
-            BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1) x2 b) *
-          ((BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1))⁻¹) b z2 := by
+        ∑ b, (Qp (p := p) v u κ k' π ξ (x1, x2) (x1, b) -
+            BclR (p := p) v u κ k' ξ (half p u x1) (oc p κ π x1) x2 b) *
+          ((BclR (p := p) v u κ k' ξ (half p u x1) (oc p κ π x1))⁻¹) b z2 := by
       have := congrFun (congrFun hmul x2) z2
       rw [Matrix.mul_apply] at this
       have h1 : (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) (x1, x2) (x1, z2) =
           (1 : Matrix (Fin κ ⊕ Fin k') (Fin κ ⊕ Fin k') R) x2 z2 := by
         simp [Matrix.one_apply]
       have hW : ∀ b, Wp (p := p) v u κ k' π ξ (x1, b) (x1, z2) =
-          ((BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1))⁻¹) b z2 := fun b => by simp [Wp]
+          ((BclR (p := p) v u κ k' ξ (half p u x1) (oc p κ π x1))⁻¹) b z2 := fun b => by simp [Wp]
       rw [h1, ← this]
       simp only [hW, sub_mul, Finset.sum_sub_distrib]
     rw [e1]
     refine Finset.dvd_sum fun b _ => ?_
-    exact Dvd.dvd.mul_right (Qp_congr v u hv hu hodd hp5 hN hH ξ (x := (x1, x2)) (y := (x1, b)) rfl) _
+    exact Dvd.dvd.mul_right (Qp_congr v u hodd hp5 hN hH ξ (x := (x1, x2)) (y := (x1, b)) rfl) _
   · have h1 : (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) x z = 0 := by
       rw [Matrix.one_apply, if_neg]
       intro h; exact hxz (by rw [h])
     rw [h1, sub_zero]
     refine Finset.dvd_sum fun b _ => ?_
-    exact Dvd.dvd.mul_right (Qp_noncong v u hv hu hodd hp5 hN hH ξ (x := x) (y := (z.1, b)) hxz) _
+    exact Dvd.dvd.mul_right (Qp_noncong v u hodd hp5 hN hH ξ (x := x) (y := (z.1, b)) hxz) _
 
-theorem isUnit_det_Qp (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem isUnit_det_Qp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    IsUnit (Qp (p := p) v u hv hu κ k' π ξ).det := by
-  have h := det_sub_one_dvd _ (Qp_mul_Wp (p := p) (π := π) v u hv hu hU hpv hodd hp5 hN hH)
+    IsUnit (Qp (p := p) v u κ k' π ξ).det := by
+  have h := det_sub_one_dvd _ (Qp_mul_Wp (p := p) (π := π) v u hU hpv hodd hp5 hN hH)
   obtain ⟨c, hc⟩ := h
-  have : (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ).det = 1 + (p : R) * c := by
+  have : (Qp (p := p) v u κ k' π ξ * Wp (p := p) v u κ k' π ξ).det = 1 + (p : R) * c := by
     rw [← hc]; ring
   rw [Matrix.det_mul] at this
   have hu1 := hRad c
   rw [← this] at hu1
   exact isUnit_of_mul_isUnit_left hu1
 
-theorem Qp_mul_Zp (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem Qp_mul_Zp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    Qp (p := p) v u hv hu κ k' π ξ * Zp (p := p) v u hv hu κ k' π ξ = 1 :=
-  Matrix.mul_nonsing_inv _ (isUnit_det_Qp (p := p) v u hv hu hU hpv hodd hp5 hN hH hRad)
+    Qp (p := p) v u κ k' π ξ * Zp (p := p) v u κ k' π ξ = 1 :=
+  Matrix.mul_nonsing_inv _ (isUnit_det_Qp (p := p) v u hU hpv hodd hp5 hN hH hRad)
 
-theorem Zp_mul_Qp (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem Zp_mul_Qp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    Zp (p := p) v u hv hu κ k' π ξ * Qp (p := p) v u hv hu κ k' π ξ = 1 :=
-  Matrix.nonsing_inv_mul _ (isUnit_det_Qp (p := p) v u hv hu hU hpv hodd hp5 hN hH hRad)
+    Zp (p := p) v u κ k' π ξ * Qp (p := p) v u κ k' π ξ = 1 :=
+  Matrix.nonsing_inv_mul _ (isUnit_det_Qp (p := p) v u hU hpv hodd hp5 hN hH hRad)
 
 end QInv
 

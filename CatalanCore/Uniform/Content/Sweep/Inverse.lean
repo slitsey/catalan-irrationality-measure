@@ -114,7 +114,7 @@ end Bent
 
 section Entries
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [IsLocalRing R] [Algebra (LocRing p) R]
 
 theorem res_G_half (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hodd : p % 2 = 1)
@@ -165,22 +165,22 @@ theorem res_Bent_half (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)})
 
 /-- Off the residue classes of `B̄`, the entries of `Q` are `0 (mod p)`. -/
 theorem Dv_q_far (hN : 2 * N < p * p) {a b : ℕ} (ha : a < N) (hb : b < N) (hmod : a % p ≠ b % p) :
-    Dv p 1 ((p : ℚ) ^ 3 * Lm v u hv hu a b) := by
-  have h := weight_table v u hv hu hN a b ha hb
+    Dv p 1 ((p : ℚ) ^ 3 * Lm v u a b) := by
+  have h := weight_table v u hN a b ha hb
   have hne : a ≠ b := fun h => hmod (h ▸ rfl)
-  have hW : Wt p a b ≤ 2 := by
+  have hW : Wt p u a b ≤ 2 := by
     unfold Wt w3
     rw [if_neg hne, if_neg hmod]
     split_ifs <;> omega
-  have h2 := Dv.of_Vp (k := 3 - Wt p a b) h
-  rw [show Wt p a b + (3 - Wt p a b) = 3 by omega] at h2
+  have h2 := Dv.of_Vp (k := 3 - Wt p u a b) h
+  rw [show Wt p u a b + (3 - Wt p u a b) = 3 by omega] at h2
   exact Dv.mono (by omega) h2
 
 /-- **The reduction of `Q = p³ H[K]`**: entry by entry, `Q ≡ B̄ ⊗ I_p (mod p)`. -/
 theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) {κ : ℕ} (hκN : κ * p ≤ N) (ξ : R) {n t : ℕ} (hn : n < κ * p)
     (ht : t < κ * p) :
-    IsLocalRing.residue R (Qent (p := p) v u hv hu ξ n t) =
+    IsLocalRing.residue R (Qent (p := p) v u ξ n t) =
       if n % p = t % p then IsLocalRing.residue R (Bent p v u ξ 0 (n / p) (t / p)) else 0 := by
   have hp0 : 0 < p := hp.out.pos
   have hodd := odd_of_ge5 hp5
@@ -195,12 +195,12 @@ theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
   · rw [if_pos hmod]
     by_cases hnt : n = t
     · subst hnt
-      have hhh : half p n ≤ 1 := by rcases half_eq (p := p) n with h | h <;> omega
+      have hhh : half p u n ≤ 1 := by rcases half_eq (p := p) (u := u) n with h | h <;> omega
       unfold Qent Bent
       rw [if_pos rfl, if_pos rfl, map_add, map_add]
       congr 1
-      have h1 := res_toR_congr hmax (q_mem v u hv hu hN hnN hnN) (G_mem v u hodd hN hnN)
-        (Dv.mono (by norm_num) (Dv_q_diag v u hv hu hodd (a := n)))
+      have h1 := res_toR_congr hmax (q_mem v u hN hnN hnN) (G_mem v u hodd hN hnN)
+        (Dv.mono (by norm_num) (Dv_q_diag v u hodd (a := n)))
       rw [h1]
       exact res_G_half v u hmax hodd hN hlN hhh
     · have hlj : n / p ≠ t / p := fun h => hnt (by
@@ -208,13 +208,13 @@ theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
         have h2 := Nat.div_add_mod t p
         rw [h, hmod] at h1
         omega)
-      have hq := q_decomp v u hv hu hodd hp5 hN hnN htN hnt
-      have hhn : half p n ≤ 1 := by rcases half_eq (p := p) n with h | h <;> omega
-      have hht : half p t = half p n := by unfold half; rw [hmod]
-      have hcellt : cell p t = (t / p, half p n) := by
-        show (t / p, half p t) = _
+      have hq := q_decomp v u hodd hp5 hN hnN htN hnt
+      have hhn : half p u n ≤ 1 := by rcases half_eq (p := p) (u := u) n with h | h <;> omega
+      have hht : half p u t = half p u n := by unfold half; rw [hmod]
+      have hcellt : cell p u t = (t / p, half p u n) := by
+        show (t / p, half p u t) = _
         rw [hht]
-      have hcelln : cell p n = (n / p, half p n) := rfl
+      have hcelln : cell p u n = (n / p, half p u n) := rfl
       have hn' : (n : ℚ) = p * (n / p : ℕ) + (n % p : ℕ) := by
         exact_mod_cast (Nat.div_add_mod n p).symm
       have ht' : (t : ℚ) = p * (t / p : ℕ) + (t % p : ℕ) := by
@@ -227,8 +227,8 @@ theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
         sub_ne_zero.2 (by exact_mod_cast hlj)
       have hjl' : (((t / p : ℕ) : ℚ) - ((n / p : ℕ) : ℚ)) ≠ 0 :=
         sub_ne_zero.2 (by exact_mod_cast (Ne.symm hlj))
-      have hb : (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹) =
-          (p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (t / p, half p n)) /
+      have hb : (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹) =
+          (p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (t / p, half p u n)) /
             (((n / p : ℕ) : ℚ) - ((t / p : ℕ) : ℚ)) := by
         unfold sdiff
         rw [hcellt, hcelln, hdiff]
@@ -236,11 +236,11 @@ theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
         ring
       rw [hb] at hq
       have hunit := unit_diff (p := p) hlj (by omega) (by omega)
-      have hcmem : (p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (t / p, half p n)) /
+      have hcmem : (p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (t / p, half p u n)) /
             (((n / p : ℕ) : ℚ) - ((t / p : ℕ) : ℚ)) ∈ LocRing p := by
         rw [div_eq_mul_inv]
         exact (LocRing p).mul_mem (S_diff_mem v u hodd hN hlN hjN hhn) hunit
-      have h1 := res_toR_congr hmax (q_mem v u hv hu hN hnN htN) hcmem (Dv.mono (by norm_num) hq)
+      have h1 := res_toR_congr hmax (q_mem v u hN hnN htN) hcmem (Dv.mono (by norm_num) hq)
       unfold Qent
       rw [if_neg hnt, zero_add, h1]
       unfold Bent
@@ -250,7 +250,7 @@ theorem res_Qent (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
     have hne : n ≠ t := fun h => hmod (h ▸ rfl)
     unfold Qent
     rw [if_neg hne, zero_add]
-    exact res_toR_zero hmax (Dv_q_far v u hv hu hN hnN htN hmod)
+    exact res_toR_zero hmax (Dv_q_far v u hN hnN htN hmod)
 
 end Entries
 
@@ -258,7 +258,7 @@ end Entries
 
 section Matrices
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [IsLocalRing R] [Algebra (LocRing p) R]
 
 variable (p) in
@@ -275,9 +275,9 @@ noncomputable def Bmat (v u : ℤ) (ξ : R) (κ h : ℕ) :
 
 variable (p) in
 /-- `Q = p³ H[K]` on the nodes `[0, κ p)`. -/
-noncomputable def Qmat (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (ξ : R) (κ : ℕ) :
+noncomputable def Qmat (v u : ℤ) (ξ : R) (κ : ℕ) :
     Matrix (Fin (κ * p)) (Fin (κ * p)) R :=
-  Matrix.of fun a b => Qent (p := p) v u hv hu ξ a b
+  Matrix.of fun a b => Qent (p := p) v u ξ a b
 
 theorem Bmat_res (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) {κ : ℕ} (hκN : κ * p ≤ N) (ξ : R) {h : ℕ} (hh : h ≤ 1) :
@@ -295,7 +295,7 @@ theorem Bmat_res (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
 theorem res_Qmat (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) {κ : ℕ} (hκN : κ * p ≤ N) (ξ : R) :
     Matrix.reindex finProdFinEquiv.symm finProdFinEquiv.symm
-        ((Qmat p v u hv hu ξ κ).map (IsLocalRing.residue R)) =
+        ((Qmat p v u ξ κ).map (IsLocalRing.residue R)) =
       Bbar p v u ξ κ ⊗ₖ (1 : Matrix (Fin p) (Fin p) (IsLocalRing.ResidueField R)) := by
   have hp0 : 0 < p := hp.out.pos
   ext ⟨⟨i, hi⟩, ⟨r, hr⟩⟩ ⟨⟨j, hj⟩, ⟨s, hs⟩⟩
@@ -305,7 +305,7 @@ theorem res_Qmat (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
   have hj' : j < κ := hj
   have hn : r + p * i < κ * p := by nlinarith
   have ht : s + p * j < κ * p := by nlinarith
-  have hq := res_Qent v u hv hu hmax hp5 hN hκN ξ hn ht
+  have hq := res_Qent v u hmax hp5 hN hκN ξ hn ht
   have hmr : (r + p * i) % p = r := by
     rw [Nat.add_mul_mod_self_left]; exact Nat.mod_eq_of_lt hr
   have hms : (s + p * j) % p = s := by
@@ -324,10 +324,10 @@ theorem res_Qmat (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5
 and `Z = H[K]⁻¹ = p³ Q⁻¹ ∈ p³ Mat(R)`. -/
 theorem isUnit_det_Qmat (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)}) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) {κ : ℕ} (hκN : κ * p ≤ N) (ξ : R)
-    (hB : (Bbar p v u ξ κ).det ≠ 0) : IsUnit (Qmat p v u hv hu ξ κ).det := by
+    (hB : (Bbar p v u ξ κ).det ≠ 0) : IsUnit (Qmat p v u ξ κ).det := by
   rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
-  change ((Qmat p v u hv hu ξ κ).map (IsLocalRing.residue R)).det ≠ 0
-  rw [← Matrix.det_reindex_self finProdFinEquiv.symm, res_Qmat v u hv hu hmax hp5 hN hκN ξ,
+  change ((Qmat p v u ξ κ).map (IsLocalRing.residue R)).det ≠ 0
+  rw [← Matrix.det_reindex_self finProdFinEquiv.symm, res_Qmat v u hmax hp5 hN hκN ξ,
     Matrix.det_kronecker]
   simpa using pow_ne_zero p hB
 
@@ -345,7 +345,7 @@ end Matrices
 
 section Inverse
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [IsLocalRing R] [Algebra (LocRing p) R]
 
 theorem Bop_mulVec (ξ : R) (κ : ℕ) (φ : ℕ × ℕ → R) (h : ℕ) (l : Fin κ) :
@@ -416,9 +416,9 @@ theorem Bop_bijective (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)})
 
 variable (p) in
 /-- `y = Q⁻¹ ẽ` on the nodes of `K` (`Z ẽ = p³ y`), `ẽ = e ∘ cell`; zero off `K`. -/
-noncomputable def Ysol (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (ξ : R) (κ : ℕ) (e : ℕ × ℕ → R) : ℕ → R :=
+noncomputable def Ysol (v u : ℤ) (ξ : R) (κ : ℕ) (e : ℕ × ℕ → R) : ℕ → R :=
   fun t => if h : t < κ * p then
-    ((Qmat p v u hv hu ξ κ)⁻¹ *ᵥ (fun i : Fin (κ * p) => e (cell p i))) ⟨t, h⟩ else 0
+    ((Qmat p v u ξ κ)⁻¹ *ᵥ (fun i : Fin (κ * p) => e (cell p u i))) ⟨t, h⟩ else 0
 
 /-- **Lemma 3 (c)**: the sweep inverse.  Let `e` be a function on the cells with `e(j,0) ≡ e(j,1)`, and
 `γ = 𝐁⁻¹ e` (part (b)).  With `y = Q⁻¹ ẽ` (`Ysol`; `Z ẽ = p³ y`):
@@ -430,25 +430,25 @@ theorem sweep_inverse (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)})
     (he : ∀ j < κ, (p : R) ∣ e (j, 0) - e (j, 1)) :
     ∃ γ : ℕ × ℕ → R, (∀ j < κ, (p : R) ∣ γ (j, 0) - γ (j, 1)) ∧
       (∀ l < κ, ∀ h ≤ 1, Bop (p := p) v u ξ κ γ (l, h) = e (l, h)) ∧
-      (∀ n < κ * p, ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t *
-          Ysol p v u hv hu ξ κ e t = e (cell p n)) ∧
-      (∀ t < κ * p, (p : R) ^ 2 ∣ Ysol p v u hv hu ξ κ e t - γ (cell p t)) ∧
-      (∀ n < N, (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t *
-          Ysol p v u hv hu ξ κ e t) - Bop (p := p) v u ξ κ γ (cell p n)) := by
+      (∀ n < κ * p, ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t *
+          Ysol p v u ξ κ e t = e (cell p u n)) ∧
+      (∀ t < κ * p, (p : R) ^ 2 ∣ Ysol p v u ξ κ e t - γ (cell p u t)) ∧
+      (∀ n < N, (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t *
+          Ysol p v u ξ κ e t) - Bop (p := p) v u ξ κ γ (cell p u n)) := by
   have hp0 : 0 < p := hp.out.pos
   have hodd := odd_of_ge5 hp5
   obtain ⟨γ, hγV, hBγ, -⟩ := Bop_bijective v u hmax hp5 hN hκN ξ hB e he
-  have hQ := isUnit_det_Qmat v u hv hu hmax hp5 hN hκN ξ hB
-  set Q := Qmat p v u hv hu ξ κ with hQdef
-  let ey : Fin (κ * p) → R := fun i => e (cell p i)
-  let w : Fin (κ * p) → R := fun i => γ (cell p i)
+  have hQ := isUnit_det_Qmat v u hmax hp5 hN hκN ξ hB
+  set Q := Qmat p v u ξ κ with hQdef
+  let ey : Fin (κ * p) → R := fun i => e (cell p u i)
+  let w : Fin (κ * p) → R := fun i => γ (cell p u i)
   let y : Fin (κ * p) → R := Q⁻¹ *ᵥ ey
-  have hYs : ∀ t (ht : t < κ * p), Ysol p v u hv hu ξ κ e t = y ⟨t, ht⟩ := by
+  have hYs : ∀ t (ht : t < κ * p), Ysol p v u ξ κ e t = y ⟨t, ht⟩ := by
     intro t ht; simp [Ysol, y, ey, ht, hQdef]
   have hsumF : ∀ (n : ℕ) (z : ℕ → R) (z' : Fin (κ * p) → R),
       (∀ t (ht : t < κ * p), z t = z' ⟨t, ht⟩) →
-      ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * z t =
-        ∑ t : Fin (κ * p), Qent (p := p) v u hv hu ξ n t * z' t := by
+      ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * z t =
+        ∑ t : Fin (κ * p), Qent (p := p) v u ξ n t * z' t := by
     intro n z z' hz
     rw [Finset.sum_range]
     exact Finset.sum_congr rfl fun t _ => by rw [hz t t.2]
@@ -456,19 +456,19 @@ theorem sweep_inverse (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)})
   have hQy : Q *ᵥ y = ey := by
     rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hQ, Matrix.one_mulVec]
   -- cell action for `γ`
-  have hCA : ∀ n < N, (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * γ (cell p t)) -
-      Bop (p := p) v u ξ κ γ (cell p n) := fun n hn =>
-    cell_action v u hv hu hodd hp5 hN hκN ξ γ hγV n hn
-  have hBn : ∀ n (hn : n < κ * p), Bop (p := p) v u ξ κ γ (cell p n) = e (cell p n) := by
+  have hCA : ∀ n < N, (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * γ (cell p u t)) -
+      Bop (p := p) v u ξ κ γ (cell p u n) := fun n hn =>
+    cell_action v u hodd hp5 hN hκN ξ γ hγV n hn
+  have hBn : ∀ n (hn : n < κ * p), Bop (p := p) v u ξ κ γ (cell p u n) = e (cell p u n) := by
     intro n hn
     have hnl : n / p < κ := (Nat.div_lt_iff_lt_mul hp0).2 hn
-    have hh : half p n ≤ 1 := by rcases half_eq (p := p) n with h | h <;> omega
-    exact hBγ (n / p) hnl (half p n) hh
+    have hh : half p u n ≤ 1 := by rcases half_eq (p := p) (u := u) n with h | h <;> omega
+    exact hBγ (n / p) hnl (half p u n) hh
   -- `Q w ≡ ey`
   have hQw : ∀ i : Fin (κ * p), (p : R) ^ 2 ∣ (ey - Q *ᵥ w) i := by
     intro i
     have h1 := hCA i (lt_of_lt_of_le i.2 hκN)
-    rw [hBn i i.2, hsumF i (fun t => γ (cell p t)) w (fun t ht => rfl), ← dvd_neg, neg_sub] at h1
+    rw [hBn i i.2, hsumF i (fun t => γ (cell p u t)) w (fun t ht => rfl), ← dvd_neg, neg_sub] at h1
     simpa [Matrix.mulVec, dotProduct, Q, Qmat, ey, w] using h1
   have hyw : ∀ i : Fin (κ * p), (p : R) ^ 2 ∣ (y - w) i := by
     intro i
@@ -487,24 +487,24 @@ theorem sweep_inverse (hmax : IsLocalRing.maximalIdeal R = Ideal.span {(p : R)})
     simpa [w] using hyw ⟨t, ht⟩
   · intro n hn
     have h1 := hCA n hn
-    have h2 : (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * Ysol p v u hv hu ξ κ e t) -
-        (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * γ (cell p t)) =
-        ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t *
-          (Ysol p v u hv hu ξ κ e t - γ (cell p t)) := by
+    have h2 : (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * Ysol p v u ξ κ e t) -
+        (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * γ (cell p u t)) =
+        ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t *
+          (Ysol p v u ξ κ e t - γ (cell p u t)) := by
       rw [← Finset.sum_sub_distrib]
       exact Finset.sum_congr rfl fun t _ => by ring
-    have h3 : (p : R) ^ 2 ∣ ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t *
-          (Ysol p v u hv hu ξ κ e t - γ (cell p t)) := by
+    have h3 : (p : R) ^ 2 ∣ ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t *
+          (Ysol p v u ξ κ e t - γ (cell p u t)) := by
       refine Finset.dvd_sum fun t ht => ?_
       have htl := Finset.mem_range.1 ht
       rw [hYs t htl]
-      exact (by simpa [w] using hyw ⟨t, htl⟩ : (p : R) ^ 2 ∣ y ⟨t, htl⟩ - γ (cell p t)).mul_left _
-    have e1 : (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * Ysol p v u hv hu ξ κ e t) -
-        Bop (p := p) v u ξ κ γ (cell p n) =
-        ((∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * Ysol p v u hv hu ξ κ e t) -
-          (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * γ (cell p t))) +
-        ((∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * γ (cell p t)) -
-          Bop (p := p) v u ξ κ γ (cell p n)) := by ring
+      exact (by simpa [w] using hyw ⟨t, htl⟩ : (p : R) ^ 2 ∣ y ⟨t, htl⟩ - γ (cell p u t)).mul_left _
+    have e1 : (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * Ysol p v u ξ κ e t) -
+        Bop (p := p) v u ξ κ γ (cell p u n) =
+        ((∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * Ysol p v u ξ κ e t) -
+          (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * γ (cell p u t))) +
+        ((∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * γ (cell p u t)) -
+          Bop (p := p) v u ξ κ γ (cell p u n)) := by ring
     rw [e1, h2]
     exact dvd_add h3 h1
 

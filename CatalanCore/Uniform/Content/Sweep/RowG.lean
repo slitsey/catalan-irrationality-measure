@@ -102,7 +102,7 @@ end Side
 
 section Minor
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
   {L : Type} [Fintype L] [DecidableEq L] (rn cl : L → ℕ)
 
@@ -122,14 +122,14 @@ Löwner matrix (injective, complete periods).  Row-type labels are the outside r
 pivot columns `DelC`; column-type labels the outside columns `ColOut` and the deleted pivot rows `DelR`.
 If potentials `φR`, `φC` (functions of the node) cover the weights of all pairs of labels, then
 `p^(3 |L| − E) ∣ det` as soon as `3 |L| + ∑ potentials ≤ E + 3 #(row-type labels)`. -/
-theorem minor_dvd (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem minor_dvd (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hπ : π ≤ 1)
     (hrinj : Function.Injective rn) (hcinj : Function.Injective cl)
     (hrc : ∀ a, (rn a / p + 1) * p ≤ N) (hcc : ∀ b, (cl b / p + 1) * p ≤ N)
     (φR φC : ℕ → ℕ)
     (hW : ∀ (n m : ℕ) (kR kC : Bool), RowLab rn cl p κ k' π kR n → ColLab rn cl p κ k' π kC m →
-      Wlab p kR kC (oc p κ π (n % p)) (oc p κ (1 - π) (m % p)) n m ≤ φR n + φC m)
+      Wlab u p kR kC (oc p κ π (n % p)) (oc p κ (1 - π) (m % p)) n m ≤ φR n + φC m)
     (E : ℕ)
     (hcond : 3 * Fintype.card L +
       (∑ a ∈ Finset.univ.filter (fun a : L => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = rn a), φR (rn a) +
@@ -141,7 +141,7 @@ theorem minor_dvd (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 
       E + 3 * ((Finset.univ.filter (fun a : L => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = rn a)).card +
         (Finset.univ.filter (fun y : PivIdx p κ k' => ∀ b, colNode p κ k' π y ≠ cl b)).card)) :
     (p : R) ^ (3 * Fintype.card L - E) ∣
-      (Matrix.of fun a b => Qent (p := p) v u hv hu ξ (rn a) (cl b)).det := by
+      (Matrix.of fun a b => Qent (p := p) v u ξ (rn a) (cl b)).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
   set DelR : Finset (PivIdx p κ k') := Finset.univ.filter (fun x => ∀ a, rowNode p κ k' π x ≠ rn a) with hDelR
@@ -168,19 +168,19 @@ theorem minor_dvd (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 
   have hle2 : DelC.card ≤ Fintype.card (PivIdx p κ k') := Finset.card_le_univ _
   let eC' : (Lo ⊕ ↥DelC) ≃ (Lc ⊕ ↥DelR) := Fintype.equivOfCardEq (by
     simp only [Fintype.card_sum, Fintype.card_coe]; omega)
-  have hZ1 : Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) * Zp (p := p) v u hv hu κ k' π ξ = 1 := by
-    rw [Qm_Hq]; exact Qp_mul_Zp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have hZ2 : Zp (p := p) v u hv hu κ k' π ξ * Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) = 1 := by
-    rw [Qm_Hq]; exact Zp_mul_Qp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have hJ := Schur.jacobi_L (Hq (p := p) v u hv hu κ k' π ξ zn yn) DelR DelC
-    (Zp (p := p) v u hv hu κ k' π ξ) hZ1 hZ2
+  have hZ1 : Schur.Qm (Hq (p := p) v u κ k' π ξ zn yn) * Zp (p := p) v u κ k' π ξ = 1 := by
+    rw [Qm_Hq]; exact Qp_mul_Zp v u hU hpv hodd hp5 hN hH hRad
+  have hZ2 : Zp (p := p) v u κ k' π ξ * Schur.Qm (Hq (p := p) v u κ k' π ξ zn yn) = 1 := by
+    rw [Qm_Hq]; exact Zp_mul_Qp v u hU hpv hodd hp5 hN hH hRad
+  have hJ := Schur.jacobi_L (Hq (p := p) v u κ k' π ξ zn yn) DelR DelC
+    (Zp (p := p) v u κ k' π ξ) hZ1 hZ2
     (fun a => Sum.map Subtype.val id (eR a)) (fun a => Sum.map Subtype.val id (eC a))
     (fun l : Lo ⊕ ↥DelC => Sum.map id Subtype.val (Equiv.refl _ l))
     (fun l => Sum.map id Subtype.val (eC' l)) eR eC (Equiv.refl _) eC'
     (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ => rfl)
   -- the minor is the Q-minor
-  have hM1 : (Matrix.of fun a b => Hq (p := p) v u hv hu κ k' π ξ zn yn (Sum.map Subtype.val id (eR a))
-      (Sum.map Subtype.val id (eC b))) = Matrix.of fun a b => Qent (p := p) v u hv hu ξ (rn a) (cl b) := by
+  have hM1 : (Matrix.of fun a b => Hq (p := p) v u κ k' π ξ zn yn (Sum.map Subtype.val id (eR a))
+      (Sum.map Subtype.val id (eC b))) = Matrix.of fun a b => Qent (p := p) v u ξ (rn a) (cl b) := by
     ext a b
     simp only [Hq, Matrix.of_apply]
     have h1 := heR a
@@ -233,19 +233,19 @@ theorem minor_dvd (hU : UnitProp p ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 
     · exact (Finset.sum_subtype ColOut (fun a => by simp [hColOut]) (fun a => φC (cl a))).symm
     · exact Finset.sum_coe_sort DelR (fun x => φC (rowNode p κ k' π x))
   have hdetSw : (p : R) ^ (3 * Fintype.card L - E) ∣
-      (Matrix.of fun a b => (Schur.Sw (Hq (p := p) v u hv hu κ k' π ξ zn yn)
-        (Zp (p := p) v u hv hu κ k' π ξ)) (ρ' a) (κ'' b)).det := by
-    refine det_dvd_of_potentials (p : R) _ (fun a b => 3 - wR (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b))
+      (Matrix.of fun a b => (Schur.Sw (Hq (p := p) v u κ k' π ξ zn yn)
+        (Zp (p := p) v u κ k' π ξ)) (ρ' a) (κ'' b)).det := by
+    refine det_dvd_of_potentials (p : R) _ (fun a b => 3 - wR u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b))
       ur uc ?_ ?_ _ ?_
     · intro a b
-      exact sw_dvd v u hv hu zn yn hU hpv hodd hp5 hN hH hRad hπ hzc hyc (ρ' a) (κ'' b)
+      exact sw_dvd v u zn yn hU hpv hodd hp5 hN hH hRad hπ hzc hyc (ρ' a) (κ'' b)
     · intro a b
-      have h3 : wR (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤
+      have h3 : wR u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤
           φR (nR (p := p) (κ := κ) (k' := k') (π := π) zn (ρ' a)) +
             φC (nC (p := p) (κ := κ) (k' := k') (π := π) yn (κ'' b)) :=
         hW _ _ _ _ (rowLab_of a) (colLab_of (eC' b))
-      have h4 : wR (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤ 3 := Wlab_le _ _ _ _ _ _ _
-      show 3 ≤ (3 - wR (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b)) +
+      have h4 : wR u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤ 3 := Wlab_le _ _ _ _ _ _ _ _
+      show 3 ≤ (3 - wR u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b)) +
         φR (nR (p := p) (κ := κ) (k' := k') (π := π) zn (ρ' a)) +
           φC (nC (p := p) (κ := κ) (k' := k') (π := π) yn (κ'' b))
       omega
@@ -258,7 +258,7 @@ end Minor
 
 section MemberG
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {κ k' π : ℕ} {ι κw : Type} [Fintype ι] [DecidableEq ι] [Fintype κw] [DecidableEq κw]
   (c : ι → ℕ) (xs ys : κw → ℕ)
 
@@ -290,7 +290,7 @@ theorem member_gle (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (φR φC : ℕ → ℕ)
     (hW : ∀ (n m : ℕ) (kR kC : Bool), RowLab (memRow c xs) (memCol c ys) p κ k' π kR n →
       ColLab (memRow c xs) (memCol c ys) p κ k' π kC m →
-      Wlab p kR kC (oc p κ π (n % p)) (oc p κ (1 - π) (m % p)) n m ≤ φR n + φC m)
+      Wlab u p kR kC (oc p κ π (n % p)) (oc p κ (1 - π) (m % p)) n m ≤ φR n + φC m)
     (E : ℕ)
     (hcond : by classical exact 3 * Fintype.card (ι ⊕ κw) +
       (∑ a ∈ Finset.univ.filter (fun a : ι ⊕ κw => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = memRow c xs a),
@@ -303,15 +303,15 @@ theorem member_gle (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
           φC (rowNode p κ k' π x)) ≤
       E + 3 * ((Finset.univ.filter (fun a : ι ⊕ κw => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = memRow c xs a)).card +
         (Finset.univ.filter (fun y : PivIdx p κ k' => ∀ b, colNode p κ k' π y ≠ memCol c ys b)).card)) :
-    GLE p E (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X])).det := by
+    GLE p E (seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
   have hr : ∀ a, memRow c xs a < N := fun a => lt_of_complete hp0 (hrc a)
   have hcl : ∀ b, memCol c ys b < N := fun b => lt_of_complete hp0 (hcc b)
-  have hd := minor_dvd (p := p) (R := RP p) (ξ := xiP p) (π := π) (κ := κ) (k' := k') v u hv hu
-    (memRow c xs) (memCol c ys) (xiP_unitProp p) hpv hodd hp5 hN hH (pRad_RP p) hπ
+  have hd := minor_dvd (p := p) (R := RP p) (ξ := xiP p) (π := π) (κ := κ) (k' := k') v u
+    (memRow c xs) (memCol c ys) (unitDet_of_unitProp v u κ k' (xiP_unitProp p) hodd hN hH hpv) hpv hodd hp5 hN hH (pRad_RP p) hπ
     (memRow_injective c xs hcinj hxinj h2) (memCol_injective c ys hcinj hyinj h1) hrc hcc φR φC hW E hcond
-  have hg := gle_member (p := p) v u hv hu c xs ys hN hr hcl hcinj h1 h2 h3 hd
+  have hg := gle_member (p := p) v u c xs ys hN hr hcl hcinj h1 h2 h3 hd
   refine GLE.mono ?_ hg
   rw [Fintype.card_sum] at *
   omega

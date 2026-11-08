@@ -14,8 +14,7 @@ denominator at most `4 r − 2 p + 2 m + ∑ uX + ∑ uY`.
 
 At `ξ = p X` the hypothesis `UnitProp p ξ` of the built sweep chain fails (`p X` is not a unit), and only its
 consequence is used there: the determinants of the class matrices are units (`UnitDet`).  The chain
-`Yr_class … colLab` is therefore restated in the namespace `E2` with `UnitDet` in place of `UnitProp`
-(proofs unchanged); `sw_dvdE` is Proposition W for `k' = 0` with (i) the class-free weight (for `k' = 0` the
+`Yr_class … colLab` is stated under `UnitDet` (`Sweep.Classes`), which `UnitProp` implies; `sw_dvdE` is Proposition W for `k' = 0` with (i) the class-free weight (for `k' = 0` the
 class solutions do not depend on the class) and (ii) the diagonal weight `2` of the pivot labels in the
 period `1` (`B̄⁻¹[1,1] = 0`, since `M⁰[0,0] = 0`: there is no pole at `k = 0`).
 -/
@@ -27,431 +26,6 @@ open CatalanCore CatalanCore.Rect
 namespace CatalanCore.Uniform.Content.Sweep
 
 namespace E2
-
-/-- The unit hypothesis of the sweep: the class matrices `B^h_o` have unit determinant. -/
-def UnitDet (p : ℕ) [Fact p.Prime] (v u : ℤ) (κ k' : ℕ) {R : Type*} [CommRing R] [Algebra (LocRing p) R]
-    (ξ : R) : Prop :=
-  ∀ h o : ℕ, h ≤ 1 → o ≤ 1 → IsUnit (BclR (p := p) v u κ k' ξ h o).det
-
-section ClassE
-
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ} (κ k' : ℕ)
-  {R : Type*} [CommRing R] [Algebra (LocRing p) R] {ξ : R}
-
-theorem Yr_class (hU : UnitDet p v u κ k' ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
-    (hH : (κ + 2 * k') * p ≤ N) (hv : ¬ (p : ℤ) ∣ v) {h o : ℕ} (hh : h ≤ 1) (ho : o ≤ 1) (b : ℕ)
-    {l : ℕ} (hl : l ∈ Cper κ k' (1 - o)) :
-    ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h l j * Yr (p := p) v u κ k' ξ b h o j =
-      GamR (p := p) v u b h l := by
-  have hdet := hU _ _ hh ho
-  obtain ⟨c, rfl⟩ := exists_rowPer κ k' o ho hl
-  have e1 : ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h (rowPer κ k' o c) j * Yr (p := p) v u κ k' ξ b h o j =
-      ∑ a, Bm (p := p) v u ξ h (rowPer κ k' o c) (colPer κ k' o a) * Wvec (p := p) v u κ k' ξ b h o a := by
-    unfold Yr
-    simp only [Finset.mul_sum]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    simp only [mul_ite, mul_zero]
-    rw [Finset.sum_ite_eq (Cper κ k' o) (colPer κ k' o a)]
-    rw [if_pos (colPer_mem κ k' o ho a)]
-  rw [e1]
-  have e2 : (BclR (p := p) v u κ k' ξ h o *ᵥ Wvec (p := p) v u κ k' ξ b h o) c =
-      GamR (p := p) v u b h (rowPer κ k' o c) := by
-    unfold Wvec
-    rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hdet, Matrix.one_mulVec]
-  rw [← e2]
-  rfl
-
-theorem Yr_half (hU : UnitDet p v u κ k' ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
-    (hH : (κ + 2 * k') * p ≤ N) (hv : ¬ (p : ℤ) ∣ v) {o : ℕ} (ho : o ≤ 1) (b : ℕ)
-    {j : ℕ} (hj : j ∈ Cper κ k' o) :
-    (p : R) ∣ Yr (p := p) v u κ k' ξ b 1 o j - Yr (p := p) v u κ k' ξ b 0 o j := by
-  have hdet1 := hU 1 o (by norm_num) ho
-  have hper : ∀ j, j < κ + 2 * k' → (j + 1) * p ≤ N := fun j hj => by nlinarith
-  obtain ⟨a, rfl⟩ := exists_colPer κ k' o ho hj
-  rw [Yr_colPer, Yr_colPer]
-  -- d = Γ_1 - B_1 W_0
-  set W0 := Wvec (p := p) v u κ k' ξ b 0 o with hW0
-  set B1 := BclR (p := p) v u κ k' ξ 1 o with hB1
-  set B0 := BclR (p := p) v u κ k' ξ 0 o with hB0
-  set G1 : Fin κ ⊕ Fin k' → R := fun c => GamR (p := p) v u b 1 (rowPer κ k' o c) with hG1
-  set G0 : Fin κ ⊕ Fin k' → R := fun c => GamR (p := p) v u b 0 (rowPer κ k' o c) with hG0
-  have hdet0 := hU 0 o (by norm_num) ho
-  have hB0W : B0 *ᵥ W0 = G0 := by
-    rw [hW0, Wvec, hB0, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hdet0, Matrix.one_mulVec]
-  have hd : ∀ c, (p : R) ∣ (G1 - B1 *ᵥ W0) c := by
-    intro c
-    have e : (G1 - B1 *ᵥ W0) c = (G1 c - G0 c) - ((B1 - B0) *ᵥ W0) c := by
-      have := congrFun hB0W c
-      simp only [Pi.sub_apply, Matrix.sub_mulVec]
-      rw [← this]; ring
-    rw [e]
-    refine dvd_sub ?_ ?_
-    · have hl := (rowPer_mem κ k' o ho c)
-      have hlt : rowPer κ k' o c < κ + 2 * k' := ((mem_Cper (κ := κ) (k' := k')).1 hl).1
-      simp only [hG1, hG0, GamR]
-      by_cases hb : b = 0
-      · simp [hb]
-      · simp only [hb, if_false]
-        exact sigR_halves v u hodd hN (hper _ hlt)
-    · simp only [Matrix.mulVec, dotProduct, Matrix.sub_apply]
-      refine Finset.dvd_sum fun a' _ => ?_
-      refine Dvd.dvd.mul_right ?_ _
-      have hr : rowPer κ k' o c < κ + 2 * k' := ((mem_Cper (κ := κ) (k' := k')).1 (rowPer_mem κ k' o ho c)).1
-      have hc : colPer κ k' o a' < κ + 2 * k' := ((mem_Cper (κ := κ) (k' := k')).1 (colPer_mem κ k' o ho a')).1
-      exact Bm_halves v u hodd hN ξ (hper _ hr) (hper _ hc)
-  have hdiff : Wvec (p := p) v u κ k' ξ b 1 o - W0 = B1⁻¹ *ᵥ (G1 - B1 *ᵥ W0) := by
-    rw [Matrix.mulVec_sub, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hdet1, Matrix.one_mulVec]
-    rfl
-  have := congrFun hdiff a
-  simp only [Pi.sub_apply] at this
-  rw [this]
-  simp only [Matrix.mulVec, dotProduct]
-  exact Finset.dvd_sum fun c _ => Dvd.dvd.mul_left (hd c) _
-
-end ClassE
-
-section QInvE
-
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
-  {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
-
-theorem Qp_mul_Wp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N) (x z : PivIdx p κ k') :
-    (p : R) ∣ (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ) x z - (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) x z := by
-  rw [Matrix.mul_apply, Fintype.sum_prod_type, Finset.sum_eq_single z.1]
-  swap
-  · intro a _ ha
-    apply Finset.sum_eq_zero
-    intro b _
-    simp [Wp, ha]
-  swap
-  · intro h; exact absurd (Finset.mem_univ _) h
-  by_cases hxz : x.1 = z.1
-  · obtain ⟨x1, x2⟩ := x
-    obtain ⟨z1, z2⟩ := z
-    simp only at hxz
-    subst hxz
-    have hh : half p (x1 : ℕ) ≤ 1 := half_le_one' _
-    have hdet := hU _ _ hh (oc_le (π := π) (κ := κ) (p := p) x1)
-    have hmul := Matrix.mul_nonsing_inv _ hdet
-    have e1 : ∑ b, Qp (p := p) v u hv hu κ k' π ξ (x1, x2) (x1, b) * Wp (p := p) v u κ k' π ξ (x1, b) (x1, z2) -
-        (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) (x1, x2) (x1, z2) =
-        ∑ b, (Qp (p := p) v u hv hu κ k' π ξ (x1, x2) (x1, b) -
-            BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1) x2 b) *
-          ((BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1))⁻¹) b z2 := by
-      have := congrFun (congrFun hmul x2) z2
-      rw [Matrix.mul_apply] at this
-      have h1 : (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) (x1, x2) (x1, z2) =
-          (1 : Matrix (Fin κ ⊕ Fin k') (Fin κ ⊕ Fin k') R) x2 z2 := by
-        simp [Matrix.one_apply]
-      have hW : ∀ b, Wp (p := p) v u κ k' π ξ (x1, b) (x1, z2) =
-          ((BclR (p := p) v u κ k' ξ (half p x1) (oc p κ π x1))⁻¹) b z2 := fun b => by simp [Wp]
-      rw [h1, ← this]
-      simp only [hW, sub_mul, Finset.sum_sub_distrib]
-    rw [e1]
-    refine Finset.dvd_sum fun b _ => ?_
-    exact Dvd.dvd.mul_right (Qp_congr v u hv hu hodd hp5 hN hH ξ (x := (x1, x2)) (y := (x1, b)) rfl) _
-  · have h1 : (1 : Matrix (PivIdx p κ k') (PivIdx p κ k') R) x z = 0 := by
-      rw [Matrix.one_apply, if_neg]
-      intro h; exact hxz (by rw [h])
-    rw [h1, sub_zero]
-    refine Finset.dvd_sum fun b _ => ?_
-    exact Dvd.dvd.mul_right (Qp_noncong v u hv hu hodd hp5 hN hH ξ (x := x) (y := (z.1, b)) hxz) _
-
-theorem isUnit_det_Qp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    IsUnit (Qp (p := p) v u hv hu κ k' π ξ).det := by
-  have h := det_sub_one_dvd _ (Qp_mul_Wp (p := p) (π := π) v u hv hu hU hpv hodd hp5 hN hH)
-  obtain ⟨c, hc⟩ := h
-  have : (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ).det = 1 + (p : R) * c := by
-    rw [← hc]; ring
-  rw [Matrix.det_mul] at this
-  have hu1 := hRad c
-  rw [← this] at hu1
-  exact isUnit_of_mul_isUnit_left hu1
-
-theorem Qp_mul_Zp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    Qp (p := p) v u hv hu κ k' π ξ * Zp (p := p) v u hv hu κ k' π ξ = 1 :=
-  Matrix.mul_nonsing_inv _ (isUnit_det_Qp (p := p) v u hv hu hU hpv hodd hp5 hN hH hRad)
-
-theorem Zp_mul_Qp (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) :
-    Zp (p := p) v u hv hu κ k' π ξ * Qp (p := p) v u hv hu κ k' π ξ = 1 :=
-  Matrix.nonsing_inv_mul _ (isUnit_det_Qp (p := p) v u hv hu hU hpv hodd hp5 hN hH hRad)
-
-end QInvE
-
-section MasterQE
-
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
-  {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
-
-theorem YrF_class (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
-    (hH : (κ + 2 * k') * p ≤ N) :
-    ∀ b h o, o ≤ 1 → h ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
-      ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h l j * YrF (p := p) v u κ k' ξ b h o j =
-        GamR (p := p) v u b h l :=
-  fun b h o ho hh l hl => Yr_class v u κ k' hU hodd hN hH hpv hh ho b hl
-
-theorem YrF_half (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
-    (hH : (κ + 2 * k') * p ≤ N) :
-    ∀ b o, o ≤ 1 → ∀ j ∈ Cper κ k' o, (p : R) ∣ YrF (p := p) v u κ k' ξ b 1 o j - YrF (p := p) v u κ k' ξ b 0 o j :=
-  fun b o ho j hj => Yr_half v u κ k' hU hodd hN hH hpv ho b hj
-
-/-- **Lemma G, in matrix form**: `Q Θ^b = Γ^b` on the pivot rows, modulo `p²`. -/
-theorem master_Q_Th (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N) {b : ℕ} (hb : b ≤ 1) (x : PivIdx p κ k') :
-    ∑ y, pi2 p R (Qp (p := p) v u hv hu κ k' π ξ x y) * Th (p := p) v u κ k' π ξ b y =
-      Gen.Gam (sgS (p := p) (R := R) v u) b (half p x.1) (rowPer κ k' (oc p κ π x.1) x.2) := by
-  have hp0 : 0 < p := hp.out.pos
-  have hL := lemmaG_S (p := p) (π := π) v u hv hu hodd hp5 hN hH ξ (YrF (p := p) v u κ k' ξ)
-    (YrF_class v u hU hpv hodd hN hH) (YrF_half v u hU hpv hodd hN hH) (rowNode p κ k' π x)
-    (rowNode_lt hH x) b hb
-  have hL' : ∑ y : PivIdx p κ k', (fun t => qS (p := p) v u hv hu ξ (rowNode p κ k' π x) t *
-        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) v u) (ddS (p := p) (R := R))
-          (YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ)) (t % p) *
-          YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p t) (oc p κ π (t % p)) (t / p)))
-        (colNode p κ k' π y) = _ := (sum_colNode κ k' π hp0 _).trans hL
-  have hS : ∀ y : PivIdx p κ k', (fun t => qS (p := p) v u hv hu ξ (rowNode p κ k' π x) t *
-        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) v u) (ddS (p := p) (R := R))
-          (YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ)) (t % p) *
-          YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p t) (oc p κ π (t % p)) (t / p)))
-        (colNode p κ k' π y) =
-      pi2 p R (Qp (p := p) v u hv hu κ k' π ξ x y) * Th (p := p) v u κ k' π ξ b y := by
-    intro y
-    simp only [colNode_mod, colNode_div hp0]
-    have : half p (colNode p κ k' π y) = half p y.1 := by
-      unfold colNode; rw [half_node hp0 _ _ y.1.2]
-    rw [this]
-    rfl
-  rw [Finset.sum_congr rfl (fun y _ => hS y)] at hL'
-  rw [hL']
-  have hmod : rowNode p κ k' π x % p = x.1 := rowNode_mod x
-  have hdiv : rowNode p κ k' π x / p = rowPer κ k' (oc p κ π x.1) x.2 := rowNode_div hp0 x
-  have hhalf : half p (rowNode p κ k' π x) = half p x.1 := by
-    unfold rowNode; rw [half_node hp0 _ _ x.1.2]
-  have hcl := congrArg (pi2 p R)
-    (YrF_class v u hU hpv hodd hN hH b (half p x.1) (oc p κ π x.1) (oc_le x.1) (half_le_one' _)
-      (rowPer κ k' (oc p κ π x.1) x.2) (rowPer_mem κ k' _ (oc_le x.1) x.2))
-  rw [map_sum] at hcl
-  simp only [map_mul] at hcl
-  have hsum : ∑ j ∈ Cper κ k' (oc p κ π x.1), BmS (p := p) v u ξ (half p x.1) (rowPer κ k' (oc p κ π x.1) x.2) j *
-      YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p x.1) (oc p κ π x.1) j =
-      Gen.Gam (sgS (p := p) (R := R) v u) b (half p x.1) (rowPer κ k' (oc p κ π x.1) x.2) := by
-    unfold BmS YvS
-    rw [min_eq_left (half_le_one' _), Gam_sgS_eq, min_eq_left (half_le_one' _)]
-    exact hcl
-  simp only [hmod, hdiv, hhalf]
-  rw [hsum]
-  unfold Gen.eps
-  ring
-/-- `Z W^b` reduces to `Θ^b`. -/
-theorem pi2_gv (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) {b : ℕ} (hb : b ≤ 1) (x : PivIdx p κ k') :
-    pi2 p R (gv (p := p) v u hv hu κ k' π ξ b x) = Th (p := p) v u κ k' π ξ b x := by
-  set ZS := (pi2 p R).mapMatrix (Zp (p := p) v u hv hu κ k' π ξ) with hZS
-  set QS := (pi2 p R).mapMatrix (Qp (p := p) v u hv hu κ k' π ξ) with hQS
-  have hZQ : ZS * QS = 1 := by
-    rw [hZS, hQS, ← RingHom.map_mul, Zp_mul_Qp v u hv hu hU hpv hodd hp5 hN hH hRad, map_one]
-  have hQT : QS *ᵥ (Th (p := p) v u κ k' π ξ b) = fun x => Gen.Gam (sgS (p := p) (R := R) v u) b (half p x.1)
-      (rowPer κ k' (oc p κ π x.1) x.2) := by
-    funext x'
-    rw [← master_Q_Th v u hv hu hU hpv hodd hp5 hN hH hb x']
-    simp [Matrix.mulVec, dotProduct, hQS]
-  have hTh : Th (p := p) v u κ k' π ξ b = ZS *ᵥ (fun x => Gen.Gam (sgS (p := p) (R := R) v u) b (half p x.1)
-      (rowPer κ k' (oc p κ π x.1) x.2)) := by
-    rw [← hQT, Matrix.mulVec_mulVec, hZQ, Matrix.one_mulVec]
-  rw [hTh]
-  unfold gv
-  simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, hZS, RingHom.mapMatrix_apply, Matrix.map_apply]
-  refine Finset.sum_congr rfl fun x' _ => ?_
-  rw [pi2_Rvec v u hv hu hodd hN hH hb x']
-
-/-- **Outside labels** (Corollary of Lemma G): `V(n) ≡ ε(ω_n) (Γ_h(j) − β(n)) mod p²`. -/
-theorem pi2_Vout (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) {b : ℕ} (hb : b ≤ 1) {n : ℕ} (hn : n < N) :
-    pi2 p R (Vout (p := p) v u hv hu κ k' π ξ b n) =
-      epsS (p := p) v u κ k' π ξ (n % p) *
-        pi2 p R (Gout (p := p) v u κ k' ξ b (half p n) (oc p κ π (n % p)) (n / p)) := by
-  have hp0 : 0 < p := hp.out.pos
-  have hL := lemmaG_S (p := p) (π := π) v u hv hu hodd hp5 hN hH ξ (YrF (p := p) v u κ k' ξ)
-    (YrF_class v u hU hpv hodd hN hH) (YrF_half v u hU hpv hodd hN hH) n hn b hb
-  have hL' : ∑ y : PivIdx p κ k', (fun t => qS (p := p) v u hv hu ξ n t *
-        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) v u) (ddS (p := p) (R := R))
-          (YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ)) (t % p) *
-          YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p t) (oc p κ π (t % p)) (t / p)))
-        (colNode p κ k' π y) = _ := (sum_colNode κ k' π hp0 _).trans hL
-  have hS : ∀ y : PivIdx p κ k', (fun t => qS (p := p) v u hv hu ξ n t *
-        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) v u) (ddS (p := p) (R := R))
-          (YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ)) (t % p) *
-          YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p t) (oc p κ π (t % p)) (t / p)))
-        (colNode p κ k' π y) =
-      pi2 p R (Qent (p := p) v u hv hu ξ n (colNode p κ k' π y) *
-        gv (p := p) v u hv hu κ k' π ξ b y) := by
-    intro y
-    simp only [colNode_mod, colNode_div hp0]
-    have : half p (colNode p κ k' π y) = half p y.1 := by
-      unfold colNode; rw [half_node hp0 _ _ y.1.2]
-    rw [this, map_mul, pi2_gv v u hv hu hU hpv hodd hp5 hN hH hRad hb y]
-    rfl
-  rw [Finset.sum_congr rfl (fun y _ => hS y), ← map_sum] at hL'
-  unfold Vout
-  rw [map_sub, hL', pi2_outG v u hv hu hodd hN hn]
-  unfold Gout
-  rw [map_sub, map_sum]
-  have hh := half_le_one' (p := p) n
-  have hG : pi2 p R (GamR (p := p) v u b (half p n) (n / p)) =
-      Gen.Gam (sgS (p := p) (R := R) v u) b (half p n) (n / p) := by
-    rw [Gam_sgS_eq, min_eq_left hh]
-  rw [hG]
-  simp only [map_mul]
-  have hβ : ∑ j ∈ Cper κ k' (oc p κ π (n % p)), pi2 p R (Bm (p := p) v u ξ (half p n) (n / p) j) *
-      pi2 p R (YrF (p := p) v u κ k' ξ b (half p n) (oc p κ π (n % p)) j) =
-      ∑ j ∈ Cper κ k' (oc p κ π (n % p)), BmS (p := p) v u ξ (half p n) (n / p) j *
-      YvS (p := p) (R := R) (YrF (p := p) v u κ k' ξ) b (half p n) (oc p κ π (n % p)) j := by
-    refine Finset.sum_congr rfl fun j _ => ?_
-    unfold BmS YvS
-    rw [min_eq_left hh]
-  rw [hβ]
-  unfold epsS Gen.eps
-  ring
-
-end MasterQE
-
-section SchurIfaceE
-
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
-  {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
-  {I J : Type*} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J] (zn : I → ℕ) (yn : J → ℕ)
-
-omit [DecidableEq I] [DecidableEq J] in
-theorem voutPat (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (σ : ℕ) {n : ℕ} (hn : n < N) :
-    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ Vout (p := p) v u hv hu κ k' σ ξ b n -
-      e * Gout (p := p) v u κ k' ξ b (half p n) (oc p κ σ (n % p)) (n / p) := by
-  obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (epsS (p := p) v u κ k' σ ξ (n % p))
-  refine ⟨e, fun b hb => ?_⟩
-  rw [← pi2_eq_iff, map_mul, pi2_Vout v u hv hu hU hpv hodd hp5 hN hH hRad hb hn]
-  have : pi2 p R e = epsS (p := p) v u κ k' σ ξ (n % p) := he
-  rw [this]
-
-omit [DecidableEq I] [DecidableEq J] in
-theorem gvPat (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (σ : ℕ) (y : PivIdx p κ k') :
-    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ gv (p := p) v u hv hu κ k' σ ξ b y -
-      e * YrF (p := p) v u κ k' ξ b (half p (colNode p κ k' σ y)) (oc p κ σ (colNode p κ k' σ y % p))
-        (colNode p κ k' σ y / p) := by
-  have hp0 : 0 < p := hp.out.pos
-  obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (epsS (p := p) v u κ k' σ ξ y.1)
-  refine ⟨e, fun b hb => ?_⟩
-  rw [← pi2_eq_iff, map_mul, pi2_gv v u hv hu hU hpv hodd hp5 hN hH hRad hb y]
-  have : pi2 p R e = epsS (p := p) v u κ k' σ ξ y.1 := he
-  rw [this, colNode_mod, colNode_div hp0]
-  have hh : half p (colNode p κ k' σ y) = half p y.1 := by
-    unfold colNode; rw [half_node hp0 _ _ y.1.2]
-  rw [hh]
-  unfold Th YvS
-  rw [min_eq_left (half_le_one' _)]
-
-theorem patF_halves (hodd : p % 2 = 1) (hN : 2 * N < p * p) (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v)
-    (hH : (κ + 2 * k') * p ≤ N) (isOut : Bool) {o l : ℕ} (b : ℕ) (hl : (l + 1) * p ≤ N)
-    (hlc : isOut = false → l ∈ Cper κ k' o) (ho : o ≤ 1) :
-    (p : R) ∣ patF (p := p) v u κ k' ξ isOut b 1 o l - patF (p := p) v u κ k' ξ isOut b 0 o l := by
-  cases isOut
-  · simp only [patF, Bool.false_eq_true, if_false]
-    exact YrF_half v u hU hpv hodd hN hH b o ho l (hlc rfl)
-  · simp only [patF, if_true, Gout]
-    have e : (GamR (p := p) v u b 1 l - ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ 1 l j * YrF (p := p) v u κ k' ξ b 1 o j) -
-        (GamR (p := p) v u b 0 l - ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ 0 l j * YrF (p := p) v u κ k' ξ b 0 o j) =
-        (GamR (p := p) v u b 1 l - GamR (p := p) v u b 0 l) -
-          ∑ j ∈ Cper κ k' o, ((Bm (p := p) v u ξ 1 l j - Bm (p := p) v u ξ 0 l j) * YrF (p := p) v u κ k' ξ b 1 o j +
-            Bm (p := p) v u ξ 0 l j * (YrF (p := p) v u κ k' ξ b 1 o j - YrF (p := p) v u κ k' ξ b 0 o j)) := by
-      have : ∀ j ∈ Cper κ k' o, Bm (p := p) v u ξ 1 l j * YrF (p := p) v u κ k' ξ b 1 o j -
-          Bm (p := p) v u ξ 0 l j * YrF (p := p) v u κ k' ξ b 0 o j =
-          (Bm (p := p) v u ξ 1 l j - Bm (p := p) v u ξ 0 l j) * YrF (p := p) v u κ k' ξ b 1 o j +
-            Bm (p := p) v u ξ 0 l j * (YrF (p := p) v u κ k' ξ b 1 o j - YrF (p := p) v u κ k' ξ b 0 o j) :=
-        fun j _ => by ring
-      have hs : ∑ j ∈ Cper κ k' o, ((Bm (p := p) v u ξ 1 l j - Bm (p := p) v u ξ 0 l j) * YrF (p := p) v u κ k' ξ b 1 o j +
-            Bm (p := p) v u ξ 0 l j * (YrF (p := p) v u κ k' ξ b 1 o j - YrF (p := p) v u κ k' ξ b 0 o j)) =
-          ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ 1 l j * YrF (p := p) v u κ k' ξ b 1 o j -
-          ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ 0 l j * YrF (p := p) v u κ k' ξ b 0 o j := by
-        rw [← Finset.sum_sub_distrib]
-        exact Finset.sum_congr rfl (fun j hj => (this j hj).symm)
-      rw [hs]; ring
-    rw [e]
-    refine dvd_sub ?_ (Finset.dvd_sum fun j hj => ?_)
-    · unfold GamR
-      by_cases hb : b = 0
-      · simp [hb]
-      · simp only [hb, if_false]; exact sigR_halves v u hodd hN hl
-    · have hjlt : j < κ + 2 * k' := ((mem_Cper (κ := κ) (k' := k')).1 hj).1
-      have hjc : (j + 1) * p ≤ N := by nlinarith
-      exact dvd_add (Dvd.dvd.mul_right (Bm_halves v u hodd hN ξ hl hjc) _)
-        (Dvd.dvd.mul_left (YrF_half v u hU hpv hodd hN hH b o ho j hj) _)
-theorem sw_mul (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hπ : π ≤ 1)
-    (hzn : ∀ z, zn z < N) (hyn : ∀ w, yn w < N) (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') :
-    (((nR (p := p) (κ := κ) (k' := k') (π := π) zn r : ℕ) : R) -
-        ((nC (p := p) (κ := κ) (k' := k') (π := π) yn c : ℕ) : R)) *
-      Schur.Sw (Hq (p := p) v u hv hu κ k' π ξ zn yn) (Zp (p := p) v u hv hu κ k' π ξ) r c =
-    (p : R) * (labR (p := p) v u hv hu κ k' π ξ zn 1 r * labC (p := p) v u hv hu κ k' π ξ yn 0 c -
-      labR (p := p) v u hv hu κ k' π ξ zn 0 r * labC (p := p) v u hv hu κ k' π ξ yn 1 c) := by
-  have hZ1 : Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) * Zp (p := p) v u hv hu κ k' π ξ = 1 := by
-    rw [Qm_Hq]; exact Qp_mul_Zp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have hZ2 : Zp (p := p) v u hv hu κ k' π ξ * Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) = 1 := by
-    rw [Qm_Hq]; exact Zp_mul_Qp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have h := Schur.pivot_displacement (isDisp_Hq v u hv hu zn yn hodd hN hH hzn hyn (ξ := ξ) (π := π)) hZ1 hZ2 r c
-  have e0 := congrFun (R0_eq v u hv hu κ k' π ξ zn yn hπ) r
-  have e1 := congrFun (R1_eq v u hv hu κ k' π ξ zn yn hπ) r
-  have e2 := congrFun (C0_eq v u hv hu κ k' π ξ zn yn hπ) c
-  have e3 := congrFun (C1_eq v u hv hu κ k' π ξ zn yn hπ) c
-  have hnr : Schur.nodeR (aF (p := p) (κ := κ) (k' := k') (π := π) zn) (bF (p := p) (κ := κ) (k' := k') (π := π) yn) r =
-      ((nR (p := p) (κ := κ) (k' := k') (π := π) zn r : ℕ) : R) := by
-    rcases r with z | y <;> rfl
-  have hnc : Schur.nodeC (aF (p := p) (κ := κ) (k' := k') (π := π) zn) (bF (p := p) (κ := κ) (k' := k') (π := π) yn) c =
-      ((nC (p := p) (κ := κ) (k' := k') (π := π) yn c : ℕ) : R) := by
-    rcases c with w | x <;> rfl
-  rw [hnr, hnc, e0, e1, e2, e3] at h
-  linear_combination h
-
-theorem rowLab (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hzn : ∀ z, zn z < N) (r : I ⊕ PivIdx p κ k') :
-    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ labR (p := p) v u hv hu κ k' π ξ zn b r -
-      e * patR (p := p) v u κ k' π ξ zn r b := by
-  rcases r with z | y
-  · obtain ⟨e, he⟩ := voutPat v u hv hu hU hpv hodd hp5 hN hH hRad π (hzn z)
-    exact ⟨e, fun b hb => by simpa [labR, patR, patF, nR] using he b hb⟩
-  · obtain ⟨e, he⟩ := gvPat v u hv hu hU hpv hodd hp5 hN hH hRad π y
-    exact ⟨e, fun b hb => by simpa [labR, patR, patF, nR] using he b hb⟩
-
-theorem colLab (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
-    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
-    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hπ : π ≤ 1) (hyn : ∀ w, yn w < N)
-    (c : J ⊕ PivIdx p κ k') :
-    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ labC (p := p) v u hv hu κ k' π ξ yn b c -
-      e * patC (p := p) v u κ k' π ξ yn c b := by
-  rcases c with w | x
-  · obtain ⟨e, he⟩ := voutPat v u hv hu hU hpv hodd hp5 hN hH hRad (1 - π) (hyn w)
-    exact ⟨e, fun b hb => by simpa [labC, patC, patF, nC] using he b hb⟩
-  · obtain ⟨e, he⟩ := gvPat v u hv hu hU hpv hodd hp5 hN hH hRad (1 - π) x
-    refine ⟨e, fun b hb => ?_⟩
-    have := he b hb
-    simp only [labC, patC, patF, nC, Sum.elim_inr, Sum.isLeft_inr, Bool.false_eq_true, if_false]
-    rw [rowNode_eq_colNode κ k' π hπ]
-    exact this
-
-end SchurIfaceE
 
 section K0
 
@@ -515,26 +89,26 @@ section WlabESec
 /-- The weight of a pair of labels for `k' = 0`: `3` for congruent nodes, except `2` for the diagonal pair of
 two pivot labels in the period `1`; otherwise `0` in one cell and `1` in one period (other half) when the
 kinds agree, else `2`.  (No class condition: for `k' = 0` the class solutions do not depend on the class.) -/
-def WlabE (p : ℕ) (kR kC : Bool) (n m : ℕ) : ℕ :=
+def WlabE (p : ℕ) (u : ℤ) (kR kC : Bool) (n m : ℕ) : ℕ :=
   if n % p = m % p then (if n = m ∧ kR = false ∧ kC = false ∧ n / p = 1 then 2 else 3)
-  else if kR = kC ∧ n / p = m / p then (if half p n = half p m then 0 else 1) else 2
+  else if kR = kC ∧ n / p = m / p then (if half p u n = half p u m then 0 else 1) else 2
 
-theorem WlabE_le (p : ℕ) (kR kC : Bool) (n m : ℕ) : WlabE p kR kC n m ≤ 3 := by
+theorem WlabE_le (p : ℕ) (u : ℤ) (kR kC : Bool) (n m : ℕ) : WlabE p u kR kC n m ≤ 3 := by
   unfold WlabE; split_ifs <;> omega
 
-variable {p : ℕ} [hp : Fact p.Prime] {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} (u : ℤ)
   {I J : Type*} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
 
 /-- The weight of the pair of labels `(r, c)`. -/
 noncomputable def wRE (zn : I → ℕ) (yn : J → ℕ) (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') : ℕ :=
-  WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := k') (π := π) zn r)
+  WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := k') (π := π) zn r)
     (nC (p := p) (κ := κ) (k' := k') (π := π) yn c)
 
 end WlabESec
 
 section SwE
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
   {I J : Type*} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J] (zn : I → ℕ) (yn : J → ℕ)
 
@@ -544,11 +118,11 @@ theorem sw_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd :
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hπ : π ≤ 1) (hk0 : k' = 0)
     (hdiag : ∀ y : PivIdx p κ k', colNode p κ k' π y / p = 1 →
-      (p : R) ∣ Zp (p := p) v u hv hu κ k' π ξ y y)
+      (p : R) ∣ Zp (p := p) v u κ k' π ξ y y)
     (hzc : ∀ z, (zn z / p + 1) * p ≤ N) (hyc : ∀ w, (yn w / p + 1) * p ≤ N)
     (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') :
-    (p : R) ^ (3 - wRE (p := p) (κ := κ) (k' := k') (π := π) zn yn r c) ∣
-      Schur.Sw (Hq (p := p) v u hv hu κ k' π ξ zn yn) (Zp (p := p) v u hv hu κ k' π ξ) r c := by
+    (p : R) ^ (3 - wRE u (p := p) (κ := κ) (k' := k') (π := π) zn yn r c) ∣
+      Schur.Sw (Hq (p := p) v u κ k' π ξ zn yn) (Zp (p := p) v u κ k' π ξ) r c := by
   have hp0 : 0 < p := hp.out.pos
   have hzn : ∀ z, zn z < N := fun z => lt_of_complete hp0 (hzc z)
   have hyn : ∀ w, yn w < N := fun w => lt_of_complete hp0 (hyc w)
@@ -558,7 +132,7 @@ theorem sw_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd :
       nC (p := p) (κ := κ) (k' := 0) (π := π) yn c % p
   · by_cases hdg : nR (p := p) (κ := κ) (k' := 0) (π := π) zn r = nC (p := p) (κ := κ) (k' := 0) (π := π) yn c ∧
         r.isLeft = false ∧ c.isLeft = false ∧ nR (p := p) (κ := κ) (k' := 0) (π := π) zn r / p = 1
-    · have hW : WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
+    · have hW : WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
           (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 2 := by
         unfold WlabE; rw [if_pos hcg, if_pos hdg]
       rw [hW]
@@ -576,49 +150,49 @@ theorem sw_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd :
         rw [hnn, rowNode_eq_colNode_k0]
       subst hxy
       have hd := hdiag y hper
-      have e3 : Schur.Sw (Hq (p := p) v u hv hu κ 0 π ξ zn yn) (Zp (p := p) v u hv hu κ 0 π ξ)
-          (Sum.inr y) (Sum.inr y) = -(Zp (p := p) v u hv hu κ 0 π ξ y y) := by
+      have e3 : Schur.Sw (Hq (p := p) v u κ 0 π ξ zn yn) (Zp (p := p) v u κ 0 π ξ)
+          (Sum.inr y) (Sum.inr y) = -(Zp (p := p) v u κ 0 π ξ y y) := by
         simp [Schur.Sw, Matrix.fromBlocks_apply₂₂]
       rw [e3]
       have e4 : (p : R) ^ (3 - 2) = (p : R) := by norm_num
       rw [e4]
       exact (dvd_neg).2 hd
-    · have hW : WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
+    · have hW : WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
           (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 3 := by
         unfold WlabE; rw [if_pos hcg, if_neg hdg]
       rw [hW, Nat.sub_self, pow_zero]; exact one_dvd _
   · obtain ⟨U, hUU⟩ := isUnit_natDiff (R := R) hcg
-    have hmul := sw_mul v u hv hu zn yn hU hpv hodd hp5 hN hH hRad hπ hzn hyn r c
+    have hmul := sw_mul v u zn yn hU hpv hodd hp5 hN hH hRad hπ hzn hyn r c
     rw [← hUU] at hmul
-    have hSw : Schur.Sw (Hq (p := p) v u hv hu κ 0 π ξ zn yn) (Zp (p := p) v u hv hu κ 0 π ξ) r c =
-        ((U⁻¹ : Rˣ) : R) * ((p : R) * (labR (p := p) v u hv hu κ 0 π ξ zn 1 r *
-          labC (p := p) v u hv hu κ 0 π ξ yn 0 c - labR (p := p) v u hv hu κ 0 π ξ zn 0 r *
-          labC (p := p) v u hv hu κ 0 π ξ yn 1 c)) := by
+    have hSw : Schur.Sw (Hq (p := p) v u κ 0 π ξ zn yn) (Zp (p := p) v u κ 0 π ξ) r c =
+        ((U⁻¹ : Rˣ) : R) * ((p : R) * (labR (p := p) v u κ 0 π ξ zn 1 r *
+          labC (p := p) v u κ 0 π ξ yn 0 c - labR (p := p) v u κ 0 π ξ zn 0 r *
+          labC (p := p) v u κ 0 π ξ yn 1 c)) := by
       rw [← hmul, ← mul_assoc, Units.inv_mul, one_mul]
     rw [hSw]
     refine Dvd.dvd.mul_left ?_ _
     by_cases hpat : r.isLeft = c.isLeft ∧
         nR (p := p) (κ := κ) (k' := 0) (π := π) zn r / p = nC (p := p) (κ := κ) (k' := 0) (π := π) yn c / p
     · obtain ⟨hk, hl⟩ := hpat
-      obtain ⟨e, he⟩ := rowLab v u hv hu zn hU hpv hodd hp5 hN hH hRad hzn r
-      obtain ⟨e', he'⟩ := colLab v u hv hu yn hU hpv hodd hp5 hN hH hRad hπ hyn c
-      by_cases hh : half p (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r) =
-          half p (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c)
-      · have hW : WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
+      obtain ⟨e, he⟩ := rowLab (π := π) v u zn hU hpv hodd hp5 hN hH hRad hzn r
+      obtain ⟨e', he'⟩ := colLab (π := π) v u yn hU hpv hodd hp5 hN hH hRad hπ hyn c
+      by_cases hh : half p u (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r) =
+          half p u (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c)
+      · have hW : WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
             (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 0 := by
           unfold WlabE; rw [if_neg hcg, if_pos ⟨hk, hl⟩, if_pos hh]
         rw [hW]
         have hP : ∀ b, patR (p := p) v u κ 0 π ξ zn r b = patC (p := p) v u κ 0 π ξ yn c b := by
           intro b; unfold patR patC; rw [hk, ← hl, hh]
           exact patF_o_indep v u κ ξ c.isLeft b _ _ _ _
-        have := omega_sq (p := p) (labR (p := p) v u hv hu κ 0 π ξ zn 0 r)
-          (labR (p := p) v u hv hu κ 0 π ξ zn 1 r) (labC (p := p) v u hv hu κ 0 π ξ yn 0 c)
-          (labC (p := p) v u hv hu κ 0 π ξ yn 1 c) e e' (patR (p := p) v u κ 0 π ξ zn r 0)
+        have := omega_sq (p := p) (labR (p := p) v u κ 0 π ξ zn 0 r)
+          (labR (p := p) v u κ 0 π ξ zn 1 r) (labC (p := p) v u κ 0 π ξ yn 0 c)
+          (labC (p := p) v u κ 0 π ξ yn 1 c) e e' (patR (p := p) v u κ 0 π ξ zn r 0)
           (patR (p := p) v u κ 0 π ξ zn r 1) (he 0 (by norm_num)) (he 1 (by norm_num))
           (by rw [hP 0]; exact he' 0 (by norm_num)) (by rw [hP 1]; exact he' 1 (by norm_num))
         have e3 : (p : R) ^ (3 - 0) = (p : R) * (p : R) ^ 2 := by norm_num; ring
         rw [e3]; exact mul_dvd_mul_left _ this
-      · have hW : WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
+      · have hW : WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
             (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 1 := by
           unfold WlabE; rw [if_neg hcg, if_pos ⟨hk, hl⟩, if_neg hh]
         rw [hW]
@@ -641,7 +215,7 @@ theorem sw_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd :
             (oc p κ π (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r % p))]
           rcases half_eq (p := p) (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r) with h0 | h1
           · rw [h0] at hh
-            have h1' : half p (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 1 := by
+            have h1' : half p u (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 1 := by
               rcases half_eq (p := p) (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) with h | h
               · exact absurd h.symm hh
               · exact h
@@ -649,21 +223,21 @@ theorem sw_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd :
             have := dvd_neg.2 hf
             simpa using this
           · rw [h1]
-            have h0' : half p (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 0 := by
+            have h0' : half p u (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 0 := by
               rcases half_eq (p := p) (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) with h | h
               · exact h
               · exact absurd (by rw [h1, h]) hh
             rw [h0']
             exact hf
-        have := omega_one (p := p) (labR (p := p) v u hv hu κ 0 π ξ zn 0 r)
-          (labR (p := p) v u hv hu κ 0 π ξ zn 1 r) (labC (p := p) v u hv hu κ 0 π ξ yn 0 c)
-          (labC (p := p) v u hv hu κ 0 π ξ yn 1 c) e e' (patR (p := p) v u κ 0 π ξ zn r 0)
+        have := omega_one (p := p) (labR (p := p) v u κ 0 π ξ zn 0 r)
+          (labR (p := p) v u κ 0 π ξ zn 1 r) (labC (p := p) v u κ 0 π ξ yn 0 c)
+          (labC (p := p) v u κ 0 π ξ yn 1 c) e e' (patR (p := p) v u κ 0 π ξ zn r 0)
           (patR (p := p) v u κ 0 π ξ zn r 1) (patC (p := p) v u κ 0 π ξ yn c 0)
           (patC (p := p) v u κ 0 π ξ yn c 1) (he 0 (by norm_num)) (he 1 (by norm_num))
           (he' 0 (by norm_num)) (he' 1 (by norm_num)) (hQ 0 (by norm_num)) (hQ 1 (by norm_num))
         have e3 : (p : R) ^ (3 - 1) = (p : R) * (p : R) := by norm_num [pow_two]
         rw [e3]; exact mul_dvd_mul_left _ this
-    · have hW : WlabE p r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
+    · have hW : WlabE p u r.isLeft c.isLeft (nR (p := p) (κ := κ) (k' := 0) (π := π) zn r)
           (nC (p := p) (κ := κ) (k' := 0) (π := π) yn c) = 2 := by
         unfold WlabE; rw [if_neg hcg, if_neg hpat]
       rw [hW]
@@ -673,7 +247,7 @@ end SwE
 
 section DiagE
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 theorem toR_intCast (z : ℤ) : toR p ((z : ℤ) : ℚ) = (z : R) := by
@@ -706,38 +280,22 @@ theorem isUnit_add_p {a : R} (ha : IsUnit a) (hRad : ∀ x : R, IsUnit (1 + (p :
   rw [e]
   exact (hw ▸ w.isUnit).mul (hRad _)
 
-include hv hu in
 /-- No pole at `k = 0`: `p³ G(0, h)` is divisible by `p`. -/
 theorem ggR_zero_dvd (hodd : p % 2 = 1) (hN : 2 * N < p * p) (hNp : p < N) {h : ℕ} (hh : h ≤ 1) :
     (p : R) ∣ ggR (p := p) v u (0, h) := by
   have hp0 : 0 < p := hp.out.pos
   have hp2 := hp.out.two_le
-  obtain ⟨a, ha⟩ : ∃ a, a = cstart p (0, h) := ⟨_, rfl⟩
-  have hcell : cell p a = (0, h) := by rw [ha]; exact cstart_cell hodd (c := (0, h)) hh
-  have ha_lt : a < p := by
-    rw [ha]; unfold cstart
+  have ht : cstart p (0, h) < p := by
+    unfold cstart
     interval_cases h <;> simp <;> omega
-  have haN : a < N := by omega
-  have hw := weight_table v u hv hu hN a a haN haN
-  have hWt : Wt p a a ≤ 2 := by
-    have hd : a / p = 0 := Nat.div_eq_of_lt ha_lt
-    unfold Wt
-    rw [if_pos rfl]
-    unfold Wd
-    rw [hd]
-    split_ifs <;> omega
-  have hV : Vp p 2 (Lm v u hv hu a a) := Vp.mono hWt hw
-  have h1 : Dv p 1 ((p : ℚ) ^ 3 * Lm v u hv hu a a) := by
-    have := Dv.of_Vp (k := 1) hV
-    simpa using this
-  have h3 := Dv_q_diag v u hv hu hodd (a := a)
-  rw [hcell] at h3
+  have hV := PE_diff_same_period v u hN (Nat.zero_le (cstart p (0, h))) (by omega)
+    (show 0 / p = cstart p (0, h) / p by rw [Nat.div_eq_of_lt ht]; simp)
+  have h0 : PE v u p 0 = 0 := by simp [PE]
+  rw [h0, sub_zero] at hV
+  have hV' : Vp p 2 (Gcell v u p (0, h)) := by unfold Gcell; exact Vp.neg hV
   have h4 : Dv p 1 ((p : ℚ) ^ 3 * Gcell v u p (0, h)) := by
-    have := Dv.sub h1 (Dv.mono (by norm_num : 1 ≤ 3) h3)
-    have e : (p : ℚ) ^ 3 * Lm v u hv hu a a - ((p : ℚ) ^ 3 * Lm v u hv hu a a - (p : ℚ) ^ 3 * Gcell v u p (0, h)) =
-        (p : ℚ) ^ 3 * Gcell v u p (0, h) := by ring
-    rw [e] at this
-    exact this
+    have := Dv.of_Vp (k := 1) hV'
+    simpa using this
   unfold ggR
   have := toR_dvd (R := R) h4
   simpa using this
@@ -798,29 +356,28 @@ end DiagE
 
 section DiagE2
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
 
 theorem Wp_sub_Zp_dvd (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (x z : PivIdx p κ k') :
-    (p : R) ∣ Wp (p := p) v u κ k' π ξ x z - Zp (p := p) v u hv hu κ k' π ξ x z := by
-  have hZQ := Zp_mul_Qp (π := π) v u hv hu hU hpv hodd hp5 hN hH hRad
-  have e : Wp (p := p) v u κ k' π ξ - Zp (p := p) v u hv hu κ k' π ξ =
-      Zp (p := p) v u hv hu κ k' π ξ *
-        (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ - 1) := by
+    (p : R) ∣ Wp (p := p) v u κ k' π ξ x z - Zp (p := p) v u κ k' π ξ x z := by
+  have hZQ := Zp_mul_Qp (π := π) v u hU hpv hodd hp5 hN hH hRad
+  have e : Wp (p := p) v u κ k' π ξ - Zp (p := p) v u κ k' π ξ =
+      Zp (p := p) v u κ k' π ξ *
+        (Qp (p := p) v u κ k' π ξ * Wp (p := p) v u κ k' π ξ - 1) := by
     rw [Matrix.mul_sub, Matrix.mul_one, ← Matrix.mul_assoc, hZQ, Matrix.one_mul]
-  have e2 : Wp (p := p) v u κ k' π ξ x z - Zp (p := p) v u hv hu κ k' π ξ x z =
-      (Zp (p := p) v u hv hu κ k' π ξ *
-        (Qp (p := p) v u hv hu κ k' π ξ * Wp (p := p) v u κ k' π ξ - 1)) x z := by
+  have e2 : Wp (p := p) v u κ k' π ξ x z - Zp (p := p) v u κ k' π ξ x z =
+      (Zp (p := p) v u κ k' π ξ *
+        (Qp (p := p) v u κ k' π ξ * Wp (p := p) v u κ k' π ξ - 1)) x z := by
     rw [← e, Matrix.sub_apply]
   rw [e2, Matrix.mul_apply]
   refine Finset.dvd_sum fun y _ => ?_
   refine Dvd.dvd.mul_left ?_ _
-  have := Qp_mul_Wp (π := π) v u hv hu hU hpv hodd hp5 hN hH y z
+  have := Qp_mul_Wp (π := π) v u hU hpv hodd hp5 hN hH y z
   simpa [Matrix.sub_apply] using this
 
-include hv hu in
 theorem unitDet_two (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hN : 2 * N < p * p) (hNp : 2 * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hξ : (p : R) ∣ ξ) : UnitDet p v u 2 0 ξ := by
   intro h o hh ho
@@ -837,7 +394,7 @@ theorem unitDet_two (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hN : 2 * N < 
     simp [BclR, rowPer, colPer]
   have e10 : BclR (p := p) v u 2 0 ξ h o (Sum.inl 1) (Sum.inl 0) = Bm (p := p) v u ξ h 1 0 := by
     simp [BclR, rowPer, colPer]
-  obtain ⟨c0, hc0⟩ := dvd_add hξ (ggR_zero_dvd (R := R) v u hv hu hodd hN (by omega) hh)
+  obtain ⟨c0, hc0⟩ := dvd_add hξ (ggR_zero_dvd (R := R) v u hodd hN (by omega) hh)
   have hbu : IsUnit (-(v : R) + (p : R) * y) := isUnit_add_p (isUnit_intR v hpv).neg hRad y
   rw [hdet, e00, e01, e10, hy10, hy01, hc0]
   have e : (p : R) * c0 * BclR (p := p) v u 2 0 ξ h o (Sum.inl 1) (Sum.inl 1) -
@@ -847,15 +404,14 @@ theorem unitDet_two (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hN : 2 * N < 
   rw [e]
   exact isUnit_add_p (hbu.mul hbu).neg hRad _
 
-include hv hu in
 /-- `Zp(y,y) ∈ p R` for the pivot labels of the period `1` (`κ = 2`, `k' = 0`, `ξ ∈ p R`). -/
 theorem hdiag_two (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
     (hNp : 2 * p ≤ N) (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hξ : (p : R) ∣ ξ) :
     ∀ y : PivIdx p 2 0, colNode p 2 0 π y / p = 1 →
-      (p : R) ∣ Zp (p := p) v u hv hu 2 0 π ξ y y := by
+      (p : R) ∣ Zp (p := p) v u 2 0 π ξ y y := by
   intro y hy
   have hp0 := hp.out.pos
-  have hU := unitDet_two (ξ := ξ) v u hv hu hpv hodd hN hNp hRad hξ
+  have hU := unitDet_two (ξ := ξ) v u hpv hodd hN hNp hRad hξ
   obtain ⟨ω, a⟩ := y
   rcases a with a | i
   swap
@@ -865,22 +421,22 @@ theorem hdiag_two (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p) 
     simp only [colPer, Sum.elim_inl] at hy
     exact Fin.ext hy
   subst ha
-  have hd1 := Wp_sub_Zp_dvd (π := π) v u hv hu hU hpv hodd hp5 hN (by omega) hRad (ω, Sum.inl 1) (ω, Sum.inl 1)
+  have hd1 := Wp_sub_Zp_dvd (π := π) v u hU hpv hodd hp5 hN (by omega) hRad (ω, Sum.inl 1) (ω, Sum.inl 1)
   have hW : Wp (p := p) v u 2 0 π ξ (ω, Sum.inl 1) (ω, Sum.inl 1) =
-      (BclR (p := p) v u 2 0 ξ (half p ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) := by
+      (BclR (p := p) v u 2 0 ξ (half p u ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) := by
     simp [Wp]
   rw [hW] at hd1
-  have h00 : (p : R) ∣ BclR (p := p) v u 2 0 ξ (half p ω) (oc p 2 π ω) (Sum.inl 0) (Sum.inl 0) := by
-    have e00 : BclR (p := p) v u 2 0 ξ (half p ω) (oc p 2 π ω) (Sum.inl 0) (Sum.inl 0) =
-        ξ + ggR (p := p) v u (0, half p ω) := by
+  have h00 : (p : R) ∣ BclR (p := p) v u 2 0 ξ (half p u ω) (oc p 2 π ω) (Sum.inl 0) (Sum.inl 0) := by
+    have e00 : BclR (p := p) v u 2 0 ξ (half p u ω) (oc p 2 π ω) (Sum.inl 0) (Sum.inl 0) =
+        ξ + ggR (p := p) v u (0, half p u ω) := by
       simp [BclR, rowPer, colPer, Bm]
     rw [e00]
-    exact dvd_add hξ (ggR_zero_dvd (R := R) v u hv hu hodd hN (by omega) (half_le_one' _))
+    exact dvd_add hξ (ggR_zero_dvd (R := R) v u hodd hN (by omega) (half_le_one' _))
   have hB := Binv11_dvd hRad (hU _ _ (half_le_one' _) (oc_le _)) h00
-  have e : Zp (p := p) v u hv hu 2 0 π ξ (ω, Sum.inl 1) (ω, Sum.inl 1) =
-      (BclR (p := p) v u 2 0 ξ (half p ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) -
-        ((BclR (p := p) v u 2 0 ξ (half p ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) -
-          Zp (p := p) v u hv hu 2 0 π ξ (ω, Sum.inl 1) (ω, Sum.inl 1)) := by ring
+  have e : Zp (p := p) v u 2 0 π ξ (ω, Sum.inl 1) (ω, Sum.inl 1) =
+      (BclR (p := p) v u 2 0 ξ (half p u ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) -
+        ((BclR (p := p) v u 2 0 ξ (half p u ω) (oc p 2 π ω))⁻¹ (Sum.inl 1) (Sum.inl 1) -
+          Zp (p := p) v u 2 0 π ξ (ω, Sum.inl 1) (ω, Sum.inl 1)) := by ring
   rw [e]
   exact dvd_sub hB hd1
 
@@ -902,20 +458,20 @@ end Scale2
 
 section Member2
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {ι κw : Type} [Fintype ι] [DecidableEq ι] [Fintype κw] [DecidableEq κw]
   (c : ι → ℕ) (xs ys : κw → ℕ)
 
 /-- The `p³`-scaled member matrix over `ℤ_(p)` for `x = X / p²`: diagonal `p X` on the common block. -/
 noncomputable def BlM2 : Matrix (ι ⊕ κw) (ι ⊕ κw) (LocRing p)[X] :=
   Matrix.of fun a b => (if memRow c xs a = memCol c ys b then (C ((p : ℕ) : LocRing p) * X : (LocRing p)[X]) else 0) +
-    C (toL p ((p : ℚ) ^ 3 * Lm v u hv hu (memRow c xs a) (memCol c ys b)))
+    C (toL p ((p : ℚ) ^ 3 * Lm v u (memRow c xs a) (memCol c ys b)))
 
 theorem map_BlM2 {R : Type*} [CommRing R] [Algebra (LocRing p) R] (ξ : R)
     (f : (LocRing p)[X] →+* R) (hX : f (C ((p : ℕ) : LocRing p) * X) = ξ)
     (hC : ∀ x : LocRing p, f (C x) = algebraMap (LocRing p) R x)
     (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hc : ∀ b, memCol c ys b < N) :
-    f.mapMatrix (BlM2 (p := p) v u hv hu c xs ys) = QminR (p := p) v u hv hu c xs ys ξ := by
+    f.mapMatrix (BlM2 (p := p) v u c xs ys) = QminR (p := p) v u c xs ys ξ := by
   ext a b
   simp only [RingHom.mapMatrix_apply, Matrix.map_apply, BlM2, QminR, Matrix.of_apply, Qent, map_add]
   congr 1
@@ -930,24 +486,24 @@ coefficient of the determinant of the member has `p`-adic denominator at most `3
 theorem gle_member2 (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : ∀ b, memCol c ys b < N)
     (hcinj : Function.Injective c) (h1 : ∀ i j, c i ≠ ys j) (h2 : ∀ i j, xs i ≠ c j)
     (h3 : ∀ i j, xs i ≠ ys j) {K : ℕ}
-    (hdvd : ((p : ℕ) : RP p) ^ K ∣ (QminR (p := p) v u hv hu c xs ys (xiP2 p)).det) :
+    (hdvd : ((p : ℕ) : RP p) ^ K ∣ (QminR (p := p) v u c xs ys (xiP2 p)).det) :
     GLE p (3 * (Fintype.card ι + Fintype.card κw) - K)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X])).det := by
+      (seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X])).det := by
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
-  have hmap := map_BlM2 (p := p) v u hv hu c xs ys (xiP2 p) (algebraMap ((LocRing p)[X]) (RP p)) rfl
+  have hmap := map_BlM2 (p := p) v u c xs ys (xiP2 p) (algebraMap ((LocRing p)[X]) (RP p)) rfl
     (fun x => by
       rw [IsScalarTower.algebraMap_apply (LocRing p) ((LocRing p)[X]) (RP p) x, Polynomial.algebraMap_eq])
     hN hr hcl
-  have hd1 : ((p : ℕ) : RP p) ^ K ∣ algebraMap ((LocRing p)[X]) (RP p) (BlM2 (p := p) v u hv hu c xs ys).det := by
-    have hm := RingHom.map_det (S := RP p) (algebraMap ((LocRing p)[X]) (RP p)) (BlM2 (p := p) v u hv hu c xs ys)
+  have hd1 : ((p : ℕ) : RP p) ^ K ∣ algebraMap ((LocRing p)[X]) (RP p) (BlM2 (p := p) v u c xs ys).det := by
+    have hm := RingHom.map_det (S := RP p) (algebraMap ((LocRing p)[X]) (RP p)) (BlM2 (p := p) v u c xs ys)
     rw [hm, hmap]; exact hdvd
   have hd2 := descent p hd1
   set Mt : Matrix (ι ⊕ κw) (ι ⊕ κw) ℚ[X] :=
-    seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (C (((p : ℚ) ^ 2)⁻¹) * X) with hMt
-  have hB : ∀ a b : ι ⊕ κw, toQ p (BlM2 (p := p) v u hv hu c xs ys a b) =
+    seqFullN (fS v u) (eS v u) c xs ys (C (((p : ℚ) ^ 2)⁻¹) * X) with hMt
+  have hB : ∀ a b : ι ⊕ κw, toQ p (BlM2 (p := p) v u c xs ys a b) =
       C ((p : ℚ) ^ ((fun _ : ι ⊕ κw => 3) a + (fun _ : ι ⊕ κw => 0) b)) * Mt a b := by
     intro a b
-    have hq := q_mem v u hv hu hN (hr a) (hcl b)
+    have hq := q_mem v u hN (hr a) (hcl b)
     rw [hMt, seqFullN_entry c xs ys _ _ _ hcinj h1 h2 h3]
     simp only [BlM2, Matrix.of_apply, map_add, toQ]
     rw [Polynomial.coe_mapRingHom]
@@ -959,10 +515,10 @@ theorem gle_member2 (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : 
     · simp only [Polynomial.map_C, Polynomial.map_X, Polynomial.map_mul, Subring.subtype_apply]
       rw [hcp, mul_add, ← mul_assoc, ← C_mul, hc3, Polynomial.algebraMap_eq, ← C_mul]
     · rw [Polynomial.map_zero, zero_add, zero_add, Polynomial.algebraMap_eq, ← C_mul]
-  have hG := gle_det_of_scaled_dvd p Mt (BlM2 (p := p) v u hv hu c xs ys) (fun _ => 3) (fun _ => 0) hB K hd2
+  have hG := gle_det_of_scaled_dvd p Mt (BlM2 (p := p) v u c xs ys) (fun _ => 3) (fun _ => 0) hB K hd2
   simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_zero, add_zero, Fintype.card_sum] at hG
   set MX : Matrix (ι ⊕ κw) (ι ⊕ κw) ℚ[X] :=
-    seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X]) with hMX
+    seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X]) with hMX
   have hcomp : Mt = (Polynomial.compRingHom (C (((p : ℚ) ^ 2)⁻¹) * X : ℚ[X])).mapMatrix MX := by
     ext a b
     rw [hMt, hMX, seqFullN_entry c xs ys _ _ _ hcinj h1 h2 h3, RingHom.mapMatrix_apply, Matrix.map_apply,
@@ -986,7 +542,7 @@ theorem gle_member2 (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : 
 end Member2
 section MinorE
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R] {κ k' π : ℕ} {ξ : R}
   {L : Type} [Fintype L] [DecidableEq L] (rn cl : L → ℕ)
 
@@ -1000,12 +556,12 @@ theorem minor_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hod
     (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
     (hRad : ∀ x : R, IsUnit (1 + (p : R) * x)) (hπ : π ≤ 1) (hk0 : k' = 0)
     (hdiag : ∀ y : PivIdx p κ k', colNode p κ k' π y / p = 1 →
-      (p : R) ∣ Zp (p := p) v u hv hu κ k' π ξ y y)
+      (p : R) ∣ Zp (p := p) v u κ k' π ξ y y)
     (hrinj : Function.Injective rn) (hcinj : Function.Injective cl)
     (hrc : ∀ a, (rn a / p + 1) * p ≤ N) (hcc : ∀ b, (cl b / p + 1) * p ≤ N)
     (φR φC : ℕ → ℕ)
     (hW : ∀ (n m : ℕ) (kR kC : Bool), RowLab rn cl p κ k' π kR n → ColLab rn cl p κ k' π kC m →
-      WlabE p kR kC n m ≤ φR n + φC m)
+      WlabE p u kR kC n m ≤ φR n + φC m)
     (E : ℕ)
     (hcond : 3 * Fintype.card L +
       (∑ a ∈ Finset.univ.filter (fun a : L => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = rn a), φR (rn a) +
@@ -1017,7 +573,7 @@ theorem minor_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hod
       E + 3 * ((Finset.univ.filter (fun a : L => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = rn a)).card +
         (Finset.univ.filter (fun y : PivIdx p κ k' => ∀ b, colNode p κ k' π y ≠ cl b)).card)) :
     (p : R) ^ (3 * Fintype.card L - E) ∣
-      (Matrix.of fun a b => Qent (p := p) v u hv hu ξ (rn a) (cl b)).det := by
+      (Matrix.of fun a b => Qent (p := p) v u ξ (rn a) (cl b)).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
   set DelR : Finset (PivIdx p κ k') := Finset.univ.filter (fun x => ∀ a, rowNode p κ k' π x ≠ rn a) with hDelR
@@ -1044,19 +600,19 @@ theorem minor_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hod
   have hle2 : DelC.card ≤ Fintype.card (PivIdx p κ k') := Finset.card_le_univ _
   let eC' : (Lo ⊕ ↥DelC) ≃ (Lc ⊕ ↥DelR) := Fintype.equivOfCardEq (by
     simp only [Fintype.card_sum, Fintype.card_coe]; omega)
-  have hZ1 : Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) * Zp (p := p) v u hv hu κ k' π ξ = 1 := by
-    rw [Qm_Hq]; exact Qp_mul_Zp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have hZ2 : Zp (p := p) v u hv hu κ k' π ξ * Schur.Qm (Hq (p := p) v u hv hu κ k' π ξ zn yn) = 1 := by
-    rw [Qm_Hq]; exact Zp_mul_Qp v u hv hu hU hpv hodd hp5 hN hH hRad
-  have hJ := Schur.jacobi_L (Hq (p := p) v u hv hu κ k' π ξ zn yn) DelR DelC
-    (Zp (p := p) v u hv hu κ k' π ξ) hZ1 hZ2
+  have hZ1 : Schur.Qm (Hq (p := p) v u κ k' π ξ zn yn) * Zp (p := p) v u κ k' π ξ = 1 := by
+    rw [Qm_Hq]; exact Qp_mul_Zp v u hU hpv hodd hp5 hN hH hRad
+  have hZ2 : Zp (p := p) v u κ k' π ξ * Schur.Qm (Hq (p := p) v u κ k' π ξ zn yn) = 1 := by
+    rw [Qm_Hq]; exact Zp_mul_Qp v u hU hpv hodd hp5 hN hH hRad
+  have hJ := Schur.jacobi_L (Hq (p := p) v u κ k' π ξ zn yn) DelR DelC
+    (Zp (p := p) v u κ k' π ξ) hZ1 hZ2
     (fun a => Sum.map Subtype.val id (eR a)) (fun a => Sum.map Subtype.val id (eC a))
     (fun l : Lo ⊕ ↥DelC => Sum.map id Subtype.val (Equiv.refl _ l))
     (fun l => Sum.map id Subtype.val (eC' l)) eR eC (Equiv.refl _) eC'
     (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ => rfl)
   -- the minor is the Q-minor
-  have hM1 : (Matrix.of fun a b => Hq (p := p) v u hv hu κ k' π ξ zn yn (Sum.map Subtype.val id (eR a))
-      (Sum.map Subtype.val id (eC b))) = Matrix.of fun a b => Qent (p := p) v u hv hu ξ (rn a) (cl b) := by
+  have hM1 : (Matrix.of fun a b => Hq (p := p) v u κ k' π ξ zn yn (Sum.map Subtype.val id (eR a))
+      (Sum.map Subtype.val id (eC b))) = Matrix.of fun a b => Qent (p := p) v u ξ (rn a) (cl b) := by
     ext a b
     simp only [Hq, Matrix.of_apply]
     have h1 := heR a
@@ -1109,19 +665,19 @@ theorem minor_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hod
     · exact (Finset.sum_subtype ColOut (fun a => by simp [hColOut]) (fun a => φC (cl a))).symm
     · exact Finset.sum_coe_sort DelR (fun x => φC (rowNode p κ k' π x))
   have hdetSw : (p : R) ^ (3 * Fintype.card L - E) ∣
-      (Matrix.of fun a b => (Schur.Sw (Hq (p := p) v u hv hu κ k' π ξ zn yn)
-        (Zp (p := p) v u hv hu κ k' π ξ)) (ρ' a) (κ'' b)).det := by
-    refine det_dvd_of_potentials (p : R) _ (fun a b => 3 - wRE (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b))
+      (Matrix.of fun a b => (Schur.Sw (Hq (p := p) v u κ k' π ξ zn yn)
+        (Zp (p := p) v u κ k' π ξ)) (ρ' a) (κ'' b)).det := by
+    refine det_dvd_of_potentials (p : R) _ (fun a b => 3 - wRE u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b))
       ur uc ?_ ?_ _ ?_
     · intro a b
-      exact sw_dvdE v u hv hu zn yn hU hpv hodd hp5 hN hH hRad hπ hk0 hdiag hzc hyc (ρ' a) (κ'' b)
+      exact sw_dvdE v u zn yn hU hpv hodd hp5 hN hH hRad hπ hk0 hdiag hzc hyc (ρ' a) (κ'' b)
     · intro a b
-      have h3 : wRE (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤
+      have h3 : wRE u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤
           φR (nR (p := p) (κ := κ) (k' := k') (π := π) zn (ρ' a)) +
             φC (nC (p := p) (κ := κ) (k' := k') (π := π) yn (κ'' b)) :=
         hW _ _ _ _ (rowLab_of a) (colLab_of (eC' b))
-      have h4 : wRE (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤ 3 := WlabE_le _ _ _ _ _
-      show 3 ≤ (3 - wRE (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b)) +
+      have h4 : wRE u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b) ≤ 3 := WlabE_le _ _ _ _ _ _
+      show 3 ≤ (3 - wRE u (p := p) (κ := κ) (k' := k') (π := π) zn yn (ρ' a) (κ'' b)) +
         φR (nR (p := p) (κ := κ) (k' := k') (π := π) zn (ρ' a)) +
           φC (nC (p := p) (κ := κ) (k' := k') (π := π) yn (κ'' b))
       omega
@@ -1132,7 +688,7 @@ theorem minor_dvdE (hU : UnitDet p v u κ k' ξ) (hpv : ¬ (p : ℤ) ∣ v) (hod
 end MinorE
 section MemberGE
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {κ k' π : ℕ} {ι κw : Type} [Fintype ι] [DecidableEq ι] [Fintype κw] [DecidableEq κw]
   (c : ι → ℕ) (xs ys : κw → ℕ)
 
@@ -1143,14 +699,14 @@ if potentials `φR`, `φC` cover the weights of all labels, every coefficient of
 theorem member_gleE (hU : UnitDet p v u κ k' (xiP2 p)) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
     (hH : (κ + 2 * k') * p ≤ N) (hπ : π ≤ 1) (hk0 : k' = 0)
     (hdiag : ∀ y : PivIdx p κ k', colNode p κ k' π y / p = 1 →
-      ((p : ℕ) : RP p) ∣ Zp (p := p) (R := RP p) v u hv hu κ k' π (xiP2 p) y y)
+      ((p : ℕ) : RP p) ∣ Zp (p := p) (R := RP p) v u κ k' π (xiP2 p) y y)
     (hcinj : Function.Injective c) (hxinj : Function.Injective xs) (hyinj : Function.Injective ys)
     (h1 : ∀ i j, c i ≠ ys j) (h2 : ∀ i j, xs i ≠ c j) (h3 : ∀ i j, xs i ≠ ys j)
     (hrc : ∀ a, (memRow c xs a / p + 1) * p ≤ N) (hcc : ∀ b, (memCol c ys b / p + 1) * p ≤ N)
     (φR φC : ℕ → ℕ)
     (hW : ∀ (n m : ℕ) (kR kC : Bool), RowLab (memRow c xs) (memCol c ys) p κ k' π kR n →
       ColLab (memRow c xs) (memCol c ys) p κ k' π kC m →
-      WlabE p kR kC n m ≤ φR n + φC m)
+      WlabE p u kR kC n m ≤ φR n + φC m)
     (E : ℕ)
     (hcond : by classical exact 3 * Fintype.card (ι ⊕ κw) +
       (∑ a ∈ Finset.univ.filter (fun a : ι ⊕ κw => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = memRow c xs a),
@@ -1163,15 +719,15 @@ theorem member_gleE (hU : UnitDet p v u κ k' (xiP2 p)) (hpv : ¬ (p : ℤ) ∣ 
           φC (rowNode p κ k' π x)) ≤
       E + 3 * ((Finset.univ.filter (fun a : ι ⊕ κw => ¬ ∃ x : PivIdx p κ k', rowNode p κ k' π x = memRow c xs a)).card +
         (Finset.univ.filter (fun y : PivIdx p κ k' => ∀ b, colNode p κ k' π y ≠ memCol c ys b)).card)) :
-    GLE p E (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X])).det := by
+    GLE p E (seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
   have hr : ∀ a, memRow c xs a < N := fun a => lt_of_complete hp0 (hrc a)
   have hcl : ∀ b, memCol c ys b < N := fun b => lt_of_complete hp0 (hcc b)
-  have hd := minor_dvdE (p := p) (R := RP p) (ξ := xiP2 p) (π := π) (κ := κ) (k' := k') v u hv hu
+  have hd := minor_dvdE (p := p) (R := RP p) (ξ := xiP2 p) (π := π) (κ := κ) (k' := k') v u
     (memRow c xs) (memCol c ys) hU hpv hodd hp5 hN hH (pRad_RP p) hπ hk0 hdiag
     (memRow_injective c xs hcinj hxinj h2) (memCol_injective c ys hcinj hyinj h1) hrc hcc φR φC hW E hcond
-  have hg := gle_member2 (p := p) v u hv hu c xs ys hN hr hcl hcinj h1 h2 h3 hd
+  have hg := gle_member2 (p := p) v u c xs ys hN hr hcl hcinj h1 h2 h3 hd
   refine GLE.mono ?_ hg
   rw [Fintype.card_sum] at *
   omega
@@ -1179,7 +735,7 @@ theorem member_gleE (hU : UnitDet p v u κ k' (xiP2 p)) (hpv : ¬ (p : ℤ) ∣ 
 end MemberGE
 section MemberPE
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N' : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N' : ℕ}
 
 /-- **Theorem G for the window family, in explicit node form.**  Window rows `r + 2 i`, columns
 `r + 2 i + 1` (`i < m`), retained common nodes `c` below `r`, pivot system `(κ, k')` with
@@ -1190,24 +746,24 @@ families of pairs and `hsum` holds, every coefficient of the determinant has den
 theorem member_gle_PE (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N' < p * p)
     {r m κ k' : ℕ} (hU : UnitDet p v u κ k' (xiP2 p)) (hk0 : k' = 0)
     (hdiag : ∀ y : PivIdx p κ k', colNode p κ k' ((r + 1) % 2) y / p = 1 →
-      ((p : ℕ) : RP p) ∣ Zp (p := p) (R := RP p) v u hv hu κ k' ((r + 1) % 2) (xiP2 p) y y)
+      ((p : ℕ) : RP p) ∣ Zp (p := p) (R := RP p) v u κ k' ((r + 1) % 2) (xiP2 p) y y)
     (hκr : r < κ * p) (hH : (κ + 2 * k') * p ≤ N')
     (hcompl : ∀ n, n < r + 2 * m → (n / p + 1) * p ≤ N')
     {ι : Type} [Fintype ι] [DecidableEq ι] (c : ι → ℕ) (hcinj : Function.Injective c)
     (hcr : ∀ i, c i < r) (φR φC : ℕ → ℕ) (hφ : ∀ t, t < r → φR t = 3 ∧ φC t = 3)
     (hpp : ∀ n ∈ TRs p κ k' r m, ∀ n' ∈ TCs p κ k' r m,
-      WlabE p false false n n' ≤ φR n + φC n')
+      WlabE p u false false n n' ≤ φR n + φC n')
     (hpo : ∀ n ∈ TRs p κ k' r m, ∀ n' ∈ OCs p κ k' r m,
-      WlabE p false true n n' ≤ φR n + φC n')
+      WlabE p u false true n n' ≤ φR n + φC n')
     (hop : ∀ n ∈ ORs p κ k' r m, ∀ n' ∈ TCs p κ k' r m,
-      WlabE p true false n n' ≤ φR n + φC n')
+      WlabE p u true false n n' ≤ φR n + φC n')
     (hoo : ∀ n ∈ ORs p κ k' r m, ∀ n' ∈ OCs p κ k' r m,
-      WlabE p true true n n' ≤ φR n + φC n')
+      WlabE p u true true n n' ≤ φR n + φC n')
     (E : ℕ)
     (hsum : 3 * r + 3 * m + (∑ t ∈ TRs p κ k' r m, φR t + ∑ t ∈ ORs p κ k' r m, φR t +
         ∑ t ∈ TCs p κ k' r m, φC t + ∑ t ∈ OCs p κ k' r m, φC t) ≤
       E + 3 * ((TRs p κ k' r m).card + (ORs p κ k' r m).card)) :
-    GLE p E (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c
+    GLE p E (seqFullN (fS v u) (eS v u) c
       (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
@@ -1236,7 +792,7 @@ theorem member_gle_PE (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤
       intro i j h; apply hcinj; simpa using congrArg Fin.val h)
     simpa using this
   have hfree := card_free c hcinj r hcr
-  refine member_gleE (p := p) (π := (r + 1) % 2) (κ := κ) (k' := k') v u hv hu c
+  refine member_gleE (p := p) (π := (r + 1) % 2) (κ := κ) (k' := k') v u c
     (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) hU hpv hodd hp5 hN hH hπ hk0 hdiag hcinj hxinj
     hyinj h1 h2 h3 (fun a => hcompl _ (hrow a)) (fun a => hcompl _ (hcol a)) φR φC ?_ E ?_
   · -- the weights
@@ -1313,7 +869,7 @@ theorem member_gle_PE (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤
             exact hb (Sum.inr ⟨(n' - r) / 2, by omega⟩) (by simp only [memRow, Sum.elim_inr]; omega)
           · right
             exact ⟨by omega, by omega⟩
-    have hle := WlabE_le p kR kC n n'
+    have hle := WlabE_le p u kR kC n n'
     rcases hRc with ⟨rfl, hn⟩ | ⟨rfl, hn | hn⟩
     · rcases hCc with ⟨rfl, hn'⟩ | ⟨rfl, hn' | hn'⟩
       · exact hoo n hn n' hn'
@@ -1353,21 +909,21 @@ end MemberPE
 
 section E2Pot
 
-variable {p : ℕ} [hp : Fact p.Prime]
+variable {p : ℕ} [hp : Fact p.Prime] {u : ℤ}
 
 /-- Potentials: `3` below `r`, the window potential on its parity, and `1` on the virtual nodes (both types). -/
-def phiR2 (r m : ℕ) (u : ℕ → ℕ) (t : ℕ) : ℕ :=
-  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 0 then u ((t - r) / 2) else 0) else 1
+def phiR2 (r m : ℕ) (uX : ℕ → ℕ) (t : ℕ) : ℕ :=
+  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 0 then uX ((t - r) / 2) else 0) else 1
 
-def phiC2 (r m : ℕ) (u' : ℕ → ℕ) (t : ℕ) : ℕ :=
-  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 1 then u' ((t - r) / 2) else 0) else 1
+def phiC2 (r m : ℕ) (uY : ℕ → ℕ) (t : ℕ) : ℕ :=
+  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 1 then uY ((t - r) / 2) else 0) else 1
 
 /-- Every pair of labels of the window is covered. -/
-theorem e2_pair {r m : ℕ} (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : ℕ → ℕ)
-    (hdual : ∀ i j, i < m → j < m → w3 (cell p (r + 2 * i)) (cell p (r + 2 * j + 1)) ≤ u i + u' j)
+theorem e2_pair {r m : ℕ} (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (uX uY : ℕ → ℕ)
+    (hdual : ∀ i j, i < m → j < m → w3 (cell p u (r + 2 * i)) (cell p u (r + 2 * j + 1)) ≤ uX i + uY j)
     (n n' : ℕ) (hn1 : r ≤ n) (hn2 : n < 2 * p) (hn3 : (n - r) % 2 = 0 ∨ r + 2 * m ≤ n)
     (hm1 : r ≤ n') (hm2 : n' < 2 * p) (hm3 : (n' - r) % 2 = 1 ∨ r + 2 * m ≤ n') :
-    WlabE p false false n n' ≤ phiR2 r m u n + phiC2 r m u' n' := by
+    WlabE p u false false n n' ≤ phiR2 r m uX n + phiC2 r m uY n' := by
   have hp0 : 0 < p := hp.out.pos
   have hper : ∀ x, p ≤ x → x < 2 * p → x / p = 1 := by
     intro x h1 h2
@@ -1380,26 +936,26 @@ theorem e2_pair {r m : ℕ} (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : 
   by_cases hnn : n = n'
   · subst hnn
     have hv : r + 2 * m ≤ n := by omega
-    have e1 : phiR2 r m u n = 1 := by unfold phiR2; rw [if_neg (by omega), if_neg (by omega)]
-    have e2 : phiC2 r m u' n = 1 := by unfold phiC2; rw [if_neg (by omega), if_neg (by omega)]
-    have hW : WlabE p false false n n = 2 := by
+    have e1 : phiR2 r m uX n = 1 := by unfold phiR2; rw [if_neg (by omega), if_neg (by omega)]
+    have e2 : phiC2 r m uY n = 1 := by unfold phiC2; rw [if_neg (by omega), if_neg (by omega)]
+    have hW : WlabE p u false false n n = 2 := by
       unfold WlabE; rw [if_pos rfl, if_pos ⟨rfl, rfl, rfl, hdn⟩]
     omega
   · have hne : n % p ≠ n' % p := fun h => hnn (cong_eq (by omega) (by omega) h)
     have hsame : n / p = n' / p := by rw [hdn, hdn']
-    have hW1 : WlabE p false false n n' ≤ 1 := by
+    have hW1 : WlabE p u false false n n' ≤ 1 := by
       unfold WlabE; rw [if_neg hne, if_pos ⟨rfl, hsame⟩]; split_ifs <;> omega
     by_cases hv1 : r + 2 * m ≤ n
-    · have e1 : phiR2 r m u n = 1 := by unfold phiR2; rw [if_neg (by omega), if_neg (by omega)]
+    · have e1 : phiR2 r m uX n = 1 := by unfold phiR2; rw [if_neg (by omega), if_neg (by omega)]
       omega
     by_cases hv2 : r + 2 * m ≤ n'
-    · have e2 : phiC2 r m u' n' = 1 := by unfold phiC2; rw [if_neg (by omega), if_neg (by omega)]
+    · have e2 : phiC2 r m uY n' = 1 := by unfold phiC2; rw [if_neg (by omega), if_neg (by omega)]
       omega
     have h0 : (n - r) % 2 = 0 := by omega
     have h1 : (n' - r) % 2 = 1 := by omega
-    have e1 : phiR2 r m u n = u ((n - r) / 2) := by
+    have e1 : phiR2 r m uX n = uX ((n - r) / 2) := by
       unfold phiR2; rw [if_neg (by omega), if_pos (by omega), if_pos h0]
-    have e2 : phiC2 r m u' n' = u' ((n' - r) / 2) := by
+    have e2 : phiC2 r m uY n' = uY ((n' - r) / 2) := by
       unfold phiC2; rw [if_neg (by omega), if_pos (by omega), if_pos h1]
     rw [e1, e2]
     have hd := hdual ((n - r) / 2) ((n' - r) / 2) (by omega) (by omega)
@@ -1409,16 +965,16 @@ theorem e2_pair {r m : ℕ} (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : 
     refine le_trans ?_ hd
     unfold WlabE w3 cell
     rw [if_neg hne, if_pos ⟨rfl, hsame⟩, hdn, hdn']
-    by_cases hh : half p n = half p n'
+    by_cases hh : half p u n = half p u n'
     · simp [hh]
     · simp [hh]
 
-theorem e2_point (p r m : ℕ) (u u' : ℕ → ℕ) (hN2 : r + 2 * m ≤ 2 * p) (t : ℕ) :
-    ((if t ∈ TRs p 2 0 r m then phiR2 r m u t else 0) + (if t ∈ ORs p 2 0 r m then phiR2 r m u t else 0) +
-      (if t ∈ TCs p 2 0 r m then phiC2 r m u' t else 0) + (if t ∈ OCs p 2 0 r m then phiC2 r m u' t else 0) +
+theorem e2_point (p r m : ℕ) (uX uY : ℕ → ℕ) (hN2 : r + 2 * m ≤ 2 * p) (t : ℕ) :
+    ((if t ∈ TRs p 2 0 r m then phiR2 r m uX t else 0) + (if t ∈ ORs p 2 0 r m then phiR2 r m uX t else 0) +
+      (if t ∈ TCs p 2 0 r m then phiC2 r m uY t else 0) + (if t ∈ OCs p 2 0 r m then phiC2 r m uY t else 0) +
       3 * (if t ∈ FXs r m then 1 else 0) + (if t ∈ Finset.Ico (r + 2 * m) (2 * p) then 1 else 0)) ≤
-    ((if t ∈ FXs r m then phiR2 r m u t else 0) +
-      (if t ∈ FYs r m then phiC2 r m u' t else 0) +
+    ((if t ∈ FXs r m then phiR2 r m uX t else 0) +
+      (if t ∈ FYs r m then phiC2 r m uY t else 0) +
       3 * ((if t ∈ TRs p 2 0 r m then 1 else 0) + (if t ∈ ORs p 2 0 r m then 1 else 0))) := by
   unfold TRs TCs ORs OCs Tdel FXs FYs phiR2 phiC2
   simp only [Finset.mem_filter, Finset.mem_Ico, mul_zero, add_zero]
@@ -1430,13 +986,13 @@ section E2Main
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-theorem e2_sum (r m : ℕ) (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : ℕ → ℕ) :
-    3 * r + 3 * m + (∑ t ∈ TRs p 2 0 r m, phiR2 r m u t + ∑ t ∈ ORs p 2 0 r m, phiR2 r m u t +
-        ∑ t ∈ TCs p 2 0 r m, phiC2 r m u' t + ∑ t ∈ OCs p 2 0 r m, phiC2 r m u' t) ≤
-      (4 * r - 2 * p + 2 * m + ∑ i ∈ Finset.range m, u i + ∑ j ∈ Finset.range m, u' j) +
+theorem e2_sum (r m : ℕ) (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (uX uY : ℕ → ℕ) :
+    3 * r + 3 * m + (∑ t ∈ TRs p 2 0 r m, phiR2 r m uX t + ∑ t ∈ ORs p 2 0 r m, phiR2 r m uX t +
+        ∑ t ∈ TCs p 2 0 r m, phiC2 r m uY t + ∑ t ∈ OCs p 2 0 r m, phiC2 r m uY t) ≤
+      (4 * r - 2 * p + 2 * m + ∑ i ∈ Finset.range m, uX i + ∑ j ∈ Finset.range m, uY j) +
         3 * ((TRs p 2 0 r m).card + (ORs p 2 0 r m).card) := by
-  have hX : ∑ i ∈ Finset.range m, u i = ∑ t ∈ FXs r m, phiR2 r m u t := by
-    have h := sum_stride r m 0 (by norm_num) (fun t => r ≤ t) (phiR2 r m u)
+  have hX : ∑ i ∈ Finset.range m, uX i = ∑ t ∈ FXs r m, phiR2 r m uX t := by
+    have h := sum_stride r m 0 (by norm_num) (fun t => r ≤ t) (phiR2 r m uX)
     rw [FXs, ← h]
     refine Finset.sum_congr rfl fun i hi => ?_
     have hi := Finset.mem_range.1 hi
@@ -1444,8 +1000,8 @@ theorem e2_sum (r m : ℕ) (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : �
     unfold phiR2
     rw [if_neg (by omega), if_pos (by omega), if_pos (by omega)]
     congr 1; omega
-  have hY : ∑ i ∈ Finset.range m, u' i = ∑ t ∈ FYs r m, phiC2 r m u' t := by
-    have h := sum_stride r m 1 (by norm_num) (fun t => r ≤ t) (phiC2 r m u')
+  have hY : ∑ i ∈ Finset.range m, uY i = ∑ t ∈ FYs r m, phiC2 r m uY t := by
+    have h := sum_stride r m 1 (by norm_num) (fun t => r ≤ t) (phiC2 r m uY)
     rw [FYs, ← h]
     refine Finset.sum_congr rfl fun i hi => ?_
     have hi := Finset.mem_range.1 hi
@@ -1486,12 +1042,12 @@ theorem e2_sum (r m : ℕ) (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (u u' : �
     intro t ht
     simp only [Finset.mem_Ico] at ht
     rw [Finset.mem_range]; omega
-  have hle := Finset.sum_le_sum (s := Finset.range B) (fun t _ => e2_point p r m u u' hN2 t)
+  have hle := Finset.sum_le_sum (s := Finset.range B) (fun t _ => e2_point p r m uX uY hN2 t)
   simp only [Finset.sum_add_distrib, ← Finset.mul_sum] at hle
-  rw [sum_ite_range B _ hsTR (phiR2 r m u), sum_ite_range B _ hsOR (phiR2 r m u),
-    sum_ite_range B _ hsTC (phiC2 r m u'), sum_ite_range B _ hsOC (phiC2 r m u'),
-    sum_ite_range B _ hsFX (fun _ => 1), sum_ite_range B _ hsFX (phiR2 r m u),
-    sum_ite_range B _ hsFY (phiC2 r m u'), sum_ite_range B _ hsTR (fun _ => 1),
+  rw [sum_ite_range B _ hsTR (phiR2 r m uX), sum_ite_range B _ hsOR (phiR2 r m uX),
+    sum_ite_range B _ hsTC (phiC2 r m uY), sum_ite_range B _ hsOC (phiC2 r m uY),
+    sum_ite_range B _ hsFX (fun _ => 1), sum_ite_range B _ hsFX (phiR2 r m uX),
+    sum_ite_range B _ hsFY (phiC2 r m uY), sum_ite_range B _ hsTR (fun _ => 1),
     sum_ite_range B _ hsOR (fun _ => 1), sum_ite_range B _ hsFE (fun _ => 1)] at hle
   simp only [Finset.sum_const, smul_eq_mul, mul_one, Nat.card_Ico] at hle
   rw [hcX] at hle
@@ -1510,13 +1066,13 @@ variable {p : ℕ} [hp : Fact p.Prime]
 with `W₃ ≤ uX i + uY j`, every coefficient of the determinant of the member has `p`-adic denominator at most
 `4 r − 2 p + 2 m + ∑ uX + ∑ uY`.  The prime `p ≥ 5` satisfies `p² > 2 N + 2 p` and `p ∤ v`; nothing else
 (no table, no `(ND)`). -/
-theorem row_E2 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣ v) (hp5 : 5 ≤ p)
+theorem row_E2 (v u : ℤ) (hpv : ¬ (p : ℤ) ∣ v) (hp5 : 5 ≤ p)
     {r m : ℕ} (hpr : p ≤ r) (hN2 : r + 2 * m ≤ 2 * p) (hN : 2 * (r + 2 * m) + 2 * p < p * p)
     {ι : Type} [Fintype ι] [DecidableEq ι] (c : ι → ℕ) (hcinj : Function.Injective c)
     (hcr : ∀ i, c i < r) (uX uY : ℕ → ℕ)
-    (hdual : ∀ i j, i < m → j < m → w3 (cell p (r + 2 * i)) (cell p (r + 2 * j + 1)) ≤ uX i + uY j) :
+    (hdual : ∀ i j, i < m → j < m → w3 (cell p u (r + 2 * i)) (cell p u (r + 2 * j + 1)) ≤ uX i + uY j) :
     GLE p (4 * r - 2 * p + 2 * m + ∑ i ∈ Finset.range m, uX i + ∑ j ∈ Finset.range m, uY j)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c
+      (seqFullN (fS v u) (eS v u) c
         (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
@@ -1528,15 +1084,15 @@ theorem row_E2 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣
   · -- `p ≤ r < 2 p`: `κ = 2`, `k' = 0`, `ξ = p X`
     have hN' : 2 * (2 * p) < p * p := by nlinarith
     have hNp : 2 * p ≤ 2 * p := le_refl _
-    have hU := E2.unitDet_two (R := RP p) (ξ := E2.xiP2 p) v u hv hu hpv hodd hN' hNp (pRad_RP p)
+    have hU := E2.unitDet_two (R := RP p) (ξ := E2.xiP2 p) v u hpv hodd hN' hNp (pRad_RP p)
       (E2.xiP2_dvd p)
-    have hdiag := E2.hdiag_two (R := RP p) (ξ := E2.xiP2 p) (π := (r + 1) % 2) v u hv hu hpv hodd hp5 hN' hNp
+    have hdiag := E2.hdiag_two (R := RP p) (ξ := E2.xiP2 p) (π := (r + 1) % 2) v u hpv hodd hp5 hN' hNp
       (pRad_RP p) (E2.xiP2_dvd p)
     have hcompl : ∀ n, n < r + 2 * m → (n / p + 1) * p ≤ 2 * p := by
       intro n hn
       have : n / p < 2 := (Nat.div_lt_iff_lt_mul hp0).2 (by omega)
       nlinarith
-    refine E2.member_gle_PE (p := p) (κ := 2) (k' := 0) v u hv hu hpv hodd hp5 hN' hU rfl hdiag hr2
+    refine E2.member_gle_PE (p := p) (κ := 2) (k' := 0) v u hpv hodd hp5 hN' hU rfl hdiag hr2
       (by omega) hcompl c hcinj hcr (E2.phiR2 r m uX) (E2.phiC2 r m uY) ?_ ?_ ?_ ?_ ?_
       (4 * r - 2 * p + 2 * m + ∑ i ∈ Finset.range m, uX i + ∑ j ∈ Finset.range m, uY j) ?_
     · intro t ht
@@ -1566,7 +1122,7 @@ theorem row_E2 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣
       have := Fintype.card_le_of_injective (fun i => (⟨c i, hcr i⟩ : Fin r)) (by
         intro i j h; apply hcinj; simpa using congrArg Fin.val h)
       simpa using this
-    have hg := gle_member (p := p) v u hv hu c (fun i : Fin 0 => r + 2 * (i : ℕ))
+    have hg := gle_member (p := p) v u c (fun i : Fin 0 => r + 2 * (i : ℕ))
       (fun i : Fin 0 => r + 2 * (i : ℕ) + 1) (N := r) hN3
       (by rintro (i | i)
           · exact hcr i

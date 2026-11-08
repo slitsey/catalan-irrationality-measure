@@ -101,21 +101,38 @@ theorem delta1_eq (hv : v ≠ 0) (hu : u ≠ 0) (k : ℕ) :
   field_simp
   ring
 
+/-- The sequence `f_t = ∑_{κ ≤ t} Δ_κ` of the pair `(v, u)`; `u = 0` is the one-term (ζ(3)) sequence `fB`. -/
+noncomputable def fS (t : ℕ) : ℚ := ∑ k ∈ range t, (T1 v u (k + 1) + T2 u (k + 1))
+/-- The sequence `e_t = ∑_{κ ≤ t} E_κ` of the pair `(v, u)`. -/
+noncomputable def eS (t : ℕ) : ℚ := ∑ k ∈ range t, (U1 v u (k + 1) + U2 u (k + 1))
+
+/-- The plane 2 datum has the sequences `fS`, `eS`. -/
+theorem plane2_f (hv : v ≠ 0) (hu : u ≠ 0) : (Datum.plane2 v u hv hu).f = fS v u := by
+  funext t
+  unfold Datum.f fS
+  refine Finset.sum_congr rfl fun k _ => ?_
+  rw [delta_eq v u hv hu]
+
+theorem plane2_e (hv : v ≠ 0) (hu : u ≠ 0) : (Datum.plane2 v u hv hu).e = eS v u := by
+  funext t
+  unfold Datum.e eS
+  rw [← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  rw [delta1_eq v u hv hu]
+
 /-- `f_t = S + ρ`: the polar and regular sums. -/
-theorem f_eq (hv : v ≠ 0) (hu : u ≠ 0) (t : ℕ) :
-    (Datum.plane2 v u hv hu).f t = PF v u p t + RF v u p t := by
-  unfold Datum.f PF RF
+theorem f_eq (t : ℕ) : fS v u t = PF v u p t + RF v u p t := by
+  unfold fS PF RF
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  rw [delta_eq v u hv hu, polF_add_regF]
+  rw [polF_add_regF]
 
 /-- `e_t = G + γ`. -/
-theorem e_eq (hv : v ≠ 0) (hu : u ≠ 0) (t : ℕ) :
-    (Datum.plane2 v u hv hu).e t = PE v u p t + RE v u p t := by
-  unfold Datum.e PE RE
-  rw [← Finset.sum_add_distrib, ← Finset.sum_neg_distrib]
+theorem e_eq (t : ℕ) : eS v u t = PE v u p t + RE v u p t := by
+  unfold eS PE RE
+  rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  rw [delta1_eq v u hv hu, polE_add_regE]
+  rw [polE_add_regE]
 
 end Terms
 
@@ -362,22 +379,23 @@ end Poles
 
 section Cells
 
-variable (p : ℕ)
+variable (p : ℕ) (u : ℤ)
 
-/-- The half of `t` in its period: `1` if `2 (t mod p) ≥ p + 1`, else `0`. -/
-def half (t : ℕ) : ℕ := if p + 1 ≤ 2 * (t % p) then 1 else 0
+/-- The half of `t` in its period: `1` if `2 (t mod p) ≥ p + 1`, else `0`.  For `u = 0` (the one-term
+datum, no simple poles at the half-integers) the half map is `0`: cells are periods. -/
+def half (t : ℕ) : ℕ := if u = 0 then 0 else if p + 1 ≤ 2 * (t % p) then 1 else 0
 
 /-- The cell `(period, half)` of a node. -/
-def cell (t : ℕ) : ℕ × ℕ := (t / p, half p t)
+def cell (t : ℕ) : ℕ × ℕ := (t / p, half p u t)
 
 /-- The weight on cells: `0` in one cell, `1` in one period (other half), `2` in different periods. -/
 def w3 (c c' : ℕ × ℕ) : ℕ := if c = c' then 0 else if c.1 = c'.1 then 1 else 2
 
 /-- The diagonal weight: `3` in period `≥ 1`, `2` in cell `(0, 1)`, `0` in cell `(0, 0)`. -/
-def Wd (t : ℕ) : ℕ := if 1 ≤ t / p then 3 else if half p t = 1 then 2 else 0
+def Wd (t : ℕ) : ℕ := if 1 ≤ t / p then 3 else if half p u t = 1 then 2 else 0
 
 /-- The joint weight of a pair of nodes: `3` for congruent distinct nodes, else the cell weight. -/
-def Wt (s t : ℕ) : ℕ := if s = t then Wd p s else if s % p = t % p then 3 else w3 (cell p s) (cell p t)
+def Wt (s t : ℕ) : ℕ := if s = t then Wd p u s else if s % p = t % p then 3 else w3 (cell p u s) (cell p u t)
 
 theorem w3_symm (c c' : ℕ × ℕ) : w3 c c' = w3 c' c := by
   unfold w3
@@ -388,7 +406,7 @@ theorem w3_symm (c c' : ℕ × ℕ) : w3 c c' = w3 c' c := by
     · rw [if_neg h, if_neg h', if_pos h2, if_pos h2.symm]
     · rw [if_neg h, if_neg h', if_neg h2, if_neg (Ne.symm h2)]
 
-theorem Wt_symm (s t : ℕ) : Wt p s t = Wt p t s := by
+theorem Wt_symm (s t : ℕ) : Wt p u s t = Wt p u t s := by
   unfold Wt
   by_cases h : s = t
   · subst h; simp
@@ -399,7 +417,7 @@ theorem Wt_symm (s t : ℕ) : Wt p s t = Wt p t s := by
     · simp only [h2, Ne.symm h2, if_false]
       exact w3_symm _ _
 
-variable {p}
+variable {p u}
 
 theorem period_eq_of_between {s κ t : ℕ} (h1 : s ≤ κ) (h2 : κ ≤ t) (hper : s / p = t / p) :
     κ / p = s / p :=
@@ -430,12 +448,12 @@ theorem two_mul_sub_one_dvd {q ρ : ℕ} (hρ1 : 1 ≤ ρ) (hρp : ρ < p)
   · have := Nat.mul_le_mul_left p hge
     omega
 
-/-- Inside a cell no singular `κ` of either kind occurs. -/
-theorem no_pole_same_cell {s κ t : ℕ} (hp0 : 0 < p) (hs : s < κ) (hκt : κ ≤ t) (hc : cell p s = cell p t) :
-    ¬ p ∣ κ ∧ ¬ p ∣ 2 * κ - 1 := by
+/-- Inside a cell no singular `κ` occurs (for `u = 0` the simple poles do not exist, `T2 0 = 0`). -/
+theorem no_pole_same_cell {s κ t : ℕ} (hp0 : 0 < p) (hs : s < κ) (hκt : κ ≤ t) (hc : cell p u s = cell p u t) :
+    ¬ p ∣ κ ∧ (u ≠ 0 → ¬ p ∣ 2 * κ - 1) := by
   have hper : s / p = t / p := (Prod.mk.inj hc).1
-  have hhalf : half p s = half p t := (Prod.mk.inj hc).2
-  refine ⟨no_mult_same_period hs hκt hper, ?_⟩
+  have hhalf : half p u s = half p u t := (Prod.mk.inj hc).2
+  refine ⟨no_mult_same_period hs hκt hper, fun hu0 => ?_⟩
   have hq := period_eq_of_between hs.le hκt hper
   have hqt : t / p = s / p := hper.symm
   have h1 := Nat.div_add_mod s p
@@ -452,6 +470,7 @@ theorem no_pole_same_cell {s κ t : ℕ} (hp0 : 0 < p) (hs : s < κ) (hκt : κ 
   have hd' : p ∣ 2 * (p * (s / p) + κ % p) - 1 := by rw [← hκ]; exact hd
   have h2ρ := two_mul_sub_one_dvd hρ1 hρκ hd'
   unfold half at hhalf
+  rw [if_neg hu0, if_neg hu0] at hhalf
   by_cases hhs : p + 1 ≤ 2 * (s % p)
   · rw [if_pos hhs] at hhalf
     omega
@@ -519,12 +538,16 @@ theorem PF_diff_same_period (hN : 2 * N < p * p) {s t : ℕ} (hst : s ≤ t) (ht
     rw [PF_step]
     exact polF_pole_nomult v u (by omega) (by omega) (no_mult_same_period (by omega) (by omega) hper)
 
-theorem PF_eq_same_cell {s t : ℕ} (hst : s ≤ t) (hc : cell p s = cell p t) :
+theorem PF_eq_same_cell {s t : ℕ} (hst : s ≤ t) (hc : cell p u s = cell p u t) :
     PF v u p t = PF v u p s :=
   eq_telescope _ s t hst fun i hsi hi => by
     have h := PF_step v u (p := p) i
-    have hnp := no_pole_same_cell (p := p) (s := s) (κ := i + 1) (t := t) hp.out.pos (by omega) (by omega) hc
-    have : polF v u p (i + 1) = 0 := by unfold polF; simp [hnp.1, hnp.2]
+    have hnp := no_pole_same_cell (p := p) (u := u) (s := s) (κ := i + 1) (t := t) hp.out.pos (by omega) (by omega) hc
+    have : polF v u p (i + 1) = 0 := by
+      unfold polF
+      by_cases hu0 : u = 0
+      · simp [hnp.1, hu0, T2]
+      · simp [hnp.1, hnp.2 hu0]
     linarith
 
 theorem PE_diff_period (hN : 2 * N < p * p) {s t : ℕ} (hst : s ≤ t) (ht : t < N) :
@@ -538,12 +561,16 @@ theorem PE_diff_same_period (hN : 2 * N < p * p) {s t : ℕ} (hst : s ≤ t) (ht
     rw [PE_step]
     exact polE_pole_nomult v u (by omega) (by omega) (no_mult_same_period (by omega) (by omega) hper)
 
-theorem PE_eq_same_cell {s t : ℕ} (hst : s ≤ t) (hc : cell p s = cell p t) :
+theorem PE_eq_same_cell {s t : ℕ} (hst : s ≤ t) (hc : cell p u s = cell p u t) :
     PE v u p t = PE v u p s :=
   eq_telescope _ s t hst fun i hsi hi => by
     have h := PE_step v u (p := p) i
-    have hnp := no_pole_same_cell (p := p) (s := s) (κ := i + 1) (t := t) hp.out.pos (by omega) (by omega) hc
-    have : polE v u p (i + 1) = 0 := by unfold polE; simp [hnp.1, hnp.2]
+    have hnp := no_pole_same_cell (p := p) (u := u) (s := s) (κ := i + 1) (t := t) hp.out.pos (by omega) (by omega) hc
+    have : polE v u p (i + 1) = 0 := by
+      unfold polE
+      by_cases hu0 : u = 0
+      · simp [hnp.1, hu0, U2]
+      · simp [hnp.1, hnp.2 hu0]
     linarith
 
 end Telescope
@@ -552,48 +579,50 @@ end Telescope
 
 section Table
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
 
 theorem lw_offdiag {s t : ℕ} (hst : s < t) :
-    lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e s t =
-      ((Datum.plane2 v u hv hu).f t - (Datum.plane2 v u hv hu).f s) / (((t - s : ℕ) : ℚ)) := by
+    lw (fS v u) (eS v u) s t =
+      ((fS v u) t - (fS v u) s) / (((t - s : ℕ) : ℚ)) := by
   unfold lw
   rw [if_neg (Nat.ne_of_lt hst), Nat.cast_sub hst.le]
 
 /-- The valuation of the difference of two values of `f` is bounded by the cell weight. -/
 theorem Vp_fdiff (hN : 2 * N < p * p) {s t : ℕ} (hst : s < t) (ht : t < N) :
-    Vp p (w3 (cell p s) (cell p t)) ((Datum.plane2 v u hv hu).f t - (Datum.plane2 v u hv hu).f s) := by
-  have hdec : (Datum.plane2 v u hv hu).f t - (Datum.plane2 v u hv hu).f s =
+    Vp p (w3 (cell p u s) (cell p u t)) ((fS v u) t - (fS v u) s) := by
+  have hdec : (fS v u) t - (fS v u) s =
       (PF v u p t - PF v u p s) + (RF v u p t - RF v u p s) := by
-    rw [f_eq v u (p := p) hv hu, f_eq v u (p := p) hv hu]; ring
+    rw [f_eq v u (p := p), f_eq v u (p := p)]; ring
   have hR : Vp p 0 (RF v u p t - RF v u p s) :=
     Vp.zero_iff.2 ((LocRing p).sub_mem (RF_mem v u t) (RF_mem v u s))
   rw [hdec]
-  by_cases hc : cell p s = cell p t
+  by_cases hc : cell p u s = cell p u t
   · have h0 : PF v u p t - PF v u p s = 0 := by rw [PF_eq_same_cell v u hst.le hc]; ring
     rw [h0, zero_add]
     unfold w3; rw [if_pos hc]; exact hR
   · by_cases hper : s / p = t / p
-    · have h1 := PF_diff_same_period v u hN hst.le ht hper
-      have : w3 (cell p s) (cell p t) = 1 := by
-        unfold w3; rw [if_neg hc, if_pos (show (cell p s).1 = (cell p t).1 from hper)]
+    · -- for `u = 0` cells are periods, so this case cannot occur
+      have hu0 : u ≠ 0 := fun hu0 => hc (Prod.ext hper (by simp [cell, half, hu0]))
+      have h1 := PF_diff_same_period v u hN hst.le ht hper
+      have : w3 (cell p u s) (cell p u t) = 1 := by
+        unfold w3; rw [if_neg hc, if_pos (show (cell p u s).1 = (cell p u t).1 from hper)]
       rw [this]; exact Vp.add h1 (hR.mono (by omega))
     · have h1 := PF_diff_period v u hN hst.le ht
-      have : w3 (cell p s) (cell p t) = 2 := by
+      have : w3 (cell p u s) (cell p u t) = 2 := by
         unfold w3; rw [if_neg hc]
-        have : ¬ (cell p s).1 = (cell p t).1 := hper
+        have : ¬ (cell p u s).1 = (cell p u t).1 := hper
         rw [if_neg this]
       rw [this]; exact Vp.add h1 (hR.mono (by omega))
 
 /-- **The weight table** (N1): for nodes `s, t < N` with `2N < p²`, `p^{W(s,t)} · lw f e s t` is
 `p`-integral, whatever the integers `(v, u)`. -/
 theorem weight_table (hN : 2 * N < p * p) (s t : ℕ) (hs : s < N) (ht : t < N) :
-    Vp p (Wt p s t) (lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e s t) := by
+    Vp p (Wt p u s t) (lw (fS v u) (eS v u) s t) := by
   have lt_case : ∀ s t : ℕ, s < t → t < N →
-      Vp p (Wt p s t) (lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e s t) := by
+      Vp p (Wt p u s t) (lw (fS v u) (eS v u) s t) := by
     intro s t hst ht
-    rw [lw_offdiag v u hv hu hst]
-    have hf := Vp_fdiff v u hv hu hN hst ht
+    rw [lw_offdiag v u hst]
+    have hf := Vp_fdiff v u hN hst ht
     have hne : s ≠ t := Nat.ne_of_lt hst
     by_cases hcong : s % p = t % p
     · have hdvd : p ∣ t - s := (Nat.modEq_iff_dvd' hst.le).1 hcong
@@ -613,25 +642,25 @@ theorem weight_table (hN : 2 * N < p * p) (s t : ℕ) (hs : s < N) (ht : t < N) 
         have h2 := Nat.div_add_mod t p
         rw [← hper] at h2
         omega
-      have hw : w3 (cell p s) (cell p t) = 2 := by
+      have hw : w3 (cell p u s) (cell p u t) = 2 := by
         unfold w3
-        have hc : ¬ cell p s = cell p t := fun h => hper (Prod.mk.inj h).1
-        rw [if_neg hc, if_neg (show ¬ (cell p s).1 = (cell p t).1 from hper)]
+        have hc : ¬ cell p u s = cell p u t := fun h => hper (Prod.mk.inj h).1
+        rw [if_neg hc, if_neg (show ¬ (cell p u s).1 = (cell p u t).1 from hper)]
       rw [hw] at hf
       have e : (((t - s : ℕ)) : ℚ) = ((p * l : ℕ) : ℚ) := by rw [hl]
       rw [e]
-      have : Wt p s t = 3 := by unfold Wt; rw [if_neg hne, if_pos hcong]
+      have : Wt p u s t = 3 := by unfold Wt; rw [if_neg hne, if_pos hcong]
       rw [this]
       exact Vp.div_p_mul hf hl0 hlp
     · have hnd : ¬ p ∣ t - s := fun h => hcong ((Nat.modEq_iff_dvd' hst.le).2 h)
-      have : Wt p s t = w3 (cell p s) (cell p t) := by unfold Wt; rw [if_neg hne, if_neg hcong]
+      have : Wt p u s t = w3 (cell p u s) (cell p u t) := by unfold Wt; rw [if_neg hne, if_neg hcong]
       rw [this]
       exact Vp.div_unit hf hnd
   by_cases hst : s = t
   · subst hst
     unfold lw; rw [if_pos rfl]
     unfold Wt; rw [if_pos rfl]
-    rw [e_eq v u (p := p) hv hu]
+    rw [e_eq v u (p := p)]
     have hRE : RE v u p s ∈ LocRing p := RE_mem v u s
     have hPE0 : PE v u p 0 = 0 := by simp [PE]
     unfold Wd
@@ -642,14 +671,14 @@ theorem weight_table (hN : 2 * N < p * p) (s t : ℕ) (hs : s < N) (ht : t < N) 
       exact (Vp.add this (Vp.of_mem hRE)).neg
     · rw [if_neg h1]
       have hs0 : s / p = 0 := by by_contra h; exact h1 (Nat.pos_of_ne_zero h)
-      by_cases h2 : half p s = 1
+      by_cases h2 : half p u s = 1
       · rw [if_pos h2]
         have := PE_diff_same_period v u hN (Nat.zero_le s) hs (by rw [hs0]; simp)
         rw [hPE0, sub_zero] at this
         exact (Vp.add this (Vp.of_mem hRE)).neg
       · rw [if_neg h2]
-        have hc : cell p 0 = cell p s := by
-          have : half p s = 0 := by
+        have hc : cell p u 0 = cell p u s := by
+          have : half p u s = 0 := by
             unfold half at h2 ⊢
             split_ifs at h2 ⊢ <;> simp_all
           unfold cell
@@ -662,8 +691,8 @@ theorem weight_table (hN : 2 * N < p * p) (s t : ℕ) (hs : s < N) (ht : t < N) 
   · rcases Nat.lt_or_gt_of_ne hst with hlt | hgt
     · exact lt_case s t hlt ht
     · have h := lt_case t s hgt hs
-      have hsym : lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e s t =
-          lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e t s := by
+      have hsym : lw (fS v u) (eS v u) s t =
+          lw (fS v u) (eS v u) t s := by
         unfold lw
         rw [if_neg hst, if_neg (Ne.symm hst)]
         have h1 : (s : ℚ) - t ≠ 0 := sub_ne_zero.2 (by exact_mod_cast hst)
@@ -679,14 +708,14 @@ end Table
 
 section Assignment
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
 /-- Every coefficient of every entry has the weight of its pair of nodes. -/
 theorem entry_gle (hN : 2 * N < p * p) (cn : ι → ℕ) (xs ys : κ → ℕ) (hc : ∀ a, cn a < N)
     (hx : ∀ i, xs i < N) (hy : ∀ i, ys i < N) (a b : ι ⊕ κ) :
-    GLE p (Wt p (Sum.elim cn xs a) (Sum.elim cn ys b))
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e cn xs ys (X : ℚ[X]) a b) := by
+    GLE p (Wt p u (Sum.elim cn xs a) (Sum.elim cn ys b))
+      (seqFullN (fS v u) (eS v u) cn xs ys (X : ℚ[X]) a b) := by
   have bnd : ∀ a, Sum.elim cn xs a < N := fun a => by
     rcases a with a | i
     · exact hc a
@@ -695,7 +724,7 @@ theorem entry_gle (hN : 2 * N < p * p) (cn : ι → ℕ) (xs ys : κ → ℕ) (h
     rcases b with b | j
     · exact hc b
     · exact hy j
-  have key := fun a b => GLE.C_iff.2 (weight_table v u hv hu hN _ _ (bnd a) (bnd' b))
+  have key := fun a b => GLE.C_iff.2 (weight_table v u hN _ _ (bnd a) (bnd' b))
   rcases a with a | i <;> rcases b with b | j
   · simp only [seqFullN, Rect.Blk, Matrix.fromBlocks_apply₁₁, Matrix.add_apply, Matrix.smul_apply,
       Matrix.one_apply, Matrix.of_apply, smul_eq_mul, Polynomial.algebraMap_eq]
@@ -716,14 +745,14 @@ potentials with `W ≤ uR + uC` on every pair, then every coefficient of the det
 `p^{∑uR + ∑uC}`-integral: `v_p(den P_I) ≤ ∑u + ∑u′` for every `I`. -/
 theorem det_gle_of_dual (hN : 2 * N < p * p) (cn : ι → ℕ) (xs ys : κ → ℕ) (hc : ∀ a, cn a < N)
     (hx : ∀ i, xs i < N) (hy : ∀ i, ys i < N) (uR uC : ι ⊕ κ → ℕ)
-    (hW : ∀ a b, Wt p (Sum.elim cn xs a) (Sum.elim cn ys b) ≤ uR a + uC b) :
+    (hW : ∀ a b, Wt p u (Sum.elim cn xs a) (Sum.elim cn ys b) ≤ uR a + uC b) :
     GLE p (∑ a, uR a + ∑ b, uC b)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e cn xs ys (X : ℚ[X])).det := by
-  have h := det_gle (p := p) (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e cn xs ys
-    (X : ℚ[X])) (fun a b => Wt p (Sum.elim cn xs a) (Sum.elim cn ys b))
-    (entry_gle v u hv hu hN cn xs ys hc hx hy)
+      (seqFullN (fS v u) (eS v u) cn xs ys (X : ℚ[X])).det := by
+  have h := det_gle (p := p) (seqFullN (fS v u) (eS v u) cn xs ys
+    (X : ℚ[X])) (fun a b => Wt p u (Sum.elim cn xs a) (Sum.elim cn ys b))
+    (entry_gle v u hN cn xs ys hc hx hy)
   refine h.mono ?_
-  refine tropVal_le_of_dual (fun a b => Wt p (Sum.elim cn xs a) (Sum.elim cn ys b))
+  refine tropVal_le_of_dual (fun a b => Wt p u (Sum.elim cn xs a) (Sum.elim cn ys b))
     (fun a => (uR a : ℚ)) (fun b => (uC b : ℚ)) ?_ ?_
   · intro a b; exact_mod_cast hW a b
   · push_cast; exact le_rfl

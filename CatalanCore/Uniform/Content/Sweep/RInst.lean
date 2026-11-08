@@ -100,7 +100,7 @@ end RInst
 
 section Member
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {ι κw : Type} [Fintype ι] [DecidableEq ι] [Fintype κw] [DecidableEq κw]
   (c : ι → ℕ) (xs ys : κw → ℕ)
 
@@ -111,17 +111,17 @@ def memCol : ι ⊕ κw → ℕ := Sum.elim c ys
 /-- The `p³`-scaled member matrix over `ℤ_(p)[X]`. -/
 noncomputable def BlM : Matrix (ι ⊕ κw) (ι ⊕ κw) (LocRing p)[X] :=
   Matrix.of fun a b => (if memRow c xs a = memCol c ys b then (X : (LocRing p)[X]) else 0) +
-    C (toL p ((p : ℚ) ^ 3 * Lm v u hv hu (memRow c xs a) (memCol c ys b)))
+    C (toL p ((p : ℚ) ^ 3 * Lm v u (memRow c xs a) (memCol c ys b)))
 
 /-- The minor of `Q` over `R` with the same nodes. -/
 noncomputable def QminR {R : Type*} [CommRing R] [Algebra (LocRing p) R] (ξ : R) :
     Matrix (ι ⊕ κw) (ι ⊕ κw) R :=
-  Matrix.of fun a b => Qent (p := p) v u hv hu ξ (memRow c xs a) (memCol c ys b)
+  Matrix.of fun a b => Qent (p := p) v u ξ (memRow c xs a) (memCol c ys b)
 
 theorem map_BlM {R : Type*} [CommRing R] [Algebra (LocRing p) R] (ξ : R)
     (f : (LocRing p)[X] →+* R) (hX : f X = ξ) (hC : ∀ x : LocRing p, f (C x) = algebraMap (LocRing p) R x)
     (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hc : ∀ b, memCol c ys b < N) :
-    f.mapMatrix (BlM (p := p) v u hv hu c xs ys) = QminR (p := p) v u hv hu c xs ys ξ := by
+    f.mapMatrix (BlM (p := p) v u c xs ys) = QminR (p := p) v u c xs ys ξ := by
   ext a b
   simp only [RingHom.mapMatrix_apply, Matrix.map_apply, BlM, QminR, Matrix.of_apply, Qent, map_add]
   congr 1
@@ -154,26 +154,26 @@ determinant in the variable `X`. -/
 theorem gle_member (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : ∀ b, memCol c ys b < N)
     (hcinj : Function.Injective c) (h1 : ∀ i j, c i ≠ ys j) (h2 : ∀ i j, xs i ≠ c j)
     (h3 : ∀ i j, xs i ≠ ys j) {K : ℕ}
-    (hdvd : ((p : ℕ) : RP p) ^ K ∣ (QminR (p := p) v u hv hu c xs ys (xiP p)).det) :
+    (hdvd : ((p : ℕ) : RP p) ^ K ∣ (QminR (p := p) v u c xs ys (xiP p)).det) :
     GLE p (3 * (Fintype.card ι + Fintype.card κw) - K)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X])).det := by
+      (seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X])).det := by
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   -- the minor over R
-  have hmap := map_BlM (p := p) v u hv hu c xs ys (xiP p) (algebraMap ((LocRing p)[X]) (RP p)) rfl
+  have hmap := map_BlM (p := p) v u c xs ys (xiP p) (algebraMap ((LocRing p)[X]) (RP p)) rfl
     (fun x => by
       rw [IsScalarTower.algebraMap_apply (LocRing p) ((LocRing p)[X]) (RP p) x, Polynomial.algebraMap_eq])
     hN hr hcl
-  have hd1 : ((p : ℕ) : RP p) ^ K ∣ algebraMap ((LocRing p)[X]) (RP p) (BlM (p := p) v u hv hu c xs ys).det := by
-    have hm := RingHom.map_det (S := RP p) (algebraMap ((LocRing p)[X]) (RP p)) (BlM (p := p) v u hv hu c xs ys)
+  have hd1 : ((p : ℕ) : RP p) ^ K ∣ algebraMap ((LocRing p)[X]) (RP p) (BlM (p := p) v u c xs ys).det := by
+    have hm := RingHom.map_det (S := RP p) (algebraMap ((LocRing p)[X]) (RP p)) (BlM (p := p) v u c xs ys)
     rw [hm, hmap]; exact hdvd
   have hd2 := descent p hd1
   -- the scaled member
   set Mt : Matrix (ι ⊕ κw) (ι ⊕ κw) ℚ[X] :=
-    seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (C (((p : ℚ) ^ 3)⁻¹) * X) with hMt
-  have hB : ∀ a b : ι ⊕ κw, toQ p (BlM (p := p) v u hv hu c xs ys a b) =
+    seqFullN (fS v u) (eS v u) c xs ys (C (((p : ℚ) ^ 3)⁻¹) * X) with hMt
+  have hB : ∀ a b : ι ⊕ κw, toQ p (BlM (p := p) v u c xs ys a b) =
       C ((p : ℚ) ^ ((fun _ : ι ⊕ κw => 3) a + (fun _ : ι ⊕ κw => 0) b)) * Mt a b := by
     intro a b
-    have hq := q_mem v u hv hu hN (hr a) (hcl b)
+    have hq := q_mem v u hN (hr a) (hcl b)
     rw [hMt, seqFullN_entry c xs ys _ _ _ hcinj h1 h2 h3]
     simp only [BlM, Matrix.of_apply, map_add, toQ]
     rw [Polynomial.coe_mapRingHom]
@@ -185,11 +185,11 @@ theorem gle_member (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : �
     · rw [Polynomial.map_X, mul_add, ← mul_assoc, ← C_mul, hc3', Polynomial.C_1, one_mul,
         Polynomial.algebraMap_eq, ← C_mul]
     · rw [Polynomial.map_zero, zero_add, zero_add, Polynomial.algebraMap_eq, ← C_mul]
-  have hG := gle_det_of_scaled_dvd p Mt (BlM (p := p) v u hv hu c xs ys) (fun _ => 3) (fun _ => 0) hB K hd2
+  have hG := gle_det_of_scaled_dvd p Mt (BlM (p := p) v u c xs ys) (fun _ => 3) (fun _ => 0) hB K hd2
   simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_zero, add_zero, Fintype.card_sum] at hG
   -- Mt is the composite of the member in X with X ↦ p⁻³ X
   set MX : Matrix (ι ⊕ κw) (ι ⊕ κw) ℚ[X] :=
-    seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c xs ys (X : ℚ[X]) with hMX
+    seqFullN (fS v u) (eS v u) c xs ys (X : ℚ[X]) with hMX
   have hcomp : Mt = (Polynomial.compRingHom (C (((p : ℚ) ^ 3)⁻¹) * X : ℚ[X])).mapMatrix MX := by
     ext a b
     rw [hMt, hMX, seqFullN_entry c xs ys _ _ _ hcinj h1 h2 h3, RingHom.mapMatrix_apply, Matrix.map_apply,

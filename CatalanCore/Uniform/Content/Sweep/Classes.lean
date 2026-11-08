@@ -401,12 +401,24 @@ theorem Yr_colPer (b h o : ℕ) (a : Fin κ ⊕ Fin k') :
 
 variable {ξ}
 
-theorem Yr_class (hU : UnitProp p ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
+/-- The unit hypothesis of the sweep: the class matrices `B^h_o` have unit determinant.  It follows from
+`UnitProp` (`unitDet_of_unitProp`, for `ξ = X`) and is all that the chain uses; at `ξ = p X` (row `E₂`)
+it is proved directly. -/
+def UnitDet (p : ℕ) [Fact p.Prime] (v u : ℤ) (κ k' : ℕ) {R : Type*} [CommRing R] [Algebra (LocRing p) R]
+    (ξ : R) : Prop :=
+  ∀ h o : ℕ, h ≤ 1 → o ≤ 1 → IsUnit (BclR (p := p) v u κ k' ξ h o).det
+
+theorem unitDet_of_unitProp {R : Type*} [CommRing R] [Algebra (LocRing p) R] {ξ : R} (hU : UnitProp p ξ)
+    (hodd : p % 2 = 1) (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N) (hv : ¬ (p : ℤ) ∣ v) :
+    UnitDet p v u κ k' ξ :=
+  fun _ _ hh ho => isUnit_det_BclR v u κ k' hU hodd hN hh ho hH hv
+
+theorem Yr_class (hU : UnitDet p v u κ k' ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
     (hH : (κ + 2 * k') * p ≤ N) (hv : ¬ (p : ℤ) ∣ v) {h o : ℕ} (hh : h ≤ 1) (ho : o ≤ 1) (b : ℕ)
     {l : ℕ} (hl : l ∈ Cper κ k' (1 - o)) :
     ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h l j * Yr (p := p) v u κ k' ξ b h o j =
       GamR (p := p) v u b h l := by
-  have hdet := isUnit_det_BclR v u κ k' hU hodd hN hh ho hH hv
+  have hdet := hU _ _ hh ho
   obtain ⟨c, rfl⟩ := exists_rowPer κ k' o ho hl
   have e1 : ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h (rowPer κ k' o c) j * Yr (p := p) v u κ k' ξ b h o j =
       ∑ a, Bm (p := p) v u ξ h (rowPer κ k' o c) (colPer κ k' o a) * Wvec (p := p) v u κ k' ξ b h o a := by
@@ -425,11 +437,11 @@ theorem Yr_class (hU : UnitProp p ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
   rw [← e2]
   rfl
 
-theorem Yr_half (hU : UnitProp p ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
+theorem Yr_half (hU : UnitDet p v u κ k' ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
     (hH : (κ + 2 * k') * p ≤ N) (hv : ¬ (p : ℤ) ∣ v) {o : ℕ} (ho : o ≤ 1) (b : ℕ)
     {j : ℕ} (hj : j ∈ Cper κ k' o) :
     (p : R) ∣ Yr (p := p) v u κ k' ξ b 1 o j - Yr (p := p) v u κ k' ξ b 0 o j := by
-  have hdet1 := isUnit_det_BclR v u κ k' hU hodd hN (h := 1) (by norm_num) ho hH hv
+  have hdet1 := hU 1 o (by norm_num) ho
   have hper : ∀ j, j < κ + 2 * k' → (j + 1) * p ≤ N := fun j hj => by nlinarith
   obtain ⟨a, rfl⟩ := exists_colPer κ k' o ho hj
   rw [Yr_colPer, Yr_colPer]
@@ -439,7 +451,7 @@ theorem Yr_half (hU : UnitProp p ξ) (hodd : p % 2 = 1) (hN : 2 * N < p * p)
   set B0 := BclR (p := p) v u κ k' ξ 0 o with hB0
   set G1 : Fin κ ⊕ Fin k' → R := fun c => GamR (p := p) v u b 1 (rowPer κ k' o c) with hG1
   set G0 : Fin κ ⊕ Fin k' → R := fun c => GamR (p := p) v u b 0 (rowPer κ k' o c) with hG0
-  have hdet0 := isUnit_det_BclR v u κ k' hU hodd hN (h := 0) (by norm_num) ho hH hv
+  have hdet0 := hU 0 o (by norm_num) ho
   have hB0W : B0 *ᵥ W0 = G0 := by
     rw [hW0, Wvec, hB0, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hdet0, Matrix.one_mulVec]
   have hd : ∀ c, (p : R) ∣ (G1 - B1 *ᵥ W0) c := by

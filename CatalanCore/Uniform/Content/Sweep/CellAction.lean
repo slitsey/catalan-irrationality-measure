@@ -94,21 +94,21 @@ end Alg
 
 section CellSums
 
-variable {p : ℕ}
+variable {p : ℕ} {u : ℤ}
 
 /-- The sum of `F` over the nodes of the cell `c = (j, h')`. -/
-def cellSum {α : Type*} [AddCommMonoid α] (p : ℕ) (c : ℕ × ℕ) (F : ℕ → α) : α :=
-  ∑ r ∈ range p, if half p r = c.2 then F (c.1 * p + r) else 0
+def cellSum {α : Type*} [AddCommMonoid α] (p : ℕ) (u : ℤ) (c : ℕ × ℕ) (F : ℕ → α) : α :=
+  ∑ r ∈ range p, if half p u r = c.2 then F (c.1 * p + r) else 0
 
-theorem half_eq (r : ℕ) : half p r = 0 ∨ half p r = 1 := by
+theorem half_eq (r : ℕ) : half p u r = 0 ∨ half p u r = 1 := by
   unfold half; split_ifs <;> simp
 
-theorem half_node (hp0 : 0 < p) (j r : ℕ) (hr : r < p) : half p (j * p + r) = half p r := by
+theorem half_node (hp0 : 0 < p) (j r : ℕ) (hr : r < p) : half p u (j * p + r) = half p u r := by
   unfold half
   have : (j * p + r) % p = r := by rw [Nat.mul_comm, Nat.mul_add_mod]; exact Nat.mod_eq_of_lt hr
   rw [this, Nat.mod_eq_of_lt hr]
 
-theorem cell_node (hp0 : 0 < p) (j r : ℕ) (hr : r < p) : cell p (j * p + r) = (j, half p r) := by
+theorem cell_node (hp0 : 0 < p) (j r : ℕ) (hr : r < p) : cell p u (j * p + r) = (j, half p u r) := by
   unfold cell
   rw [half_node hp0 j r hr]
   have : (j * p + r) / p = j := by
@@ -124,14 +124,14 @@ theorem sum_range_mul {α : Type*} [AddCommMonoid α] (F : ℕ → α) (κ : ℕ
     rw [e, Finset.sum_range_add, ih, Finset.sum_range_succ]
 
 theorem sum_range_cells {α : Type*} [AddCommMonoid α] (G : ℕ → α) :
-    ∑ r ∈ range p, G r = (∑ r ∈ range p, if half p r = 0 then G r else 0) +
-      ∑ r ∈ range p, if half p r = 1 then G r else 0 := by
+    ∑ r ∈ range p, G r = (∑ r ∈ range p, if half p u r = 0 then G r else 0) +
+      ∑ r ∈ range p, if half p u r = 1 then G r else 0 := by
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun r _ => ?_
-  rcases half_eq (p := p) r with h | h <;> simp [h]
+  rcases half_eq (p := p) (u := u) r with h | h <;> simp [h]
 
 theorem sum_nodes_cells {α : Type*} [AddCommMonoid α] (F : ℕ → α) (κ : ℕ) :
-    ∑ t ∈ range (κ * p), F t = ∑ j ∈ range κ, (cellSum p (j, 0) F + cellSum p (j, 1) F) := by
+    ∑ t ∈ range (κ * p), F t = ∑ j ∈ range κ, (cellSum p u (j, 0) F + cellSum p u (j, 1) F) := by
   rw [sum_range_mul]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [sum_range_cells]
@@ -217,29 +217,32 @@ variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ)
 /-- The first node of the cell `c = (j, h)`: `j p + h (p+1)/2`. -/
 def cstart (p : ℕ) (c : ℕ × ℕ) : ℕ := c.1 * p + c.2 * ((p + 1) / 2)
 
-theorem cstart_cell (hodd : p % 2 = 1) {c : ℕ × ℕ} (hc : c.2 ≤ 1) : cell p (cstart p c) = c := by
+theorem cstart_cell {u : ℤ} (hodd : p % 2 = 1) {c : ℕ × ℕ} (hc : c.2 ≤ 1) (hc0 : u = 0 → c.2 = 0) :
+    cell p u (cstart p c) = c := by
   have hp0 : 0 < p := hp.out.pos
   obtain ⟨j, h⟩ := c
-  simp only at hc
+  simp only at hc hc0
   interval_cases h
   · simp only [cstart, zero_mul, add_zero]
-    have := cell_node hp0 j 0 hp0
+    have := cell_node (u := u) hp0 j 0 hp0
     simpa [half] using this
-  · have hm : (p + 1) / 2 < p := by have := hp.out.two_le; omega
+  · have hu0 : u ≠ 0 := fun h => by have := hc0 h; omega
+    have hm : (p + 1) / 2 < p := by have := hp.out.two_le; omega
     simp only [cstart, one_mul]
     rw [cell_node hp0 j _ hm]
     congr 1
     unfold half
     rw [Nat.mod_eq_of_lt hm]
-    rw [if_pos (by omega)]
+    rw [if_neg hu0, if_pos (by omega)]
 
-theorem cstart_le (hodd : p % 2 = 1) (t : ℕ) : cstart p (cell p t) ≤ t := by
+theorem cstart_le {u : ℤ} (hodd : p % 2 = 1) (t : ℕ) : cstart p (cell p u t) ≤ t := by
   have hp0 : 0 < p := hp.out.pos
   have h1 : (t / p) * p + t % p = t := by rw [Nat.mul_comm]; exact Nat.div_add_mod t p
   have h2 := Nat.mod_lt t hp0
   unfold cstart cell half
   simp only
-  split_ifs with h
+  split_ifs with h h'
+  · simp only [zero_mul, add_zero]; omega
   · simp only [one_mul]; omega
   · simp only [zero_mul, add_zero]; omega
 
@@ -248,17 +251,19 @@ entry of the Löwner matrix is `-e`). -/
 noncomputable def Scell (p : ℕ) (c : ℕ × ℕ) : ℚ := PF v u p (cstart p c)
 noncomputable def Gcell (p : ℕ) (c : ℕ × ℕ) : ℚ := - PE v u p (cstart p c)
 
-theorem PF_eq_Scell (hodd : p % 2 = 1) (t : ℕ) : PF v u p t = Scell v u p (cell p t) := by
+theorem PF_eq_Scell (hodd : p % 2 = 1) (t : ℕ) : PF v u p t = Scell v u p (cell p u t) := by
   unfold Scell
-  have hc : (cell p t).2 ≤ 1 := by
+  have hc : (cell p u t).2 ≤ 1 := by
     unfold cell half; simp only; split_ifs <;> omega
-  exact PF_eq_same_cell v u (cstart_le hodd t) (cstart_cell hodd hc)
+  have hc0 : u = 0 → (cell p u t).2 = 0 := fun h => by unfold cell half; simp [h]
+  exact PF_eq_same_cell v u (cstart_le hodd t) (cstart_cell hodd hc hc0)
 
-theorem PE_eq_Gcell (hodd : p % 2 = 1) (t : ℕ) : - PE v u p t = Gcell v u p (cell p t) := by
+theorem PE_eq_Gcell (hodd : p % 2 = 1) (t : ℕ) : - PE v u p t = Gcell v u p (cell p u t) := by
   unfold Gcell
-  have hc : (cell p t).2 ≤ 1 := by
+  have hc : (cell p u t).2 ≤ 1 := by
     unfold cell half; simp only; split_ifs <;> omega
-  rw [PE_eq_same_cell v u (cstart_le hodd t) (cstart_cell hodd hc)]
+  have hc0 : u = 0 → (cell p u t).2 = 0 := fun h => by unfold cell half; simp [h]
+  rw [PE_eq_same_cell v u (cstart_le hodd t) (cstart_cell hodd hc hc0)]
 
 end CellFns
 
@@ -266,19 +271,19 @@ end CellFns
 
 section KLevel
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
 
 /-- The Löwner entry of the plane 2 datum. -/
-abbrev Lm (a b : ℕ) : ℚ := lw (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e a b
+noncomputable abbrev Lm (a b : ℕ) : ℚ := lw (fS v u) (eS v u) a b
 
-theorem Wt_le_three (a b : ℕ) : Wt p a b ≤ 3 := by
+theorem Wt_le_three (a b : ℕ) : Wt p u a b ≤ 3 := by
   unfold Wt Wd w3; split_ifs <;> omega
 
 theorem q_mem (hN : 2 * N < p * p) {a b : ℕ} (ha : a < N) (hb : b < N) :
-    (p : ℚ) ^ 3 * Lm v u hv hu a b ∈ LocRing p :=
-  (weight_table v u hv hu hN a b ha hb).mono (Wt_le_three a b)
+    (p : ℚ) ^ 3 * Lm v u a b ∈ LocRing p :=
+  (weight_table v u hN a b ha hb).mono (Wt_le_three u a b)
 
-theorem Wt_same_cell {a b : ℕ} (hne : a ≠ b) (h : cell p a = cell p b) : Wt p a b = 0 := by
+theorem Wt_same_cell {a b : ℕ} (hne : a ≠ b) (h : cell p u a = cell p u b) : Wt p u a b = 0 := by
   have hper : a / p = b / p := (Prod.mk.inj h).1
   have hmod : a % p ≠ b % p := fun hm => hne (by
     have h1 := Nat.div_add_mod a p
@@ -287,8 +292,8 @@ theorem Wt_same_cell {a b : ℕ} (hne : a ≠ b) (h : cell p a = cell p b) : Wt 
     omega)
   unfold Wt; rw [if_neg hne, if_neg hmod]; unfold w3; rw [if_pos h]
 
-theorem Wt_same_period {a b : ℕ} (hne : a ≠ b) (h : (cell p a).1 = (cell p b).1)
-    (hc : cell p a ≠ cell p b) : Wt p a b = 1 := by
+theorem Wt_same_period {a b : ℕ} (hne : a ≠ b) (h : (cell p u a).1 = (cell p u b).1)
+    (hc : cell p u a ≠ cell p u b) : Wt p u a b = 1 := by
   have hper : a / p = b / p := h
   have hmod : a % p ≠ b % p := fun hm => hne (by
     have h1 := Nat.div_add_mod a p
@@ -299,26 +304,26 @@ theorem Wt_same_period {a b : ℕ} (hne : a ≠ b) (h : (cell p a).1 = (cell p b
 
 /-- Same cell, different nodes: `p³ M(n, t) ∈ p³ ℤ_(p)`. -/
 theorem Dv_q_same_cell (hN : 2 * N < p * p) {a b : ℕ} (ha : a < N) (hb : b < N) (hne : a ≠ b)
-    (h : cell p a = cell p b) : Dv p 3 ((p : ℚ) ^ 3 * Lm v u hv hu a b) := by
-  have := weight_table v u hv hu hN a b ha hb
-  rw [Wt_same_cell hne h] at this
+    (h : cell p u a = cell p u b) : Dv p 3 ((p : ℚ) ^ 3 * Lm v u a b) := by
+  have := weight_table v u hN a b ha hb
+  rw [Wt_same_cell (u := u) hne h] at this
   exact Dv.intro (Vp.zero_iff.1 this)
 
 /-- Same period, other half: `p³ M(n, t) ∈ p² ℤ_(p)`. -/
 theorem Dv_q_same_period (hN : 2 * N < p * p) {a b : ℕ} (ha : a < N) (hb : b < N) (hne : a ≠ b)
-    (h : (cell p a).1 = (cell p b).1) (hc : cell p a ≠ cell p b) :
-    Dv p 2 ((p : ℚ) ^ 3 * Lm v u hv hu a b) := by
-  have := weight_table v u hv hu hN a b ha hb
-  rw [Wt_same_period hne h hc] at this
+    (h : (cell p u a).1 = (cell p u b).1) (hc : cell p u a ≠ cell p u b) :
+    Dv p 2 ((p : ℚ) ^ 3 * Lm v u a b) := by
+  have := weight_table v u hN a b ha hb
+  rw [Wt_same_period (u := u) hne h hc] at this
   exact Dv.of_Vp this
 
 /-- The diagonal entry: `p³ M(n, n) ≡ p³ G(cell n)  (mod p³)`. -/
 theorem Dv_q_diag (hodd : p % 2 = 1) {a : ℕ} :
-    Dv p 3 ((p : ℚ) ^ 3 * Lm v u hv hu a a - (p : ℚ) ^ 3 * Gcell v u p (cell p a)) := by
-  have e : (p : ℚ) ^ 3 * Lm v u hv hu a a - (p : ℚ) ^ 3 * Gcell v u p (cell p a) =
+    Dv p 3 ((p : ℚ) ^ 3 * Lm v u a a - (p : ℚ) ^ 3 * Gcell v u p (cell p u a)) := by
+  have e : (p : ℚ) ^ 3 * Lm v u a a - (p : ℚ) ^ 3 * Gcell v u p (cell p u a) =
       (p : ℚ) ^ 3 * (-RE v u p a) := by
     unfold Lm lw
-    rw [if_pos rfl, e_eq v u (p := p) hv hu, ← PE_eq_Gcell v u hodd a]
+    rw [if_pos rfl, e_eq v u (p := p), ← PE_eq_Gcell v u hodd a]
     ring
   rw [e]
   exact Dv.intro (by simpa using (LocRing p).neg_mem (RE_mem v u (p := p) a))
@@ -368,21 +373,21 @@ theorem RF_div_mem (hp5 : 5 ≤ p) (hN : 2 * N < p * p) {a b : ℕ} (ha : a < N)
 
 /-- `s(c) = p² (S(c) - S(cell n))`. -/
 noncomputable def sdiff (p : ℕ) (n : ℕ) (c : ℕ × ℕ) : ℚ :=
-  (p : ℚ) ^ 2 * (Scell v u p c - Scell v u p (cell p n))
+  (p : ℚ) ^ 2 * (Scell v u p c - Scell v u p (cell p u n))
 
 /-- The entry for a node `t` away from `n` is its polar part `p s(c(t))/(t - n)` plus `p³ ℤ_(p)`. -/
 theorem q_decomp (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) {n t : ℕ} (hn : n < N) (ht : t < N)
     (hne : n ≠ t) :
-    Dv p 3 ((p : ℚ) ^ 3 * Lm v u hv hu n t -
-      (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹)) := by
+    Dv p 3 ((p : ℚ) ^ 3 * Lm v u n t -
+      (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹)) := by
   have hD : ((t : ℚ) - n) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast (Ne.symm hne))
-  have hLm : Lm v u hv hu n t =
+  have hLm : Lm v u n t =
       ((PF v u p t - PF v u p n) + (RF v u p t - RF v u p n)) / ((t : ℚ) - n) := by
     unfold Lm lw
-    rw [if_neg hne, f_eq v u (p := p) hv hu, f_eq v u (p := p) hv hu]
+    rw [if_neg hne, f_eq v u (p := p), f_eq v u (p := p)]
     congr 1; ring
-  have e : (p : ℚ) ^ 3 * Lm v u hv hu n t -
-      (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹) =
+  have e : (p : ℚ) ^ 3 * Lm v u n t -
+      (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹) =
       (p : ℚ) ^ 3 * ((RF v u p t - RF v u p n) / ((t : ℚ) - n)) := by
     rw [hLm, sdiff, ← PF_eq_Scell v u hodd t, ← PF_eq_Scell v u hodd n]
     field_simp
@@ -406,26 +411,26 @@ theorem dvd_sub_iff (t n : ℕ) : (p : ℤ) ∣ (t : ℤ) - n ↔ t % p = n % p 
 
 /-- `ε_c(n)`: the sum of `1/(t - n)` over the nodes of the cell `c` not congruent to `n`. -/
 noncomputable def eps (p : ℕ) [Fact p.Prime] (n : ℕ) (c : ℕ × ℕ) : ℚ :=
-  cellSum p c (fun t => ((invZ p ((t : ℤ) - n) : LocRing p) : ℚ))
+  cellSum p u c (fun t => ((invZ p ((t : ℤ) - n) : LocRing p) : ℚ))
 
 /-- In a period other than that of `n`, the inverse distances to `n` over one cell are the single
 congruent term `1/((j - l) p)` (in the cell of `n`'s residue) plus the integral `ε`. -/
 theorem cell_inv_sum (n j h' : ℕ) :
-    cellSum p (j, h') (fun t => ((t : ℚ) - n)⁻¹) =
-      (if h' = half p n then ((((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹) else 0) + eps p n (j, h') := by
+    cellSum p u (j, h') (fun t => ((t : ℚ) - n)⁻¹) =
+      (if h' = half p u n then ((((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹) else 0) + eps u p n (j, h') := by
   have hp0 : 0 < p := hp.out.pos
   unfold cellSum eps
   set ρ := n % p with hρ
   have hρp : ρ < p := Nat.mod_lt n hp0
   have hn : n = (n / p) * p + ρ := by
     have := Nat.div_add_mod n p; rw [Nat.mul_comm] at this; omega
-  have hhalf : half p ρ = half p n := by
+  have hhalf : half p u ρ = half p u n := by
     unfold half; rw [Nat.mod_eq_of_lt hρp]
   have hterm : ∀ r ∈ range p,
-      (if half p r = (j, h').2 then (((j * p + r : ℕ) : ℚ) - n)⁻¹ else 0) =
-        (if r = ρ then (if half p r = (j, h').2 then ((((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹) else 0)
+      (if half p u r = (j, h').2 then (((j * p + r : ℕ) : ℚ) - n)⁻¹ else 0) =
+        (if r = ρ then (if half p u r = (j, h').2 then ((((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹) else 0)
           else 0) +
-        (if half p r = (j, h').2 then ((invZ p (((j * p + r : ℕ) : ℤ) - n) : LocRing p) : ℚ) else 0) := by
+        (if half p u r = (j, h').2 then ((invZ p (((j * p + r : ℕ) : ℤ) - n) : LocRing p) : ℚ) else 0) := by
     intro r hr
     have hrp : r < p := Finset.mem_range.1 hr
     by_cases hrρ : r = ρ
@@ -449,14 +454,14 @@ theorem cell_inv_sum (n j h' : ℕ) :
   congr 1
   rw [Finset.sum_ite_eq' (range p) ρ]
   rw [if_pos (Finset.mem_range.2 hρp), hhalf]
-  by_cases h : h' = half p n
+  by_cases h : h' = half p u n
   · simp [h]
-  · have : half p n ≠ h' := fun h2 => h h2.symm
+  · have : half p u n ≠ h' := fun h2 => h h2.symm
     simp [h, this]
 
 /-- `ε_0 + ε_1 ≡ 0 (mod p)`: `t - n` runs over a complete residue system, and `∑ v⁻¹ ≡ 0`. -/
-theorem eps_sum_dvd (hp5 : 5 ≤ p) (n j : ℕ) : Dv p 1 (eps p n (j, 0) + eps p n (j, 1)) := by
-  have h1 : eps p n (j, 0) + eps p n (j, 1) =
+theorem eps_sum_dvd (hp5 : 5 ≤ p) (n j : ℕ) : Dv p 1 (eps u p n (j, 0) + eps u p n (j, 1)) := by
+  have h1 : eps u p n (j, 0) + eps u p n (j, 1) =
       ∑ r ∈ range p, ((invZ p (((j * p + r : ℕ) : ℤ) - n) : LocRing p) : ℚ) := by
     unfold eps cellSum
     exact (sum_range_cells (fun r => ((invZ p (((j * p + r : ℕ) : ℤ) - n) : LocRing p) : ℚ))).symm
@@ -526,8 +531,8 @@ theorem sdiff_halves (hodd : p % 2 = 1) (hN : 2 * N < p * p) {j : ℕ} (hj : (j 
     Dv p 1 (sdiff v u p n (j, 1) - sdiff v u p n (j, 0)) := by
   have := Scell_halves v u hodd hN hj
   unfold sdiff
-  have e : (p : ℚ) ^ 2 * (Scell v u p (j, 1) - Scell v u p (cell p n)) -
-      (p : ℚ) ^ 2 * (Scell v u p (j, 0) - Scell v u p (cell p n)) =
+  have e : (p : ℚ) ^ 2 * (Scell v u p (j, 1) - Scell v u p (cell p u n)) -
+      (p : ℚ) ^ 2 * (Scell v u p (j, 0) - Scell v u p (cell p u n)) =
       (p : ℚ) ^ 2 * (Scell v u p (j, 1) - Scell v u p (j, 0)) := by ring
   rw [e]; exact this
 
@@ -537,40 +542,40 @@ end Halves
 
 section ASums
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
 
 theorem cellSum_congr {α : Type*} [AddCommMonoid α] (c : ℕ × ℕ) {F G : ℕ → α}
-    (h : ∀ r, r < p → half p r = c.2 → F (c.1 * p + r) = G (c.1 * p + r)) :
-    cellSum p c F = cellSum p c G := by
+    (h : ∀ r, r < p → half p u r = c.2 → F (c.1 * p + r) = G (c.1 * p + r)) :
+    cellSum p u c F = cellSum p u c G := by
   unfold cellSum
   refine Finset.sum_congr rfl fun r hr => ?_
-  by_cases hh : half p r = c.2
+  by_cases hh : half p u r = c.2
   · rw [if_pos hh, if_pos hh]; exact h r (Finset.mem_range.1 hr) hh
   · rw [if_neg hh, if_neg hh]
 
 theorem cellSum_add {α : Type*} [AddCommMonoid α] (c : ℕ × ℕ) (F G : ℕ → α) :
-    cellSum p c (fun t => F t + G t) = cellSum p c F + cellSum p c G := by
+    cellSum p u c (fun t => F t + G t) = cellSum p u c F + cellSum p u c G := by
   unfold cellSum
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun r _ => ?_
   split_ifs <;> simp
 
 theorem cellSum_mul_left (c : ℕ × ℕ) (a : ℚ) (F : ℕ → ℚ) :
-    cellSum p c (fun t => a * F t) = a * cellSum p c F := by
+    cellSum p u c (fun t => a * F t) = a * cellSum p u c F := by
   unfold cellSum
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun r _ => ?_
   split_ifs <;> simp
 
 theorem cellSum_dv {k : ℕ} (c : ℕ × ℕ) {F : ℕ → ℚ}
-    (h : ∀ r, r < p → half p r = c.2 → Dv p k (F (c.1 * p + r))) : Dv p k (cellSum p c F) := by
+    (h : ∀ r, r < p → half p u r = c.2 → Dv p k (F (c.1 * p + r))) : Dv p k (cellSum p u c F) := by
   unfold cellSum
   refine Dv.sum _ _ fun r hr => ?_
-  by_cases hh : half p r = c.2
+  by_cases hh : half p u r = c.2
   · rw [if_pos hh]; exact h r (Finset.mem_range.1 hr) hh
   · rw [if_neg hh]; exact Dv.zero
 
-theorem eps_mem (n : ℕ) (c : ℕ × ℕ) : eps p n c ∈ LocRing p := by
+theorem eps_mem (n : ℕ) (c : ℕ × ℕ) : eps u p n c ∈ LocRing p := by
   unfold eps cellSum
   refine (LocRing p).sum_mem fun r _ => ?_
   split_ifs
@@ -579,52 +584,52 @@ theorem eps_mem (n : ℕ) (c : ℕ × ℕ) : eps p n c ∈ LocRing p := by
 
 /-- The cell sum `A_n(c)`. -/
 noncomputable def Acell (p : ℕ) (n : ℕ) (c : ℕ × ℕ) : ℚ :=
-  cellSum p c (fun t => (p : ℚ) ^ 3 * Lm v u hv hu n t)
+  cellSum p u c (fun t => (p : ℚ) ^ 3 * Lm v u n t)
 
 theorem Acell_mem (hN : 2 * N < p * p) (n : ℕ) (hn : n < N) {j h' : ℕ} (hj : (j + 1) * p ≤ N) :
-    Acell v u hv hu p n (j, h') ∈ LocRing p := by
+    Acell v u p n (j, h') ∈ LocRing p := by
   unfold Acell cellSum
   refine (LocRing p).sum_mem fun r hr => ?_
   have hrp := Finset.mem_range.1 hr
   split_ifs
-  · exact q_mem v u hv hu hN hn (by nlinarith)
+  · exact q_mem v u hN hn (by nlinarith)
   · exact (LocRing p).zero_mem
 
 /-- Same cell as `n`: `A_n(cell n) ≡ p³ G(cell n)  (mod p³)`. -/
 theorem Acell_same (hodd : p % 2 = 1) (hN : 2 * N < p * p) (n : ℕ) (hn : n < N)
     (hl : (n / p + 1) * p ≤ N) :
-    Dv p 3 (Acell v u hv hu p n (n / p, half p n) - (p : ℚ) ^ 3 * Gcell v u p (n / p, half p n)) := by
+    Dv p 3 (Acell v u p n (n / p, half p u n) - (p : ℚ) ^ 3 * Gcell v u p (n / p, half p u n)) := by
   have hp0 : 0 < p := hp.out.pos
   obtain ⟨ρ, hρ⟩ : ∃ ρ, ρ = n % p := ⟨_, rfl⟩
   have hρp : ρ < p := by rw [hρ]; exact Nat.mod_lt n hp0
   have hn' : (n / p) * p + ρ = n := by
     have := Nat.div_add_mod n p; rw [Nat.mul_comm] at this; omega
-  have hhρ : half p ρ = half p n := by unfold half; rw [hρ, Nat.mod_mod]
-  have hsub : Acell v u hv hu p n (n / p, half p n) - (p : ℚ) ^ 3 * Lm v u hv hu n n =
-      ∑ r ∈ range p, ((if half p r = half p n then (p : ℚ) ^ 3 * Lm v u hv hu n ((n / p) * p + r) else 0)
-        - (if r = ρ then (p : ℚ) ^ 3 * Lm v u hv hu n n else 0)) := by
+  have hhρ : half p u ρ = half p u n := by unfold half; rw [hρ, Nat.mod_mod]
+  have hsub : Acell v u p n (n / p, half p u n) - (p : ℚ) ^ 3 * Lm v u n n =
+      ∑ r ∈ range p, ((if half p u r = half p u n then (p : ℚ) ^ 3 * Lm v u n ((n / p) * p + r) else 0)
+        - (if r = ρ then (p : ℚ) ^ 3 * Lm v u n n else 0)) := by
     rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' (range p) ρ, if_pos (Finset.mem_range.2 hρp)]
     rfl
-  have hdv : Dv p 3 (Acell v u hv hu p n (n / p, half p n) - (p : ℚ) ^ 3 * Lm v u hv hu n n) := by
+  have hdv : Dv p 3 (Acell v u p n (n / p, half p u n) - (p : ℚ) ^ 3 * Lm v u n n) := by
     rw [hsub]
     refine Dv.sum _ _ fun r hr => ?_
     have hrp := Finset.mem_range.1 hr
     by_cases hrρ : r = ρ
     · rw [hrρ, if_pos rfl, hhρ, if_pos rfl, hn']; simpa using (Dv.zero : Dv p 3 0)
     · rw [if_neg hrρ, sub_zero]
-      by_cases hh : half p r = half p n
+      by_cases hh : half p u r = half p u n
       · rw [if_pos hh]
         have hnb : (n / p) * p + r < N := by nlinarith
-        refine Dv_q_same_cell v u hv hu hN hn hnb ?_ ?_
+        refine Dv_q_same_cell v u hN hn hnb ?_ ?_
         · intro heq
           apply hrρ
           omega
-        · have := cell_node hp0 (n / p) r hrp
+        · have := cell_node (u := u) hp0 (n / p) r hrp
           rw [this, hh]; rfl
       · rw [if_neg hh]; exact Dv.zero
-  have hdiag := Dv_q_diag v u hv hu hodd (a := n)
+  have hdiag := Dv_q_diag v u hodd (a := n)
   have := hdv.add hdiag
-  rw [show cell p n = (n / p, half p n) from rfl] at this
+  rw [show cell p u n = (n / p, half p u n) from rfl] at this
   convert this using 1
   ring
 
@@ -634,27 +639,27 @@ end ASums
 
 section AOther
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
 
 theorem cellSum_sub (c : ℕ × ℕ) (F G : ℕ → ℚ) :
-    cellSum p c (fun t => F t - G t) = cellSum p c F - cellSum p c G := by
+    cellSum p u c (fun t => F t - G t) = cellSum p u c F - cellSum p u c G := by
   unfold cellSum
   rw [← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun r _ => ?_
   split_ifs <;> simp
 
 theorem Acell_other_half (hN : 2 * N < p * p) (n : ℕ) (hn : n < N) (hl : (n / p + 1) * p ≤ N)
-    {h' : ℕ} (hh : h' ≠ half p n) : Dv p 2 (Acell v u hv hu p n (n / p, h')) := by
+    {h' : ℕ} (hh : h' ≠ half p u n) : Dv p 2 (Acell v u p n (n / p, h')) := by
   have hp0 : 0 < p := hp.out.pos
   unfold Acell
-  refine cellSum_dv _ fun r hrp hr => ?_
+  refine cellSum_dv (u := u) _ fun r hrp hr => ?_
   have hnb : (n / p) * p + r < N := by nlinarith
-  have hcell : cell p ((n / p) * p + r) = (n / p, h') := by
+  have hcell : cell p u ((n / p) * p + r) = (n / p, h') := by
     rw [cell_node hp0 _ r hrp]; simp only at hr; rw [hr]
-  refine Dv_q_same_period v u hv hu hN hn hnb ?_ ?_ ?_
+  refine Dv_q_same_period v u hN hn hnb ?_ ?_ ?_
   · intro heq
     apply hh
-    have : cell p n = cell p ((n / p) * p + r) := by rw [← heq]
+    have : cell p u n = cell p u ((n / p) * p + r) := by rw [← heq]
     rw [hcell] at this
     exact (Prod.mk.inj this).2.symm
   · rw [hcell]; rfl
@@ -664,9 +669,9 @@ theorem Acell_other_half (hN : 2 * N < p * p) (n : ℕ) (hn : n < N) (hl : (n / 
 
 theorem Acell_other_period (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (n : ℕ) (hn : n < N)
     {j : ℕ} (hjl : j ≠ n / p) (hj : (j + 1) * p ≤ N) (h' : ℕ) :
-    Dv p 3 (Acell v u hv hu p n (j, h') -
-      (if h' = half p n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) -
-      (p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h')) := by
+    Dv p 3 (Acell v u p n (j, h') -
+      (if h' = half p u n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) -
+      (p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h')) := by
   have hp0 : 0 < p := hp.out.pos
   have hp0' : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   have hjl' : ((j : ℚ) - ((n / p : ℕ) : ℚ)) ≠ 0 := by
@@ -675,16 +680,16 @@ theorem Acell_other_period (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * 
     have : (j : ℚ) = ((n / p : ℕ) : ℚ) := by linarith
     exact_mod_cast this
   -- the polar approximation
-  have hG : cellSum p (j, h') (fun t => (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹)) =
-      (p : ℚ) * sdiff v u p n (j, h') * cellSum p (j, h') (fun t => ((t : ℚ) - n)⁻¹) := by
+  have hG : cellSum p u (j, h') (fun t => (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹)) =
+      (p : ℚ) * sdiff v u p n (j, h') * cellSum p u (j, h') (fun t => ((t : ℚ) - n)⁻¹) := by
     rw [← cellSum_mul_left]
-    refine cellSum_congr (j, h') fun r hrp hr => ?_
+    refine cellSum_congr (u := u) (j, h') fun r hrp hr => ?_
     rw [cell_node hp0 j r hrp]; simp only at hr; rw [hr]
-  have hD : Dv p 3 (cellSum p (j, h') (fun t => (p : ℚ) ^ 3 * Lm v u hv hu n t -
-      (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹))) := by
-    refine cellSum_dv _ fun r hrp hr => ?_
+  have hD : Dv p 3 (cellSum p u (j, h') (fun t => (p : ℚ) ^ 3 * Lm v u n t -
+      (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹))) := by
+    refine cellSum_dv (u := u) _ fun r hrp hr => ?_
     have hnb : j * p + r < N := by nlinarith
-    refine q_decomp v u hv hu hodd hp5 hN hn hnb ?_
+    refine q_decomp v u hodd hp5 hN hn hnb ?_
     intro heq
     apply hjl
     have h1 : n = j * p + r := heq
@@ -695,9 +700,9 @@ theorem Acell_other_period (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * 
   unfold Acell
   convert hD using 1
   have e : (p : ℚ) * sdiff v u p n (j, h') *
-      ((if h' = half p n then (((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹ else 0) + eps p n (j, h')) =
-      (if h' = half p n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
-        (p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h') := by
+      ((if h' = half p u n then (((j : ℚ) - ((n / p : ℕ) : ℚ)) * p)⁻¹ else 0) + eps u p n (j, h')) =
+      (if h' = half p u n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
+        (p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h') := by
     split_ifs
     · field_simp
     · ring
@@ -708,7 +713,7 @@ theorem sdiff_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) (n : ℕ) (hn : n < N)
     sdiff v u p n (j, h') ∈ LocRing p := by
   have hp0 : 0 < p := hp.out.pos
   have hm : (p + 1) / 2 < p := by have := hp.out.two_le; omega
-  have hc : cell p n = (n / p, half p n) := rfl
+  have hc : cell p u n = (n / p, half p u n) := rfl
   have key : ∀ a b : ℕ, a < N → b < N → (p : ℚ) ^ 2 * (PF v u p b - PF v u p a) ∈ LocRing p := by
     intro a b ha hb
     rcases le_total a b with hab | hab
@@ -720,10 +725,10 @@ theorem sdiff_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) (n : ℕ) (hn : n < N)
   have h1 : cstart p (j, h') < N := by
     unfold cstart
     interval_cases h' <;> simp <;> nlinarith
-  have h2 := cstart_le hodd n
-  have := key (cstart p (cell p n)) (cstart p (j, h')) (by omega) h1
-  have e : (p : ℚ) ^ 2 * (PF v u p (cstart p (j, h')) - PF v u p (cstart p (cell p n))) =
-      (p : ℚ) ^ 2 * (PF v u p (cstart p (j, h')) - PF v u p (cstart p (cell p n))) := rfl
+  have h2 := cstart_le (u := u) hodd n
+  have := key (cstart p (cell p u n)) (cstart p (j, h')) (by omega) h1
+  have e : (p : ℚ) ^ 2 * (PF v u p (cstart p (j, h')) - PF v u p (cstart p (cell p u n))) =
+      (p : ℚ) ^ 2 * (PF v u p (cstart p (j, h')) - PF v u p (cstart p (cell p u n))) := rfl
   exact this
 
 end AOther
@@ -824,7 +829,7 @@ end RLevel
 
 section Main
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 theorem toR_p : toR p ((p : ℚ)) = (p : R) := by
@@ -834,7 +839,7 @@ theorem toR_p : toR p ((p : ℚ)) = (p : R) := by
   rw [this, map_natCast]
 
 theorem G_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) {t : ℕ} (ht : t < N) :
-    (p : ℚ) ^ 3 * Gcell v u p (cell p t) ∈ LocRing p := by
+    (p : ℚ) ^ 3 * Gcell v u p (cell p u t) ∈ LocRing p := by
   have h := PE_diff_period v u hN (Nat.zero_le t) ht
   have h0 : PE v u p 0 = 0 := by simp [PE]
   rw [h0, sub_zero] at h
@@ -857,32 +862,32 @@ theorem unit_diff {j l : ℕ} (hjl : j ≠ l) (hj : j < p) (hl : l < p) :
 theorem period_same (hodd : p % 2 = 1) (hN : 2 * N < p * p) (n : ℕ) (hn : n < N)
     (hl : (n / p + 1) * p ≤ N) (φ : ℕ × ℕ → R) :
     (p : R) ^ 2 ∣
-      (toR p (Acell v u hv hu p n (n / p, 0)) * φ (n / p, 0) +
-        toR p (Acell v u hv hu p n (n / p, 1)) * φ (n / p, 1)) -
-      toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, half p n)) * φ (n / p, half p n) := by
-  have hA := fun h' => Acell_mem v u hv hu hN n hn (j := n / p) (h' := h') hl
-  have hG : (p : ℚ) ^ 3 * Gcell v u p (n / p, half p n) ∈ LocRing p := G_mem v u hodd hN hn
-  have hsame := Acell_same v u hv hu hodd hN n hn hl
+      (toR p (Acell v u p n (n / p, 0)) * φ (n / p, 0) +
+        toR p (Acell v u p n (n / p, 1)) * φ (n / p, 1)) -
+      toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, half p u n)) * φ (n / p, half p u n) := by
+  have hA := fun h' => Acell_mem v u hN n hn (j := n / p) (h' := h') hl
+  have hG : (p : ℚ) ^ 3 * Gcell v u p (n / p, half p u n) ∈ LocRing p := G_mem v u hodd hN hn
+  have hsame := Acell_same v u hodd hN n hn hl
   rcases half_eq (p := p) n with h | h
   · rw [h] at hsame hG ⊢
-    have e : (toR p (Acell v u hv hu p n (n / p, 0)) * φ (n / p, 0) +
-        toR p (Acell v u hv hu p n (n / p, 1)) * φ (n / p, 1)) -
+    have e : (toR p (Acell v u p n (n / p, 0)) * φ (n / p, 0) +
+        toR p (Acell v u p n (n / p, 1)) * φ (n / p, 1)) -
         toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, 0)) * φ (n / p, 0) =
-        toR p (Acell v u hv hu p n (n / p, 0) - (p : ℚ) ^ 3 * Gcell v u p (n / p, 0)) * φ (n / p, 0) +
-        toR p (Acell v u hv hu p n (n / p, 1)) * φ (n / p, 1) := by
+        toR p (Acell v u p n (n / p, 0) - (p : ℚ) ^ 3 * Gcell v u p (n / p, 0)) * φ (n / p, 0) +
+        toR p (Acell v u p n (n / p, 1)) * φ (n / p, 1) := by
       rw [toR_sub (hA 0) hG]; ring
     rw [e]
     exact dvd_add ((toR_dvd_of_dvd (by norm_num) hsame).mul_right _)
-      ((toR_dvd (Acell_other_half v u hv hu hN n hn hl (h' := 1) (by rw [h]; norm_num))).mul_right _)
+      ((toR_dvd (Acell_other_half v u hN n hn hl (h' := 1) (by rw [h]; norm_num))).mul_right _)
   · rw [h] at hsame hG ⊢
-    have e : (toR p (Acell v u hv hu p n (n / p, 0)) * φ (n / p, 0) +
-        toR p (Acell v u hv hu p n (n / p, 1)) * φ (n / p, 1)) -
+    have e : (toR p (Acell v u p n (n / p, 0)) * φ (n / p, 0) +
+        toR p (Acell v u p n (n / p, 1)) * φ (n / p, 1)) -
         toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, 1)) * φ (n / p, 1) =
-        toR p (Acell v u hv hu p n (n / p, 0)) * φ (n / p, 0) +
-        toR p (Acell v u hv hu p n (n / p, 1) - (p : ℚ) ^ 3 * Gcell v u p (n / p, 1)) * φ (n / p, 1) := by
+        toR p (Acell v u p n (n / p, 0)) * φ (n / p, 0) +
+        toR p (Acell v u p n (n / p, 1) - (p : ℚ) ^ 3 * Gcell v u p (n / p, 1)) * φ (n / p, 1) := by
       rw [toR_sub (hA 1) hG]; ring
     rw [e]
-    exact dvd_add ((toR_dvd (Acell_other_half v u hv hu hN n hn hl (h' := 0) (by rw [h]; norm_num))).mul_right _)
+    exact dvd_add ((toR_dvd (Acell_other_half v u hN n hn hl (h' := 0) (by rw [h]; norm_num))).mul_right _)
       ((toR_dvd_of_dvd (by norm_num) hsame).mul_right _)
 
 /-- The case `j ≠ l` of the cell action. -/
@@ -890,8 +895,8 @@ theorem period_other (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (n 
     {j : ℕ} (hjl : j ≠ n / p) (hj : (j + 1) * p ≤ N)
     (φ : ℕ × ℕ → R) (hφ : (p : R) ∣ φ (j, 0) - φ (j, 1)) :
     (p : R) ^ 2 ∣
-      (toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) + toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1)) -
-      toR p (sdiff v u p n (j, half p n) / ((j : ℚ) - ((n / p : ℕ) : ℚ))) * φ (j, half p n) := by
+      (toR p (Acell v u p n (j, 0)) * φ (j, 0) + toR p (Acell v u p n (j, 1)) * φ (j, 1)) -
+      toR p (sdiff v u p n (j, half p u n) / ((j : ℚ) - ((n / p : ℕ) : ℚ))) * φ (j, half p u n) := by
   have hp0 : 0 < p := hp.out.pos
   have hjp : j < p := by nlinarith
   have hlp : n / p < p := by
@@ -901,49 +906,49 @@ theorem period_other (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (n 
     nlinarith
   have hunit := unit_diff hjl hjp hlp
   have hsd := fun h' hh => sdiff_mem v u hodd hN n hn hj h' hh
-  have hepsm := eps_mem (p := p) n
+  have hepsm := eps_mem (p := p) u n
   -- the three-term form of each cell sum
   have hform : ∀ h' : ℕ, h' ≤ 1 →
-      ∃ D : ℚ, Dv p 3 D ∧ Acell v u hv hu p n (j, h') =
-        (if h' = half p n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
-        (p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h') + D := by
+      ∃ D : ℚ, Dv p 3 D ∧ Acell v u p n (j, h') =
+        (if h' = half p u n then sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
+        (p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h') + D := by
     intro h' _
-    refine ⟨_, Acell_other_period v u hv hu hodd hp5 hN n hn hjl hj h', ?_⟩
+    refine ⟨_, Acell_other_period v u hodd hp5 hN n hn hjl hj h', ?_⟩
     ring
   obtain ⟨D0, hD0, e0⟩ := hform 0 (by norm_num)
   obtain ⟨D1, hD1, e1⟩ := hform 1 (by norm_num)
   -- coefficients and memberships
-  have hh := half_eq (p := p) n
-  have hcmem : sdiff v u p n (j, half p n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) ∈ LocRing p := by
+  have hh := half_eq (p := p) (u := u) n
+  have hcmem : sdiff v u p n (j, half p u n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) ∈ LocRing p := by
     rw [div_eq_mul_inv]
     exact (LocRing p).mul_mem (hsd _ (by rcases hh with h | h <;> omega)) hunit
   have hs0 := hsd 0 (by norm_num)
   have hs1 := hsd 1 (by norm_num)
-  have hpsE : ∀ h', (p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h') ∈ LocRing p → True := fun _ _ => trivial
-  have hmulmem : ∀ h' : ℕ, h' ≤ 1 → (p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h') ∈ LocRing p := by
+  have hpsE : ∀ h', (p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h') ∈ LocRing p → True := fun _ _ => trivial
+  have hmulmem : ∀ h' : ℕ, h' ≤ 1 → (p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h') ∈ LocRing p := by
     intro h' hh'
     exact (LocRing p).mul_mem ((LocRing p).mul_mem (by exact_mod_cast int_mem_locRing (ℓ := p) (p : ℤ)) (hsd h' hh'))
-      (eps_mem n _)
-  have hmulR : ∀ h' : ℕ, h' ≤ 1 → toR p ((p : ℚ) * sdiff v u p n (j, h') * eps p n (j, h')) =
-      (p : R) * toR p (sdiff v u p n (j, h')) * toR p (eps p n (j, h')) := by
+      (eps_mem u n _)
+  have hmulR : ∀ h' : ℕ, h' ≤ 1 → toR p ((p : ℚ) * sdiff v u p n (j, h') * eps u p n (j, h')) =
+      (p : R) * toR p (sdiff v u p n (j, h')) * toR p (eps u p n (j, h')) := by
     intro h' hh'
     have hpm : ((p : ℚ)) ∈ LocRing p := by exact_mod_cast int_mem_locRing (ℓ := p) (p : ℤ)
-    rw [toR_mul ((LocRing p).mul_mem hpm (hsd h' hh')) (eps_mem n _), toR_mul hpm (hsd h' hh'), toR_p]
-  have hitemem : ∀ h' : ℕ, h' ≤ 1 → (if h' = half p n then
+    rw [toR_mul ((LocRing p).mul_mem hpm (hsd h' hh')) (eps_mem u n _), toR_mul hpm (hsd h' hh'), toR_p]
+  have hitemem : ∀ h' : ℕ, h' ≤ 1 → (if h' = half p u n then
       sdiff v u p n (j, h') / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) ∈ LocRing p := by
     intro h' hh'
     split_ifs with hhh
     · rw [div_eq_mul_inv]; exact (LocRing p).mul_mem (hsd h' hh') hunit
     · exact (LocRing p).zero_mem
   -- images in `R`
-  have hR0 : toR p (Acell v u hv hu p n (j, 0)) =
-      toR p (if 0 = half p n then sdiff v u p n (j, 0) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
-      (p : R) * toR p (sdiff v u p n (j, 0)) * toR p (eps p n (j, 0)) + toR p D0 := by
+  have hR0 : toR p (Acell v u p n (j, 0)) =
+      toR p (if 0 = half p u n then sdiff v u p n (j, 0) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
+      (p : R) * toR p (sdiff v u p n (j, 0)) * toR p (eps u p n (j, 0)) + toR p D0 := by
     rw [e0, toR_add ((LocRing p).add_mem (hitemem 0 (by norm_num)) (hmulmem 0 (by norm_num))) hD0.mem,
       toR_add (hitemem 0 (by norm_num)) (hmulmem 0 (by norm_num)), hmulR 0 (by norm_num)]
-  have hR1 : toR p (Acell v u hv hu p n (j, 1)) =
-      toR p (if 1 = half p n then sdiff v u p n (j, 1) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
-      (p : R) * toR p (sdiff v u p n (j, 1)) * toR p (eps p n (j, 1)) + toR p D1 := by
+  have hR1 : toR p (Acell v u p n (j, 1)) =
+      toR p (if 1 = half p u n then sdiff v u p n (j, 1) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) else 0) +
+      (p : R) * toR p (sdiff v u p n (j, 1)) * toR p (eps u p n (j, 1)) + toR p D1 := by
     rw [e1, toR_add ((LocRing p).add_mem (hitemem 1 (by norm_num)) (hmulmem 1 (by norm_num))) hD1.mem,
       toR_add (hitemem 1 (by norm_num)) (hmulmem 1 (by norm_num)), hmulR 1 (by norm_num)]
   have hD0' : (p : R) ^ 2 ∣ toR p D0 := toR_dvd_of_dvd (by norm_num) hD0
@@ -952,9 +957,9 @@ theorem period_other (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (n 
   have hs : (p : R) ∣ toR p (sdiff v u p n (j, 1)) - toR p (sdiff v u p n (j, 0)) := by
     rw [← toR_sub hs1 hs0]
     simpa using toR_dvd (sdiff_halves v u hodd hN hj n)
-  have he : (p : R) ∣ toR p (eps p n (j, 0)) + toR p (eps p n (j, 1)) := by
-    rw [← toR_add (eps_mem n _) (eps_mem n _)]
-    simpa using toR_dvd (eps_sum_dvd hp5 n j)
+  have he : (p : R) ∣ toR p (eps u p n (j, 0)) + toR p (eps u p n (j, 1)) := by
+    rw [← toR_add (eps_mem u n _) (eps_mem u n _)]
+    simpa using toR_dvd (eps_sum_dvd u hp5 n j)
   rcases hh with h | h
   · rw [h] at hR0 hR1 ⊢
     simp only [if_true] at hR0
@@ -975,12 +980,12 @@ end Main
 
 section Final
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 /-- The entry `p³ H(n, t)` of `p³ H = ξ · Id + p³ M`, an element of `R`. -/
 noncomputable def Qent (ξ : R) (n t : ℕ) : R :=
-  (if n = t then ξ else 0) + toR p ((p : ℚ) ^ 3 * Lm v u hv hu n t)
+  (if n = t then ξ else 0) + toR p ((p : ℚ) ^ 3 * Lm v u n t)
 
 /-- The cell operator `𝐁`:
 `(𝐁 φ)(l, h) = [l < κ] (ξ + p³ G(l, h)) φ(l, h) + ∑_{j < κ, j ≠ l} p² (S(l,h) - S(j,h))/(l - j) φ(j, h)`. -/
@@ -991,18 +996,18 @@ noncomputable def Bop (ξ : R) (κ : ℕ) (φ : ℕ × ℕ → R) (c : ℕ × �
 
 theorem cellSum_toR (hN : 2 * N < p * p) (n : ℕ) (hn : n < N) {j : ℕ} (hj : (j + 1) * p ≤ N)
     (φ : ℕ × ℕ → R) (h' : ℕ) :
-    cellSum p (j, h') (fun t => toR p ((p : ℚ) ^ 3 * Lm v u hv hu n t) * φ (cell p t)) =
-      toR p (Acell v u hv hu p n (j, h')) * φ (j, h') := by
+    cellSum p u (j, h') (fun t => toR p ((p : ℚ) ^ 3 * Lm v u n t) * φ (cell p u t)) =
+      toR p (Acell v u p n (j, h')) * φ (j, h') := by
   have hp0 : 0 < p := hp.out.pos
   unfold Acell cellSum
   rw [toR_sum _ _ (fun r hr => by
     have hrp := Finset.mem_range.1 hr
     split_ifs
-    · exact q_mem v u hv hu hN hn (by nlinarith)
+    · exact q_mem v u hN hn (by nlinarith)
     · exact (LocRing p).zero_mem), Finset.sum_mul]
   refine Finset.sum_congr rfl fun r hr => ?_
   have hrp := Finset.mem_range.1 hr
-  by_cases hh : half p r = h'
+  by_cases hh : half p u r = h'
   · simp only [hh, if_true]
     rw [cell_node hp0 j r hrp, hh]
   · simp only [hh, if_false]
@@ -1024,18 +1029,18 @@ theorem Bop_eq (ξ : R) (κ : ℕ) (φ : ℕ × ℕ → R) (l h : ℕ) :
 `p³ (H φ̃)(n) ≡ (𝐁 φ)(cell n)  (mod p²)`. -/
 theorem cell_action (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) {κ : ℕ} (hκN : κ * p ≤ N)
     (ξ : R) (φ : ℕ × ℕ → R) (hφ : ∀ j < κ, (p : R) ∣ φ (j, 0) - φ (j, 1)) (n : ℕ) (hn : n < N) :
-    (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * φ (cell p t)) -
-      Bop (p := p) v u ξ κ φ (cell p n) := by
+    (p : R) ^ 2 ∣ (∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * φ (cell p u t)) -
+      Bop (p := p) v u ξ κ φ (cell p u n) := by
   have hp0 : 0 < p := hp.out.pos
   have hjN : ∀ j, j < κ → (j + 1) * p ≤ N := fun j hj => by nlinarith
   -- the left side
-  have hL : ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * φ (cell p t) =
-      (if n < κ * p then ξ * φ (cell p n) else 0) +
-      ∑ j ∈ range κ, (toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) +
-        toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1)) := by
-    have e1 : ∑ t ∈ range (κ * p), Qent (p := p) v u hv hu ξ n t * φ (cell p t) =
-        ∑ t ∈ range (κ * p), (if n = t then ξ * φ (cell p t) else 0) +
-        ∑ t ∈ range (κ * p), toR p ((p : ℚ) ^ 3 * Lm v u hv hu n t) * φ (cell p t) := by
+  have hL : ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * φ (cell p u t) =
+      (if n < κ * p then ξ * φ (cell p u n) else 0) +
+      ∑ j ∈ range κ, (toR p (Acell v u p n (j, 0)) * φ (j, 0) +
+        toR p (Acell v u p n (j, 1)) * φ (j, 1)) := by
+    have e1 : ∑ t ∈ range (κ * p), Qent (p := p) v u ξ n t * φ (cell p u t) =
+        ∑ t ∈ range (κ * p), (if n = t then ξ * φ (cell p u t) else 0) +
+        ∑ t ∈ range (κ * p), toR p ((p : ℚ) ^ 3 * Lm v u n t) * φ (cell p u t) := by
       rw [← Finset.sum_add_distrib]
       refine Finset.sum_congr rfl fun t _ => ?_
       unfold Qent
@@ -1046,39 +1051,39 @@ theorem cell_action (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) {κ 
     congr 1
     refine Finset.sum_congr rfl fun j hj => ?_
     have hj' := hjN j (Finset.mem_range.1 hj)
-    rw [cellSum_toR v u hv hu hN n hn hj', cellSum_toR v u hv hu hN n hn hj']
-  have hc : cell p n = (n / p, half p n) := rfl
+    rw [cellSum_toR v u hN n hn hj', cellSum_toR v u hN n hn hj']
+  have hc : cell p u n = (n / p, half p u n) := rfl
   rw [hL, hc, Bop_eq]
   have hnl : n < κ * p ↔ n / p < κ := (Nat.div_lt_iff_lt_mul hp0).symm
   by_cases hlk : n / p < κ
   · simp only [hlk, hnl.2 hlk, if_true]
     have hl : (n / p + 1) * p ≤ N := hjN _ hlk
     -- the sum over periods
-    set X : R := toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, half p n)) * φ (n / p, half p n) with hX
+    set X : R := toR p ((p : ℚ) ^ 3 * Gcell v u p (n / p, half p u n)) * φ (n / p, half p u n) with hX
     have hsplit : ∑ j ∈ range κ, (if j = n / p then X else
-        toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-          ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n)) = X +
+        toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+          ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n)) = X +
         ∑ j ∈ range κ, if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n) := by
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n) := by
       have : ∀ j ∈ range κ, (if j = n / p then X else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n)) =
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n)) =
           (if j = n / p then X else 0) + (if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n)) := by
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n)) := by
         intro j _; split_ifs <;> simp
       rw [Finset.sum_congr rfl this, Finset.sum_add_distrib, Finset.sum_ite_eq', if_pos (Finset.mem_range.2 hlk)]
-    have hdiff : (ξ * φ (n / p, half p n) +
-        ∑ j ∈ range κ, (toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) +
-          toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1))) -
-        (ξ * φ (n / p, half p n) + (X + ∑ j ∈ range κ, if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n))) =
-        ∑ j ∈ range κ, ((toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) +
-          toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1)) - (if j = n / p then X else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n))) := by
+    have hdiff : (ξ * φ (n / p, half p u n) +
+        ∑ j ∈ range κ, (toR p (Acell v u p n (j, 0)) * φ (j, 0) +
+          toR p (Acell v u p n (j, 1)) * φ (j, 1))) -
+        (ξ * φ (n / p, half p u n) + (X + ∑ j ∈ range κ, if j = n / p then 0 else
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n))) =
+        ∑ j ∈ range κ, ((toR p (Acell v u p n (j, 0)) * φ (j, 0) +
+          toR p (Acell v u p n (j, 1)) * φ (j, 1)) - (if j = n / p then X else
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n))) := by
       rw [Finset.sum_sub_distrib, hsplit]; ring
     rw [hdiff]
     refine Finset.dvd_sum fun j hj => ?_
@@ -1086,48 +1091,48 @@ theorem cell_action (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) {κ 
     by_cases hjl : j = n / p
     · subst hjl
       rw [if_pos rfl]
-      exact period_same v u hv hu hodd hN n hn hl φ
+      exact period_same v u hodd hN n hn hl φ
     · rw [if_neg hjl]
-      have := period_other v u hv hu hodd hp5 hN n hn hjl (hjN j hjκ) φ (hφ j hjκ)
-      have hcoef : sdiff v u p n (j, half p n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) =
-          (p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
+      have := period_other v u hodd hp5 hN n hn hjl (hjN j hjκ) φ (hφ j hjκ)
+      have hcoef : sdiff v u p n (j, half p u n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) =
+          (p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
             (((n / p : ℕ) : ℚ) - (j : ℚ)) := by
         have h1 : ((j : ℚ) - ((n / p : ℕ) : ℚ)) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast hjl)
         have h2 : (((n / p : ℕ) : ℚ) - (j : ℚ)) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast (Ne.symm hjl))
         unfold sdiff
-        rw [show cell p n = (n / p, half p n) from rfl]
+        rw [show cell p u n = (n / p, half p u n) from rfl]
         field_simp
         ring
       rw [hcoef] at this
       exact this
   · -- `n` outside `K`: only the other periods
     simp only [hlk, mt hnl.1 hlk, if_false, zero_add]
-    have hdiff : (∑ j ∈ range κ, (toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) +
-        toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1))) -
+    have hdiff : (∑ j ∈ range κ, (toR p (Acell v u p n (j, 0)) * φ (j, 0) +
+        toR p (Acell v u p n (j, 1)) * φ (j, 1))) -
         (∑ j ∈ range κ, if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n)) =
-        ∑ j ∈ range κ, ((toR p (Acell v u hv hu p n (j, 0)) * φ (j, 0) +
-          toR p (Acell v u hv hu p n (j, 1)) * φ (j, 1)) - (if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n))) := by
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n)) =
+        ∑ j ∈ range κ, ((toR p (Acell v u p n (j, 0)) * φ (j, 0) +
+          toR p (Acell v u p n (j, 1)) * φ (j, 1)) - (if j = n / p then 0 else
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n))) := by
       rw [Finset.sum_sub_distrib]
     show (p : R) ^ 2 ∣ _ - (∑ j ∈ range κ, if j = n / p then 0 else
-          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
-            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p n))
+          toR p ((p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
+            ((n / p : ℕ) - (j : ℚ))) * φ (j, half p u n))
     rw [hdiff]
     refine Finset.dvd_sum fun j hj => ?_
     have hjκ := Finset.mem_range.1 hj
     have hjl : j ≠ n / p := fun h => hlk (h ▸ hjκ)
     rw [if_neg hjl]
-    have := period_other v u hv hu hodd hp5 hN n hn hjl (hjN j hjκ) φ (hφ j hjκ)
-    have hcoef : sdiff v u p n (j, half p n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) =
-        (p : ℚ) ^ 2 * (Scell v u p (n / p, half p n) - Scell v u p (j, half p n)) /
+    have := period_other v u hodd hp5 hN n hn hjl (hjN j hjκ) φ (hφ j hjκ)
+    have hcoef : sdiff v u p n (j, half p u n) / ((j : ℚ) - ((n / p : ℕ) : ℚ)) =
+        (p : ℚ) ^ 2 * (Scell v u p (n / p, half p u n) - Scell v u p (j, half p u n)) /
           (((n / p : ℕ) : ℚ) - (j : ℚ)) := by
       have h1 : ((j : ℚ) - ((n / p : ℕ) : ℚ)) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast hjl)
       have h2 : (((n / p : ℕ) : ℚ) - (j : ℚ)) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast (Ne.symm hjl))
       unfold sdiff
-      rw [show cell p n = (n / p, half p n) from rfl]
+      rw [show cell p u n = (n / p, half p u n) from rfl]
       field_simp
       ring
     rw [hcoef] at this
@@ -1139,7 +1144,7 @@ end Final
 
 section PreserveV
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 theorem G_mem_cell (hodd : p % 2 = 1) (hN : 2 * N < p * p) {l : ℕ} (hl : (l + 1) * p ≤ N)
@@ -1149,8 +1154,12 @@ theorem G_mem_cell (hodd : p % 2 = 1) (hN : 2 * N < p * p) {l : ℕ} (hl : (l + 
   have hlt : cstart p (l, h) < N := by
     unfold cstart
     interval_cases h <;> simp <;> nlinarith
-  have := G_mem v u hodd hN hlt
-  rwa [cstart_cell hodd (by simpa using hh)] at this
+  have hPE := PE_diff_period v u hN (Nat.zero_le (cstart p (l, h))) hlt
+  have h0 : PE v u p 0 = 0 := by simp [PE]
+  rw [h0, sub_zero] at hPE
+  unfold Gcell
+  have e : (p : ℚ) ^ 3 * -PE v u p (cstart p (l, h)) = -((p : ℚ) ^ 3 * PE v u p (cstart p (l, h))) := by ring
+  rw [e]; exact (LocRing p).neg_mem hPE
 
 theorem S_diff_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) {l j : ℕ} (hl : (l + 1) * p ≤ N)
     (hj : (j + 1) * p ≤ N) {h : ℕ} (hh : h ≤ 1) :
@@ -1160,12 +1169,19 @@ theorem S_diff_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) {l j : ℕ} (hl : (l 
   have hlt : cstart p (l, h) < N := by
     unfold cstart
     interval_cases h <;> simp <;> nlinarith
-  have := sdiff_mem v u hodd hN (n := cstart p (l, h)) hlt (j := j) hj h hh
-  unfold sdiff at this
-  rw [cstart_cell hodd (by simpa using hh)] at this
-  have e : (p : ℚ) ^ 2 * (Scell v u p (l, h) - Scell v u p (j, h)) =
-      -((p : ℚ) ^ 2 * (Scell v u p (j, h) - Scell v u p (l, h))) := by ring
-  rw [e]; exact (LocRing p).neg_mem this
+  have hlt2 : cstart p (j, h) < N := by
+    unfold cstart
+    interval_cases h <;> simp <;> nlinarith
+  unfold Scell
+  rcases le_total (cstart p (j, h)) (cstart p (l, h)) with hab | hab
+  · have := PF_diff_period v u hN hab hlt
+    have e : (p : ℚ) ^ 2 * (PF v u p (cstart p (l, h)) - PF v u p (cstart p (j, h))) =
+        (p : ℚ) ^ 2 * (PF v u p (cstart p (l, h)) - PF v u p (cstart p (j, h))) := rfl
+    exact this
+  · have := PF_diff_period v u hN hab hlt2
+    have e : (p : ℚ) ^ 2 * (PF v u p (cstart p (l, h)) - PF v u p (cstart p (j, h))) =
+        -((p : ℚ) ^ 2 * (PF v u p (cstart p (j, h)) - PF v u p (cstart p (l, h)))) := by ring
+    rw [e]; exact (LocRing p).neg_mem this
 
 /-- **`𝐁` maps the functions with `φ(j,0) ≡ φ(j,1) (mod p)` to functions of the same kind**, on the cells
 of every period `l` (with `(l+1) p ≤ N`). -/

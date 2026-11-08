@@ -64,13 +64,13 @@ theorem no_mult_between {p a q : ℕ} (hp : 0 < p) (h1 : a * p < q * p) (h2 : q 
 
 theorem w3_le_two (c c' : ℕ × ℕ) : w3 c c' ≤ 2 := by unfold w3; split_ifs <;> omega
 
-theorem w3_diff {p t t' : ℕ} (h : t / p ≠ t' / p) : w3 (cell p t) (cell p t') = 2 := by
+theorem w3_diff {p t t' : ℕ} {u : ℤ} (h : t / p ≠ t' / p) : w3 (cell p u t) (cell p u t') = 2 := by
   unfold w3 cell
-  have : (t / p, half p t) ≠ (t' / p, half p t') := fun h' => h (congrArg Prod.fst h')
+  have : (t / p, half p u t) ≠ (t' / p, half p u t') := fun h' => h (congrArg Prod.fst h')
   rw [if_neg this]
   simp [h]
 
-theorem w3_same {p t t' : ℕ} (h : t / p = t' / p) : w3 (cell p t) (cell p t') ≤ 1 := by
+theorem w3_same {p t t' : ℕ} {u : ℤ} (h : t / p = t' / p) : w3 (cell p u t) (cell p u t') ≤ 1 := by
   unfold w3 cell
   simp only [h]
   split_ifs <;> simp
@@ -127,7 +127,7 @@ theorem per_b1 {p b0 x : ℕ} (hp : 0 < p) (h1 : b0 * p + p ≤ x) (h2 : x < b0 
   have e : (b0 + 1) * p = b0 * p + p := by rw [Nat.add_mul, Nat.one_mul]
   exact (div_win hp).2 ⟨by rw [e]; exact h1, by rw [e]; exact h2⟩
 
-variable {p r s e k' b0 lo hi Itop D2 N : ℕ}
+variable {p r s e k' b0 lo hi Itop D2 N : ℕ} {u : ℤ}
 
 /-- Congruent images: the potentials add up to at least `3`. -/
 theorem Q1 (G : Geo p r s e k' b0 lo hi Itop D2 N) (fl : Bool) (w : ℕ → ℕ) {t t' : ℕ}
@@ -152,13 +152,13 @@ theorem Q1 (G : Geo p r s e k' b0 lo hi Itop D2 N) (fl : Bool) (w : ℕ → ℕ)
 
 theorem Q2E (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ}
     (hfl : fl = true ↔ (lo < b0 * p + p ∧ ∀ t, lo ≤ t → t < hi → b0 * p + p ≤ t → 1 ≤ w t))
-    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p t) (cell p t') ≤ w t + w t')
+    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p u t) (cell p u t') ≤ w t + w t')
     {t t' : ℕ} (ht : lo ≤ t ∧ t < hi) (ht' : InIm r (b0 * p + p) Itop N (b0 * p + p + D2) t')
     (hn' : ¬ (lo ≤ t' ∧ t' < hi)) :
-    w3 (cell p t) (cell p t') ≤ w t + psi p (b0 * p + p) lo hi fl w t' := by
+    w3 (cell p u t) (cell p u t') ≤ w t + psi p (b0 * p + p) lo hi fl w t' := by
   obtain ⟨hp5, hodd, hb0, hrl, hs, hsp, hD2, hk, hE, hN⟩ := G
   have hp0 : 0 < p := by omega
-  have hw3 := w3_le_two (cell p t) (cell p t')
+  have hw3 := w3_le_two (cell p u t) (cell p u t')
   have htr : r ≤ t ∧ t < r + p := by omega
   have ht'r : r ≤ t' := ht'.1
   cases fl
@@ -168,7 +168,7 @@ theorem Q2E (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ
     · rw [if_pos (by omega)]
       have e1 : t' / p = b0 + 1 := per_b1 hp0 hJ.1 hJ.2
       by_cases hper : t / p = t' / p
-      · have := w3_same (p := p) hper; omega
+      · have := w3_same (p := p) (u := u) hper; omega
       · have hlt : t < b0 * p + p := by
           by_contra hge
           apply hper
@@ -186,7 +186,7 @@ theorem Q2E (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ
         have hd := hdual t t₁ ht.1 ht.2 h1 h2
         have p1 : t / p = b0 := per_b0 hp0 (by omega) hlt
         have p2 : t₁ / p = b0 + 1 := per_b1 hp0 h3 (by omega)
-        have : w3 (cell p t) (cell p t₁) = 2 := w3_diff (by omega)
+        have : w3 (cell p u t) (cell p u t₁) = 2 := w3_diff (by omega)
         omega
     · rw [if_neg hJ]; omega
   · -- `j₀ = κ − 1`
@@ -195,7 +195,7 @@ theorem Q2E (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ
     · rw [if_pos hJ]
       have e1 : t' / p = b0 := per_b0 hp0 (by omega) hJ
       by_cases hper : t / p = t' / p
-      · have := w3_same (p := p) hper; omega
+      · have := w3_same (p := p) (u := u) hper; omega
       · have hge : b0 * p + p ≤ t := by
           by_contra hlt
           apply hper
@@ -207,10 +207,10 @@ theorem Q2E (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ
 /-- Non-congruent images: the potentials dominate the cell weight. -/
 theorem Q2 (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ}
     (hfl : fl = true ↔ (lo < b0 * p + p ∧ ∀ t, lo ≤ t → t < hi → b0 * p + p ≤ t → 1 ≤ w t))
-    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p t) (cell p t') ≤ w t + w t')
+    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p u t) (cell p u t') ≤ w t + w t')
     {t t' : ℕ} (ht : InIm r (b0 * p + p) Itop N (b0 * p + p + D2) t)
     (ht' : InIm r (b0 * p + p) Itop N (b0 * p + p + D2) t') :
-    w3 (cell p t) (cell p t') ≤
+    w3 (cell p u t) (cell p u t') ≤
       psi p (b0 * p + p) lo hi fl w t + psi p (b0 * p + p) lo hi fl w t' := by
   by_cases h1 : lo ≤ t ∧ t < hi
   · have e1 : psi p (b0 * p + p) lo hi fl w t = w t := by unfold psi; rw [if_pos h1]
@@ -223,7 +223,7 @@ theorem Q2 (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ}
       rw [e2, w3_symm]
       have := Q2E G hfl hdual h2 ht h1
       omega
-    · have hw3 := w3_le_two (cell p t) (cell p t')
+    · have hw3 := w3_le_two (cell p u t) (cell p u t')
       cases fl
       · rw [psi_false, psi_false, if_neg h1, if_neg h2]; split_ifs <;> omega
       · rw [psi_true, psi_true, if_neg h1, if_neg h2]; split_ifs <;> omega
@@ -243,13 +243,13 @@ theorem shn_of_le {hs D2 u : ℕ} (h : hs ≤ u) : shn hs D2 u = u - D2 := by un
 
 theorem shn_of_lt {hs D2 u : ℕ} (h : u < hs) : shn hs D2 u = u := by unfold shn; rw [if_neg (by omega)]
 
-theorem w3_congr {p a b a' b' : ℕ} (h1 : half p a = half p a') (h2 : half p b = half p b')
+theorem w3_congr {p a b a' b' : ℕ} {u : ℤ} (h1 : half p u a = half p u a') (h2 : half p u b = half p u b')
     (h3 : a / p = b / p ↔ a' / p = b' / p) :
-    w3 (cell p a) (cell p b) = w3 (cell p a') (cell p b') := by
+    w3 (cell p u a) (cell p u b) = w3 (cell p u a') (cell p u b') := by
   unfold w3 cell
   simp only [Prod.mk.injEq, h1, h2, h3]
 
-variable {p r s e k' b0 lo hi Itop D2 N : ℕ}
+variable {p r s e k' b0 lo hi Itop D2 N : ℕ} {u : ℤ}
 
 /-- Period and residue data of one label node under the shift. -/
 theorem shift_data (G : Geo p r s e k' b0 lo hi Itop D2 N) {x : ℕ} (hx : r ≤ x) :
@@ -341,14 +341,14 @@ theorem p1_aux (G : Geo p r s e k' b0 lo hi Itop D2 N) {n n' t t' : ℕ}
 (`RowLab`, `ColLab`), `Wlab ≤ φ n + φ n'`. -/
 theorem p1_pair [hp : Fact p.Prime] (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl : Bool} {w : ℕ → ℕ}
     (hfl : fl = true ↔ (lo < b0 * p + p ∧ ∀ t, lo ≤ t → t < hi → b0 * p + p ≤ t → 1 ≤ w t))
-    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p t) (cell p t') ≤ w t + w t')
+    (hdual : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi → w3 (cell p u t) (cell p u t') ≤ w t + w t')
     {n n' : ℕ} {kR kC : Bool}
     (hn : (r ≤ n ∧ n < b0 * p + p ∧ (n - r) % 2 = 0) ∨ (N ≤ n ∧ n < b0 * p + p + D2 ∧ (n - r) % 2 = 1) ∨
       (b0 * p + p + D2 ≤ n ∧ n < N ∧ (n - r) % 2 = 0))
     (hn' : (r ≤ n' ∧ n' < b0 * p + p ∧ (n' - r) % 2 = 1) ∨ (N ≤ n' ∧ n' < b0 * p + p + D2 ∧ (n' - r) % 2 = 0) ∨
       (b0 * p + p + D2 ≤ n' ∧ n' < N ∧ (n' - r) % 2 = 1))
     (hkR : kR = true ↔ b0 * p + p + D2 ≤ n) (hkC : kC = true ↔ b0 * p + p + D2 ≤ n') :
-    Wlab p kR kC (oc p (b0 + 1) ((r + 1) % 2) (n % p)) (oc p (b0 + 1) (1 - (r + 1) % 2) (n' % p)) n n' ≤
+    Wlab u p kR kC (oc p (b0 + 1) ((r + 1) % 2) (n % p)) (oc p (b0 + 1) (1 - (r + 1) % 2) (n' % p)) n n' ≤
       phin p (b0 * p + p) lo hi (b0 * p + p + D2) D2 r fl w n +
         phin p (b0 * p + p) lo hi (b0 * p + p + D2) D2 r fl w n' := by
   have G' := G
@@ -367,8 +367,8 @@ theorem p1_pair [hp : Fact p.Prime] (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl 
   rw [← ht, ← ht']
   have aux := p1_aux G hn hn' ht ht'
   obtain ⟨hIm, hIm', htm, htm', hper, hne, hsame⟩ := aux
-  have hhalf : half p t = half p n := by unfold half; rw [htm]
-  have hhalf' : half p t' = half p n' := by unfold half; rw [htm']
+  have hhalf : half p u t = half p u n := by unfold half; rw [htm]
+  have hhalf' : half p u t' = half p u n' := by unfold half; rw [htm']
   by_cases hc : n % p = n' % p
   · -- congruent
     unfold Wlab
@@ -387,7 +387,7 @@ theorem p1_pair [hp : Fact p.Prime] (G : Geo p r s e k' b0 lo hi Itop D2 N) {fl 
       · have : (b0 * p + p + D2 ≤ n ↔ b0 * p + p + D2 ≤ n') := kind_eq hs3
         exact Bool.eq_iff_iff.2 ((hkR.trans this).trans hkC.symm)
       · exact class_eq hodd b0 r n n' hnr hnr' (by omega) hpp
-    refine le_trans (Wlab_le_w3 kR kC _ _ n n' hc hpat) ?_
+    refine le_trans (Wlab_le_w3 (u := u) kR kC _ _ n n' hc hpat) ?_
     rw [w3_congr (a' := t) (b' := t') hhalf.symm hhalf'.symm hper]
     exact Q2 G hfl hdual hIm hIm'
 
@@ -395,7 +395,7 @@ end P1Pair
 
 section P1Sums
 
-variable {p r s e k' b0 lo hi Itop D2 N : ℕ}
+variable {p r s e k' b0 lo hi Itop D2 N : ℕ} {u : ℤ}
 
 /-- Row-type indicator in image coordinates: X parity below `N`, Y parity from `N`. -/
 def rt (r N u : ℕ) : ℕ :=
@@ -545,7 +545,7 @@ end P1Sums
 
 section P1Regions
 
-variable {p r s e k' b0 lo hi Itop D2 N : ℕ}
+variable {p r s e k' b0 lo hi Itop D2 N : ℕ} {u : ℤ}
 
 theorem psi_mem {p A lo hi : ℕ} {fl : Bool} {w : ℕ → ℕ} {u : ℕ} (h : lo ≤ u ∧ u < hi) :
     psi p A lo hi fl w u = w u := by unfold psi; rw [if_pos h]
@@ -625,7 +625,7 @@ end P1Regions
 
 section P1Total
 
-variable {p r s e k' b0 lo hi Itop D2 N : ℕ}
+variable {p r s e k' b0 lo hi Itop D2 N : ℕ} {u : ℤ}
 
 /-- **The sum condition of `RowNodes.member_gle_P`, as an equality.** -/
 theorem p1_sum [hp : Fact p.Prime] (G : Geo p r s e k' b0 lo hi Itop D2 N) {m : ℕ} (hm : r + 2 * m = N)
@@ -687,13 +687,13 @@ the node; in particular any function of the cell), every coefficient of the dete
 the family (window rows `r + 2 i`, columns `r + 2 i + 1`, retained common nodes `c` below `r`) has
 `p`-adic denominator at most `3 (r + m) − 3 ‖m‖_p + ∑_{t ∈ E} w t`, where `‖m‖_p = min (m mod p) (p − m mod p)`.
 No (ND) hypothesis and no table. -/
-theorem row_P1 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1)
+theorem row_P1 (v u : ℤ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1)
     (hp5 : 5 ≤ p) {r m : ℕ} (hm : p ≤ 2 * m) (hN : 2 * (r + 2 * m) + 2 * p < p * p)
     {ι : Type} [Fintype ι] [DecidableEq ι] (c : ι → ℕ) (hcinj : Function.Injective c)
     (hcr : ∀ i, c i < r) (w : ℕ → ℕ)
-    (hdual : ∀ t ∈ P1E p r m, ∀ t' ∈ P1E p r m, w3 (cell p t) (cell p t') ≤ w t + w t') :
+    (hdual : ∀ t ∈ P1E p r m, ∀ t' ∈ P1E p r m, w3 (cell p u t) (cell p u t') ≤ w t + w t') :
     GLE p (3 * (r + m) - 3 * min (m % p) (p - m % p) + ∑ t ∈ P1E p r m, w t)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c
+      (seqFullN (fS v u) (eS v u) c
         (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
@@ -754,7 +754,7 @@ theorem row_P1 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣
       ∀ t, lo ≤ t → t < hi → b0 * p + p ≤ t → 1 ≤ w t)) :=
     ⟨decide (lo < b0 * p + p ∧ ∀ t, lo ≤ t → t < hi → b0 * p + p ≤ t → 1 ≤ w t), by simp⟩
   have hdual' : ∀ t t', lo ≤ t → t < hi → lo ≤ t' → t' < hi →
-      w3 (cell p t) (cell p t') ≤ w t + w t' := by
+      w3 (cell p u t) (cell p u t') ≤ w t + w t' := by
     intro t t' h1 h2 h3 h4
     refine hdual t ?_ t' ?_
     · rw [hP1E]; exact Finset.mem_Ico.2 ⟨h1, h2⟩
@@ -810,7 +810,7 @@ theorem row_P1 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣
     intro t ht
     unfold phin; rw [if_pos ht]; exact ⟨rfl, rfl⟩
   obtain ⟨hTR, hTC, hOR, hOC⟩ := sets_eq hGeo hm'
-  refine member_gle_P (p := p) (k' := k') (κ := b0 + 1) v u hv hu hpv hodd hp5 hN2 hκr hH hcompl c hcinj hcr
+  refine member_gle_P (p := p) (k' := k') (κ := b0 + 1) v u hpv hodd hp5 hN2 hκr hH hcompl c hcinj hcr
     (phin p (b0 * p + p) lo hi (b0 * p + p + D2) D2 r fl w)
     (phin p (b0 * p + p) lo hi (b0 * p + p + D2) D2 r fl w) hφ ?_ ?_ ?_ ?_
     (3 * (r + m) - 3 * min (m % p) (p - m % p) + ∑ t ∈ P1E p r m, w t) ?_

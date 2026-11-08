@@ -23,7 +23,7 @@ namespace CatalanCore.Uniform.Content.Sweep
 
 section Facts
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N : ℕ}
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 /-- `p² S(c)` and `p³ G(c)` of a cell, as elements of `R`. -/
@@ -37,7 +37,7 @@ noncomputable def Bm (ξ : R) (h l j : ℕ) : R :=
     toR p ((p : ℚ) ^ 2 * (Scell v u p (l, h) - Scell v u p (j, h)) / ((l : ℚ) - j))
 
 theorem sig_cell_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) {t : ℕ} (ht : t < N) :
-    (p : ℚ) ^ 2 * Scell v u p (cell p t) ∈ LocRing p := by
+    (p : ℚ) ^ 2 * Scell v u p (cell p u t) ∈ LocRing p := by
   have h := PF_diff_period v u hN (Nat.zero_le t) ht
   have h0 : PF v u p 0 = 0 := by simp [PF]
   rw [h0, sub_zero] at h
@@ -47,27 +47,27 @@ theorem sig_cell_mem (hodd : p % 2 = 1) (hN : 2 * N < p * p) {t : ℕ} (ht : t <
 /-- **F1** (congruent nodes): the entry of `p³ H` is the period matrix modulo `p²`. -/
 theorem F1 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {s t : ℕ}
     (hs : s < N) (ht : t < N) (hm : s % p = t % p) :
-    (p : R) ^ 2 ∣ Qent (p := p) v u hv hu ξ s t - Bm (p := p) v u ξ (half p s) (s / p) (t / p) := by
+    (p : R) ^ 2 ∣ Qent (p := p) v u ξ s t - Bm (p := p) v u ξ (half p u s) (s / p) (t / p) := by
   have hp0 : 0 < p := hp.out.pos
-  have hhalf : half p t = half p s := by unfold half; rw [hm]
+  have hhalf : half p u t = half p u s := by unfold half; rw [hm]
   by_cases hst : s = t
   · subst hst
     unfold Qent Bm
     rw [if_pos rfl, if_pos rfl]
-    have hq := q_mem v u hv hu hN hs hs
+    have hq := q_mem v u hN hs hs
     have hG := G_mem v u hodd hN hs
-    have e1 : (p : ℚ) ^ 3 * Lm v u hv hu s s - (p : ℚ) ^ 3 * Gcell v u p (cell p s) =
+    have e1 : (p : ℚ) ^ 3 * Lm v u s s - (p : ℚ) ^ 3 * Gcell v u p (cell p u s) =
         (p : ℚ) ^ 3 * (-RE v u p s) := by
       unfold Lm lw
-      rw [if_pos rfl, e_eq v u (p := p) hv hu, ← PE_eq_Gcell v u hodd s]
+      rw [if_pos rfl, e_eq v u (p := p), ← PE_eq_Gcell v u hodd s]
       ring
-    have hd : Dv p 3 ((p : ℚ) ^ 3 * Lm v u hv hu s s - (p : ℚ) ^ 3 * Gcell v u p (cell p s)) := by
+    have hd : Dv p 3 ((p : ℚ) ^ 3 * Lm v u s s - (p : ℚ) ^ 3 * Gcell v u p (cell p u s)) := by
       rw [e1]; exact Dv.intro ((LocRing p).neg_mem (RE_mem v u s))
-    have key : (p : R) ^ 3 ∣ toR p ((p : ℚ) ^ 3 * Lm v u hv hu s s) - toR p ((p : ℚ) ^ 3 * Gcell v u p (cell p s)) := by
+    have key : (p : R) ^ 3 ∣ toR p ((p : ℚ) ^ 3 * Lm v u s s) - toR p ((p : ℚ) ^ 3 * Gcell v u p (cell p u s)) := by
       rw [← toR_sub hq hG]; exact toR_dvd hd
-    have hc : cell p s = (s / p, half p s) := rfl
-    have e : ξ + toR p ((p : ℚ) ^ 3 * Lm v u hv hu s s) - (ξ + ggR (p := p) v u (s / p, half p s)) =
-        toR p ((p : ℚ) ^ 3 * Lm v u hv hu s s) - toR p ((p : ℚ) ^ 3 * Gcell v u p (cell p s)) := by
+    have hc : cell p u s = (s / p, half p u s) := rfl
+    have e : ξ + toR p ((p : ℚ) ^ 3 * Lm v u s s) - (ξ + ggR (p := p) v u (s / p, half p u s)) =
+        toR p ((p : ℚ) ^ 3 * Lm v u s s) - toR p ((p : ℚ) ^ 3 * Gcell v u p (cell p u s)) := by
       unfold ggR; rw [← hc]; ring
     rw [e]
     exact (pow_dvd_pow (p : R) (by norm_num : 2 ≤ 3)).trans key
@@ -82,7 +82,7 @@ theorem F1 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {s t
       omega
     unfold Qent Bm
     rw [if_neg hne, if_neg hls, zero_add]
-    set h := half p s with hh
+    set h := half p u s with hh
     have hPFt : PF v u p t = Scell v u p (t / p, h) := by
       rw [PF_eq_Scell v u hodd t]; unfold cell; rw [hhalf]
     have hPFs : PF v u p s = Scell v u p (s / p, h) := by
@@ -102,23 +102,23 @@ theorem F1 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {s t
       sub_ne_zero.2 (by exact_mod_cast hls)
     have hp0q : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
     have hDne : ((t : ℚ) - s) ≠ 0 := sub_ne_zero.2 (by exact_mod_cast (Ne.symm hne))
-    have hLm : Lm v u hv hu s t = ((PF v u p t - PF v u p s) + (RF v u p t - RF v u p s)) / ((t : ℚ) - s) := by
+    have hLm : Lm v u s t = ((PF v u p t - PF v u p s) + (RF v u p t - RF v u p s)) / ((t : ℚ) - s) := by
       unfold Lm lw
-      rw [if_neg hne, f_eq v u (p := p) hv hu, f_eq v u (p := p) hv hu]
+      rw [if_neg hne, f_eq v u (p := p), f_eq v u (p := p)]
       congr 1; ring
     set T : ℚ := (p : ℚ) ^ 2 * (Scell v u p (s / p, h) - Scell v u p (t / p, h)) /
       (((s / p : ℕ) : ℚ) - ((t / p : ℕ) : ℚ)) with hT
-    have hkey : (p : ℚ) ^ 3 * Lm v u hv hu s t - T =
+    have hkey : (p : ℚ) ^ 3 * Lm v u s t - T =
         (p : ℚ) ^ 3 * ((RF v u p t - RF v u p s) / ((t : ℚ) - s)) := by
       rw [hLm, hPFt, hPFs, hT, hD]
       field_simp
       ring
     have hRd := RF_div_mem v u hp5 hN hs ht hne
-    have hd : Dv p 3 ((p : ℚ) ^ 3 * Lm v u hv hu s t - T) := by
+    have hd : Dv p 3 ((p : ℚ) ^ 3 * Lm v u s t - T) := by
       rw [hkey]; exact Dv.intro hRd
-    have hq := q_mem v u hv hu hN hs ht
+    have hq := q_mem v u hN hs ht
     have hTm : T ∈ LocRing p := by
-      have : T = (p : ℚ) ^ 3 * Lm v u hv hu s t - (p : ℚ) ^ 3 * ((RF v u p t - RF v u p s) / ((t : ℚ) - s)) := by
+      have : T = (p : ℚ) ^ 3 * Lm v u s t - (p : ℚ) ^ 3 * ((RF v u p t - RF v u p s) / ((t : ℚ) - s)) := by
         rw [← hkey]; ring
       rw [this]
       have hp3 : ((p : ℚ) ^ 3) ∈ LocRing p := by exact_mod_cast int_mem_locRing (ℓ := p) ((p : ℤ) ^ (3 : ℕ))
@@ -134,8 +134,8 @@ theorem F1 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {s t
 with `σ = p² S` and the inverse of the integer `t - n` taken in `ℤ_(p)`. -/
 theorem F2 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {n t : ℕ}
     (hn : n < N) (ht : t < N) (hm : n % p ≠ t % p) :
-    (p : R) ^ 2 ∣ Qent (p := p) v u hv hu ξ n t -
-      (p : R) * (sigR (p := p) v u (cell p t) - sigR (p := p) v u (cell p n)) *
+    (p : R) ^ 2 ∣ Qent (p := p) v u ξ n t -
+      (p : R) * (sigR (p := p) v u (cell p u t) - sigR (p := p) v u (cell p u n)) *
         toR p ((((t : ℚ) - n)⁻¹)) := by
   have hne : n ≠ t := fun h => hm (by rw [h])
   have hz : ¬ (p : ℤ) ∣ (t : ℤ) - n := by
@@ -150,21 +150,21 @@ theorem F2 (hodd : p % 2 = 1) (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (ξ : R) {n t
   have hpm : ((p : ℚ)) ∈ LocRing p := by exact_mod_cast int_mem_locRing (ℓ := p) (p : ℤ)
   have hs1 := sig_cell_mem v u hodd hN ht
   have hs2 := sig_cell_mem v u hodd hN hn
-  have hsd : sdiff v u p n (cell p t) ∈ LocRing p := by
+  have hsd : sdiff v u p n (cell p u t) ∈ LocRing p := by
     unfold sdiff; rw [mul_sub]; exact (LocRing p).sub_mem hs1 hs2
-  have hP : (p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹) ∈ LocRing p :=
+  have hP : (p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹) ∈ LocRing p :=
     (LocRing p).mul_mem ((LocRing p).mul_mem hpm hsd) hinv
-  have hq := q_mem v u hv hu hN hn ht
-  have hd := q_decomp v u hv hu hodd hp5 hN hn ht hne
+  have hq := q_mem v u hN hn ht
+  have hd := q_decomp v u hodd hp5 hN hn ht hne
   have := toR_dvd (R := R) hd
   rw [toR_sub hq hP] at this
-  have e1 : toR p ((p : ℚ) * sdiff v u p n (cell p t) * (((t : ℚ) - n)⁻¹)) =
-      (p : R) * (sigR (p := p) v u (cell p t) - sigR (p := p) v u (cell p n)) * toR p ((((t : ℚ) - n)⁻¹)) := by
+  have e1 : toR p ((p : ℚ) * sdiff v u p n (cell p u t) * (((t : ℚ) - n)⁻¹)) =
+      (p : R) * (sigR (p := p) v u (cell p u t) - sigR (p := p) v u (cell p u n)) * toR p ((((t : ℚ) - n)⁻¹)) := by
     rw [toR_mul ((LocRing p).mul_mem hpm hsd) hinv, toR_mul hpm hsd, toR_p]
     congr 2
     unfold sdiff sigR
     rw [mul_sub, toR_sub hs1 hs2]
-  have hQ : Qent (p := p) v u hv hu ξ n t = toR p ((p : ℚ) ^ 3 * Lm v u hv hu n t) := by
+  have hQ : Qent (p := p) v u ξ n t = toR p ((p : ℚ) ^ 3 * Lm v u n t) := by
     unfold Qent; rw [if_neg hne, zero_add]
   rw [hQ, ← e1]
   exact (pow_dvd_pow (p : R) (by norm_num : 2 ≤ 3)).trans this
@@ -278,13 +278,14 @@ theorem cstart_lt (hodd : p % 2 = 1) {j h : ℕ} (hh : h ≤ 1) (hj : (j + 1) * 
 
 theorem sig_mem_cell (hodd : p % 2 = 1) (hN : 2 * N < p * p) {j h : ℕ} (hh : h ≤ 1)
     (hj : (j + 1) * p ≤ N) : (p : ℚ) ^ 2 * Scell v u p (j, h) ∈ LocRing p := by
-  have := sig_cell_mem v u hodd hN (cstart_lt hodd hh hj)
-  rwa [cstart_cell hodd (c := (j, h)) hh] at this
+  have h0 : PF v u p 0 = 0 := by simp [PF]
+  have := PF_diff_period v u hN (Nat.zero_le (cstart p (j, h))) (cstart_lt hodd hh hj)
+  rw [h0, sub_zero] at this
+  exact this
 
 theorem gg_mem_cell (hodd : p % 2 = 1) (hN : 2 * N < p * p) {j h : ℕ} (hh : h ≤ 1)
     (hj : (j + 1) * p ≤ N) : (p : ℚ) ^ 3 * Gcell v u p (j, h) ∈ LocRing p := by
-  have := G_mem v u hodd hN (cstart_lt hodd hh hj)
-  rwa [cstart_cell hodd (c := (j, h)) hh] at this
+  exact G_mem_cell v u hodd hN hj hh
 
 theorem sigR_halves (hodd : p % 2 = 1) (hN : 2 * N < p * p) {j : ℕ} (hj : (j + 1) * p ≤ N) :
     (p : R) ∣ sigR (p := p) v u (j, 1) - sigR (p := p) v u (j, 0) := by

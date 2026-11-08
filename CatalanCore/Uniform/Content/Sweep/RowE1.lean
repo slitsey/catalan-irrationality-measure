@@ -27,7 +27,7 @@ namespace CatalanCore.Uniform.Content.Sweep
 
 section E1Tools
 
-variable {p : ℕ} [hp : Fact p.Prime]
+variable {p : ℕ} [hp : Fact p.Prime] {u : ℤ}
 
 /-- The class of a row-type label node (system `π = (r+1) % 2`). -/
 theorem ocR_eq (hodd : p % 2 = 1) (κ r n : ℕ) :
@@ -47,12 +47,12 @@ theorem ocC_eq (hodd : p % 2 = 1) (κ r n : ℕ) :
 /-- `Wlab` is at most the cell weight when the patterns agree in one period. -/
 theorem Wlab_le_w3 (kR kC : Bool) (oR oC n n' : ℕ) (hnc : n % p ≠ n' % p)
     (hpat : n / p = n' / p → kR = kC ∧ oR = oC) :
-    Wlab p kR kC oR oC n n' ≤ w3 (cell p n) (cell p n') := by
+    Wlab u p kR kC oR oC n n' ≤ w3 (cell p u n) (cell p u n') := by
   unfold Wlab w3 cell
   rw [if_neg hnc]
   by_cases hper : n / p = n' / p
   · obtain ⟨h1, h2⟩ := hpat hper
-    by_cases hh : half p n = half p n'
+    by_cases hh : half p u n = half p u n'
     · simp [h1, h2, hper, hh]
     · simp [h1, h2, hper, hh]
   · have : ¬ (kR = kC ∧ oR = oC ∧ n / p = n' / p) := fun h => hper h.2.2
@@ -79,26 +79,26 @@ end E1Tools
 
 section E1Pot
 
-variable {p : ℕ} [hp : Fact p.Prime]
+variable {p : ℕ} [hp : Fact p.Prime] {u : ℤ}
 
 /-- Potential split of the virtual nodes: `1` on X-parity nodes, `2` on Y-parity nodes. -/
 def a1 (r t : ℕ) : ℕ := if (t - r) % 2 = 0 then 1 else 2
 
-def phiR1 (r m : ℕ) (u : ℕ → ℕ) (t : ℕ) : ℕ :=
-  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 0 then u ((t - r) / 2) else 0) else a1 r t
+def phiR1 (r m : ℕ) (uX : ℕ → ℕ) (t : ℕ) : ℕ :=
+  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 0 then uX ((t - r) / 2) else 0) else a1 r t
 
-def phiC1 (r m : ℕ) (u' : ℕ → ℕ) (t : ℕ) : ℕ :=
-  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 1 then u' ((t - r) / 2) else 0) else 3 - a1 r t
+def phiC1 (r m : ℕ) (uY : ℕ → ℕ) (t : ℕ) : ℕ :=
+  if t < r then 3 else if t < r + 2 * m then (if (t - r) % 2 = 1 then uY ((t - r) / 2) else 0) else 3 - a1 r t
 
 theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < κ * p) (hκ2 : (κ - 1) * p ≤ r)
-    (hκ0 : 1 ≤ κ) (u u' : ℕ → ℕ)
-    (hdual : ∀ i j, i < m → j < m → w3 (cell p (r + 2 * i)) (cell p (r + 2 * j + 1)) ≤ u i + u' j)
+    (hκ0 : 1 ≤ κ) (uX uY : ℕ → ℕ)
+    (hdual : ∀ i j, i < m → j < m → w3 (cell p u (r + 2 * i)) (cell p u (r + 2 * j + 1)) ≤ uX i + uY j)
     (n n' : ℕ) (kR kC : Bool)
     (hn : (r ≤ n ∧ (n - r) % 2 = 0 ∧ n < r + 2 * m) ∨ (r + 2 * m ≤ n ∧ n < κ * p))
     (hn' : (r ≤ n' ∧ (n' - r) % 2 = 1 ∧ n' < r + 2 * m) ∨ (r + 2 * m ≤ n' ∧ n' < κ * p))
     (hkR : kR = true ↔ κ * p ≤ n) (hkC : kC = true ↔ κ * p ≤ n') :
-    Wlab p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤
-      phiR1 r m u n + phiC1 r m u' n' := by
+    Wlab u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤
+      phiR1 r m uX n + phiC1 r m uY n' := by
   have hp0 : 0 < p := hp.out.pos
   have hpR := ocR_eq (p := p) hodd κ r n
   have hpC := ocC_eq (p := p) hodd κ r n'
@@ -118,9 +118,9 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
   · -- window row, window column
     have hne : n % p ≠ n' % p := by
       intro h; have := cong_eq (by omega) (by omega) h; omega
-    have h1 : phiR1 r m u n = u ((n - r) / 2) := by
+    have h1 : phiR1 r m uX n = uX ((n - r) / 2) := by
       unfold phiR1; rw [if_neg (by omega), if_pos hn3, if_pos hn2]
-    have h2 : phiC1 r m u' n' = u' ((n' - r) / 2) := by
+    have h2 : phiC1 r m uY n' = uY ((n' - r) / 2) := by
       unfold phiC1; rw [if_neg (by omega), if_pos hm3, if_pos hm2]
     rw [h1, h2]
     refine le_trans (Wlab_le_w3 kR kC _ _ n n' hne ?_) ?_
@@ -134,13 +134,13 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
   · -- window row, virtual column
     have hne : n % p ≠ n' % p :=
       period_ne (by rw [hper n hn1 (by omega), hper n' (by omega) hm2]) (by omega)
-    have h1 : phiR1 r m u n = u ((n - r) / 2) := by
+    have h1 : phiR1 r m uX n = uX ((n - r) / 2) := by
       unfold phiR1; rw [if_neg (by omega), if_pos hn3, if_pos hn2]
-    have h2 : phiC1 r m u' n' = 3 - a1 r n' := by
+    have h2 : phiC1 r m uY n' = 3 - a1 r n' := by
       unfold phiC1; rw [if_neg (by omega), if_neg (by omega)]
     rw [h1, h2]
-    have hle := Wlab_le_w3 kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' hne
-    have hle2 : Wlab p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
+    have hle := Wlab_le_w3 (u := u) kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' hne
+    have hle2 : Wlab u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
       unfold Wlab; rw [if_neg hne]; split_ifs <;> omega
     unfold a1
     by_cases hpar : (n' - r) % 2 = 0
@@ -150,7 +150,7 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
         intro hper'
         refine ⟨hbool hper', ?_⟩
         rw [hpR, hpC, if_neg (by omega), if_neg (by omega), hper'])
-      have h3 : w3 (cell p n) (cell p n') ≤ 1 := by
+      have h3 : w3 (cell p u n) (cell p u n') ≤ 1 := by
         unfold w3 cell
         have hp' : n / p = n' / p := by rw [hper n hn1 (by omega), hper n' (by omega) hm2]
         simp only [hp', if_true]
@@ -159,13 +159,13 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
   · -- virtual row, window column
     have hne : n % p ≠ n' % p :=
       period_ne (by rw [hper n (by omega) hn2, hper n' hm1 (by omega)]) (by omega)
-    have h1 : phiR1 r m u n = a1 r n := by
+    have h1 : phiR1 r m uX n = a1 r n := by
       unfold phiR1; rw [if_neg (by omega), if_neg (by omega)]
-    have h2 : phiC1 r m u' n' = u' ((n' - r) / 2) := by
+    have h2 : phiC1 r m uY n' = uY ((n' - r) / 2) := by
       unfold phiC1; rw [if_neg (by omega), if_pos hm3, if_pos hm2]
     rw [h1, h2]
-    have hle := Wlab_le_w3 kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' hne
-    have hle2 : Wlab p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
+    have hle := Wlab_le_w3 (u := u) kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' hne
+    have hle2 : Wlab u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
       unfold Wlab; rw [if_neg hne]; split_ifs <;> omega
     unfold a1
     by_cases hpar : (n - r) % 2 = 0
@@ -174,7 +174,7 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
         intro hper'
         refine ⟨hbool hper', ?_⟩
         rw [hpR, hpC, if_neg (by omega), if_neg (by omega), hper'])
-      have h3 : w3 (cell p n) (cell p n') ≤ 1 := by
+      have h3 : w3 (cell p u n) (cell p u n') ≤ 1 := by
         unfold w3 cell
         have hp' : n / p = n' / p := by rw [hper n (by omega) hn2, hper n' hm1 (by omega)]
         simp only [hp', if_true]
@@ -182,17 +182,17 @@ theorem e1_pair (hodd : p % 2 = 1) {r m κ : ℕ} (hm : 2 * m < p) (hκ1 : r < �
       omega
     · rw [if_neg hpar]; omega
   · -- virtual row, virtual column
-    have h1 : phiR1 r m u n = a1 r n := by
+    have h1 : phiR1 r m uX n = a1 r n := by
       unfold phiR1; rw [if_neg (by omega), if_neg (by omega)]
-    have h2 : phiC1 r m u' n' = 3 - a1 r n' := by
+    have h2 : phiC1 r m uY n' = 3 - a1 r n' := by
       unfold phiC1; rw [if_neg (by omega), if_neg (by omega)]
     rw [h1, h2]
-    have hle3 := Wlab_le p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n'
+    have hle3 := Wlab_le u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n'
     by_cases hnn : n = n'
     · subst hnn; unfold a1; split_ifs <;> omega
     · have hne : n % p ≠ n' % p :=
         period_ne (by rw [hper n (by omega) hn2, hper n' (by omega) hm2]) hnn
-      have hle2 : Wlab p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
+      have hle2 : Wlab u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ 2 := by
         unfold Wlab; rw [if_neg hne]; split_ifs <;> omega
       unfold a1
       split_ifs <;> omega
@@ -240,13 +240,13 @@ variable {p : ℕ} [hp : Fact p.Prime]
 below `r` and potentials `uX`, `uY` on the window rows and columns with `W₃ ≤ uX + uY`, every coefficient
 of the determinant of the member has `p`-adic denominator at most `3 r + ∑ uX + ∑ uY`.  The prime `p ≥ 5`
 satisfies `p² > 2 N + 2 p` (`N = r + 2m`) and `p ∤ v`; nothing else (no table). -/
-theorem row_E1 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
+theorem row_E1 (v u : ℤ) (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ p)
     {r m : ℕ} (hm : 2 * m < p) (hN : 2 * (r + 2 * m) + 2 * p < p * p)
     {ι : Type} [Fintype ι] [DecidableEq ι] (c : ι → ℕ) (hcinj : Function.Injective c)
     (hcr : ∀ i, c i < r) (uX uY : ℕ → ℕ)
-    (hdual : ∀ i j, i < m → j < m → w3 (cell p (r + 2 * i)) (cell p (r + 2 * j + 1)) ≤ uX i + uY j) :
+    (hdual : ∀ i j, i < m → j < m → w3 (cell p u (r + 2 * i)) (cell p u (r + 2 * j + 1)) ≤ uX i + uY j) :
     GLE p (3 * r + ∑ i ∈ Finset.range m, uX i + ∑ j ∈ Finset.range m, uY j)
-      (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c
+      (seqFullN (fS v u) (eS v u) c
         (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
@@ -271,7 +271,7 @@ theorem row_E1 (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) (hpv : ¬ (p : ℤ) ∣
     rw [hN'def]
     exact Nat.mul_le_mul_right p (Nat.add_le_add_right (Nat.div_le_div_right (by omega)) 1)
   have hκH : κ * p ≤ N' := by simpa using hH
-  refine member_gle_P (p := p) (k' := 0) (κ := κ) v u hv hu hpv hodd hp5 hN2 hκ1 hH hcompl c hcinj hcr
+  refine member_gle_P (p := p) (k' := 0) (κ := κ) v u hpv hodd hp5 hN2 hκ1 hH hcompl c hcinj hcr
     (phiR1 r m uX) (phiC1 r m uY) ?_ ?_ ?_ ?_ ?_ (3 * r + ∑ i ∈ Finset.range m, uX i + ∑ j ∈ Finset.range m, uY j) ?_
   · intro t ht; constructor <;> simp [phiR1, phiC1, ht]
   · intro n hn n' hn'

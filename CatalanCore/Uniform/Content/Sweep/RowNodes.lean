@@ -356,7 +356,7 @@ end Reduce2
 
 section MemberP
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) {N' : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) {N' : ℕ}
 
 /-- **Theorem G for the window family, in explicit node form.**  Window rows `r + 2 i`, columns
 `r + 2 i + 1` (`i < m`), retained common nodes `c` below `r`, pivot system `(κ, k')` with
@@ -370,18 +370,18 @@ theorem member_gle_P (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ 
     {ι : Type} [Fintype ι] [DecidableEq ι] (c : ι → ℕ) (hcinj : Function.Injective c)
     (hcr : ∀ i, c i < r) (φR φC : ℕ → ℕ) (hφ : ∀ t, t < r → φR t = 3 ∧ φC t = 3)
     (hpp : ∀ n ∈ TRs p κ k' r m, ∀ n' ∈ TCs p κ k' r m,
-      Wlab p false false (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
+      Wlab u p false false (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
     (hpo : ∀ n ∈ TRs p κ k' r m, ∀ n' ∈ OCs p κ k' r m,
-      Wlab p false true (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
+      Wlab u p false true (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
     (hop : ∀ n ∈ ORs p κ k' r m, ∀ n' ∈ TCs p κ k' r m,
-      Wlab p true false (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
+      Wlab u p true false (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
     (hoo : ∀ n ∈ ORs p κ k' r m, ∀ n' ∈ OCs p κ k' r m,
-      Wlab p true true (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
+      Wlab u p true true (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n' ≤ φR n + φC n')
     (E : ℕ)
     (hsum : 3 * r + 3 * m + (∑ t ∈ TRs p κ k' r m, φR t + ∑ t ∈ ORs p κ k' r m, φR t +
         ∑ t ∈ TCs p κ k' r m, φC t + ∑ t ∈ OCs p κ k' r m, φC t) ≤
       E + 3 * ((TRs p κ k' r m).card + (ORs p κ k' r m).card)) :
-    GLE p E (seqFullN (Datum.plane2 v u hv hu).f (Datum.plane2 v u hv hu).e c
+    GLE p E (seqFullN (fS v u) (eS v u) c
       (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det := by
   classical
   have hp0 : 0 < p := hp.out.pos
@@ -410,7 +410,7 @@ theorem member_gle_P (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ 
       intro i j h; apply hcinj; simpa using congrArg Fin.val h)
     simpa using this
   have hfree := card_free c hcinj r hcr
-  refine member_gle (p := p) (π := (r + 1) % 2) (κ := κ) (k' := k') v u hv hu c
+  refine member_gle (p := p) (π := (r + 1) % 2) (κ := κ) (k' := k') v u c
     (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) hpv hodd hp5 hN hH hπ hcinj hxinj
     hyinj h1 h2 h3 (fun a => hcompl _ (hrow a)) (fun a => hcompl _ (hcol a)) φR φC ?_ E ?_
   · -- the weights
@@ -487,7 +487,7 @@ theorem member_gle_P (hpv : ¬ (p : ℤ) ∣ v) (hodd : p % 2 = 1) (hp5 : 5 ≤ 
             exact hb (Sum.inr ⟨(n' - r) / 2, by omega⟩) (by simp only [memRow, Sum.elim_inr]; omega)
           · right
             exact ⟨by omega, by omega⟩
-    have hle := Wlab_le p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n'
+    have hle := Wlab_le u p kR kC (oc p κ ((r + 1) % 2) (n % p)) (oc p κ (1 - (r + 1) % 2) (n' % p)) n n'
     rcases hRc with ⟨rfl, hn⟩ | ⟨rfl, hn | hn⟩
     · rcases hCc with ⟨rfl, hn'⟩ | ⟨rfl, hn' | hn'⟩
       · exact hoo n hn n' hn'

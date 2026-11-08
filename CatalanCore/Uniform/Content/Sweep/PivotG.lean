@@ -100,7 +100,7 @@ section Inst
 
 open CatalanCore.Uniform.Content.Sweep.Gen
 
-variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0)
+variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ)
   {R : Type*} [CommRing R] [Algebra (LocRing p) R]
 
 /-- The vector index `b ∈ {0,1}`: `Γ^0 = 1`, `Γ^1 = σ`, over `R`. -/
@@ -147,13 +147,13 @@ theorem sum_dd_dvd (hp5 : 5 ≤ p) (ω : ℕ) :
 
 
 /-- The data of `lemmaG` for the plane 2 matrix, in `S = R / (p²)`. -/
-noncomputable def qS (ξ : R) (n t : ℕ) : S2 p R := pi2 p R (Qent (p := p) v u hv hu ξ n t)
+noncomputable def qS (ξ : R) (n t : ℕ) : S2 p R := pi2 p R (Qent (p := p) v u ξ n t)
 noncomputable def BmS (ξ : R) (h l j : ℕ) : S2 p R := pi2 p R (Bm (p := p) v u ξ (min h 1) l j)
 noncomputable def sgS (j h : ℕ) : S2 p R := pi2 p R (sigR (p := p) v u (j, min h 1))
 noncomputable def ddS (a b : ℕ) : S2 p R := pi2 p R (ddR (p := p) a b)
 noncomputable def YvS (Yr : ℕ → ℕ → ℕ → ℕ → R) (b h o j : ℕ) : S2 p R := pi2 p R (Yr b (min h 1) o j)
 
-theorem half_le_one' (t : ℕ) : half p t ≤ 1 := by unfold half; split_ifs <;> omega
+theorem half_le_one' {u : ℤ} (t : ℕ) : half p u t ≤ 1 := by unfold half; split_ifs <;> omega
 
 theorem lemmaG_S (hodd : p % 2 = 1) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 * N' < p * p)
     (hH : (κ + 2 * k') * p ≤ N') (ξ : R)
@@ -162,14 +162,14 @@ theorem lemmaG_S (hodd : p % 2 = 1) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 
       ∑ j ∈ Cper κ k' o, Bm (p := p) v u ξ h l j * Yr b h o j = GamR (p := p) v u b h l)
     (hYhR : ∀ b o, o ≤ 1 → ∀ j ∈ Cper κ k' o, (p : R) ∣ Yr b 1 o j - Yr b 0 o j)
     (n : ℕ) (hn : n < N') (b : ℕ) (hb : b ≤ 1) :
-    ∑ t ∈ PCs p κ k' π, qS v u hv hu ξ n t *
+    ∑ t ∈ PCs p κ k' π, qS v u ξ n t *
         (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS v u) (ddS) (YvS Yr) (t % p) *
-          YvS Yr b (half p t) (oc p κ π (t % p)) (t / p)) =
+          YvS Yr b (half p u t) (oc p κ π (t % p)) (t / p)) =
       Gen.eps (pi2 p R (p : R)) p κ k' π (sgS v u) (ddS) (YvS Yr) (n % p) *
           (∑ j ∈ Cper κ k' (oc p κ π (n % p)),
-            BmS v u ξ (half p n) (n / p) j * YvS Yr b (half p n) (oc p κ π (n % p)) j) +
+            BmS v u ξ (half p u n) (n / p) j * YvS Yr b (half p u n) (oc p κ π (n % p)) j) +
         pi2 p R (p : R) * delta κ k' (sgS v u) (YvS Yr) * Eres p κ π ddS (n % p) *
-          Gam (sgS v u) b (half p n) (n / p) := by
+          Gam (sgS v u) b (half p u n) (n / p) := by
   have hp0 : 0 < p := hp.out.pos
   have hPS := pi2_P_sq (p := p) (R := R)
   have hper : ∀ j, j < κ + 2 * k' → (j + 1) * p ≤ N' := fun j hj => by nlinarith
@@ -180,14 +180,14 @@ theorem lemmaG_S (hodd : p % 2 = 1) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 
     have : t / p < κ + 2 * k' := hj
     have h1 := (Nat.div_lt_iff_lt_mul hp0).1 this
     nlinarith
-  refine lemmaG (pi2 p R (p : R)) p π (sgS v u) ddS (YvS Yr) hPS hp0 N' (half p)
-    (fun t => by unfold half; rw [Nat.mod_mod]) half_le_one' (qS v u hv hu ξ) (BmS v u ξ) ?_ ?_ ?_ ?_ ?_ ?_ ?_
+  refine lemmaG (pi2 p R (p : R)) p π (sgS v u) ddS (YvS Yr) hPS hp0 N' (half p u)
+    (fun t => by unfold half; rw [Nat.mod_mod]) half_le_one' (qS v u ξ) (BmS v u ξ) ?_ ?_ ?_ ?_ ?_ ?_ ?_
     n hn b hb
   · -- F1
     intro n' hn' t ht hm
     unfold qS BmS
     rw [pi2_eq_iff, min_eq_left (half_le_one' _)]
-    exact F1 v u hv hu hodd hp5 hN ξ hn' (lt_of_lt_of_le (hmemt t ht) le_rfl) hm
+    exact F1 v u hodd hp5 hN ξ hn' (lt_of_lt_of_le (hmemt t ht) le_rfl) hm
   · -- F2
     intro n' hn' t ht hm
     unfold qS sgS ddS
@@ -198,25 +198,25 @@ theorem lemmaG_S (hodd : p % 2 = 1) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 
       push_cast at this
       rw [sub_eq_zero, ZMod.natCast_eq_natCast_iff'] at this
       exact this.symm
-    have h2 := F2 v u hv hu hodd hp5 hN ξ hn' (hmemt t ht) hm
+    have h2 := F2 v u hodd hp5 hN ξ hn' (hmemt t ht) hm
     unfold cell at h2
     have h3 := ddR_cong (p := p) (R := R) hz
     rw [min_eq_left (half_le_one' t), min_eq_left (half_le_one' n')]
     simp only [← map_sub, ← map_mul]
     rw [pi2_eq_iff]
-    have e : Qent (p := p) v u hv hu ξ n' t -
-        (p : R) * (sigR (p := p) v u (t / p, half p t) - sigR (p := p) v u (n' / p, half p n')) *
+    have e : Qent (p := p) v u ξ n' t -
+        (p : R) * (sigR (p := p) v u (t / p, half p u t) - sigR (p := p) v u (n' / p, half p u n')) *
           ddR (p := p) (n' % p) (t % p) =
-        (Qent (p := p) v u hv hu ξ n' t - (p : R) * (sigR (p := p) v u (t / p, half p t) - sigR (p := p) v u (n' / p, half p n')) *
+        (Qent (p := p) v u ξ n' t - (p : R) * (sigR (p := p) v u (t / p, half p u t) - sigR (p := p) v u (n' / p, half p u n')) *
           toR p ((((t : ℚ) - n')⁻¹))) +
-        (p : R) * (sigR (p := p) v u (t / p, half p t) - sigR (p := p) v u (n' / p, half p n')) *
+        (p : R) * (sigR (p := p) v u (t / p, half p u t) - sigR (p := p) v u (n' / p, half p u n')) *
           (toR p ((((t : ℚ) - n')⁻¹)) - ddR (p := p) (n' % p) (t % p)) := by
       ring
     rw [e]
     obtain ⟨c, hc⟩ := h3
     refine dvd_add h2 ?_
     rw [hc]
-    exact ⟨(sigR (p := p) v u (t / p, half p t) - sigR (p := p) v u (n' / p, half p n')) * c, by ring⟩
+    exact ⟨(sigR (p := p) v u (t / p, half p u t) - sigR (p := p) v u (n' / p, half p u n')) * c, by ring⟩
   · intro h l j
     unfold BmS
     rw [Bm_symm v u ξ (min h 1) l j]
