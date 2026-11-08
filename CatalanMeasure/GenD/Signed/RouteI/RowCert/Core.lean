@@ -493,17 +493,20 @@ open CatalanMeasure.GenD.Signed.RouteI.MarkedSourceTail
 /-- The scale of the row polynomial. -/
 def dPc : ℕ := 2 ^ 80
 
+/-- GD6: the radix of the rounded complex products of the row engine; the one place where it is written. -/
+def rowD : ℕ := 2 ^ 128 + 51
+
 /-- The engine at degree `I * bs - 1` for atoms. -/
 def pG (bs I lg lI : ℕ) : EPar :=
-  ⟨Int.ofNat (2 ^ 128 + 51), bs, I, lg, lI, Int.ofNat (2 ^ 384 + 2), Int.ofNat ((2 ^ 384 + 2) ^ bs)⟩
+  ⟨Int.ofNat rowD, bs, I, lg, lI, Int.ofNat (2 ^ 384 + 2), Int.ofNat ((2 ^ 384 + 2) ^ bs)⟩
 
-/-- The moment check with the radices forced to literals once. -/
+/-- The moment check with the radices forced to literals once (GrpN fix: scale `(1, 2^16 D^2)`, strict lists). -/
 def momG (s : Bool) (bs I lg lI : ℕ) (E : List Ent) (c : List ℤ) : Bool :=
-  forceI (Int.ofNat (2 ^ 128 + 51)) fun d => forceI (Int.ofNat (2 ^ 384 + 2)) fun b =>
+  forceI (Int.ofNat rowD) fun d => forceI (Int.ofNat (2 ^ 384 + 2)) fun b =>
     forceI (Int.ofNat ((2 ^ 384 + 2) ^ bs)) fun cc =>
-    forceI (Int.ofNat (2 ^ 96 * (2 ^ 128 + 51) ^ 2)) fun sc =>
-      forceI (Int.ofNat (2 ^ 80)) fun dp =>
-        grpList s dp sc (moments ⟨d, bs, I, lg, lI, b, cc⟩ E) == c
+    forceI (Int.ofNat (2 ^ 16 * rowD ^ 2)) fun sc =>
+      forceI (Int.ofNat 1) fun dp =>
+        grpListS s dp sc (moments ⟨d, bs, I, lg, lI, b, cc⟩ E) == c
 
 /-- All checks of a chunk. -/
 def grpB (s : Bool) (bs I lg lI : ℕ) (ρ : ℚ) (A : List QA) (E : List Ent) (c : List ℤ) : Bool :=
@@ -513,7 +516,7 @@ def grpB (s : Bool) (bs I lg lI : ℕ) (ρ : ℚ) (A : List QA) (E : List Ent) (
   decide ((A.map fun a => |a.1|).sum * (4 * (ρ ^ (I * bs) * (1 - ρ)⁻¹ / ((I * bs : ℕ) : ℚ))) ≤
     1 / 10 ^ 11) &&
   decide ((E.map fun e => |e.1|).sum ≤ 2 ^ 100) &&
-  entB (Int.ofNat (2 ^ 128 + 51)) (2 ^ 96) (1 / 2 ^ 126) (1 / 2 ^ 96) A E &&
+  entB (Int.ofNat rowD) (2 ^ 96) (1 / 2 ^ 126) (1 / 2 ^ 96) A E &&
   momG s bs I lg lI E c
 
 theorem pG_ok {bs I lg lI : ℕ} (h1 : bs ≤ 2 ^ lg) (h2 : I ≤ 2 ^ lI) : (pG bs I lg lI).OK where
@@ -529,7 +532,7 @@ theorem pG_ok {bs I lg lI : ℕ} (h1 : bs ≤ 2 ^ lg) (h2 : I ≤ 2 ^ lI) : (pG 
   lI := h2
 
 theorem pG_D (bs I lg lI : ℕ) : ((pG bs I lg lI).D : ℝ) = 2 ^ 128 + 51 := by
-  have : (pG bs I lg lI).D = 2 ^ 128 + 51 := by simp only [pG]; decide +kernel -- kcost: one power
+  have : (pG bs I lg lI).D = 2 ^ 128 + 51 := by simp only [pG, rowD]; decide +kernel -- kcost: one power
   rw [this]
   push_cast
   norm_num
@@ -614,7 +617,7 @@ theorem grp_chunk {s : Bool} {bs I lg lI : ℕ} {ρ : ℚ} {A : List QA} {E : Li
     refine this.trans ?_
     norm_num
   have hg : ((E.map fun e => |e.1|).sum) * (2 * p.D ^ 2) < p.B / 2 := by
-    have e1 : p.D = 2 ^ 128 + 51 := by simp only [hpd, pG]; decide +kernel -- kcost: one power
+    have e1 : p.D = 2 ^ 128 + 51 := by simp only [hpd, pG, rowD]; decide +kernel -- kcost: one power
     have e2 : p.B = 2 ^ 384 + 2 := by simp only [hpd, pG]; decide +kernel -- kcost: one power
     rw [e1, e2]
     have : (2 : ℤ) ^ 100 * (2 * (2 ^ 128 + 51) ^ 2) < (2 ^ 384 + 2) / 2 := by
@@ -631,11 +634,14 @@ theorem grp_chunk {s : Bool} {bs I lg lI : ℕ} {ρ : ℚ} {A : List QA} {E : Li
     have h2 := hmom
     unfold momG at h2
     simp only [forceI_eq] at h2
-    have e1 : (2 : ℤ) ^ 96 * p.D ^ 2 = Int.ofNat (2 ^ 96 * (2 ^ 128 + 51) ^ 2) := by
-      simp only [hpd, pG]
+    have e1 : (2 : ℤ) ^ 96 * p.D ^ 2 = (2 : ℤ) ^ 80 * Int.ofNat (2 ^ 16 * rowD ^ 2) := by
+      simp only [hpd, pG, rowD]
       decide +kernel -- kcost: two powers
-    have e2 : ((dPc : ℕ) : ℤ) = Int.ofNat (2 ^ 80) := rfl
-    rw [e1, e2]
+    have e2 : ((dPc : ℕ) : ℤ) = (2 : ℤ) ^ 80 * Int.ofNat 1 := by
+      simp only [dPc]
+      decide +kernel -- kcost: one power
+    rw [e1, e2, grpList_scale s ((2 : ℤ) ^ 80) (Int.ofNat 1) (Int.ofNat (2 ^ 16 * rowD ^ 2)) (by norm_num),
+      ← grpListS_eq]
     exact beq_iff_eq.1 h2
   rw [hm] at hclose
   refine Close.mono hclose ?_

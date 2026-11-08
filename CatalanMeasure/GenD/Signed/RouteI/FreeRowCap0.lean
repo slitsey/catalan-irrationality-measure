@@ -25,7 +25,7 @@ logarithmic rest.
   tail (`own_stream`, `hV_of`); thin slivers of nonnegative density are dropped by sign.
 * Reflection, opposite and column potentials, `log t` and `log (1 - s t)`, are bounded by atoms
   `w log |1 - r(q) t|` of rational `q` (`refl_bound`, `opp_bound`, `col_bound`, `log_t_atom`); the
-  positive reflection also uses the series `R900` by `refl_series`.
+  positive reflection also uses the series `reflPoly` by `refl_series`.
 * The moments of the atoms and the direct moments come from one packed engine (`moments`,
   `group_ok`), whose entries are checked against the atoms.
 * The radial field is the chord cover of `OrdHf`, with one further block for `log t` (`rad_of_cov`).
@@ -58,7 +58,7 @@ def opp : Sign → Sign
 /-- Everything in the free row at anchor `0` that is not a gas or column kernel. -/
 def rest (S : CapSource) (t : Trunc) (σ : Sign) (x : ℝ) : ℝ :=
   11 / 29 * Real.log |x| - 39 / 29 * Real.log (1 + x ^ 2) + 3 / 29 * Real.log (1 - x) - kappa σ +
-    (if σ = Sign.pos then S.R900 x + S.Eref900 else 0) + S.radialA t σ x + S.auxTail t σ
+    (if σ = Sign.pos then S.reflPoly x + S.reflTail else 0) + S.radialA t σ x + S.auxTail t σ
 
 theorem avgL_append (a b : List YCell) (f : ℝ → ℝ) : avgL (a ++ b) f = avgL a f + avgL b f := by
   simp [avgL]
@@ -1212,6 +1212,54 @@ def hsum (s : Bool) : ℕ → List ℤ → ℤ
 def grpList (s : Bool) (dP Sc : ℤ) : List ℤ → List ℤ
   | [] => []
   | _ :: rest => (-hsum s 1 (coefL dP Sc 1 rest)) :: coefL dP Sc 1 rest
+
+/-! GrpN fix (PHASE1-UNIT-COSTS §1.5): the check lists of the Grp modules are computed with the scale
+`(dP, Sc) = (1, 2^16 D^2)` instead of `(2^80, 2^96 D^2)`: every quotient is equal (a common factor `2^80`
+cancels in the floor division, `grpList_scale`), but no numerator or divisor is a multiple of `2^64`, so the
+kernel's hash of a `Nat` literal (low 64 bits) no longer collides (A). `coefLs`, `grpListS` are the strict
+forms (B): each quotient and each index is a literal when it is used. Statements and data are unchanged. -/
+
+/-- Strict `coefL`. -/
+def coefLs (dP Sc : ℤ) : ℕ → List ℤ → List ℤ
+  | _, [] => []
+  | k, m :: t =>
+    forceI ((-(2 * m * dP)) / ((k : ℤ) * Sc)) fun q =>
+      forceN k fun k' => q :: coefLs dP Sc (k' + 1) t
+
+theorem coefLs_eq (dP Sc : ℤ) : ∀ (l : List ℤ) (k : ℕ), coefLs dP Sc k l = coefL dP Sc k l
+  | [], _ => rfl
+  | m :: t, k => by
+    simp only [coefLs, coefL, forceI_eq, forceN_eq]
+    rw [coefLs_eq dP Sc t (k + 1)]
+
+/-- Strict `grpList`. -/
+def grpListS (s : Bool) (dP Sc : ℤ) : List ℤ → List ℤ
+  | [] => []
+  | _ :: rest => forceI (-hsum s 1 (coefLs dP Sc 1 rest)) fun h => h :: coefLs dP Sc 1 rest
+
+theorem grpListS_eq (s : Bool) (dP Sc : ℤ) (l : List ℤ) :
+    grpListS s dP Sc l = grpList s dP Sc l := by
+  cases l with
+  | nil => rfl
+  | cons a rest => simp only [grpListS, grpList, forceI_eq, coefLs_eq]
+
+theorem coefL_scale (c dP Sc : ℤ) (hc : 0 < c) : ∀ (l : List ℤ) (k : ℕ),
+    coefL (c * dP) (c * Sc) k l = coefL dP Sc k l
+  | [], _ => rfl
+  | m :: t, k => by
+    simp only [coefL]
+    rw [coefL_scale c dP Sc hc t (k + 1)]
+    congr 1
+    have e1 : -(2 * m * (c * dP)) = c * (-(2 * m * dP)) := by ring
+    have e2 : (k : ℤ) * (c * Sc) = c * ((k : ℤ) * Sc) := by ring
+    rw [e1, e2]
+    exact Int.mul_ediv_mul_of_pos _ _ hc
+
+theorem grpList_scale (s : Bool) (c dP Sc : ℤ) (hc : 0 < c) (l : List ℤ) :
+    grpList s (c * dP) (c * Sc) l = grpList s dP Sc l := by
+  cases l with
+  | nil => rfl
+  | cons a rest => simp only [grpList, coefL_scale c dP Sc hc]
 
 noncomputable section
 
@@ -3507,7 +3555,7 @@ theorem row_cap {S : CapSource} (hS : S.Admissible) (σ : Sign) {dP : ℕ} (hdP 
     (hOpp : ∀ t ∈ dom, avgL (S.gas (opp σ)) (rowK (sgOf σ * t)) ≤ Lq + O t)
     (hCol : ∀ t ∈ dom, -avgL (S.refCol 0) (colK (sgOf σ * t)) ≤ C t)
     (hRf : ∀ t ∈ dom, (2 - cr) * R t +
-      (if σ = Sign.pos then S.R900 (sgOf σ * t) else 0) ≤ 0)
+      (if σ = Sign.pos then S.reflPoly (sgOf σ * t) else 0) ≤ 0)
     (hAt : ∀ t ∈ dom, cr * R t + O t + C t + (11 / 29 - wl) * Real.log t +
       3 / 29 * Real.log (1 - sgOf σ * t) ≤ avQ false AF t + avQ true AT t)
     (hRad : ∀ t ∈ dom, S.radialA (Trunc.finite 384) σ (sgOf σ * t) -
@@ -3515,7 +3563,7 @@ theorem row_cap {S : CapSource} (hS : S.Admissible) (σ : Sign) {dP : ℕ} (hdP 
     (hDir : Close dP D cD eD) (hF : Close dP (avQ false AF) cF eF)
     (hT : Close dP (avQ true AT) cT eT)
     (hAux : S.auxTail (Trunc.finite 384) σ ≤ eA)
-    (hE : (if σ = Sign.pos then S.Eref900 else 0) ≤ eE)
+    (hE : (if σ = Sign.pos then S.reflTail else 0) ≤ eE)
     (hs : (addZ (addZ (addZ (addZ (addZ cD cD) cF) cT) cl) r).length = 2 * m + 1)
     (hq : q.length = m + 1) (hgs : 2 * m + 1 ≤ 2 ^ lgs) (hgq : m + 1 ≤ 2 ^ lgq)
     (hK : kronEq K m lgs lgq (dP : ℤ) c (addZ (addZ (addZ (addZ (addZ cD cD) cF) cT) cl) r) q = true)
@@ -3557,12 +3605,12 @@ theorem row_cap {S : CapSource} (hS : S.Admissible) (σ : Sign) {dP : ℕ} (hdP 
   have hfin' := hfin
   rw [sub_div] at hfin'
   rw [add_div] at hk'
-  have hsplit : (if σ = Sign.pos then S.R900 (sgOf σ * t) + S.Eref900 else 0) =
-      (if σ = Sign.pos then S.R900 (sgOf σ * t) else 0) + (if σ = Sign.pos then S.Eref900 else 0) := by
+  have hsplit : (if σ = Sign.pos then S.reflPoly (sgOf σ * t) + S.reflTail else 0) =
+      (if σ = Sign.pos then S.reflPoly (sgOf σ * t) else 0) + (if σ = Sign.pos then S.reflTail else 0) := by
     split_ifs <;> simp
   rw [hsplit]
-  set W := (if σ = Sign.pos then S.R900 (sgOf σ * t) else 0)
-  set Er := (if σ = Sign.pos then S.Eref900 else 0)
+  set W := (if σ = Sign.pos then S.reflPoly (sgOf σ * t) else 0)
+  set Er := (if σ = Sign.pos then S.reflTail else 0)
   have hlt : 11 / 29 * Real.log t = (11 / 29 - wl) * Real.log t + wl * Real.log t := by ring
   rw [hlt]
   have ev : avQ false AF t + avQ true AT t + (D t + D t) ≤
@@ -3621,16 +3669,13 @@ theorem phys_pint {l : List YCell} {P : List Seg} {f : ℝ → ℝ} (hl : ∀ c 
 
 theorem refl_series (S : CapSource) {P : List Seg} (hl : ∀ c ∈ S.gas Sign.pos, 2 ≤ c.lo)
     (hb : ∀ F : ℝ → ℝ, evC (S.gas Sign.pos) F = evS P F)
-    (hP : ∀ g ∈ P, 2 ≤ g.lo ∧ g.lo < g.hi) {t : ℝ} (h0 : 0 < t) (h1 : t ≤ 1) :
-    pint P (fun y => Real.log |1 - YCell.physX y * t|) + S.R900 t ≤ 0 := by
+    (hP : ∀ g ∈ P, 2 ≤ g.lo ∧ g.lo < g.hi) (hr : S.reflDeg = 899) {t : ℝ} (h0 : 0 < t) (h1 : t ≤ 1) :
+    pint P (fun y => Real.log |1 - YCell.physX y * t|) + S.reflPoly t ≤ 0 := by
   have e := phys_pint (f := fun s => Real.log |1 - s * t|) hl hb hP
     fun a b ha hab => rowlog_int ha hab h0 h1
   have b := OrdHf.physL_refl_le hl h0 h1 900
-  have c : S.R900 t = ∑ k ∈ Finset.range 900, t ^ (k + 1) / ((k : ℝ) + 1) *
-      physL (S.gas Sign.pos) (fun s => s ^ (k + 1)) := by
-    unfold CapSource.R900 CapSource.reflMoment
-    refine Finset.sum_congr rfl fun k _ => ?_
-    ring
+  have c : S.reflPoly t = ∑ k ∈ Finset.range 900, t ^ (k + 1) / ((k : ℝ) + 1) *
+      physL (S.gas Sign.pos) (fun s => s ^ (k + 1)) := OrdHf.reflPoly_eq S hr t
   rw [← c, e] at b
   linarith
 
@@ -3779,10 +3824,11 @@ theorem auxN_le : capSource.auxTail (Trunc.finite 384) Sign.neg ≤
   OrdHf.auxTail_le OrdHf.enc_valid OrdHf.enc_q1 Sign.neg (by rw [auxMass_eq, OrdHf.tgtN])
     (by rw [auxMass_eq]; exact tgt_nonneg _) (by simp)
 
-theorem eref_cap : capSource.Eref900 ≤ (1 / 900 + 1 / 901) / 901 * ((OrdHf.EvP : ℝ) / 2 ^ 64) := by
+theorem eref_cap : capSource.reflTail ≤ (1 / 900 + 1 / 901) / 901 * ((OrdHf.EvP : ℝ) / 2 ^ 64) := by
   have hF := OrdHf.relP_spec OrdHf.pTg gasPosT OrdHf.gP.L OrdHf.pRel
   have := OrdHf.eref_le OrdHf.pP64 OrdHf.pT0 hF
   rw [OrdHf.pE] at this
+  rw [OrdHf.reflTail_eq capSource rfl]
   exact this
 
 /-! ### Bindings -/
@@ -3972,7 +4018,7 @@ structure RowCert (σ : Sign) (dom : Set ℝ) (cap : ℝ) where
   hLq : pint (Gq.map segR) (fun y => Real.log (YCell.physX y)) ≤ Lq
   hRf : ∀ t ∈ dom, (2 - (cr : ℝ)) * pint ((Go ++ Gs).map segR)
       (fun y => Real.log |1 - YCell.physX y * t|) +
-    (if σ = Sign.pos then capSource.R900 (sgOf σ * t) else 0) ≤ 0
+    (if σ = Sign.pos then capSource.reflPoly (sgOf σ * t) else 0) ≤ 0
   hLog : ∀ t ∈ dom, (11 / 29 - (wl : ℝ)) * Real.log t + 3 / 29 * Real.log (1 - sgOf σ * t) ≤
     avQ false LF t + avQ true LT t
   hRad : ∀ t ∈ dom, capSource.radialA (Trunc.finite 384) σ (sgOf σ * t) -
@@ -3983,7 +4029,7 @@ structure RowCert (σ : Sign) (dom : Set ℝ) (cap : ℝ) where
     cF eF
   hT : Close dP (avQ true LT) cT eT
   hAux : capSource.auxTail (Trunc.finite 384) σ ≤ eA
-  hE : (if σ = Sign.pos then capSource.Eref900 else 0) ≤ eE
+  hE : (if σ = Sign.pos then capSource.reflTail else 0) ≤ eE
   hs : (addZ (addZ (addZ (addZ (addZ cD cD) cF) cT) cl) r).length = 2 * m + 1
   hq : q.length = m + 1
   hgs : 2 * m + 1 ≤ 2 ^ lgs
@@ -4065,17 +4111,17 @@ theorem hRf_pos {Go Gs : List GS} (hb : ∀ F : ℝ → ℝ, evC (capSource.gas 
     (hk : ∀ g ∈ (Go ++ Gs).map segR, 2 ≤ g.lo ∧ g.lo < g.hi) :
     ∀ t ∈ Ioo (0 : ℝ) 1, (2 - ((1 : ℚ) : ℝ)) * pint ((Go ++ Gs).map segR)
       (fun y => Real.log |1 - YCell.physX y * t|) +
-      (if Sign.pos = Sign.pos then capSource.R900 (sgOf Sign.pos * t) else 0) ≤ 0 := by
+      (if Sign.pos = Sign.pos then capSource.reflPoly (sgOf Sign.pos * t) else 0) ≤ 0 := by
   intro t ht
   have := refl_series capSource gas_pos_lo (P := (Go ++ Gs).map segR)
-    (fun F => by simpa [sgOf] using hb F) hk ht.1 ht.2.le
+    (fun F => by simpa [sgOf] using hb F) hk rfl ht.1 ht.2.le
   simp only [ite_true, sgOf, one_mul, Rat.cast_one]
   linarith
 
 /-- The reflection hypothesis of the negative sign is empty at factor two. -/
 theorem hRf_neg (G : List GS) : ∀ t ∈ Ioc (0 : ℝ) 1, (2 - ((2 : ℚ) : ℝ)) * pint (G.map segR)
       (fun y => Real.log |1 - YCell.physX y * t|) +
-      (if Sign.neg = Sign.pos then capSource.R900 (sgOf Sign.neg * t) else 0) ≤ 0 := by
+      (if Sign.neg = Sign.pos then capSource.reflPoly (sgOf Sign.neg * t) else 0) ≤ 0 := by
   intro t _
   simp
 

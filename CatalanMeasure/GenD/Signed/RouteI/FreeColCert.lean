@@ -421,8 +421,10 @@ theorem qs_abs (T : ℤ) (Sl : List ℤ) (num Dn dl : ℤ) (hD : Dn ≠ 0) {z : 
     push_cast
     linarith
 
+/-- GD6: the tables are indexed up to `DM`; `LcT` is the least common multiple of `1, ..., DM + 1`
+(80313433200 at `DM = 26`), computed, not stored. -/
 def DM : ℕ := 26
-def LcT : ℤ := 80313433200
+def LcT : ℤ := (((List.range (DM + 1)).foldl (fun a i => Nat.lcm a (i + 1)) 1 : ℕ) : ℤ)
 def rowsT : List (List ℤ) := [
   raw_ints% [0, 40156716600, 13385572200, 6692786100, 4015671660, 2677114440, 1912224600, 1434168450, 1115464350, 892371480, 730122120, 608435100, 514829700, 441282600, 382444920, 334639305, 295269975, 262462200, 234834600, 211351140, 191222460, 173838600, 158722200, 145495350, 133855722, 123559128, 114406600],
   raw_ints% [80313433200, 40156716600, 26771144400, 20078358300, 16062686640, 13385572200, 11473347600, 10039179150, 8923714800, 8031343320, 7301221200, 6692786100, 6177956400, 5736673800, 5354228880, 5019589575, 4724319600, 4461857400, 4227022800, 4015671660, 3824449200, 3650610600, 3491888400, 3346393050, 3212537328, 3088978200],
@@ -1724,16 +1726,13 @@ structure UnitD where
   lm : Bool
   rm : Bool
 
-def lenC : ℕ := 628
-def lenR : ℕ := 704
+/-- GD6: the table lengths are those of the source tables (628 and 704 for `capSource`). -/
+@[irreducible] def lenC : ℕ := col0.length
+@[irreducible] def lenR : ℕ := row0.length
 
-theorem col0_len : col0.length = lenC := by
-  -- kcost: one length of a 628 item list, under 0.1 s measured on the bench
-  decide +kernel
+theorem col0_len : col0.length = lenC := by unfold lenC; rfl
 
-theorem row0_len : row0.length = lenR := by
-  -- kcost: one length of a 704 item list, under 0.1 s measured on the bench
-  decide +kernel
+theorem row0_len : row0.length = lenR := by unfold lenR; rfl
 
 def UnitD.near (u : UnitD) : List ((ℤ × ℤ) × ℤ) := nodesL Tc (0, 1) (seg col0 u.n0 u.n1)
 
