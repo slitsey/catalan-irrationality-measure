@@ -222,7 +222,13 @@ def kcost_refusal(target):
         return None
     bad = []
     for decl in re.split(r'\n(?=(?:private |protected )?(?:theorem|lemma|def|example|instance)\b)', src):
-        if 'decide +kernel' not in decl or 'kcost:' in decl:
+        if 'decide +kernel' not in decl:
+            continue
+        if 'kcost:' in decl:
+            # 7 Nov (C7): a kcost comment that describes the work but states no seconds passed this
+            # gate and the module ran ~3 h. The comment must carry a number of seconds.
+            if not re.search(r'kcost:[^\n]*?\d+(?:\.\d+)?\s*(?:s|sec|seconds|ks)\b', decl):
+                bad.append((decl.split(None, 2)[1] if len(decl.split()) > 1 else '?') + ' (kcost without seconds)')
             continue
         counts = [int(m.group(1)) for m in _COUNT.finditer(decl) if 200 <= int(m.group(1)) <= 10 ** 7]
         if counts:
@@ -231,6 +237,23 @@ def kcost_refusal(target):
         return (f'kernel cost not stated: {", ".join(bad[:5])} run `decide +kernel` over a count >= 200; '
                 'count the operations, measure one declaration, and add a `-- kcost: <s> s` comment (or redesign)')
     return None
+
+
+def bigdata_refusal(spec):
+    """7 Nov (C7, Sean: "how will you ensure this does not happen again"): a 15 GB single data module
+    ran ~3 h. A build with budget > 8 GB is refused unless its target is listed in
+    work/tools/lanes/bigok.txt (one module per line, added by the coordinator after a priced design)."""
+    try:
+        if float(spec.get('budget') or 0) <= 8.0:
+            return None
+    except (TypeError, ValueError):
+        return None
+    ok = LANES / 'bigok.txt'
+    names = set(ok.read_text(encoding='utf-8').split()) if ok.exists() else set()
+    if spec['target'] in names:
+        return None
+    return (f"budget {spec.get('budget')} GB > 8 GB for {spec['target']}: split the module or get the "
+            'coordinator to add it to work/tools/lanes/bigok.txt after a measured price')
 
 
 def stale_count(target):
@@ -442,7 +465,7 @@ def drive():
             log(f"refuse-lake {spec['target']}")
             pick = None
         if pick and not spec.get('cmd'):
-            why = registry_refusal(spec['target']) or kcost_refusal(spec['target'])
+            why = registry_refusal(spec['target']) or kcost_refusal(spec['target']) or bigdata_refusal(spec)
             if why:
                 spec.update(rc=96, ended=time.time(), output='lanes: refused: ' + why)
                 (DONE / f'{pick.stem}.json').write_text(json.dumps(spec), encoding='utf-8')
