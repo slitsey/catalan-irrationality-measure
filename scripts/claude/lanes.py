@@ -243,6 +243,8 @@ def bigdata_refusal(spec):
     """7 Nov (C7, Sean: "how will you ensure this does not happen again"): a 15 GB single data module
     ran ~3 h. A build with budget > 8 GB is refused unless its target is listed in
     work/tools/lanes/bigok.txt (one module per line, added by the coordinator after a priced design)."""
+    if spec.get('shed'):
+        return None  # a shed job requeues at 1.5x its budget; that is the driver's own choice
     try:
         if float(spec.get('budget') or 0) <= 8.0:
             return None
