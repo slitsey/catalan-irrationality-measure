@@ -88,8 +88,8 @@ Hermite interpolation, Andr\'eief's identity, logarithmic energy, formal verific
 \begin{abstract}
 Let $\mu$ denote the irrationality exponent. We prove that $\mu(aL(2,\chi_{-3})+b\pi^2)\le\MuPlaneA$ and
 $\mu(a\zeta(3)+b\pi^2)\le\MuPlaneB$ for all rationals $a$ and $b$, not both zero. The best published bound on the
-first plane was $24781$, due to Calegari, Dimitrov and Tang. On the second plane the numbers with $ab\ne0$ are
-irrational by a theorem of Q.~Tang, and as far as we know no irrationality measure for them was known. At special
+first plane was $24781$, due to Calegari, Dimitrov and Tang. Every number on the second plane is
+irrational by a theorem of Q.~Tang, and as far as we know no irrationality measure valid on the whole plane was known. At special
 points of the first plane the bound is lower. We prove $\mu(L(2,\chi_{-3}))\le\MuChi$, and the bounds $\MuThirdsU$,
 $\MuDipA$, $\MuDipB$ and $\MuDipC$ for $L(2,\chi_{-3})\pm\pi^2/9$, $\pm2\pi^2/27$, $\pm\pi^2/27$ and $\pm\pi^2/18$. For
 completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$, which are weaker than the known
@@ -160,8 +160,8 @@ Let $a$ and $b$ be rational numbers, not both zero. Then
 \]
 \end{theorem}
 
-For $ab\ne0$ this is, as far as we know, the first irrationality measure for these numbers. Their irrationality is due
-to Q.~Tang, who proved in Lean that $1$, $\zeta(2)$ and $\zeta(3)$ are linearly independent over $\Q$ \cite{Tang26}.
+As far as we know, this is the first irrationality measure valid on the whole plane. The irrationality of these numbers
+is due to Q.~Tang, who proved in Lean that $1$, $\zeta(2)$ and $\zeta(3)$ are linearly independent over $\Q$ \cite{Tang26}.
 At the two ends of the plane we prove the following bounds, each by its own argument (\S\ref{ssec:zeta3} and
 Section~\ref{sec:proof}). We include them for completeness. Both are weaker than the bounds $\mu(\zeta(3))<5.4197$ and
 $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
@@ -267,8 +267,7 @@ remaining sixths, $\Psi(\frac16,\frac12)=\frac{45}2(\Lt+\frac{\pi^2}{15})$, $\Ps
 and their mirrors $\Psi(\frac12,\frac56)$, $\Psi(\frac13,\frac56)$. Some numbers with similar names are not on the
 plane. The Clausen value $\mathrm{Cl}_2(\frac\pi3)=\frac{3\sqrt3}4\Lt$ and the Mahler measure of
 $1+z_1+z_2$, which is $\frac{3\sqrt3}{4\pi}\Lt$, carry the factors $\sqrt3$ and $\sqrt3/\pi$, and our results say nothing about them.
-On the second plane, Theorem~\ref{thm:plane2} gives, as far as we know, the first measures for $\zeta(2)+\zeta(3)$ and
-for $\zeta(3)$ plus any nonzero rational multiple of $\zeta(2)$. It gives none for the ratio $\zeta(3)/\pi^2$, whose irrationality also
+On the second plane, Theorem~\ref{thm:plane2} gives, for example, $\mu(\zeta(2)+\zeta(3))\le\MuPlaneB$. It gives none for the ratio $\zeta(3)/\pi^2$, whose irrationality also
 follows from Q.~Tang's theorem \cite{Lai2026}. The method does not reach every trigamma difference. The nearest
 numbers it misses, such as $\psi'(\frac k8)-\frac{\pi^2}6$ and $\Psi(\frac k5,\frac l5)$, are discussed in
 \S\ref{ssec:unreached}.
@@ -305,11 +304,11 @@ $\mu(\zeta(3))<5.4197$. They also proved the uniform bound $\mu(a\zeta(3)+b\zeta
 $\zeta(3)$ and $\pi^4$, which is the closest analogue of Theorem~\ref{thm:plane2}. The linear forms in $1$, $\zeta(2)$
 and $\zeta(3)$ have a longer history. Dauguet and Zudilin \cite{DauguetZudilin14} bounded such forms from below when
 the coefficients satisfy divisibility and size conditions. They noted that this does not give the linear independence of
-$1$, $\zeta(2)$, $\zeta(3)$, which remained open. For a fixed number $a\zeta(3)+b\zeta(2)$ with $ab\ne0$ their theorem
+$1$, $\zeta(2)$, $\zeta(3)$, which remained open. For a fixed number $a\zeta(3)+b\zeta(2)$ their theorem
 gives no measure. In 2026 Q.~Tang \cite{Tang26} proved the linear independence in Lean. This proof is a formalization
 with no accompanying written paper. Lai
 \cite{Lai2026} then proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent. As far as we know, no
-irrationality measure for any $a\zeta(3)+b\pi^2$ with $ab\ne0$ was known before Theorem~\ref{thm:plane2}.
+irrationality measure valid on the whole plane of $\zeta(3)$ and $\pi^2$ was known before Theorem~\ref{thm:plane2}.
 
 \emph{Catalan's constant.} In October 2026 OpenAI \cite{OpenAI2026} proved that $G$ is irrational and formalized the
 proof in Lean. Sun's preprint \cite{Sun2026} had claimed a proof of the irrationality of $G$. Wachs \cite{Wachs2026}

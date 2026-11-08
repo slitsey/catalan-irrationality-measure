@@ -22,8 +22,8 @@ large integers `q`.
 Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
 for every integer `a` and every sufficiently large integer `b`. The two plane theorems take the rational
 coefficients as arguments and write the fraction as `p/q`. Each statement implies that the number is
-irrational. For `a b ≠ 0`, the bound for `a ζ(3) + b π²` is, as far as we know, the first irrationality measure
-for these numbers.
+irrational. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the
+whole plane.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
 `Classical.choice`.
