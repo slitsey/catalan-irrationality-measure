@@ -285,10 +285,10 @@ theorem plane_cat_valid (cs : ℚ) (hcs : 0 < cs) (hcs1 : cs ≤ 1) (depth Q0 Pb
       _ (List.mem_singleton_self _)
 
 /-- **The small-prime prefix bound of the plane frames** (P108, `PreValid`): for `p ∤ 6` with `p ≤ r / 68`
-some clearing exponent is at most `(5/2) r + X r p`, `X` the budget `sqrtLog 5 10 + unit`. -/
+some clearing exponent is at most `(13/6) r + X r p`, `X` the budget `sqrtLog 5 10 + unit`. -/
 theorem plane_preValid (depth : ℕ) :
     PreValid planeC planeC_pos (planeFrame σ a b c h0) depth 6
-      (SmallBudget.add (SmallBudget.sqrtLog 5 10) SmallBudget.unit) (1 / 68) (5 / 2) := by
+      (SmallBudget.add (SmallBudget.sqrtLog 5 10) SmallBudget.unit) (1 / 68) (13 / 6) := by
   intro i hi p hpf hpM h
   have hp : p.Prime := Fact.out
   have e1 : (((1 / 68 : ℚ)) : ℝ) = ((1 : ℕ) : ℝ) / ((68 : ℕ) : ℝ) := by norm_num
@@ -304,9 +304,9 @@ theorem plane_preValid (depth : ℕ) :
   obtain ⟨hb1, hb2⟩ := plane_border (r := i.1) hr2
   have hR : (12 * (altGeom planeC planeC_pos).borderSize i.1 : ℝ) < i.1 + 6 := by exact_mod_cast hb2
   obtain ⟨n, hn, hle⟩ := (planeBundle σ a b c h0).pre_gle planeC planeC_pos depth i hr2 (by omega) p h5
-    5 10 3 (5 / 2) (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
+    5 10 3 (13 / 6) (by omega) (by norm_num; omega) (by omega) (by omega) (by linarith) (by omega)
   refine ⟨n, hn, ?_⟩
-  have e2 : (((5 / 2 : ℚ)) : ℝ) = 5 / 2 := by norm_num
+  have e2 : (((13 / 6 : ℚ)) : ℝ) = 13 / 6 := by norm_num
   rw [e2]
   exact hle
 
@@ -341,12 +341,12 @@ theorem cFr_plane : cFr (planeFrame σ a b c h0) ≤ 23 := by
 
 /-- **The scaled content of the plane family** (P109), for every plane frame at once: a bank `kd` that passes
 `kcheck`, has the shifts `[(3, ρ, 1), (2, 1, 1)]` of the support, `c = 2 α = 1/6`, a catalogue of plane branches,
-`Q ≥ 3`, `P_bad ≥ 6`, `6 ∣ M`, `t₀ ≤ 1/68`, `α₀' ≥ 5/2`, `c_F ≥ 23`, gives
+`Q ≥ 3`, `P_bad ≥ 6`, `6 ∣ M`, `t₀ ≤ 1/68`, `α₀' ≥ 13/6`, `c_F ≥ 23`, gives
 `HasScaledContent (AltEven (1/6) Fr depth) scale Λ` with `Λ = kd.Λ`, whatever the weights are. -/
 theorem plane_content (kd : KBankData) (hkd : kcheck kd = true)
     (hshifts : kd.shifts = (planeBundle σ a b c h0).shifts) (hα : planeC = 2 * kd.α)
     (hcat : ∀ br ∈ kd.kcat, PlaneBranch br) (hQ : 3 ≤ kd.Q) (hP : 6 ≤ kd.Pbad) (hM : 6 ∣ kd.M)
-    (ht0 : kd.t0 ≤ 1 / 68) (hα0 : 5 / 2 ≤ kd.α0b) (hcF : 23 ≤ kd.cF) (depth : ℕ)
+    (ht0 : kd.t0 ≤ 1 / 68) (hα0 : 13 / 6 ≤ kd.α0b) (hcF : 23 ≤ kd.cF) (depth : ℕ)
     (hdepth : depth ≤ kd.depth) :
     HasScaledContent (AltEven planeC planeC_pos (planeFrame σ a b c h0) depth)
       (altGeom planeC planeC_pos).scale (kd.Λ : ℝ) := by

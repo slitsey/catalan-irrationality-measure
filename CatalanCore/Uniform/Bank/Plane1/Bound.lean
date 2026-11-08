@@ -53,7 +53,7 @@ structure PlaneBankOK (σ : Support) (kd : KBankData) : Prop where
   hP : 6 ≤ kd.Pbad
   hM : 6 ∣ kd.M
   ht0 : kd.t0 ≤ 1 / 68
-  hα0 : 5 / 2 ≤ kd.α0b
+  hα0 : 13 / 6 ≤ kd.α0b
   hcF : 23 ≤ kd.cF
   hdepth : planeDepth ≤ kd.depth
 
