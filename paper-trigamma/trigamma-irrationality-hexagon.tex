@@ -49,12 +49,24 @@
 \newcommand{\MuSeventhsU}{1806.1719}
 \newcommand{\MuChi}{13.7046}
 \newcommand{\MuHalvesU}{6.5253}
+\newcommand{\MuPlaneA}{20.6622}
+\newcommand{\MuPlaneB}{335.20}
+\newcommand{\MuZetaThree}{6.0382}
+\newcommand{\MuDipA}{14.000}
+\newcommand{\MuDipB}{15.359}
+\newcommand{\MuDipC}{18.161}
 \newcommand{\LamFour}{3.5149036}  \newcommand{\DFour}{3.7447213}  \newcommand{\gFour}{7.1904273}  \newcommand{\ExpFour}{31.28751}
 \newcommand{\LamThree}{3.3104458} \newcommand{\DThree}{4.0291249} \newcommand{\gThree}{6.8272548} \newcommand{\ExpThree}{9.499725}
 \newcommand{\LamFive}{3.5128488}  \newcommand{\DFive}{3.8135797}  \newcommand{\gFive}{7.1655663}  \newcommand{\ExpFive}{23.82717}
 \newcommand{\LamSeven}{3.6391158643} \newcommand{\DSeven}{3.6432250312} \newcommand{\gSeven}{7.4218615374} \newcommand{\ExpSeven}{1806.172}
 \newcommand{\LamHalf}{2.9923824}  \newcommand{\DHalf}{3.9785713}  \newcommand{\gHalf}{6.4350874}  \newcommand{\ExpHalf}{6.525207}
 \newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.70452}
+\newcommand{\LamPl}{3.2227433}    \newcommand{\DPl}{3.5503512}    \newcommand{\gPl}{6.7690926}   \newcommand{\ExpPl}{20.66217}
+\newcommand{\LamDA}{3.0668405}    \newcommand{\ExpDA}{13.99988}
+\newcommand{\LamDB}{3.1096067}    \newcommand{\ExpDB}{15.35832}
+\newcommand{\LamDC}{3.1776044}    \newcommand{\ExpDC}{18.16003}
+\newcommand{\LamPlB}{3.4768436}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.1827}
+\newcommand{\LamZ}{2.9128336}     \newcommand{\ExpZ}{6.038153}
 \newcommand{\MuChiExact}{13.704516}
 
 \begin{document}
@@ -69,29 +81,30 @@ $L(2,\chi_{-3})$ and other differences of trigamma values}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
-\keywords{Irrationality exponent, trigamma function, $L(2,\chi_{-3})$, L\"owner matrices, $p$-adic valuations,
+\keywords{Irrationality exponent, trigamma function, $L(2,\chi_{-3})$, $\zeta(3)$, L\"owner matrices, $p$-adic valuations,
 Hermite interpolation, Andr\'eief's identity, logarithmic energy, formal verification, Lean}
 
 \begin{abstract}
-We prove irrationality measures for several differences of values of the trigamma function $\psi'$ at
-rational points. Among them are
+Let $L=L(2,\chi_{-3})$. We prove that $\mu(aL+b\pi^2)\le\MuPlaneA$ for all rationals $a$ and $b$, not both zero. For
+particular directions in this plane the bound is better. Among them are
 \[
- \mu\bigl(L(2,\chi_{-3})\bigr)\le\MuChi,\qquad
- \mu\Bigl(L(2,\chi_{-3})\pm\frac{\pi^2}9\Bigr)\le\MuThirdsU,
+ \mu(L)\le\MuChi,\qquad \mu\Bigl(L\pm\frac{\pi^2}9\Bigr)\le\MuThirdsU,\qquad
+ \mu\Bigl(L\pm\frac{2\pi^2}{27}\Bigr)\le\MuDipA .
 \]
+The best bound known before for these numbers was $24781$, due to Calegari, Dimitrov and Tang. We also prove
+$\mu(a\zeta(3)+b\pi^2)\le\MuPlaneB$ for all rationals $a$ and $b$, not both zero. For $ab\ne0$ these numbers are
+irrational by a theorem of Q.~Tang, and no irrationality measure for them was known. Finally we prove
 \[
  \mu\Bigl(G\pm\frac{5\pi^2}{48}\Bigr)\le\MuLamU,
 \]
-and $\mu(\psi'(\frac k5)-\pi^2/6)\le\MuFifthsU$ and $\mu(\psi'(\frac k7)-\pi^2/6)\le\MuSeventhsU$
-for $k$ prime to the denominator. For $L(2,\chi_{-3})$ and $L(2,\chi_{-3})\pm\pi^2/9$ the best bound known before
-was $24781$, due to Calegari, Dimitrov and Tang. For $G\pm5\pi^2/48$, $\psi'(\frac k5)-\pi^2/6$ and
-$\psi'(\frac k7)-\pi^2/6$ we know of no other proof of irrationality.
+together with $\mu(\psi'(\frac k5)-\pi^2/6)\le\MuFifthsU$ and $\mu(\psi'(\frac k7)-\pi^2/6)\le\MuSeventhsU$ for $k$
+prime to the denominator. For these numbers we know of no other proof of irrationality.
 
-The approximations are determinants of rectangular L\"owner matrices built from the digamma function at
-integer nodes. We bound their denominators prime by prime, using the corank of the matrix modulo $p$ and
-cancellations at second and third order in its Smith normal form. Nonvanishing at rational points follows
-from Hermite interpolation in characteristic zero. The size of the determinants is bounded by
-Andr\'eief's identity and an energy estimate. The proof is formalized in Lean~4.
+The approximations are determinants of rectangular L\"owner matrices of rational combinations of the digamma
+function and its derivative, at integer nodes. Their denominators are bounded prime by prime. For each of the two
+planes one table of local bounds and one decay certificate serve all directions at once. Nonvanishing at rational
+points follows from Hermite interpolation in characteristic zero. The size of the determinants is bounded by
+Andr\'eief's identity and an energy estimate. The proofs are formalized in Lean~4.
 \end{abstract}
 
 \maketitle
@@ -100,7 +113,7 @@ Andr\'eief's identity and an energy estimate. The proof is formalized in Lean~4.
 %% =====================================================================
 \section{Introduction}\label{sec:intro}
 
-\subsection{The result}
+\subsection{The results}
 The values $\psi'(s)=\sum_{n\ge0}(n+s)^{-2}$ of the trigamma function at rational points $s=k/q$ are among the
 simplest constants of analysis. Each is a rational linear combination of $\pi^2$ and the values $L(2,\chi)$ for the
 Dirichlet characters $\chi$ modulo $q$. For $q\le2$ they are rational multiples of $\pi^2$. Already for $q=3$ and
@@ -109,89 +122,182 @@ $q=4$ they involve $L(2,\chi_{-3})$ and Catalan's constant $G=L(2,\chi_{-4})$, w
 \[
  \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n=0}^\infty\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr)\qquad(0<s<t\le1).
 \]
-We prove irrationality measures for $\Psi(s,t)$ for the pairs of Table~\ref{tab:main}, by a single determinant
-construction.
 
 The \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the real numbers $\mu$ such that
 $|\xi-a/b|>b^{-\mu}$ for all integers $a$ and all sufficiently large integers $b$. It does not change under
 $\xi\mapsto r\xi+r'$ with $r,r'\in\Q$ and $r\ne0$. A finite bound for $\mu(\xi)$ is an irrationality measure for
 $\xi$, and it shows that $\xi$ is irrational.
 
-\begin{table}[ht]
-\centering
-\begin{tabular}{@{}ccll@{}}
-\toprule
-$(s,t)$ & $k$ & classical form & $\mu$ \\
-\midrule
-$(\frac k2,1)$ & $1$ & $\pi^2$ & $\MuHalvesU$ \\
-\addlinespace
-$(\frac k3,1)$ & $1$ & $L(2,\chi_{-3})+\frac{\pi^2}9$ & $\MuThirdsU$ \\
-& $2$ & $L(2,\chi_{-3})-\frac{\pi^2}9$ & $\MuThirdsU$ \\
-$(\frac13,\frac23)$ & -- & $L(2,\chi_{-3})$ & $\MuChi$ \\
-\addlinespace
-$(\frac k4,1)$ & $1$ & $G+\frac{5\pi^2}{48}$ & $\MuLamU$ \\
-& $3$ & $G-\frac{5\pi^2}{48}$ & $\MuLamU$ \\
-\addlinespace
-$(\frac k5,1)$ & $1,2,3,4$ & -- & $\MuFifthsU$ \\
-\addlinespace
-$(\frac k7,1)$ & $1,\dots,6$ & -- & $\MuSeventhsU$ \\
-\bottomrule
-\end{tabular}
-\caption{The pairs of Theorem~\ref{thm:main}, grouped by the denominator of $s$. The classical form is a number in
-common notation that differs from $\Psi(s,t)$ by a rational affine map. A dash means that there is none. The last column is an upper bound for $\mu(\Psi(s,t))$.}\label{tab:main}
-\end{table}
+We write
+\[
+ L=L(2,\chi_{-3})=\sum_{n\ge0}\Bigl(\frac1{(3n+1)^2}-\frac1{(3n+2)^2}\Bigr)=0.78130\,24128\ldots
+\]
+The trigamma values with denominators $2$, $3$ and $6$ all lie in the $\Q$-span of $1$, $L$ and $\pi^2$:
+\begin{gather*}
+ \psi'(\tfrac13)=\frac{2\pi^2}3+\frac92L,\qquad \psi'(\tfrac23)=\frac{2\pi^2}3-\frac92L,\\
+ \psi'(\tfrac16)=2\pi^2+\frac{45}2L,\qquad \psi'(\tfrac56)=2\pi^2-\frac{45}2L,\\
+ \psi'(\tfrac12)=\frac{\pi^2}2,\qquad \psi'(1)=\frac{\pi^2}6 .
+\end{gather*}
+The first pair follows from the reflection formula $\psi'(s)+\psi'(1-s)=\pi^2/\sin^2\pi s$ and from
+$\psi'(\frac13)-\psi'(\frac23)=9L$. For the second pair, $\psi'(\frac16)-\psi'(\frac56)=36\sum_n((6n+1)^{-2}-(6n+5)^{-2})$,
+and splitting the series for $L$ by residues modulo $6$ shows that this sum is $\frac54L$. So every difference
+$\Psi(s,t)$ with $s,t\in\{\frac16,\frac13,\frac12,\frac23,\frac56,1\}$ is a rational point of the plane spanned by $L$
+and $\pi^2$ modulo $\Q$. This is our first plane.
 
-The classical forms come from the values
-\begin{gather*}
- \psi'(\tfrac14)=\pi^2+8G,\qquad \psi'(\tfrac34)=\pi^2-8G,\\
- \psi'(\tfrac13)=\frac{2\pi^2}3+\frac92L(2,\chi_{-3}),\qquad \psi'(\tfrac23)=\frac{2\pi^2}3-\frac92L(2,\chi_{-3}),
-\end{gather*}
-together with $\psi'(\frac12)=\frac{\pi^2}2$ and $\psi'(1)=\frac{\pi^2}6$. Here
-\begin{gather*}
- G=L(2,\chi_{-4})=\sum_{n\ge0}\Bigl(\frac1{(4n+1)^2}-\frac1{(4n+3)^2}\Bigr)=0.91596\,55941\ldots,\\
- L(2,\chi_{-3})=\sum_{n\ge0}\Bigl(\frac1{(3n+1)^2}-\frac1{(3n+2)^2}\Bigr)=0.78130\,24128\ldots
-\end{gather*}
-are the values at $2$ of the Dirichlet $L$-functions of the nontrivial characters modulo $4$ and modulo $3$. So
-Catalan's constant and $L(2,\chi_{-3})$ are the first two cases of the same family. In the notation of this paper
-\begin{gather*}
- \Psi(\tfrac14,1)=8\Bigl(G+\frac{5\pi^2}{48}\Bigr),\qquad \Psi(\tfrac34,1)=-8\Bigl(G-\frac{5\pi^2}{48}\Bigr),
- \qquad \Psi(\tfrac14,\tfrac34)=16G,\\
- \Psi(\tfrac13,1)=\frac92\Bigl(L(2,\chi_{-3})+\frac{\pi^2}9\Bigr),\qquad
- \Psi(\tfrac23,1)=-\frac92\Bigl(L(2,\chi_{-3})-\frac{\pi^2}9\Bigr),\\
- \Psi(\tfrac13,\tfrac23)=9L(2,\chi_{-3}),\qquad \Psi(\tfrac12,1)=\frac{\pi^2}3 .
-\end{gather*}
-For $q=5$ and $q=7$ there is no single classical constant. For $\gcd(k,q)=1$ the number $\Psi(\frac kq,1)$ is a
-rational linear combination of $\pi^2$ and the values $L(2,\chi)$ for the Dirichlet characters $\chi$ modulo $q$,
-since
+\begin{theorem}[first plane]\label{thm:plane1}
+Let $a$ and $b$ be rational numbers, not both zero. Then $aL+b\pi^2$ is irrational and
+\[
+ \mu(aL+b\pi^2)\le\MuPlaneA .
+\]
+\end{theorem}
+
+At some points of the plane we prove better bounds. These bounds do not follow from Theorem~\ref{thm:plane1}. Each has
+its own proof, with its own frame and geometry or with extra local bounds. The point $L$ uses the function $F_\chi$ with
+two digamma terms, its own geometry, its own local bounds and its own decay certificate (Section~\ref{sec:chi3-quarter}). The
+points $L\pm\pi^2/9$ use the differences $F_{1/3}$ and $F_{2/3}$ of two digamma functions, with their own tables for
+$\Lambda$ and their own certificate. The points in (iii)--(v) below use the frames of the plane, but with a further
+catalogue of local bounds that holds only at these weights. It comes from the rank of the reduction modulo $p$, in an
+assignment form (Section~\ref{ssec:levels}). We state the points in the
+notation $\Psi$, with the classical form beside it.
+
+\begin{theorem}[special points of the first plane]\label{thm:points1}
+The following bounds hold.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item $\mu(L)\le\MuChi$. Here $L=\frac19\Psi(\frac13,\frac23)$.
+\item $\mu(L\pm\frac{\pi^2}9)\le\MuThirdsU$. Here $\Psi(\frac13,1)=\frac92(L+\frac{\pi^2}9)$ and
+ $\Psi(\frac23,1)=-\frac92(L-\frac{\pi^2}9)$.
+\item $\mu(\Psi(\frac16,\frac13))\le\MuDipA$ and $\mu(\Psi(\frac23,\frac56))\le\MuDipA$. Here
+ $\Psi(\frac16,\frac13)=18(L+\frac{2\pi^2}{27})$ and $\Psi(\frac23,\frac56)=18(L-\frac{2\pi^2}{27})$.
+\item $\mu(\Psi(\frac13,\frac12))\le\MuDipB$ and $\mu(\Psi(\frac12,\frac23))\le\MuDipB$. Here
+ $\Psi(\frac13,\frac12)=\frac92(L+\frac{\pi^2}{27})$ and $\Psi(\frac12,\frac23)=\frac92(L-\frac{\pi^2}{27})$.
+\item $\mu(L\pm\frac{\pi^2}{18})\le\MuDipC$. Here $L+\frac{\pi^2}{18}=\frac1{18}(4\Psi(\frac13,\frac12)+\Psi(\frac12,1))$
+ and $L-\frac{\pi^2}{18}=\frac1{18}(4\Psi(\frac12,\frac23)-\Psi(\frac12,1))$.
+\end{enumerate}
+\end{theorem}
+
+The second plane is spanned by $\zeta(3)$ and $\pi^2$ modulo $\Q$. It contains the values $\psi''(1)=-2\zeta(3)$ and
+$\psi'(1)$, $\psi'(\frac12)$, and so the numbers $\zeta(2)+\zeta(3)$ and $\zeta(3)-r\zeta(2)$ for rational $r$.
+
+\begin{theorem}[second plane]\label{thm:plane2}
+Let $a$ and $b$ be rational numbers, not both zero. Then
+\[
+ \mu(a\zeta(3)+b\pi^2)\le\MuPlaneB .
+\]
+\end{theorem}
+
+For $ab\ne0$ this is the first irrationality measure for these numbers. Their irrationality is due to Q.~Tang, who proved
+in Lean that $1$, $\zeta(2)$ and $\zeta(3)$ are linearly independent over $\Q$ \cite{Tang26}. At the two ends of the
+plane we prove the following bounds, each by its own argument. For $\zeta(3)$ the frame is $\psi'(z+1)$, with a
+row catalogue of its own and the decay certificate of $\pi^2$ (\S~\ref{ssec:zeta3}). For $\pi^2$ the function is
+$F_{1/2}$, with its own table for $\Lambda$. We include them for completeness. Both are weaker than the bounds
+$\mu(\zeta(3))<5.4197$ and $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
+
+\begin{theorem}[the ends of the second plane]\label{thm:ends}
+$\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
+\end{theorem}
+
+The last three results concern numbers outside both planes. Here
+\[
+ G=L(2,\chi_{-4})=\sum_{n\ge0}\Bigl(\frac1{(4n+1)^2}-\frac1{(4n+3)^2}\Bigr)=0.91596\,55941\ldots,
+\]
+and $\psi'(\frac14)=\pi^2+8G$ and $\psi'(\frac34)=\pi^2-8G$, so that
+$\Psi(\frac14,1)=8(G+\frac{5\pi^2}{48})$ and $\Psi(\frac34,1)=-8(G-\frac{5\pi^2}{48})$. For $q=5$ and $q=7$ there is
+no single classical constant. For $\gcd(k,q)=1$ the number $\Psi(\frac kq,1)$ is a rational linear combination of
+$\pi^2$ and the values $L(2,\chi)$ for the Dirichlet characters $\chi$ modulo $q$, since
 \[
  \psi'(\tfrac kq)=q^2\sum_{n\equiv k\ (q)}\frac1{n^2}=\frac{q^2}{\varphi(q)}\sum_{\chi\bmod q}\bar\chi(k)L(2,\chi).
 \]
 
-\begin{theorem}\label{thm:main}\label{thm:thirds}\label{thm:fifths}
-Let $(s,t)$ be a pair in Table~\ref{tab:main}, and let $\mu_{s,t}$ be the entry in the last column of its row. For all
-integers $a$ and all sufficiently large integers $b$,
-\[
- \Bigl|\Psi(s,t)-\frac ab\Bigr|>b^{-\mu_{s,t}}.
-\]
-In particular $\Psi(s,t)$ is irrational and $\mu(\Psi(s,t))\le\mu_{s,t}$. The same bound holds for the classical form in
-the same row.
+\begin{theorem}\label{thm:main}\label{thm:offplane}
+The following bounds hold:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item $\mu(G\pm\frac{5\pi^2}{48})\le\MuLamU$.
+\item $\mu(\psi'(\frac k5)-\frac{\pi^2}6)\le\MuFifthsU$ for $k=1,2,3,4$.
+\item $\mu(\psi'(\frac k7)-\frac{\pi^2}6)\le\MuSeventhsU$ for $k=1,\dots,6$.
+\end{enumerate}
 \end{theorem}
 
-For $q=4$, $5$ and $7$ we know of no other proof that $\Psi(\frac kq,1)$ is irrational. For $q=4$ this does not
-follow from the irrationality of $G=\frac1{16}\Psi(\frac14,\frac34)$, since it is not known whether $1$, $G$ and
-$\pi^2$ are linearly independent over $\Q$. For $q=3$ irrationality was known \cite{CDT2024}, and the theorem
-improves the known measures. The bound for $q=2$ is weaker than the known bounds for $\pi^2$ and is included for
-completeness.
+Each bound $\mu(\xi)\le\mu_0$ above is proved in the stronger form $|\xi-a/b|>b^{-\mu_0}$ for all integers $a$ and
+all sufficiently large integers $b$. Table~\ref{tab:main} collects the results.
 
-One family of determinants, with the same three estimates, covers every row of Table~\ref{tab:main}.
+\begin{table}[ht]
+\centering
+{
+\begin{tabular}{@{}llll@{}}
+\toprule
+number & form in $\Psi$ & $\mu\le$ & best known before\\
+\midrule
+$aL+b\pi^2$, $a\ne0$ & -- & $\MuPlaneA$ & $24781$ \cite{CDT2025}\\
+$L$ & $\frac19\Psi(\frac13,\frac23)$ & $\MuChi$ & $24781$\\
+$L\pm\frac{\pi^2}9$ & $\Psi(\frac13,1)$, $\Psi(\frac23,1)$ & $\MuThirdsU$ & $24781$\\
+$L\pm\frac{2\pi^2}{27}$ & $\Psi(\frac16,\frac13)$, $\Psi(\frac23,\frac56)$ & $\MuDipA$ & $24781$\\
+$L\pm\frac{\pi^2}{27}$ & $\Psi(\frac13,\frac12)$, $\Psi(\frac12,\frac23)$ & $\MuDipB$ & $24781$\\
+$L\pm\frac{\pi^2}{18}$ & -- & $\MuDipC$ & $24781$\\
+\addlinespace
+$a\zeta(3)+b\pi^2$, $ab\ne0$ & -- & $\MuPlaneB$ & none\\
+$\zeta(3)$ & $-\frac12\psi''(1)$ & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
+$\pi^2$ & $3\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
+\addlinespace
+$G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$, $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
+$\psi'(\frac k5)-\frac{\pi^2}6$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
+$\psi'(\frac k7)-\frac{\pi^2}6$ & $\Psi(\frac k7,1)$ & $\MuSeventhsU$ & none\\
+\bottomrule
+\end{tabular}}
+\caption{The results of this paper. The first column is a number in common notation, the second is a form of the
+same number in the notation $\Psi$ up to a rational factor, where one exists. ``None'' means that we know of no
+irrationality measure.}\label{tab:main}
+\end{table}
 
-Theorem~\ref{thm:main} has been verified in the Lean~4 proof assistant, together with every theorem, proposition and
-lemma used in its proof. The formal proof has no unproved steps and uses only the standard axioms.
-Section~\ref{sec:lean} describes it. The remarks and Section~\ref{sec:limits} discuss the method and are not part of the
-formal proof. The formalization is available at \FormalizationLink. The use of AI in this work is disclosed at the end
-of the paper.
+Several numbers named in the literature lie on the first plane but at none of the points of
+Theorem~\ref{thm:points1}. For them Theorem~\ref{thm:plane1} gives $\mu\le\MuPlaneA$ in place of $24781$. These are
+$\psi'(\frac13)=\frac92(L+\frac{4\pi^2}{27})$, $\psi'(\frac23)$, $\psi'(\frac16)=\frac{45}2(L+\frac{4\pi^2}{45})$ and
+$\psi'(\frac56)$, whose irrationality Calegari, Dimitrov and Tang state explicitly \cite[Corollary~B]{CDT2024}, and
+$\Psi(\frac16,1)=\psi'(\frac16)-\zeta(2)=\frac{45}2(L+\frac{11\pi^2}{135})$ and $\Psi(\frac56,1)$. The same holds for the
+remaining sixths, $\Psi(\frac16,\frac12)=\frac{45}2(L+\frac{\pi^2}{15})$, $\Psi(\frac16,\frac23)=27(L+\frac{4\pi^2}{81})$
+and their mirrors $\Psi(\frac12,\frac56)$, $\Psi(\frac13,\frac56)$. Some numbers with similar names are not on the
+plane. The Clausen value $\mathrm{Cl}_2(\frac\pi3)=\frac{3\sqrt3}4L$ and the Mahler measure
+$m(1+x+y)=\frac{3\sqrt3}{4\pi}L$ carry the factors $\sqrt3$ and $\sqrt3/\pi$, and our results say nothing about them.
+On the second plane, Theorem~\ref{thm:plane2} gives the first measures for $\zeta(2)+\zeta(3)$ and for
+$\zeta(3)-r\zeta(2)$ with $r\in\Q^\times$. It gives none for the ratio $\zeta(3)/\pi^2$, whose irrationality also
+follows from Tang's theorem \cite{Lai2026}.
+
+% PENDING (8 Nov 2026): true only once plane1_measure, plane2_measure, the dip theorems and the zeta3_measure export
+% compile. See PAPER-II-REVISION-2026-11-08.md.
+All the theorems above have been verified in the Lean~4 proof assistant, together with every theorem, proposition and
+lemma used in their proofs. The formal proofs have no unproved steps and use only the standard axioms.
+Section~\ref{sec:lean} describes them. The remarks and Section~\ref{sec:limits} discuss the method and are not part of
+the formal proofs. The formalization is available at \FormalizationLink. The use of AI in this work is disclosed at the
+end of the paper.
 
 \subsection{Background}
+\emph{The value $L(2,\chi_{-3})$ and the first plane.} Calegari, Dimitrov and Tang \cite{CDT2024} proved that $1$, $\pi^2$ and $L$ are linearly independent
+over $\Q$. Their proof applies a new arithmetic holonomy bound to a construction of Zagier. They list the
+irrationality of $\psi'(\frac13)$, $\psi'(\frac23)$, $\psi'(\frac16)$ and $\psi'(\frac56)$ as a corollary, and remark that
+$\psi'(\frac n6)$ is irrational for every $n$. In \cite{CDT2025} they made holonomy bounds effective. Theorem~5.1 there gives
+$\mu(L)\le24781$. The remark that follows it states that the same theorem and proof hold for any $\Q$-linear
+combination of $L$ and $\pi^2$. So $24781$ was the known bound at every point of the first plane.
+Theorem~\ref{thm:plane1} improves it to $\MuPlaneA$ everywhere, and Theorem~\ref{thm:points1} improves it further at
+five pairs of points. Leibtag et al.\ \cite{LBKWSK26} find numerically that Ap\'ery-like approximations from conservative
+matrix fields have positive approximation exponents for $L\pm\pi^2/9$. A supplement to their paper uses one such
+field to give an Ap\'ery-style proof of the theorem of Calegari, Dimitrov and Tang. The exponent it proves for every
+point of the plane is greater than $10^{-4}$.
+
+\emph{The values $\zeta(2)$, $\zeta(3)$ and the second plane.} Ap\'ery proved that $\zeta(2)$ and $\zeta(3)$ are
+irrational \cite{Apery79}, and Beukers gave his integral proofs \cite{Beukers79}. Rhin and Viola obtained
+$\mu(\zeta(2))<5.441243$ and $\mu(\zeta(3))<5.513891$ with permutation groups of integrals \cite{RhinViola96,RhinViola01}.
+Zudilin lowered the bound for $\zeta(2)$ to $5.095412$ \cite{Zudilin14}. Giraudin lowered the bounds to $5.0193784$ for
+$\zeta(2)$ \cite{Giraudin26} and to $5.5138800$ for $\zeta(3)$ \cite{Giraudin26z3}. Leibtag, Barkan, Kalisch, Weinbaum,
+Shalyt and Kaminer \cite{LBKWSK26} showed that the classical constructions are one-dimensional trajectories in
+conservative matrix fields. By searching over other trajectories they obtained $\mu(\pi^2)<4.62675$ and
+$\mu(\zeta(3))<5.4197$. They also proved the uniform bound $\mu(A\zeta(3)+B\zeta(4))<66.3$ on the plane spanned by
+$\zeta(3)$ and $\pi^4$, which is the closest analogue of Theorem~\ref{thm:plane2}. The linear forms in $1$, $\zeta(2)$
+and $\zeta(3)$ have a longer history. Dauguet and Zudilin \cite{DauguetZudilin14} bounded such forms from below when
+the coefficients satisfy divisibility and size conditions. They noted that this does not give the linear independence of
+$1$, $\zeta(2)$, $\zeta(3)$, which remained open. For a fixed number $a\zeta(3)+b\zeta(2)$ with $ab\ne0$ their theorem
+gives no measure. In 2026 Tang \cite{Tang26} proved the linear independence in Lean. Lai
+\cite{Lai2026} then proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent. As far as we know, no
+irrationality measure for any $a\zeta(3)+b\pi^2$ with $ab\ne0$ was known before Theorem~\ref{thm:plane2}.
+
 \emph{Catalan's constant.} In October 2026 OpenAI \cite{OpenAI2026} proved that $G$ is irrational and formalized the
 proof in Lean. Sun's preprint \cite{Sun2026} had claimed a proof of the irrationality of $G$. Wachs \cite{Wachs2026}
 reports that its main estimate is not justified. Finite irrationality exponents for $G$ were obtained after OpenAI's
@@ -202,59 +308,37 @@ the arithmetic of $G$ and related values before these results see
 Eskandari, Murty and Nemoto \cite{EMN2025} construct a $2$-dimensional mixed motive over $\Q$ with period $G$. They use
 it to obtain linear forms in $1$ and $G$. Eskandari \cite{Eskandari2026} improves the exponent of rational approximations
 to $G$ of Rivoal--Zudilin type from $0.52$ to $0.62$. These are explicit approximations, not a lower bound for all
-rationals. Our searches found no proof that $G-5\pi^2/48$ or $G+5\pi^2/48$ is irrational.
-
-\emph{The value $L(2,\chi_{-3})$.} Calegari, Dimitrov and Tang \cite{CDT2024} proved that $1$, $\pi^2$ and
-$L(2,\chi_{-3})$ are linearly independent over $\Q$. Their proof applies a new arithmetic holonomy bound to a
-construction of Zagier. In \cite{CDT2025} they made holonomy bounds effective. Theorem~5.1 there gives
-$\mu(L(2,\chi_{-3}))\le24781$. The remark that follows that theorem states that the same theorem and proof hold for any
-$\Q$-linear combination of $L(2,\chi_{-3})$ and $\pi^2$. So $24781$ is also the known bound for
-$L(2,\chi_{-3})\pm\pi^2/9$. Theorem~\ref{thm:main} improves it to $\MuChi$ for $L(2,\chi_{-3})$ and to $\MuThirdsU$ for
-$L(2,\chi_{-3})\pm\pi^2/9$. Leibtag et al.\ \cite{LBKWSK26} find numerically that Ap\'ery-like approximations from
-conservative matrix fields have positive approximation exponents for $L(2,\chi_{-3})\pm\pi^2/9$. A supplement to their
-paper uses one such field to give an Ap\'ery-style proof of the theorem of Calegari, Dimitrov and Tang. The exponent it
-proves for each of these two numbers is only greater than $10^{-4}$.
+rationals. Our searches found no proof that $G-5\pi^2/48$ or $G+5\pi^2/48$ is irrational. This does not follow from the
+irrationality of $G$, since it is not known whether $1$, $G$ and $\pi^2$ are linearly independent over $\Q$.
 
 \emph{The numbers $\psi'(\frac k5)-\pi^2/6$ and $\psi'(\frac k7)-\pi^2/6$.} Our searches found no irrationality result for
 them. Prellberg \cite{Prellberg26} proved that $\mathrm{Li}_2(1/5)$ is irrational, but that is a different number.
 
 \emph{Recent results.} Since September 2026 a series of new results has appeared in this area. Several of them were
-obtained with AI systems. They join classical results such as the bound $\mu(\log2)<3.5746$ of Marcovecchio
-\cite{Marcovecchio09}, the bounds of Rhin and Viola for $\pi^2$ and $\zeta(3)$ \cite{RhinViola96,RhinViola01}, which
-followed Ap\'ery and Beukers \cite{Apery79,Beukers79}, and Zudilin's bound for $\pi^2$ \cite{Zudilin14}. OpenAI proved
-$\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}. This improves the bound $\mu(\pi)<7.1033$ of Zeilberger and
-Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log r)=2$ for every rational $r>0$ with $r\ne1$
-\cite{LiuJiangZhang26}. Their result also covers nonzero rational combinations of such logarithms. Giraudin lowered the
-bound for $\mu(\pi^2)$ to $5.0193784$ with two hypergeometric constructions of Zudilin \cite{Zudilin14} at new parameters
-\cite{Giraudin26}. Giraudin also lowered the bound for $\mu(\zeta(3))$ to $5.5138800$ by applying the Rhin--Viola method
-at a new integral direction \cite{Giraudin26z3}. Leibtag, Barkan, Kalisch, Weinbaum, Shalyt and Kaminer \cite{LBKWSK26}
-showed that the classical constructions are one-dimensional trajectories in conservative matrix fields. By searching over
-other trajectories they obtained $\mu(\pi^2)<4.62675$ and $\mu(\zeta(3))<5.4197$. Prellberg \cite{Prellberg26} proved that
-$\mathrm{Li}_2(-1/4)$, $\mathrm{Li}_2(1/5)$ and $\mathrm{Li}_2(-1/3)$ are irrational. These are three cases left open in
-\cite{CDT2024}. The proof uses the integrals of Rhin--Viola and Viola--Zudilin. Fauzan \cite{Fauzan2026} announced a proof
-that $\zeta(5)$ is irrational, using rationally normalized Hankel determinants. Lai \cite{Lai2026} combined that method
-with simultaneous approximations of Zudilin and of Dauguet and Zudilin. Lai showed that $1$, $\zeta(3)$ and $\zeta(4)$
-are linearly independent over $\Q$.
+obtained with AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}. This improves the
+bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log r)=2$
+for every rational $r>0$ with $r\ne1$ \cite{LiuJiangZhang26}, improving the classical bound $\mu(\log2)<3.5746$ of
+Marcovecchio \cite{Marcovecchio09}. Their result also covers nonzero rational combinations of such logarithms. Prellberg
+\cite{Prellberg26} proved that $\mathrm{Li}_2(-1/4)$, $\mathrm{Li}_2(1/5)$ and $\mathrm{Li}_2(-1/3)$ are irrational. These
+are three cases left open in \cite{CDT2024}. The proof uses the integrals of Rhin--Viola and Viola--Zudilin. Fauzan
+\cite{Fauzan2026} announced a proof that $\zeta(5)$ is irrational, using rationally normalized Hankel determinants.
 
 \emph{Determinant methods.} Irrationality proofs built on determinants of large size have a precedent in Zudilin's
 determinantal criterion with Hankel determinants \cite{Zudilin}. The preprint of Liu, Jiang and Zhang on logarithms
 \cite{LiuJiangZhang26} uses a separated-weight interpolation determinant. The arguments of Fauzan and Lai
-\cite{Fauzan2026,Lai2026} use Hankel determinants. Brown \cite{Brown26} proposes a multivariate transfinite-diameter test
-for Mellin-type integrals and applies it to $\pi^2$. The framework we use is OpenAI's \cite{OpenAI2026}. In it the decay
-of the determinants is controlled by Cauchy determinants and Andr\'eief's identity, and the denominators are controlled
-prime by prime. Our determinants are L\"owner matrices, that is, matrices of divided differences, of a digamma
-difference. They are a matrix-valued analogue of Pad\'e and Hermite--Pad\'e approximation \cite{NikishinSorokin91}.
-Formal proofs of irrationality results in Lean also include the irrationality of $\zeta(3)$ by Liu, Zhang and Zhi
-\cite{LZZ25}.
+\cite{Fauzan2026,Lai2026} use Hankel determinants. Brown \cite{Brown26} proposes a multivariate
+transfinite-diameter test for Mellin-type integrals and applies it to $\pi^2$. The framework we use is OpenAI's
+\cite{OpenAI2026}. In it the decay of the determinants is controlled by Cauchy determinants and Andr\'eief's identity,
+and the denominators are controlled prime by prime. Our determinants are L\"owner matrices, that is, matrices of
+divided differences. They are a matrix-valued analogue of Pad\'e and Hermite--Pad\'e approximation
+\cite{NikishinSorokin91}. Formal proofs of irrationality results in Lean also include the irrationality of $\zeta(3)$ by
+Liu, Zhang and Zhi \cite{LZZ25}.
 
 \subsection{The companion paper}
 Catalan's constant is also a difference of trigamma values, $G=\frac1{16}\Psi(\frac14,\frac34)$, and the construction
 applies to this pair. For it, however, our bound for the denominators exceeds our bound for the decay, so we obtain no
 measure for $G$. The companion paper \cite{Litsey2026} refines OpenAI's determinant instead and proves
 $\mu(G)\le270$. Our computations for $(\frac14,\frac34)$ are not part of the formal proof.
-
-The row for $\pi^2$ is included only to show the reach of the construction. Since $\zeta(2)=\pi^2/6$, much better bounds
-are known, the best being $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
 
 \subsection{What a measure requires}
 Let $P(x)$ be a polynomial with rational coefficients for which $P(\xi)$ is small, and suppose that $|\xi-a/b|$ is very
@@ -267,47 +351,64 @@ small. Three estimates turn this into a lower bound for $|\xi-a/b|$.
  of $b$.
 \end{enumerate}
 In OpenAI's argument for $G$ the size of the determinant is tied to a prime $p$, and nonvanishing is proved modulo $p$.
-Here nonvanishing is proved in characteristic zero, so the size $r$ is free. The matrices are also simpler: their
-entries are divided differences of a single digamma combination. We prove the three estimates once, uniformly in the
-shift.
+Here nonvanishing is proved in characteristic zero, so the size $r$ is free. A plane theorem needs more. A number
+$aL+b\pi^2$ is $\xi=F'(0)$ for a combination $F$ of three digamma functions whose weights depend on $(a,b)$. The three
+estimates must then hold with constants that do not depend on the weights. For the second plane the function $F$ has a
+pole of order two, so the matrices are no longer Cauchy-like at every pole, and both the arithmetic and the analysis
+need a new argument.
 
 \subsection{New ideas}
-The proof rests on the following ideas. Section~\ref{sec:overview} explains each of them in more detail.
+The proofs rest on the following ideas. Section~\ref{sec:overview} explains the first five in more detail.
 \begin{enumerate}[leftmargin=*]
-\item \emph{Rectangular L\"owner matrices.} The rows and columns share a long block of nodes $\{0,\dots,r-1\}$, which
- carries the variable. A further $m\approx cr/2$ row nodes and $m$ column nodes alternate beyond it. The degree of the
- determinant in the variable is still $r$, while its decay is that of a larger node set. The border nodes never meet
- the diagonal, so the denominators grow less than the decay.
+\item \emph{L\"owner determinants of digamma combinations.} The approximations are determinants of L\"owner matrices,
+ the matrices of divided differences, of a combination $F$ of $\psi(z+s)$ and $\psi'(z+s)$ at integer nodes. The rows
+ and columns share a long block of nodes, which carries the variable. A further border of row nodes and column nodes
+ alternates beyond it. The degree in the variable stays small, while the decay is that of a larger node set.
 \item \emph{Denominators from local bounds.} For each prime we prove a list of upper bounds for the valuation of the
- common denominator. Each is an explicit integer expression in $r$, $m$, $p$ and the first pole $k_p$. Integrated
- against $\log p$, their minimum gives the denominator exponent. Checking this minimum reduces to finitely many
- comparisons of rational numbers.
-\item \emph{Primes smaller than the border.} When $p\le2m$ some residue classes contain two border nodes. Eliminating
- these pairs by Schur complements leaves a smaller matrix of the same shape, to which the separation argument for large
- primes applies at third order in the Smith normal form.
-\item \emph{Nonvanishing in characteristic zero.} A kernel vector of the matrix at a rational point corresponds to a
- solution of a Hermite interpolation problem. A Wronskian argument bounds the corank independently of $r$, so a
- principal minor of bounded codimension does not vanish.
-\item \emph{Decay through a trial measure.} Andr\'eief's identity turns the determinant into an integral whose
- logarithm is a discrete logarithmic energy. Comparison with a piecewise polynomial trial measure bounds this energy,
- leaving a lower bound for one explicit function on finitely many segments.
+ common denominator. Each is an explicit integer expression in a few integers attached to the prime. Integrated
+ against $\log p$, their minimum gives the denominator exponent, and checking it reduces to finitely many comparisons of
+ rational numbers.
+\item \emph{Local bounds that do not see the weights.} For integer weights the polar data at a prime $p$ depend only on
+ the shifts. All our local bounds for the first plane read only these data. So one table of bounds serves every point of
+ the plane. A prime dividing a weight can only lower the true valuation.
+\item \emph{A decay certificate uniform in the weights.} The energy inequalities behind the decay estimate contain no
+ weight. The weights enter only through a constant factor in the external field, which costs $e^{O(r)}$. One trial
+ measure on one contour therefore proves the decay for a whole plane.
+\item \emph{Nonvanishing in characteristic zero.} A kernel vector of the matrix at a rational point gives a solution of a
+ Hermite interpolation problem. A discrete Wronskian bounds the corank, because one pole of the increment of $F$ is
+ isolated in its class modulo $\Z$. The bound depends only on the number of poles, counted with order.
+\item \emph{Level returns and a gauge for the special points.} At a prime $p$, the partial sums of $F$ step by the
+ residues at its poles. For special weights this level returns to an earlier value, and whole blocks of entries become
+ $p$-integral. A row operation inside each residue class modulo $p$, by a $p$-integral multiple of a common row,
+ gives some further rows the level of the return. This turns the rank of the reduction modulo $p$ into an assignment
+ bound, and it gives the points of Theorem~\ref{thm:points1}(iii)--(v).
+\item \emph{Elimination of complete periods for a double pole.} For the second plane the Schur complement of the
+ L\"owner matrix over a union of complete periods modulo $p$ is again of L\"owner type, with generators that are
+ constant on half-periods. This follows from the displacement identity of L\"owner matrices and from
+ $\sum_{v\in\F_p^\times}v^{-1}=0$. A uniform pivot on complete double periods extends it to primes smaller than the border.
+ The required nondegeneracy modulo $p$ is the Wronskian argument of item~5 in characteristic $p$.
+\item \emph{Jets reduced to simple poles.} At a double pole the Gram representation of the L\"owner matrix carries a
+ derivative. A rank-one splitting of this term, and Cauchy's estimate on small circles, bound every jet determinant by
+ the Cauchy determinant of a fixed frame with simple poles. The decay certificate of that frame then applies.
 \end{enumerate}
-The constants of the proof for each row of Table~\ref{tab:main} are listed in Table~\ref{tab:data}.
+The constants of the proofs are listed in Table~\ref{tab:data}.
 
 \subsection{Organization}
 Section~\ref{sec:overview} explains the construction and the main ideas without technicalities, and states the general
 deduction. Section~\ref{sec:construction} gives the construction. Sections~\ref{sec:content}, \ref{sec:nonvanishing}
-and~\ref{sec:decay} prove the three estimates, for the denominators, nonvanishing and decay, uniformly in the shift.
-Section~\ref{sec:chi3-quarter} treats the function $F_\chi$ of the pair $(\frac13,\frac23)$. Section~\ref{sec:proof} deduces
-Theorem~\ref{thm:main} and comments on the individual rows. Section~\ref{sec:limits} discusses the limits of the method. Section~\ref{sec:lean} describes the formalization. The
+and~\ref{sec:decay} prove the three estimates for differences of two digamma functions. They also prove nonvanishing and
+decay for general combinations. Section~\ref{sec:plane1} proves Theorem~\ref{thm:plane1} and the special points of
+Theorem~\ref{thm:points1}, and Section~\ref{sec:chi3-quarter} treats the point $L$ itself. Section~\ref{sec:plane2}
+proves Theorem~\ref{thm:plane2}. Section~\ref{sec:proof} completes the proofs and gives the data.
+Section~\ref{sec:limits} discusses the limits of the method. Section~\ref{sec:lean} describes the formalization. The
 disclosure of AI use follows it.
 
 \subsection{Notation and conventions}
 We write $\psi$ for the digamma function, the logarithmic derivative of Euler's gamma function, and $v_p$ for the
 $p$-adic valuation. For $P\in\Q[x]$, $\den P$ is the least positive integer whose product with $P$ lies in $\Z[x]$. We
 write $[0,r)=\{0,1,\dots,r-1\}$. For finite sets $X_0$, $Y_0$ of integers and a matrix $A$ indexed by integers,
-$A[X_0,Y_0]$ is the submatrix with rows $X_0$ and columns $Y_0$.
-
+$A[X_0,Y_0]$ is the submatrix with rows $X_0$ and columns $Y_0$. We write $\|y\|$ for the distance from a real number
+$y$ to $\Z$, and $\|m\|_p=p\|m/p\|$.
 %% =====================================================================
 \section{Overview of the method}\label{sec:overview}
 
@@ -466,7 +567,7 @@ the decay estimate, and the prime number theorem in arithmetic progressions. The
 contains rectangular determinants, Gauss valuations, the local bounds, the tables for $\Lambda$, the selection in
 characteristic zero, the decay theorem and the deduction. A family supplies its function $F$, its geometry parameter and
 its numerical tables. The written proofs below are at the level of a research article. For long computations we point
-to the formal proof, which is the basis for the correctness of Theorem~\ref{thm:main}.
+to the formal proof, which is the basis for the correctness of our theorems.
 
 %% =====================================================================
 \section{The construction}\label{sec:construction}
@@ -505,8 +606,61 @@ $F_\chi'(0)=-\frac13\psi'(\frac13)+\frac12\psi'(\frac12)-\frac16\psi'(1)=-\frac1
 $-\frac16F_\chi'(0)=\frac1{36}\Psi(\frac13,\frac23)=\xi_\chi$.
 \end{proof}
 
-Since $\mu$ is invariant under rational affine maps, Theorem~\ref{thm:main} is a statement about the numbers $\xi$ of
-\eqref{eq:frames}.
+\subsection{Combinations with several terms}\label{ssec:frames}
+The planes need combinations with more than two terms, and the second plane needs the trigamma function itself. We
+call a \emph{frame} a function
+\[
+ F(z)=\sum_{s\in S}\bigl(a_s\psi(z+s)+b_s\psi'(z+s)\bigr),
+\]
+where $S\subset\Q\cap(0,1]$ is a finite set of shifts, the weights $a_s,b_s$ are rational with $(a_s,b_s)\ne(0,0)$, and
+$\sum_sa_s=0$. The \emph{order} of a shift is $1$ if $b_s=0$ and $2$ otherwise. We write $d$ for the sum of the orders,
+the number of poles of $F$ in a period counted with order. The balance $\sum_sa_s=0$ gives $F(z)=O(1/|z|)$ in the right
+half-plane. Put $\xi=F'(0)$ and
+\[
+ \delta(z)=F(z+1)-F(z)=\sum_{s\in S}\Bigl(\frac{a_s}{z+s}-\frac{b_s}{(z+s)^2}\Bigr),
+\]
+and put $f_t=\sum_{k<t}\delta(k)$ and $e_t=-\sum_{k<t}\delta'(k)$.
+Then $f_t=F(t)-F(0)$ and $F'(t)=\xi-e_t$ for integers $t\ge0$. So the L\"owner matrix of $F$ at nonnegative integer
+nodes is $\Lw_F=M+\xi\Id$, with $M[t,t']=(f_{t'}-f_t)/(t'-t)$ for $t\ne t'$ and $M[t,t]=-e_t$. The function $F_s$ of
+\eqref{eq:frames} is the frame with $S=\{s,1\}$, $a_1=1$, $a_s=-1$, multiplied by $\omega$. The geometries, the members
+$P_{r,I}$ and Lemma~\ref{lem:integrality} below apply to every frame without change.
+
+\emph{The frames of the first plane.} Let $S^+=\{\frac13,\frac12,1\}$ and $S^-=\{\frac23,\frac12,1\}$, and write $s_\pm$
+for the first shift. For integers $a,b,c$ with $a+b+c=0$ and $abc\ne0$ put
+\[
+ F^\pm_{a,b,c}(z)=a\psi(z+s_\pm)+b\psi(z+\tfrac12)+c\psi(z+1).
+\]
+All shifts have order $1$, so $d=3$. The function $F_\chi$ of \eqref{eq:frames} is $-\frac16F^+_{2,-3,1}$.
+
+\begin{lemma}\label{lem:planeconst}
+Put $\tau=(3a+2b)/(27a)$. Then $\xi=\frac{9a}2(L+\tau\pi^2)$ for $F^+_{a,b,c}$ and $\xi=-\frac{9a}2(L-\tau\pi^2)$
+for $F^-_{a,b,c}$. For every rational $t$ there is a frame on $S^+$ or on $S^-$ whose number $\xi$ is a nonzero rational
+multiple of $L+t\pi^2$.
+\end{lemma}
+\begin{proof}
+On $S^+$, $\xi=a\psi'(\frac13)+b\psi'(\frac12)+c\psi'(1)$. Insert the values of \S\ref{sec:intro} and $c=-a-b$. The
+coefficient of $L$ is $\frac{9a}2$ and that of $\pi^2$ is $\frac{2a}3+\frac b2-\frac{a+b}6=\frac a2+\frac b3$, which is
+$\frac{9a}2\tau$. On $S^-$ the sign of $L$ changes. For the second statement let $a=2\den(t)$, $b=a(27t-3)/2$ and
+$c=-a-b$. These are integers with $\tau=t$. Here $a\ne0$, $b=0$ only for $t=\frac19$, and $c=0$ only for
+$t=\frac1{27}$. For these two values we use $S^-$ with the frames $(1,-3,2)$ and $(1,-2,1)$, for which $\tau=-\frac19$
+and $\tau=-\frac1{27}$.
+\end{proof}
+
+\emph{The frames of the second plane.} For integers $v\ne0$ and $u$ put
+\[
+ F^{(2)}_{v,u}(z)=v\,\psi'(z+1)+u\bigl(\psi(z+1)-\psi(z+\tfrac12)\bigr).
+\]
+The shift $1$ has order $2$, and the shift $\frac12$ has order $1$ if $u\ne0$. So $d=3$ for $u\ne0$ and $d=2$ for
+$u=0$. Since $\psi''(1)=-2\zeta(3)$ and $\psi'(1)-\psi'(\frac12)=-\frac{\pi^2}3$,
+\[
+ \xi=-2v\,\zeta(3)-\frac u3\pi^2 .
+\]
+Given rationals $a\ne0$ and $b$, choose integers $v\ne0$ and $u$ with $u/v=6b/a$. Then $\xi=-\frac{2v}a(a\zeta(3)+b\pi^2)$.
+The frame $F^{(2)}_{1,0}=\psi'(z+1)$ gives $\zeta(3)$. Its increment is $\delta(k)=-(k+1)^{-2}$, so
+$M[t,t']=-(t'-t)^{-1}\sum_{k=t+1}^{t'}k^{-2}$ and $M[t,t]=\sum_{k\le t}2k^{-3}$.
+
+Since $\mu$ is invariant under rational affine maps, the theorems of the introduction are statements about the
+numbers $\xi$ of these frames and of \eqref{eq:frames}.
 
 \subsection{Geometries}
 \begin{definition}\label{def:geometry}
@@ -530,7 +684,7 @@ $[r,r+2m)$ has length $cr+O(1)$. For a depth $K\ge0$, its \emph{members} are the
 $\Phi_{r,I}=\Phi_{\mathcal G,I}$ with $|I|\le K$. We put $P_{r,I}=\det\Phi_{r,I}$.
 \end{definition}
 
-For the functions $F_s$ we use $c=\frac3{10},\frac15,\frac3{10},\frac29,\frac16$ for $q=2,4,3,5,7$. For $F_\chi$ we use
+For the functions $F_s$ we use $c=\frac3{10},\frac15,\frac3{10},\frac29,\frac16$ for $q=2,4,3,5,7$. For the frames of the first plane we use $c=\frac16$, for those of the second plane $c=\frac6{41}$, and for $\zeta(3)$ $c=\frac3{10}$. For $F_\chi$ we use
 $c=\frac12$, as explained in Section~\ref{sec:chi3-quarter}. All $o(1)$ terms below are uniform over the members as
 $r\to\infty$.
 
@@ -1249,6 +1403,38 @@ The theorem applies to every function of \eqref{eq:frames}. For $F_\chi$ the pol
 in its class modulo $\Z$, since the other poles are $-\frac13$ and $-\frac12$. In the formal proof the depth is $K\le64$
 for all the functions of this paper.
 
+\subsection{General frames}\label{ssec:nvgeneral}
+The argument above uses $F$ only through its increment $\Delta_F$ and one pole of $\Delta_F$ that is isolated in its
+class modulo $\Z$. It therefore applies to every frame of \S\ref{ssec:frames}, including the frames with a double pole.
+For a frame put
+\[
+ \mathsf D(z)=\prod_{s\in S}(z+s)^{w(s)},\qquad \mathsf A=\mathsf D\,\delta ,
+\]
+where $w(s)$ is the order of $s$. Then $\mathsf D$ has degree $d$, and $\mathsf A$ is a polynomial of degree at most
+$d-2$, by the balance $\sum_sa_s=0$.
+
+\begin{theorem}[nonvanishing for frames]\label{thm:nvframe}
+Let $F$ be a frame, and let $r\ge\max(1,d-2)$ and $m\ge0$. For every $x_0\in\Q$ some member $P_{r,I}$ with
+$|I|\le\lfloor d/2\rfloor$ satisfies $P_{r,I}(x_0)\ne0$.
+\end{theorem}
+
+\begin{proof}
+The partial sums satisfy $f_{t+1}-f_t=\mathsf A(t)/\mathsf D(t)$, and differentiating $\mathsf D\delta=\mathsf A$ gives
+the corresponding relation for the diagonal. Fix a shift $s_0$. Then $\mathsf D(-s_0)=0$, and $\mathsf A(-s_0)$ is
+$a_{s_0}$ or $-b_{s_0}$, according to the order, times $\prod_{s\ne s_0}(s-s_0)^{w(s)}$. So $\mathsf A(-s_0)\ne0$. The
+translates $-s_0\pm n$ with $n\ge1$ are not roots of $\mathsf D$, since distinct shifts in $(0,1]$ differ by less than $1$.
+So the pole $-s_0$ of $\delta$ is isolated in its class modulo $\Z$, whatever its order. The proof of
+Theorem~\ref{thm:selection} then applies with $\Delta_F=\mathsf A/\mathsf D$. In it the discrete Wronskian of a kernel
+pair carries the factor $\mathsf D$ of degree $d$. Comparing its degree with its prescribed zeros bounds the corank by
+$\lfloor(d+1+1-2)/2\rfloor=\lfloor d/2\rfloor$. The node set and the common block are each one chain of step $1$, and the condition
+$r\ge d-2$ ensures that the common nodes see every kernel pair. The deletion follows as before.
+\end{proof}
+
+For the frames of the first plane $d=3$, and one deleted node suffices. For the frames $F^{(2)}_{v,u}$ we have
+$\mathsf D=(z+1)^2(z+\frac12)$ and $\mathsf A=-(v+\frac u2)z-\frac{v+u}2$ when $u\ne0$, with $\mathsf A(-1)=\frac v2\ne0$.
+So again one deleted node suffices. No case distinction in $u$ is needed. The formal proof uses the same abstract
+interpolation argument for every frame.
+
 %% =====================================================================
 \section{Analytic decay}\label{sec:decay}
 
@@ -1415,7 +1601,8 @@ a chord. Then $J$ is the sum of the integrals of these majorants.
 
 \begin{proposition}[certified constants]\label{prop:cert}
 For each row of Table~\ref{tab:data} there is a trial measure $\sigma$ on a polygon $\Gamma$, with a cover by cells
-satisfying the checks above, for which Theorem~\ref{thm:decay} gives the constants $D$ and $\rho$ of the table.
+satisfying the checks above, for which Theorem~\ref{thm:decay} gives the constants $D$ and $\rho$ of the table. For the
+rows of the second plane the certificate is that of the reference frame of \S\ref{ssec:decaydouble}.
 \end{proposition}
 
 All inequalities are verified by the Lean kernel, as described in Section~\ref{sec:lean}. The certificate data are the
@@ -1432,7 +1619,7 @@ the segment \cite{SaffTotik}. Weak duality expresses the deficit of any certific
 first is the energy of $2\mu_0|\nu_c|(\sigma-\sigma^*)$. This is the difference between $2\mu_0|\nu_c|\sigma$ and the optimal
 dual measure $2\mu_0|\nu_c|\sigma^*$. So a certificate close to the best possible one must be close to $\sigma^*$ in energy.
 Then $\Upsilon-\Upsilon_\Gamma$ is a small ripple on the support of $\sigma^*$. This is why a pointwise verification on a
-cover is needed. This remark is not used in the proof of Theorem~\ref{thm:main} and is not part of the formalization.
+cover is needed. This remark is not used in any proof and is not part of the formalization.
 \end{remark}
 
 \subsection{Node removal and the neighbourhood}
@@ -1446,8 +1633,339 @@ uniformly in $C''$. Insert this into \eqref{eq:expand} with $|h|e^{\rho r}\le1$.
 $2^{|C'|}=e^{O(r)}$ terms, each at most $e^{-(D-o(1))r^2}$. This gives Theorem~\ref{thm:decay}. The deletion of at most
 $K$ common nodes in a member changes the energy by $O(r)$.
 
+\subsection{Frames with several terms and double poles}\label{ssec:decaydouble}
+For a frame of \S\ref{ssec:frames} with all orders $1$ the argument above applies verbatim, with $|\mathcal T|=d$. It reads
+the frame only through the source bound $|E(z)|\le C_Ee^{-2\pi|\Im z|}$ on $\Gamma$, through the positions of the poles
+and through the bound on the atom masses. The weights enter only through $C_E$ and the atom masses. A change of these
+constants multiplies each term of Andr\'eief's integral by at most $e^{O(r)}$, which is $e^{o(r^2)}$. So a certificate
+for a set of shifts serves every frame on those shifts. We use this for the first plane in Section~\ref{sec:plane1}.
+
+At a double pole the Gram representation carries a derivative. Write
+\[
+ E(z)=-\pi\sum_sa_s\cot\pi(z+s)+\pi^2\sum_s\frac{b_s}{\sin^2\pi(z+s)},
+\]
+and let $\Gamma$ cross the negative axis at $x^*$, with heads $x_{s,n}=-s-n>x^*$.
+
+\begin{lemma}[Gram formula]\label{lem:gramjet}
+Let $\kappa_{t,t'}(z)=1/((z-t)(z-t'))$ for nonnegative integers $t,t'$. Then
+\[
+ \Lw_F[t,t']=\frac1{2\pi i}\int_\Gamma\kappa_{t,t'}E\,dz-\sum_{s,n}\bigl(b_s\kappa_{t,t'}'(x_{s,n})-a_s\kappa_{t,t'}(x_{s,n})\bigr).
+\]
+\end{lemma}
+\begin{proof}
+Put $\tilde F(z)=\sum_s(a_s\psi(1-s-z)-b_s\psi'(1-s-z))$. The reflection formulas $\psi(1-w)=\psi(w)+\pi\cot\pi w$ and
+$\psi'(1-w)=\pi^2/\sin^2\pi w-\psi'(w)$ give $F=\tilde F+E$. The residues of $F\kappa_{t,t'}$ at $t$ and $t'$ give the
+L\"owner entry, also for $t=t'$. At a head, $\psi$ has residue $-1$ and $\psi'$ has principal part $(z-x)^{-2}$, which
+gives the atom terms. The function $\tilde F$ is holomorphic to the left of $\Gamma$ and $O(1/|z|)$ there by the balance,
+so its integral against $\kappa_{t,t'}$ vanishes. The function $E$ decays like $e^{-2\pi|\Im z|}$, again by the
+balance.
+\end{proof}
+
+The atom term at a double head is a symmetric bilinear form of rank two in the row and column functions, and it splits
+into two rank-one terms. For functions $g$ and $h$ put $\hat g=g'-\frac{a_s}{2b_s}g$ and define $\hat h$ likewise. Then
+\begin{equation}\label{eq:rankone}
+ -b_s(gh)'+a_sgh=-\frac{b_s}2\bigl[(g+\hat g)(h+\hat h)-(g-\hat g)(h-\hat h)\bigr].
+\end{equation}
+So the measure $\Omega$ of \eqref{eq:gram} is replaced by a real measure on a parameter space with two labels at each
+double head, carrying the weights $-b_s/2$ and $b_s/2$, and one label at each simple head. Andr\'eief's identity holds on any
+measure space, so it writes every minor of $\Lw_F$ as an integral of products of two determinants. A repeated label
+gives two equal rows, so its term vanishes.
+
+The determinants now contain derivatives of Cauchy kernels at the double heads. We compare them with a frame that has
+only simple poles. A \emph{reference frame} for $F$ is a frame $\mathcal R$ with simple poles that contains the shifts of
+$F$, together with one further shift $s^*$ for each double shift $s$, such that the head of $s^*$ lies within distance
+$\frac12$ of that of $s$, on the same side of $x^*$. For $F^{(2)}_{v,u}$ with $u\ne0$ we take the shifts $1$, $\frac34$,
+$\frac12$, with heads $-n$, $-n+\frac14$, $\frac12-n$. For $F^{(2)}_{1,0}$ we take the shifts $1$, $\frac12$ of the
+function $F_{1/2}$.
+
+\begin{lemma}[jets]\label{lem:jet}
+Let $z$ be an injective list of $k$ labels, let the rows be $k$ distinct nonnegative integers $t_i$, and let $x^0$ be
+the list of the heads of $\mathcal R$ matched to $z$. Then the determinant of the functions of \eqref{eq:rankone}
+at $z$ is at most $e^{O(k\log(r+k))}$ times the Cauchy determinant $|\det[(x^0_l-t_i)^{-1}]|$, uniformly for $k=O(r)$.
+\end{lemma}
+\begin{proof}
+A row at a double head is $\kappa\,\upsilon_t+\upsilon_t'$ evaluated at the head, with a constant $\kappa$. So the
+determinant is a product of operators $\kappa_l\pm\partial_l$ applied to the Cauchy determinant
+$\det[(x_l-t_i)^{-1}]$ in independent variables $x_l$. Cauchy's estimate on circles of radius $\frac18$, one variable at a
+time, bounds it by $\prod_l(|\kappa_l|+8)$ times the supremum of the Cauchy determinant over the polydisc. On the polydisc
+compare each factor of Cauchy's product formula with its value at $x^0$. Two variables on one double head move by at
+most $\frac38$ each and stay at distance at most $\frac14$, which is their distance at $x^0$. Every other ratio is at
+most $(1+e_a/|x^0_a-x^0_c|)(1+e_c/|x^0_a-x^0_c|)$ with $e_a\le\frac38$. The heads lie on the lattice $\frac14\Z$ with
+a bounded number per unit, so the sum of the reciprocal distances is $O(\log r)$ for each variable. The contour points lie
+at distance bounded below from the heads, by the choice of $\Gamma$. Taking logarithms gives the bound.
+\end{proof}
+
+\begin{theorem}[decay for frames]\label{thm:decayframe}
+Let $F$ be a frame and $\mathcal R$ a reference frame for it, or $F$ itself if all orders are $1$. Suppose that
+$\mathcal R$ has a certificate for $\Gamma$ and $\nu_c$ as in Theorem~\ref{thm:decay}, with $|\mathcal T|$ replaced by
+$d$, the number of poles of $F$ per period counted with order. Then the conclusion of Theorem~\ref{thm:decay} holds for
+every member of the alternating geometry of parameter $c$ for $F$, with the same $D$ and $\rho$.
+\end{theorem}
+\begin{proof}
+By Lemma~\ref{lem:gramjet}, \eqref{eq:rankone} and Andr\'eief's identity, each minor is an integral over the labels of
+products of two determinants. Lemma~\ref{lem:jet} bounds each of them by the Cauchy expression of $\mathcal R$ at the
+matched heads, at a cost $e^{O(r\log r)}$. The atom weights are bounded and $|E|\le C_Ee^{-2\pi|\Im z|}$. These are the
+only inputs of the energy argument above. Each double head carries two labels, so the atom term is weighted by $d$.
+\end{proof}
+
+The certificate of the second plane is that of the reference frame $(1,\frac34,\frac12)$ with $d=3$. The certificate
+for $\zeta(3)$ is that of the function $F_{1/2}$ with $d=2$. It is the certificate of the row for $\pi^2$, unchanged.
+
 %% =====================================================================
-\section{The pair of shifts \texorpdfstring{$(\frac13,\frac23)$}{(1/3,2/3)}}
+\section{The first plane}\label{sec:plane1}
+
+In this section we prove Theorem~\ref{thm:plane1} and parts (iii)--(v) of Theorem~\ref{thm:points1}. We use the frames
+$F^\pm_{a,b,c}$ of \S\ref{ssec:frames} with the alternating geometry of parameter $c=\frac16$, so $\alpha=\frac1{12}$ and
+$m=\lceil r/12-\frac12\rceil$. The point of the section is that the denominator exponent and the decay certificate do not
+depend on the weights $(a,b,c)$. Nonvanishing is Theorem~\ref{thm:nvframe} with $d=3$, so one deleted node suffices.
+
+\subsection{Polar data}
+Fix a frame $F^\pm_{a,b,c}$ with integer weights. Let $\varrho=2$ on $S^+$ and $\varrho=1$ on $S^-$. For $j\ge1$ the increment
+is
+\[
+ \delta(j-1)=\frac{3a}{3j-\varrho}+\frac{2b}{2j-1}+\frac cj ,
+\]
+and $-\delta'(j-1)=\frac{9a}{(3j-\varrho)^2}+\frac{4b}{(2j-1)^2}+\frac c{j^2}$. Let $p\ge5$ be a prime with $3\bar N<p^2$. Call an
+integer $t$ \emph{singular} at $p$ if $p$ divides $t(3t-\varrho)(2t-1)$. The singular integers form the three lattices
+$p\Z$, $k_A+p\Z$ and $k_B+p\Z$, where $k_A\in[1,p)$ solves $3k_A\equiv\varrho\pmod p$ and $k_B=\frac{p+1}2$. We write
+$k_p=\min(k_A,k_B)$ for the first singular index. Then $k_A/p\to\kappa_A$ with
+\[
+ \kappa_A=\tfrac13\ \text{on } S^+,\ p\equiv1\ (6)\ \text{and on } S^-,\ p\equiv5\ (6),\qquad
+ \kappa_A=\tfrac23\ \text{otherwise},
+\]
+and $\kappa_B=\frac12$. Passing from $S^+$ to $S^-$ exchanges the two classes of primes modulo $6$.
+
+\begin{lemma}[polar data]\label{lem:poledata}
+For every frame on $S^\pm$ with integer weights and every $1\le j\le\bar N$, the increment above has $p$-adic valuation at
+least $-1$, and its derivative at least $-2$. If $j$ is not singular, both are $p$-integral.
+\end{lemma}
+\begin{proof}
+Each of $j$, $3j-\varrho$ and $2j-1$ is smaller than $3\bar N<p^2$. So its valuation is at most $1$, and it is $0$ if $j$ is
+not singular. The weights are integers.
+\end{proof}
+
+The lemma uses nothing about the weights but their integrality. If $p$ divides a weight, the corresponding pole may
+disappear, and the lemma still holds since it gives only lower bounds. Rational weights are cleared first. Multiplying a
+frame by a nonzero integer multiplies $\xi$ by that integer, which does not change $\mu$.
+
+\subsection{Local bounds for every frame}
+For $x\ne y$ put
+\[
+ w(x,y)=\mathbf 1[\text{a singular index lies in }(\min(x,y),\max(x,y)]]+\mathbf 1[p\mid x-y],
+\]
+and put $w(t,t)=2\cdot\mathbf 1[t\ge k_p]$. By Lemma~\ref{lem:poledata}, the entry of $\Phi_{r,I}$ at $(x,y)$ has Gauss valuation at
+least $-w(x,y)$. Lemma~\ref{lem:trop} then applies with $W=w$. We use four facts about $w$: $w\le2$, $w(x,y)\le1$ if
+$x\ne y$ and $p\nmid x-y$, $w(x,y)=0$ if $x\ne y$ are both below $k_p$, and $w(t,t)=0$ if $t<k_p$.
+
+\begin{proposition}\label{prop:planelocal}
+Let $p\ge5$ be a prime with $3\bar N<p^2$. For every frame on $S^\pm$ and every member, $e_p(r,I)$ is at most each of
+the following, under its condition.
+\begin{center}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lp{0.55\textwidth}p{0.25\textwidth}@{}}
+\toprule
+ & bound & condition\\
+\midrule
+(T1) & $2r+2m$ & none\\
+(T1$'$) & $2r+2m-\|m\|_p$ & none\\
+(D2) & $2r-2(k_p+p-r)_++2m+(\min(\bar N,p+k_p)-r)_+$ & $2m<p\le r$\\
+(D4) & $2(r-\min(k_p,r))+2m+(\bar N-p)_+$ & $p>r$\\
+(D6) & $(\bar N-k_p)_+$ & $p\ge\bar N$, $k_p\ge r$\\
+(W) & $2r+2m-(t_2-t_1)$ for each window of Theorem~\ref{thm:window} & as there\\
+\bottomrule
+\end{tabular}}
+\end{center}
+In (W) the cuts are the three lattices of singular indices and the residue of $r$.
+\end{proposition}
+\begin{proof}
+(T1) and (T1$'$) are proved as in \S\ref{sssec:trop}. For the others we give potentials, with one function $\pi$ used on
+rows and on columns. For (D2), $\pi=0$ on the common nodes $t<k_p$ with $t+p\ge r$, $\pi=1$ on the other common nodes,
+and $\pi(t)=1+\mathbf 1[t-p<k_p]$ on the border. For (D4), $\pi(t)=\mathbf 1[t\ge k_p]$ on the common nodes and
+$\pi(t)=1+\mathbf 1[t\ge p]$ on the border. For (D6), $\pi=0$ on the common nodes and $\pi(t)=\mathbf 1[t\ge k_p]$ on the
+border. In each case the four facts give $w\le\pi\oplus\pi$ entrywise, and the sums are the stated values. For (W), the
+proof of Theorem~\ref{thm:window} uses the function only through Lemma~\ref{lem:poledata} and the cuts. Between two
+consecutive cuts the step function $V$ and the diagonal residues are constant, which is what the translation of
+kernel vectors needs. No relation among the weights is used.
+\end{proof}
+
+None of these bounds reads the weights. They depend on $(r,m,p)$ and on the class of $p$ modulo $6$ only.
+
+\subsection{The denominator exponent}
+Homogenise as in \S\ref{ssec:profiles}, with $k_A\mapsto\kappa_A\theta$, $k_B\mapsto\kappa_B\theta$ and $\theta=p/r$. Let
+$\varphi_1$ and $\varphi_2$ be the minima of the homogenised bounds of Proposition~\ref{prop:planelocal} for
+$\kappa_A=\frac13$ and $\kappa_A=\frac23$, with windows for $n\le16$. Put $t_0=\alpha/33$ and
+\[
+ \Lambda^*=(2+2\alpha)\,t_0+\frac12\int_{t_0}^{9}(\varphi_1+\varphi_2)\,d\theta .
+\]
+On $(t_0,\alpha/17]$ only (T1$'$) and the windows with $n=\lfloor m/p\rfloor$ act. On each strip
+$(\frac\alpha{n+1},\frac\alpha n]$ the window lowers the sawtooth by a triangle of area $\alpha^2/(2n(n+1)(2n+1))$. So
+$\Lambda^*$ is a rational number, and
+\[
+ \Lambda^*=3.22274324065\ldots
+\]
+Primes of the classes $1$ and $5$ modulo $6$ each have density $\frac12$, and $S^-$ exchanges them, so $\Lambda^*$ serves
+both supports. Above $\theta=\frac72$ both profiles vanish.
+
+\begin{theorem}[denominators on the first plane]\label{thm:planecontent}
+For every frame on $S^\pm$, every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member satisfies
+$\log\den P_{r,I}\le(\Lambda^*+\epsilon)r^2$. The threshold $R(\epsilon)$ does not depend on the frame.
+\end{theorem}
+\begin{proof}
+Take the product over primes of the bounds of Proposition~\ref{prop:planelocal}. For the primes with $p^2\le3\bar N$, and for
+$2$ and $3$, every entry has valuation at least $-2\log(3\bar N)/\log p$. These primes contribute $O(r^{3/2})$. Each
+bound is built from affine functions of $r$, $m$, $p$, $k_A$, $k_B$ and $p\lfloor r/p\rfloor$ by $\max$, $\min$ and
+truncation, with bounded coefficients. So it differs from $r$ times its homogenisation by a bounded amount. Each
+integer condition differs from its homogenised form only for $p$ in an interval of bounded length, where (T1) costs
+$O(r\log r)$. The prime number theorem in progressions modulo $6$ then gives the claim, as in
+Theorem~\ref{thm:content}. Primes $p\le t_0r$ pay (T1), which gives $(2+2\alpha)t_0r^2$.
+\end{proof}
+
+On $\theta\le\alpha$ the profile has a closed form. Only (T1), (T1$'$) and the windows act there, and with $s=1/\theta$
+one has $\varphi(\theta)=2+2\alpha-\theta\,\Gamma_\kappa(s)$, where $\Gamma_\kappa(s)$ is the larger of $\|\alpha s\|$ and the
+longest gap of the lattice $\{0,\kappa_A,\kappa_B\}+\Z$ inside a window determined by the fractional parts of $s$ and
+$\alpha s$. This function has period $12$ in $s$. The formal proof uses this to check one period of $81$ cells per class,
+instead of the pieces of every strip.
+
+\subsection{Decay}
+Let $\Gamma$ be the polygon of the formal proof for the alternating geometry of parameter $\frac16$, crossing the real axis
+at distance $\frac14$ from the poles of both supports.
+
+\begin{proposition}\label{prop:planecert}
+There is a trial measure with $25$ polynomial pieces on $\Gamma$, with a cover by cells satisfying the checks of
+\S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and $|\mathcal T|=3$, for which Theorem~\ref{thm:decay} gives
+\begin{gather*}
+ D=\frac{99853629795114224867}{28125000000000000000}=3.55035\ldots,\\
+ \rho=\frac{33845462710966783}{5\cdot10^{15}}=6.76909\ldots
+\end{gather*}
+\end{proposition}
+
+The certificate contains no weight. By \S\ref{ssec:decaydouble} the decay estimate therefore holds for every frame on
+$S^+$ and on $S^-$ with these $D$ and $\rho$. The weights change only the threshold in $r$.
+
+\subsection{Proof of Theorem~\ref{thm:plane1}}
+Let $a$ and $b$ be rationals, not both zero. If $a=0$, the number is a nonzero rational multiple of $\pi^2$, and
+Theorem~\ref{thm:ends}, proved in Section~\ref{sec:proof}, gives $\mu\le\MuHalvesU$. Let $a\ne0$ and $t=b/a$. By
+Lemma~\ref{lem:planeconst} there is a frame on $S^+$ or $S^-$ whose $\xi$ is a nonzero rational multiple of $L+t\pi^2$.
+Theorem~\ref{thm:planecontent} gives the denominators with $\Lambda^*$, Proposition~\ref{prop:planecert} the decay, and
+Theorem~\ref{thm:nvframe} nonvanishing with one deleted node. The deduction of Theorem~\ref{thm:deduction} at the even
+scales gives
+\[
+ \mu(\xi)\le\frac\rho{D-\Lambda^*}=20.66216\,8\ldots<\MuPlaneA .
+\]
+The strict inequality gives the bound $|aL+b\pi^2-p/q|>q^{-\MuPlaneA}$ for all large $q$, and in particular the
+irrationality.\qed
+
+The thresholds depend on $(a,b)$ through the height of the weights. No uniformity in $(a,b)$ is claimed.
+
+\subsection{Level returns}\label{ssec:levels}
+At special weights the partial sums of the increment return to an earlier level, and then more entries are
+$p$-integral than Proposition~\ref{prop:planelocal} uses. Fix a frame on $S^\pm$, a class of primes modulo $6$, and a prime
+$p\ge7$ with $3\bar N<p^2$ and $2m<p$. Every singular index $t\le\bar N$ has $3t-\varrho$, $2t-1$ or $t$ equal to $p$ times an
+integer prime to $p$ and smaller than $p$. Hence
+\[
+ f_t=\frac{V(t)}p+(\text{a $p$-integer}),\qquad M[t,t]=\frac{U(t)}{p^2}+(\text{a $p$-integer}),
+\]
+where the \emph{level} $V(t)$ and $U(t)$ are rational numbers. They are sums of the terms $\frac{3a}{3l+n}$,
+$\frac{2b}{2l+1}$, $\frac c{l+1}$, respectively of their squared analogues with a sign, over the singular indices up to
+$t$. Here $n\in\{1,2\}$ is fixed by the class. So $V$ and $U$ are constant between consecutive singular indices, and they
+depend on $p$ only through the class. Along the first period $V$ steps by the residues at the three poles. On $S^+$, for
+$p\equiv1\pmod6$, the poles come in the order $k_A$, $k_B$, $p$ with residues $3a$, $2b$, $c$, so the level after two
+poles is $3a+2b$, which is $0$ exactly on the line of $L$. For $p\equiv5\pmod6$ the order is $k_B$, $k_A$, $p$ with
+residues $2b$, $\frac32a$, $c$. A frame for which a partial sum of these residues vanishes has a \emph{level return}.
+The frames $(2,-1,-1)$, $(1,-2,1)$ and $(4,-3,-1)$ have level returns, with $b+\frac a2=0$, $2a+b=0$ and
+$2b+\frac32a=0$.
+
+\begin{lemma}[period sums]\label{lem:periodsums}
+Let $t'=t+sp$ with $1\le s<p$. Then $f_{t'}-f_t=(V(t')-V(t))/p+\Delta$ with $v_p(\Delta)\ge1$.
+\end{lemma}
+\begin{proof}
+The polar terms give $(V(t')-V(t))/p$ exactly. For each shift, every block of $p$ consecutive indices runs once
+through the residues modulo $p$. The nonpolar terms of a block therefore contribute a multiple of
+$\sum_{v\in\F_p^\times}v^{-1}\equiv0\pmod p$.
+\end{proof}
+
+So two congruent nodes at the same level have a $p$-integral entry, not one of valuation $-1$. A second saving comes
+from row operations inside a residue class. Let $x$ be a border node and $a<x$ a common node with $x-a=jp$. Suppose that
+$V(x)\ne V(a)$, $U(a)\ne0$, and that
+\[
+ \lambda_x=\frac{V(x)-V(a)}{j\,U(a)}
+\]
+satisfies $\lambda_x\ne1$ and has no prime factor larger than $5$ in its denominator. Then $\lambda_x$ is $p$-integral. We
+call $(x,a)$ a \emph{pivot pair}, and we put $V^*(x)=(V(x)-\lambda_xV(a))/(1-\lambda_x)$. Pivot pairs whose border node is a
+column are defined in the same way. Each border node lies in at most one pivot pair, and $V^*=V$ on the nodes in no
+pair. Define weights $w'$ on rows times columns as follows.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item For $x\not\equiv y\pmod p$, $w'(x,y)=\mathbf 1[V^*(x)\ne V^*(y)]$.
+\item For a pivot pair, the entry at the border node and its common node has $w'=0$.
+\item For other $x\equiv y$, $w'(x,y)$ is the largest $w_0(x_1,y_1)$ with $x_1$ equal to $x$ or its common node and $y_1$
+ equal to $y$ or its common node. Here $w_0(x_1,y_1)=2\cdot\mathbf 1[V(x_1)\ne V(y_1)]$ for $x_1\ne y_1$, and
+ $w_0(t,t)=2\cdot\mathbf 1[U(t)\ne0]$.
+\end{enumerate}
+
+\begin{lemma}[levels]\label{lem:levels}
+If nonnegative numbers $u$ on the rows and $u'$ on the columns satisfy $w'\le u+u'$ entrywise, then
+$e_p(r,I)\le\sum u+\sum u'+2|I|$ for every member.
+\end{lemma}
+\begin{proof}
+Subtract $\lambda_x$ times the row of $a$ from the row of $x$ for every pivot pair, and likewise for columns. The
+pivots are common nodes, which are never modified themselves, so these operations are unimodular and the determinant is
+unchanged as a polynomial in the variable. It suffices to bound the Gauss valuation of each new entry from below by
+$-w'$. For congruent $x\ne y$ without pivots, Lemma~\ref{lem:periodsums} gives
+$M[x,y]=(V(y)-V(x))/(sp^2)+\Delta/(sp)$, so the valuation is at least $-2\cdot\mathbf 1[V(x)\ne V(y)]$. With pivots the
+entry is a combination of at most four such entries with $p$-integral coefficients, which gives (iii). For a pivot
+pair the entry is $M[x,a]-\lambda_x(M[a,a]+x_{\rm var})$, where $x_{\rm var}$ is the variable. The terms of order $p^{-2}$
+cancel by the choice of $\lambda_x$, the rest is $p$-integral, and the variable has the $p$-integral coefficient
+$-\lambda_x$. This is (ii). For $y\not\equiv x$ write $\frac1{y-x}=\frac1{y-a}+\frac{jp}{(y-a)(y-x)}$. Then
+\[
+ M[x,y]-\lambda_xM[a,y]=\frac{(1-\lambda_x)(V(y)-V^*(x))}{p\,(y-a)}+(\text{a $p$-integer}),
+\]
+since $y-a$ and $y-x$ are units. If $y$ is pivoted too, the same identity applied to its column gives the leading term
+$(1-\lambda_x)(1-\lambda_y)(V^*(y)-V^*(x))/(p(y-a))$. This is (i). Finally, a deleted common node may be the common node of
+at most two pivot pairs, since $2m<p$. Those pairs are undone, which raises the bound by at most $2$ per deleted node.
+\end{proof}
+
+The bound of Lemma~\ref{lem:levels} with no pivot pairs is already better than Lemma~\ref{lem:trop} at a level return.
+The pivots add more. They are the assignment form of the rank of the reduction modulo $p$ on the fibres where the
+level returns. For instance, take the frame $(2,-1,-1)$ on $S^+$ and $p\equiv5\pmod6$. The poles fall at about $\frac
+p2$, $\frac{2p}3$, $p$, $\frac{3p}2$, with residues $-2$, $3$, $-1$, so $V$ returns to $0$ at $p$. A border node in
+$[\frac{3p}2,\frac{5p}3)$ has level $-\frac23$. Its common node in $[\frac p2,\frac{2p}3)$ has level $-2$ and $U=4$. Then
+$\lambda=\frac13$ and $V^*=0$, so after the row operation the border node behaves like a node at the returned level.
+
+\begin{theorem}[the special points]\label{thm:dips}
+For the frames $(2,-1,-1)$, $(1,-2,1)$ and $(4,-3,-1)$, on $S^+$ and on $S^-$, the minimum of the bounds of
+Proposition~\ref{prop:planelocal} and Lemma~\ref{lem:levels} gives the denominator exponents
+\[
+ \Lambda=3.06684046\ldots,\qquad 3.10960666\ldots,\qquad 3.17760435\ldots
+\]
+\end{theorem}
+\begin{proof}
+On each cell of the common refinement of the conditions, the nodes split into boundedly many classes by residue
+interval, parity and period. Pivot pairs, $\lambda$ and $V^*$ are constant on these classes. Potentials constant on the
+classes are affine in $\theta=p/r$, with a bounded rounding error per prime, as in Theorem~\ref{thm:planecontent}. The
+potentials of the formal proof take half-integer values. They are verified on every pair of classes, and the minimum with
+the plane bounds is integrated as there. All pivots used have $\lambda\in\Z[\frac1{30}]$, so every prime $p\ge7$ is
+admissible. The level branches act only for $\theta\ge\frac3{10}$. The frames on $S^-$ give the same profiles with the
+classes exchanged.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:points1}(iii)--(v)]
+The frame $(2,-1,-1)$ has $\tau=\frac2{27}$. On $S^+$ its number is $9(L+\frac{2\pi^2}{27})=\frac12\Psi(\frac16,\frac13)$, and
+on $S^-$ it is $-9(L-\frac{2\pi^2}{27})=-\frac12\Psi(\frac23,\frac56)$. The frame $(1,-2,1)$ has $\tau=-\frac1{27}$ and gives
+$\Psi(\frac12,\frac23)$ on $S^+$ and $\Psi(\frac13,\frac12)$ on $S^-$, up to sign. The frame $(4,-3,-1)$ has $\tau=\frac1{18}$ and
+gives $L\pm\frac{\pi^2}{18}$. With the denominator exponents of Theorem~\ref{thm:dips}, the decay of
+Proposition~\ref{prop:planecert} and Theorem~\ref{thm:nvframe}, the deduction gives
+\[
+ \frac\rho{D-\Lambda}=13.99987\,8\ldots,\qquad 15.35831\,0\ldots,\qquad 18.16002\,2\ldots,
+\]
+below $\MuDipA$, $\MuDipB$ and $\MuDipC$.
+\end{proof}
+
+The point $t=0$ is the frame $(2,-3,1)$, which has a level return after two poles in the class $p\equiv1\pmod6$. It is
+treated with its own geometry in Section~\ref{sec:chi3-quarter}. The points $t=\pm\frac19$ are given by the
+differences $F_{1/3}$ and $F_{2/3}$ of two digamma functions, with their own geometry, in Section~\ref{sec:proof}.
+
+%% =====================================================================
+\section{The point \texorpdfstring{$L$}{L} of the first plane}
 \label{sec:chi3-quarter}
 
 For $\Psi(\frac13,\frac23)$ we use the function $F_\chi$ of \eqref{eq:frames}, which combines three digamma terms, with
@@ -1550,60 +2068,377 @@ class modulo $\Z$, and the depth is $K\le64$. The deduction of Section~\ref{sec:
 since $\Psi(\frac13,\frac23)=36\,\xi_\chi$.
 
 %% =====================================================================
-\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+\section{The second plane}\label{sec:plane2}
+
+In this section we prove Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Theorem~\ref{thm:ends}. We use the
+frames $F^{(2)}_{v,u}$ of \S\ref{ssec:frames} with integers $v\ne0$ and $u$, and we put $\varepsilon=\mathbf 1[u\ne0]$. For
+$u\ne0$ we take the alternating geometry of parameter $c=\frac6{41}$, so $\alpha=\frac3{41}$. For $u=0$ we take
+$c=\frac3{10}$. In both cases $2m\le r$. The new feature is the double pole at the shift $1$. The entries of the L\"owner
+matrix then have valuation down to $-3$, and most of the work goes into recovering what is lost against a simple pole.
+
+\subsection{Cells and weights}
+Let $p\ge5$ be a prime with $p^2>2\bar N+2p$. The increment is
+\[
+ \delta(k-1)=\frac uk-\frac{2u}{2k-1}-\frac v{k^2}\qquad(k\ge1).
+\]
+Its poles below $\bar N$ are the double poles $k=jp$ and, if $u\ne0$, the simple poles $k=jp+\frac{p+1}2$. Write an integer
+$t\ge0$ as $t=jp+\omega$ with $0\le\omega<p$. We call $j$ the \emph{period} of $t$, $h=\mathbf 1[\omega\ge\frac{p+1}2]$ its
+\emph{half}, and $c(t)=(j,h)$ its \emph{cell}. A pole lies at the start of every cell. Let $S(c)$ be the sum of the polar
+terms of $\delta$ up to the start of the cell $c$, and $G(c)$ the same for $-\delta'$. Then
+\[
+ f_t=S(c(t))+\rho_t,\qquad e_t=G(c(t))+\gamma_t ,
+\]
+with $\rho_t$ and $\gamma_t$ in $\Z_{(p)}$, and $p^2S$ and $p^3G$ in $\Z_{(p)}$. Modulo $p$ the numbers $p^2S$ and $p^3G$
+depend only on the period, because the simple poles have lower order than the double ones.
+
+\begin{lemma}[weights]\label{lem:weights2}
+Let $W(t,t')=\max(0,-v_p(M[t,t']))$. Then $W(t,t')\le3$ if $t\equiv t'\pmod p$, and for $t\not\equiv t'$
+\[
+ W(t,t')\le W_3(c(t),c(t')),\qquad W_3(c,c')=\begin{cases}0&c=c',\\ 1&\text{same period, other half},\\ 2&\text{other
+ period.}\end{cases}
+\]
+On the diagonal $W(t,t)$ is $0$ on the cell $(0,0)$, at most $2\varepsilon$ on $(0,1)$, and at most $3$ elsewhere. This holds
+also when $p$ divides $v$ or $u$.
+\end{lemma}
+\begin{proof}
+For $t\ne t'$ the difference $t'-t$ is a unit unless $t\equiv t'$, and then $v_p(t'-t)=1$ since $p^2>\bar N$. The
+numerator $f_{t'}-f_t$ has valuation at least $-2$, at least $-1$ if $t$ and $t'$ lie in one period, and at least $0$ if
+they lie in one cell. The diagonal is $-e_t$. The weights $u$ and $v$ are integers, so a prime dividing them only
+raises valuations.
+\end{proof}
+
+The cases $p\mid v$ need no separate treatment below. Each row we prove either follows from Lemma~\ref{lem:weights2}
+alone, or is at least $2(r+m)$, which is the trivial bound when every entry has valuation at least $-2$. That is the case if
+$p\mid v$.
+
+\begin{proposition}[assignment rows]\label{prop:rows2}
+Assume $2m\le r$. For every member,
+\begin{center}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & bound & condition\\
+\midrule
+(P1) & $3(r+m)-\|m\|_p$ & none\\
+(P4) & $6(r+m-p)+\varepsilon p$ & $p\le r$\\
+(P5) & $\varepsilon r+3(\bar N-p)$ & $r\le p\le\bar N$\\
+(P6) & $\varepsilon(2r+2m-p+1)$ & $\bar N\le p\le2r$\\
+(P7) & $\varepsilon(\bar N-\frac{p-1}2)_+$ & $p\ge2r$\\
+\bottomrule
+\end{tabular}}
+\end{center}
+\end{proposition}
+\begin{proof}
+All follow from Lemmas~\ref{lem:trop} and~\ref{lem:weights2}. For (P1) take the potentials of (T1$'$) shifted by
+$\frac12$: on the rows of a residue class $\frac32-\frac12\sigma$ and on its columns $\frac32+\frac12\sigma$, where
+$\sigma=\operatorname{sign}(|X'\cap\text{class}|-|Y'\cap\text{class}|)$. Congruent pairs get $3$ and the others at least
+$2$. For the other rows take one function $\varphi$ on rows and columns, with $\varphi=0$ on the cell $(0,0)$,
+$\varphi=\varepsilon$ on $(0,1)$ and $\varphi=3$ on the periods $j\ge1$. Pairs inside the period $0$ have weight at most
+$\varphi\oplus\varphi$, and any pair with a node in a later period has weight at most $3$. Counting the common nodes twice
+and the border nodes once gives the four bounds. The hypothesis $2m\le r$ places the border in the period $0$ for (P5) and
+above $\frac p2$ for (P7).
+\end{proof}
+
+Proposition~\ref{prop:rows2} prices a prime $p\le2m$ at $3(r+m)-\|m\|_p$, and a prime $2m<p\le r$ at no better. The double
+pole costs one more unit per node than a simple pole. The next two subsections recover most of this unit on the primes
+below $r+2m$.
+
+\subsection{Elimination of complete periods}
+Let $\cO$ be the discrete valuation ring of \S\ref{sec:content}, in a variable $X$, and put $x=p^{-3}X$, so that a member
+is a polynomial in $x$. Fix $\kappa\ge1$ and $k'\ge0$ with $(\kappa+2k')p\le\bar N+p$, and put $\bar N'=\max(\bar N,
+(\kappa+2k')p)$. Then $p^2>2\bar N'$. Let $H=M+p^{-3}X\Id$ on $[0,\bar N')$, so that $H$ restricts to the matrices of the
+members. Extend the border alternately, so $\hat X=\{t\ge r:t-r\text{ even}\}$ and $\hat Y=\{t\ge r:t-r\text{ odd}\}$. The
+\emph{pivot} consists of the complete periods below $\kappa p$ and of $2k'$ further complete periods:
+\[
+ \mathcal P_r=[0,\kappa p)\cup(\hat X\cap[\kappa p,(\kappa+2k')p)),\qquad
+ \mathcal P_c=[0,\kappa p)\cup(\hat Y\cap[\kappa p,(\kappa+2k')p)).
+\]
+
+\begin{lemma}[displacement and bordering]\label{lem:displace}
+For all nodes $s,t$ one has $(s-t)H(s,t)=f_s-f_t$, whatever the diagonal. Suppose $H[\mathcal P_r,\mathcal P_c]$ is
+invertible, and let $Z$ be its inverse. Let $\mathrm{Sw}$ be the Schur complement of $H[\mathcal P_r,\mathcal P_c]$ in the
+matrix bordered by unit vectors, as in Lemma~\ref{lem:bordered}. Then
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item every minor of $H$ that contains $\mathcal P_r\setminus A_0$ and $\mathcal P_c\setminus A_0'$ equals
+ $\pm\det H[\mathcal P_r,\mathcal P_c]$ times a minor of $\mathrm{Sw}$ with rows $B_0\cup A_0'$ and columns
+ $B_0'\cup A_0$, where $B_0$ and $B_0'$ are the remaining rows and columns.
+\item there are vectors $g_u\in\Q(X)^2$, one for each label $u$, such that $(v-u)\,\mathrm{Sw}(u,v)=g_u\wedge g_v$ for all
+ labels $u\ne v$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The first identity is the definition of the L\"owner matrix. With $\mathsf T=\operatorname{diag}(t)$ it says that
+$\mathsf TH-H\mathsf T=f\mathbf 1^{\mathsf T}-\mathbf 1f^{\mathsf T}$ has rank two. The bordered matrix satisfies the same
+equation with generators $(1,f_t)$ on actual nodes and $0$ on the border, since $(s-s)\cdot1=0$. A Schur complement of a
+block preserves this displacement structure, with generators $g=G-VZG_{\mathcal P}$. Laplace expansion along the unit
+border gives (a).
+\end{proof}
+
+The generators are explicit. On a label $z$ outside the pivot $g_z=(1-H(z,\mathcal P_c)Z\mathbf 1,\
+f_z-H(z,\mathcal P_c)Zf)$, and on a pivot label $t$ it is $((Z\mathbf 1)_t,(Zf)_t)$ up to sign. We rescale them as
+$\tilde g_u=(p^{-3}g_{u,1},p^{-1}g_{u,2})$ on pivot labels and $\tilde g_u=(g_{u,1},p^2g_{u,2})$ on the others, and the pivot
+rows and columns of $\mathrm{Sw}$ by $p^{-3}$. The rescaled matrix $\widetilde{\mathrm{Sw}}$ then has entries
+$p^{-2}(\tilde g_u\wedge\tilde g_v)/(v-u)$.
+
+The reduction of the pivot is governed by matrices on period indices. For $h\in\{0,1\}$ put $s_h(j)=p^2S(j,h)$,
+$g_h(j)=p^3G(j,h)$, $\Gamma_h(j)=(1,s_h(j))$, and
+\[
+ B^h(l,j)=\frac{s_h(j)-s_h(l)}{j-l}\ (l\ne j),\qquad B^h(j,j)=X+g_h(j).
+\]
+Let $J_X=\{\kappa,\kappa+2,\dots,\kappa+2k'-2\}$, $J_Y=J_X+1$, and $B_X^h=B^h[[0,\kappa)\cup J_X,[0,\kappa)\cup J_Y]$. Write
+$\bar B_X$ for its reduction modulo $p$, which does not depend on $h$. If $t\equiv t'\pmod p$ then
+$p^3H(t,t')\equiv B^h(j_t,j_{t'})\pmod{p^3}$. If $t\not\equiv t'$ then $p^3H(t,t')\in p\cO$. Hence
+$p^3H[\mathcal P_r,\mathcal P_c]$ is congruent modulo $p$ to a direct sum of copies of $\bar B_X$ and its transpose, one for
+each residue class.
+
+\begin{theorem}[nondegeneracy]\label{thm:nd}
+Let $\kappa\ge1$, $k'\ge0$ and $p>\kappa+2k'$. Then $\det\bar B_X\ne0$ in $\F_p(X)$.
+\end{theorem}
+\begin{proof}
+For $k'=0$ the determinant is monic in $X$. Let $k'\ge1$. The variable occurs only on the diagonal of the block
+$[0,\kappa)$, so $\det\bar B_X$ is $\pm\det\bar B[J_X,J_Y]$ times a monic polynomial, and it suffices that
+$D=\det[(h_j-h_l)/(j-l)]_{l\in J_X,j\in J_Y}$ is nonzero in $\F_p$, where $h_t=\sum_{i\le t}i^{-2}$. Suppose that $c\ne0$
+lies in its kernel. Let $P=\prod_{j\in J_Y}(z-j)$, $\mathsf u=\sum_jc_jP/(z-j)$ and $\mathsf w=\sum_jc_jh_jP/(z-j)$. These
+polynomials over $\F_p$ have degree at most $k'-1$, $\mathsf u\ne0$, and $\mathsf w(t)=h_t\mathsf u(t)$ on the $2k'$
+consecutive nodes $\kappa,\dots,\kappa+2k'-1$. Since $h_{t+1}-h_t=(t+1)^{-2}$, the polynomial
+\[
+ \mathsf E(z)=(z+1)^2\bigl(\mathsf w(z+1)\mathsf u(z)-\mathsf w(z)\mathsf u(z+1)\bigr)-\mathsf u(z)\mathsf u(z+1)
+\]
+vanishes at the $2k'-1$ nodes other than the last. The top terms cancel, so $\deg\mathsf E\le2k'-2$ and $\mathsf E=0$. Divide
+$\mathsf u$ and $\mathsf w$ by their greatest common divisor. At $z=-1$ the identity gives $\mathsf u(-1)\mathsf u(0)=0$. If
+$\mathsf u(x+1)=0$ with $x\ne-1$ then $\mathsf u(x)=0$, and conversely, by coprimality. So every element of $\F_p$ is a root
+of $\mathsf u$, whose degree is less than $p$. This is a contradiction.
+\end{proof}
+
+The argument is that of Theorem~\ref{thm:nvframe}, in characteristic $p$. The double pole at $-1$ is isolated in its
+orbit, and the orbit is now finite, which replaces the infinitely many roots by $p$ roots.
+
+\begin{proposition}[generators]\label{prop:gen}
+Let $p>\kappa+2k'$. Then all $\tilde g_u$ lie in $\cO^2$. There are vectors $\mathcal V(c)\in\cO^2$ on the cells of the
+periods outside the pivot, of the period $\kappa-1$ and of the period $\kappa+2k'-1$, such that every label $u$ in these
+periods satisfies $\tilde g_u\equiv\epsilon_u\mathcal V(c(u))\pmod{p^2}$ with a unit $\epsilon_u\equiv1\pmod p$, and
+$\mathcal V(j,0)\equiv\mathcal V(j,1)\pmod p$. Consequently, for two such labels $u\ne v$,
+\begin{gather*}
+ v\bigl(\widetilde{\mathrm{Sw}}(u,v)\bigr)\ge-3\ \text{if }u\equiv v\pmod p,\\
+ v\bigl(\widetilde{\mathrm{Sw}}(u,v)\bigr)\ge-W_3(c(u),c(v))\ \text{otherwise},
+\end{gather*}
+and $v(\widetilde{\mathrm{Sw}}(t,t))\ge-3$ on deleted nodes.
+\end{proposition}
+\begin{proof}
+Let $Q=p^3H[\mathcal P_r,\mathcal P_c]$. By Theorem~\ref{thm:nd} and the direct sum above, $Q$ is invertible over $\cO$. We
+look for the solution $\Theta$ of $Q\Theta=(\mathbf 1,p^2f)$ modulo $p^2$. Modulo $p^2$ the right side is a function of the
+cell, and modulo $p$ of the period. Put $\Theta(t)=\epsilon(t)Y^{h}(j_t)$ with $Y^h=(B^h_X)^{-1}\Gamma_h$ on a class
+oriented like $\hat X$, and the transposed matrix on the others. The congruent part of $Q(u,\cdot)\Theta$ is then
+$\epsilon B^h(j_u,\cdot)Y^h$, which is $\epsilon\Gamma_h(j_u)$ on the pivot. The non-congruent part lies in $p\cO$, and
+modulo $p^2$ it equals
+\[
+ p\sum_{\omega'\ne\omega_u}\frac1{\omega'-\omega_u}\bigl(\Psi_{o(\omega')}[1,\cdot]-\bar s(j_u)\Psi_{o(\omega')}[0,\cdot]\bigr),
+ \qquad \Psi_X=\bar\Gamma^{\mathsf T}\bar B_X^{-1}\bar\Gamma ,
+\]
+with $\Psi_Y=\Psi_X^{\mathsf T}$. Here we use that the pivot consists of complete periods, so every residue carries
+$\Psi_X$ or $\Psi_Y$ and nothing else. Since $\sum_{\omega'\ne\omega}(\omega'-\omega)^{-1}\equiv0\pmod p$, only the
+antisymmetric part $\Psi_X-\Psi_X^{\mathsf T}$ survives. It acts on $2$-vectors as a scalar $\delta$ times the rotation, so
+the sum is $p\delta E(\omega_u)\bar\Gamma(j_u)$, where $E(\omega)$ is the sum of $(\omega'-\omega)^{-1}$ over the residues
+of one orientation. Taking $\epsilon=1-p\delta E$ gives $Q\Theta\equiv(\mathbf 1,p^2f)\pmod{p^2}$ on the pivot, and the
+same computation outside the pivot gives $\tilde g_z\equiv\epsilon(\Gamma(z)-B^h(j_z,\cdot)Y^h)\pmod{p^2}$. These are the
+vectors $\mathcal V$. They depend on the cell modulo $p^2$, and on the period modulo $p$, since $B^h$ and $\Gamma_h$ do
+not depend on $h$ modulo $p$. For $k'=0$ we have $\delta=0$.
+
+By Lemma~\ref{lem:displace}, $\widetilde{\mathrm{Sw}}(u,v)=p^{-2}(\tilde g_u\wedge\tilde g_v)/(v-u)$. The wedge lies in
+$p^2\cO$ for two labels in one cell and in $p\cO$ for two labels in one period. The difference $v-u$ has valuation $1$ if
+$u\equiv v$ and $0$ otherwise. The diagonal entry on a deleted node is $-p^{-3}Q^{-1}(t,t)$.
+\end{proof}
+
+\subsection{The rows of the second plane}
+We now combine Lemma~\ref{lem:displace}(a) with Proposition~\ref{prop:gen}. A potential on the labels bounds the Leibniz
+terms of the minor of $\widetilde{\mathrm{Sw}}$, and the factor $\det H[\mathcal P_r,\mathcal P_c]$ has valuation exactly
+$-3|\mathcal P_r|$.
+
+\begin{theorem}[rows of the second plane]\label{thm:rows2}
+Let $p\ge5$ with $p^2>2\bar N+2p$ and $2m\le r$. For every member the following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item (E$_1$) If $p>2m$, then $e_p(r,I)\le3r+\sum u+\sum u'$ for all nonnegative potentials $u$ on $X'$ and $u'$ on $Y'$ with
+ $W_3\le u\oplus u'$ on the border.
+\item (E$_2$) If $p\le r$ and $\bar N\le2p$, then (E$_1$) holds with $3r$ replaced by $3r-(2p-\bar N)$.
+\item (R) If $p\le2m$, write $2m=kp+s$ with $0\le s<p$, and let $E=[r,r+s)$ for even $k$ and $E=[r+s,r+p)$ for odd $k$. For
+ $t\in E$ let $c_b(t)\in\{0,1,2,3\}$ be twice the period of $t$ minus that of $r$, plus the half of $t$. Then, for each
+ $w\in\{(2,2,0,1),(2,2,1,0),(0,1,2,2),(1,0,2,2)\}$,
+ \[
+ e_p(r,I)\le3(r+m)-3\|m\|_p+\sum_{t\in E}w(c_b(t)).
+ \]
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+In each case $\kappa+2k'\le\bar N/p+1<p$, so Theorem~\ref{thm:nd} and Proposition~\ref{prop:gen} apply.
+
+(i) Take $\kappa=\lfloor r/p\rfloor+1$ and $k'=0$. Since $2m<p$, no two border nodes are congruent. The nodes of
+$[\bar N,\kappa p)$ lie in one period with the border nodes beyond $\kappa p-p$. Give them the potentials $\frac32$ on both
+sides, and the deleted nodes the potentials $3$. Proposition~\ref{prop:gen} bounds every Leibniz term of the minor of
+$\widetilde{\mathrm{Sw}}$, and Lemma~\ref{lem:displace}(a) with the count of the pivot gives the bound for the Gauss
+valuation. The coefficient of $x^i$ carries an extra $3i\ge0$.
+
+(ii) Take $\kappa=2$, $k'=0$ and $X$ replaced by $pX$. Then $\bar B_X=\bigl(\begin{smallmatrix}0&-1\\-1&2\end{smallmatrix}
+\bigr)$, because there is no pole at $k=0$. Its inverse has entry $0$ at $(1,1)$. So $Q^{-1}(t,t)\in p\cO$ for $t$ in the
+period $1$, and the virtual nodes $[\bar N,2p)$ need the potentials $1$ only. This saves $2p-\bar N$.
+
+(iii) Take $\kappa=\lfloor r/p\rfloor+1$ and $k'=\lfloor k/2\rfloor$. The labels outside the pivot are shifted down by
+$2k'p$. This keeps parity, residue and half, and it maps them onto the nodes of $[r,\bar N-2k'p)$ together with the
+virtual nodes. The window $[r,\bar N-2k'p)$ has length $p+s$ or $s$. Each residue class of the border has an even number
+of nodes except the $2\|m\|_p$ classes of $E$. The nodes outside $E$ pair off at weight $3$ per pair. On $E$ we use the
+potential $w(c_b(t))$ on both sides. Each $w$ in the list dominates $W_3$ on the four cells that $E$ can meet. For the other
+nodes choose a period $j_0$ meeting $E$, such that $w\ge1$ on the cells of $E$ in the other period, if any. Give a node outside
+$E$ the potential $1$ if it lies in $j_0$ and $2$ otherwise. Every congruent pair outside $E$ has exactly one node in $j_0$,
+so its potentials sum to $3$. All other pairs have $W\le2$, or $W\le1$ inside $j_0$, and the bound follows as in (i).
+\end{proof}
+
+For $k=1$ part (iii) needs only the pivot of (i), with the weight $3$ of congruent pairs kept. For $k\ge2$ it needs the
+complete double periods. The pivot contracts the window of length $2m$ to one of length $p+s$ or $s$, and the cost of
+each eliminated pair of periods is exactly $3$ per node.
+
+\subsection{The denominator exponent}
+Homogenise with $\theta=p/r$ as before. The profile $\mathcal P(\theta)$ is the minimum of the homogenised bounds of
+Proposition~\ref{prop:rows2} and Theorem~\ref{thm:rows2}. For (E$_1$) and (E$_2$) the potentials are constant on the at most
+three cells cut from the border at the multiples of $\theta/2$. On the band $\frac{2\alpha}{k+1}<\theta\le\frac{2\alpha}k$, the
+bound (R) is
+\[
+ 3+\tfrac32k\theta+\tau(E)\ (k\text{ even}),\qquad 3+6\alpha-\tfrac32(k+1)\theta+\tau(E)\ (k\text{ odd}),
+\]
+where $\tau(E)$ is the least of the four sums $\sum_cw(c)|c|/2$ over the cells $c$ of $E=[1,1+2\alpha-k\theta]$, respectively
+$[1+2\alpha-k\theta,1+\theta]$. Between the points $\theta=2/j$ and $\theta=2(1+2\alpha)/j$ the cell type of $E$ is fixed. So
+$\mathcal P$ is piecewise affine on $(2\alpha/18,\infty)$, with finitely many pieces. We use (R) for $k\le17$. Below
+$2\alpha/18$ the profile is the sawtooth $3+3\alpha-\theta\|\alpha/\theta\|$ of (P1).
+
+\begin{theorem}[denominators on the second plane]\label{thm:content2}
+Let $\alpha=\frac3{41}$ and $u\ne0$. For every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member with $|I|\le1$
+satisfies $\log\den P_{r,I}\le(\Lambda_2+\epsilon)r^2$, where
+\[
+ \Lambda_2=\int_0^\infty\mathcal P(\theta)\,d\theta\le\frac{869210883039}{250000000000}=3.47684\,35321\ldots
+\]
+The threshold does not depend on $(u,v)$.
+\end{theorem}
+\begin{proof}
+For each prime with $p^2>2\bar N+2p$ the rows give $e_p(r,I)\le r\,\mathcal P(p/r)+O(1)$. For the rows (E$_1$), (E$_2$)
+and (R) the cells of the integer window and of its homogenisation differ by a bounded number of cells of bounded length,
+which take the potential $2$. The hypotheses $p>\kappa+2k'$ of Proposition~\ref{prop:gen} hold for $r$ large, since
+$p>2\alpha r/18$ on the bands used. For the other primes every entry has valuation at least $-3\log(2\bar N)/\log p$, which
+costs $O(r^{3/2})$ in total. The prime number theorem then gives the integral, as in Theorem~\ref{thm:content}. The integral
+of the sawtooth contributes a multiple of $\log2$, and the rest is an exact rational integral. Both are bounded by the stated
+rational number.
+\end{proof}
+
+Without (R) the same integral is $3.47980\ldots$, and the exponent below would be about $389$.
+
+\subsection{Decay and proof of Theorem~\ref{thm:plane2}}
+By Theorem~\ref{thm:nvframe} with $d=3$, one deleted node suffices for nonvanishing. The decay is Theorem~\ref{thm:decayframe}
+with the reference frame of shifts $1$, $\frac34$, $\frac12$.
+
+\begin{proposition}\label{prop:cert2}
+For the reference frame of shifts $1$, $\frac34$, $\frac12$ and $c=\frac6{41}$ there is a trial measure with $49$ polynomial
+pieces and a cover by $508$ cells satisfying the checks of \S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and $d=3$,
+for which Theorem~\ref{thm:decay} gives $D\ge\DPlB$ and $\rho\le\gPlB$.
+\end{proposition}
+
+\begin{proof}[Proof of Theorem~\ref{thm:plane2}]
+Let $a$ and $b$ be rationals, not both zero. If $a=0$ the number is a nonzero rational multiple of $\pi^2$, and
+Theorem~\ref{thm:ends} gives $\mu\le\MuHalvesU$. If $b=0$ it is a nonzero rational multiple of $\zeta(3)$, and
+Theorem~\ref{thm:ends} gives $\mu\le\MuZetaThree$. Let $ab\ne0$, and choose integers $v\ne0$ and $u\ne0$ with
+$u/v=6b/a$. By \S\ref{ssec:frames}, the number $\xi$ of $F^{(2)}_{v,u}$ is a nonzero rational multiple of $a\zeta(3)+b\pi^2$.
+Theorem~\ref{thm:content2}, Proposition~\ref{prop:cert2} and Theorem~\ref{thm:nvframe} give the three estimates, and
+Theorem~\ref{thm:deduction} gives
+\[
+ \mu(\xi)\le\frac\rho{D-\Lambda_2}\le\ExpPlB<\MuPlaneB .\qedhere
+\]
+\end{proof}
+
+\subsection{The value $\zeta(3)$}\label{ssec:zeta3}
+For $u=0$ the frame is $\psi'(z+1)$, with $d=2$ and $\xi=-2\zeta(3)$. Everything above holds with the half map set to $0$.
+The cells are then the periods, $W_3$ takes the values $0$ and $2$, and $\varepsilon=0$ in
+Proposition~\ref{prop:rows2}. The rows (P4) and (P5) become $6(r+m-p)$ and $3(\bar N-p)_+$, and (P6), (P7) vanish. In (R)
+the four cells become two, and the potentials are $(0,0,2,2)$ and $(2,2,0,0)$. With $c=\frac3{10}$ the integral of the
+profile is
+\begin{multline*}
+ \Lambda_{\zeta(3)}=\frac{78871534239346376957366127790384501}{27370345362695344229217529371840000}+\frac9{200}\log2\\
+ =2.91283\,35313\ldots
+\end{multline*}
+The reference frame is the function $F_{1/2}$, and its certificate is that of the row for $\pi^2$ in
+Table~\ref{tab:data}. Theorem~\ref{thm:nvframe} with $d=2$ gives nonvanishing with one deleted node.
+
+\begin{proof}[Proof of Theorem~\ref{thm:ends} for $\zeta(3)$]
+The three estimates above and Theorem~\ref{thm:deduction} give
+$\mu(\zeta(3))\le\rho/(D-\Lambda_{\zeta(3)})\le\ExpZ<\MuZetaThree$. The bound for $\pi^2$ is proved in
+Section~\ref{sec:proof}, with the rows of Theorem~\ref{thm:offplane}.
+\end{proof}
+
+%% =====================================================================
+\section{The deduction and the remaining proofs}\label{sec:proof}
 
 The three estimates combine as follows.
 
 \begin{theorem}[deduction]\label{thm:deduction}
-Let $F$ be a function of \eqref{eq:frames} with its geometry. Let $K$ be a depth such that, for every large $r$ and every
-rational $x_0$, some member $P_{r,I}$ with $|I|\le K$ satisfies $P_{r,I}(x_0)\ne0$, as in Theorem~\ref{thm:selection}.
-Suppose that the denominator exponent $\Lambda$ of Theorem~\ref{thm:content} and the constants $D$, $\rho$ of
-Theorem~\ref{thm:decay} satisfy $\Lambda<D$. Then $\mu(\xi)\le\rho/(D-\Lambda)$.
+Let $F$ be a frame with a geometry. Let $K$ be a depth such that, for every large $r$ and every rational $x_0$, some
+member $P_{r,I}$ with $|I|\le K$ satisfies $P_{r,I}(x_0)\ne0$, as in Theorems~\ref{thm:selection} and~\ref{thm:nvframe}.
+Suppose that the members satisfy $\log\den P_{r,I}\le(\Lambda+o(1))r^2$ and the decay estimate of
+Theorem~\ref{thm:decay} with constants $D$ and $\rho$, and that $\Lambda<D$. Then $\xi$ is irrational and
+$\mu(\xi)\le\rho/(D-\Lambda)$.
 \end{theorem}
 
 \begin{proof}
 Let $\eta=D-\Lambda$, and let $\mu_0>\mu_1>\rho/\eta$. Suppose that $|\xi-a/b|<b^{-\mu_0}$ with $b$ large. Let $r$ be
-the least admissible scale with $r\ge\mu_1\log b/\rho$. By Theorem~\ref{thm:selection} with $x_0=a/b$ there is a member
-with $P_{r,I}(a/b)\ne0$. By Lemma~\ref{lem:integrality}, $|\den(P_{r,I})\,P_{r,I}(a/b)|\ge b^{-r}$. Write $a/b=\xi+h$.
-Then $|h|<b^{-\mu_0}\le e^{-\rho r}$, because $\rho r\le\mu_1\log b+O(1)<\mu_0\log b$ for large $b$. By
-Theorems~\ref{thm:content} and~\ref{thm:decay},
+the least admissible scale with $r\ge\mu_1\log b/\rho$. With $x_0=a/b$ there is a member with $P_{r,I}(a/b)\ne0$. By
+Lemma~\ref{lem:integrality}, $|\den(P_{r,I})\,P_{r,I}(a/b)|\ge b^{-r}$. Write $a/b=\xi+h$.
+Then $|h|<b^{-\mu_0}\le e^{-\rho r}$, because $\rho r\le\mu_1\log b+O(1)<\mu_0\log b$ for large $b$. By the two
+estimates,
 \[
  |\den(P_{r,I})\,P_{r,I}(a/b)|\le e^{(\Lambda+o(1))r^2}e^{-(D-o(1))r^2}=e^{-(\eta-o(1))r^2}.
 \]
 Comparing the two bounds gives $(\eta-o(1))r^2\le r\log b$. But $\eta r\ge(\mu_1\eta/\rho)\log b$ with
-$\mu_1\eta/\rho>1$. This is a contradiction for large $b$.
+$\mu_1\eta/\rho>1$. This is a contradiction for large $b$. If $\xi=a/b$ were rational, then for every large $r$ some member would satisfy
+$b^{-r}\le|\den(P_{r,I})\,P_{r,I}(\xi)|\le e^{-(\eta-o(1))r^2}$, which is impossible. So $\xi$ is irrational.
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:main}]
-For each row of Table~\ref{tab:main} the function, the geometry parameter and the constants are those of
-Table~\ref{tab:data}. The denominator exponent is given by Theorem~\ref{thm:content} with the table for $\Lambda$ of the formal
-proof. For the pair $(\frac13,\frac23)$ it is given by Section~\ref{sec:chi3-quarter}. The decay rates are given by
-Proposition~\ref{prop:cert}, and nonvanishing by Theorem~\ref{thm:selection}. Theorem~\ref{thm:deduction}, applied at the even scales, gives
-$\mu(\xi)\le\rho/(D-\Lambda)$, and in every row $\rho/(D-\Lambda)<\mu_{s,t}$. By \eqref{eq:frames}, $\xi$ is a
-nonzero rational multiple of $\Psi(s,t)$, so $\mu(\Psi(s,t))<\mu_{s,t}$. Since this inequality is strict, the
-definition of $\mu$ gives $|\Psi(s,t)-a/b|>b^{-\mu_{s,t}}$ for all integers $a$ and all sufficiently large $b$. This
-proves Theorem~\ref{thm:main}.
+\begin{proof}[Proof of Theorem~\ref{thm:offplane}, Theorem~\ref{thm:points1}(ii) and Theorem~\ref{thm:ends} for $\pi^2$]
+For each of these rows of Table~\ref{tab:main} the function is $F_s$ of \eqref{eq:frames}, and the geometry parameter and
+the constants are those of Table~\ref{tab:data}. The denominator exponent is given by Theorem~\ref{thm:content} with the
+table for $\Lambda$ of the formal proof. The decay rates are given by Proposition~\ref{prop:cert}, and nonvanishing by
+Theorem~\ref{thm:selection}. Theorem~\ref{thm:deduction}, applied at the even scales, gives $\mu(\xi)\le\rho/(D-\Lambda)$,
+and in every row $\rho/(D-\Lambda)$ is below the stated bound. By \eqref{eq:frames}, $\xi$ is a nonzero rational multiple
+of $\Psi(s,1)$. Since the inequality is strict, the definition of $\mu$ gives $|\xi-a/b|>b^{-\mu_0}$ for all integers $a$
+and all sufficiently large $b$.
 \end{proof}
+
+Theorem~\ref{thm:points1}(i) is proved in Section~\ref{sec:chi3-quarter}, parts (iii)--(v) and Theorem~\ref{thm:plane1}
+in Section~\ref{sec:plane1}, and Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Section~\ref{sec:plane2}. In each
+case the bound is attained in the same strong form.
 
 \begin{table}[ht]
 \centering
-{\setlength{\tabcolsep}{2pt}
+{\setlength{\tabcolsep}{1.5pt}
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
-$(s,t)$ & $c$ & $\Lambda$ & $D$ & $\rho$ & $\rho/\eta$ & $\mu$\\
+row & $c$ & $\Lambda$ & $D$ & $\rho$ & $\rho/\eta$ & $\mu$\\
 \midrule
-$(\frac12,1)$ & $\frac3{10}$ & $\LamHalf$ & $\DHalf$ & $\gHalf$ & $\ExpHalf$ & $\MuHalvesU$\\
-$(\frac k3,1)$ & $\frac3{10}$ & $\LamThree$ & $\DThree$ & $\gThree$ & $\ExpThree$ & $\MuThirdsU$\\
+plane 1 & $\frac16$ & $\LamPl$ & $\DPl$ & $\gPl$ & $\ExpPl$ & $\MuPlaneA$\\
+$L\pm\frac{2\pi^2}{27}$ & $\frac16$ & $\LamDA$ & $\DPl$ & $\gPl$ & $\ExpDA$ & $\MuDipA$\\
+$L\pm\frac{\pi^2}{27}$ & $\frac16$ & $\LamDB$ & $\DPl$ & $\gPl$ & $\ExpDB$ & $\MuDipB$\\
+$L\pm\frac{\pi^2}{18}$ & $\frac16$ & $\LamDC$ & $\DPl$ & $\gPl$ & $\ExpDC$ & $\MuDipC$\\
 $(\frac13,\frac23)$ & $\frac12$ & $\LamChi$ & $\DChi$ & $\gChi$ & $\ExpChi$ & $\MuChi$\\
+$(\frac k3,1)$ & $\frac3{10}$ & $\LamThree$ & $\DThree$ & $\gThree$ & $\ExpThree$ & $\MuThirdsU$\\
+\addlinespace
+plane 2 & $\frac6{41}$ & $\LamPlB$ & $\DPlB$ & $\gPlB$ & $\ExpPlB$ & $\MuPlaneB$\\
+$\zeta(3)$ & $\frac3{10}$ & $\LamZ$ & $\DHalf$ & $\gHalf$ & $\ExpZ$ & $\MuZetaThree$\\
+$(\frac12,1)$ & $\frac3{10}$ & $\LamHalf$ & $\DHalf$ & $\gHalf$ & $\ExpHalf$ & $\MuHalvesU$\\
+\addlinespace
 $(\frac k4,1)$ & $\frac15$ & $\LamFour$ & $\DFour$ & $\gFour$ & $\ExpFour$ & $\MuLamU$\\
 $(\frac k5,1)$ & $\frac29$ & $\LamFive$ & $\DFive$ & $\gFive$ & $\ExpFive$ & $\MuFifthsU$\\
 $(\frac k7,1)$ & $\frac16$ & $\LamSeven$ & $\DSeven$ & $\gSeven$ & $\ExpSeven$ & $\MuSeventhsU$\\
 \bottomrule
 \end{tabular}}
-\caption{The data of the proof of Theorem~\ref{thm:main}, with $k$ prime to the denominator. For each pair of shifts the table gives the geometry parameter
-$c$, the denominator exponent $\Lambda$, the decay rate $D$, the neighbourhood exponent $\rho$ and the exponent. The constants
-are the rational numbers of the formal proof, rounded outward to the digits shown: $\Lambda$ and $\rho$ up, $D$ down.
-The column $\rho/\eta$, with $\eta=D-\Lambda$, is the exact quotient, rounded up.}\label{tab:data}
+\caption{The data of the proofs. A pair $(s,t)$ denotes the function of \eqref{eq:frames} for $\Psi(s,t)$, with $k$
+prime to the denominator. For each row the table gives the geometry parameter $c$, the denominator exponent $\Lambda$, the
+decay rate $D$, the neighbourhood exponent $\rho$ and the exponent. The constants are rational numbers, rounded outward to
+the digits shown: $\Lambda$ and $\rho$ up, $D$ down. The column $\rho/\eta$, with $\eta=D-\Lambda$, is the exact quotient,
+rounded up. The three rows below plane 1 share its decay certificate. The row for $\zeta(3)$ shares the
+certificate of the row $(\frac12,1)$.}\label{tab:data}
 \end{table}
 
 \begin{remark}[relation to linear independence criteria]
@@ -1615,20 +2450,22 @@ asymptotic. The size $r$ of the determinant is chosen in terms of $b$.
 \end{remark}
 
 \subsection{Notes on the rows}\label{sec:families}
-Except for the pair $(\frac13,\frac23)$ of Section~\ref{sec:chi3-quarter}, the function of each row is $F_s$ of
-\eqref{eq:frames} with $s=k/q$, $\omega=q^{-2}$ and $\xi_s=-q^{-2}\Psi(\frac kq,1)$. The table for $\Lambda$, the trial
-measure and the cover are data of the formal proof. All shifts with the same denominator share one table for $\Lambda$,
-indexed by the root classes, and one certificate. Indeed the bounds depend on the shift only through the root class, and
-the decay depends on it only through the separation of the poles from the contour. For $q=4$ the root classes
-$j\equiv kp^{-1}\pmod 4$ of $k=1$ and $k=3$ exchange the two classes of primes modulo $4$. For $q=3$ the table uses the
-primes in the classes modulo $6$, and the root classes $j=1,2$ correspond to first poles near $p/3$ and $2p/3$. For $q=7$
-there are six root classes. Here $D-\Lambda$ is only about $4\cdot10^{-3}$, which explains the large exponent. A small
-further gain in either constant would lower it substantially (Section~\ref{sec:limits}). The certificate for $q=7$
-therefore takes $\varepsilon_0=10^{-6}$ in the function $\Upsilon$, where the other rows take $\varepsilon_0=10^{-3}$. Its
-trial measure has $22$ polynomial pieces, and its cells on $\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of
-\S\ref{ssec:slope-cert}. For $q=2$ there is one root
-class, $j=1$, with first pole $k_p=\frac{p+1}2$. The resulting bound is weaker than the known ones for this number.
+For the rows $(\frac kq,1)$ the function is $F_s$ of \eqref{eq:frames} with $s=k/q$, $\omega=q^{-2}$ and
+$\xi_s=-q^{-2}\Psi(\frac kq,1)$. The table for $\Lambda$, the trial measure and the cover are data of the formal proof. All
+shifts with the same denominator share one table for $\Lambda$, indexed by the root classes, and one certificate. Indeed the
+bounds depend on the shift only through the root class, and the decay depends on it only through the separation of the
+poles from the contour. For $q=4$ the root classes $j\equiv kp^{-1}\pmod 4$ of $k=1$ and $k=3$ exchange the two classes of
+primes modulo $4$. For $q=3$ the table uses the primes in the classes modulo $6$, and the root classes $j=1,2$ correspond to
+first poles near $p/3$ and $2p/3$. For $q=7$ there are six root classes. Here $D-\Lambda$ is only about $4\cdot10^{-3}$,
+which explains the large exponent. A small further gain in either constant would lower it substantially
+(Section~\ref{sec:limits}). The certificate for $q=7$ therefore takes $\varepsilon_0=10^{-6}$ in the function $\Upsilon$,
+where the rows $q=2,3,4,5$ take $\varepsilon_0=10^{-3}$. Its trial measure has $22$ polynomial pieces, and its cells on
+$\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of \S\ref{ssec:slope-cert}. For $q=2$ there is one root
+class, $j=1$, with first pole $k_p=\frac{p+1}2$.
 
+The certificates of the two planes also take $\varepsilon_0=10^{-6}$. On the second plane $D-\Lambda$ is about
+$0.021$, which explains the size of its exponent. On the first plane the points of Theorem~\ref{thm:points1}(iii)--(v)
+gain only in $\Lambda$, since they use the certificate of the plane.
 %% =====================================================================
 \section{Limits of the method}\label{sec:limits}
 
@@ -1655,33 +2492,40 @@ assignment bound.
 \section{Formalization}\label{sec:lean}
 \raggedbottom
 
-The proof of Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every
-theorem, proposition and lemma it uses. The remarks and Section~\ref{sec:limits} are not part of the formalization. The
-development is available at
+The theorems of Section~\ref{sec:intro} are formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with
+every theorem, proposition and lemma their proofs use. The remarks and Section~\ref{sec:limits} are not part of the
+formalization. The development is available at
 \begin{center}
 \FormalizationLink
 \end{center}
-It combines analytic and arithmetic proofs with generated rational data. Kernel checks verify the tables for $\Lambda$ of
-Section~\ref{sec:content} and the decay certificates of Section~\ref{sec:decay}. Numerical computations alone are not
-used as proof.
+It combines analytic and arithmetic proofs with generated rational data. Kernel checks verify the tables for $\Lambda$ and
+the decay certificates. Numerical computations alone are not used as proof.
 
-The statements of Theorem~\ref{thm:main} are in the file \lean{ChallengeHybrid.lean}. Their proofs are in
-\lean{SolutionHybrid.lean}, in the namespace \lean{TrigammaDifferences}. Each final theorem concerns one row of
-Table~\ref{tab:main}. Its number $\xi$ is written as a series: the classical form where there is one, and
-$\Psi(s,t)$ otherwise. The theorem states that
-$b^{-\mu_{s,t}}<|\xi-a/b|$ for all $a\in\Z$ and all sufficiently large $b$. The theorems
-are the following.
+The statements are in the file \lean{ChallengeHybrid.lean}. Their proofs are in \lean{SolutionHybrid.lean}, in the
+namespace \lean{TrigammaDifferences}. Each number $\xi$ is written as a series: the classical form where there is one, and
+$\Psi(s,t)$ otherwise. Each theorem states that $b^{-\mu_0}<|\xi-a/b|$ for all $a\in\Z$ and all sufficiently large $b$.
+The plane theorems state this for all rationals $a$ and $b$, not both zero, and the irrationality of the number. The
+theorems are the following.
+% PENDING (8 Nov 2026): plane1_measure, plane2_measure, the three dip theorems and the export of zeta3_measure do not yet
+% exist in SolutionHybrid.lean. See outputs/Compatibility programme/PAPER-II-REVISION-2026-11-08.md. Do not release
+% before they compile.
 \begin{itemize}
-\item \lean{lambda_plus_measure} and \lean{lambda_minus_measure}: the pairs $(\frac14,1)$ and $(\frac34,1)$,
- with $\mu_{s,t}=\MuLamU$.
-\item \lean{chi3_measure}: the pair $(\frac13,\frac23)$, with $\mu_{s,t}=\MuChi$.
-\item \lean{chi3_plus_pi2_measure} and \lean{chi3_minus_pi2_measure}: the pairs $(\frac13,1)$ and $(\frac23,1)$, with
- $\mu_{s,t}=\MuThirdsU$.
-\item \lean{fifths1_measure}, \dots, \lean{fifths4_measure}: the pairs $(\frac k5,1)$ for $k=1,\dots,4$, with
- $\mu_{s,t}=\MuFifthsU$.
-\item \lean{sevenths1_measure}, \dots, \lean{sevenths6_measure}: the pairs $(\frac k7,1)$ for $k=1,\dots,6$, with
- $\mu_{s,t}=\MuSeventhsU$.
-\item \lean{pi2_measure}: the pair $(\frac12,1)$, with $\mu_{s,t}=\MuHalvesU$.
+\item \lean{plane1_measure}: Theorem~\ref{thm:plane1}, with $\mu_0=\MuPlaneA$.
+\item \lean{chi3_measure}: Theorem~\ref{thm:points1}(i), with $\mu_0=\MuChi$.
+\item \lean{chi3_plus_pi2_measure} and \lean{chi3_minus_pi2_measure}: Theorem~\ref{thm:points1}(ii), with
+ $\mu_0=\MuThirdsU$.
+\item \lean{dip_2_27_plus_measure}, \lean{dip_2_27_minus_measure}, \lean{dip_1_27_plus_measure},
+ \lean{dip_1_27_minus_measure}, \lean{dip_1_18_plus_measure} and \lean{dip_1_18_minus_measure}:
+ Theorem~\ref{thm:points1}(iii)--(v), with $\mu_0=\MuDipA$, $\MuDipB$ and $\MuDipC$.
+\item \lean{plane2_measure}: Theorem~\ref{thm:plane2}, with $\mu_0=\MuPlaneB$.
+\item \lean{zeta3_measure} and \lean{pi2_measure}: Theorem~\ref{thm:ends}, with $\mu_0=\MuZetaThree$ and
+ $\MuHalvesU$.
+\item \lean{lambda_plus_measure} and \lean{lambda_minus_measure}: Theorem~\ref{thm:offplane}(i), with
+ $\mu_0=\MuLamU$.
+\item \lean{fifths1_measure}, \dots, \lean{fifths4_measure}: Theorem~\ref{thm:offplane}(ii), with
+ $\mu_0=\MuFifthsU$.
+\item \lean{sevenths1_measure}, \dots, \lean{sevenths6_measure}: Theorem~\ref{thm:offplane}(iii), with
+ $\mu_0=\MuSeventhsU$.
 \end{itemize}
 The shared results are in the namespace \lean{CatalanCore.Uniform}.
 \begin{itemize}
@@ -1762,7 +2606,9 @@ Frank Calegari, Vesselin Dimitrov, and Yunqing Tang, \emph{The linear
 
 \bibitem{CDT2025}
 \bysame, \emph{Arithmetic holonomy bounds and effective {D}iophantine
-  approximation}, 2025, Theorem 5.1 gives $\mu(L(2,\chi_{-3}))\le 24781$,
+  approximation}, 2025, Theorem 5.1 gives $\mu(L(2,\chi_{-3}))\le 24781$, and
+  the remark following it covers every $\mathbb{Q}$-linear combination of
+  $L(2,\chi_{-3})$ and $\pi^2$,
   \href{https://arxiv.org/abs/2510.04156}{arXiv:2510.04156}.
 
 \bibitem{Carreira2026b}
@@ -1776,6 +2622,11 @@ Marcos Costa Santos~Carreira, \emph{Determinant constructions for the
   constant}, Preprint, 9 October 2026, revised 21 October 2026,
   \href{https://doi.org/10.5281/zenodo.23532239}{doi:10.5281/zenodo.23532239};
   sources at \url{https://github.com/MarcosCarreira/catalan-designs}, 2026.
+
+\bibitem{DauguetZudilin14}
+Simon Dauguet and Wadim Zudilin, \emph{On simultaneous diophantine
+  approximations to {$\zeta(2)$} and {$\zeta(3)$}}, 2014, Preprint,
+  \href{https://arxiv.org/abs/1401.5322}{arXiv:1401.5322}.
 
 \bibitem{Lean4}
 Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
@@ -1929,6 +2780,14 @@ Edward~B. Saff and Vilmos Totik, \emph{Logarithmic potentials with external
 \bibitem{Sun2026}
 Zhi-Wei Sun, \emph{Catalan's constant is irrational}, 2026,
   \href{https://arxiv.org/abs/2609.04176}{arXiv:2609.04176}.
+
+\bibitem{Tang26}
+Q.~Tang, \emph{zeta2-zeta3-linear-independence: a {L}ean 4 formalization of the
+  linear independence of {$1$}, {$\zeta(2)$} and {$\zeta(3)$} over
+  {$\mathbb{Q}$}}, GitHub repository dtq1997/zeta2-zeta3-linear-independence,
+  version of 30 September 2026,
+  \href{https://github.com/dtq1997/zeta2-zeta3-linear-independence}{github.com/dtq1997/zeta2-zeta3-linear-independence},
+  2026.
 
 \bibitem{Mathlib}
 {The mathlib Community}, \emph{The {L}ean mathematical library}, Proceedings of
