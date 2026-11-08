@@ -15,7 +15,7 @@ project:
     mu(G - 5 pi^2/48) <= 31.2876 and mu(G + 5 pi^2/48) <= 31.2876;
     mu(L(2, chi_{-3})) <= 13.7046; mu(L(2, chi_{-3}) + pi^2/9) <= 9.4998 and
     mu(L(2, chi_{-3}) - pi^2/9) <= 9.4998; mu(psi'(a/5) - pi^2/6) <= 23.8272
-    for a = 1, 2, 3, 4; mu(psi'(a/7) - pi^2/6) <= 2207.8697 for a = 1, ..., 6; and mu(pi^2) <= 6.5253.
+    for a = 1, 2, 3, 4; mu(psi'(a/7) - pi^2/6) <= 1806.1719 for a = 1, ..., 6; and mu(pi^2) <= 6.5253.
     Each statement says: |x - a/b| > b^(-mu) for every integer a and every
     sufficiently large integer b, where mu is the exponent above. The
     approximations come from determinants of rectangular Loewner matrices of
@@ -143,7 +143,7 @@ fidelity:
     number in the same row of the paper's Table 1, which differs from Psi(s,t)
     by a rational affine map. The bound is stated for all integers a and all
     sufficiently large b, with the exponents 78219/2500,
-    137046/10000, 47499/5000, 14892/625, 22078697/10000 and 65253/10000 as rationals cast to R.
+    137046/10000, 47499/5000, 14892/625, 18061719/10000 and 65253/10000 as rationals cast to R.
 
 review:
   status: "self-assessed"
@@ -206,32 +206,32 @@ alignment:
       lean: "TrigammaDifferences.sevenths1_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(1/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(1/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (2/7,1)"
       lean: "TrigammaDifferences.sevenths2_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(2/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(2/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (3/7,1)"
       lean: "TrigammaDifferences.sevenths3_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(3/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(3/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (4/7,1)"
       lean: "TrigammaDifferences.sevenths4_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(4/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(4/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (5/7,1)"
       lean: "TrigammaDifferences.sevenths5_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(5/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(5/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (6/7,1)"
       lean: "TrigammaDifferences.sevenths6_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "psi'(6/7) - pi^2/6, exponent 2207.8697."
+      note: "psi'(6/7) - pi^2/6, exponent 1806.1719."
     - source: "Litsey, Irrationality measures for differences of trigamma values (2026), Theorem 1.1, (s,t) = (1/2,1)"
       lean: "TrigammaDifferences.pi2_measure"
       module: "ChallengeHybrid"

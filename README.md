@@ -13,7 +13,7 @@ large integers `q`.
 > - μ(L(2, χ₋₃)) ≤ 13.7046;
 > - μ(L(2, χ₋₃) ± π²/9) ≤ 9.4998, for both signs;
 > - μ(ψ′(a/5) − π²/6) ≤ 23.8272 for a = 1, 2, 3, 4;
-> - μ(ψ′(a/7) − π²/6) ≤ 2207.8697 for a = 1, …, 6;
+> - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6;
 > - μ(π²) ≤ 6.5253 (weaker than the known bounds, included for completeness).
 
 Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
@@ -167,7 +167,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 | L(2, χ₋₃) | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.7046 |
 | L(2, χ₋₃) ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0291249 | 6.8272548 | 9.499725 | 9.4998 |
 | ψ′(a/5) − π²/6 | (a/5, 1) | 2/9 | 3.5128488 | 3.8135797 | 7.1655663 | 23.82717 | 23.8272 |
-| ψ′(a/7) − π²/6 | (a/7, 1) | 1/6 | 3.6391158643 | 3.6424792669 | 7.4259546075 | 2207.870 | 2207.8697 |
+| ψ′(a/7) − π²/6 | (a/7, 1) | 1/6 | 3.6391158643 | 3.6432250312 | 7.4218615374 | 1806.172 | 1806.1719 |
 | π² | (1/2, 1) | 3/10 | 2.9923824 | 3.9785713 | 6.4350874 | 6.525207 | 6.5253 |
 
 Here `Λ` is the content constant, `D` the decay constant and `γ` the window constant. They are the
@@ -226,7 +226,7 @@ classes of the primes, and one decay certificate. The data are in `Bank/Fifths/`
 ### ψ′(a/7) − π²/6
 
 For `1 ≤ a ≤ 6`, likewise a combination of the values `L(2, χ)`, `χ` modulo 7, and of `π²`, with six root
-classes. Here `D − Λ` is about `2.7·10⁻³`, and the exponent is correspondingly large. The data are in
+classes. Here `D − Λ` is about `4.1·10⁻³`, and the exponent is correspondingly large. The data are in
 `Bank/Sevenths/` and `Bank/SeventhsContent/`; the theorem is
 `CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound.sevenths_measure`, whose argument is `a − 1` in `Fin 6`,
 and the public theorems are `TrigammaDifferences.sevenths1_measure`, …,
