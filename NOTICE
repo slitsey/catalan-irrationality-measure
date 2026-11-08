@@ -32,12 +32,15 @@ It contains third-party material, also licensed under the Apache License, Versio
    From the Palomar submission template, https://github.com/PalomarRegistry/PalomarTemplate,
    adapted to this project.
 
-4. CatalanMeasure/GenD/Signed/Davis/  (33 files listed in PROVENANCE.json there)
+4. CatalanMeasure/GenD/Signed/Davis/ and archive/CatalanArchive/GenD/Signed/Davis/
+   (33 files listed in PROVENANCE.json in the first directory)
    From Cinna Davis's formalization, https://github.com/1337isnot1337/catalan-constant,
-   commit 3c4515314bda407d032cb55f60bfc56b03c1d3f9, under the Apache License 2.0: the
-   inverse-image quadrature nodes and their finite branch certificates. The files were moved
-   to the module path CatalanMeasure.GenD.Signed.Davis; their declaration namespaces and
-   proofs are unchanged. Source paths and hashes are in PROVENANCE.json and the original notice in
+   commit 3c4515314bda407d032cb55f60bfc56b03c1d3f9, under the Apache License 2.0. Two files,
+   GeneralNodalWeights.lean and NodalRootDeletion.lean (weight bounds for a nodal polynomial
+   family), are used by the proof. The other 31, the inverse-image quadrature nodes and their
+   finite branch certificates, are kept in the archive directory and are not part of the build.
+   The files were moved to the module path CatalanMeasure.GenD.Signed.Davis; their declaration
+   namespaces and proofs are unchanged. Source paths and hashes are in PROVENANCE.json and the original notice in
    NOTICE in that directory. The other files of that directory are new work.
 
 Everything else (CatalanMeasure/ apart from item 4, CatalanMeasure.lean, Challenge.lean, Solution.lean,

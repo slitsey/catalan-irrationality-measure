@@ -7,7 +7,7 @@
       "source_git_blob": "5c2cf42df911770186640b2035a59f9a6665e6b0",
       "source_sha256": "454bf32d50c0919c921e5e1eaad730dace03d5bc44966b23e073d7bcbf1f2901",
       "source_bytes": 4578,
-      "local": "CatalanMeasure/GenD/Signed/Davis/PolynomialNorm.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/PolynomialNorm.lean.txt",
       "local_sha256": "d7d79454ef6ea7b1996a023d69634c497ecda3287efaa78463a35af3f521b767",
       "exports": [
         "CatalanMeasure.Refinement.polynomialFromCoeffs",
@@ -25,7 +25,7 @@
       "source_git_blob": "e829c5f2755be640b78eefb5b1878dcd5838b4c6",
       "source_sha256": "04c7f185382d215d021ad126381f5035fa7fed9292fc3de3030ea25115474ce7",
       "source_bytes": 3051,
-      "local": "CatalanMeasure/GenD/Signed/Davis/PolynomialData.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/PolynomialData.lean.txt",
       "local_sha256": "31470955bd80ec43b78f5d8753a7cc2171a16025606e1984d14565a795f49c63",
       "exports": [
         "CatalanMeasure.Refinement.rationalHorner",
@@ -44,7 +44,7 @@
       "source_git_blob": "68f0b8c1085d113f15e7019a4744307f16e1e914",
       "source_sha256": "01797a911dee806321a552c0a0b89d144c7ae350cfb12d6e761120cd0ed8a430",
       "source_bytes": 3071,
-      "local": "CatalanMeasure/GenD/Signed/Davis/IntegerHorner.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/IntegerHorner.lean.txt",
       "local_sha256": "bbf22216b6e630c79be46e3b847b0674a508a7ea00ec0e369f02f81899e0bf23",
       "exports": [
         "CatalanMeasure.Refinement.homogeneousHorner",
@@ -59,7 +59,7 @@
       "source_git_blob": "5e5250af4cb381323fc96374fe3302842ff918d4",
       "source_sha256": "443b2e8c1e2d2d43680baae6132d21d7f9300c6f01307ea126c9d59762373a85",
       "source_bytes": 8290,
-      "local": "CatalanMeasure/GenD/Signed/Davis/InverseBranches.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/InverseBranches.lean.txt",
       "local_sha256": "7f1bc7b71c5cedc71645035879827802c7ce9cf0e960a9851a52ba401876c5a9",
       "exports": [
         "CatalanMeasure.GenD.Analytic.factorization_of_distinct_roots",
@@ -83,7 +83,7 @@
       "source_git_blob": "171011d79d037328090ee391f51ffab417027050",
       "source_sha256": "f7e650f486b8fea342238b4e1e14f1d2263beac6ad93cb70ff5a9538d9f900f4",
       "source_bytes": 7328,
-      "local": "CatalanMeasure/GenD/Signed/Davis/InverseImageNodes.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/InverseImageNodes.lean.txt",
       "local_sha256": "c623b4ea5d2c4260cf437c11dc917dd228401ddbc2b764def129b07b3f3cc933",
       "exports": [
         "CatalanMeasure.GenD.Analytic.inverseImagePolynomial",
@@ -107,7 +107,7 @@
       "source_git_blob": "4aea2c0c6f2824425e6b94cb8202d18347417be9",
       "source_sha256": "733c40b9679d7d3bce4b04bfedd8dbe6f062c77621fbc47f31c6bdf6cd0e74b1",
       "source_bytes": 3933,
-      "local": "CatalanMeasure/GenD/Signed/Davis/InverseImageCircle.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/InverseImageCircle.lean.txt",
       "local_sha256": "62320f13131a0e8e6b2741724b99129a15f7626ae5aec799cf93011e3f0a2b08",
       "exports": [
         "CatalanMeasure.GenD.Analytic.inverseImageDegree",
@@ -156,7 +156,7 @@
       "source_git_blob": "f19cc3f15e4bc890cea822250c37167e661dd814",
       "source_sha256": "8747471adcc4e5f64c0b9e6d73332e20a58345a97b14471e19c6e8eb3f3216b5",
       "source_bytes": 6479,
-      "local": "CatalanMeasure/GenD/Signed/Davis/InverseImageWeights.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/InverseImageWeights.lean.txt",
       "local_sha256": "594960fd2b01eb1297dd8b3b80a539752ffcf1576b35f631360657e6d737b179",
       "exports": [
         "CatalanMeasure.GenD.Analytic.inverseImageCount_split",
@@ -174,7 +174,7 @@
       "source_git_blob": "3bd4bb4f2729d75640794656d7f975ca9cdc5381",
       "source_sha256": "3032207a23484c5ccc1f987670fecd04b6d02fcdebe362766d350017b505611b",
       "source_bytes": 34174,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130Data.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130Data.lean.txt",
       "local_sha256": "ee001e4932f4fd58a7d768caf43d7775cadc99c4087c1e4ce3c1058f6d8759ef",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.powerCoefficients",
@@ -193,7 +193,7 @@
       "source_git_blob": "164983a1e89b4f43a6847337edaf3a882c86feee",
       "source_sha256": "4e9c9c1fb47a99940540a73d1f28031a72c18a2e0aed7f6edd9e5c2604860107",
       "source_bytes": 1594,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130Degree.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130Degree.lean.txt",
       "local_sha256": "a06dcaaa40b61061af809de5d0479eeb35cb37e2b5aec57fb2fe49d68672f00b",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.leadingCoefficient",
@@ -213,7 +213,7 @@
       "source_git_blob": "5a4a2940c1cc2354077ddb9c5d6634add4657aeb",
       "source_sha256": "97ea1c125c79ef75638486c67dcf7c2fd041427deefccb0fed1aced76dda282e",
       "source_bytes": 13047,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130BranchData.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130BranchData.lean.txt",
       "local_sha256": "5996b6e383330a4938025faf55337eb72478db48690ede48f49c962f0bb55559",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branchBrackets",
@@ -230,7 +230,7 @@
       "source_git_blob": "d12d0578020ec309bb02f09b19e455d9a2458ba2",
       "source_sha256": "e7e4f11b1ed73895317b44ea4357e2fa9602ddffb2481fb1a5b0c399473fa1dc",
       "source_bytes": 15883,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130ZeroData.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130ZeroData.lean.txt",
       "local_sha256": "4925e3bf94eb55c2fa2c86b38d2368a3e15ab1d4518b11ad3401c49b954707b3",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.zeroBrackets",
@@ -243,7 +243,7 @@
       "source_git_blob": "6cb6de540b960e7546dae2ab56a54dce05eba574",
       "source_sha256": "bc0582026b69003fe2cdeb9b66fe2bd18ce357a84f2a02e255fc54a7625a5260",
       "source_bytes": 1431,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130Geometry.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130Geometry.lean.txt",
       "local_sha256": "22df61cb2a9f9997a0196a5a21d386cc2437ae45a013a1260617e30233d2ef11",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_ordered",
@@ -261,7 +261,7 @@
       "source_git_blob": "1adcb5eea173b4f75287912ad1b6bdc2d3236297",
       "source_sha256": "c2c4ada14c5b688074ff2cbac5e818b67d7324cc614e8414fd49bf4968e7c14c",
       "source_bytes": 13050,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130IntegerData.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130IntegerData.lean.txt",
       "local_sha256": "94159711c4b65d2ef263274eb4f76d87a24e85fa9af8c466ceacc986374d4ca1",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.coefficientDenominator",
@@ -279,7 +279,7 @@
       "source_git_blob": "f0b7c8020ad9eecc0403ca2e8418d12d4869ba81",
       "source_sha256": "b0e1d85a91ff131951ce231306c9996723dcd7fb850ff55167129e45bec5edb2",
       "source_bytes": 1363,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130SignData.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130SignData.lean.txt",
       "local_sha256": "a30d9cd3ec84ae1d73700319c786479fb66699f46ba2dfdb0b41c7df33a9d28a",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.signIndex",
@@ -293,7 +293,7 @@
       "source_git_blob": "28b39425b390d004e4c1f768395209d08628a7c9",
       "source_sha256": "19225330a784359f4656fd314e722c3eb1df1a0e0b45d085c20b4b25be0efe83",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch00.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch00.lean.txt",
       "local_sha256": "77452ba7006fb2c6beb4e15e22ecc459f5e7011f480e0db38f48aabe187d7993",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_0"
@@ -304,7 +304,7 @@
       "source_git_blob": "9bc5efff993018f24b012dbf8d5b41d978796b04",
       "source_sha256": "7b8d8b53bd37a7b1bdc1289ad183b5e433e293f62383ba12548c84be61c6137a",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch01.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch01.lean.txt",
       "local_sha256": "759c136f88d849eb89f78f32d69c4223c7d6c7f7ecc9b6309e752373af8073c7",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_1"
@@ -315,7 +315,7 @@
       "source_git_blob": "96d270b5d96f57beefe756e8a43cbb46e0be9388",
       "source_sha256": "a98c26464b3b129e4d36e000cafc7e0dfe2ee6f0ed45e021f963e2cb9050b2dc",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch02.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch02.lean.txt",
       "local_sha256": "179991cfbd3a2ea9e1d8b3169b86b5f074a1589a18d8ad8458ad9b9e75d67ee2",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_2"
@@ -326,7 +326,7 @@
       "source_git_blob": "367657f3ec9a767c10c2de7da9ac16dd29e3d228",
       "source_sha256": "fa1f77e19f7b9795a0f0749fce95659944e50d01bf034ac21fa2640b248d63f0",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch03.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch03.lean.txt",
       "local_sha256": "b67eab7cbe49990169c05a428f7a5b1439d0e0e12088bc5cb225966383dc2701",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_3"
@@ -337,7 +337,7 @@
       "source_git_blob": "5731bb8c9183c67372578fe605bbd8e96721bd1a",
       "source_sha256": "463bd0b253c7219474c3f96588eff7f85023f02c4c78df2dfa1f4c222066d596",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch04.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch04.lean.txt",
       "local_sha256": "9c7a67e5af81a7795d79262ba8ab44cb8e8d5a8ece865a5d11ff3d24b944f952",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_4"
@@ -348,7 +348,7 @@
       "source_git_blob": "75f2e8deabd44406ac1c8b6ed830eafed8300c10",
       "source_sha256": "4cf6a4eae0dfe719da7099e70a822677c39a15a723371879c2ab3fbf41fdd499",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch05.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch05.lean.txt",
       "local_sha256": "32c542717c3dc2796b1784717db8142e4e2fa47416c351d1b6b72e0b3f8823ce",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_5"
@@ -359,7 +359,7 @@
       "source_git_blob": "a17b73291703b1d235d78daaf1b5b45314e2c5b3",
       "source_sha256": "d34b88f95d1a416f8d7bd56491e25f7a984e5a47f2c2c9f6b15bcf1b175f888e",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch06.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch06.lean.txt",
       "local_sha256": "740f5f6e597133924eb0610113f35aa0271bc5653181a333bb7fcd97fc1e0ff9",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_6"
@@ -370,7 +370,7 @@
       "source_git_blob": "1c9df81183a345aca8811415da215bed75a924fe",
       "source_sha256": "0c4b1359a34ff82fb2dc260d23923a98f61526daaddf5ed9be4511418b58272e",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch07.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch07.lean.txt",
       "local_sha256": "2b674fa113c504faa27ee53ff6289724d13166aebc5a22489d05423737ed40f1",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_7"
@@ -381,7 +381,7 @@
       "source_git_blob": "3d90da8193fed64c42b673a5ff0d9caf68f855e3",
       "source_sha256": "14a21c60ba3f95f9219f1ff754c9af359cefb44f0efb7d154cf5252bc8d05b1a",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch08.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch08.lean.txt",
       "local_sha256": "ca4aa4ab0e1277f6f67901e8a0c97e7f82c24a8a292f1c655b3bf8f8e179d456",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_8"
@@ -392,7 +392,7 @@
       "source_git_blob": "9505ebf8d859418980c7dab002ae17d8d7734962",
       "source_sha256": "64620708dfaf24b19f2e4beec7ba68ad7b80f8fcece09c704d72b93304657226",
       "source_bytes": 387,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch09.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch09.lean.txt",
       "local_sha256": "d2fd5fd0888837a2562d1c863dc060e511db22cbf1a9695c94c7bd3630e67c2b",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_9"
@@ -403,7 +403,7 @@
       "source_git_blob": "6d9533b8261dc851969bae1832928df7bf281170",
       "source_sha256": "e6865edf24160083d27f4582e8b496d6093e4de9f534d39b3a9d9251414d9573",
       "source_bytes": 389,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch10.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch10.lean.txt",
       "local_sha256": "a8db7866ae04ea5dfc92089e605d1bd965a4a0bb0aff978415ce797eb12f3ce8",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_10"
@@ -414,7 +414,7 @@
       "source_git_blob": "f06268ef0059f3d190da97615797a43d949a09b1",
       "source_sha256": "a9d01e26ca490228d248bb3356f57ab6614d36a5ffe7bd0f623605626e6f1ae0",
       "source_bytes": 389,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch11.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch11.lean.txt",
       "local_sha256": "39b49ee9fcc8239e7e9343820a5e4dfc5f45b970b5f10dbf54145046a5c3803f",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_11"
@@ -425,7 +425,7 @@
       "source_git_blob": "52c088d09cfab6857b5f8171742f92017efeb070",
       "source_sha256": "ab998009b11e5d4d4e059e2092764a8d588c7e5cb9e51271f08dcefbb4f017d4",
       "source_bytes": 389,
-      "local": "CatalanMeasure/GenD/Signed/Davis/SignChunks/Branch12.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/SignChunks/Branch12.lean.txt",
       "local_sha256": "44e5dc5d249a5b009ee849636a63616b66e830efb3aea9455cfd27f5d0fb5d20",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_sign_chunk_12"
@@ -436,7 +436,7 @@
       "source_git_blob": "a181b270402378e40c4cbb195221c735ce6a2f1a",
       "source_sha256": "c0bb7932cb9eba4998df36eb05c752507da51f8181b3a9562b3bde509ce077ae",
       "source_bytes": 2237,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130BranchChecks.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130BranchChecks.lean.txt",
       "local_sha256": "735fefd48cc248b3033742c22fbd7b2c0d6a647506e9261ac26e9be8d249c302",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branch_all_chunks",
@@ -449,7 +449,7 @@
       "source_git_blob": "f1da57250e4ef59acaa4d3f121e37a6c06196390",
       "source_sha256": "a4becf2fbecd365c3d1de4ed9340f6c2ee359c9c6c2b15df516870f8fa8a76ae",
       "source_bytes": 1636,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130Branches.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130Branches.lean.txt",
       "local_sha256": "ba8b82e79722f35f0c8d04f57799f2c2618672a0af45e013b6646fc15eae0343",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.branchCertificate"
@@ -460,7 +460,7 @@
       "source_git_blob": "9be79c5d1f255f436309166edf1f4181b92c554a",
       "source_sha256": "6d8f1f53d916b690a467834b1dfad02b35c9268becd69bc0786f9607a749aae0",
       "source_bytes": 343,
-      "local": "CatalanMeasure/GenD/Signed/Davis/ResidualDomain.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/ResidualDomain.lean.txt",
       "local_sha256": "d679d454fbb2c0cbfe604ac1cbb61c35b2cde06167569302bcbb762f9d62df6b",
       "exports": [
         "CatalanMeasure.Improvement.Fields.trimmedResidualCap",
@@ -472,7 +472,7 @@
       "source_git_blob": "bd3a8863903a00f1c45f9eea1c360358b3eac031",
       "source_sha256": "1a668dbbeb94f2575646908e3b184974c8411b393ba9dec42c8afc3e88199ce3",
       "source_bytes": 2041,
-      "local": "CatalanMeasure/GenD/Signed/Davis/Trimmed130Support.lean",
+      "local": "archive/CatalanArchive/GenD/Signed/Davis/Trimmed130Support.lean.txt",
       "local_sha256": "6e6b696dbffd20dc1afe727b4e96ba919323b2c37f690189d0cd229f562f79bb",
       "exports": [
         "CatalanMeasure.Refinement.Trimmed130.realCoordinateInv_strictMonoOn",
