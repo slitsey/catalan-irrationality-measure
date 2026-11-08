@@ -1134,9 +1134,9 @@ theorem refRow_cells : ∀ c ∈ CapSourceData.refRowF 0, 2 ≤ c.lo ∨ c.hi �
 
 theorem E2_bound {la lv : List ℤ} {D : ℕ} {Lc : ℤ} (hD : 0 < D) (hLc : 0 < Lc)
     (hn : la.length = lv.length)
-    (h140 : ∀ m : ℕ, 1 ≤ m → m ≤ 140 → (m : ℤ) ∣ Lc)
-    (hlenR : (zRof Lc la lv).length ≤ 140) (hlenC : (zCof Lc lv).length ≤ 140)
-    (hla : la.length ≤ 140) {k N : ℕ} {dat : List (ℕ × ℕ)}
+    {n : ℕ} (hdivn : ∀ m : ℕ, 1 ≤ m → m ≤ n → (m : ℤ) ∣ Lc)
+    (hlenR : (zRof Lc la lv).length ≤ n) (hlenC : (zCof Lc lv).length ≤ n)
+    (hla : la.length ≤ n) {k N : ℕ} {dat : List (ℕ × ℕ)}
     (hrow : rowOK (zRof Lc la lv) k CapSourceData.row0 dat = true)
     (hlenR2 : 2 ≤ (zRof Lc la lv).length) (hlenC2 : 2 ≤ (zCof Lc lv).length) :
     2 * CompletedGas.barrierInner (CompletedGas.rowT (CapSourceData.refRowF 0)) (trialSeqOf la D) +
@@ -1148,7 +1148,7 @@ theorem E2_bound {la lv : List ℤ} {D : ℕ} {Lc : ℤ} (hD : 0 < D) (hLc : 0 <
       / ((D : ℝ) * Lc) := by
   have hdiv : ∀ i < la.length, ((i : ℤ) + 1) ∣ Lc := by
     intro i hi
-    have := h140 (i + 1) (by omega) (by omega)
+    have := hdivn (i + 1) (by omega) (by omega)
     simpa using this
   rw [inner_eq refRow_cells hD hLc hn hdiv]
   have hpos : (0 : ℝ) < (D : ℝ) * Lc := by
@@ -1165,7 +1165,7 @@ theorem E2_bound {la lv : List ℤ} {D : ℕ} {Lc : ℤ} (hD : 0 < D) (hLc : 0 <
     have : CapSourceData.refRowF 0 = CapSourceData.row0.map (CapSourceData.mkCell 1 (CapSourceData.sumP CapSourceData.row0)) := by
       simp [CapSourceData.refRowF]
     rw [this]
-    refine row_sum_le hz hLc (fun m h1 h2 => h140 m h1 (by omega)) (fun x hx => ?_)
+    refine row_sum_le hz hLc (fun m h1 h2 => hdivn m h1 (by omega)) (fun x hx => ?_)
       (T := CapSourceData.sumP CapSourceData.row0) CapSourceData.row0_tot CapSourceData.row0 dat
       (fun t ht => CapSourceData.row0_ok t ht) hrow
     exact bound_zR Lc la lv (abs_le.mpr ⟨hx.1, hx.2⟩)
@@ -1174,7 +1174,7 @@ theorem E2_bound {la lv : List ℤ} {D : ℕ} {Lc : ℤ} (hD : 0 < D) (hLc : 0 <
     have : CapSourceData.refColF 0 = CapSourceData.col0.map (CapSourceData.mkCell 1 (CapSourceData.sumP CapSourceData.col0)) := by
       simp [CapSourceData.refColF]
     rw [this]
-    exact col_sum_ge hLc (fun m h1 h2 => h140 m h1 (by omega)) CapSourceData.col0_tot CapSourceData.col0
+    exact col_sum_ge hLc (fun m h1 h2 => hdivn m h1 (by omega)) CapSourceData.col0_tot CapSourceData.col0
       (fun t ht => CapSourceData.col0_ok t ht)
   push_cast
   linarith
