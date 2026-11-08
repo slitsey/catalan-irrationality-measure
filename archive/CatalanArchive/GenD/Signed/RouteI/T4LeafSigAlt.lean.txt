@@ -1,0 +1,54 @@
+module
+
+public import CatalanMeasure.GenD.Signed.RouteI.T4LeafDefs
+
+@[expose] public section
+
+/-!
+# T4 leaf data, signed pieces at the raised sigma
+
+The signed pieces 1 and 2 at `σ = 33871/10^5` (the least value on the `10^-5` grid for which piece 1 passes with the
+literal `I1 = 2366997/10^6` of `GasEnergyHi.hi_final`; at `σ = 33814269/10^8` piece 1 has minimum -1.9e-6).  Not
+consumed by `TerminalC` unless `sigma296` and `sigQ` are raised.
+-/
+
+namespace CatalanMeasure.GenD.Signed.RouteI.T4LeafSigAlt
+open CatalanMeasure.GenD.Signed.RouteI.T4Instance CatalanMeasure.GenD.Signed.RouteI.T4LeafDefs
+noncomputable section
+
+/-- The signed literals of design C: `σ`, `η = 10^-7`, the intercept cap `I1` of
+`GasEnergyHi.hi_final`, the E2 moment bounds `L0, L1` of `AnchorE2Data`, the norm bounds `Q`
+of `ShiftGNum`, and the certified moved caps of `RowCert.All` and `ColCert.MovedCaps`. -/
+def lCalt : SigLits where
+  σ := (33871 / 100000 : ℚ)
+  η := (1 / 10000000 : ℚ)
+  I1 := (2366997 / 1000000 : ℚ)
+  L0 := (-9427697 / 125000000000 : ℚ)
+  L1 := (-4943292757 / 100000000000 : ℚ)
+  Q00 := (16623 / 100000000000 : ℚ)
+  Q01 := (93 / 97656250 : ℚ)
+  Q11 := (1002863 / 1000000000 : ℚ)
+  c0R := (-1289870127 / 500000000 : ℚ)
+  c1R := (-514801833 / 200000000 : ℚ)
+  c0C := (-2946694099 / 1000000000 : ℚ)
+  c1C := (-2888907917 / 1000000000 : ℚ)
+  c2C := (-71355343 / 25000000 : ℚ)
+
+-- kcost: 0.2 s per leaf measured (24 leaves 4.8 s over the import baseline); 35 cellOK calls, degree 2
+theorem sigP1_ok_alt : PolyNonneg (sigP1 lCalt) 0 aeQ := by
+  refine polyNonneg_of_ints (D := (10512500000000000 : ℚ)) (zs := [189741537325, -4592901908375, 27825150749056]) (f := 8) (by norm_num [aeQ, a1Q]) (by norm_num) (fun w => ?_) (by decide +kernel)
+  simp only [sigP1, sigP2, sigVq, sigJ1q, sigR1q, sigC1q, sigC2q, lCalt, aeQ, a1Q, hiQ, MQ, tQ, c2Q, evalQ_addQ, evalQ_smulQ, evalQ_mulQ, evalQ_cons, evalQ_nil, evalZ]
+  push_cast
+  ring
+
+-- kcost: 0.2 s per leaf measured (24 leaves 4.8 s over the import baseline); 3 cellOK calls, degree 2
+theorem sigP2_ok_alt : PolyNonneg (sigP2 lCalt) aeQ a1Q := by
+  refine polyNonneg_of_ints (D := (262812500000000000 : ℚ)) (zs := [585549759450150, -1254629401976910, 1265573062079051]) (f := 1) (by norm_num [aeQ, a1Q]) (by norm_num) (fun w => ?_) (by decide +kernel)
+  simp only [sigP1, sigP2, sigVq, sigJ1q, sigR1q, sigC1q, sigC2q, lCalt, aeQ, a1Q, hiQ, MQ, tQ, c2Q, evalQ_addQ, evalQ_smulQ, evalQ_mulQ, evalQ_cons, evalQ_nil, evalZ]
+  push_cast
+  ring
+
+
+end
+end CatalanMeasure.GenD.Signed.RouteI.T4LeafSigAlt
+

@@ -3,6 +3,7 @@ module
 public import CatalanMeasure.GenD.Signed.LogEval
 public import CatalanMeasure.GenD.Signed.RouteI.Theorem296
 public import CatalanMeasure.GenD.Signed.RouteI.Pay
+public import CatalanMeasure.GenD.Signed.RouteI.SigmaC
 public import CatalanMeasure.GenD.Signed.RouteI.IntervalNodesData
 public import CatalanMeasure.GenD.Signed.RouteI.ChordTableData
 public import CatalanMeasure.GenD.Signed.Count.LedgerContent
@@ -866,24 +867,24 @@ theorem hweights_d
     (fun N a => hC0_d N a) (by simpa using hw_d) 1 one_pos
 
 /-- **The terminal on the interval nodes** (GP Theorem 10.1): the three sheet bounds with `ζ = 3/4`,
-`δ̂ = δc`, target `T296` and cost `58 cost296`, plus (hcirc) and (hseg), give `μ(G) ≤ μ`. -/
-theorem measure_of_sheets (μ : ℚ) (hμ1 : (2697551 / 10000 : ℝ) ≤ μ) (hμ2 : (μ : ℝ) ≤ 400)
+`δ̂ = δc`, target `T296` and cost `58 costC`, plus (hcirc) and (hseg), give `μ(G) ≤ μ`. -/
+theorem measure_of_sheets (μ : ℚ) (hμ1 : (269787 / 1000 : ℝ) ≤ μ) (hμ2 : (μ : ℝ) ≤ 400)
     (hcirc : ∀ z : ℂ, ‖z‖ = 3 / 4 →
       ((dc58.toParameters.h0 + dc58.toParameters.q0 : ℕ) : ℝ) * Real.log ‖(1 : ℂ) - z‖ +
         ivlL ivlLo ivlHi z ≤ 32506 / 10000)
     (hseg : ∀ x : ℝ, 3 / 4 ≤ |x| → |x| < 1 →
       ((dc58.toParameters.h0 + dc58.toParameters.q0 : ℕ) : ℝ) * Real.log ‖(1 : ℂ) - (x : ℂ)‖ +
         ivlL ivlLo ivlHi (x : ℂ) - 2 * (dc58.toParameters.g0 : ℝ) * Real.log (3 / 4) ≤ 32506 / 10000)
-    (hfirst : FreeFirstBoundZ dc58.toParameters Gd (3 / 4) δc T296 (58 * cost296))
+    (hfirst : FreeFirstBoundZ dc58.toParameters Gd (3 / 4) δc T296 (58 * costC))
     (hnear : FreeNearBoundZ dc58.toParameters Gd (CatalanMeasure.Signed.NodeSub (tauI ivlLo ivlHi))
-      (3 / 4) δc T296 (58 * cost296) alpha296)
-    (hlarge : FreeLargeBoundZ dc58.toParameters Gd (3 / 4) δc T296 (58 * cost296) alpha296) :
+      (3 / 4) δc T296 (58 * costC) alpha296)
+    (hlarge : FreeLargeBoundZ dc58.toParameters Gd (3 / 4) δc T296 (58 * costC) alpha296) :
     ∀ᶠ b : ℕ in atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(μ : ℝ)) <
         |(∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - a / b| := by
   obtain ⟨lbC, gain, hg, hc⟩ := Count.LedgerContent.content
-  have hpay := pay_design (B := (μ : ℝ)) hμ1 hμ2
-  exact catalan_irrationalityMeasure_of_nodes (tauI ivlLo ivlHi) Gd tauI_injective_data tauI_mem_data
+  have hpay := pay_designC (B := (μ : ℝ)) hμ1 hμ2
+  exact catalan_irrationalityMeasure_of_nodes_C (tauI ivlLo ivlHi) Gd tauI_injective_data tauI_mem_data
     tauI_ne_zero_data hsupport_d _ μ eta295 _ alpha296 (3 / 4) 1 δc (by norm_num) zero_le_one hpay
     hc (Count.WinCertGlue.eta295_lt_of_gain hg) hfirst hnear hlarge (hweights_d hcirc hseg)
 
@@ -982,17 +983,17 @@ end TopSec
 
 /-! ### The data records and the terminal theorem
 
-The design is `P58`, `ζ = 3/4`, `δ̂ = δc`, `G = Gd`, `σ = 33814269/10^8`.  Each sheet record collects the
+The design is `P58`, `ζ = 3/4`, `δ̂ = δc`, `G = Gd`, `σ = 33871/10^5`.  Each sheet record collects the
 leaf certificates of one sheet in the exact type of its producer. -/
 
 section Terminal
 open CatalanMeasure.GenD.Signed.RouteI.IntervalNodesData CatalanMeasure.GenD.Signed.RouteI.ChordTableData
 
-/-- `σ` of the design (`sigma296`). -/
-def sigQ : ℚ := 33814269 / 100000000
+/-- `σ` of the design (`sigmaC`). -/
+def sigQ : ℚ := 33871 / 100000
 
-theorem cost_eq : 58 * cost296 = ((P58.n0 : ℕ) : ℝ) * ((c2Q : ℝ) + sigQ) := by
-  norm_num [cost296, sigma296, c2Q, sigQ, P58]
+theorem cost_eq : 58 * costC = ((P58.n0 : ℕ) : ℝ) * ((c2Q : ℝ) + sigQ) := by
+  norm_num [costC, sigmaC, c2Q, sigQ, P58]
 
 theorem T296_tQ : T296 = (tQ : ℝ) := T296_eq'
 
@@ -1021,7 +1022,7 @@ structure FirstData where
   hM : ∀ k β hβ, (R k β hβ).M₁ ≤ evalQ (rs k) β
 
 theorem FirstData.sheet (D : FirstData) :
-    FreeFirstBoundZ P58 Gd (3 / 4) δc T296 (58 * cost296) := by
+    FreeFirstBoundZ P58 Gd (3 / 4) δc T296 (58 * costC) := by
   rw [T296_tQ, cost_eq]
   exact firstSheet_of_pieces (P := P58) (Shape58.adm (P := P58)) P58_gC0 P58_gC1 (by norm_num)
     D.hη D.A D.B D.hA0 D.hB1 D.hAB D.hcov D.nC D.fC D.rs D.hPoly D.R D.hN D.hF D.hM
@@ -1049,7 +1050,7 @@ structure LargeData where
   hF : ∀ k β hβ, (R k β hβ).fieldCap ≤ evalQ (fC k) β
 
 theorem LargeData.sheet (D : LargeData) :
-    FreeLargeBoundZ P58 Gd (3 / 4) δc T296 (58 * cost296) alpha296 := by
+    FreeLargeBoundZ P58 Gd (3 / 4) δc T296 (58 * costC) alpha296 := by
   rw [T296_tQ, cost_eq]
   have : alpha296 = (51 / 500 : ℝ) := rfl
   rw [this]
@@ -1129,10 +1130,10 @@ structure NearData where
   hole : PhaseHole
 
 theorem NearData.sheet (D : NearData) (Nd : ∀ (N m : ℕ), (Fin m → ℝ) → Prop) :
-    FreeNearBoundZ P58 Gd Nd (3 / 4) δc T296 (58 * cost296) alpha296 := by
+    FreeNearBoundZ P58 Gd Nd (3 / 4) δc T296 (58 * costC) alpha296 := by
   rw [T296_tQ]
-  have e : 58 * cost296 = 58 * ((c2Q : ℝ) + D.l.σ) := by
-    rw [D.hσ]; norm_num [cost296, sigma296, c2Q, sigQ]
+  have e : 58 * costC = 58 * ((c2Q : ℝ) + D.l.σ) := by
+    rw [D.hσ]; norm_num [costC, sigmaC, c2Q, sigQ]
   rw [e]
   have : alpha296 = (51 / 500 : ℝ) := rfl
   rw [this]
@@ -1145,9 +1146,9 @@ theorem NearData.sheet (D : NearData) (Nd : ∀ (N m : ℕ), (Fin m → ℝ) →
     D.B' D.hAB D.hA0 D.hB1 D.hcovP D.Δ D.hΔ0 D.nC D.fC D.rs D.np D.F0 D.U D.FU D.p2 D.du2 D.s D.s' D.hF0
     D.hPW D.hPφ D.hPω D.Rp D.hNp D.hFp D.hSp D.hp2p D.hs D.hs' D.hole
 
-/-- **μ(G) ≤ μ for any rational `μ ∈ [269.7551, 400]`, from the data records.**  The stated value of the
+/-- **μ(G) ≤ μ for any rational `μ ∈ [269.787, 400]`, from the data records.**  The stated value of the
 design is `μ = 270`. -/
-theorem measure_of_data (μ : ℚ) (hμ1 : (2697551 / 10000 : ℝ) ≤ μ) (hμ2 : (μ : ℝ) ≤ 400)
+theorem measure_of_data (μ : ℚ) (hμ1 : (269787 / 1000 : ℝ) ≤ μ) (hμ2 : (μ : ℝ) ≤ 400)
     (F : FirstData) (Lg : LargeData) (Nr : NearData)
     (hcirc : ∀ z : ℂ, ‖z‖ = 3 / 4 →
       ((dc58.toParameters.h0 + dc58.toParameters.q0 : ℕ) : ℝ) * Real.log ‖(1 : ℂ) - z‖ +
