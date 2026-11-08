@@ -78,7 +78,9 @@ def est(t):
         sib = sorted(v for k, v in tp.items() if cls(k) == cls(t))
         ws = sib[len(sib) // 2] if sib else peaks().get(cls(t))
     return (1.75 * ws + 1.0, ws) if ws else (7.0, 3.5)
-def reserve(spec, used=(0.0, 0.0)):
+WARM = 180.0   # s after start before a run job's reservation follows its measured peak
+PEAK = {}      # pid -> (max working set, max commit) seen, GB
+def reserve(spec, used=(0.0, 0.0), peak=None):
     """(commit, working set) GB held for a job: the larger of forecast and declared budget; a job
     already above that is growing, so it holds 1.25 x what it uses now."""
     ec, ew = est(spec['target'])
@@ -90,6 +92,11 @@ def reserve(spec, used=(0.0, 0.0)):
         # the queue with 15 GB free. A run job holds its declared budget; growth past it is
         # still caught by the 1.25 x use rule below.
         ew = max(bb, 1.0); ec = 1.75 * ew + 1.0
+        # 7 Nov 21:30: H generators declared 14 GB and used 5.3, and G's RN builds (top
+        # priority) sat queued with 15 GB free. After WARM seconds a run job holds 1.25 x its
+        # measured peak (never below 1 GB); growth is still caught by the 1.25 x use rule.
+        if peak and time.time() - spec.get('started', time.time()) > WARM:
+            ew = max(1.25 * peak[0], 1.0); ec = max(1.25 * peak[1], ew + 1.0)
     elif own is not None:
         # 7 Nov: a module with its own measured peak holds 1.25 x that, not a habitual 4 GB
         # budget (1.2 GB builds were reserving 4 GB and leaving the host idle).
@@ -396,7 +403,13 @@ def drive():
             # for life. Before, running jobs were charged only the class forecast (3.5 GB default
             # for `run` jobs, whatever budget they declared), while their actual use was added to
             # the envelope, so a job over its forecast made the host look emptier.
-            res = [reserve(s, use.get(proc.pid, (0.0, 0.0))) for proc, s in running.values()]
+            for proc, _ in running.values():
+                u = use.get(proc.pid)
+                if u:
+                    p0 = PEAK.get(proc.pid, (0.0, 0.0))
+                    PEAK[proc.pid] = (max(p0[0], u[0]), max(p0[1], u[1]))
+            res = [reserve(s, use.get(proc.pid, (0.0, 0.0)), PEAK.get(proc.pid))
+                   for proc, s in running.values()]
             need_c = sum(r[0] for r in res)
             need_w = sum(r[1] for r in res)
             env_w = min(24.0, phys + own_ws - FLOOR - MARGIN)
