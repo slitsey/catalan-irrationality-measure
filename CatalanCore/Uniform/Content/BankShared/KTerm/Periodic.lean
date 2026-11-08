@@ -389,9 +389,11 @@ theorem ecrude_le_bd {cF r N p : ℕ} (hp : 2 ≤ p) (hrN : r ≤ N) :
   have h2 : Nat.log 2 (14 * r) ≤ Nat.log 2 (14 * N) := Nat.log_mono_right (by omega)
   exact Nat.mul_le_mul (Nat.mul_le_mul_left 2 hrN) (by omega)
 
-/-- **Soundness of a base cell** `(P, R)` against the catalogue `cat` of the class `j`. -/
+/-- **Soundness of a base cell** `(P, R)` against the catalogue `cat` of the class `j`.  The configuration is a master
+root (`Q k = j p + oM`, with the frame facts `KParams`), as in `PieceCov`: a prefix cell needs the pole indices. -/
 def BaseSound (D : KBankData) (cat : List Branch) (j : ℕ) (P : QPiece) (R : ℚ) : Prop :=
-  ∀ (r p m k del : ℕ) (Good : ℕ → Prop),
+  KParams D → (∀ y ∈ D.shifts, y.s * j % y.q ≠ 0) →
+  ∀ (r p m k del : ℕ) (Good : ℕ → Prop), D.Q * k = j * p + D.oM → D.Q * (r + 2 * m) < p * p →
     Cond.Round D.Q r p m k D.α ((j : ℚ) / D.Q) → D.Pbad < p → p % 2 = 1 → 2 ≤ p → del ≤ D.depth →
     0 < r → (R : ℝ) ≤ r → (P.s : ℝ) * r < p → (p : ℝ) ≤ P.t * r →
     BranchesValid cat D.Pbad D.Q r p m k del Good →
@@ -402,7 +404,7 @@ theorem baseSound_of_pieceOK {D : KBankData} (hq : 1 ≤ D.Q) (hα : 0 ≤ D.α)
     {x : QPiece × Cert}
     (hok : pieceOK cat D.Q D.α ((j : ℚ) / D.Q) D.depth D.cF D.Pbad x.1 x.2 = true) :
     BaseSound D cat j x.1 x.2.R := by
-  intro r p m k del Good hrd hPb hodd hpge hdel _ hR hs ht hBV
+  intro _ _ r p m k del Good _ _ hrd hPb hodd hpge hdel _ hR hs ht hBV
   exact piece_sound_large x.1 x.2 hok hq hα Good hrd (fun _ => hodd) hpge hdel (by exact_mod_cast hR) hBV hs ht
 
 /-- The `n`-th translate of a base cell `P` with threshold `R`. -/
@@ -611,8 +613,8 @@ theorem exp_cov_per {D : KBankData} (hpar : KParams D) {c : ℚ} {hc : 0 < c} {c
       · exact GLE.mono (by omega) hnn
       · rw [e1, e2]
         exact tsub_le_iff_right.2 (by linarith)
-    obtain ⟨e, he, hbd⟩ := hbase r' p m' k (delCount (altGeom c hc) i) _ hrd' hPb hodd hp2 hdel hr'pos
-      hRr'R hs3R ht3R hBV
+    obtain ⟨e, he, hbd⟩ := hbase hpar hjs r' p m' k (delCount (altGeom c hc) i) _ hk hqN' hrd' hPb hodd hp2 hdel
+      hr'pos hRr'R hs3R ht3R hBV
     refine ⟨e + n * Kc * p, he, ?_⟩
     have hcr : (0 : ℝ) ≤ (crudeBd D.cF ⌈R * (1 + (n : ℚ) * b * P.t)⌉₊ : ℝ) := Nat.cast_nonneg _
     simp only [trPiece]

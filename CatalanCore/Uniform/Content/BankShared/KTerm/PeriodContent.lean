@@ -17,9 +17,9 @@ pieces explicitly.  `kcheckC` is `kcheck` with `pieceOK` for the head only and `
 `hasScaledContent_of_facts` is `hasScaledContent_of_kcheckFam` with the three uses of `pieceOK` on the pieces of
 a template replaced by: `PieceBasic` (the chain), and `PieceCov` (the piece bound `n_p ≤ a r + b p + C`
 at every admissible point of the piece, with `p > P_bad` and `q (r + 2 m) < p²` supplied by the scale `R0`).
-`head_cov` proves `PieceCov` for a `pieceOK` piece (Theorem B, `piece_sound`); `exp_cov` for an expansion piece
-(Lemma T, `PeriodWindow`, with the prefix branch of the cell as the valid branch).  `hasScaledContent_of_kcheckC`
-is Theorem C3. -/
+`head_cov` proves `PieceCov` for a `pieceOK` piece (Theorem B, `piece_sound`).  The expansion pieces are handled by
+Theorem PC (`Periodic.hasScaledContent_of_periodic`, Lemma T of `PeriodWindow` for the base cells); the closed form
+`hasScaledContent_of_kcheckC` (Theorem C3) is its instance in `Bank.Plane1.ContentClosed`. -/
 
 namespace CatalanCore.Uniform.Content.BankShared.KTerm
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -332,119 +332,6 @@ theorem head_cov {D : KBankData} (hpar : KParams D) {c : ℚ} {hc : 0 < c} {cons
     (branches_of_kcat' hpar hcat hjs i hi hr0 p k hk hN) hs ht
 
 
-/-- **An expansion piece** has the piece bound (Lemma T): the prefix branch (or `D1x`) of its cell is valid,
-and its price is below the line of the piece with slack `3`. -/
-theorem exp_cov {D : KBankData} (hpar : KParams D) (hlen : 2 ≤ D.shifts.length)
-    {c : ℚ} {hc : 0 < c} {const : ℝ} {depth : ℕ}
-    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]} {N0 : ℕ}
-    (hpre : ∀ n j0 j1 j2, KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 [kbrPre n j0 [j1, j2]])
-    (hd1x : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 [⟨kD1xE, [], 0⟩])
-    {j n' : ℕ} (hn : 1 ≤ n') {c₀ : PCell}
-    (hcell : c₀.ok D.α (kappaOf D j 0) (kappaOf D j 1) = true) :
-    PieceCov D c hc const depth Q N0 j (expPiece D.α D.α.den expC n' c₀) := by
-  intro i hi hr0 p k _ hk hN hPb hqN hrd hjs hs ht
-  have hpar' := hpar
-  obtain ⟨hq2, hqP, -, -, -, -, hα, -, -, -⟩ := hpar'
-  obtain ⟨hle, hr⟩ := kv_roots hpar hjs hk hPb
-  set r := i.1 with hrdef
-  set m := (altGeom c hc).borderSize r with hmdef
-  obtain ⟨kv, hkv⟩ : ∃ kv : ℕ → ℕ, kv = fun n => D.tS n * k - (D.bS j n * p + D.cS n) := ⟨_, rfl⟩
-  have hroots : ∀ n < D.shifts.length, ∃ jn,
-      (shAt D.shifts n).q * kv n = jn * p + (shAt D.shifts n).o ∧ 0 < jn ∧ jn < (shAt D.shifts n).q ∧
-      0 < kv n ∧ kv n < p := fun n hn => by
-    obtain ⟨-, -, -, h1, h2, h3, h4, h5⟩ := hr n hn
-    subst hkv
-    exact ⟨_, h1, h2, h3, h4, h5⟩
-  have hkap : ∀ t < 2, kappaOf D j t * p ≤ (kv t : ℚ) ∧ (kv t : ℚ) ≤ kappaOf D j t * p + 1 := by
-    intro t ht2
-    obtain ⟨hq0, ho0, hoq, hspec, hjj, hjq, hk0, hkp⟩ := hr t (lt_of_lt_of_le ht2 hlen)
-    have hspec' : (shAt D.shifts t).q * kv t = (shAt D.shifts t).jj j * p + (shAt D.shifts t).o := by
-      subst hkv; exact hspec
-    have hq : (0 : ℚ) < (shAt D.shifts t).q := by exact_mod_cast hq0
-    have hsp : ((shAt D.shifts t).q : ℚ) * kv t = (shAt D.shifts t).jj j * p + (shAt D.shifts t).o := by
-      exact_mod_cast hspec'
-    have hoq' : ((shAt D.shifts t).o : ℚ) < (shAt D.shifts t).q := by exact_mod_cast hoq
-    have ho0' : (0 : ℚ) ≤ (shAt D.shifts t).o := Nat.cast_nonneg _
-    have e : kappaOf D j t * p = (kv t : ℚ) - (shAt D.shifts t).o / (shAt D.shifts t).q := by
-      unfold kappaOf
-      field_simp
-      linarith
-    have hfrac : ((shAt D.shifts t).o : ℚ) / (shAt D.shifts t).q < 1 := (div_lt_one hq).2 hoq'
-    have hfrac0 : (0 : ℚ) ≤ ((shAt D.shifts t).o : ℚ) / (shAt D.shifts t).q := div_nonneg ho0' hq.le
-    constructor <;> linarith
-  have hpQ : (0 : ℚ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
-  -- the cell context
-  have hnum : (0 : ℤ) ≤ D.α.num := Rat.num_nonneg.2 hα
-  have hnat : ((D.α.num.toNat : ℕ) : ℚ) = (D.α.num : ℚ) := by
-    have : ((D.α.num.toNat : ℕ) : ℤ) = D.α.num := Int.toNat_of_nonneg hnum
-    exact_mod_cast this
-  have hab : D.α * (D.α.den : ℚ) = (D.α.num.toNat : ℚ) := by
-    rw [hnat]; exact Rat.mul_den_eq_num D.α
-  have hb1 : 1 ≤ D.α.den := D.α.den_pos
-  have hmlo := hrd.m_lo
-  have hmhi := hrd.m_hi
-  have hm1 : -1 / 2 ≤ (m : ℚ) - D.α * r := by
-    have : ((-1 / 2 : ℚ) : ℝ) ≤ (((m : ℚ) - D.α * r : ℚ) : ℝ) := by push_cast; linarith [hmlo]
-    exact_mod_cast this
-  have hm2 : (m : ℚ) - D.α * r ≤ 1 / 2 := by
-    have : (((m : ℚ) - D.α * r : ℚ) : ℝ) < ((1 / 2 : ℚ) : ℝ) := by push_cast; linarith [hmhi]
-    have := (Rat.cast_lt (K := ℝ)).1 this
-    exact this.le
-  obtain ⟨hlt, hk0', -, -, -, -⟩ := c₀.ok_spec hcell
-  have hkc : (0 : ℚ) ≤ c₀.kc := Nat.cast_nonneg _
-  have h1 : (1 : ℚ) ≤ D.α.den := by exact_mod_cast hb1
-  have h2 : (1 : ℚ) ≤ n' := by exact_mod_cast hn
-  have hbn : (0 : ℚ) < (D.α.den : ℚ) * n' + c₀.u1 := by nlinarith
-  have hbn0 : (0 : ℚ) < (D.α.den : ℚ) * n' + c₀.u0 := by nlinarith
-  have hs' : (1 / ((D.α.den : ℚ) * n' + c₀.u1)) * (r : ℚ) < p := by
-    have h := hs
-    simp only [expPiece] at h
-    exact_mod_cast h
-  have ht' : (p : ℚ) ≤ (1 / ((D.α.den : ℚ) * n' + c₀.u0)) * (r : ℚ) := by
-    have h := ht
-    simp only [expPiece] at h
-    exact_mod_cast h
-  have hr1 : (r : ℚ) < ((D.α.den : ℚ) * n' + c₀.u1) * p := by
-    rw [one_div, inv_mul_eq_div, div_lt_iff₀ hbn] at hs'
-    linarith
-  have hr0' : ((D.α.den : ℚ) * n' + c₀.u0) * p ≤ r := by
-    rw [one_div, inv_mul_eq_div, le_div_iff₀ hbn0] at ht'
-    linarith
-  have hctx : CellCtx D.α (kappaOf D j 0) (kappaOf D j 1) D.α.num.toNat D.α.den n' c₀ r p m kv :=
-    { hα := hα, hab := hab, hb := hb1, hn := hn, hok := hcell, hp := (Fact.out : p.Prime).pos,
-      hm1 := hm1, hm2 := hm2, hk0 := (hkap 0 (by norm_num)).1, hk0' := (hkap 0 (by norm_num)).2,
-      hk1 := (hkap 1 (by norm_num)).1, hk1' := (hkap 1 (by norm_num)).2, hr0 := hr0', hr1 := hr1 }
-  have hcond : ∀ cd ∈ ([] : List KCond), cd.Holds r p m kv := fun cd hcd => absurd hcd List.not_mem_nil
-  rcases hbr : c₀.br with _ | ⟨j0, j1, j2⟩
-  · -- `D1x`
-    obtain ⟨nn, hnn, hb⟩ := hd1x ⟨kD1xE, [], 0⟩ (List.mem_singleton_self _) i hi hr0 p hPb hN hqN kv hroots
-      hcond
-    refine ⟨nn, hnn, ?_⟩
-    have h1 : (nn : ℝ) ≤ ((kD1xE.evalN r p m kv : ℕ) : ℝ) := by
-      have h0 : (⟨kD1xE, [], 0⟩ : KBranch).debit = 0 := rfl
-      rw [h0, Nat.zero_mul, Nat.add_zero] at hb
-      have : nn ≤ kD1xE.evalN r p m kv := hb
-      exact_mod_cast this
-    have h2 := (Rat.cast_le (K := ℝ)).2 (d1x_bound hctx hbr)
-    push_cast at h2
-    simp only [expPiece, expC]
-    push_cast
-    linarith
-  · -- the prefix branch of the cell
-    obtain ⟨nn, hnn, hb⟩ := hpre (D.α.num.toNat * n' + c₀.nu) j0 j1 j2 _ (List.mem_singleton_self _) i hi hr0
-      p hPb hN hqN kv hroots hcond
-    refine ⟨nn, hnn, ?_⟩
-    have h1 : (nn : ℝ) ≤ (((kbrPre (D.α.num.toNat * n' + c₀.nu) j0 [j1, j2]).τ.evalN r p m kv : ℕ) : ℝ) := by
-      have h0 : (kbrPre (D.α.num.toNat * n' + c₀.nu) j0 [j1, j2]).debit = 0 := rfl
-      rw [h0, Nat.zero_mul, Nat.add_zero] at hb
-      have : nn ≤ (kbrPre (D.α.num.toNat * n' + c₀.nu) j0 [j1, j2]).τ.evalN r p m kv := hb
-      exact_mod_cast this
-    have h2 := (Rat.cast_le (K := ℝ)).2 (pre_bound hctx hbr)
-    push_cast at h2
-    simp only [expPiece, expC]
-    push_cast
-    linarith
-
 /-! ### Theorem C3 -/
 
 set_option maxHeartbeats 4000000 in
@@ -697,40 +584,6 @@ theorem kcheckC_facts {E : KBankDataC} (h : kcheckC E = true) :
   obtain ⟨y, hy, rfl⟩ := List.mem_map.1 hx
   exact (h2 y hy).1
 
-/-- **Theorem C3** (family form): a closed `k`-shift bank that passes `kcheckC`, with the valid catalogue, the
-valid prefix branches of every strip and the valid branch `D1x`, has the scaled content `Λ`. -/
-theorem hasScaledContent_of_kcheckC (E : KBankDataC) (hE : kcheckC E = true)
-    (c : ℚ) (hc : 0 < c) (hcα : c = 2 * E.α) (const : ℝ) (depth : ℕ)
-    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (hdepth : depth ≤ E.depth)
-    (hQ : AltQ c hc E.cF Q) (B : SmallBudget) (N0 : ℕ)
-    (hcat : KCatValidFam c hc const depth Q E.shifts E.Q E.Pbad N0 E.kcat)
-    (hpre : ∀ n j0 j1 j2, KCatValidFam c hc const depth Q E.shifts E.Q E.Pbad N0 [kbrPre n j0 [j1, j2]])
-    (hd1x : KCatValidFam c hc const depth Q E.shifts E.Q E.Pbad N0 [⟨kD1xE, [], 0⟩])
-    (hPre : PreValidFam c hc const depth Q E.M B E.t0 E.α0b) :
-    HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (E.Λ : ℝ) := by
-  obtain ⟨hpar, hlen, hαpos, hcls, hheads, hcells, hpieces, hN1⟩ := kcheckC_facts hE
-  have hα0 : 0 ≤ E.α := hαpos.le
-  have hb1 : 1 ≤ E.α.den := E.α.den_pos
-  refine hasScaledContent_of_facts E.toK hpar hcls hheads c hc hcα const depth Q hQ B N0 ?_ ?_ hcat hPre
-  · intro x hx z hz
-    obtain ⟨y, hy, rfl⟩ := List.mem_map.1 hx
-    simp only [KTmplC.toK, List.mem_append, List.mem_map] at hz
-    rcases hz with ⟨e, he, rfl⟩ | hz
-    · obtain ⟨n', c₀, hn1, -, hc₀, rfl⟩ := mem_expList he
-      exact expPiece_basic hα0 hb1 hn1 (hcells y hy c₀ hc₀) (by norm_num [expC])
-    · have hall := hpieces y hy
-      simp only [kpieceAll, List.all_eq_true] at hall
-      exact pieceBasic_of_ok (hall z hz)
-  · intro x hx z hz
-    obtain ⟨y, hy, rfl⟩ := List.mem_map.1 hx
-    simp only [KTmplC.toK, List.mem_append, List.mem_map] at hz
-    rcases hz with ⟨e, he, rfl⟩ | hz
-    · obtain ⟨n', c₀, hn1, -, hc₀, rfl⟩ := mem_expList he
-      exact exp_cov hpar hlen hpre hd1x hn1 (hcells y hy c₀ hc₀)
-    · have hall := hpieces y hy
-      simp only [kpieceAll, List.all_eq_true] at hall
-      exact head_cov hpar hdepth hQ hcat (hall z hz)
-
 /-! ### Assembling a closed bank from shared facts about the expansion
 
 The expansion of a class (the same for the two supports of a plane) is checked once.  The head conditions of
@@ -809,10 +662,8 @@ theorem kcheckC_of {E : KBankDataC} (h1 : kcParams E = true) (h2 : kcHeads E = t
   exact ⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, h5⟩
 
 end CatalanCore.Uniform.Content.BankShared.KTerm
-#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.exp_cov
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.head_cov
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_facts
-#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_kcheckC
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.ktmplHead_toK_of
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KTmplC.mass_toK
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.kcheckC_of
