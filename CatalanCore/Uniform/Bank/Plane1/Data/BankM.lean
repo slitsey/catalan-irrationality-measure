@@ -13,7 +13,7 @@ set_option maxRecDepth 100000
 
 /-! # Plane 1 content, closed form: the bank of `S⁻` (wave H5a-closed; ledger P115)
 
-`bankM` = header with `Λ = planeLam` and the closed templates `tM1`, `tM5` (strips `n' = 16, …, 1` from the cells
+`bankM` = header with `Λ = planeLam` and the closed templates `tM1`, `tM5` (strips `n' = 32, …, 1` from the cells
 `cells1`, `cells5`, then the head pieces).  **`bankM_check : kcheckC bankM = true`**, from the pieces: the frame,
 the head conditions (the expansion is checked once in `Exp1`, `Exp5`), the cells, `pieceOK` of the head pieces and the
 class masses (`kclassOK_six`). -/
@@ -21,8 +21,8 @@ class masses (`kclassOK_six`). -/
 namespace CatalanCore.Uniform.Bank.Plane1.Data
 open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
 
-def tM1 : KTmplC := ⟨qq 1 204, 16, cells1, hM1, 5⟩
-def tM5 : KTmplC := ⟨qq 1 204, 16, cells5, hM5, 5⟩
+def tM1 : KTmplC := ⟨qq 1 396, 32, cells1, hM1, 5⟩
+def tM5 : KTmplC := ⟨qq 1 396, 32, cells5, hM5, 5⟩
 
 /-- The closed plane 1 content bank of the support. -/
 def bankM : KBankDataC := { eHeadM with Λ := planeLam, tmpls := [(1, tM1), (5, tM5)] }
@@ -70,8 +70,8 @@ theorem bankM_pieces : kcPieces bankM = true := by
 theorem bankM_mass : ((tM1.toK bankM.α).toQ.mass bankM.toK.α0 + (tM5.toK bankM.α).toQ.mass bankM.toK.α0 =
     bankM.toK.Λ * 2) := by
   rw [KTmplC.mass_toK, KTmplC.mass_toK]
-  rw [show (tM1.expP bankM.α) = expPs (qq 1 12) 16 cells1 from rfl,
-    show (tM5.expP bankM.α) = expPs (qq 1 12) 16 cells5 from rfl, exp1_mass, exp5_mass]
+  rw [show (tM1.expP bankM.α) = expPs (qq 1 12) 32 cells1 from rfl,
+    show (tM5.expP bankM.α) = expPs (qq 1 12) 32 cells5 from rfl, exp1_mass, exp5_mass]
   -- kcost: 3 s measured (masses of the 76 head pieces of each class and the final comparison)
   decide +kernel
 
