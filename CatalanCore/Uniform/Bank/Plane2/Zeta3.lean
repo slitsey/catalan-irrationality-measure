@@ -282,9 +282,9 @@ theorem zeta3_content (depth : ℕ) :
 theorem zeta3_numeric : (zLam : ℚ) < Dchi.Dt ∧ cH ≤ 60382 / 10000 * (Dchi.Dt - zLam) := by
   unfold zLam; constructor <;> decide +kernel
 
-/-- **ζ(3) has irrationality measure at most `6.0382`** (the one-term datum on the halves cover, `α = 3/20`,
+/-- **ζ(3) has irrationality measure at most `B`** whenever `cH ≤ B (D - Λ)` (the one-term datum on the halves cover, `α = 3/20`,
 the sweep rows `B1, B2, B4, E1, P1` at `u = 0`, `K = 17` bands). -/
-theorem zeta3_measure : MeasureLBAt (riemannZeta 3).re ((60382 / 10000 : ℚ) : ℝ) := by
+theorem zeta3_measure_le {B : ℚ} (hB : cH ≤ B * (Dchi.Dt - zLam)) : MeasureLBAt (riemannZeta 3).re (B : ℝ) := by
   set P : (FH.seqFamily zeta3Datum.f zeta3Datum.e zeta3Datum.xi 1).ι → Prop :=
     fun n => SeqFamily.scale FH.geometry n % 2 = 0 with hP
   set Famr := (FH.seqFamily zeta3Datum.f zeta3Datum.e zeta3Datum.xi 1).restrictAdm P with hFamr
@@ -298,7 +298,8 @@ theorem zeta3_measure : MeasureLBAt (riemannZeta 3).re ((60382 / 10000 : ℚ) : 
     intro ε hε
     obtain ⟨R0, hR⟩ := zeta3_decay 1 ε hε
     exact ⟨R0, fun n hn hr t ht => hR n hn.1 hr t ht⟩
-  obtain ⟨hlam, hmu⟩ := zeta3_numeric
+  have hlam := zeta3_numeric.1
+  have hmu := hB
   have hη : (zLam : ℝ) < halvesCert.Dr := by
     show (zLam : ℝ) < ((Dchi.Dt : ℚ) : ℝ)
     exact_mod_cast hlam
@@ -326,7 +327,7 @@ theorem zeta3_measure : MeasureLBAt (riemannZeta 3).re ((60382 / 10000 : ℚ) : 
   refine key.1.mono ?_
   have hpos : (0 : ℝ) < halvesCert.Dr - zLam := sub_pos.2 hη
   rw [div_le_iff₀ hpos]
-  have hmuR : ((cH : ℚ) : ℝ) ≤ ((60382 / 10000 : ℚ) : ℝ) * (((Dchi.Dt : ℚ) : ℝ) - (zLam : ℝ)) := by
+  have hmuR : ((cH : ℚ) : ℝ) ≤ ((B : ℚ) : ℝ) * (((Dchi.Dt : ℚ) : ℝ) - (zLam : ℝ)) := by
     exact_mod_cast hmu
   have e1 : halvesCert.cr = ((cH : ℚ) : ℝ) := by
     show ((Dchi.ccert : ℚ) : ℝ) = _
@@ -334,6 +335,10 @@ theorem zeta3_measure : MeasureLBAt (riemannZeta 3).re ((60382 / 10000 : ℚ) : 
   have e2 : halvesCert.Dr = ((Dchi.Dt : ℚ) : ℝ) := rfl
   rw [e1, e2]
   linarith
+
+/-- **ζ(3) has irrationality measure at most `6.0382`**. -/
+theorem zeta3_measure : MeasureLBAt (riemannZeta 3).re ((60382 / 10000 : ℚ) : ℝ) :=
+  zeta3_measure_le zeta3_numeric.2
 
 end CatalanCore.Uniform.Bank.Plane2
 

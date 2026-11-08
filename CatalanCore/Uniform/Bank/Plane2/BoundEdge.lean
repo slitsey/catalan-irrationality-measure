@@ -279,15 +279,16 @@ def Plane2ContentPi (Λ : ℝ) : Prop :=
     (fun n => SeqFamily.scale P2G.geometry n % 2 = 0)) (SeqFamily.scale P2G.geometry) Λ
 
 /-- **The plane 2 theorem on the whole projective line, contents as the only open input.**  For every rational
-`(a, b) ≠ (0, 0)`, `a ζ(3) + b π²` is irrational and has irrationality measure at most `335.20`, given the contents of the
+`(a, b) ≠ (0, 0)`, `a ζ(3) + b π²` is irrational and has irrationality measure at most every `B ≥ ccert / (D - Λ)`, given the contents of the
 three families (generic datum, `ζ(3)`, `π²`) at the same `Λ ≤ 869210883039/250000000000`. -/
-theorem plane2_point_ab_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) (hG : Plane2Content (Λ : ℝ))
+theorem plane2_point_ab_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) {B : ℚ} (hB : Cover.Dchi.ccert / (Cover.Dchi.Dt - Λ) ≤ B)
+    (hG : Plane2Content (Λ : ℝ))
     (hZ : Plane2ContentZeta (Λ : ℝ)) (hP : Plane2ContentPi (Λ : ℝ)) (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
-    MeasureLBAt ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) ((33520 / 100 : ℚ) : ℝ) ∧
+    MeasureLBAt ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) (B : ℝ) ∧
       Irrational ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) := by
   by_cases ha : a = 0
   · have hb : b ≠ 0 := by tauto
-    refine plane2_family_point piDatum (by decide) (plane2_decay_pi 1) hΛu hP (lam := -1 / (3 * b)) ?_ ?_
+    refine plane2_family_point piDatum (by decide) (plane2_decay_pi 1) hΛu hB hP (lam := -1 / (3 * b)) ?_ ?_
     · simp [hb]
     · rw [piDatum_xi, ha]
       have hb' : (b : ℝ) ≠ 0 := by exact_mod_cast hb
@@ -295,14 +296,14 @@ theorem plane2_point_ab_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) (hG : Pla
       field_simp
       ring
   · by_cases hb : b = 0
-    · refine plane2_family_point zeta3Datum (by decide) (plane2_decay_zeta 1) hΛu hZ (lam := -2 / a) ?_ ?_
+    · refine plane2_family_point zeta3Datum (by decide) (plane2_decay_zeta 1) hΛu hB hZ (lam := -2 / a) ?_ ?_
       · simp [ha]
       · rw [zeta3Datum_xi, hb]
         have ha' : (a : ℝ) ≠ 0 := by exact_mod_cast ha
         push_cast
         field_simp
         ring
-    · exact plane2_point_of_content hΛu hG a b ha hb
+    · exact plane2_point_of_content hΛu hB hG a b ha hb
 
 end CatalanCore.Uniform.Bank.Plane2
 

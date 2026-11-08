@@ -317,16 +317,23 @@ theorem p2_ratio_real {Λ : ℚ} (hΛ : Λ ≤ p2LamMax) :
     _ = (((Cover.Dchi.ccert / (Cover.Dchi.Dt - p2LamMax) : ℚ)) : ℝ) := by push_cast; rfl
     _ ≤ ((33520 / 100 : ℚ) : ℝ) := by exact_mod_cast p2_ratio
 
+/-- The ratio bound `335.20` for every content below `p2LamMax`, in `ℚ`. -/
+theorem p2_ratio_le {Λ : ℚ} (hΛ : Λ ≤ p2LamMax) : Cover.Dchi.ccert / (Cover.Dchi.Dt - Λ) ≤ 33520 / 100 := by
+  have h := p2_ratio_real hΛ
+  have h' : ((Cover.Dchi.ccert / (Cover.Dchi.Dt - Λ) : ℚ) : ℝ) ≤ ((33520 / 100 : ℚ) : ℝ) := by
+    push_cast at h ⊢; exact h
+  exact_mod_cast h'
+
 /-- **A datum on the plane 2 cover** (generic): a datum `D` of depth `d / 2 ≤ 1` whose Löwner family over `P2G` has the
 decay of the cover and a content `Λ ≤ 869210883039/250000000000` has a constant `ξ` with `D.xi = lam ξ`, `lam ≠ 0`
-of irrationality measure at most `335.20`. -/
+of irrationality measure at most `B`, for every `B` above the exact ratio `ccert / (D - Λ)`. -/
 theorem plane2_family_point (D : Datum) (hdepth : D.d / 2 ≤ 1)
     (hdecay : HasScaledDecay (P2G.seqFamily D.f D.e D.xi 1) (SeqFamily.scale P2G.geometry) p2Cert.Dr p2Cert.cr)
-    {Λ : ℚ} (hΛu : Λ ≤ p2LamMax)
+    {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) {B : ℚ} (hB : Cover.Dchi.ccert / (Cover.Dchi.Dt - Λ) ≤ B)
     (hΛ : HasScaledContent ((P2G.seqFamily D.f D.e D.xi 1).restrictAdm
       (fun n => SeqFamily.scale P2G.geometry n % 2 = 0)) (SeqFamily.scale P2G.geometry) (Λ : ℝ))
     {ξ : ℝ} {lam : ℚ} (hlam : lam ≠ 0) (hconst : D.xi = (lam : ℝ) * ξ) :
-    MeasureLBAt ξ ((33520 / 100 : ℚ) : ℝ) ∧ Irrational ξ := by
+    MeasureLBAt ξ (B : ℝ) ∧ Irrational ξ := by
   set P : (P2G.seqFamily D.f D.e D.xi 1).ι → Prop := fun n => SeqFamily.scale P2G.geometry n % 2 = 0 with hP
   set Famr := (P2G.seqFamily D.f D.e D.xi 1).restrictAdm P with hFamr
   have hΛ' : HasScaledContent (Famr.restrictAdm (fun n => SeqFamily.scale P2G.geometry n % 2 = 0))
@@ -368,15 +375,16 @@ theorem plane2_family_point (D : Datum) (hdepth : D.d / 2 ≤ 1)
   have e1 : p2Cert.cr = ((Cover.Dchi.ccert : ℚ) : ℝ) := rfl
   have e2 : p2Cert.Dr = ((Cover.Dchi.Dt : ℚ) : ℝ) := rfl
   rw [one_mul, e1, e2]
-  exact p2_ratio_real hΛu
+  exact_mod_cast hB
 
 /-- **The plane 2 theorem for `a b ≠ 0`, the content as the only open input.**  Given a content
 `Λ ≤ 869210883039/250000000000` of the plane 2 families (`Plane2Content`), `a ζ(3) + b π²` is irrational and has
-irrationality measure at most `335.20`, for rational `a, b ≠ 0`.  The decay is `plane2_decay` (the generated cover),
+irrationality measure at most every `B ≥ ccert / (D - Λ)` (`335.20` at `p2LamMax`), for rational `a, b ≠ 0`.  The decay is `plane2_decay` (the generated cover),
 the nonvanishing `altGeom_seqFamily_nv0_even`, the constant `plane2_xi`. -/
-theorem plane2_point_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) (hΛ : Plane2Content (Λ : ℝ))
+theorem plane2_point_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) {B : ℚ} (hB : Cover.Dchi.ccert / (Cover.Dchi.Dt - Λ) ≤ B)
+    (hΛ : Plane2Content (Λ : ℝ))
     (a b : ℚ) (ha : a ≠ 0) (hb : b ≠ 0) :
-    MeasureLBAt ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) ((33520 / 100 : ℚ) : ℝ) ∧
+    MeasureLBAt ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) (B : ℝ) ∧
       Irrational ((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) := by
   have hden_a : (a.den : ℤ) ≠ 0 := by exact_mod_cast a.den_nz
   have hden_b : (b.den : ℤ) ≠ 0 := by exact_mod_cast b.den_nz
@@ -400,7 +408,7 @@ theorem plane2_point_of_content {Λ : ℚ} (hΛu : Λ ≤ p2LamMax) (hΛ : Plane
     push_cast
     field_simp
     ring
-  exact plane2_family_point (Datum.plane2 v u hv hu) (by rw [Datum.plane2_d]) (plane2_decay v u hv hu 1) hΛu
+  exact plane2_family_point (Datum.plane2 v u hv hu) (by rw [Datum.plane2_d]) (plane2_decay v u hv hu 1) hΛu hB
     (hΛ v u hv hu) hlam hconst
 
 end CatalanCore.Uniform.Bank.Plane2

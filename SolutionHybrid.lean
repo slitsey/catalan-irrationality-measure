@@ -13,6 +13,15 @@ public import CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound
 public import CatalanCore.Uniform.Bank.HalvesContent.Bound
 public import CatalanCore.Uniform.Bank.Irrational
 public import CatalanCore.Uniform.Bank.FourthsContent.Level3Data
+public import CatalanCore.Uniform.Bank.Plane1.Measure
+public import CatalanCore.Uniform.Bank.Plane2.Measure
+public import CatalanCore.Uniform.Bank.Plane2.Zeta3
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank227P
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank227M
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank127P
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank127M
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank118P
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank118M
 
 public section
 
@@ -325,6 +334,116 @@ theorem pi2_final :
   exact eventually_of_exact (by unfold cH; norm_num) hl (by rw [bankData_Λ]; decide +kernel)
     CatalanCore.Uniform.Bank.HalvesContent.Bound.pi2_irrational hX
 
+/-- A measure at the exact rational exponent `c / (D - Λ)`, with `c < B (D - Λ)`, gives the bound with exponent `B`. -/
+theorem eventually_of_q {x : ℝ} {c D Λ B : ℚ} (hc : 0 < c) (hΛ : Λ < D) (hB : c < B * (D - Λ))
+    (hx : Irrational x) (h : Measure.MeasureLBAt x (((c / (D - Λ) : ℚ)) : ℝ)) :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-((B : ℚ) : ℝ)) < |x - a / b| := by
+  refine eventually_of_exact hc hΛ hB hx ?_
+  have e : (((c / (D - Λ) : ℚ)) : ℝ) = (1 : ℝ) * (c : ℝ) / ((D : ℝ) - (Λ : ℝ)) := by push_cast; ring
+  rw [← e]; exact h
+
+open CatalanCore.Uniform CatalanCore.Measure CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Bank.Plane1
+  CatalanCore.Uniform.Bank.Plane1.Data in
+theorem plane1_final (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
+    ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ, (q : ℝ) ^ (-((206622 / 10000 : ℚ) : ℝ)) <
+      |((a : ℝ) * CatalanFrames.P6.chi3L2 + (b : ℝ) * Real.pi ^ 2) - p / q| := by
+  obtain ⟨h1, h2⟩ := plane_point_ab a b hab planeContent_data planeDecay_cover plane1_eta plane1_cc
+  refine eventually_of_exact plane1_cc plane1_eta (by decide +kernel) h2 ?_
+  rw [one_mul]; exact h1
+
+open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Support CatalanCore.Uniform.Content.Shape
+  CatalanCore.Uniform.Bank.Plane2 in
+theorem plane2_final (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
+    ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ, (q : ℝ) ^ (-((33520 / 100 : ℚ) : ℝ)) <
+      |((a : ℝ) * (riemannZeta 3).re + (b : ℝ) * Real.pi ^ 2) - p / q| := by
+  obtain ⟨h1, h2⟩ := plane2_point_ab_of_content plane2Lam_le_max
+    (B := Cover.Dchi.ccert / (Cover.Dchi.Dt - plane2Lam)) le_rfl plane2Content_inst plane2ContentZeta_inst
+    (hasScaledContent_mono PiContent.plane2ContentPi (by exact_mod_cast piLam_le_plane2Lam)) a b hab
+  exact eventually_of_q p2_cc (lt_of_le_of_lt plane2Lam_le_max p2_eta) (by unfold plane2Lam; decide +kernel) h2 h1
+
+open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Support CatalanCore.Uniform.Bank.Halves CatalanCore.Uniform.Bank.Halves.Cover
+  CatalanCore.Uniform.Bank.Plane2 in
+theorem zeta3_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-((60382 / 10000 : ℚ) : ℝ)) < |(riemannZeta 3).re - a / b| := by
+  obtain ⟨hl, -⟩ := zeta3_numeric
+  have hne : Dchi.Dt - zLam ≠ 0 := sub_ne_zero.2 (ne_of_gt hl)
+  have h := zeta3_measure_le (B := cH / (Dchi.Dt - zLam)) (div_mul_cancel₀ _ hne).ge
+  have hx : Irrational (riemannZeta 3).re := by
+    simpa using (CatalanCore.Uniform.Bank.Plane2.plane2_measure 1 0 (Or.inl one_ne_zero)).2
+  exact eventually_of_q (by unfold cH; norm_num) hl (by unfold cH zLam; decide +kernel) hx h
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_2_27_plus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((2 / 27 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.plus 2 (-1) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F227.bankP_ok Dips.Data.F227.bankP_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.plus 2 (-1) = (2 / 27 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F227.bankP_eta (by decide +kernel) h.2 h.1
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_2_27_minus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((-2 / 27 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.minus 2 (-1) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F227.bankM_ok Dips.Data.F227.bankM_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.minus 2 (-1) = (-2 / 27 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F227.bankM_eta (by decide +kernel) h.2 h.1
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_1_27_plus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((1 / 27 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.minus 1 (-2) 1 (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F127.bankM_ok Dips.Data.F127.bankM_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.minus 1 (-2) = (1 / 27 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F127.bankM_eta (by decide +kernel) h.2 h.1
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_1_27_minus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((-1 / 27 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.plus 1 (-2) 1 (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F127.bankP_ok Dips.Data.F127.bankP_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.plus 1 (-2) = (-1 / 27 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F127.bankP_eta (by decide +kernel) h.2 h.1
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_1_18_plus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((1 / 18 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.plus 4 (-3) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F118.bankP_ok Dips.Data.F118.bankP_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.plus 4 (-3) = (1 / 18 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F118.bankP_eta (by decide +kernel) h.2 h.1
+
+open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips CatalanCore.Uniform.Bank.Plane1.Data in
+theorem dip_1_18_minus_final :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ, (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+      |(CatalanFrames.P6.chi3L2 + ((-1 / 18 : ℚ) : ℝ) * Real.pi ^ 2) - a / b| := by
+  have h := dip_point Support.minus 4 (-3) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    Dips.Data.F118.bankM_ok Dips.Data.F118.bankM_eta (by decide +kernel) le_rfl
+  have ht : planeT Support.minus 4 (-3) = (-1 / 18 : ℚ) := by
+    simp only [planeT, Support.sgn]
+    norm_num
+  rw [ht] at h
+  exact eventually_of_q plane1_cc Dips.Data.F118.bankM_eta (by decide +kernel) h.2 h.1
+
 end Aux
 
 
@@ -434,6 +553,94 @@ theorem pi2_measure :
         |Real.pi ^ 2 - (a : ℝ) / b| := by
   exact Aux.pi2_final
 
+theorem plane1_measure (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
+    ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ,
+      (q : ℝ) ^ (-((206622 / 10000 : ℚ) : ℝ)) <
+        |((a : ℝ) * (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + (b : ℝ) * Real.pi ^ 2) - (p : ℝ) / q| := by
+  exact Aux.plane1_final a b hab
+
+theorem plane2_measure (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
+    ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ,
+      (q : ℝ) ^ (-((33520 / 100 : ℚ) : ℝ)) <
+        |((a : ℝ) * (∑' n : ℕ, 1 / ((n : ℝ) + 1) ^ 3) + (b : ℝ) * Real.pi ^ 2) - (p : ℝ) / q| := by
+  have h := Aux.plane2_final a b hab
+  rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
+  exact h
+
+theorem dip_2_27_plus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + 2 * Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
+  have h := Aux.dip_2_27_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + 2 * Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem dip_2_27_minus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - 2 * Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
+  have h := Aux.dip_2_27_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - 2 * Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem dip_1_27_plus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
+  have h := Aux.dip_1_27_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem dip_1_27_minus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
+  have h := Aux.dip_1_27_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem dip_1_18_plus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 18) - (a : ℝ) / b| := by
+  have h := Aux.dip_1_18_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 18 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem dip_1_18_minus_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+        |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 18) - (a : ℝ) / b| := by
+  have h := Aux.dip_1_18_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 18 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
+
+theorem zeta3_measure :
+    ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
+      (b : ℝ) ^ (-((60382 / 10000 : ℚ) : ℝ)) <
+        |(∑' n : ℕ, 1 / ((n : ℝ) + 1) ^ 3) - (a : ℝ) / b| := by
+  have h := Aux.zeta3_final
+  rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
+  exact h
+
 #print axioms lambda_minus_measure
 #print axioms lambda_plus_measure
 #print axioms chi3_measure
@@ -450,5 +657,14 @@ theorem pi2_measure :
 #print axioms sevenths5_measure
 #print axioms sevenths6_measure
 #print axioms pi2_measure
+#print axioms plane1_measure
+#print axioms plane2_measure
+#print axioms dip_2_27_plus_measure
+#print axioms dip_2_27_minus_measure
+#print axioms dip_1_27_plus_measure
+#print axioms dip_1_27_minus_measure
+#print axioms dip_1_18_plus_measure
+#print axioms dip_1_18_minus_measure
+#print axioms zeta3_measure
 
 end TrigammaDifferences
