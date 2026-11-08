@@ -5,8 +5,8 @@ project:
   name: "An irrationality measure for Catalan's constant"
   description: >-
     For Catalan's constant G = sum_{j >= 0} (-1)^j / (2j+1)^2, we prove
-    |G-a/b| > b^(-295) for every integer a and all sufficiently large b, so the
-    irrationality exponent of G is at most 295. The proof uses OpenAI's
+    |G-a/b| > b^(-270) for every integer a and all sufficiently large b, so the
+    irrationality exponent of G is at most 270. The proof uses OpenAI's
     determinant construction for general parameters, here the design
     (58,9,3,5,3), with a determinant of size 58N whose value is a polynomial of
     degree at most 53N in the constant. At a prime p each unit of corank modulo p
@@ -23,18 +23,22 @@ project:
     suffices on the others. With weight 0 the determinant factors through two Gram
     determinants, which Fischer's inequality and a finite Andreief identity bound
     by two logarithmic gases, and tangent inequalities against fixed reference
-    measures bound the gases. This adds 23.11 to the decay rate. A quadrature
-    formula with 53N nodes, the inverse images under a fixed polynomial of
-    Chebyshev nodes (due to C. Davis), with the exact Green function of the
-    inverse image, a binomial bound for generalized Vandermonde determinants and
-    one contour of radius 3/5 for the column weights, extends the bound to an
-    interval of length exp(-rho N) around G, with rho = 295.849794. The energy
-    estimates use trial sequences given by logarithmic potentials of point
-    charges. The fields of the reference measures are bounded by polynomial
-    majorants and exact sum of squares identities. The decay rate is
-    eta = 53.16065, and a criterion with a free lower end of the window of primes
-    gives the exponent 295: its last condition reads
-    295 > d rho / (eta - 4 d delta) = 294.956... with d = 53 and delta = 2.9e-7.
+    measures bound the gases. This adds 24.64 to the decay rate. A quadrature
+    formula with 53N nodes, the Chebyshev nodes of 106 short intervals whose
+    Lagrange polynomials are bounded by the Green functions of the intervals,
+    extends the bound to an interval of length exp(-rho N) around G, with
+    rho = 278.376313578. The weight of each replaced column and its generalized
+    Vandermonde factor are bounded together: a weighted Hadamard inequality with
+    parameter 3/4 makes the dependence on the column cancel, and one contour of
+    radius 3/4 serves all columns. The node-dependent part of the weight is
+    bounded by a chord table and enters the energy bound as an external field.
+    The energy estimates use trial sequences given by logarithmic potentials of
+    point charges, which move linearly with the fraction of prescribed columns.
+    The fields of the reference measures are bounded by polynomial majorants and
+    exact sum of squares identities. The decay rate is eta = 54.68745, and a
+    criterion with a free lower end of the window of primes gives the exponent
+    270: its last condition reads
+    270 > d rho / (eta - 4 d delta) = 269.78696... with d = 53 and delta = 2.9e-7.
     Denominator and content asymptotics and the choice of the prime use the prime
     number theorem. All numerical bounds are ordinary kernel-checked rational
     proofs.
@@ -80,10 +84,12 @@ sources:
     location: "https://github.com/1337isnot1337/catalan-constant"
     relationship: other
     note: >-
-      Supplies the quadrature nodes (inverse images of Chebyshev nodes under a
-      fixed polynomial) and their Lean certificates. 33 files from commit
-      3c45153 are ported into CatalanMeasure/GenD/Signed/Davis/ with
-      declarations and proofs unchanged; see NOTICE and PROVENANCE.json there.
+      Supplies two lemmas on the weights of nodal polynomials. Two files of
+      commit 3c45153, GeneralNodalWeights.lean and NodalRootDeletion.lean, are
+      ported into CatalanMeasure/GenD/Signed/Davis/ with declarations and proofs
+      unchanged and are used by the proof; the other 31 ported files are in
+      archive/ and are not part of the build. See NOTICE and PROVENANCE.json
+      there.
     license: "Apache-2.0"
     author_endorsement: not-contacted
   - title: "A finite irrationality measure for Catalan's constant"
@@ -115,7 +121,7 @@ related_formalizations:
     relationship: builds-on
     note: >-
       OpenAI's formalization of the irrationality of Catalan's constant. 479
-      files of it are vendored in OAI/, of which the proof imports 386, together
+      files of it are vendored in OAI/, of which the proof imports 117, together
       with the 10 files that OpenAI adds to PrimeNumberTheoremAnd; they were
       converted to Lean's module system and ported from Lean v4.34.1 to
       v4.35.0-rc2. Apart from comparison constants given to seven digits in 37
@@ -124,9 +130,10 @@ related_formalizations:
   - id: "https://github.com/1337isnot1337/catalan-constant/tree/3c4515314bda407d032cb55f60bfc56b03c1d3f9"
     relationship: builds-on
     note: >-
-      Cinna Davis's formalization of mu(G) <= 528.23288. Its node and branch
-      certificate modules (33 files, commit 3c45153) are ported into
-      CatalanMeasure/GenD/Signed/Davis/ with declarations and proofs unchanged.
+      Cinna Davis's formalization of mu(G) <= 528.23288. Two of its files
+      (commit 3c45153), on the weights of nodal polynomials, are ported into
+      CatalanMeasure/GenD/Signed/Davis/ with declarations and proofs unchanged
+      and are used by the proof.
   - id: "https://github.com/rohitkrjha/catalan-measure"
     relationship: independent
     note: >-
@@ -137,7 +144,7 @@ status:
   scope: >-
     The statement in Challenge.lean, with Catalan's constant written as a series,
     is fully proved in Solution.lean by
-    CatalanMeasure.GenD.Signed.RouteI.Measure295.catalan_irrationalityMeasure_295.
+    CatalanMeasure.GenD.Signed.RouteI.Measure270.catalan_irrationalityMeasure_270.
     Every result of the companion paper is formalized, including the degree and
     denominator bounds, the nonvanishing, the closed formulas, the counting
     inequality and its application to every constant subspace with the rank data,
@@ -191,11 +198,11 @@ alignment:
   namespace: "CatalanIrrationalityMeasure"
   statements:
     - source: "Litsey (2026), Theorem 1.1"
-      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_295"
+      lean: "CatalanIrrationalityMeasure.catalan_irrationalityMeasure_270"
       module: "Challenge"
       status: proved
-      note: "For all large b and all integers a, b^(-295) < |G - a/b|."
+      note: "For all large b and all integers a, b^(-270) < |G - a/b|."
 
 acknowledgements: >-
   OpenAI's formalization of the irrationality of Catalan's constant; Cinna
-  Davis's formalization, for the quadrature nodes; the PrimeNumberTheoremAnd project; Mathlib; the Lean FRO.
+  Davis's formalization, for the weights of nodal polynomials; the PrimeNumberTheoremAnd project; Mathlib; the Lean FRO.

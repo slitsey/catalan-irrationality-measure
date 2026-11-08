@@ -107,7 +107,7 @@ the shortening $\tau$ of the interval and the lowering of the bound by $10^{-6}$
 \section{The bounds for the energy method}\label{app:field}
 
 This appendix gives the trial sequences of Section~\ref{sec:energy}, the certified bounds that they satisfy, and
-the bound for $W_0$.
+the bounds for the weights of Section~\ref{sec:real}.
 
 \emph{Trial sequences.} For the constrained case we use a trial sequence with $40$ Chebyshev coefficients and a
 finite number of geometric terms, with the multiplier $\lambda_1=1.68493357$. For the case with doubled
@@ -119,41 +119,53 @@ numbers $z_j$ are rationals with at most twelve decimals. The norms of the geome
 two terms $(z_j,r_j)$ and $(z_l,r_l)$ contribute
 $-\frac12\operatorname{Re}\bigl(r_jr_l\log(1-z_jz_l)+r_j\bar r_l\log(1-z_j\bar z_l)\bigr)$ to $\|u\|^2$.
 
-\emph{The suprema of the fields.} We must bound three functions of one variable from above on their domains: the
-field $X$ on $[-1,1]$, the field $Y$ on $[0,1]$, and the field $F_1$ on $E_x$. For $X$ and $Y$ we locate the real
+\emph{The suprema of the fields.} We must bound two functions of one variable from above on their domains: the
+field $X$ on $[-1,1]$ and the field $Y$ on $[0,1]$. We locate the real
 critical points. The derivative is a rational function with a known denominator, and an exact identity gives its
 numerator. The Descartes rule, after a M\"obius transformation of the interval, bounds the number of real roots
 of the numerator. Sign evaluations at $81$-bit rational points then isolate this number of roots. One global Lipschitz
-bound on each isolating interval and the values at the end points give the supremum. For $F_1$ on $|x|\ge401/2500$ we use a
-cover by cells, with exact rational and integer arithmetic on each cell. The cover uses a Taylor expansion of the
-polynomial part and an expansion to order $5$ of the logarithmic terms. On the positive part of $E_x$ below $401/2500$
-three further cells suffice, because the field stays below $-0.08$ there.
+bound on each isolating interval and the values at the end points give the supremum.
 
-\emph{The bounds.} This gives
+\emph{The bounds.} For the base trial sequences this gives
 \[
- \sup X\le\SupX,\quad \sup Y\le\SupY,\quad \sup_{E_x}F_1\le\ResCap .
+ \sup X\le\SupX,\quad \sup Y\le\SupY .
 \]
 So $M_X+M_Y=\FieldCap$, and the norms satisfy $2\|u\|^2+\frac12\|v\|^2\le0.7736206$. The first coefficient satisfies
-$u_1\ge9/50$, which is used near $x=0$. For the points of the second kind a one-variable estimate gives
-$\sup_{0<y<1}F_2(y)\le-77/100$ for $u_1\ge9/50$. For the constrained case, with the weights
+$u_1\ge9/50$, which is used near $x=0$. For the constrained case, with the weights
 $(\alpha_A,\beta_h,\gamma_H-\frac12,\lambda_1,2g_0/n_0)=(11/29,3/29,49/58,\lambda_1,5/29)$, the bounds
 $\sup X_1\le-1.15854$ and $\sup Y\le-1.32981$ are obtained by isolating the zeros of the numerators of the
-derivatives, which are polynomials with integer coefficients. The norm bound is $n_1=0.67761$. With $a_0=41/58$,
-$a_1=76/29$ and $U_0=\Uzero$ these give the hypotheses of Lemma~\ref{lem:energy-ineq} and the inequality of the
-constrained case, as stated in Section~\ref{sec:energy}.
+derivatives, which are polynomials with integer coefficients. The norm bound is $n_1=0.67761$.
 
-\emph{The bound for $W_0$.} By \eqref{eq:entropy} the bound for $W_0$ is the maximum of a field on the contour $\Gamma$ of
-Section~\ref{sec:real}. The contour consists of the circle $|z|=\frac35$ and real segments. On the circle, the
-inequality \eqref{eq:circlecap} follows from the bound
+\emph{The increments.} The increment of the case with doubled interaction has $40$ Chebyshev coefficients, and
+that of the constrained case has $24$. Both are dyadic. Their fields are bounded on the whole domains by the
+same methods. For the case with doubled interaction the norm bound at $\tau$ is $0.7736206-0.117647903\,\tau+0.005215061\,\tau^2$,
+the field $X$ gains at most $0.01484272\,\tau$, and the column field $Y$ with $\gamma g$ is bounded by a piecewise
+linear function of $\gamma$ with knots at $\alpha_1,\frac15,\frac3{10},\frac25,\frac35,\frac45,1$. The fields $F_1$ and $F_2$
+contain the node term $\hat\delta/58$. They are bounded by covers by cells, with exact rational and integer arithmetic on each cell
+and the maximum of $\hat\delta$ on each cell. For $F_1$ on $|x|\ge401/2500$ the cover has $150$ cells. It uses a Taylor expansion of the
+polynomial part and an expansion to order $5$ of the logarithmic terms. On the positive part of $E_W$ below $401/2500$ six
+further cells suffice. For $F_2$ the covers of $[98749/10^6,\,9995/10^4]$ have $17$ and $14$ cells at the two ends of the move. This gives
 \[
- \bigl(|P(z)|^7|1-z|^{103}\bigr)^2<\frac{20550646924241}{2^{44}}\cdot2^{2\cdot871}\qquad(|z|=\tfrac35)
+ \sup F_1\le0.007,\qquad \sup F_2\le0.007-\log2
 \]
-for an explicit integer polynomial $P$. Substituting $z=\frac35\zeta$ turns the difference into a Laurent polynomial on
-$|\zeta|=1$, and a sum of squares identity proves its positivity. This is a single polynomial identity with $256$ square
-numerators. On the real segments the field is treated by a direct estimate. This proves
-\[
- \sup_{0\le y\le1}\bigl(w(y)+58\tilde h_2(y)\bigr)\le W_0=\WZero .
-\]
+at $\tau=0$, and $-0.0268$ and $0.0233-\log2$ at $\tau=1$. For the constrained case the norm bound at $\tau$ is
+$0.67761-0.082834152\,\tau+0.004096781\,\tau^2$, and the bound $\mathcal M_1$ of Section~\ref{sec:energy} is the chord of
+$0.35072$ and $0.35295$. The two numbers are maxima over the $865$ segments of the chord table at the two end values of
+$\lambda_1$. With $a_0=41/58$, $a_1=76/29$ and $U_0=\Uzero$ these bounds give the inequalities of \S\ref{ssec:cases}.
+Each check $V(\alpha)\le\sigma\alpha$ is a polynomial inequality on a closed interval and is proved by a cover in exact
+rational arithmetic.
+
+\emph{The bound for the weights.} Inequalities \eqref{eq:circlecap} and \eqref{eq:segcap} concern the explicit function $L$ of
+\eqref{eq:Ldef}. On the circle $|z|=\frac34$ write $z=\frac34(s+i\sqrt{1-s^2})$ with $s=\cos\theta$. Then $|z-t|^2=\frac9{16}+t^2-\frac32ts$
+is affine in $s$ for every real $t$. So $\log|1-z|$ is a concave function of $s$. Each $G_c(z)$ is $\operatorname{arccosh}$ of
+$(|z-a_c|+|z-b_c|)/w_c$, a sum of square roots of affine functions of $s$, and therefore concave in $s$ as well. Hence the left
+side of \eqref{eq:circlecap} is a concave function of $s\in[-1,1]$. Its maximum is $3.25053\ldots$ near $s=-0.1741$. A concave function
+is bounded by its secants outside the points and by the chord between them, so three points at distance $\frac1{2000}$ around the
+maximum suffice. At these points the value is enclosed to within $10^{-17}$ by exact rational arithmetic with integer square roots,
+and the bound $D_\Gamma=\Dcirc$ holds with a margin $6\cdot10^{-5}$. On the real segments we use, for real $x$, the closed form
+$e^{G_c(x)}w_c/4\le\frac12\max(w_c,|2x-a_c-b_c|)$ together with $6\log|1-x|\le6\log\frac14$ for $x\ge\frac34$ and
+$6\log|1-x|\le6\log2$ for $x\le-\frac34$. This gives \eqref{eq:segcap} with values below $-9$, far below $D_\Gamma$.
+The knot values $v_i$ of the chord table lie between $-1.97$ and $17.99$.
 
 \section{The reference measures of Section~\ref{sec:signed}}\label{app:trials}
 
@@ -165,7 +177,7 @@ are piecewise uniform on finitely many cells in $Y$, with masses $m_+$ and $m_-$
 negative free nodes, and $R=G_++G_-$ is the row reference. The column reference $C$ has mass $1$. The measures are completed by
 auxiliary measures on the $16$ inner circles. Each auxiliary measure has a cubed Poisson density: its Fourier coefficients
 are $-q^k(1+Ak+Bk^2)/k$ with $q=e^{-\varepsilon/2}$ and $\varepsilon=27/250$, and the constants $A$ and $B$ are rational functions of $r=q^2$.
-The auxiliary measures $\nu_+$ and $\nu_-$ sit at the phases $\pi j/93$, with $680$ and $991$ entries respectively, and have total masses $1-m_+$ and $\frac{53}{58}-m_-$. Let $X$ be the inverse of $x\mapsto x+1/x$ with $|X|\le1$. Then
+The auxiliary measures $\nu_+$ and $\nu_-$ sit at the phases $\pi j/93$, with $616$ and $935$ entries respectively, and have total masses $1-m_+$ and $\frac{53}{58}-m_-$. Let $X$ be the inverse of $x\mapsto x+1/x$ with $|X|\le1$. Then
 $q_+=X_\#G_++\nu_+$ is the measure in the plane of $z$. In the plane of $u$ we take $q_-=J_\#\tilde q_-$ with $\tilde q_-=X_\#G_-+\nu_-$.
 
 \emph{The fields.} Let $L(\mu)=\int\log|X|\,d\mu$. For $\sigma=\pm$ the free row field is
@@ -193,13 +205,13 @@ energies of lists of cells occur: those of $G_+$, $G_-$ and $C$ with themselves,
 pair energies. For piecewise uniform measures a pair energy is a bilinear form in the jumps of the densities, with the kernel $t^2\log|t|$, up to constants. We evaluate it on integer end points in fixed point arithmetic. Well separated blocks of end points are
 treated by a series in the offsets from their centres, using the moments of the blocks, and the other pairs by a recursion on the blocks. This encloses each pair energy to within $10^{-7}$. The remaining terms of $I(q_\pm)$ are the logarithmic moments of the cells,
 the integrals of the cells against the rings, which are sums of primitives over the end points, and the quadratic forms of the auxiliary measures, which have closed forms on the rings. All of these are enclosed to within $10^{-9}$. The reflection term $-\iint\log(1-xx')$ of $I(q_+)$
-enters only through a lower bound from its truncated series. Finally $\int_0^{53}\tau^*\ge1425.3339$. Together these give $\mathsf I\le2.367346$.
+enters only through a lower bound from its truncated series. Finally $\int_0^{53}\tau^*\ge1425.3339$. Together these give $\mathsf I_0+\mathsf I_{\mathrm{gas}}\le2.366997$.
 
-\emph{The column field.} The bound $\mathsf C\le-2.946610$ on $(0,1)$ uses a chain of $386$ units $s=(M+\delta z)/10^{12}$ with $|z|\le1$, together with two end ranges. On a unit the field is at most an integer polynomial in $z$ plus an explicit
+\emph{The column field.} The three bounds $c^{\mathsf C}_i$ of \eqref{eq:caps} on $(0,1)$ use a chain of $386$ units $s=(M+\delta z)/10^{12}$ with $|z|\le1$, together with two end ranges. On a unit the field is at most an integer polynomial in $z$ plus an explicit
 error. The far cells of the references enter through exact integer moments of contiguous clusters, $1152$ clusters in all, and the Taylor series of the logarithmic kernel. The near cells of $C$ enter through the closed form of their potential. The two logarithms enter by
 series or, on the end units, by monotonicity. The constant is $L(R)\ge-0.6905432$, from the primitive of $\log|X|$ in $Y$.
 
-\emph{The angular bounds.} The bounds $\kappa_\pm$ are proved for both signs on each of the $16$ radii, by $32$ certificates. The auxiliary part is cut at degree $384$, with the tail retained. The gas is split into bins. On a bin the kernel has the form
+\emph{The angular bounds.} The bounds $\kappa_\pm$ are proved for both signs on each of the $16$ radii, by $32$ certificates. The auxiliary part is cut at degree $384$, and its tail is bounded. The gas is split into bins. On a bin the kernel has the form
 $\mathsf Q_u(x)=\mathsf a-2\mathsf bux+\mathsf cx^2$ with $u=\cos\theta$. Jensen's inequality and an odd truncation of the logarithmic series bound $\int\frac12\log\mathsf Q_u$ by a polynomial in $u$. The negative sign has a direct and a reflected kernel. The sum over the bins
 is converted exactly to a Chebyshev series. Its bound by $\kappa_\pm$ on $[-1,1]$ is certified by an identity of the same form as the one for the free rows below.
 
@@ -216,4 +228,4 @@ column panels, and the same form for $\log t$ and $\log(1-t)$. Each such term ha
 direct moments are computed by exact integer arithmetic with Kronecker packing. The radial field and the term $-\frac{39}{29}\log(1+t^2)$ are bounded by a chord cover and a
 Chebyshev polynomial. This gives a polynomial $\mathsf p(z)$ with $F_\sigma\le\mathsf p$ plus explicit small errors. Finally $\mathsf p(z)\le\mathsf c$ on $[-1,1]$ is proved by an exact identity
 $\mathsf d(\mathsf c-\mathsf p)=\mathsf r+\mathsf q_0^2$ between Chebyshev series, with $\mathsf q_0$ of degree $16383$ and with $\mathsf r$ small in the $\ell^1$ norm of its coefficients. This gives
-$\mathsf R\le-2.579777$ for both signs.
+the bounds $c^{\mathsf R}_0$ and $c^{\mathsf R}_1$ of \eqref{eq:caps} at the two ends of the move, for both signs.

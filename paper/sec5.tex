@@ -19,11 +19,12 @@ Let
 \end{gather*}
 The number $\Gamma_0$ is the improvement of the decay rate proved in Section~\ref{sec:signed}. Put
 \begin{equation}\label{eq:rho-def}
- \rho=n_0c_2+W_0,\qquad c_2=\Ctwo,\quad W_0=\WZero,\quad \rho=\Rho .
+ \rho=n_0c+\psi,\qquad c=c_2+\sigma,
 \end{equation}
-Here $c_2$ is the increase of the energy bound per prescribed column (Section~\ref{sec:energy}), and $W_0$
-bounds the logarithmic size of the weight and the binomial factor of one column, per unit of $N$
-(\S\ref{ssec:weights}).
+with $c_2=\Ctwo$, $\sigma=\Sigm$ and $\psi=\Psiw$,
+so that $\rho=\Rho$. Here $c$ is the increase of the energy bound per prescribed column
+(Section~\ref{sec:energy}), and $\psi$ bounds the logarithmic size of the weight and the Vandermonde factor
+of one column, per unit of $N$ (\S\ref{ssec:weights}).
 
 \begin{theorem}\label{thm:real}
 For our parameters, uniformly for real $x$ with $|x-G|\le e^{-\rho N}$,
@@ -55,34 +56,67 @@ $\ell_a$. This is a quadrature formula of Gauss type. It makes the columns of $\
 values of the polynomials $P_r$. So the perturbed determinant can be treated by the energy
 method. The cost is the size of the weights.
 
-We take $J=d_0N=53N$ nodes, and we use the nodes of Davis \cite{Davis2026}. Davis constructs a polynomial
-$P$ of degree $130$ with rational coefficients such that every value in $(-1,1)$ is taken by $P$ at
-$130$ distinct points of $(-1,1)$. Put $K=\lceil J/130\rceil$. Then $F_N=T_K\circ P$ has $130K$ simple
-roots in $(-1,1)$. We take $J$ of them as the nodes $t_1,\ldots,t_J$, and delete the other $s=130K-J<130$.
-The nodes lie in $E=P^{-1}([-1,1])$. In the coordinate $x$ with $t=2x/(1+x^2)$ they lie in
+We take $J=d_0N=53N$ nodes, which are Chebyshev nodes of short intervals. Let $[a_c,b_c]$,
+$1\le c\le106$, be fixed intervals with dyadic end points, $48$ in $[-1,0)$ and $58$ in $(0,1)$, adjacent
+within each side. Their union is $[-0.99931266\ldots,-0.37573294\ldots]\cup[0.19559072\ldots,0.99999983\ldots]$. In
+the coordinate $x$ with $t=2x/(1+x^2)$ it is contained in
 \[
  E_x=[-\tfrac{2409}{2500},-\tfrac{19501}{100000}]\cup[\tfrac{98749}{1000000},1].
 \]
-So the nodes avoid a neighbourhood of $x=0$, where the fields of the energy method are largest. The two
-gaps have different widths. The nodes are not Chebyshev nodes for a union of two intervals. They are the
-inverse images under $P$ of the Chebyshev nodes of $[-1,1]$, and this is what makes the Lagrange
-polynomials small.
+So the nodes avoid a neighbourhood of $x=0$, where the fields of the energy method are largest. We pair the
+intervals $(2i-1,2i)$ within each side, which gives $24+29=53$ pairs. The two members of a pair receive
+$K_c=\lceil N/2\rceil$ and $\lfloor N/2\rfloor$ nodes, so that $\sum_cK_c=53N$. Let
+$\ell_c(z)=(2z-a_c-b_c)/(b_c-a_c)$ and $w_c=b_c-a_c$. The nodes in $[a_c,b_c]$ are the zeros of
+$T_{K_c}\circ\ell_c$. They lie in the open interval, so all nodes are distinct.
 
-Let $g_E$ be the Green function of $\C\setminus E$ with pole at infinity. Since $E=P^{-1}([-1,1])$, it is
+Let $G(w)=\log|w+\sqrt{w^2-1}|$, with the branch of modulus at least $1$, be the Green function of
+$\C\setminus[-1,1]$. Put $G_c=G\circ\ell_c$ and
+\begin{equation}\label{eq:Ldef}
+ L(z)=\tfrac12\sum_c\bigl(G_c(z)+\log(w_c/4)\bigr).
+\end{equation}
+
+\begin{lemma}\label{lem:lagrange}
+There is a constant $C$ such that for all $N$, every node $t_a$ and every $z\in\C$ with $|z|\le1$, the
+Lagrange polynomial $\ell_a$ of $t_a$ satisfies $|\ell_a(z)|\le CN\,e^{N(L(z)-L(t_a))}$.
+\end{lemma}
+
+\begin{proof}
+We use three facts about $T_K$. First, $|T_K(w)|\le e^{KG(w)}$, since $2T_K(w)=\phi^K+\phi^{-K}$ with
+$\phi=w+\sqrt{w^2-1}$. Second, $|T_K(v)|=\cosh(KG(v))\ge\frac12e^{KG(v)}$ for real $|v|\ge1$. Third, the
+Lagrange polynomial $\lambda_j$ of the $j$-th of the $K$ Chebyshev nodes satisfies
+$|\lambda_j(w)|\le Ke^{(K-1)G(w)}$ for all $w\in\C$. For the third, write $w=\frac12(u+u^{-1})$ with
+$|u|=e^{G(w)}\ge1$ and the node as $\frac12(v+v^{-1})$ with $|v|=1$. Then
 \[
- g_E(z)=\tfrac1{130}\,g_{[-1,1]}(P(z)),\qquad
- g_{[-1,1]}(w)=\operatorname{arccosh}\bigl(\tfrac12(|w-1|+|w+1|)\bigr).
+ \frac{T_K(w)}{w-\frac12(v+v^{-1})}=\Bigl(\sum_{i<K}u^iv^{K-1-i}\Bigr)\Bigl(\sum_{i<K}(uv)^{-i}\Bigr),
 \]
-This formula needs no choice of branch. Let $D_N$ be the monic polynomial whose roots are the deleted roots.
-The Lagrange polynomial of a node $t_a$ is
+which has modulus at most $K^2|u|^{K-1}$. The product of the differences of the $j$-th node from the others
+has modulus at least $K/2^{K-1}$. This gives the third fact.
+
+Let $t_a$ be the $j$-th node of the interval $c$. Grouping the factors of $\ell_a$ by intervals gives
 \[
- \ell_a(z)=\frac{F_N(z)\,D_N(t_a)}{F_N'(t_a)\,(z-t_a)\,D_N(z)}.
+ \ell_a(z)=\lambda_j(\ell_c(z))\prod_{c'\ne c}\frac{T_{K_{c'}}(\ell_{c'}(z))}{T_{K_{c'}}(\ell_{c'}(t_a))}.
 \]
-Here $|F_N'(t_a)|$ is bounded below independently of $N$, and $|T_K(w)|\le e^{Kg_{[-1,1]}(w)}$. Since $130K=53N+s$, this gives $|\ell_a(z)|\le e^{53Ng_E(z)+O(\log N)}$ for $z$ in
-a fixed disc at distance at least $N^{-2}$ from $t_a$ and from the deleted roots. Fewer than $130$ roots
-are deleted, so the deletion costs only a factor polynomial in $N$. The contours below can be moved by
-$O(N^{-2})$ to keep this distance, and $g_E$ is uniformly H\"older continuous. So the move changes the
-bound by a factor $e^{O(1)}$. The weight of column $k$ is a
+For $c'\ne c$ the node lies outside the open interval $(a_{c'},b_{c'})$, so $|\ell_{c'}(t_a)|\ge1$. The
+three facts and $G_c(t_a)=0$ give $|\ell_a(z)|\le K_c2^{105}e^{\Lambda(z)-\Lambda(t_a)}$ with
+$\Lambda=\sum_cK_cG_c$. Since $|K_c-N/2|\le\frac12$ and $\sum_cG_c$ is bounded on the closed unit disc,
+$\Lambda(z)-\Lambda(t_a)\le\frac N2\sum_c\bigl(G_c(z)-G_c(t_a)\bigr)+O(1)$. The constants $\log(w_c/4)$ cancel
+in $L(z)-L(t_a)$, and $K_c\le N$.
+\end{proof}
+
+The term $-L(t_a)$ depends on the node. We bound it by a piecewise linear function. On each interval
+$[a_d,b_d]$ we have $G_d=0$, and for $c\ne d$ the function $|\ell_c|$ is affine with values at least $1$.
+Since $\operatorname{arccosh}$ is concave and increasing on $[1,\infty)$, the function $L$ is concave on each
+interval. Let $k_0<\dots<k_{865}$ be fixed dyadic knots that include all end points $a_c$, $b_c$, and let
+$v_i$ be rational numbers with $v_i\ge-L(k_i)-C_0$, where $C_0=\Czero$. Let $\hat\delta$ be the piecewise
+linear function through the points $(k_i,v_i)$. By concavity,
+\begin{equation}\label{eq:chord}
+ -L(t)\le C_0+\hat\delta(t)
+\end{equation}
+for every $t$ in the union of the intervals, and so at every node. One value $L(k_i)$ needs no
+logarithm per term: $2L(k_i)$ is the logarithm of a product of $106$ factors, each an algebraic number with
+one square root.
+
+The weight of column $k$ is a
 coefficient functional of $\ell_a$ multiplied by the column function. After removal of the common factor of
 the rows it equals
 \[
@@ -110,14 +144,14 @@ The formal proof replaces the integral by the finite Gauss--Chebyshev identity
 $\frac1M\sum_{j<M}\cos^{2l}\frac{(2j+1)\pi}{2M}=c_l$ for $l<M$, and Cauchy's estimate by the finite Cauchy formula
 at roots of unity. So no integration is needed. For $0\le y\le1$ and $z\in\C$ let
 \[
- \Phi_y(z)=(10-58y)\log|z|+6\log|1-z|+53g_E(z).
+ \Phi_y(z)=(10-58y)\log|z|+6\log|1-z|+L(z).
 \]
-Here $10=(A-b-q)/N$ and $6=(q+h)/N$. With $y=k/n$, Lemma~\ref{lem:keyhole} gives
+Here $10=(A-b-q)/N$ and $6=(q+h)/N$. With $y=k/n$, Lemmas~\ref{lem:lagrange} and~\ref{lem:keyhole} give
 \begin{equation}\label{eq:wk}
- |\beta'_k|\le e^{(w(y)+o(1))N},\qquad w(y)=\max_{z\in\Gamma}\Phi_y(z),
+ |\beta'_k|\le e^{(w(y)-L(t_a)+o(1))N},\qquad w(y)=\max_{z\in\Gamma}\Phi_y(z),
 \end{equation}
-where $\Gamma$ is the circle $|z|=\frac35$ together with the segments $\frac35\le|z|\le1$ of the real axis. One
-radius serves all columns. The certified bound for this maximum is in \S\ref{ssec:weights}.
+where $\Gamma$ is the circle $|z|=\frac34$ together with the segments $\frac34\le|z|\le1$ of the real axis. One
+radius serves all columns and all nodes. The bound for this maximum is in \S\ref{ssec:weights}.
 
 \subsection{Column expansion and Andr\'eief's identity}\label{ssec:andreief}
 Write $\mathcal P(r,a)=P_r(t_a)$. Expanding $\det(\cA_N+\varepsilon\mathcal P\beta)$ multilinearly in the
@@ -162,51 +196,56 @@ columns that remain integrals, and the missing exponents are the replaced column
 Vandermonde determinant by a product over the missing exponents.
 
 \begin{lemma}\label{lem:binomvand}
-Let $s_1,\ldots,s_{n'}\in[0,1]$, let $E_1<\dots<E_{n'}<n$ be integers, and let $\{k_1,\ldots,k_m\}$ be the
-complement of $\{E_i\}$ in $\{0,\ldots,n-1\}$. Then
+Let $0<\zeta<1$, let $s_1,\ldots,s_{n'}\ge0$, let $E_1<\dots<E_{n'}<n$ be integers, and let $\{k_1,\ldots,k_m\}$ be
+the complement of $\{E_i\}$ in $\{0,\ldots,n-1\}$. Then
 \[
- \bigl|\det[s_l^{E_i}]\bigr|\le\prod_{j=1}^m\mathcal B(k_j)\prod_{i<l}|s_i-s_l|,\qquad
- \mathcal B(k)=\sum_{i=0}^{m-1}\binom{n'}{n'-k+i},
+ \bigl|\det[s_l^{E_i}]\bigr|\le\prod_l(1+\zeta s_l)^m\prod_{j=1}^m\mathcal B_\zeta(k_j)\prod_{i<l}|s_i-s_l|,\qquad
+ \mathcal B_\zeta(k)=\sum_{i}\zeta^{-(n'-k+i)},
 \]
-with $\binom{n'}r=0$ for $r\notin[0,n']$.
+where the sum runs over the $i<m$ with $0\le n'-k+i\le n'$. Moreover $\mathcal B_\zeta(k)\le\zeta^{-(n-1-k)}/(1-\zeta)$.
 \end{lemma}
 
 \begin{proof}
 Let $P(X)=\prod_l(X-s_l)=\sum_r(-1)^re_r(s)X^{n'-r}$. Multiplying the matrix by a unitriangular matrix built
 from $P$ gives $|\det[s_l^{E_i}]|=\prod_{i<l}|s_i-s_l|\cdot|\det Q|$, where $Q$ is the $m\times m$ matrix with
-entries $Q_{j,i}=[X^{k_j-i}]P$. So $|Q_{j,i}|=e_{n'-k_j+i}(s)\le\binom{n'}{n'-k_j+i}$, since $s\in[0,1]^{n'}$.
-Hadamard's inequality, applied to the rows of $Q$ in the $\ell^1$ norm, gives the claim.
+entries $Q_{j,i}=[X^{k_j-i}]P$. So $|Q_{j,i}|=e_{n'-k_j+i}(s)$, and this is $0$ unless $0\le n'-k_j+i\le n'$.
+Since the $s_l$ are nonnegative, $\prod_l(1+\zeta s_l)=\sum_r\zeta^re_r(s)$ is a sum of nonnegative terms. So
+$e_r(s)\le\zeta^{-r}\prod_l(1+\zeta s_l)$, and the row $j$ of $Q$ has $\ell^1$ norm at most
+$\prod_l(1+\zeta s_l)\,\mathcal B_\zeta(k_j)$. Hadamard's inequality, applied to the rows of $Q$ in the $\ell^1$ norm,
+gives the first claim. The exponents $n'-k+i$ in $\mathcal B_\zeta(k)$ are distinct and at most $n-1-k$, which gives the
+second.
 \end{proof}
 
 \subsection{The weight of one column}\label{ssec:weights}
-The bound of Lemma~\ref{lem:binomvand} does not depend on the points $s_l$. Since $\binom{n'}r\le\binom nr$,
+The bound of Lemma~\ref{lem:binomvand} has two parts. The factor $\prod_l(1+\zeta s_l)^m$ depends on the free points.
+With $m=\alpha n$ it equals $\exp\bigl(n\sum_l\alpha\log(1+\zeta s_l)\bigr)$. So it adds the field
+$\alpha\log(1+\zeta s)$ to the column field of the energy, and we treat it in Section~\ref{sec:energy}. The other factor
+belongs to the replaced columns. With $y=k/n$ we have $\zeta^{-(n-k)}=e^{58N(1-y)\log(1/\zeta)}$. By \eqref{eq:wk}, the
+replaced column $k$ at the node $t_a$ therefore contributes at most
 \[
- \log\mathcal B(k)\le n_0\tilde h_2(k/n)N+O(\log N),
+ e^{(w(y)+58(1-y)\log(1/\zeta)-L(t_a)+o(1))N}.
 \]
-where $\tilde h_2(y)$ is the binary entropy $h_2(y)=-y\log y-(1-y)\log(1-y)$ for $y\ge\frac12$ and $\log2$ for
-$y<\frac12$. So the replaced column $k$ contributes at most $e^{(w(y)+n_0\tilde h_2(y)+o(1))N}$, with $y=k/n$.
-We must bound the supremum of $w+58\tilde h_2$ over $y\in[0,1]$. Two inequalities suffice.
-
-First, for $z\in\Gamma$,
-\begin{equation}\label{eq:circlecap}
- \Phi_y(z)\le(10-58y)\log\tfrac35+\tfrac{709}{20} .
-\end{equation}
-On the circle this is the bound $6\log|1-z|+53g_E(z)<\frac{709}{20}$. Appendix~\ref{app:field} certifies it through
-a single polynomial inequality on $|z|=\frac35$. On a real segment it follows from the bound
-$6\log|1-x|+53g_E(x)\le\frac{709}{20}+10\log\frac35$ and from $\log\frac35\le\log|x|\le0$. Second, for $0<r\le1$ and $0\le y\le1$,
-\begin{equation}\label{eq:entropy}
- \tilde h_2(y)-y\log r\le\log(1+1/r) .
-\end{equation}
-Indeed, put $a=-\log r\ge0$. For $y\ge\frac12$ this is the inequality $h_2(y)+ya\le\log(1+e^a)$, which is
-Jensen's inequality for the logarithm, applied to the values $e^a/y$ and $1/(1-y)$ with weights $y$ and $1-y$.
-For $y<\frac12$ it follows from $\log2+\frac a2\le\log(1+e^a)$. Together with \eqref{eq:circlecap} this gives, at
-$r=\frac35$,
+We take $\zeta=\frac34$, the radius of the contour $\Gamma$. Two inequalities bound $w$, with $D_\Gamma=\Dcirc$:
+\begin{gather}
+ 6\log|1-z|+L(z)\le D_\Gamma\qquad(|z|=\tfrac34),\label{eq:circlecap}\\
+ 6\log|1-x|+L(x)-10\log\tfrac34\le D_\Gamma\qquad(x\in\R,\ \tfrac34\le|x|<1).\label{eq:segcap}
+\end{gather}
+Appendix~\ref{app:field} proves them. On the circle, \eqref{eq:circlecap} gives
+$\Phi_y(z)\le(10-58y)\log\frac34+D_\Gamma$. On a real segment put $l=\log\frac34$ and $u=\log|x|$, so that $l\le u\le0$.
+Then $(10-58y)(u-l)\le10(u-l)\le-10l$ for $0\le y\le1$, and \eqref{eq:segcap} gives the same bound. The end points
+$|x|=1$ follow by continuity. Hence
 \[
- w(y)+58\tilde h_2(y)\le10\log\tfrac35+\tfrac{709}{20}+58\log\tfrac83=87.2298\ldots
+ w(y)+58(1-y)\log\tfrac43\le(10-58y)\log\tfrac34+D_\Gamma-58(1-y)\log\tfrac34=D_\Gamma-48\log\tfrac34
 \]
-for every $y$. We take $W_0=\WZero$, which leaves a strict margin for the terms $o(1)$. The two factors peak at
-different columns: the weight $w(y)$ grows with $y$, while $\tilde h_2(y)$ is largest on $[0,\frac12]$.
-Inequality \eqref{eq:entropy} is what exploits this, and it is the reason for treating the columns one at a time.
+for every $y$. The dependence on the column cancels exactly. This is the reason for choosing the parameter of
+Lemma~\ref{lem:binomvand} equal to the radius of the contour. With \eqref{eq:chord}, the column $k$ at the node $t_a$
+contributes at most $e^{(\psi+\hat\delta(t_a)+o(1))N}$ as soon as
+\[
+ \psi>C_0+D_\Gamma-48\log\tfrac34=50.1113394\ldots
+\]
+We take $\psi=\Psiw$, which leaves a strict margin for the terms $o(1)$. The factor $e^{N\hat\delta(t_a)}$ depends on the
+node. We do not bound it here. It is carried into the energy bound, where it raises the field of each prescribed point
+$y$ by $\hat\delta(\mathsf t(y))/58$, with $\mathsf t(y)=2y/(1+y^2)$.
 
-The remaining part of $\rho$ is $n_0c_2$, the increase of the energy bound caused by the prescribed
-columns. It comes from Section~\ref{sec:energy}, and with it $\rho=58\cdot\Ctwo+\WZero=\Rho$.
+The remaining part of $\rho$ is $n_0c$, the increase of the energy bound caused by the prescribed
+columns. It comes from Section~\ref{sec:energy}, and with it $\rho=58\cdot\Cost+\Psiw=\Rho$.

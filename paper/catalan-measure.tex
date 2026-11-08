@@ -12,29 +12,33 @@
 \newcommand{\FormalizationLink}{\url{\FormalizationURL}}
 
 % Numerical constants: decimal truncations (or outward roundings) of rational numbers of the formal proof.
-\newcommand{\Bstar}{294.95608}
-\newcommand{\Rho}{295.849794}
+\newcommand{\Mustar}{269.78696}
+\newcommand{\Rho}{278.376313578}
 \newcommand{\Ctwo}{3.596893}
-\newcommand{\WZero}{87.23}
+\newcommand{\Sigm}{0.33871}
+\newcommand{\Cost}{3.935603}
+\newcommand{\Psiw}{50.111339578}
+\newcommand{\Czero}{33.052}
+\newcommand{\Dcirc}{3.2506}
 \newcommand{\Utarget}{2.255858836}
-\newcommand{\Gain}{23.1132}
-\newcommand{\Uzero}{2.2627295}
+\newcommand{\Gain}{24.64}
+\newcommand{\Uzero}{2.2631834}
 \newcommand{\NormCap}{0.77363}
 \newcommand{\SupX}{-0.96450499}
 \newcommand{\SupY}{-1.57499400}
 \newcommand{\FieldCap}{-2.53949899}
 \newcommand{\ResCap}{-0.0631062}
-\newcommand{\EtaTot}{53.16065}
-\newcommand{\LamCrit}{0.9971276}
+\newcommand{\EtaTot}{54.68745}
+\newcommand{\LamCrit}{0.9699101}
 \newcommand{\Kcoef}{160}
 \newcommand{\Ngeo}{75}
 \newcommand{\Ncomplex}{41}
 \newcommand{\Mmargin}{2.986\cdot10^{-6}}
-\newcommand{\Decay}{6445.9487}
+\newcommand{\Decay}{6447.4755}
 \newcommand{\DecayOA}{6422.8355}
-\newcommand{\EtaExact}{53.16173}
-\newcommand{\PayL}{53.0000613}
-\newcommand{\PayR}{53.0079522}
+\newcommand{\EtaExact}{54.68853}
+\newcommand{\PayL}{53.0000596}
+\newcommand{\PayR}{53.0419104}
 \newcommand{\AlphaOne}{51/500}
 \newcommand{\Chi}{22.06076}
 \newcommand{\ChiLean}{22.0607}
@@ -75,7 +79,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{November 6, 2026}
+\date{November 8, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -83,17 +87,17 @@
 logarithmic energy, Pick matrices, Nevanlinna--Pick interpolation, Gauss quadrature, Lean}
 
 \begin{abstract}
-Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. We prove that $|G-a/b|>b^{-295}$ for all
+Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. We prove that $|G-a/b|>b^{-270}$ for all
 integers $a$ and all sufficiently large integers $b$. Hence the irrationality exponent of $G$ is at most
-$295$. The proof refines OpenAI's recent proof that $G$ is irrational. That proof compares two bounds for
+$270$. The proof refines OpenAI's recent proof that $G$ is irrational. That proof compares two bounds for
 a large determinant whose entries are linear forms in $1$ and $G$. The lower bound comes from the
 denominators of the entries, and the upper bound from an integral representation. We improve both. On the
 arithmetic side we show that the matrix of rational parts has large corank modulo $p$ for the primes in
 explicit intervals, which lowers the denominators. On the analytic side we bound a determinant that the
 energy method treats trivially. A phase inequality for Pick matrices, proved by Nevanlinna--Pick
 interpolation, compares it with a determinant of a simpler kind. That determinant is bounded by a finite
-Gram inequality and two logarithmic gases. A quadrature formula extends the upper bound to an
-exponentially small neighbourhood of $G$, as a measure requires. The proof is formalized in the Lean proof
+Gram inequality and two logarithmic gases. Gauss quadrature at Chebyshev nodes of many short intervals
+extends the upper bound to an exponentially small neighbourhood of $G$, as a measure requires. The proof is formalized in the Lean proof
 assistant and kernel-checked.
 \end{abstract}
 
@@ -125,9 +129,9 @@ $\xi\mapsto r\xi+r'$ with $r,r'\in\Q$ and $r\ne0$.
 \begin{theorem}\label{thm:main}
 For all integers $a$ and all sufficiently large integers $b$,
 \[
- \left|G-\frac ab\right|>b^{-295}.
+ \left|G-\frac ab\right|>b^{-270}.
 \]
-In particular $\mu(G)\le295$.
+In particular $\mu(G)\le270$.
 \end{theorem}
 
 The proof uses the prime number theorem. The theorem and every result it depends on have been formalized
@@ -198,10 +202,10 @@ $\beta(4),\beta(6),\ldots,\beta(36)$ is irrational, with a Lean formalization \c
 \cite{Xu2026} obtained $\mu(G)<2402$ and $\mu(G)\le727.03$ at other parameters. Xu's certificate is
 numerical and not formalized. Davis \cite{Davis2026} reached $\mu(G)\le528.23288$ with new quadrature nodes, the zeros of $T_K(P(t))$
 for a fixed polynomial $P$. The MultiAgency agent swarm regenerated $P$ and reached $\mu(G)\le528.2315$
-\cite{MultiAgency2026}. Both results are formalized in Lean. We use Davis's nodes, the polynomial
-$P$ of \cite{Davis2026} and the formal proofs of their properties from that work in
-Section~\ref{sec:real}. The other constructions are independent of the ideas of the present paper.
-An earlier preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
+\cite{MultiAgency2026}. Both results are formalized in Lean. Our nodes are different, but we use two
+formal lemmas of \cite{Davis2026} on the weights of nodal polynomials in Section~\ref{sec:real}. The
+other constructions are independent of the ideas of the present paper.
+A preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
 \cite{Wachs2026} showed that its main estimate is not justified.
 
 \subsection{The companion paper}
@@ -247,11 +251,11 @@ The right side is less than $1$ as soon as $\mu>d\rho/\eta$. So $\mu(G)\le d\rho
 The three numbers come from different places. The degree $d$ comes from the construction
 (Lemma~\ref{lem:degree}). The neighbourhood exponent $\rho$ comes from a quadrature formula for the
 coefficient of $G$ (Section~\ref{sec:real}). The difference $\eta$ is a small difference of two large
-numbers, $D\approx6446$ and $\Lambda\approx6393$ (Figure~\ref{fig:balance}). For OpenAI's construction with
+numbers, $D\approx6447$ and $\Lambda\approx6393$ (Figure~\ref{fig:balance}). For OpenAI's construction with
 our parameters, $D$ and $\Lambda$ differ by about $8$. We lower $\Lambda$ by $22.06$ through the corank of
-a matrix modulo $p$ (Section~\ref{sec:content}), and raise $D$ by $23.11$ through a bound for a
-determinant of row functions (Section~\ref{sec:signed}). The result is $\eta\approx53.16$, which is what
-makes $d\rho/\eta$ as small as $295$.
+a matrix modulo $p$ (Section~\ref{sec:content}), and raise $D$ by $24.64$ through a bound for a
+determinant of row functions (Section~\ref{sec:signed}). The result is $\eta\approx54.69$, which is what
+makes $d\rho/\eta$ as small as $270$.
 
 \begin{figure}[ht]
 \centering
@@ -265,23 +269,23 @@ makes $d\rho/\eta$ as small as $295$.
  \put(60,-3.5){\makebox(0,0){$6440$}}
  \qbezier(-1.5,-1.4)(-1,-0.9)(-0.5,-0.4)\qbezier(-0.9,-1.4)(-0.4,-0.9)(0.1,-0.4)
  \put(0,14){\framebox(42.8,3){}}
- \put(42.8,14){\framebox(23.1,3){$+23.1$}}
+ \put(42.8,14){\framebox(24.6,3){$+24.6$}}
  \put(-1,15.5){\makebox(0,0)[r]{decay rate $D$}}
  \put(0,6){\framebox(12.8,3){}}
  \put(12.8,6){\dashbox{0.5}(22.1,3){$-22.1$}}
  \put(-1,7.5){\makebox(0,0)[r]{denominators $\Lambda$}}
  \put(12.8,3){\line(0,1){11}}
- \put(65.9,3){\line(0,1){11}}
- \qbezier(12.8,3.6)(39.35,3.6)(65.9,3.6)
+ \put(67.4,3){\line(0,1){11}}
+ \qbezier(12.8,3.6)(40.1,3.6)(67.4,3.6)
  \qbezier(12.8,3.6)(13.4,3.85)(14.0,4.1)\qbezier(12.8,3.6)(13.4,3.35)(14.0,3.1)
- \qbezier(65.9,3.6)(65.3,3.85)(64.7,4.1)\qbezier(65.9,3.6)(65.3,3.35)(64.7,3.1)
- \put(39,1.6){\makebox(0,0){$\eta=D-\Lambda\approx53.2$}}
+ \qbezier(67.4,3.6)(66.8,3.85)(66.2,4.1)\qbezier(67.4,3.6)(66.8,3.35)(66.2,3.1)
+ \put(40,1.6){\makebox(0,0){$\eta=D-\Lambda\approx54.7$}}
  \put(42.8,19.2){\makebox(0,0){$D_0=6422.8$}}
  \put(34.9,11.2){\makebox(0,0){$\Lambda_0=6414.8$}}
 \end{picture}
 \caption{The exponent balance for the parameters $(58,9,3,5,3)$, per unit of $N^2$. The axis is broken at
 $6380$. OpenAI's estimates give the decay rate $D_0$ and the denominator exponent $\Lambda_0$, which
-differ by about $8$. The bound of Section~\ref{sec:signed} adds $23.1$ to $D_0$, and the corank bounds
+differ by about $8$. The bound of Section~\ref{sec:signed} adds $24.6$ to $D_0$, and the corank bounds
 of Section~\ref{sec:content} remove $22.1$ from $\Lambda_0$.}\label{fig:balance}
 \end{figure}
 
@@ -302,10 +306,18 @@ every constant subspace at once (Theorem~\ref{thm:everyU}). Only upper bounds fo
 and these come from forced intersections of row spaces. No value of a moment enters.
 
 \item \emph{A perturbation bound column by column.} For the neighbourhood of $G$ we write the coefficient of
-$G$ by a quadrature formula with $53N$ nodes, using Davis's nodes. The perturbed determinant is then a sum of
-determinants in which some columns are replaced by values of the row polynomials at the nodes. We bound the
-weight of each replaced column and its generalized Vandermonde factor together. One contour of radius
-$\frac35$ and the inequality $h_2(y)-y\log r\le\log(1+1/r)$ treat all columns at once.
+$G$ by a quadrature formula with $53N$ nodes. The nodes are Chebyshev nodes of $106$ short intervals, and the
+Lagrange polynomials are bounded by the Green functions of the intervals. The perturbed determinant is then
+a sum of determinants in which some columns are replaced by values of the row polynomials at the nodes. We
+bound the weight of each replaced column and its generalized Vandermonde factor together. A weighted form of
+Hadamard's inequality with a parameter $\zeta=\frac34$ makes the dependence on the column cancel, and one
+contour of radius $\frac34$ treats all columns at once. The part of the weight that depends on the node is
+carried into the energy bound as an external field.
+
+\item \emph{Trial sequences that move with the configuration.} The energy bound with prescribed columns uses
+trial sequences that depend linearly on the fraction of prescribed columns. Their fields are affine in the
+parameter, so the suprema are bounded by chords between two end points. A finite cover of the range of the
+fraction by cells then reduces every case to exact polynomial inequalities.
 
 \item \emph{A phase inequality for Pick matrices.} OpenAI's integrand contains a determinant
 $\det\mathsf L$ of size $n$ that the energy method bounds by $e^{O(n\log n)}$. In the Pick matrix of the nodes the
@@ -317,7 +329,7 @@ product and follows its argument along an arc of the unit circle.
 \item \emph{A complete log-gas bound.} With weight $0$ the determinant factors through two Gram
 determinants. Fischer's inequality and a finite Andr\'eief identity bound it by two logarithmic gases, one
 in the plane and one in the Joukowski coordinate. These are bounded by tangent inequalities against fixed
-reference measures. This raises the decay rate by $23.11$. Numerical evaluation for small $N$ suggests that
+reference measures. This raises the decay rate by $24.64$. Numerical evaluation for small $N$ suggests that
 this is most of the true size of $\det\mathsf L$ at the extremal configuration.
 
 \item \emph{Near-extremal configurations.} The phase statistic need not be large on every configuration.
@@ -332,18 +344,20 @@ Table~\ref{tab:constants} lists the constants for the parameters $(58,9,3,5,3)$,
 \begin{table}[ht]\centering
 \begin{tabular}{@{}llr@{}}\toprule
 degree & $d$ & $53$\\
-neighbourhood exponent & $\rho=58c_2+W_0$ & $295.84$\\
+cost of a prescribed column & $c=c_2+\sigma$ & $3.93$\\
+weight of a column & $\psi$ & $50.11$\\
+neighbourhood exponent & $\rho=58c+\psi$ & $278.37$\\
 decay rate (OpenAI's estimate) & $D_0$ & $6422.83$\\
-decay rate (with the bound for $\det\mathsf L$) & $D$ & $6445.94$\\
+decay rate (with the bound for $\det\mathsf L$) & $D$ & $6447.47$\\
 denominator exponent (with the corank gain) & $\Lambda$ & $6392.78$\\
-difference & $\eta=D-\Lambda$ & $53.16$\\
+difference & $\eta=D-\Lambda$ & $54.68$\\
 \midrule
-bound & $d\rho/\eta$ & $294.95\ldots$\\\bottomrule
+bound & $d\rho/\eta$ & $269.78\ldots$\\\bottomrule
 \end{tabular}
 \caption{The constants of the proof, truncated. The formal proof uses exact rational numbers.}
 \label{tab:constants}\end{table}
 Without the corank gain and the bound for $\det\mathsf L$, $\eta$ would be about $8$, and the method would give an
-exponent near $2000$.
+exponent above $1800$.
 
 \subsection{Organization}
 Section~\ref{sec:overview} recalls OpenAI's construction for general parameters and proves the criterion
@@ -503,8 +517,9 @@ any prime of the interval would lose a power of $b$. The chosen prime may be so 
 decay $e^{-\eta p^2}$ weak, but it also makes the height $b^{dp}$ small, and the primes of $(p,2p]$ alone
 already win. So $\lambda$ need not exceed $2\omega$, and the bound $\rho\lambda$ may lie below $\rho$.
 
-For Catalan's constant we take $d=53$, $\omega=\frac35$, $\delta=2.9\cdot10^{-7}$ and $\lambda=295/\rho$.
-The last hypothesis then reads $295>B_*$ with $B_*=d\rho/(\eta-4d\delta)=\Bstar\ldots$
+For Catalan's constant we take $d=53$, $\omega=\frac35$, $\delta=2.9\cdot10^{-7}$ and $\lambda=270/\rho$.
+The last hypothesis then reads $270>\mu_*$ with $\mu_*=d\rho/(\eta-4d\delta)=\Mustar\ldots$ The formal proof
+checks the six hypotheses with $\rho\lambda$ in place of $270$ for every $\rho\lambda\in[269.787,400]$.
 
 \input{sec3}
 \input{sec4}

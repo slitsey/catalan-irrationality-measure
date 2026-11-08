@@ -14,7 +14,7 @@ Proposition~\ref{prop:criterion}.
 Take $d=53$, and let the polynomials $Q_p$ of the proposition be the $Q_N$ with $N=p$. Let
 \begin{gather*}
  \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac35,\quad \delta=2.9\cdot10^{-7},\\
- \lambda=\frac{295}{\rho}=\LamCrit\ldots
+ \lambda=\frac{270}{\rho}=\LamCrit\ldots
 \end{gather*}
 \begin{enumerate}[label=(\alph*)]
 \item $\deg Q_N\le53N$ by \eqref{eq:QN} and Lemma~\ref{lem:degree}.
@@ -30,11 +30,11 @@ $|x-G|\le e^{-\rho N}$ and large $N$,
 since $\eta=\EtaTot<D-\Lambda=\EtaExact\ldots$ In the formal proof this is the inequality $\eta<D-\Lambda$ with
 $\int\kappa$ replaced by its lower bound $\ChiLean$ and $D_0-\Lambda_0$ by its lower bound $7.98775$.
 \end{enumerate}
-The numerical conditions hold as well. We have $\rho\lambda=295$ and $0<\eta<2d=106$. Next $\omega=\frac35<\lambda$ and
-$\delta<\frac13$. The third condition reads $53\le(\lambda-\omega)(\eta+106(1-3\delta))=63.20\ldots$ Further
+The numerical conditions hold as well. We have $\rho\lambda=270$ and $0<\eta<2d=106$. Next $\omega=\frac35<\lambda$ and
+$\delta<\frac13$. The third condition reads $53\le(\lambda-\omega)(\eta+106(1-3\delta))=59.43\ldots$ Further
 $2(\omega-\delta(2\lambda-\omega))=1.199999\ldots>1$. Finally
 $d+4d\delta\lambda=\PayL\ldots<\eta\lambda=\PayR\ldots$ So Proposition~\ref{prop:criterion} gives
-$|G-a/b|>b^{-\rho\lambda}=b^{-295}$ for all integers $a$ and all sufficiently large $b$. This proves
+$|G-a/b|>b^{-\rho\lambda}=b^{-270}$ for all integers $a$ and all sufficiently large $b$. This proves
 Theorem~\ref{thm:main}.
 
 \section{Remarks on the method}\label{sec:remarks}
@@ -42,10 +42,11 @@ Theorem~\ref{thm:main}.
 \subsection{The three ingredients}
 For fixed parameters the method gives the exponent $d\rho/\eta$, and its three ingredients come from
 different places. The degree $d=n-g$ comes from the construction. Of $\rho=\Rho$, the prescribed columns
-contribute $n_0c_2\approx208.6$ through the energy, and the weight and the binomial factor of one column
-contribute $W_0=87.23$. The number $\eta$ is a small difference of two large numbers, $D\approx6.4\cdot10^3$ and
+contribute $n_0c\approx228.3$ through the energy, and the weight and the Vandermonde factor of one column
+contribute $\psi\approx50.1$. Of $n_0c$, the part $n_0\sigma\approx19.6$ comes from the bound of
+Section~\ref{sec:signed} for few prescribed columns. The number $\eta$ is a small difference of two large numbers, $D\approx6.4\cdot10^3$ and
 $\Lambda\approx6.4\cdot10^3$. The corank bounds of Section~\ref{sec:content} contribute about $22$ to it, and the
-bound of Section~\ref{sec:signed} about $23$. Without them $\eta$ would be about $8$. Since the exponent
+bound of Section~\ref{sec:signed} about $25$. Without them $\eta$ would be about $8$. Since the exponent
 is inversely proportional to $\eta$, a further gain of $0.2$ in $\eta$ would lower it by about $1$.
 
 \subsection{The row determinant}
@@ -78,10 +79,10 @@ formalization of the irrationality of $G$ \cite{OpenAI2026}. The development is 
 \end{center}
 Theorem~\ref{thm:main} is the theorem
 \begin{center}
-{\small\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_295}}
+{\small\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_270}}
 \end{center}
 in \lean{Solution.lean}. Its statement, in \lean{Challenge.lean}, uses only Mathlib. Catalan's constant is
-written as the series $\sum_j(-1)^j/(2j+1)^2$, and the conclusion is $|G-a/b|>b^{-295}$ for all integers $a$
+written as the series $\sum_j(-1)^j/(2j+1)^2$, and the conclusion is $|G-a/b|>b^{-270}$ for all integers $a$
 and all sufficiently large $b$. The modules of the proof contain no \lean{sorry} and no \lean{native\_decide}. The command
 \lean{\#print axioms} shows that only the three standard axioms \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound} are used. The proof is kernel-checked: Lean's kernel accepts every declaration. It has not been run through the independent checker \lean{lake comparator} \cite{Comparator}.
@@ -89,15 +90,15 @@ The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The part
 OpenAI's formalization that are used were converted to Lean's module system and ported to Lean
 4.35.0-rc2. The repository's \texttt{README} describes the changes and the layout of the modules.
 
-The quadrature nodes of Section~\ref{sec:real} come with Davis's formalization \cite{Davis2026}. We use 33
-of its Lean files, taken from commit \texttt{3c45153} under the Apache License~2.0. They contain the
-polynomial $P$ of degree $130$, the inverse branches of $P$, the nodes and their properties. Their
-declarations and proofs are unchanged. We adapted the module paths and imports, and added comments and
+Two lemmas of Section~\ref{sec:real} on the weights of nodal polynomials come from Davis's formalization
+\cite{Davis2026}. We use two of its Lean files, taken from commit \texttt{3c45153} under the Apache
+License~2.0. Their declarations and proofs are unchanged. We adapted the module paths and imports, and added comments and
 axiom checks. The repository's \texttt{NOTICE} file and a provenance record list these files with their source
 hashes.
 
 The proof combines conventional formal proofs with numerical certificates. These are the inverses of the base
-matrices modulo $1009$, the trial sequences and the bounds of Appendix~\ref{app:field}, the reference measures
+matrices modulo $1009$, the intervals and the chord table of Section~\ref{sec:real}, the trial sequences, the
+cell covers and the bounds of Appendix~\ref{app:field}, the reference measures
 and the bounds of Appendix~\ref{app:trials}, and the rank data of Appendix~\ref{app:windows}. The certificates are
 exact rational and integer computations checked by the Lean kernel without compiled code. The interval
 arithmetic used to generate them \cite{Arb} is not trusted.

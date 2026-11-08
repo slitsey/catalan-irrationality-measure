@@ -44,63 +44,67 @@ configuration is described by an equilibrium problem for two interacting measure
 When $m$ of the $n$ columns are point values, only $n-m$ points of each kind are integrated over, and the
 energy is still normalized by $n$. The prescribed points enter through the row determinant, now evaluated
 at the free points together with the prescribed ones. There are two kinds of prescribed points: the
-quadrature nodes, which lie in the set $E_x$ of Section~\ref{sec:real}, and points $y\in(0,1)$. Let $\alpha=m/n$ be the fraction of
-prescribed columns and $\alpha_2$ the fraction of prescribed points of the second kind. Each missing free point
-changes the energy bound by a bounded amount. The total change is linear in $m$, and its slope $c_2$ enters
-$\rho$.
+quadrature nodes, and points $y\in(0,1)$. In the coordinate $x$ the nodes lie in the set $E_W$ of the $x$ with
+$|x|\le1$ and $2x/(1+x^2)$ in one of the intervals of Section~\ref{sec:real}. We have $E_W\subset E_x$. Let
+$\alpha=m/n$ be the fraction of prescribed columns and $\alpha_2$ the fraction of prescribed points of the
+second kind. Each missing free point changes the energy bound by a bounded amount. The total change is linear
+in $m$, and its slope $c=c_2+\sigma$ enters $\rho$.
+
+Two terms from Section~\ref{sec:real} are added. The factor $\prod_l(1+\zeta s_l)^m$ of Lemma~\ref{lem:binomvand}
+adds the field $\alpha g(s)$, with $g(s)=\log(1+\frac34s)$, to the column field. Since $g>0$ on $(0,1]$, the
+value with $\alpha g$ is at most the value with $\gamma g$ for every $\gamma\ge\alpha$. The factor
+$e^{N\hat\delta}$ of the weights adds $\hat\delta(\mathsf t(x))/58$ to the field of every prescribed point $x$,
+where $\mathsf t(x)=2x/(1+x^2)$. Indeed $n^2\cdot\frac1n\sum_j\hat\delta(\mathsf t(y_j))/58=N\sum_j\hat\delta(\mathsf t(y_j))$.
 
 Every step of OpenAI's argument remains valid uniformly in the number of free points. The regularization of
 the logarithmic interactions, the diagonal corrections and the completion of squares only involve sums over
 the points present. For the prescribed points of the first kind the relevant field is
 \[
- F_1(x)=-\gamma_d\log(1+x^2)-2\mathsf T(u,x),\qquad x\in E_x .
+ F_1(x)=-\gamma_d\log(1+x^2)-2\mathsf T(u,x)+\tfrac1{58}\hat\delta(\mathsf t(x)),\qquad x\in E_W .
 \]
 For those of the second kind it is
 \[
- F_2(y)=-\gamma_d\log(1+y^2)+\frac{n_0-2g_0-1}{n_0}\log y-u_1y,\qquad0<y<1,
+ F_2(y)=-\gamma_d\log(1+y^2)+\frac{n_0-2g_0-1}{n_0}\log y-u_1y+\tfrac1{58}\hat\delta(\mathsf t(y))
 \]
-where $u_1$ is the first coefficient of $u$. The coefficient $(n_0-2g_0-1)/n_0$ is a lower bound, valid for all
-$N\ge1$, of $(n-1-2g)/n$. By Lemma~\ref{lem:binomvand} the generalized Vandermonde determinant contributes only
-the factor $\prod_{i<l}|s_i-s_l|$ to the energy, and the binomial factors are assigned to the columns. The
-energy bound then reduces to a quadratic inequality in $\alpha$ and $\alpha_2$.
+for $y\in E_W$ with $0<y<1$, where $u_1$ is the first coefficient of $u$. The coefficient $(n_0-2g_0-1)/n_0$ is a lower bound, valid for all
+$N\ge1$, of $(n-1-2g)/n$. The exact coefficient of $-\log(1+x^2)$ in both fields is $(n-g-1)/n=\gamma_d-1/n$. Since
+$0\le\log(1+x^2)\le\log2$ for $|x|\le1$, the exact fields exceed $F_1$ and $F_2$ by at most $\log2/n$, which tends to zero. By Lemma~\ref{lem:binomvand} the generalized Vandermonde determinant contributes
+the factor $\prod_{i<l}|s_i-s_l|$ and the column field $\alpha g$ to the energy, and the factors $\mathcal B_\zeta$
+are assigned to the columns. The energy bound then reduces to a quadratic inequality in $\alpha$ and $\alpha_2$.
+The maximum over $\alpha_2$ has a closed form.
 
 \begin{lemma}[energy inequality with prescribed points]\label{lem:energy-ineq}
-Let $\ell=\log2$, $\alpha_1>0$ and $u\ge0$, and let $\mathcal N,\mathcal F,\mathcal R,\mathcal F_2$ and $c_2$ be real
-numbers with
-\begin{gather*}
- \mathcal N+\mathcal F+U_0-a_0\ell\le u,\qquad \ell-\mathcal R+\mathcal F_2\le0,\\
- (a_1-1)\ell-\mathcal F+\mathcal R-c_2-\ell\alpha_1+\frac u{\alpha_1}\le0 .
-\end{gather*}
-Then for all $\alpha\ge\alpha_1$ and $\alpha_2\ge0$
+Let $\ell=\log2$ and let $\mathcal N,\mathcal F,\mathcal R,\mathcal F_2$ be real numbers. Put
+\begin{multline*}
+ V(\alpha)=\bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+\mathcal N+(1-\alpha)\mathcal F+\alpha\mathcal R\\
+ +\frac{(\mathcal F_2+\ell-\mathcal R)^2}{4\ell}+U_0-\tfrac12\ell-c_2\alpha .
+\end{multline*}
+Then for all real $\alpha$ and all $\alpha_2\ge0$
 \begin{multline*}
  \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2+\alpha_2-\alpha_2^2\bigr)\ell+\mathcal N+(1-\alpha)\mathcal F\\
- +(\alpha-\alpha_2)\mathcal R+\alpha_2\mathcal F_2\le-U_0+\tfrac12\ell+c_2\alpha .
+ +(\alpha-\alpha_2)\mathcal R+\alpha_2\mathcal F_2\le-U_0+\tfrac12\ell+c_2\alpha+V(\alpha) .
 \end{multline*}
 \end{lemma}
 
 \begin{proof}
-Put $s=(a_1-1)\ell-\mathcal F+\mathcal R-c_2$. The left side minus the right side equals
-\[
- (\mathcal N+\mathcal F+U_0-a_0\ell)+\alpha s-\ell\alpha^2+\alpha_2(\ell-\mathcal R+\mathcal F_2)-\ell\alpha_2^2 .
-\]
-The last two terms are nonpositive by the second hypothesis. The first three are at most
-$\alpha(u/\alpha+s-\ell\alpha)$. The function $u/\alpha-\ell\alpha$ decreases in $\alpha$, so this is at most
-$\alpha(u/\alpha_1+s-\ell\alpha_1)\le0$.
+The difference of the two sides is $\alpha_2(\mathcal F_2+\ell-\mathcal R)-\ell\alpha_2^2$, and
+$tb-\ell t^2\le b^2/(4\ell)$ for all real $t$ and $b$.
 \end{proof}
 
-The lemma is applied with $\mathcal N$ a bound for $2\|u\|^2+\frac12\|v\|^2$, $\mathcal F=M_X+M_Y$,
-$\mathcal R$ a bound for the supremum of $F_1$ and $\mathcal F_2$ a bound for the supremum of $F_2$. The
-analogue for the constrained case has no prescribed points of the second kind. Its polynomial in $\alpha$ is
+So the energy bound holds at the slope $c=c_2+\sigma$ on every range of $\alpha$ on which $V(\alpha)\le\sigma\alpha$.
+The lemma is applied with $\mathcal N$ a bound for $2\|u\|^2+\frac12\|v\|^2$, $\mathcal F$ a bound for $M_X+M_Y$, with the
+column field $\gamma g$ included in $Y$, $\mathcal R$ a bound for the supremum of $F_1$ and $\mathcal F_2$ a bound for the
+supremum of $F_2$. Keeping $\mathcal R$ and $\mathcal F_2$ apart is much better than one cap for both, because the moved
+trial sequences of \S\ref{ssec:trials} lower the first field and raise the second. The analogue for the constrained case has no prescribed
+points of the second kind. Its inequality is
 \[
- \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+n_1+(1-\alpha)\mathcal F_1+\alpha\lambda_1\tfrac{2g_0}{n_0}
- \le-U_0+\tfrac12\ell+c_2\alpha,
+ \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+n_1+(1-\alpha)\mathcal F_1+\alpha\mathcal M_1
+ \le-U_0+\tfrac12\ell+c\alpha,
 \]
-with $n_1$ a bound for the norms of the trial sequences and $\mathcal F_1=M_{X_1}+M_Y$. The coefficient of $\alpha^2$ is negative, so this holds for all real $\alpha$ as soon as the discriminant of the
-difference of the two sides is nonpositive.
-
-For our parameters the trial sequences of Appendix~\ref{app:field} give the hypotheses of
-Lemma~\ref{lem:energy-ineq} with $\alpha_1=\AlphaOne$, $u=0.0068682$ and $c_2=\Ctwo$. They also give the
-inequality of the constrained case with the same $U_0$ and $c_2$.
+with $n_1$ a bound for the norms of the trial sequences, $\mathcal F_1=M_{X_1}+M_Y$, and $\mathcal M_1$ a bound for
+$\lambda_1\bigl(\frac{2g_0}{n_0}-\frac{2x^2}{1+x^2}\bigr)+\hat\delta(\mathsf t(x))/58$ on $E_W$. Since
+$1-\frac{2x^2}{1+x^2}=\sqrt{1-\mathsf t(x)^2}$, this bound is a maximum of affine functions of $\lambda_1$ over the
+segments of the chord table, with $\hat\delta$ replaced by its larger end value. So it is convex in $\lambda_1$.
 
 \emph{The squares that remain.} Section~\ref{sec:signed} uses what the completion of squares leaves, so we record it for the case with doubled
 interaction. Let $\mu_F$, $\mu_M$ and $\mu_S$ be the normalized counting measures of the free points, the prescribed points of the first kind and the
@@ -151,36 +155,59 @@ the logarithmic potential of a point charge of complex strength $r$ at $x_0+i\ep
 extremal measure has a gap in its support around $x=0$. Its potential has a logarithmic singularity at $x=0$
 and square-root behaviour at the edges of the gap. A Chebyshev expansion converges slowly near such points,
 while a charge at a small distance $\epsilon_0$ reproduces the local behaviour with one term. This is also why
-the quadrature nodes of Section~\ref{sec:real} avoid a neighbourhood of $x=0$. Appendix~\ref{app:field} gives the charges
-and the certified bounds.
+the quadrature nodes of Section~\ref{sec:real} avoid a neighbourhood of $x=0$.
+
+\emph{Moving trial sequences.} The best trial sequence depends on $\alpha$. We use families
+\[
+ u(\tau)=u+\tau\,\mathrm du,\qquad v(\tau)=v+\tau\,\mathrm dv\qquad(0\le\tau\le1),
+\]
+with fixed finitely supported increments and with $\tau=\tau(\alpha)$ an explicit piecewise linear function. The fields
+$X$, $Y$, $F_1$ and $F_2$ are affine in $\tau$. So the supremum of a field at $\tau$ is at most the chord between the
+suprema at $\tau=0$ and $\tau=1$, or, for the kept base fields, the supremum at $\tau=0$ plus $\tau$ times the supremum of the
+increment. The norms are quadratic in $\tau$. All bounds then become polynomials in $\alpha$ on each piece of
+$\tau(\alpha)$. Appendix~\ref{app:field} gives the charges, the increments and the certified bounds.
 
 \subsection{The two cases at the improved rate}\label{ssec:cases}
-Theorem~\ref{thm:real} asks for the rate $U_0=U+\Gamma_0/n_0^2$ instead of $U$. In the constrained case the
-inequality above holds at $U_0$ for every $\alpha$, with the slope $c_2$. In the case with doubled interaction
-Lemma~\ref{lem:energy-ineq} gives it at $U_0$ only for $\alpha\ge\alpha_1$, because the extra term $U_0-U$ is
-absorbed by the term $c_2\alpha$ and the quadratic term once $\alpha$ is not small. So a new argument is needed
-only in the case with doubled interaction with fewer than $\alpha_1n$ prescribed columns.
-Section~\ref{sec:signed} supplies it, with the same constant $c_2$. Precisely, it proves the following.
+Theorem~\ref{thm:real} asks for the rate $U_0=U+\Gamma_0/n_0^2$ instead of $U$, at the slope $c$. In both cases this
+reduces to finitely many polynomial inequalities in $\alpha$, each of the form $V(\alpha)\le\sigma\alpha$ on a closed
+interval with polynomial caps. Each is proved by a cover of the interval by subintervals on which the leading
+term dominates, in exact rational arithmetic. The bound at an interior $\alpha$ of a cell uses the caps at the right
+end point of the cell, since $g>0$. A finite cover by cells and the uniform continuity of the caps then give the
+bound for all $\alpha$, with an error that tends to zero.
+
+In the constrained case we use the increment with $24$ Chebyshev coefficients and $\tau=\min(1,\frac{50}{11}\alpha)$. The
+inequality holds on $[0,1]$, which is covered by the $6$ pieces with end points $0,\frac{11}{50},\frac3{10},\frac25,\frac35,\frac45,1$.
+In the case with doubled interaction we use the increment with $40$ Chebyshev coefficients and $\tau=1$. The inequality
+of Lemma~\ref{lem:energy-ineq} holds on $[\alpha_1,1]$, covered by the $6$ pieces with end points
+$\alpha_1,\frac15,\frac3{10},\frac25,\frac35,\frac45,1$. For $\alpha<\alpha_1$ it fails, because the extra term
+$U_0-U$ is absorbed by the term $c\alpha$ only once $\alpha$ is not small. So a new argument is needed only in the case
+with doubled interaction with fewer than $\alpha_1n$ prescribed columns. Section~\ref{sec:signed} supplies it, with the
+same slope $c$. Precisely, it proves the following.
 
 \begin{proposition}\label{prop:signed-goal}
-In the case with doubled interaction, for every configuration with $m\le\alpha_1n$ prescribed columns, the
-integrand of Lemma~\ref{lem:andreief}, with the generalized Vandermonde determinant replaced by the bound of
-Lemma~\ref{lem:binomvand}, is at most
+In the case with doubled interaction, for every configuration with $m\le\alpha_1n$ prescribed columns at the nodes
+$t_{a_1},\ldots,t_{a_m}$, the integrand of Lemma~\ref{lem:andreief}, with the generalized Vandermonde determinant replaced by
+the bound of Lemma~\ref{lem:binomvand}, is at most
 \[
- \exp\Bigl(n^2\bigl(-U_0+\tfrac12\log2+c_2\alpha+o(1)\bigr)\Bigr)\,C_0^m\prod_j\mathcal B(k_j),\qquad \alpha=m/n,
+ \exp\Bigl(n^2\bigl(-U_0+\tfrac12\log2+c\alpha+o(1)\bigr)-N\sum_j\hat\delta(t_{a_j})\Bigr)\,C_*^m\prod_j\mathcal B_\zeta(k_j),\qquad \alpha=m/n,
 \]
-with an absolute constant $C_0$.
+with an absolute constant $C_*$.
 \end{proposition}
 
 \begin{proof}[Proof of Theorem~\ref{thm:real}, given Proposition~\ref{prop:signed-goal}]
 By Proposition~\ref{prop:signed-goal} and the discussion above, in both cases a determinant $M_f$ with $m$
-prescribed columns $k_1,\ldots,k_m$ is at most
-$C_0^m\prod_j\mathcal B(k_j)e^{n_0c_2Nm}\exp\bigl(n_0^2N^2(-U_0+\frac12\log2+o(1))\bigr)$. The factor $C_0^m$ comes
-from the expansion of the row functions at the prescribed points. By \eqref{eq:wk} and the bound for
-$\mathcal B(k)$, the constants of Lemma~\ref{lem:expansion} satisfy
+prescribed columns $k_1,\ldots,k_m$ at the nodes $t_{a_j}$ is at most
 \[
- \log(B_kC_k)\le\bigl(n_0c_2+w(k/n)+n_0\tilde h_2(k/n)+o(1)\bigr)N\le(\rho+o(1))N .
+ C_*^m\prod_j\mathcal B_\zeta(k_j)\,e^{n_0cNm-N\sum_j\hat\delta(t_{a_j})}\exp\bigl(n_0^2N^2(-U_0+\tfrac12\log2+o(1))\bigr).
 \]
+The factor $C_*^m$ comes from the expansion of the row functions at the prescribed points. By \eqref{eq:wk} and
+\S\ref{ssec:weights}, the weight of the column $k_j$ at the node $t_{a_j}$, times $\mathcal B_\zeta(k_j)$, is at most
+$e^{(\psi+\hat\delta(t_{a_j})+o(1))N}$. The terms $\hat\delta$ cancel. So for every column $k$ and every node $a$
+the weight and the factor of $M_f$ that belong to the pair $(k,a)$ have the product
+\[
+ \log(B_kC_k)\le\bigl(n_0c+\psi+o(1)\bigr)N=(\rho+o(1))N ,
+\]
+and Lemma~\ref{lem:expansion} applies with this bound for each pair.
 For $|\varepsilon|\le e^{-\rho N}$ Lemma~\ref{lem:expansion} gives a factor $(1+O(N^5))^n=e^{o(N^2)}$. With
 $D=n_0^2(U_0-\frac12\log2)$ this is the claim.
 \end{proof}

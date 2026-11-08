@@ -12,29 +12,33 @@
 \newcommand{\FormalizationLink}{\url{\FormalizationURL}}
 
 % Numerical constants: decimal truncations (or outward roundings) of rational numbers of the formal proof.
-\newcommand{\Bstar}{294.95608}
-\newcommand{\Rho}{295.849794}
+\newcommand{\Mustar}{269.78696}
+\newcommand{\Rho}{278.376313578}
 \newcommand{\Ctwo}{3.596893}
-\newcommand{\WZero}{87.23}
+\newcommand{\Sigm}{0.33871}
+\newcommand{\Cost}{3.935603}
+\newcommand{\Psiw}{50.111339578}
+\newcommand{\Czero}{33.052}
+\newcommand{\Dcirc}{3.2506}
 \newcommand{\Utarget}{2.255858836}
-\newcommand{\Gain}{23.1132}
-\newcommand{\Uzero}{2.2627295}
+\newcommand{\Gain}{24.64}
+\newcommand{\Uzero}{2.2631834}
 \newcommand{\NormCap}{0.77363}
 \newcommand{\SupX}{-0.96450499}
 \newcommand{\SupY}{-1.57499400}
 \newcommand{\FieldCap}{-2.53949899}
 \newcommand{\ResCap}{-0.0631062}
-\newcommand{\EtaTot}{53.16065}
-\newcommand{\LamCrit}{0.9971276}
+\newcommand{\EtaTot}{54.68745}
+\newcommand{\LamCrit}{0.9699101}
 \newcommand{\Kcoef}{160}
 \newcommand{\Ngeo}{75}
 \newcommand{\Ncomplex}{41}
 \newcommand{\Mmargin}{2.986\cdot10^{-6}}
-\newcommand{\Decay}{6445.9487}
+\newcommand{\Decay}{6447.4755}
 \newcommand{\DecayOA}{6422.8355}
-\newcommand{\EtaExact}{53.16173}
-\newcommand{\PayL}{53.0000613}
-\newcommand{\PayR}{53.0079522}
+\newcommand{\EtaExact}{54.68853}
+\newcommand{\PayL}{53.0000596}
+\newcommand{\PayR}{53.0419104}
 \newcommand{\AlphaOne}{51/500}
 \newcommand{\Chi}{22.06076}
 \newcommand{\ChiLean}{22.0607}
@@ -75,7 +79,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{November 6, 2026}
+\date{November 8, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -83,17 +87,17 @@
 logarithmic energy, Pick matrices, Nevanlinna--Pick interpolation, Gauss quadrature, Lean}
 
 \begin{abstract}
-Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. We prove that $|G-a/b|>b^{-295}$ for all
+Let $G=\sum_{j\ge0}(-1)^j(2j+1)^{-2}$ be Catalan's constant. We prove that $|G-a/b|>b^{-270}$ for all
 integers $a$ and all sufficiently large integers $b$. Hence the irrationality exponent of $G$ is at most
-$295$. The proof refines OpenAI's recent proof that $G$ is irrational. That proof compares two bounds for
+$270$. The proof refines OpenAI's recent proof that $G$ is irrational. That proof compares two bounds for
 a large determinant whose entries are linear forms in $1$ and $G$. The lower bound comes from the
 denominators of the entries, and the upper bound from an integral representation. We improve both. On the
 arithmetic side we show that the matrix of rational parts has large corank modulo $p$ for the primes in
 explicit intervals, which lowers the denominators. On the analytic side we bound a determinant that the
 energy method treats trivially. A phase inequality for Pick matrices, proved by Nevanlinna--Pick
 interpolation, compares it with a determinant of a simpler kind. That determinant is bounded by a finite
-Gram inequality and two logarithmic gases. A quadrature formula extends the upper bound to an
-exponentially small neighbourhood of $G$, as a measure requires. The proof is formalized in the Lean proof
+Gram inequality and two logarithmic gases. Gauss quadrature at Chebyshev nodes of many short intervals
+extends the upper bound to an exponentially small neighbourhood of $G$, as a measure requires. The proof is formalized in the Lean proof
 assistant and kernel-checked.
 \end{abstract}
 
@@ -125,9 +129,9 @@ $\xi\mapsto r\xi+r'$ with $r,r'\in\Q$ and $r\ne0$.
 \begin{theorem}\label{thm:main}
 For all integers $a$ and all sufficiently large integers $b$,
 \[
- \left|G-\frac ab\right|>b^{-295}.
+ \left|G-\frac ab\right|>b^{-270}.
 \]
-In particular $\mu(G)\le295$.
+In particular $\mu(G)\le270$.
 \end{theorem}
 
 The proof uses the prime number theorem. The theorem and every result it depends on have been formalized
@@ -198,10 +202,10 @@ $\beta(4),\beta(6),\ldots,\beta(36)$ is irrational, with a Lean formalization \c
 \cite{Xu2026} obtained $\mu(G)<2402$ and $\mu(G)\le727.03$ at other parameters. Xu's certificate is
 numerical and not formalized. Davis \cite{Davis2026} reached $\mu(G)\le528.23288$ with new quadrature nodes, the zeros of $T_K(P(t))$
 for a fixed polynomial $P$. The MultiAgency agent swarm regenerated $P$ and reached $\mu(G)\le528.2315$
-\cite{MultiAgency2026}. Both results are formalized in Lean. We use Davis's nodes, the polynomial
-$P$ of \cite{Davis2026} and the formal proofs of their properties from that work in
-Section~\ref{sec:real}. The other constructions are independent of the ideas of the present paper.
-An earlier preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
+\cite{MultiAgency2026}. Both results are formalized in Lean. Our nodes are different, but we use two
+formal lemmas of \cite{Davis2026} on the weights of nodal polynomials in Section~\ref{sec:real}. The
+other constructions are independent of the ideas of the present paper.
+A preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
 \cite{Wachs2026} showed that its main estimate is not justified.
 
 \subsection{The companion paper}
@@ -247,11 +251,11 @@ The right side is less than $1$ as soon as $\mu>d\rho/\eta$. So $\mu(G)\le d\rho
 The three numbers come from different places. The degree $d$ comes from the construction
 (Lemma~\ref{lem:degree}). The neighbourhood exponent $\rho$ comes from a quadrature formula for the
 coefficient of $G$ (Section~\ref{sec:real}). The difference $\eta$ is a small difference of two large
-numbers, $D\approx6446$ and $\Lambda\approx6393$ (Figure~\ref{fig:balance}). For OpenAI's construction with
+numbers, $D\approx6447$ and $\Lambda\approx6393$ (Figure~\ref{fig:balance}). For OpenAI's construction with
 our parameters, $D$ and $\Lambda$ differ by about $8$. We lower $\Lambda$ by $22.06$ through the corank of
-a matrix modulo $p$ (Section~\ref{sec:content}), and raise $D$ by $23.11$ through a bound for a
-determinant of row functions (Section~\ref{sec:signed}). The result is $\eta\approx53.16$, which is what
-makes $d\rho/\eta$ as small as $295$.
+a matrix modulo $p$ (Section~\ref{sec:content}), and raise $D$ by $24.64$ through a bound for a
+determinant of row functions (Section~\ref{sec:signed}). The result is $\eta\approx54.69$, which is what
+makes $d\rho/\eta$ as small as $270$.
 
 \begin{figure}[ht]
 \centering
@@ -265,23 +269,23 @@ makes $d\rho/\eta$ as small as $295$.
  \put(60,-3.5){\makebox(0,0){$6440$}}
  \qbezier(-1.5,-1.4)(-1,-0.9)(-0.5,-0.4)\qbezier(-0.9,-1.4)(-0.4,-0.9)(0.1,-0.4)
  \put(0,14){\framebox(42.8,3){}}
- \put(42.8,14){\framebox(23.1,3){$+23.1$}}
+ \put(42.8,14){\framebox(24.6,3){$+24.6$}}
  \put(-1,15.5){\makebox(0,0)[r]{decay rate $D$}}
  \put(0,6){\framebox(12.8,3){}}
  \put(12.8,6){\dashbox{0.5}(22.1,3){$-22.1$}}
  \put(-1,7.5){\makebox(0,0)[r]{denominators $\Lambda$}}
  \put(12.8,3){\line(0,1){11}}
- \put(65.9,3){\line(0,1){11}}
- \qbezier(12.8,3.6)(39.35,3.6)(65.9,3.6)
+ \put(67.4,3){\line(0,1){11}}
+ \qbezier(12.8,3.6)(40.1,3.6)(67.4,3.6)
  \qbezier(12.8,3.6)(13.4,3.85)(14.0,4.1)\qbezier(12.8,3.6)(13.4,3.35)(14.0,3.1)
- \qbezier(65.9,3.6)(65.3,3.85)(64.7,4.1)\qbezier(65.9,3.6)(65.3,3.35)(64.7,3.1)
- \put(39,1.6){\makebox(0,0){$\eta=D-\Lambda\approx53.2$}}
+ \qbezier(67.4,3.6)(66.8,3.85)(66.2,4.1)\qbezier(67.4,3.6)(66.8,3.35)(66.2,3.1)
+ \put(40,1.6){\makebox(0,0){$\eta=D-\Lambda\approx54.7$}}
  \put(42.8,19.2){\makebox(0,0){$D_0=6422.8$}}
  \put(34.9,11.2){\makebox(0,0){$\Lambda_0=6414.8$}}
 \end{picture}
 \caption{The exponent balance for the parameters $(58,9,3,5,3)$, per unit of $N^2$. The axis is broken at
 $6380$. OpenAI's estimates give the decay rate $D_0$ and the denominator exponent $\Lambda_0$, which
-differ by about $8$. The bound of Section~\ref{sec:signed} adds $23.1$ to $D_0$, and the corank bounds
+differ by about $8$. The bound of Section~\ref{sec:signed} adds $24.6$ to $D_0$, and the corank bounds
 of Section~\ref{sec:content} remove $22.1$ from $\Lambda_0$.}\label{fig:balance}
 \end{figure}
 
@@ -302,10 +306,18 @@ every constant subspace at once (Theorem~\ref{thm:everyU}). Only upper bounds fo
 and these come from forced intersections of row spaces. No value of a moment enters.
 
 \item \emph{A perturbation bound column by column.} For the neighbourhood of $G$ we write the coefficient of
-$G$ by a quadrature formula with $53N$ nodes, using Davis's nodes. The perturbed determinant is then a sum of
-determinants in which some columns are replaced by values of the row polynomials at the nodes. We bound the
-weight of each replaced column and its generalized Vandermonde factor together. One contour of radius
-$\frac35$ and the inequality $h_2(y)-y\log r\le\log(1+1/r)$ treat all columns at once.
+$G$ by a quadrature formula with $53N$ nodes. The nodes are Chebyshev nodes of $106$ short intervals, and the
+Lagrange polynomials are bounded by the Green functions of the intervals. The perturbed determinant is then
+a sum of determinants in which some columns are replaced by values of the row polynomials at the nodes. We
+bound the weight of each replaced column and its generalized Vandermonde factor together. A weighted form of
+Hadamard's inequality with a parameter $\zeta=\frac34$ makes the dependence on the column cancel, and one
+contour of radius $\frac34$ treats all columns at once. The part of the weight that depends on the node is
+carried into the energy bound as an external field.
+
+\item \emph{Trial sequences that move with the configuration.} The energy bound with prescribed columns uses
+trial sequences that depend linearly on the fraction of prescribed columns. Their fields are affine in the
+parameter, so the suprema are bounded by chords between two end points. A finite cover of the range of the
+fraction by cells then reduces every case to exact polynomial inequalities.
 
 \item \emph{A phase inequality for Pick matrices.} OpenAI's integrand contains a determinant
 $\det\mathsf L$ of size $n$ that the energy method bounds by $e^{O(n\log n)}$. In the Pick matrix of the nodes the
@@ -317,7 +329,7 @@ product and follows its argument along an arc of the unit circle.
 \item \emph{A complete log-gas bound.} With weight $0$ the determinant factors through two Gram
 determinants. Fischer's inequality and a finite Andr\'eief identity bound it by two logarithmic gases, one
 in the plane and one in the Joukowski coordinate. These are bounded by tangent inequalities against fixed
-reference measures. This raises the decay rate by $23.11$. Numerical evaluation for small $N$ suggests that
+reference measures. This raises the decay rate by $24.64$. Numerical evaluation for small $N$ suggests that
 this is most of the true size of $\det\mathsf L$ at the extremal configuration.
 
 \item \emph{Near-extremal configurations.} The phase statistic need not be large on every configuration.
@@ -332,18 +344,20 @@ Table~\ref{tab:constants} lists the constants for the parameters $(58,9,3,5,3)$,
 \begin{table}[ht]\centering
 \begin{tabular}{@{}llr@{}}\toprule
 degree & $d$ & $53$\\
-neighbourhood exponent & $\rho=58c_2+W_0$ & $295.84$\\
+cost of a prescribed column & $c=c_2+\sigma$ & $3.93$\\
+weight of a column & $\psi$ & $50.11$\\
+neighbourhood exponent & $\rho=58c+\psi$ & $278.37$\\
 decay rate (OpenAI's estimate) & $D_0$ & $6422.83$\\
-decay rate (with the bound for $\det\mathsf L$) & $D$ & $6445.94$\\
+decay rate (with the bound for $\det\mathsf L$) & $D$ & $6447.47$\\
 denominator exponent (with the corank gain) & $\Lambda$ & $6392.78$\\
-difference & $\eta=D-\Lambda$ & $53.16$\\
+difference & $\eta=D-\Lambda$ & $54.68$\\
 \midrule
-bound & $d\rho/\eta$ & $294.95\ldots$\\\bottomrule
+bound & $d\rho/\eta$ & $269.78\ldots$\\\bottomrule
 \end{tabular}
 \caption{The constants of the proof, truncated. The formal proof uses exact rational numbers.}
 \label{tab:constants}\end{table}
 Without the corank gain and the bound for $\det\mathsf L$, $\eta$ would be about $8$, and the method would give an
-exponent near $2000$.
+exponent above $1800$.
 
 \subsection{Organization}
 Section~\ref{sec:overview} recalls OpenAI's construction for general parameters and proves the criterion
@@ -503,8 +517,9 @@ any prime of the interval would lose a power of $b$. The chosen prime may be so 
 decay $e^{-\eta p^2}$ weak, but it also makes the height $b^{dp}$ small, and the primes of $(p,2p]$ alone
 already win. So $\lambda$ need not exceed $2\omega$, and the bound $\rho\lambda$ may lie below $\rho$.
 
-For Catalan's constant we take $d=53$, $\omega=\frac35$, $\delta=2.9\cdot10^{-7}$ and $\lambda=295/\rho$.
-The last hypothesis then reads $295>B_*$ with $B_*=d\rho/(\eta-4d\delta)=\Bstar\ldots$
+For Catalan's constant we take $d=53$, $\omega=\frac35$, $\delta=2.9\cdot10^{-7}$ and $\lambda=270/\rho$.
+The last hypothesis then reads $270>\mu_*$ with $\mu_*=d\rho/(\eta-4d\delta)=\Mustar\ldots$ The formal proof
+checks the six hypotheses with $\rho\lambda$ in place of $270$ for every $\rho\lambda\in[269.787,400]$.
 
 \section{Denominators and nonvanishing}\label{sec:setup}
 
@@ -1344,11 +1359,12 @@ Let
 \end{gather*}
 The number $\Gamma_0$ is the improvement of the decay rate proved in Section~\ref{sec:signed}. Put
 \begin{equation}\label{eq:rho-def}
- \rho=n_0c_2+W_0,\qquad c_2=\Ctwo,\quad W_0=\WZero,\quad \rho=\Rho .
+ \rho=n_0c+\psi,\qquad c=c_2+\sigma,
 \end{equation}
-Here $c_2$ is the increase of the energy bound per prescribed column (Section~\ref{sec:energy}), and $W_0$
-bounds the logarithmic size of the weight and the binomial factor of one column, per unit of $N$
-(\S\ref{ssec:weights}).
+with $c_2=\Ctwo$, $\sigma=\Sigm$ and $\psi=\Psiw$,
+so that $\rho=\Rho$. Here $c$ is the increase of the energy bound per prescribed column
+(Section~\ref{sec:energy}), and $\psi$ bounds the logarithmic size of the weight and the Vandermonde factor
+of one column, per unit of $N$ (\S\ref{ssec:weights}).
 
 \begin{theorem}\label{thm:real}
 For our parameters, uniformly for real $x$ with $|x-G|\le e^{-\rho N}$,
@@ -1380,34 +1396,67 @@ $\ell_a$. This is a quadrature formula of Gauss type. It makes the columns of $\
 values of the polynomials $P_r$. So the perturbed determinant can be treated by the energy
 method. The cost is the size of the weights.
 
-We take $J=d_0N=53N$ nodes, and we use the nodes of Davis \cite{Davis2026}. Davis constructs a polynomial
-$P$ of degree $130$ with rational coefficients such that every value in $(-1,1)$ is taken by $P$ at
-$130$ distinct points of $(-1,1)$. Put $K=\lceil J/130\rceil$. Then $F_N=T_K\circ P$ has $130K$ simple
-roots in $(-1,1)$. We take $J$ of them as the nodes $t_1,\ldots,t_J$, and delete the other $s=130K-J<130$.
-The nodes lie in $E=P^{-1}([-1,1])$. In the coordinate $x$ with $t=2x/(1+x^2)$ they lie in
+We take $J=d_0N=53N$ nodes, which are Chebyshev nodes of short intervals. Let $[a_c,b_c]$,
+$1\le c\le106$, be fixed intervals with dyadic end points, $48$ in $[-1,0)$ and $58$ in $(0,1)$, adjacent
+within each side. Their union is $[-0.99931266\ldots,-0.37573294\ldots]\cup[0.19559072\ldots,0.99999983\ldots]$. In
+the coordinate $x$ with $t=2x/(1+x^2)$ it is contained in
 \[
  E_x=[-\tfrac{2409}{2500},-\tfrac{19501}{100000}]\cup[\tfrac{98749}{1000000},1].
 \]
-So the nodes avoid a neighbourhood of $x=0$, where the fields of the energy method are largest. The two
-gaps have different widths. The nodes are not Chebyshev nodes for a union of two intervals. They are the
-inverse images under $P$ of the Chebyshev nodes of $[-1,1]$, and this is what makes the Lagrange
-polynomials small.
+So the nodes avoid a neighbourhood of $x=0$, where the fields of the energy method are largest. We pair the
+intervals $(2i-1,2i)$ within each side, which gives $24+29=53$ pairs. The two members of a pair receive
+$K_c=\lceil N/2\rceil$ and $\lfloor N/2\rfloor$ nodes, so that $\sum_cK_c=53N$. Let
+$\ell_c(z)=(2z-a_c-b_c)/(b_c-a_c)$ and $w_c=b_c-a_c$. The nodes in $[a_c,b_c]$ are the zeros of
+$T_{K_c}\circ\ell_c$. They lie in the open interval, so all nodes are distinct.
 
-Let $g_E$ be the Green function of $\C\setminus E$ with pole at infinity. Since $E=P^{-1}([-1,1])$, it is
+Let $G(w)=\log|w+\sqrt{w^2-1}|$, with the branch of modulus at least $1$, be the Green function of
+$\C\setminus[-1,1]$. Put $G_c=G\circ\ell_c$ and
+\begin{equation}\label{eq:Ldef}
+ L(z)=\tfrac12\sum_c\bigl(G_c(z)+\log(w_c/4)\bigr).
+\end{equation}
+
+\begin{lemma}\label{lem:lagrange}
+There is a constant $C$ such that for all $N$, every node $t_a$ and every $z\in\C$ with $|z|\le1$, the
+Lagrange polynomial $\ell_a$ of $t_a$ satisfies $|\ell_a(z)|\le CN\,e^{N(L(z)-L(t_a))}$.
+\end{lemma}
+
+\begin{proof}
+We use three facts about $T_K$. First, $|T_K(w)|\le e^{KG(w)}$, since $2T_K(w)=\phi^K+\phi^{-K}$ with
+$\phi=w+\sqrt{w^2-1}$. Second, $|T_K(v)|=\cosh(KG(v))\ge\frac12e^{KG(v)}$ for real $|v|\ge1$. Third, the
+Lagrange polynomial $\lambda_j$ of the $j$-th of the $K$ Chebyshev nodes satisfies
+$|\lambda_j(w)|\le Ke^{(K-1)G(w)}$ for all $w\in\C$. For the third, write $w=\frac12(u+u^{-1})$ with
+$|u|=e^{G(w)}\ge1$ and the node as $\frac12(v+v^{-1})$ with $|v|=1$. Then
 \[
- g_E(z)=\tfrac1{130}\,g_{[-1,1]}(P(z)),\qquad
- g_{[-1,1]}(w)=\operatorname{arccosh}\bigl(\tfrac12(|w-1|+|w+1|)\bigr).
+ \frac{T_K(w)}{w-\frac12(v+v^{-1})}=\Bigl(\sum_{i<K}u^iv^{K-1-i}\Bigr)\Bigl(\sum_{i<K}(uv)^{-i}\Bigr),
 \]
-This formula needs no choice of branch. Let $D_N$ be the monic polynomial whose roots are the deleted roots.
-The Lagrange polynomial of a node $t_a$ is
+which has modulus at most $K^2|u|^{K-1}$. The product of the differences of the $j$-th node from the others
+has modulus at least $K/2^{K-1}$. This gives the third fact.
+
+Let $t_a$ be the $j$-th node of the interval $c$. Grouping the factors of $\ell_a$ by intervals gives
 \[
- \ell_a(z)=\frac{F_N(z)\,D_N(t_a)}{F_N'(t_a)\,(z-t_a)\,D_N(z)}.
+ \ell_a(z)=\lambda_j(\ell_c(z))\prod_{c'\ne c}\frac{T_{K_{c'}}(\ell_{c'}(z))}{T_{K_{c'}}(\ell_{c'}(t_a))}.
 \]
-Here $|F_N'(t_a)|$ is bounded below independently of $N$, and $|T_K(w)|\le e^{Kg_{[-1,1]}(w)}$. Since $130K=53N+s$, this gives $|\ell_a(z)|\le e^{53Ng_E(z)+O(\log N)}$ for $z$ in
-a fixed disc at distance at least $N^{-2}$ from $t_a$ and from the deleted roots. Fewer than $130$ roots
-are deleted, so the deletion costs only a factor polynomial in $N$. The contours below can be moved by
-$O(N^{-2})$ to keep this distance, and $g_E$ is uniformly H\"older continuous. So the move changes the
-bound by a factor $e^{O(1)}$. The weight of column $k$ is a
+For $c'\ne c$ the node lies outside the open interval $(a_{c'},b_{c'})$, so $|\ell_{c'}(t_a)|\ge1$. The
+three facts and $G_c(t_a)=0$ give $|\ell_a(z)|\le K_c2^{105}e^{\Lambda(z)-\Lambda(t_a)}$ with
+$\Lambda=\sum_cK_cG_c$. Since $|K_c-N/2|\le\frac12$ and $\sum_cG_c$ is bounded on the closed unit disc,
+$\Lambda(z)-\Lambda(t_a)\le\frac N2\sum_c\bigl(G_c(z)-G_c(t_a)\bigr)+O(1)$. The constants $\log(w_c/4)$ cancel
+in $L(z)-L(t_a)$, and $K_c\le N$.
+\end{proof}
+
+The term $-L(t_a)$ depends on the node. We bound it by a piecewise linear function. On each interval
+$[a_d,b_d]$ we have $G_d=0$, and for $c\ne d$ the function $|\ell_c|$ is affine with values at least $1$.
+Since $\operatorname{arccosh}$ is concave and increasing on $[1,\infty)$, the function $L$ is concave on each
+interval. Let $k_0<\dots<k_{865}$ be fixed dyadic knots that include all end points $a_c$, $b_c$, and let
+$v_i$ be rational numbers with $v_i\ge-L(k_i)-C_0$, where $C_0=\Czero$. Let $\hat\delta$ be the piecewise
+linear function through the points $(k_i,v_i)$. By concavity,
+\begin{equation}\label{eq:chord}
+ -L(t)\le C_0+\hat\delta(t)
+\end{equation}
+for every $t$ in the union of the intervals, and so at every node. One value $L(k_i)$ needs no
+logarithm per term: $2L(k_i)$ is the logarithm of a product of $106$ factors, each an algebraic number with
+one square root.
+
+The weight of column $k$ is a
 coefficient functional of $\ell_a$ multiplied by the column function. After removal of the common factor of
 the rows it equals
 \[
@@ -1435,14 +1484,14 @@ The formal proof replaces the integral by the finite Gauss--Chebyshev identity
 $\frac1M\sum_{j<M}\cos^{2l}\frac{(2j+1)\pi}{2M}=c_l$ for $l<M$, and Cauchy's estimate by the finite Cauchy formula
 at roots of unity. So no integration is needed. For $0\le y\le1$ and $z\in\C$ let
 \[
- \Phi_y(z)=(10-58y)\log|z|+6\log|1-z|+53g_E(z).
+ \Phi_y(z)=(10-58y)\log|z|+6\log|1-z|+L(z).
 \]
-Here $10=(A-b-q)/N$ and $6=(q+h)/N$. With $y=k/n$, Lemma~\ref{lem:keyhole} gives
+Here $10=(A-b-q)/N$ and $6=(q+h)/N$. With $y=k/n$, Lemmas~\ref{lem:lagrange} and~\ref{lem:keyhole} give
 \begin{equation}\label{eq:wk}
- |\beta'_k|\le e^{(w(y)+o(1))N},\qquad w(y)=\max_{z\in\Gamma}\Phi_y(z),
+ |\beta'_k|\le e^{(w(y)-L(t_a)+o(1))N},\qquad w(y)=\max_{z\in\Gamma}\Phi_y(z),
 \end{equation}
-where $\Gamma$ is the circle $|z|=\frac35$ together with the segments $\frac35\le|z|\le1$ of the real axis. One
-radius serves all columns. The certified bound for this maximum is in \S\ref{ssec:weights}.
+where $\Gamma$ is the circle $|z|=\frac34$ together with the segments $\frac34\le|z|\le1$ of the real axis. One
+radius serves all columns and all nodes. The bound for this maximum is in \S\ref{ssec:weights}.
 
 \subsection{Column expansion and Andr\'eief's identity}\label{ssec:andreief}
 Write $\mathcal P(r,a)=P_r(t_a)$. Expanding $\det(\cA_N+\varepsilon\mathcal P\beta)$ multilinearly in the
@@ -1487,54 +1536,59 @@ columns that remain integrals, and the missing exponents are the replaced column
 Vandermonde determinant by a product over the missing exponents.
 
 \begin{lemma}\label{lem:binomvand}
-Let $s_1,\ldots,s_{n'}\in[0,1]$, let $E_1<\dots<E_{n'}<n$ be integers, and let $\{k_1,\ldots,k_m\}$ be the
-complement of $\{E_i\}$ in $\{0,\ldots,n-1\}$. Then
+Let $0<\zeta<1$, let $s_1,\ldots,s_{n'}\ge0$, let $E_1<\dots<E_{n'}<n$ be integers, and let $\{k_1,\ldots,k_m\}$ be
+the complement of $\{E_i\}$ in $\{0,\ldots,n-1\}$. Then
 \[
- \bigl|\det[s_l^{E_i}]\bigr|\le\prod_{j=1}^m\mathcal B(k_j)\prod_{i<l}|s_i-s_l|,\qquad
- \mathcal B(k)=\sum_{i=0}^{m-1}\binom{n'}{n'-k+i},
+ \bigl|\det[s_l^{E_i}]\bigr|\le\prod_l(1+\zeta s_l)^m\prod_{j=1}^m\mathcal B_\zeta(k_j)\prod_{i<l}|s_i-s_l|,\qquad
+ \mathcal B_\zeta(k)=\sum_{i}\zeta^{-(n'-k+i)},
 \]
-with $\binom{n'}r=0$ for $r\notin[0,n']$.
+where the sum runs over the $i<m$ with $0\le n'-k+i\le n'$. Moreover $\mathcal B_\zeta(k)\le\zeta^{-(n-1-k)}/(1-\zeta)$.
 \end{lemma}
 
 \begin{proof}
 Let $P(X)=\prod_l(X-s_l)=\sum_r(-1)^re_r(s)X^{n'-r}$. Multiplying the matrix by a unitriangular matrix built
 from $P$ gives $|\det[s_l^{E_i}]|=\prod_{i<l}|s_i-s_l|\cdot|\det Q|$, where $Q$ is the $m\times m$ matrix with
-entries $Q_{j,i}=[X^{k_j-i}]P$. So $|Q_{j,i}|=e_{n'-k_j+i}(s)\le\binom{n'}{n'-k_j+i}$, since $s\in[0,1]^{n'}$.
-Hadamard's inequality, applied to the rows of $Q$ in the $\ell^1$ norm, gives the claim.
+entries $Q_{j,i}=[X^{k_j-i}]P$. So $|Q_{j,i}|=e_{n'-k_j+i}(s)$, and this is $0$ unless $0\le n'-k_j+i\le n'$.
+Since the $s_l$ are nonnegative, $\prod_l(1+\zeta s_l)=\sum_r\zeta^re_r(s)$ is a sum of nonnegative terms. So
+$e_r(s)\le\zeta^{-r}\prod_l(1+\zeta s_l)$, and the row $j$ of $Q$ has $\ell^1$ norm at most
+$\prod_l(1+\zeta s_l)\,\mathcal B_\zeta(k_j)$. Hadamard's inequality, applied to the rows of $Q$ in the $\ell^1$ norm,
+gives the first claim. The exponents $n'-k+i$ in $\mathcal B_\zeta(k)$ are distinct and at most $n-1-k$, which gives the
+second.
 \end{proof}
 
 \subsection{The weight of one column}\label{ssec:weights}
-The bound of Lemma~\ref{lem:binomvand} does not depend on the points $s_l$. Since $\binom{n'}r\le\binom nr$,
+The bound of Lemma~\ref{lem:binomvand} has two parts. The factor $\prod_l(1+\zeta s_l)^m$ depends on the free points.
+With $m=\alpha n$ it equals $\exp\bigl(n\sum_l\alpha\log(1+\zeta s_l)\bigr)$. So it adds the field
+$\alpha\log(1+\zeta s)$ to the column field of the energy, and we treat it in Section~\ref{sec:energy}. The other factor
+belongs to the replaced columns. With $y=k/n$ we have $\zeta^{-(n-k)}=e^{58N(1-y)\log(1/\zeta)}$. By \eqref{eq:wk}, the
+replaced column $k$ at the node $t_a$ therefore contributes at most
 \[
- \log\mathcal B(k)\le n_0\tilde h_2(k/n)N+O(\log N),
+ e^{(w(y)+58(1-y)\log(1/\zeta)-L(t_a)+o(1))N}.
 \]
-where $\tilde h_2(y)$ is the binary entropy $h_2(y)=-y\log y-(1-y)\log(1-y)$ for $y\ge\frac12$ and $\log2$ for
-$y<\frac12$. So the replaced column $k$ contributes at most $e^{(w(y)+n_0\tilde h_2(y)+o(1))N}$, with $y=k/n$.
-We must bound the supremum of $w+58\tilde h_2$ over $y\in[0,1]$. Two inequalities suffice.
-
-First, for $z\in\Gamma$,
-\begin{equation}\label{eq:circlecap}
- \Phi_y(z)\le(10-58y)\log\tfrac35+\tfrac{709}{20} .
-\end{equation}
-On the circle this is the bound $6\log|1-z|+53g_E(z)<\frac{709}{20}$. Appendix~\ref{app:field} certifies it through
-a single polynomial inequality on $|z|=\frac35$. On a real segment it follows from the bound
-$6\log|1-x|+53g_E(x)\le\frac{709}{20}+10\log\frac35$ and from $\log\frac35\le\log|x|\le0$. Second, for $0<r\le1$ and $0\le y\le1$,
-\begin{equation}\label{eq:entropy}
- \tilde h_2(y)-y\log r\le\log(1+1/r) .
-\end{equation}
-Indeed, put $a=-\log r\ge0$. For $y\ge\frac12$ this is the inequality $h_2(y)+ya\le\log(1+e^a)$, which is
-Jensen's inequality for the logarithm, applied to the values $e^a/y$ and $1/(1-y)$ with weights $y$ and $1-y$.
-For $y<\frac12$ it follows from $\log2+\frac a2\le\log(1+e^a)$. Together with \eqref{eq:circlecap} this gives, at
-$r=\frac35$,
+We take $\zeta=\frac34$, the radius of the contour $\Gamma$. Two inequalities bound $w$, with $D_\Gamma=\Dcirc$:
+\begin{gather}
+ 6\log|1-z|+L(z)\le D_\Gamma\qquad(|z|=\tfrac34),\label{eq:circlecap}\\
+ 6\log|1-x|+L(x)-10\log\tfrac34\le D_\Gamma\qquad(x\in\R,\ \tfrac34\le|x|<1).\label{eq:segcap}
+\end{gather}
+Appendix~\ref{app:field} proves them. On the circle, \eqref{eq:circlecap} gives
+$\Phi_y(z)\le(10-58y)\log\frac34+D_\Gamma$. On a real segment put $l=\log\frac34$ and $u=\log|x|$, so that $l\le u\le0$.
+Then $(10-58y)(u-l)\le10(u-l)\le-10l$ for $0\le y\le1$, and \eqref{eq:segcap} gives the same bound. The end points
+$|x|=1$ follow by continuity. Hence
 \[
- w(y)+58\tilde h_2(y)\le10\log\tfrac35+\tfrac{709}{20}+58\log\tfrac83=87.2298\ldots
+ w(y)+58(1-y)\log\tfrac43\le(10-58y)\log\tfrac34+D_\Gamma-58(1-y)\log\tfrac34=D_\Gamma-48\log\tfrac34
 \]
-for every $y$. We take $W_0=\WZero$, which leaves a strict margin for the terms $o(1)$. The two factors peak at
-different columns: the weight $w(y)$ grows with $y$, while $\tilde h_2(y)$ is largest on $[0,\frac12]$.
-Inequality \eqref{eq:entropy} is what exploits this, and it is the reason for treating the columns one at a time.
+for every $y$. The dependence on the column cancels exactly. This is the reason for choosing the parameter of
+Lemma~\ref{lem:binomvand} equal to the radius of the contour. With \eqref{eq:chord}, the column $k$ at the node $t_a$
+contributes at most $e^{(\psi+\hat\delta(t_a)+o(1))N}$ as soon as
+\[
+ \psi>C_0+D_\Gamma-48\log\tfrac34=50.1113394\ldots
+\]
+We take $\psi=\Psiw$, which leaves a strict margin for the terms $o(1)$. The factor $e^{N\hat\delta(t_a)}$ depends on the
+node. We do not bound it here. It is carried into the energy bound, where it raises the field of each prescribed point
+$y$ by $\hat\delta(\mathsf t(y))/58$, with $\mathsf t(y)=2y/(1+y^2)$.
 
-The remaining part of $\rho$ is $n_0c_2$, the increase of the energy bound caused by the prescribed
-columns. It comes from Section~\ref{sec:energy}, and with it $\rho=58\cdot\Ctwo+\WZero=\Rho$.
+The remaining part of $\rho$ is $n_0c$, the increase of the energy bound caused by the prescribed
+columns. It comes from Section~\ref{sec:energy}, and with it $\rho=58\cdot\Cost+\Psiw=\Rho$.
 \section{The energy method with prescribed columns}\label{sec:energy}
 
 This section recalls OpenAI's energy method, extends it to determinants with prescribed columns, and
@@ -1581,63 +1635,67 @@ configuration is described by an equilibrium problem for two interacting measure
 When $m$ of the $n$ columns are point values, only $n-m$ points of each kind are integrated over, and the
 energy is still normalized by $n$. The prescribed points enter through the row determinant, now evaluated
 at the free points together with the prescribed ones. There are two kinds of prescribed points: the
-quadrature nodes, which lie in the set $E_x$ of Section~\ref{sec:real}, and points $y\in(0,1)$. Let $\alpha=m/n$ be the fraction of
-prescribed columns and $\alpha_2$ the fraction of prescribed points of the second kind. Each missing free point
-changes the energy bound by a bounded amount. The total change is linear in $m$, and its slope $c_2$ enters
-$\rho$.
+quadrature nodes, and points $y\in(0,1)$. In the coordinate $x$ the nodes lie in the set $E_W$ of the $x$ with
+$|x|\le1$ and $2x/(1+x^2)$ in one of the intervals of Section~\ref{sec:real}. We have $E_W\subset E_x$. Let
+$\alpha=m/n$ be the fraction of prescribed columns and $\alpha_2$ the fraction of prescribed points of the
+second kind. Each missing free point changes the energy bound by a bounded amount. The total change is linear
+in $m$, and its slope $c=c_2+\sigma$ enters $\rho$.
+
+Two terms from Section~\ref{sec:real} are added. The factor $\prod_l(1+\zeta s_l)^m$ of Lemma~\ref{lem:binomvand}
+adds the field $\alpha g(s)$, with $g(s)=\log(1+\frac34s)$, to the column field. Since $g>0$ on $(0,1]$, the
+value with $\alpha g$ is at most the value with $\gamma g$ for every $\gamma\ge\alpha$. The factor
+$e^{N\hat\delta}$ of the weights adds $\hat\delta(\mathsf t(x))/58$ to the field of every prescribed point $x$,
+where $\mathsf t(x)=2x/(1+x^2)$. Indeed $n^2\cdot\frac1n\sum_j\hat\delta(\mathsf t(y_j))/58=N\sum_j\hat\delta(\mathsf t(y_j))$.
 
 Every step of OpenAI's argument remains valid uniformly in the number of free points. The regularization of
 the logarithmic interactions, the diagonal corrections and the completion of squares only involve sums over
 the points present. For the prescribed points of the first kind the relevant field is
 \[
- F_1(x)=-\gamma_d\log(1+x^2)-2\mathsf T(u,x),\qquad x\in E_x .
+ F_1(x)=-\gamma_d\log(1+x^2)-2\mathsf T(u,x)+\tfrac1{58}\hat\delta(\mathsf t(x)),\qquad x\in E_W .
 \]
 For those of the second kind it is
 \[
- F_2(y)=-\gamma_d\log(1+y^2)+\frac{n_0-2g_0-1}{n_0}\log y-u_1y,\qquad0<y<1,
+ F_2(y)=-\gamma_d\log(1+y^2)+\frac{n_0-2g_0-1}{n_0}\log y-u_1y+\tfrac1{58}\hat\delta(\mathsf t(y))
 \]
-where $u_1$ is the first coefficient of $u$. The coefficient $(n_0-2g_0-1)/n_0$ is a lower bound, valid for all
-$N\ge1$, of $(n-1-2g)/n$. By Lemma~\ref{lem:binomvand} the generalized Vandermonde determinant contributes only
-the factor $\prod_{i<l}|s_i-s_l|$ to the energy, and the binomial factors are assigned to the columns. The
-energy bound then reduces to a quadratic inequality in $\alpha$ and $\alpha_2$.
+for $y\in E_W$ with $0<y<1$, where $u_1$ is the first coefficient of $u$. The coefficient $(n_0-2g_0-1)/n_0$ is a lower bound, valid for all
+$N\ge1$, of $(n-1-2g)/n$. The exact coefficient of $-\log(1+x^2)$ in both fields is $(n-g-1)/n=\gamma_d-1/n$. Since
+$0\le\log(1+x^2)\le\log2$ for $|x|\le1$, the exact fields exceed $F_1$ and $F_2$ by at most $\log2/n$, which tends to zero. By Lemma~\ref{lem:binomvand} the generalized Vandermonde determinant contributes
+the factor $\prod_{i<l}|s_i-s_l|$ and the column field $\alpha g$ to the energy, and the factors $\mathcal B_\zeta$
+are assigned to the columns. The energy bound then reduces to a quadratic inequality in $\alpha$ and $\alpha_2$.
+The maximum over $\alpha_2$ has a closed form.
 
 \begin{lemma}[energy inequality with prescribed points]\label{lem:energy-ineq}
-Let $\ell=\log2$, $\alpha_1>0$ and $u\ge0$, and let $\mathcal N,\mathcal F,\mathcal R,\mathcal F_2$ and $c_2$ be real
-numbers with
-\begin{gather*}
- \mathcal N+\mathcal F+U_0-a_0\ell\le u,\qquad \ell-\mathcal R+\mathcal F_2\le0,\\
- (a_1-1)\ell-\mathcal F+\mathcal R-c_2-\ell\alpha_1+\frac u{\alpha_1}\le0 .
-\end{gather*}
-Then for all $\alpha\ge\alpha_1$ and $\alpha_2\ge0$
+Let $\ell=\log2$ and let $\mathcal N,\mathcal F,\mathcal R,\mathcal F_2$ be real numbers. Put
+\begin{multline*}
+ V(\alpha)=\bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+\mathcal N+(1-\alpha)\mathcal F+\alpha\mathcal R\\
+ +\frac{(\mathcal F_2+\ell-\mathcal R)^2}{4\ell}+U_0-\tfrac12\ell-c_2\alpha .
+\end{multline*}
+Then for all real $\alpha$ and all $\alpha_2\ge0$
 \begin{multline*}
  \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2+\alpha_2-\alpha_2^2\bigr)\ell+\mathcal N+(1-\alpha)\mathcal F\\
- +(\alpha-\alpha_2)\mathcal R+\alpha_2\mathcal F_2\le-U_0+\tfrac12\ell+c_2\alpha .
+ +(\alpha-\alpha_2)\mathcal R+\alpha_2\mathcal F_2\le-U_0+\tfrac12\ell+c_2\alpha+V(\alpha) .
 \end{multline*}
 \end{lemma}
 
 \begin{proof}
-Put $s=(a_1-1)\ell-\mathcal F+\mathcal R-c_2$. The left side minus the right side equals
-\[
- (\mathcal N+\mathcal F+U_0-a_0\ell)+\alpha s-\ell\alpha^2+\alpha_2(\ell-\mathcal R+\mathcal F_2)-\ell\alpha_2^2 .
-\]
-The last two terms are nonpositive by the second hypothesis. The first three are at most
-$\alpha(u/\alpha+s-\ell\alpha)$. The function $u/\alpha-\ell\alpha$ decreases in $\alpha$, so this is at most
-$\alpha(u/\alpha_1+s-\ell\alpha_1)\le0$.
+The difference of the two sides is $\alpha_2(\mathcal F_2+\ell-\mathcal R)-\ell\alpha_2^2$, and
+$tb-\ell t^2\le b^2/(4\ell)$ for all real $t$ and $b$.
 \end{proof}
 
-The lemma is applied with $\mathcal N$ a bound for $2\|u\|^2+\frac12\|v\|^2$, $\mathcal F=M_X+M_Y$,
-$\mathcal R$ a bound for the supremum of $F_1$ and $\mathcal F_2$ a bound for the supremum of $F_2$. The
-analogue for the constrained case has no prescribed points of the second kind. Its polynomial in $\alpha$ is
+So the energy bound holds at the slope $c=c_2+\sigma$ on every range of $\alpha$ on which $V(\alpha)\le\sigma\alpha$.
+The lemma is applied with $\mathcal N$ a bound for $2\|u\|^2+\frac12\|v\|^2$, $\mathcal F$ a bound for $M_X+M_Y$, with the
+column field $\gamma g$ included in $Y$, $\mathcal R$ a bound for the supremum of $F_1$ and $\mathcal F_2$ a bound for the
+supremum of $F_2$. Keeping $\mathcal R$ and $\mathcal F_2$ apart is much better than one cap for both, because the moved
+trial sequences of \S\ref{ssec:trials} lower the first field and raise the second. The analogue for the constrained case has no prescribed
+points of the second kind. Its inequality is
 \[
- \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+n_1+(1-\alpha)\mathcal F_1+\alpha\lambda_1\tfrac{2g_0}{n_0}
- \le-U_0+\tfrac12\ell+c_2\alpha,
+ \bigl(-(a_0-\tfrac12)+(a_1-1)\alpha-\alpha^2\bigr)\ell+n_1+(1-\alpha)\mathcal F_1+\alpha\mathcal M_1
+ \le-U_0+\tfrac12\ell+c\alpha,
 \]
-with $n_1$ a bound for the norms of the trial sequences and $\mathcal F_1=M_{X_1}+M_Y$. The coefficient of $\alpha^2$ is negative, so this holds for all real $\alpha$ as soon as the discriminant of the
-difference of the two sides is nonpositive.
-
-For our parameters the trial sequences of Appendix~\ref{app:field} give the hypotheses of
-Lemma~\ref{lem:energy-ineq} with $\alpha_1=\AlphaOne$, $u=0.0068682$ and $c_2=\Ctwo$. They also give the
-inequality of the constrained case with the same $U_0$ and $c_2$.
+with $n_1$ a bound for the norms of the trial sequences, $\mathcal F_1=M_{X_1}+M_Y$, and $\mathcal M_1$ a bound for
+$\lambda_1\bigl(\frac{2g_0}{n_0}-\frac{2x^2}{1+x^2}\bigr)+\hat\delta(\mathsf t(x))/58$ on $E_W$. Since
+$1-\frac{2x^2}{1+x^2}=\sqrt{1-\mathsf t(x)^2}$, this bound is a maximum of affine functions of $\lambda_1$ over the
+segments of the chord table, with $\hat\delta$ replaced by its larger end value. So it is convex in $\lambda_1$.
 
 \emph{The squares that remain.} Section~\ref{sec:signed} uses what the completion of squares leaves, so we record it for the case with doubled
 interaction. Let $\mu_F$, $\mu_M$ and $\mu_S$ be the normalized counting measures of the free points, the prescribed points of the first kind and the
@@ -1688,36 +1746,59 @@ the logarithmic potential of a point charge of complex strength $r$ at $x_0+i\ep
 extremal measure has a gap in its support around $x=0$. Its potential has a logarithmic singularity at $x=0$
 and square-root behaviour at the edges of the gap. A Chebyshev expansion converges slowly near such points,
 while a charge at a small distance $\epsilon_0$ reproduces the local behaviour with one term. This is also why
-the quadrature nodes of Section~\ref{sec:real} avoid a neighbourhood of $x=0$. Appendix~\ref{app:field} gives the charges
-and the certified bounds.
+the quadrature nodes of Section~\ref{sec:real} avoid a neighbourhood of $x=0$.
+
+\emph{Moving trial sequences.} The best trial sequence depends on $\alpha$. We use families
+\[
+ u(\tau)=u+\tau\,\mathrm du,\qquad v(\tau)=v+\tau\,\mathrm dv\qquad(0\le\tau\le1),
+\]
+with fixed finitely supported increments and with $\tau=\tau(\alpha)$ an explicit piecewise linear function. The fields
+$X$, $Y$, $F_1$ and $F_2$ are affine in $\tau$. So the supremum of a field at $\tau$ is at most the chord between the
+suprema at $\tau=0$ and $\tau=1$, or, for the kept base fields, the supremum at $\tau=0$ plus $\tau$ times the supremum of the
+increment. The norms are quadratic in $\tau$. All bounds then become polynomials in $\alpha$ on each piece of
+$\tau(\alpha)$. Appendix~\ref{app:field} gives the charges, the increments and the certified bounds.
 
 \subsection{The two cases at the improved rate}\label{ssec:cases}
-Theorem~\ref{thm:real} asks for the rate $U_0=U+\Gamma_0/n_0^2$ instead of $U$. In the constrained case the
-inequality above holds at $U_0$ for every $\alpha$, with the slope $c_2$. In the case with doubled interaction
-Lemma~\ref{lem:energy-ineq} gives it at $U_0$ only for $\alpha\ge\alpha_1$, because the extra term $U_0-U$ is
-absorbed by the term $c_2\alpha$ and the quadratic term once $\alpha$ is not small. So a new argument is needed
-only in the case with doubled interaction with fewer than $\alpha_1n$ prescribed columns.
-Section~\ref{sec:signed} supplies it, with the same constant $c_2$. Precisely, it proves the following.
+Theorem~\ref{thm:real} asks for the rate $U_0=U+\Gamma_0/n_0^2$ instead of $U$, at the slope $c$. In both cases this
+reduces to finitely many polynomial inequalities in $\alpha$, each of the form $V(\alpha)\le\sigma\alpha$ on a closed
+interval with polynomial caps. Each is proved by a cover of the interval by subintervals on which the leading
+term dominates, in exact rational arithmetic. The bound at an interior $\alpha$ of a cell uses the caps at the right
+end point of the cell, since $g>0$. A finite cover by cells and the uniform continuity of the caps then give the
+bound for all $\alpha$, with an error that tends to zero.
+
+In the constrained case we use the increment with $24$ Chebyshev coefficients and $\tau=\min(1,\frac{50}{11}\alpha)$. The
+inequality holds on $[0,1]$, which is covered by the $6$ pieces with end points $0,\frac{11}{50},\frac3{10},\frac25,\frac35,\frac45,1$.
+In the case with doubled interaction we use the increment with $40$ Chebyshev coefficients and $\tau=1$. The inequality
+of Lemma~\ref{lem:energy-ineq} holds on $[\alpha_1,1]$, covered by the $6$ pieces with end points
+$\alpha_1,\frac15,\frac3{10},\frac25,\frac35,\frac45,1$. For $\alpha<\alpha_1$ it fails, because the extra term
+$U_0-U$ is absorbed by the term $c\alpha$ only once $\alpha$ is not small. So a new argument is needed only in the case
+with doubled interaction with fewer than $\alpha_1n$ prescribed columns. Section~\ref{sec:signed} supplies it, with the
+same slope $c$. Precisely, it proves the following.
 
 \begin{proposition}\label{prop:signed-goal}
-In the case with doubled interaction, for every configuration with $m\le\alpha_1n$ prescribed columns, the
-integrand of Lemma~\ref{lem:andreief}, with the generalized Vandermonde determinant replaced by the bound of
-Lemma~\ref{lem:binomvand}, is at most
+In the case with doubled interaction, for every configuration with $m\le\alpha_1n$ prescribed columns at the nodes
+$t_{a_1},\ldots,t_{a_m}$, the integrand of Lemma~\ref{lem:andreief}, with the generalized Vandermonde determinant replaced by
+the bound of Lemma~\ref{lem:binomvand}, is at most
 \[
- \exp\Bigl(n^2\bigl(-U_0+\tfrac12\log2+c_2\alpha+o(1)\bigr)\Bigr)\,C_0^m\prod_j\mathcal B(k_j),\qquad \alpha=m/n,
+ \exp\Bigl(n^2\bigl(-U_0+\tfrac12\log2+c\alpha+o(1)\bigr)-N\sum_j\hat\delta(t_{a_j})\Bigr)\,C_*^m\prod_j\mathcal B_\zeta(k_j),\qquad \alpha=m/n,
 \]
-with an absolute constant $C_0$.
+with an absolute constant $C_*$.
 \end{proposition}
 
 \begin{proof}[Proof of Theorem~\ref{thm:real}, given Proposition~\ref{prop:signed-goal}]
 By Proposition~\ref{prop:signed-goal} and the discussion above, in both cases a determinant $M_f$ with $m$
-prescribed columns $k_1,\ldots,k_m$ is at most
-$C_0^m\prod_j\mathcal B(k_j)e^{n_0c_2Nm}\exp\bigl(n_0^2N^2(-U_0+\frac12\log2+o(1))\bigr)$. The factor $C_0^m$ comes
-from the expansion of the row functions at the prescribed points. By \eqref{eq:wk} and the bound for
-$\mathcal B(k)$, the constants of Lemma~\ref{lem:expansion} satisfy
+prescribed columns $k_1,\ldots,k_m$ at the nodes $t_{a_j}$ is at most
 \[
- \log(B_kC_k)\le\bigl(n_0c_2+w(k/n)+n_0\tilde h_2(k/n)+o(1)\bigr)N\le(\rho+o(1))N .
+ C_*^m\prod_j\mathcal B_\zeta(k_j)\,e^{n_0cNm-N\sum_j\hat\delta(t_{a_j})}\exp\bigl(n_0^2N^2(-U_0+\tfrac12\log2+o(1))\bigr).
 \]
+The factor $C_*^m$ comes from the expansion of the row functions at the prescribed points. By \eqref{eq:wk} and
+\S\ref{ssec:weights}, the weight of the column $k_j$ at the node $t_{a_j}$, times $\mathcal B_\zeta(k_j)$, is at most
+$e^{(\psi+\hat\delta(t_{a_j})+o(1))N}$. The terms $\hat\delta$ cancel. So for every column $k$ and every node $a$
+the weight and the factor of $M_f$ that belong to the pair $(k,a)$ have the product
+\[
+ \log(B_kC_k)\le\bigl(n_0c+\psi+o(1)\bigr)N=(\rho+o(1))N ,
+\]
+and Lemma~\ref{lem:expansion} applies with this bound for each pair.
 For $|\varepsilon|\le e^{-\rho N}$ Lemma~\ref{lem:expansion} gives a factor $(1+O(N^5))^n=e^{o(N^2)}$. With
 $D=n_0^2(U_0-\frac12\log2)$ this is the claim.
 \end{proof}
@@ -1993,24 +2074,26 @@ It satisfies $f\le\phi_H$ on $(0,1)$, $f\le0$ on $[-1,0]$, and
 \begin{equation}\label{eq:testS}
  \tfrac14F_0+\tfrac14|F_1|y\le\phi_H(y)\qquad(0<y<1).
 \end{equation}
-Also $\sum_kkF_k^2\le7877/10000$ and $\sum_kF_ku_k\ge879/10000$.
+Also $\sum_kkF_k^2\le7877/10000$. On this range of $\alpha$ the case with doubled interaction uses the moving trial
+sequence $u(\tau)=u+\tau\,\mathrm du$ of \S\ref{ssec:trials}, with the increment of $40$ Chebyshev coefficients and
+$\tau=\alpha/\alpha_1$. We have $\sum_kF_ku_k\ge879/10000$ and $\sum_kF_k\mathrm du_k\ge-0.010526$.
 
 Fix a configuration and a set $S$. Let $\mu_F$, $\mu_M$ and $\mu_S$ be the measures of \S\ref{ssec:prescribed}, with the points of $S$ as the
 prescribed points of the second kind, and let $\beta$ be the mass of $\mu_S$. By \eqref{eq:squares}, the bound of Lemma~\ref{lem:energy-ineq} with
-$\alpha_2=\beta$ improves by the number $\Delta$ of \eqref{eq:squares}. The left side of the inequality of Lemma~\ref{lem:energy-ineq}, minus the right
-side, is at most $\Delta(\alpha)=11/1600$ for $\alpha\le143/2000$ and $\Delta(\alpha)=177/50000$ for
-$143/2000<\alpha\le\alpha_1$. So either $\Delta\le\Delta(\alpha)$, or the energy bound gives the conclusion of
+$\alpha_2=\beta$ improves by the number $\Delta$ of \eqref{eq:squares}. Divide $[0,\alpha_1]$ into $64$ equal cells. On the cell $j$ the
+left side of the inequality of Lemma~\ref{lem:energy-ineq}, minus the right side at the slope $c$, is at most a rational number $\Delta_j$.
+These numbers lie between $10^{-6}$ and $0.008365$. So either $\Delta\le\Delta_j$, or the energy bound gives the conclusion of
 Proposition~\ref{prop:signed-goal} for $\Xi_S$ directly.
 
-Suppose that $\Delta\le\Delta(\alpha)$. Since $\phi_H\ge0$ on $(0,1)$ and $f\le\phi_H$, while $f\le0$ on the negative
+Suppose that $\Delta\le\Delta_j$. Since $\phi_H\ge0$ on $(0,1)$ and $f\le\phi_H$, while $f\le0$ on the negative
 half, we have $\frac12f\le\phi_H$ on positive prescribed points and $\frac12f\le0$ on negative ones. With
 \eqref{eq:testS},
 \begin{align*}
  \frac1n\sum_{p>0}\phi_H(p)&\ge\int f\,d(\mu_F+\tfrac12\mu_M)+\tfrac14F_0\beta+\tfrac14|F_1|A_1(\mu_S)\\
- &\ge\tfrac12F_0-\tfrac14F_0\alpha+\sum_kF_ku_k-\sqrt{\tfrac12\Delta(\alpha)\sum_kkF_k^2},
+ &\ge\tfrac12F_0-\tfrac14F_0\alpha+\sum_kF_ku_k(\tau)-\sqrt{\tfrac12\Delta_j\sum_kkF_k^2},
 \end{align*}
-by the Cauchy--Schwarz inequality. For $\alpha\le143/2000$ the right side is at least $0.4813$. For the larger
-$\alpha$ it is at least $0.4890$. Both exceed $0.474993$. So \eqref{eq:phaseneed} holds, and
+by the Cauchy--Schwarz inequality. The right side is affine in $\alpha$ on each cell. At the end points of every cell it exceeds
+$0.4752$, which is larger than the right side of \eqref{eq:phaseneed}. The smallest margin is $0.0050$. So \eqref{eq:phaseneed} holds, and
 Theorem~\ref{thm:window} gives $F(-\frac1{100})\ge0$. All the numerical facts of this subsection are part of the formal proof, which also carries the regularization of the moments that we have suppressed here. We have proved the following.
 
 \begin{proposition}\label{prop:alternative}
@@ -2153,7 +2236,7 @@ is the sum of $\mathsf D(\mathsf D-1)\log2$ from $\prod_a\ell_a^2$ and $2\mathsf
 
 \subsection{The final inequality}\label{ssec:budget}
 We now bound the other factors of the integrand. Let $n'=n-m$, with free points $x_i$ and $s_j$ and prescribed points $y_j$, and let $\mathcal S$ be the product of the
-factors of the integrand other than the row determinant and the binomial factors of Lemma~\ref{lem:binomvand}. Put $\mathsf t(x)=2x/(1+x^2)$ and $t_i=\mathsf t(x_i)$. In the normalization of
+factors of the integrand other than the row determinant and the factors $\mathcal B_\zeta$ of Lemma~\ref{lem:binomvand}. Put $\mathsf t(x)=2x/(1+x^2)$ and $t_i=\mathsf t(x_i)$. In the normalization of
 \S\ref{ssec:rowdet} a free point carries the weight $|t|^{75N-1}(1-t)^{3N}$. The prescribed columns have lost the common factor $|t|^{22N}(1-t)^{3N}$ of the rows, so a prescribed point
 carries $|\mathsf t(y)|^{\mathsf D}$. The Cauchy determinant of Lemma~\ref{lem:andreief} is $\pm V(t)V(s)/\prod_{i,j}(1-t_is_j)$, and the generalized Vandermonde determinant gives
 $\prod_js_j^{9N}(1-s_j)^{3N}|V(s)|$. Hence
@@ -2227,6 +2310,32 @@ Since $R$ and $C$ have mass $1$, this gives
 \]
 So $9N\log s+3N\log(1-s)+n\mathsf C_*(s)=n\mathsf C(s)$ for the column field $\mathsf C$ of the appendix.
 
+\emph{The moved sequences.} Lemma~\ref{lem:freetangent} holds for any sequences, so we may move $a$ and $v$ with the
+fraction $\alpha$. Let $\mathrm da^0,\mathrm da^1,\mathrm dv^0,\mathrm dv^1$ be fixed sequences supported on $k\le160$, with
+dyadic entries of denominator $2^{40}$. Put $\alpha_e=\frac1{25}$, $\tau=\min(1,\alpha/\alpha_e)$ and
+\[
+ a(\tau)=a+\mathrm da^0+\tau\,\mathrm da^1,\qquad v(\tau)=v+\mathrm dv^0+\tau\,\mathrm dv^1 .
+\]
+The increment $(\mathrm da^0,\mathrm dv^0)$ moves the sequences already at $\alpha=0$. The fields change by finite sums:
+$\mathsf R_*$ gains $h^0+\tau h^1$ with $h^i=-2\mathsf T(\mathrm da^i,\cdot)-\mathsf S(\mathrm dv^i,\cdot)$, and $\mathsf C_*$ gains
+$k^0+\tau k^1$ with $k^i=2\mathsf T(\mathrm dv^i,\cdot)$. The polarization identity gives
+\[
+ \mathsf I_0(\tau)=\mathsf I_0+(L_0+Q_{00})+\tau(L_1+2Q_{01})+\tau^2Q_{11},
+\]
+with $L_i=2\langle a,\mathrm da^i\rangle+\langle v,\mathrm dv^i\rangle$ and
+$Q_{ij}=\langle\mathrm da^i,\mathrm da^j\rangle+\frac12\langle\mathrm dv^i,\mathrm dv^j\rangle$. Only $L_0$ and $L_1$ involve the
+references. We also include the column field $\gamma g$ of \S\ref{ssec:prescribed}, with $\gamma=\tau\alpha_e$ for $\alpha\le\alpha_e$
+and $\gamma=\alpha$ for $\alpha_e\le\alpha\le\alpha_1$, so that $\gamma\ge\alpha$. The moved row field at $\tau$ is the convex
+combination $(1-\tau)(F_\pm+h^0)+\tau(F_\pm+h^0+h^1)$, and the moved column field is affine in $\tau$ and $\gamma$. So five
+numbers bound all of them, the bounds at the end points:
+\begin{gather*}
+ F_\pm+h^0\le c^{\mathsf R}_0,\qquad F_\pm+h^0+h^1\le c^{\mathsf R}_1,\\
+ \mathsf C+k^0\le c^{\mathsf C}_0,\qquad \mathsf C+k^0+k^1+\alpha_eg\le c^{\mathsf C}_1,\qquad \mathsf C+k^0+k^1+\alpha_1g\le c^{\mathsf C}_2 .
+\end{gather*}
+For $\alpha\le\alpha_e$ the row and column caps are the chords $(1-\tau)c^{\mathsf R}_0+\tau c^{\mathsf R}_1$ and
+$(1-\tau)c^{\mathsf C}_0+\tau c^{\mathsf C}_1$. For $\alpha_e\le\alpha\le\alpha_1$ they are $c^{\mathsf R}_1$ and the chord of
+$c^{\mathsf C}_1$ and $c^{\mathsf C}_2$ at $\alpha$. No supremum of an increment is ever taken separately from the supremum of the base field.
+
 We turn to the gas potentials. Let $\nu_\pm$, $A_\pm$ and $\tilde q_-$ be as in Appendix~\ref{app:trials}, so that $q_+=X_\#G_++\nu_+$ and $q_-=J_\#\tilde q_-$ with $\tilde q_-=X_\#G_-+\nu_-$.
 Let $0<x<1$ and $Y=x+1/x$. By \eqref{eq:jouk}, $\log|x-X(Y')|=\log|Y-Y'|+\log x+\log|X(Y')|-\log(1-xX(Y'))$. On the support of $G_+$ we have $X>0$, so
 $-\log(1-xX)=\sum_kx^kX^k/k$ has positive terms. Those with $k\le900$ integrate to $\mathsf P(x)$ and the others to at most $\mathsf E$. Hence
@@ -2255,7 +2364,7 @@ cancel, the exponents of $1+x^2$ leave $2$, and the coefficient of $\log|x|$ is 
  \mathsf W_N(x)+n\mathsf R_*(x)+\mathsf g(x)\le nF_+(x)+2\log(1+x^2),\label{eq:rowpos}\\
  \mathsf W_N(x)+n\mathsf R_*(x)+\mathsf g(x)=nF_-(x)+2\log(1+x^2)-\log|x|.\label{eq:rowneg}
 \end{gather}
-Suppose that $F_\pm\le\mathsf R$ and $\mathsf C\le\mathsf C_0$.
+Let $\mathsf R$ and $\mathsf C_0$ be upper bounds for the moved row and column fields at the given $\alpha$. The added fields are bounded, so they do not affect the following argument, which we write for $F_\pm$ and $\mathsf C$.
 The term $-\frac12\log(1-x)$ of Lemma~\ref{lem:freetangent} and the term $-\log|x|$ of \eqref{eq:rowneg} are unbounded. They are controlled by the field itself. Let $H_0$ be the supremum of $F_+-\frac3{29}\log(1-x)-\frac{11}{29}\log|x|$ on $(0,1)$ and of $F_--\frac3{29}\log(1-x)-\frac{11}{29}\log|x|$ on $(-1,0)$. It is finite.
 Indeed, after the subtraction $F_\sigma$ consists of constants, the term $-\frac{39}{29}\log(1+x^2)\le0$, the polynomial $\mathsf P$, the term $A_\sigma$ and
 $U^{G_\sigma+R-2_\#C}(x+1/x)+m_\sigma\log|x|$. The term $A_\sigma$ is bounded because the auxiliary measures have bounded densities on circles. The measures $G_\sigma$, $R$ and $2_\#C$
@@ -2286,7 +2395,7 @@ because all the moments are nonnegative. Hence $U^{q_+}(1/y)\le-\log y-\mathsf P
 \[
  \mathsf w(y)+\mathsf g\le \mathsf D\log2+n\mathsf H_S(y)-2\log y+\log(1+y^2).
 \]
-Let $\mathsf M$ be an upper bound for $\mathsf H_\pm$ on their domains and for $\mathsf H_S$ on $(0,1)$. Since $\log(1+y^2)\le\log2$ and $|y|$ is bounded below on $E_x$, every prescribed row contributes at most
+The factor $e^{-N\hat\delta(\mathsf t(y))}$ of Proposition~\ref{prop:signed-goal} adds $\hat\delta(\mathsf t(y))/58$ to these fields. Let $\mathsf M$ be an upper bound for $\mathsf H_\pm+\hat\delta\circ\mathsf t/58$ on $E_W$ and for $\mathsf H_S+\hat\delta\circ\mathsf t/58$ on $E_W\cap(0,1)$. Since $\log(1+y^2)\le\log2$ and $|y|$ is bounded below on $E_x$, every prescribed row, with its factor $e^{-N\hat\delta}$, contributes at most
 $\mathsf D\log2+n\mathsf M+O(1)$.
 
 Now add \eqref{eq:scalar}, Lemma~\ref{lem:freetangent} multiplied by $n^2$, and half of Proposition~\ref{prop:gas}. With $n'=(1-\alpha)n$ and $\eta,\varepsilon\to0$, this gives
@@ -2298,25 +2407,36 @@ uniformly in the configuration, with
  \mathsf B(\alpha)=\mathsf I-\tfrac32\alpha^2\log2+(1-\alpha)(\mathsf R+\mathsf C_0)+\alpha\mathsf M\\
  +\log2\Bigl(\tfrac{75}{58}(1-\alpha)+\tfrac12(1-\alpha)^2+\tfrac{53}{58}\alpha\Bigr).
 \end{multline}
-Here $\mathsf I=\mathsf I_0+\mathsf I_{\mathrm{gas}}$, and $\frac12\mathsf K_N/n^2$ tends to
+Here $\mathsf I=\mathsf I_0(\tau)+\mathsf I_{\mathrm{gas}}$, and $\frac12\mathsf K_N/n^2$ tends to
 \[
  \mathsf I_{\mathrm{gas}}=\kappa_++\tfrac{53}{58}(\kappa_--c_M)-\tfrac12\bigl(\tfrac{53}{58}\bigr)^2\log2-\tfrac12\bigl(I(q_+)+I(q_-)\bigr)-\frac1{2\cdot58^2}\int_0^{53}\tau^*,
 \]
 with $\kappa_-$ and $c_M$ as above. The three terms in $\log2$ of \eqref{eq:budget} come from the exponent
 $n'(75N-1)+\binom{n'}2$ and from the term $\mathsf D\log2$ of each prescribed row. Appendix~\ref{app:trials} gives the reference measures and the bounds
 \begin{equation}\label{eq:caps}
- \mathsf I\le2.367346,\quad\mathsf R\le-2.579777,\quad\mathsf C_0\le-2.946610,\quad\mathsf M\le-0.976,
+\begin{gathered}
+ \mathsf I_0+\mathsf I_{\mathrm{gas}}\le2.366997,\qquad\mathsf M\le-0.976,\\
+ c^{\mathsf R}_0=-2.579740254,\quad c^{\mathsf R}_1=-2.574009165,\\
+ c^{\mathsf C}_0=-2.946694099,\quad c^{\mathsf C}_1=-2.888907917,\quad c^{\mathsf C}_2=-2.85421372,
+\end{gathered}
 \end{equation}
-with $\kappa_-=5489/100000$ and $\kappa_+=29557/200000$. The function $\mathsf B(\alpha)+U_0-\frac12\log2-c_2\alpha$ is a concave quadratic in $\alpha$. With the numbers
-\eqref{eq:caps}, its value at $\alpha=0$ is about $-4\cdot10^{-7}$ and its slope at $\alpha=0$ is about $-0.0026$. So it
-is negative on $[0,\alpha_1]$.
+with $\kappa_-=5463909/10^8$ and $\kappa_+=14762657/10^8$, and the moved values
+\begin{gather*}
+ L_0\le-7.5421576\cdot10^{-5},\quad L_1\le-0.04943292757,\\
+ Q_{00}\le1.6623\cdot10^{-7},\quad Q_{01}\le9.5232\cdot10^{-7},\quad Q_{11}\le1.002863\cdot10^{-3}.
+\end{gather*}
+Let $V_S(\alpha)=\mathsf B(\alpha)+U_0-\frac12\log2-c_2\alpha$, with $\mathsf I$, $\mathsf R$ and $\mathsf C_0$ the moved values above and $\log2$
+replaced by an upper bound. On each of the two pieces $[0,\alpha_e]$ and $[\alpha_e,\alpha_1]$ it is a polynomial in $\alpha$ with rational
+coefficients. We have $V_S(0)=-1.81\ldots\cdot10^{-5}$, and the cover of \S\ref{ssec:cases} proves $V_S(\alpha)\le\sigma\alpha$ on both pieces. The
+inequality is tight near $\alpha=0.0033$, where $V_S(\alpha)/\alpha$ reaches $0.33867$.
 
 \begin{proof}[Proof of Proposition~\ref{prop:signed-goal}]
 Fix a configuration with $m\le\alpha_1n$. By \eqref{eq:expandS} it suffices to bound each of the at most $2^m$ terms
 $\mathcal S\,|\det\Xi_S|$, at the cost of the factor $5^m$. By Proposition~\ref{prop:alternative} each term either satisfies the
 bound directly, or is at most $499^n\mathcal S\,|\det\Xi^0_S|$. In the second case the final inequality gives
-$\exp\bigl(n^2(-U_0+\frac12\log2+c_2\alpha+o(1))\bigr)$, since $499^n=e^{o(n^2)}$. The binomial factors of
-Lemma~\ref{lem:binomvand} give $\prod_j\mathcal B(k_j)$.
+$\exp\bigl(n^2(-U_0+\frac12\log2+c\alpha+o(1))-N\sum_j\hat\delta(t_{a_j})\bigr)$, since $499^n=e^{o(n^2)}$ and $c=c_2+\sigma$.
+The factor $\prod_l(1+\zeta s_l)^m$ of Lemma~\ref{lem:binomvand} is contained in the column field, and the factors $\mathcal B_\zeta$ give
+$\prod_j\mathcal B_\zeta(k_j)$.
 \end{proof}
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
@@ -2334,7 +2454,7 @@ Proposition~\ref{prop:criterion}.
 Take $d=53$, and let the polynomials $Q_p$ of the proposition be the $Q_N$ with $N=p$. Let
 \begin{gather*}
  \rho=\Rho,\quad \eta=\EtaTot,\quad \omega=\tfrac35,\quad \delta=2.9\cdot10^{-7},\\
- \lambda=\frac{295}{\rho}=\LamCrit\ldots
+ \lambda=\frac{270}{\rho}=\LamCrit\ldots
 \end{gather*}
 \begin{enumerate}[label=(\alph*)]
 \item $\deg Q_N\le53N$ by \eqref{eq:QN} and Lemma~\ref{lem:degree}.
@@ -2350,11 +2470,11 @@ $|x-G|\le e^{-\rho N}$ and large $N$,
 since $\eta=\EtaTot<D-\Lambda=\EtaExact\ldots$ In the formal proof this is the inequality $\eta<D-\Lambda$ with
 $\int\kappa$ replaced by its lower bound $\ChiLean$ and $D_0-\Lambda_0$ by its lower bound $7.98775$.
 \end{enumerate}
-The numerical conditions hold as well. We have $\rho\lambda=295$ and $0<\eta<2d=106$. Next $\omega=\frac35<\lambda$ and
-$\delta<\frac13$. The third condition reads $53\le(\lambda-\omega)(\eta+106(1-3\delta))=63.20\ldots$ Further
+The numerical conditions hold as well. We have $\rho\lambda=270$ and $0<\eta<2d=106$. Next $\omega=\frac35<\lambda$ and
+$\delta<\frac13$. The third condition reads $53\le(\lambda-\omega)(\eta+106(1-3\delta))=59.43\ldots$ Further
 $2(\omega-\delta(2\lambda-\omega))=1.199999\ldots>1$. Finally
 $d+4d\delta\lambda=\PayL\ldots<\eta\lambda=\PayR\ldots$ So Proposition~\ref{prop:criterion} gives
-$|G-a/b|>b^{-\rho\lambda}=b^{-295}$ for all integers $a$ and all sufficiently large $b$. This proves
+$|G-a/b|>b^{-\rho\lambda}=b^{-270}$ for all integers $a$ and all sufficiently large $b$. This proves
 Theorem~\ref{thm:main}.
 
 \section{Remarks on the method}\label{sec:remarks}
@@ -2362,10 +2482,11 @@ Theorem~\ref{thm:main}.
 \subsection{The three ingredients}
 For fixed parameters the method gives the exponent $d\rho/\eta$, and its three ingredients come from
 different places. The degree $d=n-g$ comes from the construction. Of $\rho=\Rho$, the prescribed columns
-contribute $n_0c_2\approx208.6$ through the energy, and the weight and the binomial factor of one column
-contribute $W_0=87.23$. The number $\eta$ is a small difference of two large numbers, $D\approx6.4\cdot10^3$ and
+contribute $n_0c\approx228.3$ through the energy, and the weight and the Vandermonde factor of one column
+contribute $\psi\approx50.1$. Of $n_0c$, the part $n_0\sigma\approx19.6$ comes from the bound of
+Section~\ref{sec:signed} for few prescribed columns. The number $\eta$ is a small difference of two large numbers, $D\approx6.4\cdot10^3$ and
 $\Lambda\approx6.4\cdot10^3$. The corank bounds of Section~\ref{sec:content} contribute about $22$ to it, and the
-bound of Section~\ref{sec:signed} about $23$. Without them $\eta$ would be about $8$. Since the exponent
+bound of Section~\ref{sec:signed} about $25$. Without them $\eta$ would be about $8$. Since the exponent
 is inversely proportional to $\eta$, a further gain of $0.2$ in $\eta$ would lower it by about $1$.
 
 \subsection{The row determinant}
@@ -2398,10 +2519,10 @@ formalization of the irrationality of $G$ \cite{OpenAI2026}. The development is 
 \end{center}
 Theorem~\ref{thm:main} is the theorem
 \begin{center}
-{\small\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_295}}
+{\small\texttt{CatalanIrrationalityMeasure.catalan\_irrationalityMeasure\_270}}
 \end{center}
 in \lean{Solution.lean}. Its statement, in \lean{Challenge.lean}, uses only Mathlib. Catalan's constant is
-written as the series $\sum_j(-1)^j/(2j+1)^2$, and the conclusion is $|G-a/b|>b^{-295}$ for all integers $a$
+written as the series $\sum_j(-1)^j/(2j+1)^2$, and the conclusion is $|G-a/b|>b^{-270}$ for all integers $a$
 and all sufficiently large $b$. The modules of the proof contain no \lean{sorry} and no \lean{native\_decide}. The command
 \lean{\#print axioms} shows that only the three standard axioms \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound} are used. The proof is kernel-checked: Lean's kernel accepts every declaration. It has not been run through the independent checker \lean{lake comparator} \cite{Comparator}.
@@ -2409,15 +2530,15 @@ The prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The part
 OpenAI's formalization that are used were converted to Lean's module system and ported to Lean
 4.35.0-rc2. The repository's \texttt{README} describes the changes and the layout of the modules.
 
-The quadrature nodes of Section~\ref{sec:real} come with Davis's formalization \cite{Davis2026}. We use 33
-of its Lean files, taken from commit \texttt{3c45153} under the Apache License~2.0. They contain the
-polynomial $P$ of degree $130$, the inverse branches of $P$, the nodes and their properties. Their
-declarations and proofs are unchanged. We adapted the module paths and imports, and added comments and
+Two lemmas of Section~\ref{sec:real} on the weights of nodal polynomials come from Davis's formalization
+\cite{Davis2026}. We use two of its Lean files, taken from commit \texttt{3c45153} under the Apache
+License~2.0. Their declarations and proofs are unchanged. We adapted the module paths and imports, and added comments and
 axiom checks. The repository's \texttt{NOTICE} file and a provenance record list these files with their source
 hashes.
 
 The proof combines conventional formal proofs with numerical certificates. These are the inverses of the base
-matrices modulo $1009$, the trial sequences and the bounds of Appendix~\ref{app:field}, the reference measures
+matrices modulo $1009$, the intervals and the chord table of Section~\ref{sec:real}, the trial sequences, the
+cell covers and the bounds of Appendix~\ref{app:field}, the reference measures
 and the bounds of Appendix~\ref{app:trials}, and the rank data of Appendix~\ref{app:windows}. The certificates are
 exact rational and integer computations checked by the Lean kernel without compiled code. The interval
 arithmetic used to generate them \cite{Arb} is not trusted.
@@ -2543,7 +2664,7 @@ the shortening $\tau$ of the interval and the lowering of the bound by $10^{-6}$
 \section{The bounds for the energy method}\label{app:field}
 
 This appendix gives the trial sequences of Section~\ref{sec:energy}, the certified bounds that they satisfy, and
-the bound for $W_0$.
+the bounds for the weights of Section~\ref{sec:real}.
 
 \emph{Trial sequences.} For the constrained case we use a trial sequence with $40$ Chebyshev coefficients and a
 finite number of geometric terms, with the multiplier $\lambda_1=1.68493357$. For the case with doubled
@@ -2555,41 +2676,53 @@ numbers $z_j$ are rationals with at most twelve decimals. The norms of the geome
 two terms $(z_j,r_j)$ and $(z_l,r_l)$ contribute
 $-\frac12\operatorname{Re}\bigl(r_jr_l\log(1-z_jz_l)+r_j\bar r_l\log(1-z_j\bar z_l)\bigr)$ to $\|u\|^2$.
 
-\emph{The suprema of the fields.} We must bound three functions of one variable from above on their domains: the
-field $X$ on $[-1,1]$, the field $Y$ on $[0,1]$, and the field $F_1$ on $E_x$. For $X$ and $Y$ we locate the real
+\emph{The suprema of the fields.} We must bound two functions of one variable from above on their domains: the
+field $X$ on $[-1,1]$ and the field $Y$ on $[0,1]$. We locate the real
 critical points. The derivative is a rational function with a known denominator, and an exact identity gives its
 numerator. The Descartes rule, after a M\"obius transformation of the interval, bounds the number of real roots
 of the numerator. Sign evaluations at $81$-bit rational points then isolate this number of roots. One global Lipschitz
-bound on each isolating interval and the values at the end points give the supremum. For $F_1$ on $|x|\ge401/2500$ we use a
-cover by cells, with exact rational and integer arithmetic on each cell. The cover uses a Taylor expansion of the
-polynomial part and an expansion to order $5$ of the logarithmic terms. On the positive part of $E_x$ below $401/2500$
-three further cells suffice, because the field stays below $-0.08$ there.
+bound on each isolating interval and the values at the end points give the supremum.
 
-\emph{The bounds.} This gives
+\emph{The bounds.} For the base trial sequences this gives
 \[
- \sup X\le\SupX,\quad \sup Y\le\SupY,\quad \sup_{E_x}F_1\le\ResCap .
+ \sup X\le\SupX,\quad \sup Y\le\SupY .
 \]
 So $M_X+M_Y=\FieldCap$, and the norms satisfy $2\|u\|^2+\frac12\|v\|^2\le0.7736206$. The first coefficient satisfies
-$u_1\ge9/50$, which is used near $x=0$. For the points of the second kind a one-variable estimate gives
-$\sup_{0<y<1}F_2(y)\le-77/100$ for $u_1\ge9/50$. For the constrained case, with the weights
+$u_1\ge9/50$, which is used near $x=0$. For the constrained case, with the weights
 $(\alpha_A,\beta_h,\gamma_H-\frac12,\lambda_1,2g_0/n_0)=(11/29,3/29,49/58,\lambda_1,5/29)$, the bounds
 $\sup X_1\le-1.15854$ and $\sup Y\le-1.32981$ are obtained by isolating the zeros of the numerators of the
-derivatives, which are polynomials with integer coefficients. The norm bound is $n_1=0.67761$. With $a_0=41/58$,
-$a_1=76/29$ and $U_0=\Uzero$ these give the hypotheses of Lemma~\ref{lem:energy-ineq} and the inequality of the
-constrained case, as stated in Section~\ref{sec:energy}.
+derivatives, which are polynomials with integer coefficients. The norm bound is $n_1=0.67761$.
 
-\emph{The bound for $W_0$.} By \eqref{eq:entropy} the bound for $W_0$ is the maximum of a field on the contour $\Gamma$ of
-Section~\ref{sec:real}. The contour consists of the circle $|z|=\frac35$ and real segments. On the circle, the
-inequality \eqref{eq:circlecap} follows from the bound
+\emph{The increments.} The increment of the case with doubled interaction has $40$ Chebyshev coefficients, and
+that of the constrained case has $24$. Both are dyadic. Their fields are bounded on the whole domains by the
+same methods. For the case with doubled interaction the norm bound at $\tau$ is $0.7736206-0.117647903\,\tau+0.005215061\,\tau^2$,
+the field $X$ gains at most $0.01484272\,\tau$, and the column field $Y$ with $\gamma g$ is bounded by a piecewise
+linear function of $\gamma$ with knots at $\alpha_1,\frac15,\frac3{10},\frac25,\frac35,\frac45,1$. The fields $F_1$ and $F_2$
+contain the node term $\hat\delta/58$. They are bounded by covers by cells, with exact rational and integer arithmetic on each cell
+and the maximum of $\hat\delta$ on each cell. For $F_1$ on $|x|\ge401/2500$ the cover has $150$ cells. It uses a Taylor expansion of the
+polynomial part and an expansion to order $5$ of the logarithmic terms. On the positive part of $E_W$ below $401/2500$ six
+further cells suffice. For $F_2$ the covers of $[98749/10^6,\,9995/10^4]$ have $17$ and $14$ cells at the two ends of the move. This gives
 \[
- \bigl(|P(z)|^7|1-z|^{103}\bigr)^2<\frac{20550646924241}{2^{44}}\cdot2^{2\cdot871}\qquad(|z|=\tfrac35)
+ \sup F_1\le0.007,\qquad \sup F_2\le0.007-\log2
 \]
-for an explicit integer polynomial $P$. Substituting $z=\frac35\zeta$ turns the difference into a Laurent polynomial on
-$|\zeta|=1$, and a sum of squares identity proves its positivity. This is a single polynomial identity with $256$ square
-numerators. On the real segments the field is treated by a direct estimate. This proves
-\[
- \sup_{0\le y\le1}\bigl(w(y)+58\tilde h_2(y)\bigr)\le W_0=\WZero .
-\]
+at $\tau=0$, and $-0.0268$ and $0.0233-\log2$ at $\tau=1$. For the constrained case the norm bound at $\tau$ is
+$0.67761-0.082834152\,\tau+0.004096781\,\tau^2$, and the bound $\mathcal M_1$ of Section~\ref{sec:energy} is the chord of
+$0.35072$ and $0.35295$. The two numbers are maxima over the $865$ segments of the chord table at the two end values of
+$\lambda_1$. With $a_0=41/58$, $a_1=76/29$ and $U_0=\Uzero$ these bounds give the inequalities of \S\ref{ssec:cases}.
+Each check $V(\alpha)\le\sigma\alpha$ is a polynomial inequality on a closed interval and is proved by a cover in exact
+rational arithmetic.
+
+\emph{The bound for the weights.} Inequalities \eqref{eq:circlecap} and \eqref{eq:segcap} concern the explicit function $L$ of
+\eqref{eq:Ldef}. On the circle $|z|=\frac34$ write $z=\frac34(s+i\sqrt{1-s^2})$ with $s=\cos\theta$. Then $|z-t|^2=\frac9{16}+t^2-\frac32ts$
+is affine in $s$ for every real $t$. So $\log|1-z|$ is a concave function of $s$. Each $G_c(z)$ is $\operatorname{arccosh}$ of
+$(|z-a_c|+|z-b_c|)/w_c$, a sum of square roots of affine functions of $s$, and therefore concave in $s$ as well. Hence the left
+side of \eqref{eq:circlecap} is a concave function of $s\in[-1,1]$. Its maximum is $3.25053\ldots$ near $s=-0.1741$. A concave function
+is bounded by its secants outside the points and by the chord between them, so three points at distance $\frac1{2000}$ around the
+maximum suffice. At these points the value is enclosed to within $10^{-17}$ by exact rational arithmetic with integer square roots,
+and the bound $D_\Gamma=\Dcirc$ holds with a margin $6\cdot10^{-5}$. On the real segments we use, for real $x$, the closed form
+$e^{G_c(x)}w_c/4\le\frac12\max(w_c,|2x-a_c-b_c|)$ together with $6\log|1-x|\le6\log\frac14$ for $x\ge\frac34$ and
+$6\log|1-x|\le6\log2$ for $x\le-\frac34$. This gives \eqref{eq:segcap} with values below $-9$, far below $D_\Gamma$.
+The knot values $v_i$ of the chord table lie between $-1.97$ and $17.99$.
 
 \section{The reference measures of Section~\ref{sec:signed}}\label{app:trials}
 
@@ -2601,7 +2734,7 @@ are piecewise uniform on finitely many cells in $Y$, with masses $m_+$ and $m_-$
 negative free nodes, and $R=G_++G_-$ is the row reference. The column reference $C$ has mass $1$. The measures are completed by
 auxiliary measures on the $16$ inner circles. Each auxiliary measure has a cubed Poisson density: its Fourier coefficients
 are $-q^k(1+Ak+Bk^2)/k$ with $q=e^{-\varepsilon/2}$ and $\varepsilon=27/250$, and the constants $A$ and $B$ are rational functions of $r=q^2$.
-The auxiliary measures $\nu_+$ and $\nu_-$ sit at the phases $\pi j/93$, with $680$ and $991$ entries respectively, and have total masses $1-m_+$ and $\frac{53}{58}-m_-$. Let $X$ be the inverse of $x\mapsto x+1/x$ with $|X|\le1$. Then
+The auxiliary measures $\nu_+$ and $\nu_-$ sit at the phases $\pi j/93$, with $616$ and $935$ entries respectively, and have total masses $1-m_+$ and $\frac{53}{58}-m_-$. Let $X$ be the inverse of $x\mapsto x+1/x$ with $|X|\le1$. Then
 $q_+=X_\#G_++\nu_+$ is the measure in the plane of $z$. In the plane of $u$ we take $q_-=J_\#\tilde q_-$ with $\tilde q_-=X_\#G_-+\nu_-$.
 
 \emph{The fields.} Let $L(\mu)=\int\log|X|\,d\mu$. For $\sigma=\pm$ the free row field is
@@ -2629,13 +2762,13 @@ energies of lists of cells occur: those of $G_+$, $G_-$ and $C$ with themselves,
 pair energies. For piecewise uniform measures a pair energy is a bilinear form in the jumps of the densities, with the kernel $t^2\log|t|$, up to constants. We evaluate it on integer end points in fixed point arithmetic. Well separated blocks of end points are
 treated by a series in the offsets from their centres, using the moments of the blocks, and the other pairs by a recursion on the blocks. This encloses each pair energy to within $10^{-7}$. The remaining terms of $I(q_\pm)$ are the logarithmic moments of the cells,
 the integrals of the cells against the rings, which are sums of primitives over the end points, and the quadratic forms of the auxiliary measures, which have closed forms on the rings. All of these are enclosed to within $10^{-9}$. The reflection term $-\iint\log(1-xx')$ of $I(q_+)$
-enters only through a lower bound from its truncated series. Finally $\int_0^{53}\tau^*\ge1425.3339$. Together these give $\mathsf I\le2.367346$.
+enters only through a lower bound from its truncated series. Finally $\int_0^{53}\tau^*\ge1425.3339$. Together these give $\mathsf I_0+\mathsf I_{\mathrm{gas}}\le2.366997$.
 
-\emph{The column field.} The bound $\mathsf C\le-2.946610$ on $(0,1)$ uses a chain of $386$ units $s=(M+\delta z)/10^{12}$ with $|z|\le1$, together with two end ranges. On a unit the field is at most an integer polynomial in $z$ plus an explicit
+\emph{The column field.} The three bounds $c^{\mathsf C}_i$ of \eqref{eq:caps} on $(0,1)$ use a chain of $386$ units $s=(M+\delta z)/10^{12}$ with $|z|\le1$, together with two end ranges. On a unit the field is at most an integer polynomial in $z$ plus an explicit
 error. The far cells of the references enter through exact integer moments of contiguous clusters, $1152$ clusters in all, and the Taylor series of the logarithmic kernel. The near cells of $C$ enter through the closed form of their potential. The two logarithms enter by
 series or, on the end units, by monotonicity. The constant is $L(R)\ge-0.6905432$, from the primitive of $\log|X|$ in $Y$.
 
-\emph{The angular bounds.} The bounds $\kappa_\pm$ are proved for both signs on each of the $16$ radii, by $32$ certificates. The auxiliary part is cut at degree $384$, with the tail retained. The gas is split into bins. On a bin the kernel has the form
+\emph{The angular bounds.} The bounds $\kappa_\pm$ are proved for both signs on each of the $16$ radii, by $32$ certificates. The auxiliary part is cut at degree $384$, and its tail is bounded. The gas is split into bins. On a bin the kernel has the form
 $\mathsf Q_u(x)=\mathsf a-2\mathsf bux+\mathsf cx^2$ with $u=\cos\theta$. Jensen's inequality and an odd truncation of the logarithmic series bound $\int\frac12\log\mathsf Q_u$ by a polynomial in $u$. The negative sign has a direct and a reflected kernel. The sum over the bins
 is converted exactly to a Chebyshev series. Its bound by $\kappa_\pm$ on $[-1,1]$ is certified by an identity of the same form as the one for the free rows below.
 
@@ -2652,7 +2785,7 @@ column panels, and the same form for $\log t$ and $\log(1-t)$. Each such term ha
 direct moments are computed by exact integer arithmetic with Kronecker packing. The radial field and the term $-\frac{39}{29}\log(1+t^2)$ are bounded by a chord cover and a
 Chebyshev polynomial. This gives a polynomial $\mathsf p(z)$ with $F_\sigma\le\mathsf p$ plus explicit small errors. Finally $\mathsf p(z)\le\mathsf c$ on $[-1,1]$ is proved by an exact identity
 $\mathsf d(\mathsf c-\mathsf p)=\mathsf r+\mathsf q_0^2$ between Chebyshev series, with $\mathsf q_0$ of degree $16383$ and with $\mathsf r$ small in the $\ell^1$ norm of its coefficients. This gives
-$\mathsf R\le-2.579777$ for both signs.
+the bounds $c^{\mathsf R}_0$ and $c^{\mathsf R}_1$ of \eqref{eq:caps} at the two ends of the move, for both signs.
 
 \providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
 \providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }

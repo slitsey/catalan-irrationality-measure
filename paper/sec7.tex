@@ -270,24 +270,26 @@ It satisfies $f\le\phi_H$ on $(0,1)$, $f\le0$ on $[-1,0]$, and
 \begin{equation}\label{eq:testS}
  \tfrac14F_0+\tfrac14|F_1|y\le\phi_H(y)\qquad(0<y<1).
 \end{equation}
-Also $\sum_kkF_k^2\le7877/10000$ and $\sum_kF_ku_k\ge879/10000$.
+Also $\sum_kkF_k^2\le7877/10000$. On this range of $\alpha$ the case with doubled interaction uses the moving trial
+sequence $u(\tau)=u+\tau\,\mathrm du$ of \S\ref{ssec:trials}, with the increment of $40$ Chebyshev coefficients and
+$\tau=\alpha/\alpha_1$. We have $\sum_kF_ku_k\ge879/10000$ and $\sum_kF_k\mathrm du_k\ge-0.010526$.
 
 Fix a configuration and a set $S$. Let $\mu_F$, $\mu_M$ and $\mu_S$ be the measures of \S\ref{ssec:prescribed}, with the points of $S$ as the
 prescribed points of the second kind, and let $\beta$ be the mass of $\mu_S$. By \eqref{eq:squares}, the bound of Lemma~\ref{lem:energy-ineq} with
-$\alpha_2=\beta$ improves by the number $\Delta$ of \eqref{eq:squares}. The left side of the inequality of Lemma~\ref{lem:energy-ineq}, minus the right
-side, is at most $\Delta(\alpha)=11/1600$ for $\alpha\le143/2000$ and $\Delta(\alpha)=177/50000$ for
-$143/2000<\alpha\le\alpha_1$. So either $\Delta\le\Delta(\alpha)$, or the energy bound gives the conclusion of
+$\alpha_2=\beta$ improves by the number $\Delta$ of \eqref{eq:squares}. Divide $[0,\alpha_1]$ into $64$ equal cells. On the cell $j$ the
+left side of the inequality of Lemma~\ref{lem:energy-ineq}, minus the right side at the slope $c$, is at most a rational number $\Delta_j$.
+These numbers lie between $10^{-6}$ and $0.008365$. So either $\Delta\le\Delta_j$, or the energy bound gives the conclusion of
 Proposition~\ref{prop:signed-goal} for $\Xi_S$ directly.
 
-Suppose that $\Delta\le\Delta(\alpha)$. Since $\phi_H\ge0$ on $(0,1)$ and $f\le\phi_H$, while $f\le0$ on the negative
+Suppose that $\Delta\le\Delta_j$. Since $\phi_H\ge0$ on $(0,1)$ and $f\le\phi_H$, while $f\le0$ on the negative
 half, we have $\frac12f\le\phi_H$ on positive prescribed points and $\frac12f\le0$ on negative ones. With
 \eqref{eq:testS},
 \begin{align*}
  \frac1n\sum_{p>0}\phi_H(p)&\ge\int f\,d(\mu_F+\tfrac12\mu_M)+\tfrac14F_0\beta+\tfrac14|F_1|A_1(\mu_S)\\
- &\ge\tfrac12F_0-\tfrac14F_0\alpha+\sum_kF_ku_k-\sqrt{\tfrac12\Delta(\alpha)\sum_kkF_k^2},
+ &\ge\tfrac12F_0-\tfrac14F_0\alpha+\sum_kF_ku_k(\tau)-\sqrt{\tfrac12\Delta_j\sum_kkF_k^2},
 \end{align*}
-by the Cauchy--Schwarz inequality. For $\alpha\le143/2000$ the right side is at least $0.4813$. For the larger
-$\alpha$ it is at least $0.4890$. Both exceed $0.474993$. So \eqref{eq:phaseneed} holds, and
+by the Cauchy--Schwarz inequality. The right side is affine in $\alpha$ on each cell. At the end points of every cell it exceeds
+$0.4752$, which is larger than the right side of \eqref{eq:phaseneed}. The smallest margin is $0.0050$. So \eqref{eq:phaseneed} holds, and
 Theorem~\ref{thm:window} gives $F(-\frac1{100})\ge0$. All the numerical facts of this subsection are part of the formal proof, which also carries the regularization of the moments that we have suppressed here. We have proved the following.
 
 \begin{proposition}\label{prop:alternative}
@@ -430,7 +432,7 @@ is the sum of $\mathsf D(\mathsf D-1)\log2$ from $\prod_a\ell_a^2$ and $2\mathsf
 
 \subsection{The final inequality}\label{ssec:budget}
 We now bound the other factors of the integrand. Let $n'=n-m$, with free points $x_i$ and $s_j$ and prescribed points $y_j$, and let $\mathcal S$ be the product of the
-factors of the integrand other than the row determinant and the binomial factors of Lemma~\ref{lem:binomvand}. Put $\mathsf t(x)=2x/(1+x^2)$ and $t_i=\mathsf t(x_i)$. In the normalization of
+factors of the integrand other than the row determinant and the factors $\mathcal B_\zeta$ of Lemma~\ref{lem:binomvand}. Put $\mathsf t(x)=2x/(1+x^2)$ and $t_i=\mathsf t(x_i)$. In the normalization of
 \S\ref{ssec:rowdet} a free point carries the weight $|t|^{75N-1}(1-t)^{3N}$. The prescribed columns have lost the common factor $|t|^{22N}(1-t)^{3N}$ of the rows, so a prescribed point
 carries $|\mathsf t(y)|^{\mathsf D}$. The Cauchy determinant of Lemma~\ref{lem:andreief} is $\pm V(t)V(s)/\prod_{i,j}(1-t_is_j)$, and the generalized Vandermonde determinant gives
 $\prod_js_j^{9N}(1-s_j)^{3N}|V(s)|$. Hence
@@ -504,6 +506,32 @@ Since $R$ and $C$ have mass $1$, this gives
 \]
 So $9N\log s+3N\log(1-s)+n\mathsf C_*(s)=n\mathsf C(s)$ for the column field $\mathsf C$ of the appendix.
 
+\emph{The moved sequences.} Lemma~\ref{lem:freetangent} holds for any sequences, so we may move $a$ and $v$ with the
+fraction $\alpha$. Let $\mathrm da^0,\mathrm da^1,\mathrm dv^0,\mathrm dv^1$ be fixed sequences supported on $k\le160$, with
+dyadic entries of denominator $2^{40}$. Put $\alpha_e=\frac1{25}$, $\tau=\min(1,\alpha/\alpha_e)$ and
+\[
+ a(\tau)=a+\mathrm da^0+\tau\,\mathrm da^1,\qquad v(\tau)=v+\mathrm dv^0+\tau\,\mathrm dv^1 .
+\]
+The increment $(\mathrm da^0,\mathrm dv^0)$ moves the sequences already at $\alpha=0$. The fields change by finite sums:
+$\mathsf R_*$ gains $h^0+\tau h^1$ with $h^i=-2\mathsf T(\mathrm da^i,\cdot)-\mathsf S(\mathrm dv^i,\cdot)$, and $\mathsf C_*$ gains
+$k^0+\tau k^1$ with $k^i=2\mathsf T(\mathrm dv^i,\cdot)$. The polarization identity gives
+\[
+ \mathsf I_0(\tau)=\mathsf I_0+(L_0+Q_{00})+\tau(L_1+2Q_{01})+\tau^2Q_{11},
+\]
+with $L_i=2\langle a,\mathrm da^i\rangle+\langle v,\mathrm dv^i\rangle$ and
+$Q_{ij}=\langle\mathrm da^i,\mathrm da^j\rangle+\frac12\langle\mathrm dv^i,\mathrm dv^j\rangle$. Only $L_0$ and $L_1$ involve the
+references. We also include the column field $\gamma g$ of \S\ref{ssec:prescribed}, with $\gamma=\tau\alpha_e$ for $\alpha\le\alpha_e$
+and $\gamma=\alpha$ for $\alpha_e\le\alpha\le\alpha_1$, so that $\gamma\ge\alpha$. The moved row field at $\tau$ is the convex
+combination $(1-\tau)(F_\pm+h^0)+\tau(F_\pm+h^0+h^1)$, and the moved column field is affine in $\tau$ and $\gamma$. So five
+numbers bound all of them, the bounds at the end points:
+\begin{gather*}
+ F_\pm+h^0\le c^{\mathsf R}_0,\qquad F_\pm+h^0+h^1\le c^{\mathsf R}_1,\\
+ \mathsf C+k^0\le c^{\mathsf C}_0,\qquad \mathsf C+k^0+k^1+\alpha_eg\le c^{\mathsf C}_1,\qquad \mathsf C+k^0+k^1+\alpha_1g\le c^{\mathsf C}_2 .
+\end{gather*}
+For $\alpha\le\alpha_e$ the row and column caps are the chords $(1-\tau)c^{\mathsf R}_0+\tau c^{\mathsf R}_1$ and
+$(1-\tau)c^{\mathsf C}_0+\tau c^{\mathsf C}_1$. For $\alpha_e\le\alpha\le\alpha_1$ they are $c^{\mathsf R}_1$ and the chord of
+$c^{\mathsf C}_1$ and $c^{\mathsf C}_2$ at $\alpha$. No supremum of an increment is ever taken separately from the supremum of the base field.
+
 We turn to the gas potentials. Let $\nu_\pm$, $A_\pm$ and $\tilde q_-$ be as in Appendix~\ref{app:trials}, so that $q_+=X_\#G_++\nu_+$ and $q_-=J_\#\tilde q_-$ with $\tilde q_-=X_\#G_-+\nu_-$.
 Let $0<x<1$ and $Y=x+1/x$. By \eqref{eq:jouk}, $\log|x-X(Y')|=\log|Y-Y'|+\log x+\log|X(Y')|-\log(1-xX(Y'))$. On the support of $G_+$ we have $X>0$, so
 $-\log(1-xX)=\sum_kx^kX^k/k$ has positive terms. Those with $k\le900$ integrate to $\mathsf P(x)$ and the others to at most $\mathsf E$. Hence
@@ -532,7 +560,7 @@ cancel, the exponents of $1+x^2$ leave $2$, and the coefficient of $\log|x|$ is 
  \mathsf W_N(x)+n\mathsf R_*(x)+\mathsf g(x)\le nF_+(x)+2\log(1+x^2),\label{eq:rowpos}\\
  \mathsf W_N(x)+n\mathsf R_*(x)+\mathsf g(x)=nF_-(x)+2\log(1+x^2)-\log|x|.\label{eq:rowneg}
 \end{gather}
-Suppose that $F_\pm\le\mathsf R$ and $\mathsf C\le\mathsf C_0$.
+Let $\mathsf R$ and $\mathsf C_0$ be upper bounds for the moved row and column fields at the given $\alpha$. The added fields are bounded, so they do not affect the following argument, which we write for $F_\pm$ and $\mathsf C$.
 The term $-\frac12\log(1-x)$ of Lemma~\ref{lem:freetangent} and the term $-\log|x|$ of \eqref{eq:rowneg} are unbounded. They are controlled by the field itself. Let $H_0$ be the supremum of $F_+-\frac3{29}\log(1-x)-\frac{11}{29}\log|x|$ on $(0,1)$ and of $F_--\frac3{29}\log(1-x)-\frac{11}{29}\log|x|$ on $(-1,0)$. It is finite.
 Indeed, after the subtraction $F_\sigma$ consists of constants, the term $-\frac{39}{29}\log(1+x^2)\le0$, the polynomial $\mathsf P$, the term $A_\sigma$ and
 $U^{G_\sigma+R-2_\#C}(x+1/x)+m_\sigma\log|x|$. The term $A_\sigma$ is bounded because the auxiliary measures have bounded densities on circles. The measures $G_\sigma$, $R$ and $2_\#C$
@@ -563,7 +591,7 @@ because all the moments are nonnegative. Hence $U^{q_+}(1/y)\le-\log y-\mathsf P
 \[
  \mathsf w(y)+\mathsf g\le \mathsf D\log2+n\mathsf H_S(y)-2\log y+\log(1+y^2).
 \]
-Let $\mathsf M$ be an upper bound for $\mathsf H_\pm$ on their domains and for $\mathsf H_S$ on $(0,1)$. Since $\log(1+y^2)\le\log2$ and $|y|$ is bounded below on $E_x$, every prescribed row contributes at most
+The factor $e^{-N\hat\delta(\mathsf t(y))}$ of Proposition~\ref{prop:signed-goal} adds $\hat\delta(\mathsf t(y))/58$ to these fields. Let $\mathsf M$ be an upper bound for $\mathsf H_\pm+\hat\delta\circ\mathsf t/58$ on $E_W$ and for $\mathsf H_S+\hat\delta\circ\mathsf t/58$ on $E_W\cap(0,1)$. Since $\log(1+y^2)\le\log2$ and $|y|$ is bounded below on $E_x$, every prescribed row, with its factor $e^{-N\hat\delta}$, contributes at most
 $\mathsf D\log2+n\mathsf M+O(1)$.
 
 Now add \eqref{eq:scalar}, Lemma~\ref{lem:freetangent} multiplied by $n^2$, and half of Proposition~\ref{prop:gas}. With $n'=(1-\alpha)n$ and $\eta,\varepsilon\to0$, this gives
@@ -575,23 +603,34 @@ uniformly in the configuration, with
  \mathsf B(\alpha)=\mathsf I-\tfrac32\alpha^2\log2+(1-\alpha)(\mathsf R+\mathsf C_0)+\alpha\mathsf M\\
  +\log2\Bigl(\tfrac{75}{58}(1-\alpha)+\tfrac12(1-\alpha)^2+\tfrac{53}{58}\alpha\Bigr).
 \end{multline}
-Here $\mathsf I=\mathsf I_0+\mathsf I_{\mathrm{gas}}$, and $\frac12\mathsf K_N/n^2$ tends to
+Here $\mathsf I=\mathsf I_0(\tau)+\mathsf I_{\mathrm{gas}}$, and $\frac12\mathsf K_N/n^2$ tends to
 \[
  \mathsf I_{\mathrm{gas}}=\kappa_++\tfrac{53}{58}(\kappa_--c_M)-\tfrac12\bigl(\tfrac{53}{58}\bigr)^2\log2-\tfrac12\bigl(I(q_+)+I(q_-)\bigr)-\frac1{2\cdot58^2}\int_0^{53}\tau^*,
 \]
 with $\kappa_-$ and $c_M$ as above. The three terms in $\log2$ of \eqref{eq:budget} come from the exponent
 $n'(75N-1)+\binom{n'}2$ and from the term $\mathsf D\log2$ of each prescribed row. Appendix~\ref{app:trials} gives the reference measures and the bounds
 \begin{equation}\label{eq:caps}
- \mathsf I\le2.367346,\quad\mathsf R\le-2.579777,\quad\mathsf C_0\le-2.946610,\quad\mathsf M\le-0.976,
+\begin{gathered}
+ \mathsf I_0+\mathsf I_{\mathrm{gas}}\le2.366997,\qquad\mathsf M\le-0.976,\\
+ c^{\mathsf R}_0=-2.579740254,\quad c^{\mathsf R}_1=-2.574009165,\\
+ c^{\mathsf C}_0=-2.946694099,\quad c^{\mathsf C}_1=-2.888907917,\quad c^{\mathsf C}_2=-2.85421372,
+\end{gathered}
 \end{equation}
-with $\kappa_-=5489/100000$ and $\kappa_+=29557/200000$. The function $\mathsf B(\alpha)+U_0-\frac12\log2-c_2\alpha$ is a concave quadratic in $\alpha$. With the numbers
-\eqref{eq:caps}, its value at $\alpha=0$ is about $-4\cdot10^{-7}$ and its slope at $\alpha=0$ is about $-0.0026$. So it
-is negative on $[0,\alpha_1]$.
+with $\kappa_-=5463909/10^8$ and $\kappa_+=14762657/10^8$, and the moved values
+\begin{gather*}
+ L_0\le-7.5421576\cdot10^{-5},\quad L_1\le-0.04943292757,\\
+ Q_{00}\le1.6623\cdot10^{-7},\quad Q_{01}\le9.5232\cdot10^{-7},\quad Q_{11}\le1.002863\cdot10^{-3}.
+\end{gather*}
+Let $V_S(\alpha)=\mathsf B(\alpha)+U_0-\frac12\log2-c_2\alpha$, with $\mathsf I$, $\mathsf R$ and $\mathsf C_0$ the moved values above and $\log2$
+replaced by an upper bound. On each of the two pieces $[0,\alpha_e]$ and $[\alpha_e,\alpha_1]$ it is a polynomial in $\alpha$ with rational
+coefficients. We have $V_S(0)=-1.81\ldots\cdot10^{-5}$, and the cover of \S\ref{ssec:cases} proves $V_S(\alpha)\le\sigma\alpha$ on both pieces. The
+inequality is tight near $\alpha=0.0033$, where $V_S(\alpha)/\alpha$ reaches $0.33867$.
 
 \begin{proof}[Proof of Proposition~\ref{prop:signed-goal}]
 Fix a configuration with $m\le\alpha_1n$. By \eqref{eq:expandS} it suffices to bound each of the at most $2^m$ terms
 $\mathcal S\,|\det\Xi_S|$, at the cost of the factor $5^m$. By Proposition~\ref{prop:alternative} each term either satisfies the
 bound directly, or is at most $499^n\mathcal S\,|\det\Xi^0_S|$. In the second case the final inequality gives
-$\exp\bigl(n^2(-U_0+\frac12\log2+c_2\alpha+o(1))\bigr)$, since $499^n=e^{o(n^2)}$. The binomial factors of
-Lemma~\ref{lem:binomvand} give $\prod_j\mathcal B(k_j)$.
+$\exp\bigl(n^2(-U_0+\frac12\log2+c\alpha+o(1))-N\sum_j\hat\delta(t_{a_j})\bigr)$, since $499^n=e^{o(n^2)}$ and $c=c_2+\sigma$.
+The factor $\prod_l(1+\zeta s_l)^m$ of Lemma~\ref{lem:binomvand} is contained in the column field, and the factors $\mathcal B_\zeta$ give
+$\prod_j\mathcal B_\zeta(k_j)$.
 \end{proof}
