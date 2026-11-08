@@ -1,0 +1,1 @@
+-- superseded 7 Nov (t4b): ext_pair with the unprovable hypothesis hd : d <= eD <= 1/50 (false: d reaches .128 on the window)

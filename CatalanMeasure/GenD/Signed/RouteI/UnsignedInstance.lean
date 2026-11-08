@@ -4,6 +4,8 @@ public import CatalanMeasure.GenD.DesignInstance.PositiveCert.RTab
 public import CatalanMeasure.GenD.DesignInstance.PositiveCert.Data
 public import CatalanMeasure.GenD.Cert.WLogSpec
 public import CatalanMeasure.GenD.Analytic.Glue
+public import CatalanMeasure.GenD.Signed.RouteI.T4Instance
+public import CatalanMeasure.GenD.Signed.RouteI.ChordTableData
 
 @[expose] public section
 
@@ -165,36 +167,567 @@ theorem len_dv40 : dv40.length = 40 := by decide +kernel
 theorem len_du24 : du24.length = 24 := by decide +kernel
 theorem len_dv24 : dv24.length = 24 := by decide +kernel
 
+
+/-! ### The Chebyshev bridge and the degree-41 leaf `hT_ext` (t4b)
+
+`barrierTrialT (trialSeqOf l D)` is the finite sum `Σ_k (l_k / D) T_{k+1}(x) / (k + 1)`.  The check
+`-2 T(du40, x) ≤ 1287/10^5` on `[98749/10^6, 401/2500]` is the nonnegativity of the integer
+polynomial `Q = 2^23 · 10^5 · L · (1287/10^5 + 2 T(du40, ·))`, `L = lcm(1..40)`, built by the
+Chebyshev recursion `T4Instance.chebSum`, composed with `x = (98749 + 61651 w)/10^6` and checked on
+`w ∈ [0, 1]` by the integer subdivision `T4Instance.checkZ`.
+
+kcost: one kernel decision `checkZ` of depth 4 on a degree-41 integer polynomial: 9 `cellOK` calls
+(Python mirror `work/tools/g3/t4/price_leaf2.py`), measured 0.19 s per call, below 2 s. -/
+
+theorem trialT_eq_sum (l : List ℤ) (D : ℕ) (x : ℝ) :
+    barrierTrialT (trialSeqOf l D) x =
+      ∑ k ∈ Finset.range l.length, ((l.getD k 0 : ℝ) / D) *
+        (Polynomial.Chebyshev.T ℝ ((k + 1 : ℕ) : ℤ)).eval x / ((k + 1 : ℕ) : ℝ) := by
+  unfold barrierTrialT
+  have heq (k : ℕ) : trialSeqOf l D (k + 1) = (l.getD k 0 : ℝ) / D := by simp [trialSeqOf]
+  simp_rw [heq]
+  apply tsum_eq_sum
+  intro k hk
+  have hlen : l.length ≤ k := by simpa only [Finset.mem_range, not_lt] using hk
+  rw [List.getD_eq_default l 0 hlen]
+  norm_num
+
+/-- Weights `l_k · (K / (k + 1))`. -/
+def weightsOf (K : ℤ) (l : List ℤ) : List ℤ :=
+  (List.range l.length).map (fun k => l.getD k 0 * (K / ((k : ℤ) + 1)))
+
+theorem weightsOf_length (K : ℤ) (l : List ℤ) : (weightsOf K l).length = l.length := by
+  simp [weightsOf]
+
+theorem weightsOf_getD (K : ℤ) (l : List ℤ) {k : ℕ} (hk : k < l.length) :
+    (weightsOf K l).getD k 0 = l.getD k 0 * (K / ((k : ℤ) + 1)) := by
+  simp [weightsOf, List.getD_eq_getElem?_getD, hk]
+
+/-- The Chebyshev combination `c₀ T₀ + Σ ws_i T_{i+1}` as an integer polynomial. -/
+def chebPoly (c0 : ℤ) (ws : List ℤ) : List ℤ :=
+  T4Instance.chebSum (c0 :: ws) [1] [0, 1]
+
+theorem evalZ_chebPoly (c0 : ℤ) (ws : List ℤ) (x : ℝ) :
+    T4Instance.evalZ (chebPoly c0 ws) x =
+      c0 + ∑ i ∈ Finset.range ws.length,
+        (ws.getD i 0 : ℝ) * (Polynomial.Chebyshev.T ℝ ((i + 1 : ℕ) : ℤ)).eval x := by
+  unfold chebPoly
+  have h0 : T4Instance.evalZ [1] x = (Polynomial.Chebyshev.T ℝ ((0 : ℕ) : ℤ)).eval x := by
+    simp [T4Instance.evalZ]
+  have h1 : T4Instance.evalZ [0, 1] x = (Polynomial.Chebyshev.T ℝ ((0 + 1 : ℕ) : ℤ)).eval x := by
+    simp [T4Instance.evalZ]
+  rw [T4Instance.evalZ_chebSum (c0 :: ws) 0 [1] [0, 1] x h0 h1, List.length_cons,
+    Finset.sum_range_succ']
+  simp only [List.getD_cons_succ, List.getD_cons_zero, Nat.zero_add, Nat.add_zero]
+  have : (Polynomial.Chebyshev.T ℝ ((0 : ℕ) : ℤ)).eval x = 1 := by simp
+  rw [this]
+  simp only [mul_one]
+  ring
+
+/-- `x ↦ p (a + b x)` as an integer polynomial. -/
+def compLin (a b : ℤ) : List ℤ → List ℤ
+  | [] => []
+  | c :: q => T4Instance.addL [c] (T4Instance.addL (T4Instance.smulL a (compLin a b q))
+      (0 :: T4Instance.smulL b (compLin a b q)))
+
+theorem evalZ_compLin (a b : ℤ) (p : List ℤ) (w : ℝ) :
+    T4Instance.evalZ (compLin a b p) w = T4Instance.evalZ p ((a : ℝ) + b * w) := by
+  induction p with
+  | nil => simp [compLin, T4Instance.evalZ]
+  | cons c q ih =>
+    simp only [compLin, T4Instance.evalZ_addL, T4Instance.evalZ_smulL, T4Instance.evalZ, ih]
+    ring
+
+/-- `y ↦ N^len · p (y / N)` as an integer polynomial. -/
+def scaleN (N : ℤ) : List ℤ → List ℤ
+  | [] => []
+  | c :: q => (c * N ^ (q.length + 1)) :: scaleN N q
+
+theorem evalZ_scaleN {N : ℤ} (hN : (N : ℝ) ≠ 0) (p : List ℤ) (y : ℝ) :
+    T4Instance.evalZ (scaleN N p) y = (N : ℝ) ^ p.length * T4Instance.evalZ p (y / N) := by
+  induction p with
+  | nil => simp [scaleN, T4Instance.evalZ]
+  | cons c q ih =>
+    simp only [scaleN, T4Instance.evalZ, ih, List.length_cons]
+    push_cast
+    field_simp
+    ring
+
+/-- The integer polynomial of the `hT` leaf. -/
+def hTc0 : ℤ := 1287 * 2 ^ 23 * 5342931457063200
+
+def hTws : List ℤ := weightsOf (10 ^ 5 * 5342931457063200) du40
+
+def hTz : List ℤ := compLin 98749 61651 (scaleN (10 ^ 6) (chebPoly hTc0 hTws))
+
+theorem hT_div : ∀ k : ℕ, k < 40 → (10 ^ 5 * 5342931457063200 : ℤ) % ((k : ℤ) + 1) = 0 := by
+  decide +kernel
+
+/-- The leaf: `Q` is nonnegative on `[0,1]` by a depth-4 integer subdivision. -/
+theorem hT_check : T4Instance.checkZ hTz 4 0 0 = true := by
+  decide +kernel
+
+theorem hT_ext (τ : ℝ) (hτ : τ = 0 ∨ τ = 1) :
+    ∀ x ∈ Icc (98749 / 1000000 : ℝ) (401 / 2500),
+      -2 * (τ * barrierTrialT (trialSeqOf du40 (2 ^ 24)) x) ≤ 1287 / 100000 := by
+  intro x hx
+  rcases hτ with rfl | rfl
+  · norm_num
+  · simp only [one_mul]
+    set N : ℤ := 10 ^ 6 with hNdef
+    have hN : (N : ℝ) ≠ 0 := by rw [hNdef]; norm_num
+    set w : ℝ := (x - 98749 / 1000000) / (61651 / 1000000) with hw
+    have hw0 : 0 ≤ w := div_nonneg (by linarith [hx.1]) (by norm_num)
+    have hw1 : w ≤ 1 := by
+      rw [hw, div_le_one (by norm_num)]; linarith [hx.2]
+    have hnn := T4Instance.checkZ_sound hT_check (m := 0) (s := 0) (w := w)
+      (by simpa using hw0) (by simpa using hw1)
+    have hlin : ((98749 : ℤ) : ℝ) + ((61651 : ℤ) : ℝ) * w = (N : ℝ) * x := by
+      rw [hw, hNdef]; push_cast; field_simp; ring
+    have hz : T4Instance.evalZ hTz w =
+        (N : ℝ) ^ (chebPoly hTc0 hTws).length *
+          T4Instance.evalZ (chebPoly hTc0 hTws) x := by
+      unfold hTz
+      rw [evalZ_compLin, hlin, evalZ_scaleN hN]
+      congr 2
+      field_simp
+    rw [hz] at hnn
+    have hNpos : (0 : ℝ) < (N : ℝ) ^ (chebPoly hTc0 hTws).length := by
+      rw [hNdef]; positivity
+    have hq : 0 ≤ T4Instance.evalZ (chebPoly hTc0 hTws) x := by
+      by_contra hneg
+      have := mul_neg_of_pos_of_neg hNpos (not_le.mp hneg)
+      linarith
+    rw [evalZ_chebPoly, hTws, weightsOf_length, len_du40] at hq
+    rw [trialT_eq_sum, len_du40]
+    have hdiv := hT_div
+    have key : ∀ k ∈ Finset.range 40,
+        ((weightsOf (10 ^ 5 * 5342931457063200) du40).getD k 0 : ℝ) *
+            (Polynomial.Chebyshev.T ℝ ((k + 1 : ℕ) : ℤ)).eval x =
+          (2 ^ 23 * 10 ^ 5 * 5342931457063200 : ℝ) * 2 *
+            (((du40.getD k 0 : ℝ) / ((2 ^ 24 : ℕ) : ℝ)) *
+              (Polynomial.Chebyshev.T ℝ ((k + 1 : ℕ) : ℤ)).eval x / ((k + 1 : ℕ) : ℝ)) := by
+      intro k hk
+      have hk40 : k < 40 := Finset.mem_range.mp hk
+      rw [weightsOf_getD _ _ (by rw [len_du40]; exact hk40)]
+      have hd : ((k : ℤ) + 1) ∣ (10 ^ 5 * 5342931457063200 : ℤ) :=
+        Int.dvd_of_emod_eq_zero (hdiv k hk40)
+      have hne : (((k : ℤ) + 1 : ℤ) : ℝ) ≠ 0 := by push_cast; positivity
+      have := Int.cast_div hd hne
+      push_cast at this ⊢
+      rw [this]
+      field_simp
+      ring
+    rw [Finset.sum_congr rfl key] at hq
+    rw [← Finset.mul_sum] at hq
+    unfold hTc0 at hq
+    push_cast at hq
+    have hM : (0 : ℝ) < 2 ^ 23 * 10 ^ 5 * 5342931457063200 := by positivity
+    push_cast
+    nlinarith [hq, hM]
+
+/-! ### The extension pair with a block-wise chord correction (t4b)
+
+The chord correction `d = δ̂(t(x))/58` (`t(x) = 2x/(1+x²)`, `δ̂ = pwl 865 kt vt`, the frozen table of
+`ChordTableData`) grows along the extension: `δ̂` goes from `-0.20` at `x = 98749/10^6` (`t = .1956`) to
+`7.45` at `x = 401/2500` (`t = .3128`), so `d ≤ 1/50` holds only up to `x ≈ .1066`.  The window is therefore
+cut into six blocks (equal width `11297665228 / 2^40`); on block `b` the field is capped by `cap_b`
+(`cellT`, the retained Taylor cells of `RCover`, one cell per block) and the chord by `dJ_b`, the largest
+knot value of the segments meeting `t([l,u])` (`extOv`, the check of `NearDataCert.ovOK`; the lemmas
+are re-proved here so that this module does not import `NearDataCert`).  Every block satisfies
+`cap_b + dJ_b/58 + 1287/10^5 + 67/2500 ≤ 0` (`τ = 1`) and `cap_b + dJ_b/58 ≤ 7/1000` (`τ = 0`), the least
+slack being `0.0225` (generator: `scratch/g3/t4b/Gen.lean`, a Lean `#eval` over `cellT`).
+
+kcost: six `cellT` checks (order 5, 76 poles each), six `extOv` checks of 865 rational comparisons
+(measured 0.7 s each in `NearDataCert`), 6 x 8 rational inequalities, and one `coverFrom` on six cells;
+estimated below 10 s in the kernel. -/
+
+open CatalanMeasure.GenD.Signed.RouteI.ChordTableData (knotZ vZ kt vt kt_lt)
+open CatalanMeasure.GenD.Signed.RouteI.ChordTable (pwl exists_seg pwl_le_max)
+
+/-- The coordinate `t(x) = 2 x / (1 + x^2)` over `Q`. -/
+def extTq (x : ℚ) : ℚ := 2 * x / (1 + x ^ 2)
+def extKnotQ (i : ℕ) : ℚ := (knotZ i : ℚ) / 2 ^ 40
+def extVQ (i : ℕ) : ℚ := (vZ i : ℚ) / 10 ^ 9
+
+theorem extTq_real (x : ℚ) : ((extTq x : ℚ) : ℝ) = 2 * (x : ℝ) / (1 + (x : ℝ) ^ 2) := by
+  unfold extTq; push_cast; rfl
+
+theorem ext_kt_eq (i : ℕ) : kt i = (extKnotQ i : ℝ) := by
+  unfold extKnotQ kt; push_cast; rfl
+
+theorem ext_vt_eq (i : ℕ) : vt i = (extVQ i : ℝ) := by
+  unfold extVQ vt; push_cast; rfl
+
+/-- Every segment of the table meeting `t([l,u])` has both knot values `≤ dJ`. -/
+def extOv (l u dJ : ℚ) : Bool :=
+  (List.range 865).all fun i =>
+    !(decide (extKnotQ i ≤ extTq u) && decide (extTq l ≤ extKnotQ (i + 1))) ||
+      (decide (extVQ i ≤ dJ) && decide (extVQ (i + 1) ≤ dJ))
+
+theorem extOv_sound {l u dJ : ℚ} (h : extOv l u dJ = true) :
+    ∀ i, i < 865 → kt i ≤ 2 * (u : ℝ) / (1 + (u : ℝ) ^ 2) →
+      2 * (l : ℝ) / (1 + (l : ℝ) ^ 2) ≤ kt (i + 1) → vt i ≤ dJ ∧ vt (i + 1) ≤ dJ := by
+  intro i hi hA hB
+  have h1 := List.all_eq_true.mp h i (List.mem_range.mpr hi)
+  simp only [Bool.or_eq_true, Bool.not_eq_true', Bool.and_eq_true, decide_eq_true_eq,
+    Bool.and_eq_false_iff, decide_eq_false_iff_not] at h1
+  rw [ext_kt_eq, ← extTq_real] at hA
+  rw [ext_kt_eq, ← extTq_real] at hB
+  have hA' : extKnotQ i ≤ extTq u := by exact_mod_cast hA
+  have hB' : extTq l ≤ extKnotQ (i + 1) := by exact_mod_cast hB
+  rcases h1 with h1 | ⟨h2, h3⟩
+  · exfalso
+    rcases h1 with h1 | h1
+    · exact h1 hA'
+    · exact h1 hB'
+  · rw [ext_vt_eq, ext_vt_eq]
+    exact ⟨by exact_mod_cast h2, by exact_mod_cast h3⟩
+
+/-- `δ̂ ≤ dJ` on `[ta, tb]` when every segment meeting `[ta, tb]` has both knot values `≤ dJ`. -/
+theorem ext_pwl_le {K : ℕ} (hK : 0 < K) {k v : ℕ → ℝ} {ta tb dJ : ℝ}
+    (hk : ∀ i, i < K → k i < k (i + 1))
+    (hov : ∀ i, i < K → k i ≤ tb → ta ≤ k (i + 1) → v i ≤ dJ ∧ v (i + 1) ≤ dJ)
+    {t : ℝ} (h0 : k 0 ≤ t) (h1 : t ≤ k K) (hta : ta ≤ t) (htb : t ≤ tb) :
+    pwl K k v t ≤ dJ := by
+  obtain ⟨i, hi, ht⟩ := exists_seg hK h0 h1
+  obtain ⟨ha, hb⟩ := hov i hi (ht.1.trans htb) (hta.trans ht.2)
+  exact (pwl_le_max hk hi ht).trans (max_le ha hb)
+
+theorem ext_tcoord_mono {l y u : ℝ} (hl : 0 < l) (hly : l ≤ y) (hyu : y ≤ u) (hu : u ≤ 1) :
+    2 * l / (1 + l ^ 2) ≤ 2 * y / (1 + y ^ 2) ∧ 2 * y / (1 + y ^ 2) ≤ 2 * u / (1 + u ^ 2) := by
+  have key : ∀ {a b : ℝ}, 0 < a → a ≤ b → b ≤ 1 → 2 * a / (1 + a ^ 2) ≤ 2 * b / (1 + b ^ 2) := by
+    intro a b ha hab hb
+    rw [div_le_div_iff₀ (by positivity) (by positivity)]
+    nlinarith [mul_nonneg (sub_nonneg.mpr hab) (sub_nonneg.mpr (show a * b ≤ 1 by nlinarith)),
+      mul_pos ha ha]
+  exact ⟨key hl hly (hyu.trans hu), key (hl.trans_le hly) hyu hu⟩
+
+/-- The six blocks: Taylor cell `(centre, half width)` in units of `2^-40`, field cap, chord cap `dJ`. -/
+def extBlocks : List (TCell × ℚ × ℚ) := [
+  ((114224506345, 5648832614, 0), (-877 : ℚ) / 10000, (1427645111 : ℚ) / 1000000000),
+  ((125522171573, 5648832614, 0), (-1117 : ℚ) / 10000, (704302573 : ℚ) / 250000000),
+  ((136819836801, 5648832614, 0), (-167 : ℚ) / 1250, (4147334231 : ℚ) / 1000000000),
+  ((148117502029, 5648832614, 0), (-1541 : ℚ) / 10000, (5189835631 : ℚ) / 1000000000),
+  ((159415167257, 5648832614, 0), (-867 : ℚ) / 5000, (319028631 : ℚ) / 50000000),
+  ((170712832485, 5648832614, 0), (-479 : ℚ) / 2500, (93154629 : ℚ) / 12500000)
+]
+
+def extBlkOK (b : TCell × ℚ × ℚ) : Bool :=
+  cellT (resSpecW (53 / 58 : ℚ) Pc P) D_R.toD 5 65 MGL_R b.2.1 b.1 &&
+  extOv (((b.1.1 - b.1.2.1 : ℤ) : ℚ) / (TT : ℚ)) (((b.1.1 + b.1.2.1 : ℤ) : ℚ) / (TT : ℚ)) b.2.2 &&
+  decide (0 < b.1.1 - b.1.2.1) && decide (b.1.1 + b.1.2.1 ≤ TT) &&
+  decide (extKnotQ 0 ≤ extTq (((b.1.1 - b.1.2.1 : ℤ) : ℚ) / (TT : ℚ))) &&
+  decide (extTq (((b.1.1 + b.1.2.1 : ℤ) : ℚ) / (TT : ℚ)) ≤ extKnotQ 865) &&
+  decide (b.2.1 + b.2.2 / 58 + 1287 / 100000 + 67 / 2500 ≤ 0) &&
+  decide (b.2.1 + b.2.2 / 58 ≤ 7 / 1000)
+
+-- kcost: 6 blocks; per block one `cellT` (order 5, 76 poles), `extOv` (865 rational comparisons, 0.7 s measured in
+-- NearDataCert), and 6 rational inequalities.  Estimated below 10 s; measured in the build log.
+theorem extBlocks_ok : extBlocks.all extBlkOK = true := by decide +kernel
+
+theorem ext_cover :
+    coverFrom (401 / 2500) (qfloor ((98749 / 1000000 : ℚ) * (TT : ℚ))) (extBlocks.map (·.1)) = true := by
+  decide +kernel
+
+/-- Every point of the extension lies in a block `b`: the field is below `cap_b`, `δ̂(t(x)) ≤ dJ_b`,
+and the block satisfies the margins of both pair values. -/
+theorem ext_block (hZ_R : ∀ x : ℝ, -2 * finUR Pc x = ptZ D_R.toD.Z 0 x) :
+    ∀ x ∈ Icc (98749 / 1000000 : ℝ) (401 / 2500), ∃ b ∈ extBlocks,
+      resFieldW (((53 / 58 : ℚ) : ℚ) : ℝ) (trialSeqS Pc P) x ≤ (b.2.1 : ℝ) ∧
+      pwl 865 kt vt (realCoordinateInv x) ≤ (b.2.2 : ℝ) ∧
+      (b.2.1 : ℝ) + b.2.2 / 58 + 1287 / 100000 + 67 / 2500 ≤ 0 ∧
+      (b.2.1 : ℝ) + b.2.2 / 58 ≤ 7 / 1000 := by
+  intro x hx
+  have hT : (0 : ℝ) < TT := by exact_mod_cast TT_pos
+  obtain ⟨c, hc, hcx⟩ := cover_spec (401 / 2500) (extBlocks.map (·.1))
+    (qfloor ((98749 / 1000000 : ℚ) * (TT : ℚ))) ext_cover x
+    (floor_le_of_ge (98749 / 1000000) x (by push_cast; linarith [hx.1])) (by push_cast; linarith [hx.2])
+  obtain ⟨b, hb, rfl⟩ := List.mem_map.mp hc
+  have hok := List.all_eq_true.mp extBlocks_ok b hb
+  simp only [extBlkOK, Bool.and_eq_true, decide_eq_true_eq, and_assoc] at hok
+  obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩ := hok
+  refine ⟨b, hb, ?_, ?_, ?_, ?_⟩
+  · exact cellValP_sound (resFieldW (((53 / 58 : ℚ) : ℚ) : ℝ) (trialSeqS Pc P))
+      (resSpecW (53 / 58 : ℚ) Pc P b.1.2.2) D_R.toD D_R_ok 5 65 MGL_R hMGL_R
+      (resSpecW_sound (53 / 58 : ℚ) tailsP P_nonzero D_R.toD hZ_R b.1.2.2) b.2.1 b.1.1 b.1.2.1 h1 x
+      hcx (fun pr h => by simp [resSpecW] at h)
+  · obtain ⟨hxl, hxu⟩ := abs_le.mp hcx
+    set l : ℚ := ((b.1.1 - b.1.2.1 : ℤ) : ℚ) / (TT : ℚ) with hl
+    set u : ℚ := ((b.1.1 + b.1.2.1 : ℤ) : ℚ) / (TT : ℚ) with hu
+    have hlR : (l : ℝ) = ((b.1.1 : ℝ) - b.1.2.1) / TT := by rw [hl]; push_cast; ring
+    have huR : (u : ℝ) = ((b.1.1 : ℝ) + b.1.2.1) / TT := by rw [hu]; push_cast; ring
+    have hlx : (l : ℝ) ≤ x := by
+      rw [hlR]
+      have : (b.1.1 : ℝ) / TT - (b.1.2.1 : ℝ) / TT ≤ x := by linarith
+      calc _ = (b.1.1 : ℝ) / TT - (b.1.2.1 : ℝ) / TT := by ring
+        _ ≤ x := this
+    have hxu' : x ≤ (u : ℝ) := by
+      rw [huR]
+      have : x ≤ (b.1.1 : ℝ) / TT + (b.1.2.1 : ℝ) / TT := by linarith
+      calc x ≤ _ := this
+        _ = _ := by ring
+    have hl0 : (0 : ℝ) < l := by
+      rw [hlR]; apply div_pos _ hT
+      have : (0 : ℝ) < ((b.1.1 - b.1.2.1 : ℤ) : ℝ) := by exact_mod_cast h3
+      push_cast at this; linarith
+    have hu1 : (u : ℝ) ≤ 1 := by
+      rw [huR, div_le_one hT]
+      have : ((b.1.1 + b.1.2.1 : ℤ) : ℝ) ≤ (TT : ℝ) := by exact_mod_cast h4
+      push_cast at this; linarith
+    have htm := ext_tcoord_mono hl0 hlx hxu' hu1
+    have hk0 : kt 0 ≤ 2 * (l : ℝ) / (1 + (l : ℝ) ^ 2) := by
+      rw [ext_kt_eq, ← extTq_real]; exact_mod_cast h5
+    have hk1 : 2 * (u : ℝ) / (1 + (u : ℝ) ^ 2) ≤ kt 865 := by
+      rw [ext_kt_eq, ← extTq_real]; exact_mod_cast h6
+    exact ext_pwl_le (by norm_num) kt_lt (extOv_sound h2) (hk0.trans htm.1) (htm.2.trans hk1)
+      htm.1 htm.2
+  · have h := (Rat.cast_le (K := ℝ)).mpr h7
+    push_cast at h
+    linarith
+  · have h := (Rat.cast_le (K := ℝ)).mpr h8
+    push_cast at h
+    linarith
+
 /-- **The extension with the paired trial** (GP Lemma 7.4 on the window `[98749/10^6, 401/2500]`,
-`τ ∈ {0, 1}`).  The built extension cap `ext_cap` (`≤ MR = -315531/5000000`) together with the
-Chebyshev bound of the K = 40 term on the window (`hT`, the degree-40 leaf: `-2 T(du, x) ≤ 1287/10^5`,
-float maximum `.012868`) and the node correction `d ≤ eD` (`eD ≤ 1/50`, from `ChordTable`) keeps the
-paired field below `res_τ = .0070 + τ (-.0268 - .0070)`. -/
+`τ ∈ {0, 1}`): the field of the K590 trial minus `2 τ T(du40, x)`, plus the chord correction
+`d = δ̂(t(x))/58` of the frozen table, is at most `.0070 + τ (-.0268 - .0070)`.  The hypothesis `hd`
+is the definition of the correction; the term for G4 is `ext_pair Cert590.hZ_R hτ hd` with `hd` the
+`hd` of `NearDataCert.near_N0`. -/
 theorem ext_pair
     (hZ_R : ∀ x : ℝ, -2 * finUR Pc x = ptZ D_R.toD.Z 0 x)
-    {d : ℝ → ℝ} {eD τ : ℝ} (heD : eD ≤ 1 / 50) (hτ : τ = 0 ∨ τ = 1)
-    (hT : ∀ x ∈ Icc (98749 / 1000000 : ℝ) (401 / 2500),
-      -2 * (τ * barrierTrialT (trialSeqOf du40 (2 ^ 24)) x) ≤ 1287 / 100000)
-    (hd : ∀ x ∈ Icc (98749 / 1000000 : ℝ) (401 / 2500), d x ≤ eD) :
+    {d : ℝ → ℝ} {τ : ℝ} (hτ : τ = 0 ∨ τ = 1)
+    (hd : ∀ u, d u = pwl 865 kt vt (realCoordinateInv u) / 58) :
     ∀ x ∈ Icc (98749 / 1000000 : ℝ) (401 / 2500),
       resFieldW (((53 / 58 : ℚ) : ℚ) : ℝ) (trialSeqS Pc P) x
         - 2 * (τ * barrierTrialT (trialSeqOf du40 (2 ^ 24)) x) + d x ≤
       7 / 1000 + τ * (-268 / 10000 - 7 / 1000) := by
   intro x hx
-  have h1 := ext_cap hZ_R x hx
-  have h2 := hT x hx
-  have h3 := hd x hx
-  have hMR : (MR : ℝ) = -315531 / 5000000 := by unfold MR; norm_num
+  obtain ⟨b, hb, hF, hD, hm1, hm0⟩ := ext_block hZ_R x hx
+  have hdx : d x ≤ (b.2.2 : ℝ) / 58 := by rw [hd x]; linarith
+  have hT := hT_ext τ hτ x hx
   rcases hτ with rfl | rfl
-  · rw [hMR] at h1
-    simp only [zero_mul, mul_zero, sub_zero]
+  · simp only [zero_mul, mul_zero, sub_zero]
     linarith
-  · rw [hMR] at h1
-    simp only [one_mul] at h2 ⊢
+  · simp only [one_mul] at hT ⊢
     linarith
+
+/-! ### The TrialEnd shift records (G35, t4b)
+
+A record at `τ ∈ [0, 1]` over the K590 base record `D₀` has `p = p₀ + τ du`, `v = v₀ + τ dv` with
+`du`, `dv` of finite support (`trialSeqOf du40 2^24`, `dv40`, ...).  The constructors below discharge,
+field by field, everything that is linear algebra in the sequence; the numerical inputs enter as
+hypotheses whose sources are named in the docstrings:
+
+* `p_summable`, `v_summable`: finite support of `du`, `dv`;
+* `norm_le`: polarisation, `‖p₀ + τ du‖² = ‖p₀‖² + 2τ⟨p₀, du⟩ + τ²‖du‖²`, so the norm cap is
+  `D₀.normCap + τ cr + τ² qd` with `cr = 4⟨p₀, du⟩ + ⟨v₀, dv⟩`, `qd = 2‖du‖² + ‖dv‖²/2` (second
+  population; `2⟨p₀, du⟩ + ⟨v₀, dv⟩`, `‖du‖² + ‖dv‖²/2` for the first); the inner products are finite
+  weighted sums of the finite data (`T4Instance.trial_sum`, `finPart`);
+* `row`, `column`: `barrierTrialT`, `barrierTrialS` are linear in the sequence (finite support),
+  so the row cap is `MX₀ + ΔX` where `ΔX ≥ sup_{|x| ≤ 1} (-4τ T(du, x) - τ S(dv, x))` (`hX`: the
+  polynomial sup of the leaves, `hX_ext`-type degree-41 checks) and the column cap is `MY₀ + ΔY`,
+  `ΔY ≥ sup_s (2τ T(dv, s) + Cf' - Cf₀)` (`hY`, with `Cf'` the physical column field `Cf₀ + γ log (1 + s)`);
+* `marked`, `near`, `budget`: the new caps `residual(τ)` (`ext_pair`, `residual_pair`), `nearCap` (`near_N0`,
+  `near_N1`) and `budget` (`oldBound_budget_of_wV`, `first_budget_of_wV`) are passed through in the form
+  of the corresponding structure field for the shifted sequence. -/
+
+section Shift
+open Filter Set
+
+theorem barrierTrialT_shift (u w : ℕ → ℝ) (τ : ℝ) {K : ℕ} (hu : Summable (fun k => |u k|))
+    (hw : ∀ k, K ≤ k → w k = 0) {x : ℝ} (hx : |x| ≤ 1) :
+    barrierTrialT (fun k => u k + τ * w k) x = barrierTrialT u x + τ * barrierTrialT w x := by
+  have hw' : Summable (fun k => |w k|) := by
+    refine summable_of_ne_finset_zero (s := Finset.range K) fun k hk => ?_
+    have : K ≤ k := by simpa using hk
+    simp [hw k this]
+  unfold barrierTrialT
+  rw [← tsum_mul_left, ← (barrierTrialT_summable u hu hx).tsum_add
+    ((barrierTrialT_summable w hw' hx).mul_left τ)]
+  congr 1
+  ext k
+  ring
+
+theorem barrierTrialS_shift (u w : ℕ → ℝ) (τ : ℝ) {K : ℕ} (hu : Summable (fun k => |u k|))
+    (hw : ∀ k, K ≤ k → w k = 0) {x : ℝ} (hx : |x| ≤ 1) :
+    barrierTrialS (fun k => u k + τ * w k) x = barrierTrialS u x + τ * barrierTrialS w x := by
+  have hw' : Summable (fun k => |w k|) := by
+    refine summable_of_ne_finset_zero (s := Finset.range K) fun k hk => ?_
+    have : K ≤ k := by simpa using hk
+    simp [hw k this]
+  unfold barrierTrialS
+  rw [← tsum_mul_left, ← (barrierTrialS_summable u hu hx).tsum_add
+    ((barrierTrialS_summable w hw' hx).mul_left τ)]
+  congr 1
+  ext k
+  ring
+
+theorem summable_of_support {w : ℕ → ℝ} {K : ℕ} (hw : ∀ k, K ≤ k → w k = 0) :
+    Summable (fun k => |w k|) := by
+  refine summable_of_ne_finset_zero (s := Finset.range K) fun k hk => ?_
+  have : K ≤ k := by simpa using hk
+  simp [hw k this]
+
+theorem summable_shift {u w : ℕ → ℝ} (τ : ℝ) {K : ℕ} (hu : Summable (fun k => |u k|))
+    (hw : ∀ k, K ≤ k → w k = 0) : Summable (fun k => |u k + τ * w k|) := by
+  have h2 : Summable (fun k => |τ * w k|) := by
+    refine summable_of_support (K := K) fun k hk => ?_
+    simp [hw k hk]
+  exact (hu.add h2).of_nonneg_of_le (fun k => abs_nonneg _) (fun k => abs_add_le _ _)
+
+/-- The weighted square sum is summable for a summable sequence. -/
+theorem summable_wsq {u : ℕ → ℝ} (hu : Summable (fun k => |u k|)) :
+    Summable (fun k : ℕ => u (k + 1) ^ 2 / ((k + 1 : ℕ) : ℝ)) := by
+  have h1 : Summable (fun k : ℕ => |u (k + 1)|) := (summable_nat_add_iff 1).mpr hu
+  have ht : Tendsto (fun k : ℕ => |u (k + 1)|) atTop (nhds 0) := h1.tendsto_atTop_zero
+  have hev : ∀ᶠ k : ℕ in atTop, |u (k + 1)| ≤ 1 :=
+    ht.eventually (Iic_mem_nhds (by norm_num : (0 : ℝ) < 1))
+  refine Summable.of_norm_bounded_eventually_nat h1 ?_
+  filter_upwards [hev] with k hk
+  have hk1 : (1 : ℝ) ≤ ((k + 1 : ℕ) : ℝ) := by exact_mod_cast Nat.le_add_left 1 k
+  have hkp : (0 : ℝ) < ((k + 1 : ℕ) : ℝ) := lt_of_lt_of_le (by norm_num) hk1
+  rw [Real.norm_eq_abs, abs_div, abs_of_pos hkp, abs_pow]
+  calc |u (k + 1)| ^ 2 / ((k + 1 : ℕ) : ℝ) ≤ |u (k + 1)| ^ 2 := div_le_self (by positivity) hk1
+    _ ≤ |u (k + 1)| := by nlinarith [abs_nonneg (u (k + 1))]
+
+theorem normSq_smul (w : ℕ → ℝ) (τ : ℝ) :
+    barrierTrialNormSq (fun k => τ * w k) = τ ^ 2 * barrierTrialNormSq w := by
+  unfold barrierTrialNormSq
+  rw [← tsum_mul_left]
+  congr 1
+  ext k
+  ring
+
+/-- Polarisation along the shift: `‖u + τ w‖² = ‖u‖² + 2τ⟨u, w⟩ + τ²‖w‖²`. -/
+theorem normSq_shift {u w : ℕ → ℝ} (τ : ℝ) {K : ℕ} (hu : Summable (fun k => |u k|))
+    (hw : ∀ k, K ≤ k → w k = 0) :
+    barrierTrialNormSq (fun k => u k + τ * w k) =
+      barrierTrialNormSq u + 2 * τ * CompletedGas.barrierInner u w + τ ^ 2 * barrierTrialNormSq w := by
+  have hw' : ∀ k, K ≤ k → τ * w k = 0 := fun k hk => by simp [hw k hk]
+  rw [CompletedGas.barrierTrialNormSq_add (summable_wsq hu) hw', normSq_smul,
+    CompletedGas.barrierInner_smul_right]
+  ring
+
+/-- **Second-population shift record** (`p = p₀ + τ du`, `v = v₀ + τ dv`).  `Cf'` is the column field of
+the new record (`hY` compares it to the base `Cf` up to `ΔY`), `ΔX` bounds the row shift. -/
+def shiftSecond {P : Parameters} {W : Set ℝ} {Cf Cf' : ℕ → ℝ → ℝ} {d : ℝ → ℝ}
+    {target0 residual0 nearCap0 cost0 target residual nearCap cost : ℝ} {G : ℝ → Prop}
+    (D : SecondTrialBoundsEnd P W Cf d target0 residual0 nearCap0 cost0 G)
+    {du dv : ℕ → ℝ} {K : ℕ} (hdu : ∀ k, K ≤ k → du k = 0) (hdv : ∀ k, K ≤ k → dv k = 0) (τ : ℝ)
+    (ΔX ΔY normCap : ℝ)
+    (hnorm : D.normCap + τ * (4 * CompletedGas.barrierInner D.p du + CompletedGas.barrierInner D.v dv) +
+      τ ^ 2 * (2 * barrierTrialNormSq du + barrierTrialNormSq dv / 2) ≤ normCap)
+    (hX : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1,
+      -(4 * (τ * barrierTrialT du x)) - τ * barrierTrialS dv x ≤ ΔX)
+    (hY : ∀ᶠ N : ℕ in atTop, ∀ s ∈ Ioo (0 : ℝ) 1,
+      Cf' N s + 2 * (τ * barrierTrialT dv s) ≤ Cf N s + ΔY)
+    (hmarked : ∀ {N : ℕ}, 0 < N → ∀ {x : ℝ}, x ∈ Icc (-1 : ℝ) 1 → G x →
+      groupedMarkedField P N x - 2 * barrierTrialT (fun k => D.p k + τ * du k) x + d x ≤
+        residual + Real.log 2 / (P.n N : ℝ))
+    (hnear : ∀ {N : ℕ}, 0 < N → ∀ {y : ℝ}, y ∈ Ioo (0 : ℝ) 1 → G y →
+      groupedNearField P N y - (D.p 1 + τ * du 1) * y + d y ≤ nearCap + Real.log 2 / (P.n N : ℝ))
+    (hbudget : ∀ {a t : ℝ}, a ∈ W → 0 ≤ a → 0 ≤ t →
+      (-gC0 P + gC1 P * a - a ^ 2 + t - t ^ 2) * Real.log 2 +
+        normCap + (1 - a) * (D.fieldCap + ΔX + ΔY) + (a - t) * residual + t * nearCap ≤
+          -target + Real.log 2 / 2 + cost * a) :
+    SecondTrialBoundsEnd P W Cf' d target residual nearCap cost G where
+  p := fun k => D.p k + τ * du k
+  v := fun k => D.v k + τ * dv k
+  MX := D.MX + ΔX
+  MY := D.MY + ΔY
+  normCap := normCap
+  fieldCap := D.fieldCap + ΔX + ΔY
+  p_summable := summable_shift τ D.p_summable hdu
+  v_summable := summable_shift τ D.v_summable hdv
+  norm_le := by
+    have h1 := D.norm_le
+    rw [normSq_shift τ D.p_summable hdu, normSq_shift τ D.v_summable hdv]
+    rw [CompletedGas.barrierInner_comm D.p, CompletedGas.barrierInner_comm D.v] at *
+    nlinarith only [h1, hnorm]
+  field_sum := by rw [← D.field_sum]; ring
+  row := fun {ε} hε => by
+    filter_upwards [D.row hε] with N hN x hx
+    have hx1 : |x| ≤ 1 := by
+      rcases hx with ⟨h0, h1⟩ | ⟨h0, h1⟩ <;> rw [abs_le] <;> constructor <;> linarith
+    rw [barrierTrialT_shift _ _ τ D.p_summable hdu hx1, barrierTrialS_shift _ _ τ D.v_summable hdv hx1]
+    have := hN x hx
+    have := hX x hx
+    linarith
+  column := fun {ε} hε => by
+    filter_upwards [D.column hε, hY] with N hN hYN s hs
+    have hs1 : |s| ≤ 1 := by rw [abs_le]; constructor <;> linarith [hs.1, hs.2]
+    rw [barrierTrialT_shift _ _ τ D.v_summable hdv hs1]
+    have := hN s hs
+    have := hYN s hs
+    linarith
+  marked := hmarked
+  near := hnear
+  budget := hbudget
+
+/-- **First-population shift record** (`p = p₀ + τ du`, `v = v₀ + τ dv`, the K = 24 constrained trial). -/
+def shiftFirst {P : Parameters} {W : Set ℝ} {Cf Cf' : ℕ → ℝ → ℝ} {d : ℝ → ℝ} {G : ℝ → Prop}
+    {target0 cost0 target cost : ℝ}
+    (D : FirstTrialBoundsEnd P W Cf d G target0 cost0)
+    {du dv : ℕ → ℝ} {K : ℕ} (hdu : ∀ k, K ≤ k → du k = 0) (hdv : ∀ k, K ≤ k → dv k = 0) (τ : ℝ)
+    (ΔX ΔY normCap M₁ : ℝ)
+    (hnorm : D.normCap + τ * (2 * CompletedGas.barrierInner D.p du + CompletedGas.barrierInner D.v dv) +
+      τ ^ 2 * (barrierTrialNormSq du + barrierTrialNormSq dv / 2) ≤ normCap)
+    (hX : ∀ x ∈ Ico (-1 : ℝ) 0 ∪ Ioo 0 1,
+      -(2 * (τ * barrierTrialT du x)) - τ * barrierTrialS dv x ≤ ΔX)
+    (hY : ∀ᶠ N : ℕ in atTop, ∀ s ∈ Ioo (0 : ℝ) 1,
+      Cf' N s + 2 * (τ * barrierTrialT dv s) ≤ Cf N s + ΔY)
+    (hmarked : ∀ {N : ℕ}, 0 < N → ∀ {x : ℝ}, x ∈ Ioo (-1 : ℝ) 1 → x ≠ 0 → G x →
+      D.lambda * paramCaseField P N x + d x ≤ M₁)
+    (hbudget : ∀ a ∈ W,
+      (-gC0 P + gC1 P * a - a ^ 2) * Real.log 2 +
+        normCap + (1 - a) * (D.fieldCap + ΔX + ΔY) + a * M₁ ≤
+          -target + Real.log 2 / 2 + cost * a) :
+    FirstTrialBoundsEnd P W Cf' d G target cost where
+  p := fun k => D.p k + τ * du k
+  v := fun k => D.v k + τ * dv k
+  lambda := D.lambda
+  MX := D.MX + ΔX
+  MY := D.MY + ΔY
+  normCap := normCap
+  fieldCap := D.fieldCap + ΔX + ΔY
+  M₁ := M₁
+  lambda_nonneg := D.lambda_nonneg
+  p_summable := summable_shift τ D.p_summable hdu
+  v_summable := summable_shift τ D.v_summable hdv
+  norm_le := by
+    have h1 := D.norm_le
+    rw [normSq_shift τ D.p_summable hdu, normSq_shift τ D.v_summable hdv]
+    rw [CompletedGas.barrierInner_comm D.p, CompletedGas.barrierInner_comm D.v] at *
+    nlinarith only [h1, hnorm]
+  field_sum := by rw [← D.field_sum]; ring
+  row := fun {ε} hε => by
+    filter_upwards [D.row hε] with N hN x hx
+    have hx1 : |x| ≤ 1 := by
+      rcases hx with ⟨h0, h1⟩ | ⟨h0, h1⟩ <;> rw [abs_le] <;> constructor <;> linarith
+    rw [barrierTrialT_shift _ _ τ D.p_summable hdu hx1, barrierTrialS_shift _ _ τ D.v_summable hdv hx1]
+    have := hN x hx
+    have := hX x hx
+    linarith
+  marked := hmarked
+  column := fun {ε} hε => by
+    filter_upwards [D.column hε, hY] with N hN hYN s hs
+    have hs1 : |s| ≤ 1 := by rw [abs_le]; constructor <;> linarith [hs.1, hs.2]
+    rw [barrierTrialT_shift _ _ τ D.v_summable hdv hs1]
+    have := hN s hs
+    have := hYN s hs
+    linarith
+  budget := hbudget
+
+end Shift
 
 end
 end CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance
 #print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.residual_sup_d58
 #print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.ext_pair
 #print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.trialSeqOf_support
+#print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.hT_ext
+#print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.ext_block
+#print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.shiftSecond
+#print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.shiftFirst
+#print axioms CatalanMeasure.GenD.Signed.RouteI.UnsignedInstance.normSq_shift
