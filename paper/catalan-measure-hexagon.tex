@@ -115,7 +115,8 @@ Catalan's constant
 is the value at $s=2$ of the Dirichlet $L$-function of the nontrivial character modulo $4$. Values of
 $L$-functions at integers where no formula in terms of $\pi$ is available are notoriously hard to study.
 Ap\'ery proved $\zeta(3)$ irrational in 1978 \cite{Apery79}, and Calegari, Dimitrov and Tang proved
-$L(2,\chi_{-3})$ irrational in 2024 \cite{CDT2024}. For $G$ the classical methods produce linear forms
+$L_{-3}=L(2,\chi_{-3})$ irrational in 2024 \cite{CDT2024}. Epoch AI lists $L_{-3}$ under the name
+Calegari--Dimitrov--Tang constant \cite{EpochApery}. For $G$ the classical methods produce linear forms
 that do not decay fast enough, and its irrationality remained open. In October 2026 OpenAI
 \cite{OpenAI2026} proved that $G$ is irrational, with a new argument based on a large determinant, and
 verified the proof in Lean. The present paper turns that argument into an irrationality measure.
@@ -179,8 +180,8 @@ approximations to $G$, the best of which still has a negative approximation expo
 irrational. Fauzan proved that $\zeta(5)$ is irrational, using Hankel determinants \cite{Fauzan2026}, and Fasten verified the
 irrationality statement in Lean \cite{Fasten26}. Fauzan's argument also gives an irrationality measure. Using its results,
 Giraudin proved $\mu(\zeta(5))\le171$ \cite{Giraudin26z5}. Lai combined this method with simultaneous approximations to show that $1$, $\zeta(3)$ and
-$\zeta(4)$ are linearly independent over $\Q$ \cite{Lai2026}. For $L(2,\chi_{-3})$ the effective holonomy
-bounds of Calegari, Dimitrov and Tang give $\mu(L(2,\chi_{-3}))\le24781$ \cite[Thm.~5.1]{CDT2025}.
+$\zeta(4)$ are linearly independent over $\Q$ \cite{Lai2026}. For $L_{-3}$ the effective holonomy
+bounds of Calegari, Dimitrov and Tang give $\mu(L_{-3})\le24781$ \cite[Thm.~5.1]{CDT2025}.
 
 \emph{Determinant methods.} OpenAI's argument \cite{OpenAI2026} has a different shape. Instead of a
 sequence of linear forms it uses one determinant $\Delta_N$ of size $n=48N$, whose entries are rational
@@ -209,15 +210,23 @@ A preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
 \cite{Wachs2026} showed that its main estimate is not justified.
 
 \subsection{The companion paper}
-Catalan's constant is a difference of two values of the trigamma function $\psi'$. With
+The companion paper \cite{Litsey2026b} proves irrationality measures on two planes of constants. For all
+$r,r'\in\Q$, not both zero,
 \[
- \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n\ge0}\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr)\qquad(0<s<t\le1)
+ \mu(rL_{-3}+r'\pi^2)\le20.6622\qquad\text{and}\qquad\mu(r\zeta(3)+r'\pi^2)\le335.20.
 \]
-one has $G=\frac1{16}\Psi(\frac14,\frac34)$. The companion paper \cite{Litsey2026b} proves irrationality
-measures for $\Psi(s,1)$ with $s=\frac k4,\frac k3,\frac k5,\frac k7,\frac12$, and for
-$\Psi(\frac13,\frac23)=9L(2,\chi_{-3})$. For $\Psi(\frac14,1)$ and $\Psi(\frac34,1)$, which are rational multiples
-of $G\pm5\pi^2/48$, and for $s=\frac k5,\frac k7$, these are the first proofs of irrationality that we know of. Its determinants are L\"owner matrices of digamma differences,
-which are much smaller than OpenAI's. That method also applies to $(\frac14,\frac34)$, but there its
+For $rr'\ne0$ the second bound is, as far as we know, the first irrationality measure for these numbers.
+At special points of the first plane the bounds are smaller. For example, $\mu(L_{-3})\le13.7046$ and
+$\mu(L_{-3}\pm\pi^2/9)\le9.4998$. The constructions use differences of values of the trigamma function
+$\psi'$,
+\[
+ \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n\ge0}\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr)\qquad(0<s<t\le1).
+\]
+Catalan's constant is one of them: $G=\frac1{16}\Psi(\frac14,\frac34)$. The companion paper also proves
+measures for $G\pm5\pi^2/48$, which are rational multiples of $\Psi(\frac14,1)$ and $\Psi(\frac34,1)$, and for
+$\Psi(\frac k5,1)$ and $\Psi(\frac k7,1)$. For these numbers they are the first proofs of irrationality that
+we know of. The determinants of the companion paper are L\"owner matrices of digamma differences. They are
+much smaller than OpenAI's. That method also applies to $(\frac14,\frac34)$, but there its
 denominators outgrow its decay, so it gives no measure for $G$. The present paper therefore refines
 OpenAI's construction. The two papers use the same criterion, the same names for the denominator exponent
 $\Lambda$, the decay rate $D$ and the neighbourhood exponent $\rho$, and one formalization.
@@ -2848,6 +2857,12 @@ Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
   programming language}, Automated Deduction -- CADE 28, Lecture Notes in
   Computer Science, vol. 12699, Springer, 2021, pp.~625--635.
 
+\bibitem{EpochApery}
+{Epoch AI}, \emph{Ap\'ery-style irrationality proofs via linear recurrences},
+  FrontierMath open problems,
+  \url{https://epoch.ai/frontiermath/open-problems/apery-irrationality}, 2026,
+  Accessed 2026-11-08.
+
 \bibitem{Eskandari2026}
 Payman Eskandari, \emph{Improved rational approximations to {C}atalan's
   constant}, 2026, Preprint, 22 September 2026,
@@ -2952,8 +2967,8 @@ Elyasheev Leibtag, Hila Barkan, Rotem Kalisch, Shachar Weinbaum, Michael
   \url{https://github.com/RamanujanMachine/new-directions-in-irrationality}.
 
 \bibitem{Litsey2026b}
-Sean Litsey, \emph{Irrationality measures for {$L(2,\chi_{-3})$} and other
-  differences of trigamma values}, Hexagon preprint hexagon:2610.00401,
+Sean Litsey, \emph{Irrationality measures from {L\"owner} determinants},
+  Hexagon preprint hexagon:2610.00401,
   \url{https://hexagonmath.org/2610.00401}, 2026.
 
 \bibitem{LiuJiangZhang26}
