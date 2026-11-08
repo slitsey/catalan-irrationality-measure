@@ -46,13 +46,13 @@
 \newcommand{\MuLamU}{31.2876}
 \newcommand{\MuThirdsU}{9.4998}
 \newcommand{\MuFifthsU}{23.8272}
-\newcommand{\MuSeventhsU}{2207.8697}
+\newcommand{\MuSeventhsU}{1806.1719}
 \newcommand{\MuChi}{13.7046}
 \newcommand{\MuHalvesU}{6.5253}
 \newcommand{\LamFour}{3.5149036}  \newcommand{\DFour}{3.7447213}  \newcommand{\gFour}{7.1904273}  \newcommand{\ExpFour}{31.28751}
 \newcommand{\LamThree}{3.3104458} \newcommand{\DThree}{4.0291249} \newcommand{\gThree}{6.8272548} \newcommand{\ExpThree}{9.499725}
 \newcommand{\LamFive}{3.5128488}  \newcommand{\DFive}{3.8135797}  \newcommand{\gFive}{7.1655663}  \newcommand{\ExpFive}{23.82717}
-\newcommand{\LamSeven}{3.6391158643} \newcommand{\DSeven}{3.6424792669} \newcommand{\gSeven}{7.4259546075} \newcommand{\ExpSeven}{2207.870}
+\newcommand{\LamSeven}{3.6391158643} \newcommand{\DSeven}{3.6432250312} \newcommand{\gSeven}{7.4218615374} \newcommand{\ExpSeven}{1806.172}
 \newcommand{\LamHalf}{2.9923824}  \newcommand{\DHalf}{3.9785713}  \newcommand{\gHalf}{6.4350874}  \newcommand{\ExpHalf}{6.525207}
 \newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.70452}
 \newcommand{\MuChiExact}{13.704516}
@@ -65,7 +65,7 @@ $L(2,\chi_{-3})$ and other differences of trigamma values}
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{November 1, 2026}
+\date{November 8, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -85,7 +85,7 @@ rational points. Among them are
 and $\mu(\psi'(\frac k5)-\pi^2/6)\le\MuFifthsU$ and $\mu(\psi'(\frac k7)-\pi^2/6)\le\MuSeventhsU$
 for $k$ prime to the denominator. For $L(2,\chi_{-3})$ and $L(2,\chi_{-3})\pm\pi^2/9$ the best bound known before
 was $24781$, due to Calegari, Dimitrov and Tang. For $G\pm5\pi^2/48$, $\psi'(\frac k5)-\pi^2/6$ and
-$\psi'(\frac k7)-\pi^2/6$ we know of no earlier proof of irrationality.
+$\psi'(\frac k7)-\pi^2/6$ we know of no other proof of irrationality.
 
 The approximations are determinants of rectangular L\"owner matrices built from the digamma function at
 integer nodes. We bound their denominators prime by prime, using the corank of the matrix modulo $p$ and
@@ -177,7 +177,7 @@ In particular $\Psi(s,t)$ is irrational and $\mu(\Psi(s,t))\le\mu_{s,t}$. The sa
 the same row.
 \end{theorem}
 
-For $q=4$, $5$ and $7$ we know of no earlier proof that $\Psi(\frac kq,1)$ is irrational. For $q=4$ this does not
+For $q=4$, $5$ and $7$ we know of no other proof that $\Psi(\frac kq,1)$ is irrational. For $q=4$ this does not
 follow from the irrationality of $G=\frac1{16}\Psi(\frac14,\frac34)$, since it is not known whether $1$, $G$ and
 $\pi^2$ are linearly independent over $\Q$. For $q=3$ irrationality was known \cite{CDT2024}, and the theorem
 improves the known measures. The bound for $q=2$ is weaker than the known bounds for $\pi^2$ and is included for
@@ -251,7 +251,7 @@ Formal proofs of irrationality results in Lean also include the irrationality of
 Catalan's constant is also a difference of trigamma values, $G=\frac1{16}\Psi(\frac14,\frac34)$, and the construction
 applies to this pair. For it, however, our bound for the denominators exceeds our bound for the decay, so we obtain no
 measure for $G$. The companion paper \cite{Litsey2026} refines OpenAI's determinant instead and proves
-$\mu(G)\le295$. Our computations for $(\frac14,\frac34)$ are not part of the formal proof.
+$\mu(G)\le270$. Our computations for $(\frac14,\frac34)$ are not part of the formal proof.
 
 The row for $\pi^2$ is included only to show the reach of the construction. Since $\zeta(2)=\pi^2/6$, much better bounds
 are known, the best being $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
@@ -1391,6 +1391,23 @@ segment beyond its end, the same bound is used for the segment with its orientat
 two incident segments are treated together. Far segments are bounded by a multipole expansion with an explicit tail. The
 potential $U^{\nu_c}$ is an explicit elementary function, and it is bounded above by monotonicity on the cell.
 
+Some cells end at a breakpoint of $\sigma$, that is, at an endpoint of one of its segments or at a corner of $\Gamma$.
+Let $s$ be the distance from the breakpoint along the cell, with $0<s\le S$. The potential of the segments that meet at
+the breakpoint is then a polynomial in $s$ plus a term $\sum_mb_ms^m\log s$, up to an explicit remainder. In most rows
+the logarithmic part is bounded in absolute value by $\sum_m|b_m|S^m|\log S|$. For the cells on $\Gamma$ of the shifts
+$\frac k7$ we use a sharper bound. For $0<t\le1$ and an order $K\ge0$ write
+\[
+ -\log t=T_K(t)+R_K(t),\qquad T_K(t)=\sum_{k=1}^K\frac{(1-t)^k}k .
+\]
+Then $0\le R_K(t)\le(1-t)^{K+1}/((K+1)t)$, and the weighted inequality of arithmetic and geometric means gives
+\[
+ 0\le t^mR_K(t)\le\frac{(m-1)^{m-1}(K+1)^K}{(m+K)^{m+K}}\qquad(m\ge1),
+\]
+with $0^0=1$. We put $t=s/S$ and write $\log s=\log S+\log t$. This bounds each term $b_ms^m\log s$ from below by a
+polynomial of degree $m+K$ in $s$, minus a constant. Here $\log S$ is replaced by a rational number within $10^{-11}$ of
+it, checked with the enclosures of the logarithm described above. The condition on the cell becomes an inequality for
+one polynomial.
+
 For (a) the cells are intervals of the arclength on each edge of $\Gamma$. The bound is proved on a horizontal
 neighbourhood of the edge of fixed width. Beyond the last vertex the ray is handled by an analytic tail bound. For (b)
 the cells are intervals of $[0,1]$. For (c) the integrand is bounded above on each cell of $[-r_0,0]$ by a constant or by
@@ -1605,8 +1622,11 @@ indexed by the root classes, and one certificate. Indeed the bounds depend on th
 the decay depends on it only through the separation of the poles from the contour. For $q=4$ the root classes
 $j\equiv kp^{-1}\pmod 4$ of $k=1$ and $k=3$ exchange the two classes of primes modulo $4$. For $q=3$ the table uses the
 primes in the classes modulo $6$, and the root classes $j=1,2$ correspond to first poles near $p/3$ and $2p/3$. For $q=7$
-there are six root classes. Here $D-\Lambda$ is only about $3\cdot10^{-3}$, which explains the large exponent. A small
-further gain in either constant would lower it substantially (Section~\ref{sec:limits}). For $q=2$ there is one root
+there are six root classes. Here $D-\Lambda$ is only about $4\cdot10^{-3}$, which explains the large exponent. A small
+further gain in either constant would lower it substantially (Section~\ref{sec:limits}). The certificate for $q=7$
+therefore takes $\varepsilon_0=10^{-6}$ in the function $\Upsilon$, where the other rows take $\varepsilon_0=10^{-3}$. Its
+trial measure has $22$ polynomial pieces, and its cells on $\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of
+\S\ref{ssec:slope-cert}. For $q=2$ there is one root
 class, $j=1$, with first pole $k_p=\frac{p+1}2$. The resulting bound is weaker than the known ones for this number.
 
 %% =====================================================================
@@ -1614,7 +1634,7 @@ class, $j=1$, with first pole $k_p=\frac{p+1}2$. The resulting bound is weaker t
 
 The exponents are determined by three constants through $\rho/(D-\Lambda)$. Since $\partial\mu/\partial D=-\rho/\eta^2$,
 the exponent is most sensitive to the decay where $\eta$ is small. For the shifts $\frac14$ and $\frac34$,
-$\rho/\eta^2\approx136$. For the shifts $\frac k7$ it is about $6.6\cdot10^5$.
+$\rho/\eta^2\approx136$. For the shifts $\frac k7$ it is about $4.4\cdot10^5$.
 
 On the arithmetic side, the profiles $\mathcal P_j$ are minima of the bounds of Theorem~\ref{thm:local}. Every further
 local bound lowers $\Lambda$ by the integral of the amount by which it lies below $\mathcal P_j$. The denominator exponent of
@@ -1678,7 +1698,9 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
 \item \lean{BlockGeom.hasNV0} is Theorem~\ref{thm:selection}.
 \item \lean{Decay.AltDecay.altGeom_hasScaledDecay} is Theorem~\ref{thm:decay}. It uses the node energy check
  \lean{Decay/Nodes/EnergyCheck.lean}, the contour check \lean{Decay/ContourCheck.lean} and the cell checks
- \lean{Decay/PolyWire3}.
+ \lean{Decay/PolyWire3}. For the shifts $\frac k7$ it is applied in the form
+ \lean{Decay.AltDecay.altGeom_hasScaledDecay_Tr}, with the same conclusion. There the cells on the contour at breakpoints use the
+ truncated logarithm, proved in \lean{Decay/Breakpoint/TruncLog.lean} and \lean{Decay/Breakpoint/CellT.lean}.
 \item \lean{measure_of_family_nv0_even} is Theorem~\ref{thm:deduction} at the even scales.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}. The command \texttt{\#print axioms} reports only the three
