@@ -4,6 +4,7 @@ public import CatalanMeasure.GenD.Signed.RouteI.RowCert.RadOKP
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovP0
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovP1
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovP2
+public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovP3
 
 @[expose] public section
 
@@ -30,15 +31,15 @@ open CatalanMeasure.GenD.Signed.Davis.CircleCheb
 open Set
 open CatalanMeasure.GenD.Signed.RouteI.OrdHf
 
-theorem csP : 0 ≤ CP.s := by decide +kernel -- kcost: one rational
-theorem caP : 0 ≤ CP.α := by decide +kernel -- kcost: one rational
-theorem ckP : 2 * CP.s + mc4 CP.Cl 0 * CP.α ^ 2 ≤ (20903017 / 524288) := by
-  decide +kernel -- kcost: 19 rational terms
+theorem csP : 0 ≤ CP.s := by decide +kernel -- kcost: 0.01 s estimated, one rational
+theorem caP : 0 ≤ CP.α := by decide +kernel -- kcost: 0.01 s estimated, one rational
+theorem ckP : 2 * CP.s + mc4 CP.Cl 0 * CP.α ^ 2 ≤ (23082955 / 1048576) := by
+  decide +kernel -- kcost: 0.01 s estimated, 8 rational terms
 theorem cxP : (CP.Bs.all fun B => decide ((1 / 1000) ≤ B.rho)) = true := by
-  decide +kernel -- kcost: 17 comparisons at most
+  decide +kernel -- kcost: 0.01 s estimated, 17 comparisons at most
 theorem cmP : smallY CP.W (1 / 1000) CP.Bs + max (-CP.evC 0) (-CP.evC (1 / 1000)) +
     mc4 CP.Cl 0 * CP.α ^ 2 * (1 / 1000) ^ 2 / 8 ≤ 0 := by
-  decide +kernel -- kcost: 17 sums of 224 terms, two Chebyshev evaluations
+  decide +kernel -- kcost: 0.5 s estimated, 17 sums of 224 terms, two Chebyshev evaluations
 theorem cbP : ∀ B ∈ CP.Bs, 0 < B.rho ∧ 0 ≤ B.M ∧ Real.log B.rho ≤ B.sg := blks_ok RP2 bP hq0P allP
 theorem smallP : ∀ t ∈ Ioc (0 : ℝ) (((1 / 1000) : ℚ) : ℝ), CP.Phi t ≤ ((0 : ℚ) : ℝ) :=
   small_cover CP csP rfl rfl (by norm_num) (by norm_num) cbP

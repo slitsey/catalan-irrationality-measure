@@ -61,11 +61,12 @@ theorem rcP15 : (RP2.chk (auxT Sign.pos) 15 && radChk (RP2.B 15).rho (RP2.B 15).
   decide +kernel -- kcost: one class of 224 terms, 3 s measured
 theorem allP : RP2.allChk (auxT Sign.pos) = true :=
   allChk_of (lt16 (p := fun i => (RP2.chk (auxT Sign.pos) i && radChk (RP2.B i).rho (RP2.B i).sg (RP2.eta i) i) = true) rcP0 rcP1 rcP2 rcP3 rcP4 rcP5 rcP6 rcP7 rcP8 rcP9 rcP10 rcP11 rcP12 rcP13 rcP14 rcP15)
-theorem wP : RP2.W + RP2.sh = 160 := by decide +kernel -- kcost: two literals
-theorem bP : RP2.Bs.length = 16 := by decide +kernel -- kcost: one list
+theorem wP : RP2.W + RP2.sh = 160 := by decide +kernel -- kcost: 0.01 s estimated, two literals
+theorem bP : RP2.Bs.length = 16 := by decide +kernel -- kcost: 0.01 s estimated, one list
+theorem naP : RP2.NA = 93 := rfl
 theorem hqP : RP2.hq = (1 - massQ gP.T gP.L) / (sumP (auxT Sign.pos) : ℚ) := pHq
 theorem hq0P : 0 ≤ RP2.hq := pHq0
 theorem radP : RadOK RP2 capSource (auxT Sign.pos) (tgt Sign.pos) (sumP (auxT Sign.pos)) 16 :=
-  radOK_of RP2 Sign.pos enc_valid tgtP hqP hq0P pAux cos_ok co_ok cq_ok cq_len wP dc0 bP allP pTot
+  radOK_of RP2 Sign.pos enc_valid tgtP hqP hq0P pAux naP cos_ok co_ok cq_ok cq_len wP dc0 bP allP pTot
 
 end CatalanMeasure.GenD.Signed.RouteI.RowCert

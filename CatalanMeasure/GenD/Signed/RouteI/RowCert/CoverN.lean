@@ -3,6 +3,7 @@ module
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.RadOKN
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovN0
 public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovN1
+public import CatalanMeasure.GenD.Signed.RouteI.RowCert.CovN2
 
 @[expose] public section
 
@@ -29,15 +30,15 @@ open CatalanMeasure.GenD.Signed.Davis.CircleCheb
 open Set
 open CatalanMeasure.GenD.Signed.RouteI.OrdHf
 
-theorem csN : 0 ≤ CN.s := by decide +kernel -- kcost: one rational
-theorem caN : 0 ≤ CN.α := by decide +kernel -- kcost: one rational
-theorem ckN : 2 * CN.s + mc4 CN.Cl 0 * CN.α ^ 2 ≤ (11938143 / 524288) := by
-  decide +kernel -- kcost: 6 rational terms
+theorem csN : 0 ≤ CN.s := by decide +kernel -- kcost: 0.01 s estimated, one rational
+theorem caN : 0 ≤ CN.α := by decide +kernel -- kcost: 0.01 s estimated, one rational
+theorem ckN : 2 * CN.s + mc4 CN.Cl 0 * CN.α ^ 2 ≤ (23722043 / 1048576) := by
+  decide +kernel -- kcost: 0.01 s estimated, 5 rational terms
 theorem cxN : (CN.Bs.all fun B => decide ((1 / 1000) ≤ B.rho)) = true := by
-  decide +kernel -- kcost: 17 comparisons at most
+  decide +kernel -- kcost: 0.01 s estimated, 17 comparisons at most
 theorem cmN : smallY CN.W (1 / 1000) CN.Bs + max (-CN.evC 0) (-CN.evC (1 / 1000)) +
     mc4 CN.Cl 0 * CN.α ^ 2 * (1 / 1000) ^ 2 / 8 ≤ 0 := by
-  decide +kernel -- kcost: 17 sums of 224 terms, two Chebyshev evaluations
+  decide +kernel -- kcost: 0.5 s estimated, 17 sums of 224 terms, two Chebyshev evaluations
 theorem cbN : ∀ B ∈ CN.Bs, 0 < B.rho ∧ 0 ≤ B.M ∧ Real.log B.rho ≤ B.sg := by
   intro B hB
   rcases List.mem_append.1 hB with h | h

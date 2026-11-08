@@ -61,15 +61,16 @@ theorem rcN15 : (RN2.chk (auxT Sign.neg) 15 && radChk (RN2.B 15).rho (RN2.B 15).
   decide +kernel -- kcost: one class of 224 terms, 3 s measured
 theorem allN : RN2.allChk (auxT Sign.neg) = true :=
   allChk_of (lt16 (p := fun i => (RN2.chk (auxT Sign.neg) i && radChk (RN2.B i).rho (RN2.B i).sg (RN2.eta i) i) = true) rcN0 rcN1 rcN2 rcN3 rcN4 rcN5 rcN6 rcN7 rcN8 rcN9 rcN10 rcN11 rcN12 rcN13 rcN14 rcN15)
-theorem wN : RN2.W + RN2.sh = 160 := by decide +kernel -- kcost: two literals
-theorem bN : RN2.Bs.length = 16 := by decide +kernel -- kcost: one list
+theorem wN : RN2.W + RN2.sh = 160 := by decide +kernel -- kcost: 0.01 s estimated, two literals
+theorem bN : RN2.Bs.length = 16 := by decide +kernel -- kcost: 0.01 s estimated, one list
+theorem naN : RN2.NA = 93 := rfl
 theorem hqN : RN2.hq = (53 / 58 - massQ gN.T gN.L) / (sumP (auxT Sign.neg) : ℚ) := nHq
 theorem hq0N : 0 ≤ RN2.hq := nHq0
 theorem radN : RadOK RN2 capSource (auxT Sign.neg) (tgt Sign.neg) (sumP (auxT Sign.neg)) 16 :=
-  radOK_of RN2 Sign.neg enc_valid tgtN hqN hq0N nAux cos_ok co_ok cq_ok cq_len wN dc0 bN allN nTot
-theorem rnN : rnOK RN2 rnsN 44 = true := by decide +kernel -- kcost: 16 comparisons
-theorem fbN : fbOK RN2 = true := by decide +kernel -- kcost: 16 rows of comparisons
-theorem dmN : Dm224 = truncD RN2.sh 224 (mirF RN2 rnsN 44 16) := by decide +kernel -- kcost: the mirror series, 224 terms
-theorem tmN : abs1 ((mirF RN2 rnsN 44 16).drop 224) = Tm224 := by decide +kernel -- kcost: its tail
+  radOK_of RN2 Sign.neg enc_valid tgtN hqN hq0N nAux naN cos_ok co_ok cq_ok cq_len wN dc0 bN allN nTot
+theorem rnN : rnOK RN2 rnsN 44 = true := by decide +kernel -- kcost: 0.01 s estimated, 16 comparisons
+theorem fbN : fbOK RN2 = true := by decide +kernel -- kcost: 0.01 s estimated, 16 rows of comparisons
+theorem dmN : Dm224 = truncD RN2.sh 224 (mirF RN2 rnsN 44 16) := by decide +kernel -- kcost: 5 s estimated, the mirror series of 224 terms
+theorem tmN : abs1 ((mirF RN2 rnsN 44 16).drop 224) = Tm224 := by decide +kernel -- kcost: 5 s estimated, its tail
 
 end CatalanMeasure.GenD.Signed.RouteI.RowCert
