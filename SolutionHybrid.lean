@@ -26,14 +26,24 @@ public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Bank118M
 public section
 
 /-!
-Proofs of the statements in `ChallengeHybrid.lean`, from the `Level3Bound` theorems of the trigamma-difference
-banks (`CatalanCore.Uniform.Bank.*Content.Level3Bound`, `HalvesContent.Bound` and `Chi3.KContent.Bound`).
-Each bank proves a measure at its exact exponent `c / (D - Λ)`, which is below the stated exponent `μ`.
-Each constant is irrational (`CatalanCore.Uniform.Bank.Irrational`), so the bound for reduced fractions
-extends to all fractions (`MeasureLBAt.all_of_irrational`), and the gap to `μ` removes the error term
-(`Aux.eventually_of_exact`). For `G ± 5π²/48` the target is rewritten first.
--/
+Proofs of the statements in `ChallengeHybrid.lean`.
 
+* The two plane theorems, for all rationals `a, b` not both zero: `a L(2, χ₋₃) + b π²` from
+  `CatalanCore.Uniform.Bank.Plane1.plane_point_ab`, and `a ζ(3) + b π²` from
+  `CatalanCore.Uniform.Bank.Plane2.plane2_point_ab_of_content`.
+* The six special points `L(2, χ₋₃) ± 2π²/27`, `± π²/27`, `± π²/18`, each from its own content through
+  `CatalanCore.Uniform.Bank.Plane1.Dips.dip_point`.
+* `ζ(3)` from `CatalanCore.Uniform.Bank.Plane2.zeta3_measure_le`.
+* `L(2, χ₋₃)` from `Chi3.KContent.Bound`, `L(2, χ₋₃) ± π²/9`, `G ± 5π²/48`, `ψ′(a/5) - π²/6` and
+  `ψ′(a/7) - π²/6` from the `Level3Bound` theorems (`CatalanCore.Uniform.Bank.*Content.Level3Bound`),
+  and `π²` from `HalvesContent.Bound`.
+
+Each of these proves a measure at its exact exponent `c / (D - Λ)`, which is below the stated exponent `μ`.
+Each constant is irrational (`CatalanCore.Uniform.Bank.Irrational`, or the irrationality clause of the plane
+and point theorems), so the bound for reduced fractions extends to all fractions
+(`MeasureLBAt.all_of_irrational`), and the gap to `μ` removes the error term (`Aux.eventually_of_exact`,
+`Aux.eventually_of_q`). For `G ± 5π²/48`, the special points and the planes the target is rewritten first.
+-/
 namespace TrigammaDifferences
 
 namespace Aux
