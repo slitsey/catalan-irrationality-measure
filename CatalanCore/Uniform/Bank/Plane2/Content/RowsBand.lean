@@ -137,7 +137,7 @@ theorem dual_wc (u : ℤ) {W : Vec} (hW : VecDual W) {p b t t' : ℕ} (hp : p % 
 
 /-! ### Sums of the cell weight over a window -/
 
-theorem sum_ind (lo hi s e : ℕ) :
+theorem sum_ind_band (lo hi s e : ℕ) :
     ∑ t ∈ Finset.Ico lo hi, (if t ∈ Finset.Ico s e then 1 else 0) = min hi e - max lo s := by
   rw [← Finset.card_filter]
   have : (Finset.Ico lo hi).filter (fun t => t ∈ Finset.Ico s e) = Finset.Ico (max lo s) (min hi e) := by
@@ -163,7 +163,7 @@ theorem sum_wc (W : Vec) {p a lo hi lx hx : ℕ} (hp : p % 2 = 1) (hlo : lo = a 
   subst hlo hhi
   rw [Finset.sum_congr rfl (fun t ht => wc_ind W hp (by simp only [Finset.mem_Ico] at ht; omega)
     (by simp only [Finset.mem_Ico] at ht; omega))]
-  simp only [Finset.sum_add_distrib, ← Finset.mul_sum, sum_ind]
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum, sum_ind_band]
   have e1 : min (a + hx) (a + (p + 1) / 2) - max (a + lx) a = min hx ((p + 1) / 2) - max lx 0 := by omega
   have e2 : min (a + hx) (a + p) - max (a + lx) (a + (p + 1) / 2) = min hx p - max lx ((p + 1) / 2) := by omega
   have e3 : min (a + hx) (a + p + (p + 1) / 2) - max (a + lx) (a + p) =
@@ -175,7 +175,7 @@ theorem sum_wc (W : Vec) {p a lo hi lx hx : ℕ} (hp : p % 2 = 1) (hlo : lo = a 
 /-! ### The row `P₁` on the family -/
 
 /-- The sweep domain from the guard `r ≤ 400 p` and the border of `p2G`. -/
-theorem p2_guard {r p m N0 : ℕ} (hN0 : 919 ≤ N0) (hp : N0 < p) (hg : r ≤ 400 * p)
+theorem p2_guard_band {r p m N0 : ℕ} (hN0 : 919 ≤ N0) (hp : N0 < p) (hg : r ≤ 400 * p)
     (hb : 41 * (2 * m) < 6 * r + 41) : 2 * (r + 2 * m) + 2 * p < p * p := by
   have h920 : 920 ≤ p := by omega
   have : 920 * p ≤ p * p := Nat.mul_le_mul_right p h920
@@ -201,7 +201,7 @@ theorem p2_P1_gle (v u : ℤ) (hv : v ≠ 0) {r p m : ℕ} [hp : Fact p.Prime] (
     have h4 : v.natAbs ≤ p2N0 v := le_max_right _ _
     omega
   have hN : 2 * (r + 2 * (p2G.geometry r).k) + 2 * p < p * p :=
-    p2_guard (N0 := p2N0 v) (by unfold p2N0; exact le_max_left _ _) hN0 hg hb
+    p2_guard_band (N0 := p2N0 v) (by unfold p2N0; exact le_max_left _ _) hN0 hg hb
   rw [p2Q_eq v u r hr S]
   exact row_P1 v u hpv hodd hp5 h2m hN _ (p2Q_inj r S) (p2Q_lt r hr S) w hdual
 
