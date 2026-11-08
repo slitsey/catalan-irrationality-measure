@@ -121,8 +121,8 @@ Let $\chi_{-3}$ be the nontrivial Dirichlet character modulo $3$. We write
 \[
  \Lt=L(2,\chi_{-3})=\sum_{n\ge0}\Bigl(\frac1{(3n+1)^2}-\frac1{(3n+2)^2}\Bigr)=0.78130\,24128\ldots
 \]
-Calegari, Dimitrov and Tang gave the first proof that $\Lt$ is irrational \cite{CDT2024}, and Epoch AI lists
-$\Lt$ under the name Calegari--Dimitrov--Tang constant among the targets of an open problem \cite{EpochApery}. Our
+Calegari, Dimitrov and Tang gave the first proof that $\Lt$ is irrational \cite{CDT2024}, and we call $\Lt$ the
+Calegari--Dimitrov--Tang constant. Our
 first main result is a uniform irrationality measure on the plane spanned by $\Lt$ and $\pi^2$ modulo $\Q$.
 
 \begin{theorem}[first plane]\label{thm:plane1}
@@ -171,7 +171,7 @@ $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
 
 \emph{The construction.} All these bounds come from one construction. Let $\psi$ be the digamma function, the
 logarithmic derivative of Euler's gamma function. The approximations to a number $\xi$ are determinants of L\"owner
-matrices, the matrices of divided differences, of a rational combination $F$ of the functions $\psi(z+s)$ and
+matrices \cite{Loewner34}, the matrices of divided differences, of a rational combination $F$ of the functions $\psi(z+s)$ and
 $\psi'(z+s)$ with rational shifts $s$, at integer nodes. The number $\xi$ is $F'(0)$, up to a rational factor. The
 matrices are rectangular. Their rows and columns share a long block of nodes, which carries a variable, and a border
 of row and column nodes alternates beyond it. Section~\ref{sec:overview} explains the construction and why it gives
@@ -2389,7 +2389,7 @@ periods below $\kappa p$ and of $2k'$ further complete periods:
 \end{align*}
 We write $H_{\mathcal Q}=H[\mathcal Q_{\rm r},\mathcal Q_{\rm c}]$.
 
-\begin{lemma}[displacement and bordering]\label{lem:displace}
+\begin{lemma}[displacement and bordering; cf.\ \cite{Fiedler84}]\label{lem:displace}
 For all nodes $t,t'$ one has $(t-t')H(t,t')=f_t-f_{t'}$, whatever the diagonal. Suppose that $H_{\mathcal Q}$
 is invertible. Let $\mathrm{Sw}$ be the Schur complement of $H_{\mathcal Q}$ in the matrix bordered by unit
 vectors, as in Lemma~\ref{lem:bordered}. Then
@@ -2958,12 +2958,6 @@ Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
   programming language}, Automated Deduction -- CADE 28, Lecture Notes in
   Computer Science, vol. 12699, Springer, 2021, pp.~625--635.
 
-\bibitem{EpochApery}
-{Epoch AI}, \emph{Ap\'ery-style irrationality proofs via linear recurrences},
-  FrontierMath open problems,
-  \url{https://epoch.ai/frontiermath/open-problems/apery-irrationality}, 2026,
-  Accessed 2026-11-08.
-
 \bibitem{Eskandari2026}
 Payman Eskandari, \emph{Improved rational approximations to {C}atalan's
   constant}, 2026, Preprint, 22 September 2026,
@@ -2980,6 +2974,10 @@ Aabir Fauzan, \emph{{$\zeta(5)$} is irrational}, Preprint v1, September 17,
   2026, Zenodo,
   \href{https://doi.org/10.5281/zenodo.22826419}{doi:10.5281/zenodo.22826419},
   2026.
+
+\bibitem{Fiedler84}
+Miroslav Fiedler, \emph{Hankel and {L}oewner matrices}, Linear Algebra Appl.
+  \textbf{58} (1984), 75--95.
 
 \bibitem{Forrester2018Andreief}
 Peter~J. Forrester, \emph{Meet {A}ndr\'eief, {B}ordeaux 1886, and {A}ndreev,
