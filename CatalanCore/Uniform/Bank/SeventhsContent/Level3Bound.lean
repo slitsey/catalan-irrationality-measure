@@ -2,6 +2,7 @@ module
 
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Check
 public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Decay.AltFoldTr
 public import CatalanCore.Uniform.Bank.SeventhsContent.Level3Measure
 
 @[expose] public section
@@ -34,7 +35,7 @@ theorem decay_of_frame {Fr : Frame} (hC : Frame.contourCheck Fr = true)
     (hAR : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off)
     (hnorm1 : (1 : ℚ) ≤ Fr.norm) (hd : Fr.d = 2) (hm0 : ∀ i, (1 / 7 : ℚ) ≤ Fr.μ i) (depth : ℕ) :
     HasScaledDecay (F7.family Fr depth) F7.scale (D7 : ℝ) (c7 : ℝ) := by
-  have h := altGeom_hasScaledDecay (1 / 6) one_sixth_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP
+  have h := altGeom_hasScaledDecay_Tr (1 / 6) one_sixth_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP
     tab_Mq Dchi Pply check_true (by rw [dim_eq, hd]) 30 energy_ok (m0 := 1 / 7) (by norm_num)
     (fun i => by
       have h := (Rat.cast_le (K := ℝ)).2 (hm0 i)
@@ -59,9 +60,9 @@ theorem sevenths_decay (a : Fin 6) :
       (D7 : ℝ) (c7 : ℝ) :=
   decay_of_frame (frames_contour a) (frames_hAR a) (frames_norm a) rfl (frames_m0 a) _
 
-/-- **`μ(seventhsTarget (a + 1)) ≤ 22078697 / 10000`** for each of the six members. -/
+/-- **`μ(seventhsTarget (a + 1)) ≤ 18061719 / 10000`** for each of the six members. -/
 theorem sevenths_measure (a : Fin 6) :
-    Measure.MeasureLBAt (seventhsTarget (seventhNumerator a)) ((22078697 / 10000 : ℚ) : ℝ) :=
+    Measure.MeasureLBAt (seventhsTarget (seventhNumerator a)) ((18061719 / 10000 : ℚ) : ℝ) :=
   sevenths_measure_auto a (sevenths_decay a)
 
 end CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound

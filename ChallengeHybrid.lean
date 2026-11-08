@@ -12,7 +12,7 @@ Irrationality measures for differences of trigamma values, with every constant w
 `G - 5π²/48` and `G + 5π²/48` have exponent 31.2876; `L(2, χ₋₃)` has exponent 13.7046;
 `L(2, χ₋₃) + π²/9` and `L(2, χ₋₃) - π²/9` have exponent 9.4998;
 the four numbers `ψ'(a/5) - π²/6` (a = 1, ..., 4) have exponent 23.8272;
-the six numbers `ψ'(a/7) - π²/6` (a = 1, ..., 6) have exponent 2207.8697;
+the six numbers `ψ'(a/7) - π²/6` (a = 1, ..., 6) have exponent 1806.1719;
 `π²` has exponent 6.5253.
 Each bound `|ξ - a/b| > b^(-μ)` holds for all integers `a` and all sufficiently large `b`.
 -/
@@ -75,37 +75,37 @@ theorem fifths4_measure :
 
 theorem sevenths1_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 
 theorem sevenths2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 
 theorem sevenths3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 
 theorem sevenths4_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 
 theorem sevenths5_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((5 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 
 theorem sevenths6_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((6 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   sorry
 

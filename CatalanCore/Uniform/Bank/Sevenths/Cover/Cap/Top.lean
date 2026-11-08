@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Cap.B00
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Cap.B01
 
 @[expose] public section
 set_option Elab.async false
@@ -15,9 +14,9 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def capC : List PLCap := kblk00 ++ (kblk01)
+def capC : List PLCap := kblk00
 
-theorem cap_all : capC.all (plUbOk nuC none Rtw eWc ePc Dn) = true :=
-  allT_append kblk00_ok (kblk01_ok)
+theorem cap_all : capC.all (plUbFoldOk qsF Dn.W Rtw eWc ePc Dn) = true :=
+  kblk00_ok
 
 end CatalanCore.Uniform.Bank.Sevenths.Cover

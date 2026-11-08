@@ -18,7 +18,7 @@ open CatalanCore.Uniform.Decay.FarField (MPData)
 
 def tubeC : List (List CatalanCore.Uniform.Decay.PolyWire3.TCell) := [ecells0, ecells1, ecells2]
 
-theorem tube_ok : tubeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) edgesLit tubeC = true :=
+theorem tube_ok : tubeCells (cellOkTr nuC Mopt Rtw eWc ePc Fc Dn) edgesLit tubeC = true :=
   tubeCells_cons ecells0_ok (tubeCells_cons ecells1_ok (tubeCells_cons ecells2_ok (tubeCells_nil _)))
 
 end CatalanCore.Uniform.Bank.Sevenths.Cover

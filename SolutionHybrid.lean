@@ -251,7 +251,7 @@ open CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.B
   CatalanCore.Uniform.Bank.SeventhsContent.Level3Auto CatalanCore.Uniform.Bank.SeventhsContent.Level3Measure in
 theorem sevenths_final (a : Fin 6) :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a' : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) < |seventhsTarget (seventhNumerator a) - a' / b| := by
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) < |seventhsTarget (seventhNumerator a) - a' / b| := by
   have hD := CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound.sevenths_decay a
   have hmass : (F7.common.mass : ℝ) = 1 := by rw [F7_common_mass]; norm_num
   have hc : (0 : ℝ) < (c7 : ℝ) := by unfold c7; norm_num
@@ -394,37 +394,37 @@ theorem fifths4_measure :
 
 theorem sevenths1_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨0, by decide⟩
 
 theorem sevenths2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨1, by decide⟩
 
 theorem sevenths3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨2, by decide⟩
 
 theorem sevenths4_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨3, by decide⟩
 
 theorem sevenths5_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((5 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨4, by decide⟩
 
 theorem sevenths6_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((22078697 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((6 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
   exact Aux.sevenths_final ⟨5, by decide⟩
 

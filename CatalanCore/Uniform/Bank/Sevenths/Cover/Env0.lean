@@ -1,9 +1,10 @@
 module
 
 public import CatalanCore.Uniform.Bank.Common.Data.Sev1.Data
-public import CatalanCore.Uniform.Bank.Common.Data.Sev1.Frame
 public import CatalanCore.Uniform.Decay.PolyWire3.Decode
 public import CatalanCore.Uniform.Decay.PolyFull.Full
+public import CatalanCore.Uniform.Decay.PolyWire3.NuMerge
+public import CatalanCore.Uniform.Decay.PolyWire3.KindsTr
 
 @[expose] public section
 set_option Elab.async false
@@ -18,19 +19,19 @@ open CatalanCore.Uniform.Decay.FarField (MPData)
 
 def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (7 / 6 : ℚ))]
 def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (7 / 6 : ℚ))]
-def nuC : List Seg := nodeSegs RP CP
+def nuC : List Seg := nuMerge RP
 def Dbase : SplineData := CatalanCore.Uniform.Bank.Common.Data.Sev1.data
-def Pply : RatPolygon := ⟨(273 / 2000 : ℚ), CatalanCore.Uniform.Bank.Common.Data.Sev1.polygon.vertices.tail, (5000 / 1353 : ℚ)⟩
-def tmaxC : ℚ := (52711527 / 25000000 : ℚ)
+def Pply : RatPolygon := ⟨(135837 / 1000000 : ℚ), [((-84764574083 / 500000000000 : ℚ), (32159 / 500000 : ℚ)), ((-104090703191 / 500000000000 : ℚ), (79763 / 500000 : ℚ))], (500000 / 149533 : ℚ)⟩
+def tmaxC : ℚ := (586204799321 / 250000000000 : ℚ)
 def Rtw : ℚ := 4
 def eWc : ℕ := 50
 def ePc : ℕ := 51
 def Fc : FarData := ⟨(247 / 72 : ℚ), (4 : ℚ)⟩
 def Dn0 : SplineData := Dbase.noRay
 
-def e0 : Pt × Pt := ((qOfP (-273) (2000), qOfP (0) (1)), (qOfP (-8809027) (50000000), qOfP (787) (10000)))
-def e1 : Pt × Pt := ((qOfP (-8809027) (50000000), qOfP (787) (10000)), (qOfP (-11253987) (50000000), qOfP (1041) (5000)))
-def e2 : Pt × Pt := ((qOfP (-11253987) (50000000), qOfP (1041) (5000)), (qOfP (-116677041) (50000000), qOfP (8) (1)))
+def e0 : Pt × Pt := ((qOfP (-135837) (1000000), qOfP (0) (1)), (qOfP (-84764574083) (500000000000), qOfP (32159) (500000)))
+def e1 : Pt × Pt := ((qOfP (-84764574083) (500000000000), qOfP (32159) (500000)), (qOfP (-104090703191) (500000000000), qOfP (79763) (500000)))
+def e2 : Pt × Pt := ((qOfP (-104090703191) (500000000000), qOfP (79763) (500000)), (qOfP (-1276500301833) (500000000000), qOfP (8) (1)))
 
 def edgesLit : List (Pt × Pt) := [e0, e1, e2]
 

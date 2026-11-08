@@ -8,8 +8,7 @@ public import CatalanCore.Uniform.Bank.Sevenths.Cover.Energy.R12
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Energy.R15
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Energy.R18
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Energy.R21
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Energy.R24
-public import CatalanCore.Uniform.Decay.PolyWire2.Energy2
+public import CatalanCore.Uniform.Decay.PolyWire3.FoldAsm
 
 @[expose] public section
 set_option Elab.async false
@@ -23,10 +22,722 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def Etab : List (List ℚ) := [Erow0, Erow1, Erow2, Erow3, Erow4, Erow5, Erow6, Erow7, Erow8, Erow9, Erow10, Erow11, Erow12, Erow13, Erow14, Erow15, Erow16, Erow17, Erow18, Erow19, Erow20, Erow21, Erow22, Erow23, Erow24, Erow25, Erow26]
+def cnTab : List (List (ℕ × ℕ)) := [[(0, 0), (0, 1), (0, 2), (0, 2), (0, 4), (0, 4), (0, 6), (0, 6), (0, 8), (0, 8), (0, 10), (0, 10), (0, 12), (0, 12), (0, 14), (0, 14), (0, 16), (0, 16), (0, 18), (0, 18), (0, 20), (0, 21)], [(0, 1), (1, 1), (1, 2), (1, 2), (1, 4), (1, 4), (1, 6), (1, 6), (1, 8), (1, 8), (1, 10), (1, 10), (1, 12), (1, 12), (1, 14), (1, 14), (1, 16), (1, 16), (1, 18), (1, 18), (1, 20), (1, 21)], [(0, 2), (1, 2), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9), (2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15), (2, 16), (2, 17), (2, 18), (2, 19), (2, 20), (2, 21)], [(0, 2), (1, 2), (2, 3), (2, 2), (2, 5), (2, 4), (2, 7), (2, 6), (2, 9), (2, 8), (2, 11), (2, 10), (2, 13), (2, 12), (2, 15), (2, 14), (2, 17), (2, 16), (2, 19), (2, 18), (2, 20), (2, 21)], [(0, 4), (1, 4), (2, 4), (2, 5), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9), (4, 10), (4, 11), (4, 12), (4, 13), (4, 14), (4, 15), (4, 16), (4, 17), (4, 18), (4, 19), (4, 20), (4, 21)], [(0, 4), (1, 4), (2, 5), (2, 4), (4, 5), (4, 4), (4, 7), (4, 6), (4, 9), (4, 8), (4, 11), (4, 10), (4, 13), (4, 12), (4, 15), (4, 14), (4, 17), (4, 16), (4, 19), (4, 18), (4, 20), (4, 21)], [(0, 6), (1, 6), (2, 6), (2, 7), (4, 6), (4, 7), (6, 6), (6, 7), (6, 8), (6, 9), (6, 10), (6, 11), (6, 12), (6, 13), (6, 14), (6, 15), (6, 16), (6, 17), (6, 18), (6, 19), (6, 20), (6, 21)], [(0, 6), (1, 6), (2, 7), (2, 6), (4, 7), (4, 6), (6, 7), (6, 6), (6, 9), (6, 8), (6, 11), (6, 10), (6, 13), (6, 12), (6, 15), (6, 14), (6, 17), (6, 16), (6, 19), (6, 18), (6, 20), (6, 21)], [(0, 8), (1, 8), (2, 8), (2, 9), (4, 8), (4, 9), (6, 8), (6, 9), (8, 8), (8, 9), (8, 10), (8, 11), (8, 12), (8, 13), (8, 14), (8, 15), (8, 16), (8, 17), (8, 18), (8, 19), (8, 20), (8, 21)], [(0, 8), (1, 8), (2, 9), (2, 8), (4, 9), (4, 8), (6, 9), (6, 8), (8, 9), (8, 8), (8, 11), (8, 10), (8, 13), (8, 12), (8, 15), (8, 14), (8, 17), (8, 16), (8, 19), (8, 18), (8, 20), (8, 21)], [(0, 10), (1, 10), (2, 10), (2, 11), (4, 10), (4, 11), (6, 10), (6, 11), (8, 10), (8, 11), (10, 10), (10, 11), (10, 12), (10, 13), (10, 14), (10, 15), (10, 16), (10, 17), (10, 18), (10, 19), (10, 20), (10, 21)], [(0, 10), (1, 10), (2, 11), (2, 10), (4, 11), (4, 10), (6, 11), (6, 10), (8, 11), (8, 10), (10, 11), (10, 10), (10, 13), (10, 12), (10, 15), (10, 14), (10, 17), (10, 16), (10, 19), (10, 18), (10, 20), (10, 21)], [(0, 12), (1, 12), (2, 12), (2, 13), (4, 12), (4, 13), (6, 12), (6, 13), (8, 12), (8, 13), (10, 12), (10, 13), (12, 12), (12, 13), (12, 14), (12, 15), (12, 16), (12, 17), (12, 18), (12, 19), (12, 20), (12, 21)], [(0, 12), (1, 12), (2, 13), (2, 12), (4, 13), (4, 12), (6, 13), (6, 12), (8, 13), (8, 12), (10, 13), (10, 12), (12, 13), (12, 12), (12, 15), (12, 14), (12, 17), (12, 16), (12, 19), (12, 18), (12, 20), (12, 21)], [(0, 14), (1, 14), (2, 14), (2, 15), (4, 14), (4, 15), (6, 14), (6, 15), (8, 14), (8, 15), (10, 14), (10, 15), (12, 14), (12, 15), (14, 14), (14, 15), (14, 16), (14, 17), (14, 18), (14, 19), (14, 20), (14, 21)], [(0, 14), (1, 14), (2, 15), (2, 14), (4, 15), (4, 14), (6, 15), (6, 14), (8, 15), (8, 14), (10, 15), (10, 14), (12, 15), (12, 14), (14, 15), (14, 14), (14, 17), (14, 16), (14, 19), (14, 18), (14, 20), (14, 21)], [(0, 16), (1, 16), (2, 16), (2, 17), (4, 16), (4, 17), (6, 16), (6, 17), (8, 16), (8, 17), (10, 16), (10, 17), (12, 16), (12, 17), (14, 16), (14, 17), (16, 16), (16, 17), (16, 18), (16, 19), (16, 20), (16, 21)], [(0, 16), (1, 16), (2, 17), (2, 16), (4, 17), (4, 16), (6, 17), (6, 16), (8, 17), (8, 16), (10, 17), (10, 16), (12, 17), (12, 16), (14, 17), (14, 16), (16, 17), (16, 16), (16, 19), (16, 18), (16, 20), (16, 21)], [(0, 18), (1, 18), (2, 18), (2, 19), (4, 18), (4, 19), (6, 18), (6, 19), (8, 18), (8, 19), (10, 18), (10, 19), (12, 18), (12, 19), (14, 18), (14, 19), (16, 18), (16, 19), (18, 18), (18, 19), (18, 20), (18, 21)], [(0, 18), (1, 18), (2, 19), (2, 18), (4, 19), (4, 18), (6, 19), (6, 18), (8, 19), (8, 18), (10, 19), (10, 18), (12, 19), (12, 18), (14, 19), (14, 18), (16, 19), (16, 18), (18, 19), (18, 18), (18, 20), (18, 21)], [(0, 20), (1, 20), (2, 20), (2, 20), (4, 20), (4, 20), (6, 20), (6, 20), (8, 20), (8, 20), (10, 20), (10, 20), (12, 20), (12, 20), (14, 20), (14, 20), (16, 20), (16, 20), (18, 20), (18, 20), (20, 20), (20, 21)], [(0, 21), (1, 21), (2, 21), (2, 21), (4, 21), (4, 21), (6, 21), (6, 21), (8, 21), (8, 21), (10, 21), (10, 21), (12, 21), (12, 21), (14, 21), (14, 21), (16, 21), (16, 21), (18, 21), (18, 21), (20, 21), (21, 21)]]
 
-theorem etab_ok : tabOk Dn 0 Etab = true :=
-  tabOk_cons rowOk0 (tabOk_cons rowOk1 (tabOk_cons rowOk2 (tabOk_cons rowOk3 (tabOk_cons rowOk4 (tabOk_cons rowOk5 (tabOk_cons rowOk6 (tabOk_cons rowOk7 (tabOk_cons rowOk8 (tabOk_cons rowOk9 (tabOk_cons rowOk10 (tabOk_cons rowOk11 (tabOk_cons rowOk12 (tabOk_cons rowOk13 (tabOk_cons rowOk14 (tabOk_cons rowOk15 (tabOk_cons rowOk16 (tabOk_cons rowOk17 (tabOk_cons rowOk18 (tabOk_cons rowOk19 (tabOk_cons rowOk20 (tabOk_cons rowOk21 (tabOk_cons rowOk22 (tabOk_cons rowOk23 (tabOk_cons rowOk24 (tabOk_cons rowOk25 (tabOk_cons rowOk26 (tabOk_nil Dn 27 (by decide))))))))))))))))))))))))))))
+def cnF : ℕ → ℕ → ℕ × ℕ := fun i j => (cnTab.getD i []).getD j (i, j)
+
+def Etab : List (List ℚ) := [Erow0, Erow1, Erow2, Erow3, Erow4, Erow5, Erow6, Erow7, Erow8, Erow9, Erow10, Erow11, Erow12, Erow13, Erow14, Erow15, Erow16, Erow17, Erow18, Erow19, Erow20, Erow21]
+
+theorem fe0_0 : eFoldEntry Dn Etab cnF 0 0 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_0
+theorem fe0_1 : eFoldEntry Dn Etab cnF 0 1 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_1
+theorem fe0_2 : eFoldEntry Dn Etab cnF 0 2 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_2
+theorem fe0_3 : eFoldEntry Dn Etab cnF 0 3 = true := by decide +kernel
+theorem fe0_4 : eFoldEntry Dn Etab cnF 0 4 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_4
+theorem fe0_5 : eFoldEntry Dn Etab cnF 0 5 = true := by decide +kernel
+theorem fe0_6 : eFoldEntry Dn Etab cnF 0 6 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_6
+theorem fe0_7 : eFoldEntry Dn Etab cnF 0 7 = true := by decide +kernel
+theorem fe0_8 : eFoldEntry Dn Etab cnF 0 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_8
+theorem fe0_9 : eFoldEntry Dn Etab cnF 0 9 = true := by decide +kernel
+theorem fe0_10 : eFoldEntry Dn Etab cnF 0 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_10
+theorem fe0_11 : eFoldEntry Dn Etab cnF 0 11 = true := by decide +kernel
+theorem fe0_12 : eFoldEntry Dn Etab cnF 0 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_12
+theorem fe0_13 : eFoldEntry Dn Etab cnF 0 13 = true := by decide +kernel
+theorem fe0_14 : eFoldEntry Dn Etab cnF 0 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_14
+theorem fe0_15 : eFoldEntry Dn Etab cnF 0 15 = true := by decide +kernel
+theorem fe0_16 : eFoldEntry Dn Etab cnF 0 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_16
+theorem fe0_17 : eFoldEntry Dn Etab cnF 0 17 = true := by decide +kernel
+theorem fe0_18 : eFoldEntry Dn Etab cnF 0 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_18
+theorem fe0_19 : eFoldEntry Dn Etab cnF 0 19 = true := by decide +kernel
+theorem fe0_20 : eFoldEntry Dn Etab cnF 0 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_20
+theorem fe0_21 : eFoldEntry Dn Etab cnF 0 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe0_21
+
+theorem frow0 : eFoldRow Dn Etab cnF 0 0 22 = true :=
+  eFoldRow_cons fe0_0 (eFoldRow_cons fe0_1 (eFoldRow_cons fe0_2 (eFoldRow_cons fe0_3 (eFoldRow_cons fe0_4 (eFoldRow_cons fe0_5 (eFoldRow_cons fe0_6 (eFoldRow_cons fe0_7 (eFoldRow_cons fe0_8 (eFoldRow_cons fe0_9 (eFoldRow_cons fe0_10 (eFoldRow_cons fe0_11 (eFoldRow_cons fe0_12 (eFoldRow_cons fe0_13 (eFoldRow_cons fe0_14 (eFoldRow_cons fe0_15 (eFoldRow_cons fe0_16 (eFoldRow_cons fe0_17 (eFoldRow_cons fe0_18 (eFoldRow_cons fe0_19 (eFoldRow_cons fe0_20 (eFoldRow_cons fe0_21 (eFoldRow_nil Dn Etab cnF 0 22))))))))))))))))))))))
+
+theorem fe1_0 : eFoldEntry Dn Etab cnF 1 0 = true := by decide +kernel
+theorem fe1_1 : eFoldEntry Dn Etab cnF 1 1 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_1
+theorem fe1_2 : eFoldEntry Dn Etab cnF 1 2 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_2
+theorem fe1_3 : eFoldEntry Dn Etab cnF 1 3 = true := by decide +kernel
+theorem fe1_4 : eFoldEntry Dn Etab cnF 1 4 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_4
+theorem fe1_5 : eFoldEntry Dn Etab cnF 1 5 = true := by decide +kernel
+theorem fe1_6 : eFoldEntry Dn Etab cnF 1 6 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_6
+theorem fe1_7 : eFoldEntry Dn Etab cnF 1 7 = true := by decide +kernel
+theorem fe1_8 : eFoldEntry Dn Etab cnF 1 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_8
+theorem fe1_9 : eFoldEntry Dn Etab cnF 1 9 = true := by decide +kernel
+theorem fe1_10 : eFoldEntry Dn Etab cnF 1 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_10
+theorem fe1_11 : eFoldEntry Dn Etab cnF 1 11 = true := by decide +kernel
+theorem fe1_12 : eFoldEntry Dn Etab cnF 1 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_12
+theorem fe1_13 : eFoldEntry Dn Etab cnF 1 13 = true := by decide +kernel
+theorem fe1_14 : eFoldEntry Dn Etab cnF 1 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_14
+theorem fe1_15 : eFoldEntry Dn Etab cnF 1 15 = true := by decide +kernel
+theorem fe1_16 : eFoldEntry Dn Etab cnF 1 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_16
+theorem fe1_17 : eFoldEntry Dn Etab cnF 1 17 = true := by decide +kernel
+theorem fe1_18 : eFoldEntry Dn Etab cnF 1 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_18
+theorem fe1_19 : eFoldEntry Dn Etab cnF 1 19 = true := by decide +kernel
+theorem fe1_20 : eFoldEntry Dn Etab cnF 1 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_20
+theorem fe1_21 : eFoldEntry Dn Etab cnF 1 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe1_21
+
+theorem frow1 : eFoldRow Dn Etab cnF 1 0 22 = true :=
+  eFoldRow_cons fe1_0 (eFoldRow_cons fe1_1 (eFoldRow_cons fe1_2 (eFoldRow_cons fe1_3 (eFoldRow_cons fe1_4 (eFoldRow_cons fe1_5 (eFoldRow_cons fe1_6 (eFoldRow_cons fe1_7 (eFoldRow_cons fe1_8 (eFoldRow_cons fe1_9 (eFoldRow_cons fe1_10 (eFoldRow_cons fe1_11 (eFoldRow_cons fe1_12 (eFoldRow_cons fe1_13 (eFoldRow_cons fe1_14 (eFoldRow_cons fe1_15 (eFoldRow_cons fe1_16 (eFoldRow_cons fe1_17 (eFoldRow_cons fe1_18 (eFoldRow_cons fe1_19 (eFoldRow_cons fe1_20 (eFoldRow_cons fe1_21 (eFoldRow_nil Dn Etab cnF 1 22))))))))))))))))))))))
+
+theorem fe2_0 : eFoldEntry Dn Etab cnF 2 0 = true := by decide +kernel
+theorem fe2_1 : eFoldEntry Dn Etab cnF 2 1 = true := by decide +kernel
+theorem fe2_2 : eFoldEntry Dn Etab cnF 2 2 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_2
+theorem fe2_3 : eFoldEntry Dn Etab cnF 2 3 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_3
+theorem fe2_4 : eFoldEntry Dn Etab cnF 2 4 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_4
+theorem fe2_5 : eFoldEntry Dn Etab cnF 2 5 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_5
+theorem fe2_6 : eFoldEntry Dn Etab cnF 2 6 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_6
+theorem fe2_7 : eFoldEntry Dn Etab cnF 2 7 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_7
+theorem fe2_8 : eFoldEntry Dn Etab cnF 2 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_8
+theorem fe2_9 : eFoldEntry Dn Etab cnF 2 9 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_9
+theorem fe2_10 : eFoldEntry Dn Etab cnF 2 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_10
+theorem fe2_11 : eFoldEntry Dn Etab cnF 2 11 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_11
+theorem fe2_12 : eFoldEntry Dn Etab cnF 2 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_12
+theorem fe2_13 : eFoldEntry Dn Etab cnF 2 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_13
+theorem fe2_14 : eFoldEntry Dn Etab cnF 2 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_14
+theorem fe2_15 : eFoldEntry Dn Etab cnF 2 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_15
+theorem fe2_16 : eFoldEntry Dn Etab cnF 2 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_16
+theorem fe2_17 : eFoldEntry Dn Etab cnF 2 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_17
+theorem fe2_18 : eFoldEntry Dn Etab cnF 2 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_18
+theorem fe2_19 : eFoldEntry Dn Etab cnF 2 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_19
+theorem fe2_20 : eFoldEntry Dn Etab cnF 2 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_20
+theorem fe2_21 : eFoldEntry Dn Etab cnF 2 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe2_21
+
+theorem frow2 : eFoldRow Dn Etab cnF 2 0 22 = true :=
+  eFoldRow_cons fe2_0 (eFoldRow_cons fe2_1 (eFoldRow_cons fe2_2 (eFoldRow_cons fe2_3 (eFoldRow_cons fe2_4 (eFoldRow_cons fe2_5 (eFoldRow_cons fe2_6 (eFoldRow_cons fe2_7 (eFoldRow_cons fe2_8 (eFoldRow_cons fe2_9 (eFoldRow_cons fe2_10 (eFoldRow_cons fe2_11 (eFoldRow_cons fe2_12 (eFoldRow_cons fe2_13 (eFoldRow_cons fe2_14 (eFoldRow_cons fe2_15 (eFoldRow_cons fe2_16 (eFoldRow_cons fe2_17 (eFoldRow_cons fe2_18 (eFoldRow_cons fe2_19 (eFoldRow_cons fe2_20 (eFoldRow_cons fe2_21 (eFoldRow_nil Dn Etab cnF 2 22))))))))))))))))))))))
+
+theorem fe3_0 : eFoldEntry Dn Etab cnF 3 0 = true := by decide +kernel
+theorem fe3_1 : eFoldEntry Dn Etab cnF 3 1 = true := by decide +kernel
+theorem fe3_2 : eFoldEntry Dn Etab cnF 3 2 = true := by decide +kernel
+theorem fe3_3 : eFoldEntry Dn Etab cnF 3 3 = true := by decide +kernel
+theorem fe3_4 : eFoldEntry Dn Etab cnF 3 4 = true := by decide +kernel
+theorem fe3_5 : eFoldEntry Dn Etab cnF 3 5 = true := by decide +kernel
+theorem fe3_6 : eFoldEntry Dn Etab cnF 3 6 = true := by decide +kernel
+theorem fe3_7 : eFoldEntry Dn Etab cnF 3 7 = true := by decide +kernel
+theorem fe3_8 : eFoldEntry Dn Etab cnF 3 8 = true := by decide +kernel
+theorem fe3_9 : eFoldEntry Dn Etab cnF 3 9 = true := by decide +kernel
+theorem fe3_10 : eFoldEntry Dn Etab cnF 3 10 = true := by decide +kernel
+theorem fe3_11 : eFoldEntry Dn Etab cnF 3 11 = true := by decide +kernel
+theorem fe3_12 : eFoldEntry Dn Etab cnF 3 12 = true := by decide +kernel
+theorem fe3_13 : eFoldEntry Dn Etab cnF 3 13 = true := by decide +kernel
+theorem fe3_14 : eFoldEntry Dn Etab cnF 3 14 = true := by decide +kernel
+theorem fe3_15 : eFoldEntry Dn Etab cnF 3 15 = true := by decide +kernel
+theorem fe3_16 : eFoldEntry Dn Etab cnF 3 16 = true := by decide +kernel
+theorem fe3_17 : eFoldEntry Dn Etab cnF 3 17 = true := by decide +kernel
+theorem fe3_18 : eFoldEntry Dn Etab cnF 3 18 = true := by decide +kernel
+theorem fe3_19 : eFoldEntry Dn Etab cnF 3 19 = true := by decide +kernel
+theorem fe3_20 : eFoldEntry Dn Etab cnF 3 20 = true := by decide +kernel
+theorem fe3_21 : eFoldEntry Dn Etab cnF 3 21 = true := by decide +kernel
+
+theorem frow3 : eFoldRow Dn Etab cnF 3 0 22 = true :=
+  eFoldRow_cons fe3_0 (eFoldRow_cons fe3_1 (eFoldRow_cons fe3_2 (eFoldRow_cons fe3_3 (eFoldRow_cons fe3_4 (eFoldRow_cons fe3_5 (eFoldRow_cons fe3_6 (eFoldRow_cons fe3_7 (eFoldRow_cons fe3_8 (eFoldRow_cons fe3_9 (eFoldRow_cons fe3_10 (eFoldRow_cons fe3_11 (eFoldRow_cons fe3_12 (eFoldRow_cons fe3_13 (eFoldRow_cons fe3_14 (eFoldRow_cons fe3_15 (eFoldRow_cons fe3_16 (eFoldRow_cons fe3_17 (eFoldRow_cons fe3_18 (eFoldRow_cons fe3_19 (eFoldRow_cons fe3_20 (eFoldRow_cons fe3_21 (eFoldRow_nil Dn Etab cnF 3 22))))))))))))))))))))))
+
+theorem fe4_0 : eFoldEntry Dn Etab cnF 4 0 = true := by decide +kernel
+theorem fe4_1 : eFoldEntry Dn Etab cnF 4 1 = true := by decide +kernel
+theorem fe4_2 : eFoldEntry Dn Etab cnF 4 2 = true := by decide +kernel
+theorem fe4_3 : eFoldEntry Dn Etab cnF 4 3 = true := by decide +kernel
+theorem fe4_4 : eFoldEntry Dn Etab cnF 4 4 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_4
+theorem fe4_5 : eFoldEntry Dn Etab cnF 4 5 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_5
+theorem fe4_6 : eFoldEntry Dn Etab cnF 4 6 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_6
+theorem fe4_7 : eFoldEntry Dn Etab cnF 4 7 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_7
+theorem fe4_8 : eFoldEntry Dn Etab cnF 4 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_8
+theorem fe4_9 : eFoldEntry Dn Etab cnF 4 9 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_9
+theorem fe4_10 : eFoldEntry Dn Etab cnF 4 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_10
+theorem fe4_11 : eFoldEntry Dn Etab cnF 4 11 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_11
+theorem fe4_12 : eFoldEntry Dn Etab cnF 4 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_12
+theorem fe4_13 : eFoldEntry Dn Etab cnF 4 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_13
+theorem fe4_14 : eFoldEntry Dn Etab cnF 4 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_14
+theorem fe4_15 : eFoldEntry Dn Etab cnF 4 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_15
+theorem fe4_16 : eFoldEntry Dn Etab cnF 4 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_16
+theorem fe4_17 : eFoldEntry Dn Etab cnF 4 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_17
+theorem fe4_18 : eFoldEntry Dn Etab cnF 4 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_18
+theorem fe4_19 : eFoldEntry Dn Etab cnF 4 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_19
+theorem fe4_20 : eFoldEntry Dn Etab cnF 4 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_20
+theorem fe4_21 : eFoldEntry Dn Etab cnF 4 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe4_21
+
+theorem frow4 : eFoldRow Dn Etab cnF 4 0 22 = true :=
+  eFoldRow_cons fe4_0 (eFoldRow_cons fe4_1 (eFoldRow_cons fe4_2 (eFoldRow_cons fe4_3 (eFoldRow_cons fe4_4 (eFoldRow_cons fe4_5 (eFoldRow_cons fe4_6 (eFoldRow_cons fe4_7 (eFoldRow_cons fe4_8 (eFoldRow_cons fe4_9 (eFoldRow_cons fe4_10 (eFoldRow_cons fe4_11 (eFoldRow_cons fe4_12 (eFoldRow_cons fe4_13 (eFoldRow_cons fe4_14 (eFoldRow_cons fe4_15 (eFoldRow_cons fe4_16 (eFoldRow_cons fe4_17 (eFoldRow_cons fe4_18 (eFoldRow_cons fe4_19 (eFoldRow_cons fe4_20 (eFoldRow_cons fe4_21 (eFoldRow_nil Dn Etab cnF 4 22))))))))))))))))))))))
+
+theorem fe5_0 : eFoldEntry Dn Etab cnF 5 0 = true := by decide +kernel
+theorem fe5_1 : eFoldEntry Dn Etab cnF 5 1 = true := by decide +kernel
+theorem fe5_2 : eFoldEntry Dn Etab cnF 5 2 = true := by decide +kernel
+theorem fe5_3 : eFoldEntry Dn Etab cnF 5 3 = true := by decide +kernel
+theorem fe5_4 : eFoldEntry Dn Etab cnF 5 4 = true := by decide +kernel
+theorem fe5_5 : eFoldEntry Dn Etab cnF 5 5 = true := by decide +kernel
+theorem fe5_6 : eFoldEntry Dn Etab cnF 5 6 = true := by decide +kernel
+theorem fe5_7 : eFoldEntry Dn Etab cnF 5 7 = true := by decide +kernel
+theorem fe5_8 : eFoldEntry Dn Etab cnF 5 8 = true := by decide +kernel
+theorem fe5_9 : eFoldEntry Dn Etab cnF 5 9 = true := by decide +kernel
+theorem fe5_10 : eFoldEntry Dn Etab cnF 5 10 = true := by decide +kernel
+theorem fe5_11 : eFoldEntry Dn Etab cnF 5 11 = true := by decide +kernel
+theorem fe5_12 : eFoldEntry Dn Etab cnF 5 12 = true := by decide +kernel
+theorem fe5_13 : eFoldEntry Dn Etab cnF 5 13 = true := by decide +kernel
+theorem fe5_14 : eFoldEntry Dn Etab cnF 5 14 = true := by decide +kernel
+theorem fe5_15 : eFoldEntry Dn Etab cnF 5 15 = true := by decide +kernel
+theorem fe5_16 : eFoldEntry Dn Etab cnF 5 16 = true := by decide +kernel
+theorem fe5_17 : eFoldEntry Dn Etab cnF 5 17 = true := by decide +kernel
+theorem fe5_18 : eFoldEntry Dn Etab cnF 5 18 = true := by decide +kernel
+theorem fe5_19 : eFoldEntry Dn Etab cnF 5 19 = true := by decide +kernel
+theorem fe5_20 : eFoldEntry Dn Etab cnF 5 20 = true := by decide +kernel
+theorem fe5_21 : eFoldEntry Dn Etab cnF 5 21 = true := by decide +kernel
+
+theorem frow5 : eFoldRow Dn Etab cnF 5 0 22 = true :=
+  eFoldRow_cons fe5_0 (eFoldRow_cons fe5_1 (eFoldRow_cons fe5_2 (eFoldRow_cons fe5_3 (eFoldRow_cons fe5_4 (eFoldRow_cons fe5_5 (eFoldRow_cons fe5_6 (eFoldRow_cons fe5_7 (eFoldRow_cons fe5_8 (eFoldRow_cons fe5_9 (eFoldRow_cons fe5_10 (eFoldRow_cons fe5_11 (eFoldRow_cons fe5_12 (eFoldRow_cons fe5_13 (eFoldRow_cons fe5_14 (eFoldRow_cons fe5_15 (eFoldRow_cons fe5_16 (eFoldRow_cons fe5_17 (eFoldRow_cons fe5_18 (eFoldRow_cons fe5_19 (eFoldRow_cons fe5_20 (eFoldRow_cons fe5_21 (eFoldRow_nil Dn Etab cnF 5 22))))))))))))))))))))))
+
+theorem fe6_0 : eFoldEntry Dn Etab cnF 6 0 = true := by decide +kernel
+theorem fe6_1 : eFoldEntry Dn Etab cnF 6 1 = true := by decide +kernel
+theorem fe6_2 : eFoldEntry Dn Etab cnF 6 2 = true := by decide +kernel
+theorem fe6_3 : eFoldEntry Dn Etab cnF 6 3 = true := by decide +kernel
+theorem fe6_4 : eFoldEntry Dn Etab cnF 6 4 = true := by decide +kernel
+theorem fe6_5 : eFoldEntry Dn Etab cnF 6 5 = true := by decide +kernel
+theorem fe6_6 : eFoldEntry Dn Etab cnF 6 6 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_6
+theorem fe6_7 : eFoldEntry Dn Etab cnF 6 7 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_7
+theorem fe6_8 : eFoldEntry Dn Etab cnF 6 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_8
+theorem fe6_9 : eFoldEntry Dn Etab cnF 6 9 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_9
+theorem fe6_10 : eFoldEntry Dn Etab cnF 6 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_10
+theorem fe6_11 : eFoldEntry Dn Etab cnF 6 11 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_11
+theorem fe6_12 : eFoldEntry Dn Etab cnF 6 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_12
+theorem fe6_13 : eFoldEntry Dn Etab cnF 6 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_13
+theorem fe6_14 : eFoldEntry Dn Etab cnF 6 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_14
+theorem fe6_15 : eFoldEntry Dn Etab cnF 6 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_15
+theorem fe6_16 : eFoldEntry Dn Etab cnF 6 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_16
+theorem fe6_17 : eFoldEntry Dn Etab cnF 6 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_17
+theorem fe6_18 : eFoldEntry Dn Etab cnF 6 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_18
+theorem fe6_19 : eFoldEntry Dn Etab cnF 6 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_19
+theorem fe6_20 : eFoldEntry Dn Etab cnF 6 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_20
+theorem fe6_21 : eFoldEntry Dn Etab cnF 6 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe6_21
+
+theorem frow6 : eFoldRow Dn Etab cnF 6 0 22 = true :=
+  eFoldRow_cons fe6_0 (eFoldRow_cons fe6_1 (eFoldRow_cons fe6_2 (eFoldRow_cons fe6_3 (eFoldRow_cons fe6_4 (eFoldRow_cons fe6_5 (eFoldRow_cons fe6_6 (eFoldRow_cons fe6_7 (eFoldRow_cons fe6_8 (eFoldRow_cons fe6_9 (eFoldRow_cons fe6_10 (eFoldRow_cons fe6_11 (eFoldRow_cons fe6_12 (eFoldRow_cons fe6_13 (eFoldRow_cons fe6_14 (eFoldRow_cons fe6_15 (eFoldRow_cons fe6_16 (eFoldRow_cons fe6_17 (eFoldRow_cons fe6_18 (eFoldRow_cons fe6_19 (eFoldRow_cons fe6_20 (eFoldRow_cons fe6_21 (eFoldRow_nil Dn Etab cnF 6 22))))))))))))))))))))))
+
+theorem fe7_0 : eFoldEntry Dn Etab cnF 7 0 = true := by decide +kernel
+theorem fe7_1 : eFoldEntry Dn Etab cnF 7 1 = true := by decide +kernel
+theorem fe7_2 : eFoldEntry Dn Etab cnF 7 2 = true := by decide +kernel
+theorem fe7_3 : eFoldEntry Dn Etab cnF 7 3 = true := by decide +kernel
+theorem fe7_4 : eFoldEntry Dn Etab cnF 7 4 = true := by decide +kernel
+theorem fe7_5 : eFoldEntry Dn Etab cnF 7 5 = true := by decide +kernel
+theorem fe7_6 : eFoldEntry Dn Etab cnF 7 6 = true := by decide +kernel
+theorem fe7_7 : eFoldEntry Dn Etab cnF 7 7 = true := by decide +kernel
+theorem fe7_8 : eFoldEntry Dn Etab cnF 7 8 = true := by decide +kernel
+theorem fe7_9 : eFoldEntry Dn Etab cnF 7 9 = true := by decide +kernel
+theorem fe7_10 : eFoldEntry Dn Etab cnF 7 10 = true := by decide +kernel
+theorem fe7_11 : eFoldEntry Dn Etab cnF 7 11 = true := by decide +kernel
+theorem fe7_12 : eFoldEntry Dn Etab cnF 7 12 = true := by decide +kernel
+theorem fe7_13 : eFoldEntry Dn Etab cnF 7 13 = true := by decide +kernel
+theorem fe7_14 : eFoldEntry Dn Etab cnF 7 14 = true := by decide +kernel
+theorem fe7_15 : eFoldEntry Dn Etab cnF 7 15 = true := by decide +kernel
+theorem fe7_16 : eFoldEntry Dn Etab cnF 7 16 = true := by decide +kernel
+theorem fe7_17 : eFoldEntry Dn Etab cnF 7 17 = true := by decide +kernel
+theorem fe7_18 : eFoldEntry Dn Etab cnF 7 18 = true := by decide +kernel
+theorem fe7_19 : eFoldEntry Dn Etab cnF 7 19 = true := by decide +kernel
+theorem fe7_20 : eFoldEntry Dn Etab cnF 7 20 = true := by decide +kernel
+theorem fe7_21 : eFoldEntry Dn Etab cnF 7 21 = true := by decide +kernel
+
+theorem frow7 : eFoldRow Dn Etab cnF 7 0 22 = true :=
+  eFoldRow_cons fe7_0 (eFoldRow_cons fe7_1 (eFoldRow_cons fe7_2 (eFoldRow_cons fe7_3 (eFoldRow_cons fe7_4 (eFoldRow_cons fe7_5 (eFoldRow_cons fe7_6 (eFoldRow_cons fe7_7 (eFoldRow_cons fe7_8 (eFoldRow_cons fe7_9 (eFoldRow_cons fe7_10 (eFoldRow_cons fe7_11 (eFoldRow_cons fe7_12 (eFoldRow_cons fe7_13 (eFoldRow_cons fe7_14 (eFoldRow_cons fe7_15 (eFoldRow_cons fe7_16 (eFoldRow_cons fe7_17 (eFoldRow_cons fe7_18 (eFoldRow_cons fe7_19 (eFoldRow_cons fe7_20 (eFoldRow_cons fe7_21 (eFoldRow_nil Dn Etab cnF 7 22))))))))))))))))))))))
+
+theorem fe8_0 : eFoldEntry Dn Etab cnF 8 0 = true := by decide +kernel
+theorem fe8_1 : eFoldEntry Dn Etab cnF 8 1 = true := by decide +kernel
+theorem fe8_2 : eFoldEntry Dn Etab cnF 8 2 = true := by decide +kernel
+theorem fe8_3 : eFoldEntry Dn Etab cnF 8 3 = true := by decide +kernel
+theorem fe8_4 : eFoldEntry Dn Etab cnF 8 4 = true := by decide +kernel
+theorem fe8_5 : eFoldEntry Dn Etab cnF 8 5 = true := by decide +kernel
+theorem fe8_6 : eFoldEntry Dn Etab cnF 8 6 = true := by decide +kernel
+theorem fe8_7 : eFoldEntry Dn Etab cnF 8 7 = true := by decide +kernel
+theorem fe8_8 : eFoldEntry Dn Etab cnF 8 8 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_8
+theorem fe8_9 : eFoldEntry Dn Etab cnF 8 9 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_9
+theorem fe8_10 : eFoldEntry Dn Etab cnF 8 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_10
+theorem fe8_11 : eFoldEntry Dn Etab cnF 8 11 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_11
+theorem fe8_12 : eFoldEntry Dn Etab cnF 8 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_12
+theorem fe8_13 : eFoldEntry Dn Etab cnF 8 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_13
+theorem fe8_14 : eFoldEntry Dn Etab cnF 8 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_14
+theorem fe8_15 : eFoldEntry Dn Etab cnF 8 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_15
+theorem fe8_16 : eFoldEntry Dn Etab cnF 8 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_16
+theorem fe8_17 : eFoldEntry Dn Etab cnF 8 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_17
+theorem fe8_18 : eFoldEntry Dn Etab cnF 8 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_18
+theorem fe8_19 : eFoldEntry Dn Etab cnF 8 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_19
+theorem fe8_20 : eFoldEntry Dn Etab cnF 8 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_20
+theorem fe8_21 : eFoldEntry Dn Etab cnF 8 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe8_21
+
+theorem frow8 : eFoldRow Dn Etab cnF 8 0 22 = true :=
+  eFoldRow_cons fe8_0 (eFoldRow_cons fe8_1 (eFoldRow_cons fe8_2 (eFoldRow_cons fe8_3 (eFoldRow_cons fe8_4 (eFoldRow_cons fe8_5 (eFoldRow_cons fe8_6 (eFoldRow_cons fe8_7 (eFoldRow_cons fe8_8 (eFoldRow_cons fe8_9 (eFoldRow_cons fe8_10 (eFoldRow_cons fe8_11 (eFoldRow_cons fe8_12 (eFoldRow_cons fe8_13 (eFoldRow_cons fe8_14 (eFoldRow_cons fe8_15 (eFoldRow_cons fe8_16 (eFoldRow_cons fe8_17 (eFoldRow_cons fe8_18 (eFoldRow_cons fe8_19 (eFoldRow_cons fe8_20 (eFoldRow_cons fe8_21 (eFoldRow_nil Dn Etab cnF 8 22))))))))))))))))))))))
+
+theorem fe9_0 : eFoldEntry Dn Etab cnF 9 0 = true := by decide +kernel
+theorem fe9_1 : eFoldEntry Dn Etab cnF 9 1 = true := by decide +kernel
+theorem fe9_2 : eFoldEntry Dn Etab cnF 9 2 = true := by decide +kernel
+theorem fe9_3 : eFoldEntry Dn Etab cnF 9 3 = true := by decide +kernel
+theorem fe9_4 : eFoldEntry Dn Etab cnF 9 4 = true := by decide +kernel
+theorem fe9_5 : eFoldEntry Dn Etab cnF 9 5 = true := by decide +kernel
+theorem fe9_6 : eFoldEntry Dn Etab cnF 9 6 = true := by decide +kernel
+theorem fe9_7 : eFoldEntry Dn Etab cnF 9 7 = true := by decide +kernel
+theorem fe9_8 : eFoldEntry Dn Etab cnF 9 8 = true := by decide +kernel
+theorem fe9_9 : eFoldEntry Dn Etab cnF 9 9 = true := by decide +kernel
+theorem fe9_10 : eFoldEntry Dn Etab cnF 9 10 = true := by decide +kernel
+theorem fe9_11 : eFoldEntry Dn Etab cnF 9 11 = true := by decide +kernel
+theorem fe9_12 : eFoldEntry Dn Etab cnF 9 12 = true := by decide +kernel
+theorem fe9_13 : eFoldEntry Dn Etab cnF 9 13 = true := by decide +kernel
+theorem fe9_14 : eFoldEntry Dn Etab cnF 9 14 = true := by decide +kernel
+theorem fe9_15 : eFoldEntry Dn Etab cnF 9 15 = true := by decide +kernel
+theorem fe9_16 : eFoldEntry Dn Etab cnF 9 16 = true := by decide +kernel
+theorem fe9_17 : eFoldEntry Dn Etab cnF 9 17 = true := by decide +kernel
+theorem fe9_18 : eFoldEntry Dn Etab cnF 9 18 = true := by decide +kernel
+theorem fe9_19 : eFoldEntry Dn Etab cnF 9 19 = true := by decide +kernel
+theorem fe9_20 : eFoldEntry Dn Etab cnF 9 20 = true := by decide +kernel
+theorem fe9_21 : eFoldEntry Dn Etab cnF 9 21 = true := by decide +kernel
+
+theorem frow9 : eFoldRow Dn Etab cnF 9 0 22 = true :=
+  eFoldRow_cons fe9_0 (eFoldRow_cons fe9_1 (eFoldRow_cons fe9_2 (eFoldRow_cons fe9_3 (eFoldRow_cons fe9_4 (eFoldRow_cons fe9_5 (eFoldRow_cons fe9_6 (eFoldRow_cons fe9_7 (eFoldRow_cons fe9_8 (eFoldRow_cons fe9_9 (eFoldRow_cons fe9_10 (eFoldRow_cons fe9_11 (eFoldRow_cons fe9_12 (eFoldRow_cons fe9_13 (eFoldRow_cons fe9_14 (eFoldRow_cons fe9_15 (eFoldRow_cons fe9_16 (eFoldRow_cons fe9_17 (eFoldRow_cons fe9_18 (eFoldRow_cons fe9_19 (eFoldRow_cons fe9_20 (eFoldRow_cons fe9_21 (eFoldRow_nil Dn Etab cnF 9 22))))))))))))))))))))))
+
+theorem fe10_0 : eFoldEntry Dn Etab cnF 10 0 = true := by decide +kernel
+theorem fe10_1 : eFoldEntry Dn Etab cnF 10 1 = true := by decide +kernel
+theorem fe10_2 : eFoldEntry Dn Etab cnF 10 2 = true := by decide +kernel
+theorem fe10_3 : eFoldEntry Dn Etab cnF 10 3 = true := by decide +kernel
+theorem fe10_4 : eFoldEntry Dn Etab cnF 10 4 = true := by decide +kernel
+theorem fe10_5 : eFoldEntry Dn Etab cnF 10 5 = true := by decide +kernel
+theorem fe10_6 : eFoldEntry Dn Etab cnF 10 6 = true := by decide +kernel
+theorem fe10_7 : eFoldEntry Dn Etab cnF 10 7 = true := by decide +kernel
+theorem fe10_8 : eFoldEntry Dn Etab cnF 10 8 = true := by decide +kernel
+theorem fe10_9 : eFoldEntry Dn Etab cnF 10 9 = true := by decide +kernel
+theorem fe10_10 : eFoldEntry Dn Etab cnF 10 10 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_10
+theorem fe10_11 : eFoldEntry Dn Etab cnF 10 11 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_11
+theorem fe10_12 : eFoldEntry Dn Etab cnF 10 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_12
+theorem fe10_13 : eFoldEntry Dn Etab cnF 10 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_13
+theorem fe10_14 : eFoldEntry Dn Etab cnF 10 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_14
+theorem fe10_15 : eFoldEntry Dn Etab cnF 10 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_15
+theorem fe10_16 : eFoldEntry Dn Etab cnF 10 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_16
+theorem fe10_17 : eFoldEntry Dn Etab cnF 10 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_17
+theorem fe10_18 : eFoldEntry Dn Etab cnF 10 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_18
+theorem fe10_19 : eFoldEntry Dn Etab cnF 10 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_19
+theorem fe10_20 : eFoldEntry Dn Etab cnF 10 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_20
+theorem fe10_21 : eFoldEntry Dn Etab cnF 10 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe10_21
+
+theorem frow10 : eFoldRow Dn Etab cnF 10 0 22 = true :=
+  eFoldRow_cons fe10_0 (eFoldRow_cons fe10_1 (eFoldRow_cons fe10_2 (eFoldRow_cons fe10_3 (eFoldRow_cons fe10_4 (eFoldRow_cons fe10_5 (eFoldRow_cons fe10_6 (eFoldRow_cons fe10_7 (eFoldRow_cons fe10_8 (eFoldRow_cons fe10_9 (eFoldRow_cons fe10_10 (eFoldRow_cons fe10_11 (eFoldRow_cons fe10_12 (eFoldRow_cons fe10_13 (eFoldRow_cons fe10_14 (eFoldRow_cons fe10_15 (eFoldRow_cons fe10_16 (eFoldRow_cons fe10_17 (eFoldRow_cons fe10_18 (eFoldRow_cons fe10_19 (eFoldRow_cons fe10_20 (eFoldRow_cons fe10_21 (eFoldRow_nil Dn Etab cnF 10 22))))))))))))))))))))))
+
+theorem fe11_0 : eFoldEntry Dn Etab cnF 11 0 = true := by decide +kernel
+theorem fe11_1 : eFoldEntry Dn Etab cnF 11 1 = true := by decide +kernel
+theorem fe11_2 : eFoldEntry Dn Etab cnF 11 2 = true := by decide +kernel
+theorem fe11_3 : eFoldEntry Dn Etab cnF 11 3 = true := by decide +kernel
+theorem fe11_4 : eFoldEntry Dn Etab cnF 11 4 = true := by decide +kernel
+theorem fe11_5 : eFoldEntry Dn Etab cnF 11 5 = true := by decide +kernel
+theorem fe11_6 : eFoldEntry Dn Etab cnF 11 6 = true := by decide +kernel
+theorem fe11_7 : eFoldEntry Dn Etab cnF 11 7 = true := by decide +kernel
+theorem fe11_8 : eFoldEntry Dn Etab cnF 11 8 = true := by decide +kernel
+theorem fe11_9 : eFoldEntry Dn Etab cnF 11 9 = true := by decide +kernel
+theorem fe11_10 : eFoldEntry Dn Etab cnF 11 10 = true := by decide +kernel
+theorem fe11_11 : eFoldEntry Dn Etab cnF 11 11 = true := by decide +kernel
+theorem fe11_12 : eFoldEntry Dn Etab cnF 11 12 = true := by decide +kernel
+theorem fe11_13 : eFoldEntry Dn Etab cnF 11 13 = true := by decide +kernel
+theorem fe11_14 : eFoldEntry Dn Etab cnF 11 14 = true := by decide +kernel
+theorem fe11_15 : eFoldEntry Dn Etab cnF 11 15 = true := by decide +kernel
+theorem fe11_16 : eFoldEntry Dn Etab cnF 11 16 = true := by decide +kernel
+theorem fe11_17 : eFoldEntry Dn Etab cnF 11 17 = true := by decide +kernel
+theorem fe11_18 : eFoldEntry Dn Etab cnF 11 18 = true := by decide +kernel
+theorem fe11_19 : eFoldEntry Dn Etab cnF 11 19 = true := by decide +kernel
+theorem fe11_20 : eFoldEntry Dn Etab cnF 11 20 = true := by decide +kernel
+theorem fe11_21 : eFoldEntry Dn Etab cnF 11 21 = true := by decide +kernel
+
+theorem frow11 : eFoldRow Dn Etab cnF 11 0 22 = true :=
+  eFoldRow_cons fe11_0 (eFoldRow_cons fe11_1 (eFoldRow_cons fe11_2 (eFoldRow_cons fe11_3 (eFoldRow_cons fe11_4 (eFoldRow_cons fe11_5 (eFoldRow_cons fe11_6 (eFoldRow_cons fe11_7 (eFoldRow_cons fe11_8 (eFoldRow_cons fe11_9 (eFoldRow_cons fe11_10 (eFoldRow_cons fe11_11 (eFoldRow_cons fe11_12 (eFoldRow_cons fe11_13 (eFoldRow_cons fe11_14 (eFoldRow_cons fe11_15 (eFoldRow_cons fe11_16 (eFoldRow_cons fe11_17 (eFoldRow_cons fe11_18 (eFoldRow_cons fe11_19 (eFoldRow_cons fe11_20 (eFoldRow_cons fe11_21 (eFoldRow_nil Dn Etab cnF 11 22))))))))))))))))))))))
+
+theorem fe12_0 : eFoldEntry Dn Etab cnF 12 0 = true := by decide +kernel
+theorem fe12_1 : eFoldEntry Dn Etab cnF 12 1 = true := by decide +kernel
+theorem fe12_2 : eFoldEntry Dn Etab cnF 12 2 = true := by decide +kernel
+theorem fe12_3 : eFoldEntry Dn Etab cnF 12 3 = true := by decide +kernel
+theorem fe12_4 : eFoldEntry Dn Etab cnF 12 4 = true := by decide +kernel
+theorem fe12_5 : eFoldEntry Dn Etab cnF 12 5 = true := by decide +kernel
+theorem fe12_6 : eFoldEntry Dn Etab cnF 12 6 = true := by decide +kernel
+theorem fe12_7 : eFoldEntry Dn Etab cnF 12 7 = true := by decide +kernel
+theorem fe12_8 : eFoldEntry Dn Etab cnF 12 8 = true := by decide +kernel
+theorem fe12_9 : eFoldEntry Dn Etab cnF 12 9 = true := by decide +kernel
+theorem fe12_10 : eFoldEntry Dn Etab cnF 12 10 = true := by decide +kernel
+theorem fe12_11 : eFoldEntry Dn Etab cnF 12 11 = true := by decide +kernel
+theorem fe12_12 : eFoldEntry Dn Etab cnF 12 12 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_12
+theorem fe12_13 : eFoldEntry Dn Etab cnF 12 13 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_13
+theorem fe12_14 : eFoldEntry Dn Etab cnF 12 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_14
+theorem fe12_15 : eFoldEntry Dn Etab cnF 12 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_15
+theorem fe12_16 : eFoldEntry Dn Etab cnF 12 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_16
+theorem fe12_17 : eFoldEntry Dn Etab cnF 12 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_17
+theorem fe12_18 : eFoldEntry Dn Etab cnF 12 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_18
+theorem fe12_19 : eFoldEntry Dn Etab cnF 12 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_19
+theorem fe12_20 : eFoldEntry Dn Etab cnF 12 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_20
+theorem fe12_21 : eFoldEntry Dn Etab cnF 12 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe12_21
+
+theorem frow12 : eFoldRow Dn Etab cnF 12 0 22 = true :=
+  eFoldRow_cons fe12_0 (eFoldRow_cons fe12_1 (eFoldRow_cons fe12_2 (eFoldRow_cons fe12_3 (eFoldRow_cons fe12_4 (eFoldRow_cons fe12_5 (eFoldRow_cons fe12_6 (eFoldRow_cons fe12_7 (eFoldRow_cons fe12_8 (eFoldRow_cons fe12_9 (eFoldRow_cons fe12_10 (eFoldRow_cons fe12_11 (eFoldRow_cons fe12_12 (eFoldRow_cons fe12_13 (eFoldRow_cons fe12_14 (eFoldRow_cons fe12_15 (eFoldRow_cons fe12_16 (eFoldRow_cons fe12_17 (eFoldRow_cons fe12_18 (eFoldRow_cons fe12_19 (eFoldRow_cons fe12_20 (eFoldRow_cons fe12_21 (eFoldRow_nil Dn Etab cnF 12 22))))))))))))))))))))))
+
+theorem fe13_0 : eFoldEntry Dn Etab cnF 13 0 = true := by decide +kernel
+theorem fe13_1 : eFoldEntry Dn Etab cnF 13 1 = true := by decide +kernel
+theorem fe13_2 : eFoldEntry Dn Etab cnF 13 2 = true := by decide +kernel
+theorem fe13_3 : eFoldEntry Dn Etab cnF 13 3 = true := by decide +kernel
+theorem fe13_4 : eFoldEntry Dn Etab cnF 13 4 = true := by decide +kernel
+theorem fe13_5 : eFoldEntry Dn Etab cnF 13 5 = true := by decide +kernel
+theorem fe13_6 : eFoldEntry Dn Etab cnF 13 6 = true := by decide +kernel
+theorem fe13_7 : eFoldEntry Dn Etab cnF 13 7 = true := by decide +kernel
+theorem fe13_8 : eFoldEntry Dn Etab cnF 13 8 = true := by decide +kernel
+theorem fe13_9 : eFoldEntry Dn Etab cnF 13 9 = true := by decide +kernel
+theorem fe13_10 : eFoldEntry Dn Etab cnF 13 10 = true := by decide +kernel
+theorem fe13_11 : eFoldEntry Dn Etab cnF 13 11 = true := by decide +kernel
+theorem fe13_12 : eFoldEntry Dn Etab cnF 13 12 = true := by decide +kernel
+theorem fe13_13 : eFoldEntry Dn Etab cnF 13 13 = true := by decide +kernel
+theorem fe13_14 : eFoldEntry Dn Etab cnF 13 14 = true := by decide +kernel
+theorem fe13_15 : eFoldEntry Dn Etab cnF 13 15 = true := by decide +kernel
+theorem fe13_16 : eFoldEntry Dn Etab cnF 13 16 = true := by decide +kernel
+theorem fe13_17 : eFoldEntry Dn Etab cnF 13 17 = true := by decide +kernel
+theorem fe13_18 : eFoldEntry Dn Etab cnF 13 18 = true := by decide +kernel
+theorem fe13_19 : eFoldEntry Dn Etab cnF 13 19 = true := by decide +kernel
+theorem fe13_20 : eFoldEntry Dn Etab cnF 13 20 = true := by decide +kernel
+theorem fe13_21 : eFoldEntry Dn Etab cnF 13 21 = true := by decide +kernel
+
+theorem frow13 : eFoldRow Dn Etab cnF 13 0 22 = true :=
+  eFoldRow_cons fe13_0 (eFoldRow_cons fe13_1 (eFoldRow_cons fe13_2 (eFoldRow_cons fe13_3 (eFoldRow_cons fe13_4 (eFoldRow_cons fe13_5 (eFoldRow_cons fe13_6 (eFoldRow_cons fe13_7 (eFoldRow_cons fe13_8 (eFoldRow_cons fe13_9 (eFoldRow_cons fe13_10 (eFoldRow_cons fe13_11 (eFoldRow_cons fe13_12 (eFoldRow_cons fe13_13 (eFoldRow_cons fe13_14 (eFoldRow_cons fe13_15 (eFoldRow_cons fe13_16 (eFoldRow_cons fe13_17 (eFoldRow_cons fe13_18 (eFoldRow_cons fe13_19 (eFoldRow_cons fe13_20 (eFoldRow_cons fe13_21 (eFoldRow_nil Dn Etab cnF 13 22))))))))))))))))))))))
+
+theorem fe14_0 : eFoldEntry Dn Etab cnF 14 0 = true := by decide +kernel
+theorem fe14_1 : eFoldEntry Dn Etab cnF 14 1 = true := by decide +kernel
+theorem fe14_2 : eFoldEntry Dn Etab cnF 14 2 = true := by decide +kernel
+theorem fe14_3 : eFoldEntry Dn Etab cnF 14 3 = true := by decide +kernel
+theorem fe14_4 : eFoldEntry Dn Etab cnF 14 4 = true := by decide +kernel
+theorem fe14_5 : eFoldEntry Dn Etab cnF 14 5 = true := by decide +kernel
+theorem fe14_6 : eFoldEntry Dn Etab cnF 14 6 = true := by decide +kernel
+theorem fe14_7 : eFoldEntry Dn Etab cnF 14 7 = true := by decide +kernel
+theorem fe14_8 : eFoldEntry Dn Etab cnF 14 8 = true := by decide +kernel
+theorem fe14_9 : eFoldEntry Dn Etab cnF 14 9 = true := by decide +kernel
+theorem fe14_10 : eFoldEntry Dn Etab cnF 14 10 = true := by decide +kernel
+theorem fe14_11 : eFoldEntry Dn Etab cnF 14 11 = true := by decide +kernel
+theorem fe14_12 : eFoldEntry Dn Etab cnF 14 12 = true := by decide +kernel
+theorem fe14_13 : eFoldEntry Dn Etab cnF 14 13 = true := by decide +kernel
+theorem fe14_14 : eFoldEntry Dn Etab cnF 14 14 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_14
+theorem fe14_15 : eFoldEntry Dn Etab cnF 14 15 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_15
+theorem fe14_16 : eFoldEntry Dn Etab cnF 14 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_16
+theorem fe14_17 : eFoldEntry Dn Etab cnF 14 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_17
+theorem fe14_18 : eFoldEntry Dn Etab cnF 14 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_18
+theorem fe14_19 : eFoldEntry Dn Etab cnF 14 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_19
+theorem fe14_20 : eFoldEntry Dn Etab cnF 14 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_20
+theorem fe14_21 : eFoldEntry Dn Etab cnF 14 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe14_21
+
+theorem frow14 : eFoldRow Dn Etab cnF 14 0 22 = true :=
+  eFoldRow_cons fe14_0 (eFoldRow_cons fe14_1 (eFoldRow_cons fe14_2 (eFoldRow_cons fe14_3 (eFoldRow_cons fe14_4 (eFoldRow_cons fe14_5 (eFoldRow_cons fe14_6 (eFoldRow_cons fe14_7 (eFoldRow_cons fe14_8 (eFoldRow_cons fe14_9 (eFoldRow_cons fe14_10 (eFoldRow_cons fe14_11 (eFoldRow_cons fe14_12 (eFoldRow_cons fe14_13 (eFoldRow_cons fe14_14 (eFoldRow_cons fe14_15 (eFoldRow_cons fe14_16 (eFoldRow_cons fe14_17 (eFoldRow_cons fe14_18 (eFoldRow_cons fe14_19 (eFoldRow_cons fe14_20 (eFoldRow_cons fe14_21 (eFoldRow_nil Dn Etab cnF 14 22))))))))))))))))))))))
+
+theorem fe15_0 : eFoldEntry Dn Etab cnF 15 0 = true := by decide +kernel
+theorem fe15_1 : eFoldEntry Dn Etab cnF 15 1 = true := by decide +kernel
+theorem fe15_2 : eFoldEntry Dn Etab cnF 15 2 = true := by decide +kernel
+theorem fe15_3 : eFoldEntry Dn Etab cnF 15 3 = true := by decide +kernel
+theorem fe15_4 : eFoldEntry Dn Etab cnF 15 4 = true := by decide +kernel
+theorem fe15_5 : eFoldEntry Dn Etab cnF 15 5 = true := by decide +kernel
+theorem fe15_6 : eFoldEntry Dn Etab cnF 15 6 = true := by decide +kernel
+theorem fe15_7 : eFoldEntry Dn Etab cnF 15 7 = true := by decide +kernel
+theorem fe15_8 : eFoldEntry Dn Etab cnF 15 8 = true := by decide +kernel
+theorem fe15_9 : eFoldEntry Dn Etab cnF 15 9 = true := by decide +kernel
+theorem fe15_10 : eFoldEntry Dn Etab cnF 15 10 = true := by decide +kernel
+theorem fe15_11 : eFoldEntry Dn Etab cnF 15 11 = true := by decide +kernel
+theorem fe15_12 : eFoldEntry Dn Etab cnF 15 12 = true := by decide +kernel
+theorem fe15_13 : eFoldEntry Dn Etab cnF 15 13 = true := by decide +kernel
+theorem fe15_14 : eFoldEntry Dn Etab cnF 15 14 = true := by decide +kernel
+theorem fe15_15 : eFoldEntry Dn Etab cnF 15 15 = true := by decide +kernel
+theorem fe15_16 : eFoldEntry Dn Etab cnF 15 16 = true := by decide +kernel
+theorem fe15_17 : eFoldEntry Dn Etab cnF 15 17 = true := by decide +kernel
+theorem fe15_18 : eFoldEntry Dn Etab cnF 15 18 = true := by decide +kernel
+theorem fe15_19 : eFoldEntry Dn Etab cnF 15 19 = true := by decide +kernel
+theorem fe15_20 : eFoldEntry Dn Etab cnF 15 20 = true := by decide +kernel
+theorem fe15_21 : eFoldEntry Dn Etab cnF 15 21 = true := by decide +kernel
+
+theorem frow15 : eFoldRow Dn Etab cnF 15 0 22 = true :=
+  eFoldRow_cons fe15_0 (eFoldRow_cons fe15_1 (eFoldRow_cons fe15_2 (eFoldRow_cons fe15_3 (eFoldRow_cons fe15_4 (eFoldRow_cons fe15_5 (eFoldRow_cons fe15_6 (eFoldRow_cons fe15_7 (eFoldRow_cons fe15_8 (eFoldRow_cons fe15_9 (eFoldRow_cons fe15_10 (eFoldRow_cons fe15_11 (eFoldRow_cons fe15_12 (eFoldRow_cons fe15_13 (eFoldRow_cons fe15_14 (eFoldRow_cons fe15_15 (eFoldRow_cons fe15_16 (eFoldRow_cons fe15_17 (eFoldRow_cons fe15_18 (eFoldRow_cons fe15_19 (eFoldRow_cons fe15_20 (eFoldRow_cons fe15_21 (eFoldRow_nil Dn Etab cnF 15 22))))))))))))))))))))))
+
+theorem fe16_0 : eFoldEntry Dn Etab cnF 16 0 = true := by decide +kernel
+theorem fe16_1 : eFoldEntry Dn Etab cnF 16 1 = true := by decide +kernel
+theorem fe16_2 : eFoldEntry Dn Etab cnF 16 2 = true := by decide +kernel
+theorem fe16_3 : eFoldEntry Dn Etab cnF 16 3 = true := by decide +kernel
+theorem fe16_4 : eFoldEntry Dn Etab cnF 16 4 = true := by decide +kernel
+theorem fe16_5 : eFoldEntry Dn Etab cnF 16 5 = true := by decide +kernel
+theorem fe16_6 : eFoldEntry Dn Etab cnF 16 6 = true := by decide +kernel
+theorem fe16_7 : eFoldEntry Dn Etab cnF 16 7 = true := by decide +kernel
+theorem fe16_8 : eFoldEntry Dn Etab cnF 16 8 = true := by decide +kernel
+theorem fe16_9 : eFoldEntry Dn Etab cnF 16 9 = true := by decide +kernel
+theorem fe16_10 : eFoldEntry Dn Etab cnF 16 10 = true := by decide +kernel
+theorem fe16_11 : eFoldEntry Dn Etab cnF 16 11 = true := by decide +kernel
+theorem fe16_12 : eFoldEntry Dn Etab cnF 16 12 = true := by decide +kernel
+theorem fe16_13 : eFoldEntry Dn Etab cnF 16 13 = true := by decide +kernel
+theorem fe16_14 : eFoldEntry Dn Etab cnF 16 14 = true := by decide +kernel
+theorem fe16_15 : eFoldEntry Dn Etab cnF 16 15 = true := by decide +kernel
+theorem fe16_16 : eFoldEntry Dn Etab cnF 16 16 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_16
+theorem fe16_17 : eFoldEntry Dn Etab cnF 16 17 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_17
+theorem fe16_18 : eFoldEntry Dn Etab cnF 16 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_18
+theorem fe16_19 : eFoldEntry Dn Etab cnF 16 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_19
+theorem fe16_20 : eFoldEntry Dn Etab cnF 16 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_20
+theorem fe16_21 : eFoldEntry Dn Etab cnF 16 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe16_21
+
+theorem frow16 : eFoldRow Dn Etab cnF 16 0 22 = true :=
+  eFoldRow_cons fe16_0 (eFoldRow_cons fe16_1 (eFoldRow_cons fe16_2 (eFoldRow_cons fe16_3 (eFoldRow_cons fe16_4 (eFoldRow_cons fe16_5 (eFoldRow_cons fe16_6 (eFoldRow_cons fe16_7 (eFoldRow_cons fe16_8 (eFoldRow_cons fe16_9 (eFoldRow_cons fe16_10 (eFoldRow_cons fe16_11 (eFoldRow_cons fe16_12 (eFoldRow_cons fe16_13 (eFoldRow_cons fe16_14 (eFoldRow_cons fe16_15 (eFoldRow_cons fe16_16 (eFoldRow_cons fe16_17 (eFoldRow_cons fe16_18 (eFoldRow_cons fe16_19 (eFoldRow_cons fe16_20 (eFoldRow_cons fe16_21 (eFoldRow_nil Dn Etab cnF 16 22))))))))))))))))))))))
+
+theorem fe17_0 : eFoldEntry Dn Etab cnF 17 0 = true := by decide +kernel
+theorem fe17_1 : eFoldEntry Dn Etab cnF 17 1 = true := by decide +kernel
+theorem fe17_2 : eFoldEntry Dn Etab cnF 17 2 = true := by decide +kernel
+theorem fe17_3 : eFoldEntry Dn Etab cnF 17 3 = true := by decide +kernel
+theorem fe17_4 : eFoldEntry Dn Etab cnF 17 4 = true := by decide +kernel
+theorem fe17_5 : eFoldEntry Dn Etab cnF 17 5 = true := by decide +kernel
+theorem fe17_6 : eFoldEntry Dn Etab cnF 17 6 = true := by decide +kernel
+theorem fe17_7 : eFoldEntry Dn Etab cnF 17 7 = true := by decide +kernel
+theorem fe17_8 : eFoldEntry Dn Etab cnF 17 8 = true := by decide +kernel
+theorem fe17_9 : eFoldEntry Dn Etab cnF 17 9 = true := by decide +kernel
+theorem fe17_10 : eFoldEntry Dn Etab cnF 17 10 = true := by decide +kernel
+theorem fe17_11 : eFoldEntry Dn Etab cnF 17 11 = true := by decide +kernel
+theorem fe17_12 : eFoldEntry Dn Etab cnF 17 12 = true := by decide +kernel
+theorem fe17_13 : eFoldEntry Dn Etab cnF 17 13 = true := by decide +kernel
+theorem fe17_14 : eFoldEntry Dn Etab cnF 17 14 = true := by decide +kernel
+theorem fe17_15 : eFoldEntry Dn Etab cnF 17 15 = true := by decide +kernel
+theorem fe17_16 : eFoldEntry Dn Etab cnF 17 16 = true := by decide +kernel
+theorem fe17_17 : eFoldEntry Dn Etab cnF 17 17 = true := by decide +kernel
+theorem fe17_18 : eFoldEntry Dn Etab cnF 17 18 = true := by decide +kernel
+theorem fe17_19 : eFoldEntry Dn Etab cnF 17 19 = true := by decide +kernel
+theorem fe17_20 : eFoldEntry Dn Etab cnF 17 20 = true := by decide +kernel
+theorem fe17_21 : eFoldEntry Dn Etab cnF 17 21 = true := by decide +kernel
+
+theorem frow17 : eFoldRow Dn Etab cnF 17 0 22 = true :=
+  eFoldRow_cons fe17_0 (eFoldRow_cons fe17_1 (eFoldRow_cons fe17_2 (eFoldRow_cons fe17_3 (eFoldRow_cons fe17_4 (eFoldRow_cons fe17_5 (eFoldRow_cons fe17_6 (eFoldRow_cons fe17_7 (eFoldRow_cons fe17_8 (eFoldRow_cons fe17_9 (eFoldRow_cons fe17_10 (eFoldRow_cons fe17_11 (eFoldRow_cons fe17_12 (eFoldRow_cons fe17_13 (eFoldRow_cons fe17_14 (eFoldRow_cons fe17_15 (eFoldRow_cons fe17_16 (eFoldRow_cons fe17_17 (eFoldRow_cons fe17_18 (eFoldRow_cons fe17_19 (eFoldRow_cons fe17_20 (eFoldRow_cons fe17_21 (eFoldRow_nil Dn Etab cnF 17 22))))))))))))))))))))))
+
+theorem fe18_0 : eFoldEntry Dn Etab cnF 18 0 = true := by decide +kernel
+theorem fe18_1 : eFoldEntry Dn Etab cnF 18 1 = true := by decide +kernel
+theorem fe18_2 : eFoldEntry Dn Etab cnF 18 2 = true := by decide +kernel
+theorem fe18_3 : eFoldEntry Dn Etab cnF 18 3 = true := by decide +kernel
+theorem fe18_4 : eFoldEntry Dn Etab cnF 18 4 = true := by decide +kernel
+theorem fe18_5 : eFoldEntry Dn Etab cnF 18 5 = true := by decide +kernel
+theorem fe18_6 : eFoldEntry Dn Etab cnF 18 6 = true := by decide +kernel
+theorem fe18_7 : eFoldEntry Dn Etab cnF 18 7 = true := by decide +kernel
+theorem fe18_8 : eFoldEntry Dn Etab cnF 18 8 = true := by decide +kernel
+theorem fe18_9 : eFoldEntry Dn Etab cnF 18 9 = true := by decide +kernel
+theorem fe18_10 : eFoldEntry Dn Etab cnF 18 10 = true := by decide +kernel
+theorem fe18_11 : eFoldEntry Dn Etab cnF 18 11 = true := by decide +kernel
+theorem fe18_12 : eFoldEntry Dn Etab cnF 18 12 = true := by decide +kernel
+theorem fe18_13 : eFoldEntry Dn Etab cnF 18 13 = true := by decide +kernel
+theorem fe18_14 : eFoldEntry Dn Etab cnF 18 14 = true := by decide +kernel
+theorem fe18_15 : eFoldEntry Dn Etab cnF 18 15 = true := by decide +kernel
+theorem fe18_16 : eFoldEntry Dn Etab cnF 18 16 = true := by decide +kernel
+theorem fe18_17 : eFoldEntry Dn Etab cnF 18 17 = true := by decide +kernel
+theorem fe18_18 : eFoldEntry Dn Etab cnF 18 18 = true :=
+  eFoldEntry_rep (by decide +kernel) pe18_18
+theorem fe18_19 : eFoldEntry Dn Etab cnF 18 19 = true :=
+  eFoldEntry_rep (by decide +kernel) pe18_19
+theorem fe18_20 : eFoldEntry Dn Etab cnF 18 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe18_20
+theorem fe18_21 : eFoldEntry Dn Etab cnF 18 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe18_21
+
+theorem frow18 : eFoldRow Dn Etab cnF 18 0 22 = true :=
+  eFoldRow_cons fe18_0 (eFoldRow_cons fe18_1 (eFoldRow_cons fe18_2 (eFoldRow_cons fe18_3 (eFoldRow_cons fe18_4 (eFoldRow_cons fe18_5 (eFoldRow_cons fe18_6 (eFoldRow_cons fe18_7 (eFoldRow_cons fe18_8 (eFoldRow_cons fe18_9 (eFoldRow_cons fe18_10 (eFoldRow_cons fe18_11 (eFoldRow_cons fe18_12 (eFoldRow_cons fe18_13 (eFoldRow_cons fe18_14 (eFoldRow_cons fe18_15 (eFoldRow_cons fe18_16 (eFoldRow_cons fe18_17 (eFoldRow_cons fe18_18 (eFoldRow_cons fe18_19 (eFoldRow_cons fe18_20 (eFoldRow_cons fe18_21 (eFoldRow_nil Dn Etab cnF 18 22))))))))))))))))))))))
+
+theorem fe19_0 : eFoldEntry Dn Etab cnF 19 0 = true := by decide +kernel
+theorem fe19_1 : eFoldEntry Dn Etab cnF 19 1 = true := by decide +kernel
+theorem fe19_2 : eFoldEntry Dn Etab cnF 19 2 = true := by decide +kernel
+theorem fe19_3 : eFoldEntry Dn Etab cnF 19 3 = true := by decide +kernel
+theorem fe19_4 : eFoldEntry Dn Etab cnF 19 4 = true := by decide +kernel
+theorem fe19_5 : eFoldEntry Dn Etab cnF 19 5 = true := by decide +kernel
+theorem fe19_6 : eFoldEntry Dn Etab cnF 19 6 = true := by decide +kernel
+theorem fe19_7 : eFoldEntry Dn Etab cnF 19 7 = true := by decide +kernel
+theorem fe19_8 : eFoldEntry Dn Etab cnF 19 8 = true := by decide +kernel
+theorem fe19_9 : eFoldEntry Dn Etab cnF 19 9 = true := by decide +kernel
+theorem fe19_10 : eFoldEntry Dn Etab cnF 19 10 = true := by decide +kernel
+theorem fe19_11 : eFoldEntry Dn Etab cnF 19 11 = true := by decide +kernel
+theorem fe19_12 : eFoldEntry Dn Etab cnF 19 12 = true := by decide +kernel
+theorem fe19_13 : eFoldEntry Dn Etab cnF 19 13 = true := by decide +kernel
+theorem fe19_14 : eFoldEntry Dn Etab cnF 19 14 = true := by decide +kernel
+theorem fe19_15 : eFoldEntry Dn Etab cnF 19 15 = true := by decide +kernel
+theorem fe19_16 : eFoldEntry Dn Etab cnF 19 16 = true := by decide +kernel
+theorem fe19_17 : eFoldEntry Dn Etab cnF 19 17 = true := by decide +kernel
+theorem fe19_18 : eFoldEntry Dn Etab cnF 19 18 = true := by decide +kernel
+theorem fe19_19 : eFoldEntry Dn Etab cnF 19 19 = true := by decide +kernel
+theorem fe19_20 : eFoldEntry Dn Etab cnF 19 20 = true := by decide +kernel
+theorem fe19_21 : eFoldEntry Dn Etab cnF 19 21 = true := by decide +kernel
+
+theorem frow19 : eFoldRow Dn Etab cnF 19 0 22 = true :=
+  eFoldRow_cons fe19_0 (eFoldRow_cons fe19_1 (eFoldRow_cons fe19_2 (eFoldRow_cons fe19_3 (eFoldRow_cons fe19_4 (eFoldRow_cons fe19_5 (eFoldRow_cons fe19_6 (eFoldRow_cons fe19_7 (eFoldRow_cons fe19_8 (eFoldRow_cons fe19_9 (eFoldRow_cons fe19_10 (eFoldRow_cons fe19_11 (eFoldRow_cons fe19_12 (eFoldRow_cons fe19_13 (eFoldRow_cons fe19_14 (eFoldRow_cons fe19_15 (eFoldRow_cons fe19_16 (eFoldRow_cons fe19_17 (eFoldRow_cons fe19_18 (eFoldRow_cons fe19_19 (eFoldRow_cons fe19_20 (eFoldRow_cons fe19_21 (eFoldRow_nil Dn Etab cnF 19 22))))))))))))))))))))))
+
+theorem fe20_0 : eFoldEntry Dn Etab cnF 20 0 = true := by decide +kernel
+theorem fe20_1 : eFoldEntry Dn Etab cnF 20 1 = true := by decide +kernel
+theorem fe20_2 : eFoldEntry Dn Etab cnF 20 2 = true := by decide +kernel
+theorem fe20_3 : eFoldEntry Dn Etab cnF 20 3 = true := by decide +kernel
+theorem fe20_4 : eFoldEntry Dn Etab cnF 20 4 = true := by decide +kernel
+theorem fe20_5 : eFoldEntry Dn Etab cnF 20 5 = true := by decide +kernel
+theorem fe20_6 : eFoldEntry Dn Etab cnF 20 6 = true := by decide +kernel
+theorem fe20_7 : eFoldEntry Dn Etab cnF 20 7 = true := by decide +kernel
+theorem fe20_8 : eFoldEntry Dn Etab cnF 20 8 = true := by decide +kernel
+theorem fe20_9 : eFoldEntry Dn Etab cnF 20 9 = true := by decide +kernel
+theorem fe20_10 : eFoldEntry Dn Etab cnF 20 10 = true := by decide +kernel
+theorem fe20_11 : eFoldEntry Dn Etab cnF 20 11 = true := by decide +kernel
+theorem fe20_12 : eFoldEntry Dn Etab cnF 20 12 = true := by decide +kernel
+theorem fe20_13 : eFoldEntry Dn Etab cnF 20 13 = true := by decide +kernel
+theorem fe20_14 : eFoldEntry Dn Etab cnF 20 14 = true := by decide +kernel
+theorem fe20_15 : eFoldEntry Dn Etab cnF 20 15 = true := by decide +kernel
+theorem fe20_16 : eFoldEntry Dn Etab cnF 20 16 = true := by decide +kernel
+theorem fe20_17 : eFoldEntry Dn Etab cnF 20 17 = true := by decide +kernel
+theorem fe20_18 : eFoldEntry Dn Etab cnF 20 18 = true := by decide +kernel
+theorem fe20_19 : eFoldEntry Dn Etab cnF 20 19 = true := by decide +kernel
+theorem fe20_20 : eFoldEntry Dn Etab cnF 20 20 = true :=
+  eFoldEntry_rep (by decide +kernel) pe20_20
+theorem fe20_21 : eFoldEntry Dn Etab cnF 20 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe20_21
+
+theorem frow20 : eFoldRow Dn Etab cnF 20 0 22 = true :=
+  eFoldRow_cons fe20_0 (eFoldRow_cons fe20_1 (eFoldRow_cons fe20_2 (eFoldRow_cons fe20_3 (eFoldRow_cons fe20_4 (eFoldRow_cons fe20_5 (eFoldRow_cons fe20_6 (eFoldRow_cons fe20_7 (eFoldRow_cons fe20_8 (eFoldRow_cons fe20_9 (eFoldRow_cons fe20_10 (eFoldRow_cons fe20_11 (eFoldRow_cons fe20_12 (eFoldRow_cons fe20_13 (eFoldRow_cons fe20_14 (eFoldRow_cons fe20_15 (eFoldRow_cons fe20_16 (eFoldRow_cons fe20_17 (eFoldRow_cons fe20_18 (eFoldRow_cons fe20_19 (eFoldRow_cons fe20_20 (eFoldRow_cons fe20_21 (eFoldRow_nil Dn Etab cnF 20 22))))))))))))))))))))))
+
+theorem fe21_0 : eFoldEntry Dn Etab cnF 21 0 = true := by decide +kernel
+theorem fe21_1 : eFoldEntry Dn Etab cnF 21 1 = true := by decide +kernel
+theorem fe21_2 : eFoldEntry Dn Etab cnF 21 2 = true := by decide +kernel
+theorem fe21_3 : eFoldEntry Dn Etab cnF 21 3 = true := by decide +kernel
+theorem fe21_4 : eFoldEntry Dn Etab cnF 21 4 = true := by decide +kernel
+theorem fe21_5 : eFoldEntry Dn Etab cnF 21 5 = true := by decide +kernel
+theorem fe21_6 : eFoldEntry Dn Etab cnF 21 6 = true := by decide +kernel
+theorem fe21_7 : eFoldEntry Dn Etab cnF 21 7 = true := by decide +kernel
+theorem fe21_8 : eFoldEntry Dn Etab cnF 21 8 = true := by decide +kernel
+theorem fe21_9 : eFoldEntry Dn Etab cnF 21 9 = true := by decide +kernel
+theorem fe21_10 : eFoldEntry Dn Etab cnF 21 10 = true := by decide +kernel
+theorem fe21_11 : eFoldEntry Dn Etab cnF 21 11 = true := by decide +kernel
+theorem fe21_12 : eFoldEntry Dn Etab cnF 21 12 = true := by decide +kernel
+theorem fe21_13 : eFoldEntry Dn Etab cnF 21 13 = true := by decide +kernel
+theorem fe21_14 : eFoldEntry Dn Etab cnF 21 14 = true := by decide +kernel
+theorem fe21_15 : eFoldEntry Dn Etab cnF 21 15 = true := by decide +kernel
+theorem fe21_16 : eFoldEntry Dn Etab cnF 21 16 = true := by decide +kernel
+theorem fe21_17 : eFoldEntry Dn Etab cnF 21 17 = true := by decide +kernel
+theorem fe21_18 : eFoldEntry Dn Etab cnF 21 18 = true := by decide +kernel
+theorem fe21_19 : eFoldEntry Dn Etab cnF 21 19 = true := by decide +kernel
+theorem fe21_20 : eFoldEntry Dn Etab cnF 21 20 = true := by decide +kernel
+theorem fe21_21 : eFoldEntry Dn Etab cnF 21 21 = true :=
+  eFoldEntry_rep (by decide +kernel) pe21_21
+
+theorem frow21 : eFoldRow Dn Etab cnF 21 0 22 = true :=
+  eFoldRow_cons fe21_0 (eFoldRow_cons fe21_1 (eFoldRow_cons fe21_2 (eFoldRow_cons fe21_3 (eFoldRow_cons fe21_4 (eFoldRow_cons fe21_5 (eFoldRow_cons fe21_6 (eFoldRow_cons fe21_7 (eFoldRow_cons fe21_8 (eFoldRow_cons fe21_9 (eFoldRow_cons fe21_10 (eFoldRow_cons fe21_11 (eFoldRow_cons fe21_12 (eFoldRow_cons fe21_13 (eFoldRow_cons fe21_14 (eFoldRow_cons fe21_15 (eFoldRow_cons fe21_16 (eFoldRow_cons fe21_17 (eFoldRow_cons fe21_18 (eFoldRow_cons fe21_19 (eFoldRow_cons fe21_20 (eFoldRow_cons fe21_21 (eFoldRow_nil Dn Etab cnF 21 22))))))))))))))))))))))
+
+theorem etab_fold : eFoldTab Dn Etab cnF 0 22 = true :=
+  eFoldTab_cons frow0 (eFoldTab_cons frow1 (eFoldTab_cons frow2 (eFoldTab_cons frow3 (eFoldTab_cons frow4 (eFoldTab_cons frow5 (eFoldTab_cons frow6 (eFoldTab_cons frow7 (eFoldTab_cons frow8 (eFoldTab_cons frow9 (eFoldTab_cons frow10 (eFoldTab_cons frow11 (eFoldTab_cons frow12 (eFoldTab_cons frow13 (eFoldTab_cons frow14 (eFoldTab_cons frow15 (eFoldTab_cons frow16 (eFoldTab_cons frow17 (eFoldTab_cons frow18 (eFoldTab_cons frow19 (eFoldTab_cons frow20 (eFoldTab_cons frow21 (eFoldTab_nil Dn Etab cnF 22))))))))))))))))))))))
 
 theorem etab_sum : tabSum Dn Etab ≤ Dn.Ibound := by decide +kernel
 

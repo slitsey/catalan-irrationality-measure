@@ -2,7 +2,6 @@ module
 
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Line.B00
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Line.B01
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Line.B02
 
 @[expose] public section
 set_option Elab.async false
@@ -16,10 +15,10 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def lineC : List CatalanCore.Uniform.Decay.PolyWire3.TCell := lblk00 ++ (lblk01 ++ (lblk02))
+def lineC : List CatalanCore.Uniform.Decay.PolyWire3.TCell := lblk00 ++ (lblk01)
 
-theorem line_all : lineC.all (lineCellOk nuC Mopt Rtw eWc ePc Dn) = true :=
-  allT_append lblk00_ok (allT_append lblk01_ok (lblk02_ok))
+theorem line_all : lineC.all (lineFoldOk qsF MoptF Dn.W Rtw eWc ePc Dn) = true :=
+  allT_append lblk00_ok (lblk01_ok)
 
 theorem line_eq : Dn.lineCells = lineC.map (fun c => (c.ulo, c.uhi)) := by decide +kernel
 

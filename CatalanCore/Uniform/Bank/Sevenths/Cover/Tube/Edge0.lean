@@ -2,9 +2,6 @@ module
 
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E0B00
 public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E0B01
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E0B02
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E0B03
-public import CatalanCore.Uniform.Bank.Sevenths.Cover.Tube.E0B04
 
 @[expose] public section
 set_option Elab.async false
@@ -18,15 +15,15 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells0 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk0_00 ++ (blk0_01 ++ (blk0_02 ++ (blk0_03 ++ (blk0_04))))
+def ecells0 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk0_00 ++ (blk0_01)
 
-theorem ecells0_all : ecells0.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e0) = true :=
-  allT_append blk0_00_ok (allT_append blk0_01_ok (allT_append blk0_02_ok (allT_append blk0_03_ok (blk0_04_ok))))
+theorem ecells0_all : ecells0.all (cellOkTr nuC Mopt Rtw eWc ePc Fc Dn e0) = true :=
+  allT_append blk0_00_ok (blk0_01_ok)
 
 theorem ecells0_cov : coverOk 0 1 (ecells0.map fun c => (c.ulo, c.uhi)) = true := by
   decide +kernel
 
-theorem ecells0_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e0 ecells0 = true :=
+theorem ecells0_ok : edgeCells (cellOkTr nuC Mopt Rtw eWc ePc Fc Dn) e0 ecells0 = true :=
   edgeCells_of ecells0_cov ecells0_all
 
 end CatalanCore.Uniform.Bank.Sevenths.Cover

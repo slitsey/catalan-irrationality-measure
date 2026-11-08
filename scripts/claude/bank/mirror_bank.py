@@ -23,7 +23,8 @@ SRC = {
     'Thirds': (f'{HY}/exact-THIRD.json', f'{HY}/hyp-THIRD.json', ['thirds+', 'thirds-']),
     'Chi3': (f'{HY}/exact-CHI3.json', f'{HY}/hyp-CHI3.json', ['chi3']),
     'Fourths': (f'{HY}/exact-LAMB.json', f'{HY}/hyp-LAMB.json', ['lambda+', 'lambda-']),
-    'Sev1': (f'{SV}/exact-A-tight.json', f'{SV}/hypotheses/hyp-results.json', ['1']),
+    # c24q rebank (7 Nov): 36 pieces, eps0 1e-6 (receipt carries `eps`; receipts without it mean 1/1000)
+    'Sev1': (f'{PROG}/sevenths-rebank/run/evidence/exact-p22rL.json', f'{PROG}/sevenths-rebank/run/evidence/hyp-p22r.json', ['1']),
 }
 
 
@@ -113,7 +114,7 @@ def main(name):
         return out
 
     ct = cells_of(os.path.join(d0, 'Cells.lean'), '{k}B', 4, ['ray', 'line'])
-    it = cells_of(os.path.join(d0, 'CellInfo.lean'), '{k}I', 9, ['ray', 'line', 'seg'])
+    it = cells_of(os.path.join(d0, 'CellInfo.lean') if os.path.exists(os.path.join(d0, 'CellInfo.lean')) else os.path.join(os.environ.get('GEN_AUX', ''), name, 'CellInfo.lean'), '{k}I', 9, ['ray', 'line', 'seg'])
     cover = {}
     for key in ('ray', 'line'):
         r = rats(ct[key])
@@ -149,7 +150,7 @@ def main(name):
     for m in re.finditer(r'def s_(\w+) : ℚ := q1 \(raw_ints% \[(-?\d+), (\d+)\]\)', txt):
         sc[m.group(1)] = Fr(int(m.group(2)), int(m.group(3)))
     alpha = Fr(ex['alpha'])
-    exp = dict(sl=Fr(hy['polygon']['tail_slope']), Mq=1 + alpha, eps=Fr(1, 1000), r0=Fr(ex['trial']['r0']), W=Fr(1, 10**15),
+    exp = dict(sl=Fr(hy['polygon']['tail_slope']), Mq=1 + alpha, eps=Fr(ex['eps']) if 'eps' in ex else Fr(1, 1000), r0=Fr(ex['trial']['r0']), W=Fr(1, 10**15),
                umax=umax, mprime=Fr(ex['m_cont']), gmin=Fr(ex['targets']['line']), Scap=Fr(ex['S_lower_unit']),
                Ibound=Fr(ex['I_upper']), ccert=Fr(ex['c_upper']), rho=Fr(ex['atom']['rho']), theta=Fr(ex['atom']['mesh_upper']),
                etaS=Fr(ex['cap_bridge']['Sbase_debit']), Rc=Rc, Inu=Fr(ex['Inu_lower']))

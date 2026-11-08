@@ -21,7 +21,7 @@ The content of `seventhsFrameAt a` (members `a + 1 = 1 … 6`, offsets `o = 7 - 
   `p ≤ r/1000`, `α0 = 13/6`);
 * `sevenths_content_auto a`: `HasScaledContent ((F7.family (seventhsFrameAt a) depth).restrictAdm even) F7.scale
   Λ_fin`, `Λ_fin = bankData.Λ` (`bankData_Λ`), every depth `≤ 64`;
-* `sevenths_mu_le : c7 / (D7 - Λ_fin) ≤ 22078697 / 10000` ( `D7`, `c7` of `Bank/Sevenths/Final`), exact. -/
+* `sevenths_mu_le : c7 / (D7 - Λ_fin) ≤ 18061719 / 10000` ( `D7`, `c7` of `Bank/Sevenths/Final`), exact. -/
 
 namespace CatalanCore.Uniform.Bank.SeventhsContent.Level3Auto
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
@@ -89,11 +89,11 @@ theorem sevenths_content_auto (a : Fin 6) (depth : ℕ) (hd : depth ≤ 64) :
     (seventhsFrameAt a) depth hd (cFr_sevenths a) (seventhNumerator a) (sevenths_mem a) _ _
     (sevenths_catValid a depth) (sevenths_preValid a depth)
 
-/-- **The sevenths μ target**, exactly: `c7 / (D7 - Λ_fin) ≤ 22078697 / 10000` with the finite UF constant
+/-- **The sevenths μ target**, exactly: `c7 / (D7 - Λ_fin) ≤ 18061719 / 10000` with the finite UF constant
 `Λ_fin = bankData.Λ`. -/
-theorem sevenths_mu_le : (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℝ)) ≤ ((22078697 / 10000 : ℚ) : ℝ) := by
+theorem sevenths_mu_le : (c7 : ℝ) / ((D7 : ℝ) - (bankData.Λ : ℝ)) ≤ ((18061719 / 10000 : ℚ) : ℝ) := by
   have h1 : bankData.Λ < D7 := by rw [bankData_Λ]; unfold D7; norm_num
-  have h2 : c7 ≤ 22078697 / 10000 * (D7 - bankData.Λ) := by rw [bankData_Λ]; unfold c7 D7; norm_num
+  have h2 : c7 ≤ 18061719 / 10000 * (D7 - bankData.Λ) := by rw [bankData_Λ]; unfold c7 D7; norm_num
   have hpos : (0 : ℝ) < (D7 : ℝ) - (bankData.Λ : ℝ) := by
     have := (Rat.cast_lt (K := ℝ)).2 h1; linarith
   rw [div_le_iff₀ hpos]
