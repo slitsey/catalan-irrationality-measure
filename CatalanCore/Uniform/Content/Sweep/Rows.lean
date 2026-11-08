@@ -19,7 +19,7 @@ open CatalanCore.Uniform.Support
   the periods `≥ 1`; `v_p(den) ≤ T(r) + T(N)` with `T(n) = ∑_{t<n} φ(t)`, and the four closed forms
   `6r + 6m - 5p` (`p ≤ r`), `r + 3N - 3p` (`r ≤ p ≤ N`), `2r + 2m + 1 - p` (`N ≤ p ≤ 2r`),
   `(N - (p-1)/2)₊` (`p ≥ 2r`).
-* `row_P1`: `v_p(den) ≤ 3 (r + m) - ‖m‖_p`, `‖m‖_p = min (m mod p, p - m mod p)`.  Potentials from the
+* `row_B1u` (formerly `row_P1`): `v_p(den) ≤ 3 (r + m) - ‖m‖_p`, `‖m‖_p = min (m mod p, p - m mod p)`.  Potentials from the
   class of `N - 1 - t` mod `p` (`uRow`, `uCol`, `uRow + uCol = 3` on congruent nodes, `≥ 1` elsewhere);
   the window contributes `2m + A(2m)`, `A(n) = ∑_{j<n} (⌊j/p⌋ mod 2)`, and `A(2m) + ‖m‖_p ≤ m`
   (`Aphi_min`).
@@ -374,8 +374,8 @@ section P1Row
 variable {p : ℕ} [hp : Fact p.Prime] (v u : ℤ)
   {ι : Type} [Fintype ι] [DecidableEq ι]
 
-/-- **Row P1** (Prop 2.3): `v_p(den) ≤ 3 (r + m) - ‖m‖_p`, with `‖m‖_p = min (m mod p, p - m mod p)`. -/
-theorem row_P1 (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ} (hcr : ∀ a, cn a < r)
+/-- **Row B1** (Prop 2.3, generic in `(v, u)`; named `row_B1u` since `RowP1.row_P1` is the band row): `v_p(den) ≤ 3 (r + m) - ‖m‖_p`, with `‖m‖_p = min (m mod p, p - m mod p)`. -/
+theorem row_B1u (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ} (hcr : ∀ a, cn a < r)
     (hN : 2 * (r + 2 * m) < p * p) (hp5 : 5 ≤ p) :
     GLE p (3 * (r + m) - min (m % p) (p - m % p)) (rowDet v u cn r m) := by
   have hodd := odd_of_five (p := p) hp5
@@ -419,7 +419,7 @@ end CatalanCore.Uniform.Content.Sweep
 
 
 #print axioms CatalanCore.Uniform.Content.Sweep.det_gle_phi
-#print axioms CatalanCore.Uniform.Content.Sweep.row_P1
+#print axioms CatalanCore.Uniform.Content.Sweep.row_B1u
 #print axioms CatalanCore.Uniform.Content.Sweep.row_P4
 #print axioms CatalanCore.Uniform.Content.Sweep.row_P5
 #print axioms CatalanCore.Uniform.Content.Sweep.row_P6
