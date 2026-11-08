@@ -30,7 +30,7 @@ theorem mul1 {x y a b e f g : ℝ} (hx : |x - a| ≤ e) (hy : |y - b| ≤ f) (ha
 
 theorem hi_alg {EPP ENN EPN ECC EPD END p m Ap An L2 t Lp Ln RP RN Rf uP uN sP sN aL LP LM tau
       κp κn : ℝ}
-    (k1 : κp = 29557 / 200000) (k2 : κn = 5489 / 100000)
+    (k1 : κp = 14762657 / 100000000) (k2 : κn = 5463909 / 100000000)
     (hPP : |EPP - (-38127071179348) / 10 ^ 14| ≤ 1 / 10 ^ 7)
     (hNN : |ENN - (-5279775549395) / 10 ^ 14| ≤ 1 / 10 ^ 7)
     (hCC : |ECC - (-147373193052358) / 10 ^ 14| ≤ 1 / 10 ^ 7)
@@ -45,21 +45,21 @@ theorem hi_alg {EPP ENN EPN ECC EPD END p m Ap An L2 t Lp Ln RP RN Rf uP uN sP s
     (ht : |t - 788755782 / 10 ^ 14| ≤ 1 / 10 ^ 9)
     (hLp : |Lp - (-39541675682036) / 10 ^ 14| ≤ 1 / 10 ^ 9)
     (hLn : |Ln - (-29512640381580) / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (hRP : |RP - (-846912144590) / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (hRN : |RN - (-1352920825812) / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (hRP : |RP - (-853339519085) / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (hRN : |RN - (-1357201154220) / 10 ^ 14| ≤ 1 / 10 ^ 9)
     (hRf : 23239004899126 / 10 ^ 14 - 1 / 10 ^ 9 ≤ Rf)
-    (huP : |uP - (-3950260215867) / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (huN : |uN - (-5876852969659) / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (hsP : |sP - 6879409631124 / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (hsN : |sN - 43663012009342 / 10 ^ 14| ≤ 1 / 10 ^ 9)
-    (haL : |aL - (-53357427045186) / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (huP : |uP - (-3944317782559) / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (huN : |uN - (-5869925662132) / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (hsP : |sP - 6880564215755 / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (hsN : |sN - 43657136919364 / 10 ^ 14| ≤ 1 / 10 ^ 9)
+    (haL : |aL - (-53351287497253) / 10 ^ 14| ≤ 1 / 10 ^ 9)
     (hτ : 14253339 / 10000 ≤ tau)
     (hLP : EPP + 2 * p * Lp + Rf + (-sP - Ap * Ap * t + uP) + 2 * (RP - p * (Ap * t)) ≤ LP)
     (hLM : ENN - m ^ 2 * L2 + (sN - An * An * (L2 + 2 * t) + uN) +
       2 * (RN - m * (An * (t * 2)) - An * (m * L2 + Ln) - m * aL) ≤ LM) :
     -((EPP + ENN + 2 * EPN) / 2 + ECC - (EPD + END)) +
       (κp + 53 / 58 * (κn - (Ln + aL)) - (53 / 58) ^ 2 / 2 * L2 - (LP + LM) / 2 -
-        tau / (2 * 58 ^ 2)) ≤ 2367346 / 1000000 := by
+        tau / (2 * 58 ^ 2)) ≤ 2366997 / 1000000 := by
   have u : ∀ {a : ℝ}, -1 ≤ a → a ≤ 1 → |a| ≤ 1 := fun h1 h2 => abs_le.mpr ⟨h1, h2⟩
   have b1 := mul1 (g := 1 / 10 ^ 8) hp hLp (u (by norm_num) (by norm_num)) (u (by norm_num) (by norm_num)) (by norm_num)
   have b2 := mul1 (g := 1 / 10 ^ 8) hAp hAp (u (by norm_num) (by norm_num)) (u (by norm_num) (by norm_num)) (by norm_num)
@@ -267,8 +267,8 @@ theorem tail_box : |tailUnit capSource KK - 788755782 / 10 ^ 14| ≤ 1 / 10 ^ 9 
   exact this.trans (by norm_num)
 
 theorem sP_box : |cS Sign.pos * cS Sign.pos * ((SminZ paT : ℝ) / 10 ^ 17) -
-    6879409631124 / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
-  have h := cast_lit (qBox_le box_scal.2.2.2.2.1) (r := 6879409631124) (by norm_num)
+    6880564215755 / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
+  have h := cast_lit (qBox_le box_scal.2.2.2.2.1) (r := 6880564215755) (by norm_num)
   have e : ((cPn ^ 2 * SminZ paT : ℤ) : ℝ) / ((cPd ^ 2 * 10 ^ 17 : ℤ) : ℝ) =
       cS Sign.pos * cS Sign.pos * ((SminZ paT : ℝ) / 10 ^ 17) := by
     rw [cS_pos_eq]
@@ -278,8 +278,8 @@ theorem sP_box : |cS Sign.pos * cS Sign.pos * ((SminZ paT : ℝ) / 10 ^ 17) -
   exact h.trans (by norm_num)
 
 theorem sN_box : |cS Sign.neg * cS Sign.neg * ((SmaxZ naT : ℝ) / 10 ^ 17) -
-    43663012009342 / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
-  have h := cast_lit (qBox_le box_scal.2.2.2.2.2.1) (r := 43663012009342) (by norm_num)
+    43657136919364 / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
+  have h := cast_lit (qBox_le box_scal.2.2.2.2.2.1) (r := 43657136919364) (by norm_num)
   have e : ((cNn ^ 2 * SmaxZ naT : ℤ) : ℝ) / ((cNd ^ 2 * 10 ^ 17 : ℤ) : ℝ) =
       cS Sign.neg * cS Sign.neg * ((SmaxZ naT : ℝ) / 10 ^ 17) := by
     rw [cS_neg_eq]
@@ -288,8 +288,8 @@ theorem sN_box : |cS Sign.neg * cS Sign.neg * ((SmaxZ naT : ℝ) / 10 ^ 17) -
   rw [e] at h
   exact h.trans (by norm_num)
 
-theorem aL_box : |auxLog capSource - (-53357427045186) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
-  have h := cast_lit (qBox_le box_scal.2.2.2.2.2.2.1) (r := 53357427045186) (by norm_num)
+theorem aL_box : |auxLog capSource - (-53351287497253) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
+  have h := cast_lit (qBox_le box_scal.2.2.2.2.2.2.1) (r := 53351287497253) (by norm_num)
   have e : ((cNn * SlinZ naT : ℤ) : ℝ) / ((cNd * 10 ^ 17 : ℤ) : ℝ) =
       cS Sign.neg * ((SlinZ naT : ℝ) / 10 ^ 17) := by
     rw [cS_neg_eq]
@@ -297,8 +297,8 @@ theorem aL_box : |auxLog capSource - (-53357427045186) / 10 ^ 14| ≤ 1 / 10 ^ 9
     ring
   rw [e] at h
   rw [auxLog_form]
-  have e2 : -(cS Sign.neg * ((SlinZ naT : ℝ) / 10 ^ 17)) - (-53357427045186) / 10 ^ 14 =
-      -(cS Sign.neg * ((SlinZ naT : ℝ) / 10 ^ 17) - 53357427045186 / 10 ^ 14) := by ring
+  have e2 : -(cS Sign.neg * ((SlinZ naT : ℝ) / 10 ^ 17)) - (-53351287497253) / 10 ^ 14 =
+      -(cS Sign.neg * ((SlinZ naT : ℝ) / 10 ^ 17) - 53351287497253 / 10 ^ 14) := by ring
   rw [e2, abs_neg]
   exact h.trans (by norm_num)
 
@@ -309,9 +309,9 @@ theorem mass_aux (σ : Sign) : cS σ * (sumP (auxT σ) : ℝ) = capSource.auxMas
     · exact_mod_cast pa_tot.ne'
   rw [auxMass_eq, cS, div_mul_cancel₀ _ h]
 
-/-- The target bound `hi`. -/
+/-- The target bound `hi` (design C: 2366997 / 1000000). -/
 theorem hi_final :
-    -InterceptSource.refQuad capSource 0 + CompletedGas.gasConst capSource ≤ 2367346 / 1000000 := by
+    -InterceptSource.refQuad capSource 0 + CompletedGas.gasConst capSource ≤ 2366997 / 1000000 := by
   have hU : ∀ p ∈ Up, p.Good := good_of pts_okP
   have hN : ∀ p ∈ Un, p.Good := good_of pts_okN
   obtain ⟨r1, l1, f1, a1⟩ := pos_out box_pos hU tv_up
@@ -335,8 +335,8 @@ theorem hi_final :
     linarith
   have lN' : lenL gN ≤ 26 * 427 := lenN_le.trans (by norm_num)
   have hRP : |physL gP (capSource.radialA (Trunc.finite KK) Sign.pos) -
-      (-846912144590) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
-    have h := cast_lit r1 (r := -846912144590) (by norm_num)
+      (-853339519085) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
+    have h := cast_lit r1 (r := -853339519085) (by norm_num)
     have g := sG lP lenP_le le_rfl
     refine h.trans ?_
     have : ((2 : ℤ) : ℝ) / 10 ^ 14 ≤ 1 / 10 ^ 10 := by norm_num
@@ -348,9 +348,9 @@ theorem hi_final :
     have : ((2 : ℤ) : ℝ) / 10 ^ 14 ≤ 1 / 10 ^ 10 := by norm_num
     linarith [show (1 : ℝ) / 10 ^ 10 + 1 / 10 ^ 10 ≤ 1 / 10 ^ 9 by norm_num]
   have hRN : |physL gN (capSource.radialA (Trunc.finite KK) Sign.neg) -
-      (-1352920825812) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
-    have e : physL gN (capSource.radialA (Trunc.finite KK) Sign.neg) - (-1352920825812) / 10 ^ 14 =
-        physL gN (capSource.radialA (Trunc.finite KK) Sign.neg) + ((1352920825812 : ℤ) : ℝ) / 10 ^ 14 := by
+      (-1357201154220) / 10 ^ 14| ≤ 1 / 10 ^ 9 := by
+    have e : physL gN (capSource.radialA (Trunc.finite KK) Sign.neg) - (-1357201154220) / 10 ^ 14 =
+        physL gN (capSource.radialA (Trunc.finite KK) Sign.neg) + ((1357201154220 : ℤ) : ℝ) / 10 ^ 14 := by
       push_cast
       ring
     rw [e]
@@ -375,11 +375,11 @@ theorem hi_final :
     push_cast
     norm_num at g ⊢
     linarith
-  have huP := cast_lit a1 (r := -3950260215867) (by norm_num)
-  have huN := cast_lit a2 (r := -5876852969659) (by norm_num)
-  have huP' : |cS Sign.pos * cS Sign.pos * aqV false paT - (-3950260215867) / 10 ^ 14| ≤ 1 / 10 ^ 9 :=
+  have huP := cast_lit a1 (r := -3944317782559) (by norm_num)
+  have huN := cast_lit a2 (r := -5869925662132) (by norm_num)
+  have huP' : |cS Sign.pos * cS Sign.pos * aqV false paT - (-3944317782559) / 10 ^ 14| ≤ 1 / 10 ^ 9 :=
     huP.trans (by norm_num)
-  have huN' : |cS Sign.neg * cS Sign.neg * aqV true naT - (-5876852969659) / 10 ^ 14| ≤ 1 / 10 ^ 9 :=
+  have huN' : |cS Sign.neg * cS Sign.neg * aqV true naT - (-5869925662132) / 10 ^ 14| ≤ 1 / 10 ^ 9 :=
     huN.trans (by norm_num)
   have hP := energyP_ge capSource_admissible KK KK
   have hM := energyM_ge capSource_admissible KK

@@ -2351,7 +2351,8 @@ theorem nearDataClosed_capSource : NearDataClosed capSource where
   tail := tail_all
 
 theorem nearHf_capSource : CatalanMeasure.GenD.Signed.RouteI.CompactInstance.NearHf capSource (Trunc.finite 384) :=
-  CompactHf.nearHf_closed capSource capSource_admissible nearDataClosed_capSource
+  CompactHf.nearHf_closed capSource capSource_admissible (by show 31 ≤ 899; norm_num)
+    rfl nearDataClosed_capSource
     capSource_eps_ge capSource_eps_le capSource_massL_pos_ge
 
 

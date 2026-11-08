@@ -38,9 +38,9 @@ theorem box_scal : qBox (sumP gasPosT) (sumP row0) 63489562168082 = true ∧
     qBox (sumP gasNegT) (sumP row0) 36510437831917 = true ∧
     qBox cPn (sumP row0) 36510437831917 = true ∧
     qBox cNn (58 * sumP row0) 54868872512909 = true ∧
-    qBox (cPn ^ 2 * SminZ paT) (cPd ^ 2 * 10 ^ 17) 6879409631124 = true ∧
-    qBox (cNn ^ 2 * SmaxZ naT) (cNd ^ 2 * 10 ^ 17) 43663012009342 = true ∧
-    qBox (cNn * SlinZ naT) (cNd * 10 ^ 17) 53357427045186 = true ∧
+    qBox (cPn ^ 2 * SminZ paT) (cPd ^ 2 * 10 ^ 17) 6880564215755 = true ∧
+    qBox (cNn ^ 2 * SmaxZ naT) (cNd ^ 2 * 10 ^ 17) 43657136919364 = true ∧
+    qBox (cNn * SlinZ naT) (cNd * 10 ^ 17) 53351287497253 = true ∧
     qBox L2c (2 ^ 96) 69314718055994 = true := by decide +kernel
 -- kcost: as above
 theorem box_tail : ballBox tailB 1 1 788755782 2 = true ∧ 0 < (Bl.sub (Bl.ofZ 1) qB).1 ∧
@@ -53,7 +53,7 @@ namespace CatalanMeasure.GenD.Signed.RouteI.GasEnergy
 
 open CatalanMeasure.GenD.Signed.RouteI.CapSourceData
 
-theorem box_pos : boxPos (-846912144590) (-39541675682036) 23239004899126 (-3950260215867) 2 = true := by
+theorem box_pos : boxPos (-853339519085) (-39541675682036) 23239004899126 (-3944317782559) 2 = true := by
   decide +kernel
 -- kcost: 58 s measured, 8.3 GB, 6 Nov
 
@@ -63,7 +63,7 @@ namespace CatalanMeasure.GenD.Signed.RouteI.GasEnergy
 
 open CatalanMeasure.GenD.Signed.RouteI.CapSourceData
 
-theorem box_neg : boxNeg 1352920825812 29512640381580 (-5876852969659) 2 = true := by decide +kernel
+theorem box_neg : boxNeg 1357201154220 29512640381580 (-5869925662132) 2 = true := by decide +kernel
 -- kcost: 56 s measured, 8.1 GB, 6 Nov
 
 end CatalanMeasure.GenD.Signed.RouteI.GasEnergy
