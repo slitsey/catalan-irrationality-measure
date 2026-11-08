@@ -171,49 +171,33 @@ $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
 
 \emph{The construction.} All these bounds come from one construction. Let $\psi$ be the digamma function, the
 logarithmic derivative of Euler's gamma function. The approximations to a number $\xi$ are determinants of L\"owner
-matrices \cite{Loewner34}, the matrices of divided differences, of a rational combination $F$ of the functions $\psi(z+s)$ and
-$\psi'(z+s)$ with rational shifts $s$, at integer nodes. The number $\xi$ is $F'(0)$, up to a rational factor. The
-matrices are rectangular. Their rows and columns share a long block of nodes, which carries a variable, and a border
-of row and column nodes alternates beyond it. Section~\ref{sec:overview} explains the construction and why it gives
-measures.
+matrices \cite{Loewner34}, the matrices of divided differences, of a rational combination $F$ of the functions
+$\psi(z+s)$ and $\psi'(z+s)$ with rational shifts $s$, at integer nodes. The number $\xi$ is $F'(0)$, up to a rational
+factor. Section~\ref{sec:overview} explains the construction and why it gives measures.
 
-\emph{The trigamma form.} The derivative $\psi'$ is the trigamma function, and $\psi'(s)=\sum_{n\ge0}(n+s)^{-2}$. When
-$F$ is a difference of two digamma functions, the number $\xi$ is a difference of two trigamma values,
+\emph{The trigamma form.} The derivative $\psi'(s)=\sum_{n\ge0}(n+s)^{-2}$ is the trigamma function. When $F$ is a
+difference of two digamma functions, $\xi$ is a difference of two trigamma values,
 \[
- \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n=0}^\infty\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr)\qquad(0<s<t\le1).
+ \Psi(s,t)=\psi'(s)-\psi'(t)\qquad(0<s<t\le1).
 \]
-The trigamma values with denominators $2$, $3$ and $6$ all lie in the $\Q$-span of $1$, $\Lt$ and $\pi^2$:
+The trigamma values with denominators $2$, $3$ and $6$ lie in the $\Q$-span of $1$, $\Lt$ and $\pi^2$:
 \begin{gather*}
- \psi'(\tfrac13)=\frac{2\pi^2}3+\frac92\Lt,\qquad \psi'(\tfrac23)=\frac{2\pi^2}3-\frac92\Lt,\\
- \psi'(\tfrac16)=2\pi^2+\frac{45}2\Lt,\qquad \psi'(\tfrac56)=2\pi^2-\frac{45}2\Lt,\\
- \psi'(\tfrac12)=\frac{\pi^2}2,\qquad \psi'(1)=\frac{\pi^2}6 .
+ \psi'(\tfrac13)=\tfrac{2\pi^2}3+\tfrac92\Lt,\qquad \psi'(\tfrac23)=\tfrac{2\pi^2}3-\tfrac92\Lt,\qquad
+ \psi'(\tfrac16)=2\pi^2+\tfrac{45}2\Lt,\\
+ \psi'(\tfrac56)=2\pi^2-\tfrac{45}2\Lt,\qquad \psi'(\tfrac12)=\tfrac{\pi^2}2,\qquad \psi'(1)=\tfrac{\pi^2}6 .
 \end{gather*}
-The first pair follows from the reflection formula $\psi'(s)+\psi'(1-s)=\pi^2/\sin^2\pi s$ and from
-$\psi'(\frac13)-\psi'(\frac23)=9\Lt$. For the second pair, $\psi'(\frac16)-\psi'(\frac56)=36\sum_n((6n+1)^{-2}-(6n+5)^{-2})$,
-and splitting the series for $\Lt$ by residues modulo $6$ shows that this sum is $\frac54\Lt$. So every difference
-$\Psi(s,t)$ with $s,t\in\{\frac16,\frac13,\frac12,\frac23,\frac56,1\}$ lies on the first plane, up to a rational
-summand. In particular
-\begin{gather*}
- \Lt=\tfrac19\Psi(\tfrac13,\tfrac23),\qquad \Psi(\tfrac13,1)=\tfrac92\bigl(\Lt+\tfrac{\pi^2}9\bigr),\qquad
- \Psi(\tfrac23,1)=-\tfrac92\bigl(\Lt-\tfrac{\pi^2}9\bigr),\\
- \Psi(\tfrac16,\tfrac13)=18\bigl(\Lt+\tfrac{2\pi^2}{27}\bigr),\qquad \Psi(\tfrac23,\tfrac56)=18\bigl(\Lt-\tfrac{2\pi^2}{27}\bigr),\\
- \Psi(\tfrac13,\tfrac12)=\tfrac92\bigl(\Lt+\tfrac{\pi^2}{27}\bigr),\qquad \Psi(\tfrac12,\tfrac23)=\tfrac92\bigl(\Lt-\tfrac{\pi^2}{27}\bigr),
-\end{gather*}
-and $\pi^2=3\Psi(\frac12,1)$. Not every number of this paper is a single such difference. The points
-$\Lt\pm\pi^2/18$ are combinations of two of them, a general point of the first plane needs three digamma terms, and
-$\zeta(3)$ comes from the trigamma function itself. The trigamma form also gives numbers off both planes. Let
+These follow from the reflection formula $\psi'(s)+\psi'(1-s)=\pi^2/\sin^2\pi s$ and from splitting the series for
+$\Lt$ by residues modulo~$6$. So each difference $\Psi(s,t)$ of these values is a point of the first plane, and
+Table~\ref{tab:main} gives the form of each special point. A general point of the first plane needs three digamma
+terms, and $\zeta(3)$ comes from $\psi'$ itself, so not every number here is a single difference $\Psi(s,t)$.
+
+The trigamma form also gives numbers off both planes. Let
 \[
  G=L(2,\chi_{-4})=\sum_{n\ge0}\Bigl(\frac1{(4n+1)^2}-\frac1{(4n+3)^2}\Bigr)=0.91596\,55941\ldots
 \]
-be Catalan's constant. Then $\psi'(\frac14)=\pi^2+8G$ and $\psi'(\frac34)=\pi^2-8G$, so that
-$\Psi(\frac14,1)=8(G+\frac{5\pi^2}{48})$ and $\Psi(\frac34,1)=-8(G-\frac{5\pi^2}{48})$. For $q=5$ and $q=7$ there is
-no single classical constant. For $\gcd(k,q)=1$ the number $\Psi(\frac kq,1)=\psi'(\frac kq)-\frac{\pi^2}6$ lies in
-the $\Q$-span of $\pi^2$ and the real and imaginary parts of the values $L(2,\chi)$ for the Dirichlet characters
-$\chi$ modulo $q$, since
-\[
- \psi'(\tfrac kq)=q^2\sum_{n\equiv k\ (q)}\frac1{n^2}=\frac{q^2}{\varphi(q)}\sum_{\chi\bmod q}\bar\chi(k)L(2,\chi).
-\]
-For $q=5$ and $q=7$ some of the coefficients $\bar\chi(k)$ are not real, and the conjugate terms pair up.
+be Catalan's constant. Then $\psi'(\frac14)=\pi^2+8G$ and $\psi'(\frac34)=\pi^2-8G$. For $q=5$ and $q=7$ there is no
+single classical constant. The number $\psi'(\frac kq)$ is a combination of $\pi^2$ and the values $L(2,\chi)$ for the
+Dirichlet characters $\chi$ modulo~$q$, by orthogonality of characters.
 
 \begin{theorem}\label{thm:main}\label{thm:offplane}
 The following bounds hold:
@@ -224,52 +208,44 @@ The following bounds hold:
 \end{enumerate}
 \end{theorem}
 
-Each bound $\mu(\xi)\le\mu_0$ above is proved in the stronger form $|\xi-p/q|>q^{-\mu_0}$ for all integers $p$ and
-all sufficiently large integers $q$. Table~\ref{tab:main} collects the results.
+Each bound $\mu(\xi)\le\mu_0$ is proved in the stronger form $|\xi-p/q|>q^{-\mu_0}$ for all integers $p$ and all
+sufficiently large integers $q$. Table~\ref{tab:main} collects the results.
 
 \begin{table}[ht]
 \centering
-{
-\begin{tabular}{@{}llll@{}}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l@{\hspace{2em}}l@{\hspace{2em}}r@{\hspace{2em}}l@{}}
 \toprule
-number & form in $\Psi$ & $\mu\le$ & best published before\\
+Number & Trigamma form & Bound on $\mu$ & Previous bound\\
 \midrule
-$a\Lt+b\pi^2$ & -- & $\MuPlaneA$ & $24781$ \cite{CDT2025}\\
-$\Lt$ & $\frac19\Psi(\frac13,\frac23)$ & $\MuChi$ & $24781$\\
-$\Lt\pm\frac{\pi^2}9$ & $\Psi(\frac13,1)$, $\Psi(\frac23,1)$ & $\MuThirdsU$ & $24781$\\
-$\Lt\pm\frac{2\pi^2}{27}$ & $\Psi(\frac16,\frac13)$, $\Psi(\frac23,\frac56)$ & $\MuDipA$ & $24781$\\
-$\Lt\pm\frac{\pi^2}{27}$ & $\Psi(\frac13,\frac12)$, $\Psi(\frac12,\frac23)$ & $\MuDipB$ & $24781$\\
-$\Lt\pm\frac{\pi^2}{18}$ & -- & $\MuDipC$ & $24781$\\
+$a\Lt+b\pi^2$ & & $\MuPlaneA$ & $24781$ \cite{CDT2025}\\
+$\Lt$ & $\Psi(\frac13,\frac23)$ & $\MuChi$ & $24781$\\
+$\Lt\pm\frac{\pi^2}{9}$ & $\Psi(\frac13,1)$,\; $\Psi(\frac23,1)$ & $\MuThirdsU$ & $24781$\\
+$\Lt\pm\frac{2\pi^2}{27}$ & $\Psi(\frac16,\frac13)$,\; $\Psi(\frac23,\frac56)$ & $\MuDipA$ & $24781$\\
+$\Lt\pm\frac{\pi^2}{27}$ & $\Psi(\frac13,\frac12)$,\; $\Psi(\frac12,\frac23)$ & $\MuDipB$ & $24781$\\
+$\Lt\pm\frac{\pi^2}{18}$ & & $\MuDipC$ & $24781$\\
 \addlinespace
-$a\zeta(3)+b\pi^2$, $ab\ne0$ & -- & $\MuPlaneB$ & none\\
-$\zeta(3)$ & -- & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
-$\pi^2$ & $3\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
+$a\zeta(3)+b\pi^2$ & & $\MuPlaneB$ & none\\
+$\zeta(3)$ & & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
+$\pi^2$ & $\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
 \addlinespace
-$G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$, $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
-$\psi'(\frac k5)-\frac{\pi^2}6$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
-$\psi'(\frac k7)-\frac{\pi^2}6$ & $\Psi(\frac k7,1)$ & $\MuSeventhsU$ & none\\
+$G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$,\; $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
+$\psi'(\frac k5)-\frac{\pi^2}{6}$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
+$\psi'(\frac k7)-\frac{\pi^2}{6}$ & $\Psi(\frac k7,1)$ & $\MuSeventhsU$ & none\\
 \bottomrule
-\end{tabular}}
-\caption{The results of this paper. The first column is a number in common notation, the second is a form of the
-same number in the notation $\Psi$ up to a rational factor, where one exists. In the plane rows $a$ and $b$ are
-rationals, not both zero, and the bound $\MuPlaneB$ also holds for $ab=0$. ``None'' means that we know of no
+\end{tabular}
+\caption{The results of this paper. The trigamma form is a rational multiple of the number, where one exists. In the plane rows $a$ and $b$ are rationals, not both zero. ``None'' means that we know of no
 irrationality measure. A bound of about $9.7\cdot10^3$ for the first plane follows from an unrefereed supplement to
-\cite{LBKWSK26}, as explained in \S\ref{ssec:background}.}\label{tab:main}
+\cite{LBKWSK26} (\S\ref{ssec:background}).}\label{tab:main}
 \end{table}
 
-Several numbers named in the literature lie on the first plane but at none of the points of
-Theorem~\ref{thm:points1}. For them Theorem~\ref{thm:plane1} gives $\mu\le\MuPlaneA$ in place of $24781$. These are
-$\psi'(\frac13)=\frac92(\Lt+\frac{4\pi^2}{27})$, $\psi'(\frac23)$, $\psi'(\frac16)=\frac{45}2(\Lt+\frac{4\pi^2}{45})$ and
-$\psi'(\frac56)$, whose irrationality Calegari, Dimitrov and Tang state explicitly \cite[Corollary~B]{CDT2024}, and
-$\Psi(\frac16,1)=\psi'(\frac16)-\zeta(2)=\frac{45}2(\Lt+\frac{11\pi^2}{135})$ and $\Psi(\frac56,1)$. The same holds for the
-remaining sixths, $\Psi(\frac16,\frac12)=\frac{45}2(\Lt+\frac{\pi^2}{15})$, $\Psi(\frac16,\frac23)=27(\Lt+\frac{4\pi^2}{81})$
-and their mirrors $\Psi(\frac12,\frac56)$, $\Psi(\frac13,\frac56)$. Some numbers with similar names are not on the
-plane. The Clausen value $\mathrm{Cl}_2(\frac\pi3)=\frac{3\sqrt3}4\Lt$ and the Mahler measure
-$m(1+x+y)=\frac{3\sqrt3}{4\pi}\Lt$ carry the factors $\sqrt3$ and $\sqrt3/\pi$, and our results say nothing about them.
-On the second plane, Theorem~\ref{thm:plane2} gives, for example, $\mu(\zeta(2)+\zeta(3))\le\MuPlaneB$. It gives none for the ratio $\zeta(3)/\pi^2$, whose irrationality also
-follows from Q.~Tang's theorem \cite{Lai2026}. The method does not reach every trigamma difference. The nearest
-numbers it misses, such as $\psi'(\frac k8)-\frac{\pi^2}6$ and $\Psi(\frac k5,\frac l5)$, are discussed in
-\S\ref{ssec:unreached}.
+Other named numbers on the first plane are covered by Theorem~\ref{thm:plane1}, with $\mu\le\MuPlaneA$ in place of
+$24781$. Examples are $\psi'(\frac13)$, $\psi'(\frac23)$, $\psi'(\frac16)$ and $\psi'(\frac56)$, whose irrationality
+Calegari, Dimitrov and Tang state explicitly \cite[Corollary~B]{CDT2024}. The Clausen value
+$\mathrm{Cl}_2(\frac\pi3)=\frac{3\sqrt3}4\Lt$ and the Mahler measure $m(1+x+y)=\frac{3\sqrt3}{4\pi}\Lt$ are not on the
+plane, and our results say nothing about them. On the second plane, Theorem~\ref{thm:plane2} gives for example
+$\mu(\zeta(2)+\zeta(3))\le\MuPlaneB$, but nothing for $\zeta(3)/\pi^2$. The nearest numbers that the method misses are
+discussed in \S\ref{ssec:unreached}.
 
 All the theorems above have been verified in the Lean~4 proof assistant, together with every theorem, proposition and
 lemma used in their proofs. The formal proofs have no unproved steps and use only the standard axioms.
