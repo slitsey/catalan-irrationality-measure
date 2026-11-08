@@ -1,7 +1,7 @@
 module
 
-public import CatalanMeasure.GenD.Signed.RouteI.AngPilot
 public import CatalanMeasure.GenD.Signed.RouteI.AngPos0
+public import CatalanMeasure.GenD.Signed.RouteI.AngPos1
 public import CatalanMeasure.GenD.Signed.RouteI.AngPos2
 public import CatalanMeasure.GenD.Signed.RouteI.AngPos3
 public import CatalanMeasure.GenD.Signed.RouteI.AngPos4
@@ -39,7 +39,7 @@ set_option Elab.async false
 /-!
 # Route I `AngAll`: the angular radius certificates of both species at all 16 radii
 
-Case analysis only: `certN` and `certP` are the hypotheses of `Terminal295.angular295`.
+Case analysis only: `certN` and `certP` are the hypotheses of `AngularCap.angCap_of_certs` (design-C caps).
 -/
 
 namespace CatalanMeasure.GenD.Signed.RouteI.AngAll
@@ -54,7 +54,7 @@ noncomputable section
 
 /-- The negative species at every radius index. -/
 def certN : ∀ i, i < capSource.nRad →
-    AngularCap.AngRadiusCert capSource Sign.neg i (5489 / 100000)
+    AngularCap.AngRadiusCert capSource Sign.neg i (5463909 / 100000000)
   | 0, _ => AngNeg0.angNeg0
   | 1, _ => AngNeg1.angNeg1
   | 2, _ => AngNeg2.angNeg2
@@ -75,9 +75,9 @@ def certN : ∀ i, i < capSource.nRad →
 
 /-- The positive species at every radius index. -/
 def certP : ∀ i, i < capSource.nRad →
-    AngularCap.AngRadiusCert capSource Sign.pos i (29557 / 200000)
+    AngularCap.AngRadiusCert capSource Sign.pos i (14762657 / 100000000)
   | 0, _ => AngPos0.angPos0
-  | 1, _ => AngPilot.angPilot
+  | 1, _ => AngPos1.angPos1
   | 2, _ => AngPos2.angPos2
   | 3, _ => AngPos3.angPos3
   | 4, _ => AngPos4.angPos4
