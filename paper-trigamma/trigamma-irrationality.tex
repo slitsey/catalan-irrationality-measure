@@ -62,11 +62,11 @@
 \newcommand{\LamHalf}{2.9923824}  \newcommand{\DHalf}{3.9785713}  \newcommand{\gHalf}{6.4350874}  \newcommand{\ExpHalf}{6.525207}
 \newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.70452}
 \newcommand{\LamPl}{3.2227428}    \newcommand{\DPl}{3.5503512}    \newcommand{\gPl}{6.7690926}   \newcommand{\ExpPl}{20.66214}
-\newcommand{\LamDA}{3.0668405}    \newcommand{\ExpDA}{13.99988}
-\newcommand{\LamDB}{3.1096067}    \newcommand{\ExpDB}{15.35832}
-\newcommand{\LamDC}{3.1776044}    \newcommand{\ExpDC}{18.16003}
-\newcommand{\LamPlB}{3.4768436}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.1827}
-\newcommand{\LamZ}{2.9128336}     \newcommand{\ExpZ}{6.038153}
+\newcommand{\LamDA}{3.0668400}    \newcommand{\ExpDA}{13.99987}
+\newcommand{\LamDB}{3.1096062}    \newcommand{\ExpDB}{15.35830}
+\newcommand{\LamDC}{3.1776039}    \newcommand{\ExpDC}{18.16000}
+\newcommand{\LamPlB}{3.4768376}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.0886}
+\newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.038184}
 \newcommand{\MuChiExact}{13.704516}
 
 \begin{document}
@@ -104,7 +104,7 @@ prime to the denominator. For these numbers we know of no other proof of irratio
 The approximations are determinants of rectangular L\"owner matrices of rational combinations of the digamma
 function and its derivative, at integer nodes. Their denominators are bounded prime by prime. On the first plane one
 table of local bounds and one decay certificate serve every point. On the second plane they serve every point except
-the multiples of $\zeta(3)$. Nonvanishing at rational
+the multiples of $\pi^2$. Nonvanishing at rational
 points follows from Hermite interpolation in characteristic zero. The size of the determinants is bounded by
 Andr\'eief's identity and an energy estimate. The proofs are formalized in Lean~4.
 \end{abstract}
@@ -382,7 +382,7 @@ The proofs rest on the following ideas. Section~\ref{sec:overview} explains the 
 \item \emph{A decay certificate uniform in the weights.} The energy inequalities behind the decay estimate contain no
  weight. The weights enter only through a constant factor in the external field, which costs $e^{O(r)}$. A weight
  zero only removes atoms. One trial measure on one contour therefore proves the decay for the whole first plane, and
- for the second plane off the multiples of $\zeta(3)$.
+ another one for the whole second plane.
 \item \emph{Nonvanishing in characteristic zero.} A kernel vector of the matrix at a rational point gives a solution of a
  Hermite interpolation problem. A discrete Wronskian bounds the corank, because one pole of the increment of $F$ is
  isolated in its class modulo $\Z$. The bound depends only on the number of poles, counted with order.
@@ -1359,6 +1359,33 @@ $0<T_n\le1/(4n^2)$. The number $\Lambda_{\rm fin}$ is then rational, and (C5) is
 The bounds depend on the shift $s$ only through the root class, and their profiles only through $(q,j,\alpha)$. So one
 table serves all shifts with denominator $q$.
 
+On small $\theta$ the pieces of a table repeat with a period in $1/\theta$. Write $\alpha=a/b$ in lowest terms, and
+call $T_\nu(r,p,m,k)=(r+\nu bp,\,p,\,m+\nu ap,\,k)$ the \emph{translation of order} $\nu\ge0$. It keeps $p$, $k$ and
+$m-\alpha r$, and hence the rounding of $m$. A list of local bounds is \emph{closed under translation}, with constant
+$K_0$, if for every bound $\tau$ of the list and every $\nu$ there is a bound $\tau'$ of the list with
+$\tau'(T_\nu y)=\tau(y)+\nu K_0bp$ for all $y=(r,p,m,k)$, whose conditions hold at $T_\nu y$ whenever those of $\tau$
+hold at $y$.
+
+\begin{theorem}[periodic tables]\label{thm:periodic}
+Let a list of local bounds be closed under translation with constant $K_0$. Suppose that for every $r\ge R$ and every
+prime $p$ with $sr<p\le tr$ some bound $\tau$ of the list has its conditions satisfied at $y=(r,p,m(r),k_p)$ and
+$\tau(y)\le Ar+Bp+C$. Let $1/s_\nu=1/s+\nu b$ and $1/t_\nu=1/t+\nu b$. Then for every member at a scale
+$r\ge Rt/t_\nu$ and every prime $p$ with $s_\nu r<p\le t_\nu r$,
+\[
+ e_p(r,I)\le Ar+\bigl(B+(K_0-A)\nu b\bigr)p+C .
+\]
+\end{theorem}
+\begin{proof}
+Put $r'=r-\nu bp$ and $m'=m(r)-\nu ap$. Then $r'/p=r/p-\nu b$, so $s<p/r'\le t$, and $r'\ge r\,t_\nu/t\ge R$. Also
+$m'=m(r')$, since $m'-\alpha r'=m(r)-\alpha r$. So the hypothesis gives a bound $\tau$ whose conditions hold at
+$y=(r',p,m',k_p)$, with $\tau(y)\le Ar'+Bp+C$. The conditions of its translate $\tau'$ hold at $T_\nu y=(r,p,m(r),k_p)$.
+Since $\tau'$ is a local bound, $e_p(r,I)\le\tau(y)+\nu K_0bp\le A(r-\nu bp)+Bp+C+\nu K_0bp$.
+\end{proof}
+
+So a table for $\Lambda$ on a range where its bounds are closed under translation needs to be checked on one period of
+$1/\theta$ only. The pieces of the other periods are its translates, and their integrals are again rational numbers.
+The finitely many scales below the thresholds take the trivial bound, as in (C3).
+
 %% =====================================================================
 \section{Nonvanishing}\label{sec:nonvanishing}
 
@@ -1771,7 +1798,7 @@ This includes the frames with a shift of order $0$. The heads of such a shift ca
 of the bound for $|\det\Lw_F[R',Q']|$ is nonnegative, and the integral over $|\Omega|$ only loses the terms in which a
 free point sits at one of these heads. So the bound obtained with all $|S|$ shifts still holds. The construction itself
 is unchanged. Only the number $\xi$ loses the term of that shift. We use this for the first plane in
-Section~\ref{sec:plane1}, and for the second plane at the points $b\pi^2$.
+Section~\ref{sec:plane1}, and for the second plane at the points $a\zeta(3)$ and $b\pi^2$.
 
 At a double pole the Gram representation carries a derivative. Write
 \[
@@ -1809,9 +1836,11 @@ only simple poles. A \emph{reference frame} for $F$ is a frame $\mathcal R$ with
 $S_{\mathcal R}$ with the following properties. It contains every shift of $F$ of positive order. For each shift $s$ of
 order $2$ it contains a further shift $s^*$, whose heads lie on the same side of $x^*$ as those of $s$, at a distance
 $\delta_s$ from them with $\frac14\le\delta_s\le\frac12$. It may contain further shifts. The poles of $S_{\mathcal R}$ are
-separated from $x^*$. For $F^{(2)}_{v,u}$ with $u\ne0$ we take the shifts $1$, $\frac34$, $\frac12$, with heads $-n$,
+separated from $x^*$. For every frame $F^{(2)}_{v,u}$ we take the shifts $1$, $\frac34$, $\frac12$, with heads $-n$,
 $-n+\frac14$, $\frac12-n$ for $n\ge1$, and $\delta_1=\frac14$. This also serves $v=0$, where all orders are at most
-$1$. For $F^{(2)}_{1,0}$ we take the shifts $1$, $\frac12$ of the function $F_{1/2}$, with $\delta_1=\frac12$.
+$1$, and $u=0$, where the shift $\frac12$ has order $0$. In the separate proof for $\zeta(3)$ in
+\S\ref{ssec:zeta3} we take for $F^{(2)}_{1,0}$ the shifts $1$, $\frac12$ of the function $F_{1/2}$, with
+$\delta_1=\frac12$.
 
 Each label of Andr\'eief's integral now has a \emph{reference point}. For a point of $\Gamma$ it is the point itself.
 For a simple head it is the head, which is a head of $\mathcal R$. For the two labels at a head $x_{s,n}$ of a double
@@ -1874,8 +1903,8 @@ which every head of $\mathcal R$ carries an atom of bounded mass. Those are the 
 \end{proof}
 
 The certificate of the second plane is that of the reference frame $(1,\frac34,\frac12)$, with $|\mathcal T|=3$. It serves
-every frame $F^{(2)}_{v,u}$ with $u\ne0$, including $v=0$. The certificate for $\zeta(3)$ is that of the function
-$F_{1/2}$, with $|\mathcal T|=2$. It is the certificate of the row for $\pi^2$, unchanged.
+every frame $F^{(2)}_{v,u}$, including $v=0$ and $u=0$. The certificate of the separate proof for $\zeta(3)$ is that of
+the function $F_{1/2}$, with $|\mathcal T|=2$. It is the certificate of the row for $\pi^2$, unchanged.
 
 %% =====================================================================
 \section{The first plane}\label{sec:plane1}
@@ -1986,14 +2015,18 @@ bound is built from affine functions of $r$, $m$, $p$, $k_A$, $k_B$ and $p\lfloo
 truncation, with bounded coefficients. So it differs from $r$ times its homogenisation by a bounded amount. Each
 integer condition differs from its homogenised form only for $p$ in an interval of bounded length, where (T1) costs
 $O(r\log r)$. The prime number theorem in progressions modulo $6$ then gives the claim, as in
-Theorem~\ref{thm:content}. For the primes $p\le t_0r$ we use (T1), which gives $(2+2\alpha)t_0r^2$.
+Theorem~\ref{thm:content}. For the primes $p\le t_0r$ we use (T1), which gives $(2+2\alpha)t_0r^2$. On the strips
+$\theta\le\alpha$ the content is an instance of Theorem~\ref{thm:periodic}, with $a=1$, $b=12$ and $K_0=2+2\alpha$. The
+bounds acting there are closed under translation: (T1) and (T1$'$) grow by $\nu K_0bp$ under the translation of order
+$\nu$, and it takes the window with $n=\lfloor m/p\rfloor$ to the window with $n+\nu$. So the table is checked on one
+period of $1/\theta$, and its translates give the pieces of the other strips.
 \end{proof}
 
 On $\theta\le\alpha$ the profile has a closed form. Only (T1), (T1$'$) and the windows act there. Put $s=1/\theta$. Then
 $\varphi(\theta)=2+2\alpha-\theta\,\Gamma_\kappa(s)$. Here $\Gamma_\kappa(s)$ is the larger of $\|\alpha s\|$ and the
 longest gap of the lattice $\{0,\kappa_A,\kappa_B\}+\Z$ inside a window. The window is determined by the fractional
-parts of $s$ and $\alpha s$. This function has period $12$ in $s$. The formal proof uses this to check one period, on
-$82$ cells per class, instead of the pieces of every strip.
+parts of $s$ and $\alpha s$. This function has period $12$ in $s$, as Theorem~\ref{thm:periodic} predicts. The table
+has $82$ cells per class on one period.
 
 \subsection{Decay}
 Let $\Gamma$ be the polygon of the formal proof for the alternating geometry of parameter $\frac16$. It crosses the real
@@ -2110,7 +2143,7 @@ $\lambda=\frac13$ and $V^*=0$, so after the row operation the border node behave
 For the frames $(2,-1,-1)$, $(1,-2,1)$ and $(4,-3,-1)$, on $S^+$ and on $S^-$, the minimum of the bounds of
 Proposition~\ref{prop:planelocal} and Lemma~\ref{lem:levels} gives the denominator exponents
 \[
- \Lambda=3.06684046\ldots,\qquad 3.10960666\ldots,\qquad 3.17760435\ldots
+ \Lambda=3.06683997\ldots,\qquad 3.10960617\ldots,\qquad 3.17760386\ldots
 \]
 \end{theorem}
 \begin{proof}
@@ -2118,7 +2151,13 @@ On each cell of the common refinement of the conditions, the nodes split into bo
 interval, parity and period. Pivot pairs, $\lambda$ and $V^*$ are constant on these classes. Potentials constant on the
 classes are affine in $\theta=p/r$, with a bounded rounding error per prime, as in Theorem~\ref{thm:planecontent}. The
 potentials of the formal proof take half-integer values. They are verified on every pair of classes, and the minimum with
-the plane bounds is integrated as there. All pivots used have $\lambda\in\Z[\frac1{30}]$, so every prime $p\ge7$ is
+the plane bounds is integrated as there. A cell is fixed by the integer parts of $r/p$ and $\bar N/p$
+and by the order of the residues of $k_A$, $k_B$, $r$ and $\bar N$ in a period. At a common endpoint $x$ of two cells
+the bounds of the two sides take the same value. A prime with $p/r$ near $x$ may lie in neither cell, through the
+rounding of $m$ or a coincidence of two residues. So on the window $|p/r-x|\le10^{-4}x$, in each class of primes
+modulo $6$, we use the largest of the bounds of all cells that occur in the window. There are at most three. That one of
+them applies to each $(r,p,m)$ in the window is a statement of linear integer arithmetic in $r$, $p$, $m$, $k_A$ and
+$k_B$, and it is proved for every prime $p$. This bound is the second bound of (C3) at $x$. All pivots used have $\lambda\in\Z[\frac1{30}]$, so every prime $p\ge7$ is
 admissible. The level branches act only for $\theta\ge\frac3{10}$. The frames on $S^-$ give the same profiles with the
 classes exchanged.
 \end{proof}
@@ -2130,7 +2169,7 @@ $\Psi(\frac12,\frac23)$ on $S^+$ and $\Psi(\frac13,\frac12)$ on $S^-$, up to sig
 gives $L\pm\frac{\pi^2}{18}$. With the denominator exponents of Theorem~\ref{thm:dips}, the decay of
 Proposition~\ref{prop:planecert} and Theorem~\ref{thm:nvframe}, the deduction gives
 \[
- \frac\rho{D-\Lambda}=13.99987\,8\ldots,\qquad 15.35831\,0\ldots,\qquad 18.16002\,2\ldots,
+ \frac\rho{D-\Lambda}=13.99986\,39\ldots,\qquad 15.35829\,31\ldots,\qquad 18.15999\,83\ldots,
 \]
 below $\MuDipA$, $\MuDipB$ and $\MuDipC$.
 \end{proof}
@@ -2247,8 +2286,9 @@ since $\Psi(\frac13,\frac23)=36\,\xi_\chi$.
 
 In this section we prove Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Theorem~\ref{thm:ends}. We use the
 frames $F^{(2)}_{v,u}$ of \S\ref{ssec:frames} with integers $v$ and $u$, not both zero, and we put
-$\varepsilon=\mathbf 1[u\ne0]$. For $u\ne0$ we take the alternating geometry of parameter $c=\frac6{41}$, so
-$\alpha=\frac3{41}$. This includes $v=0$, the points $b\pi^2$ of the plane. For $u=0$ we take $c=\frac3{10}$. In both
+$\varepsilon=\mathbf 1[u\ne0]$. For Theorem~\ref{thm:plane2} we take the alternating geometry of parameter
+$c=\frac6{41}$, so $\alpha=\frac3{41}$, for every frame. This includes $v=0$, the points $b\pi^2$, and $u=0$, the
+points $a\zeta(3)$. For the separate bound for $\zeta(3)$ in Theorem~\ref{thm:ends} we take $c=\frac3{10}$. In both
 cases $2m\le r$. The new feature is the double pole at the shift $1$. The entries of the L\"owner matrix then have
 valuation down to $-3$, and most of the work goes into recovering what is lost against a simple pole.
 
@@ -2283,12 +2323,13 @@ they lie in one cell. The diagonal is $-e_t$. The weights $u$ and $v$ are intege
 raises valuations.
 \end{proof}
 
-The primes that divide $v$ need one remark. This includes every prime when $v=0$. If $p\mid v$, the double poles
+The primes that divide $v$ need one remark. If $p\mid v$, the double poles
 contribute terms $v/k^2$ of valuation at least $-1$ to $f_t$, and terms $2v/k^3$ of valuation at least $-2$ to $e_t$.
 So every entry of $M$ has valuation at least $-2$, and Lemma~\ref{lem:trop} with all potentials $1$ gives
 $e_p(r,I)\le2(r+m)$. The bounds of Proposition~\ref{prop:rows2} below use Lemma~\ref{lem:weights2} only and hold for
 all $p$. Those of Theorem~\ref{thm:rows2} assume $p\nmid v$. Each of them is at least $2(r+m)$, as we check after its
-proof. So for $p\mid v$ the trivial bound $2(r+m)$ takes their place, and every bound used below holds for all frames.
+proof. So for $p\mid v$ the trivial bound $2(r+m)$ takes their place, and every bound used below holds for all frames
+with $v\ne0$.
 
 \begin{proposition}[assignment bounds]\label{prop:rows2}
 Assume $2m\le r$. For every member,
@@ -2446,7 +2487,7 @@ Let $p\ge5$ with $p^2>2\bar N+2p$ and $p\nmid v$, and let $2m\le r$. For every m
 \item (E$_2$) If $p\le r$ and $\bar N\le2p$, then (E$_1$) holds with $3r$ replaced by $3r-(2p-\bar N)$.
 \item (R) If $p\le2m$, write $2m=kp+s$ with $0\le s<p$, and let $E=[r,r+s)$ for even $k$ and $E=[r+s,r+p)$ for odd $k$. For
  $t\in E$ let $c_b(t)\in\{0,1,2,3\}$ be twice the period of $t$ minus that of $r$, plus the half of $t$. Then, for each
- $w\in\{(2,2,0,1),(2,2,1,0),(0,1,2,2),(1,0,2,2)\}$,
+ $w\in\{(2,2,0,1),(2,2,1,0),(0,1,2,2),(1,0,2,2),(1,1,1,1)\}$,
  \[
  e_p(r,I)\le3(r+m)-3\|m\|_p+\sum_{t\in E}w(c_b(t)).
  \]
@@ -2513,17 +2554,22 @@ bound (R) is
 \[
  3+\tfrac32k\theta+\tau(E)\ (k\text{ even}),\qquad 3+6\alpha-\tfrac32(k+1)\theta+\tau(E)\ (k\text{ odd}),
 \]
-where $\tau(E)$ is the least over the four vectors $w$ of the sums $\sum_cw(c)\,|c\cap E|$. Here $c$ runs over the four
+where $\tau(E)$ is the least over the five vectors $w$ of the sums $\sum_cw(c)\,|c\cap E|$. Here $c$ runs over the four
 cells, scaled by $r$, $|c\cap E|$ is the length of the intersection, and $E=[1,1+2\alpha-k\theta]$, respectively
 $E=[1+2\alpha-k\theta,1+\theta]$. Each node of $E$ carries one potential, so there is no factor $\frac12$. Between the points $\theta=2/j$ and $\theta=2(1+2\alpha)/j$ the cell type of $E$ is fixed. So
-$\mathcal P$ is piecewise affine on $(2\alpha/18,\infty)$, with finitely many pieces. We use (R) for $k\le17$. Below
-$2\alpha/18$ the profile is the sawtooth $3+3\alpha-\theta\|\alpha/\theta\|$ of (P1).
+$\mathcal P$ is piecewise affine, with finitely many pieces on every interval bounded away from $0$.
+
+On $\theta<2\alpha$ the bounds (P1) and (R) are closed under translation in the sense of Theorem~\ref{thm:periodic},
+with $a=3$, $b=41$ and $K_0=3+3\alpha$. The translation of order $\nu$ takes the band $k$ to the band $k+6\nu$. So the
+table for $\Lambda$ is checked on one period of $1/\theta$, the bands $k=1,\dots,6$, and on the head $\theta\ge2\alpha$.
+Its translates cover the bands down to $t_1=3\cdot10^6/(1025\cdot10^6+3)$, just below $\alpha/25$. On $(0,t_1]$ we use
+(P1) without its last term.
 
 \begin{theorem}[denominators on the second plane]\label{thm:content2}
-Let $\alpha=\frac3{41}$ and $u\ne0$, with $v$ any integer. For every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member with $|I|\le1$
+Let $\alpha=\frac3{41}$ and $v\ne0$, with $u$ any integer. For every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member with $|I|\le1$
 satisfies $\log\den P_{r,I}\le(\Lambda_2+\epsilon)r^2$, where
 \[
- \Lambda_2=\int_0^\infty\mathcal P(\theta)\,d\theta\le\frac{869210883039}{250000000000}=3.47684\,35321\ldots
+ \Lambda_2=(3+3\alpha)t_1+\int_{t_1}^\infty\mathcal P(\theta)\,d\theta\le\frac{3476837531}{10^9}.
 \]
 The threshold does not depend on $(u,v)$.
 \end{theorem}
@@ -2532,11 +2578,17 @@ For each prime with $p^2>2\bar N+2p$ the local bounds give $e_p(r,I)\le r\,\math
 of Theorem~\ref{thm:rows2} are replaced by the trivial bound $2(r+m)$, which is at most each of them. For the bounds
 (E$_1$), (E$_2$) and (R) the cells of the integer window and of its homogenisation differ by a bounded number of cells of bounded length,
 which take the potential $2$. The hypotheses $p>\kappa+2k'$ of Proposition~\ref{prop:gen} hold for $r$ large, since
-$p>2\alpha r/18$ on the bands used. For the other primes every entry has valuation at least $-3\log(2\bar N)/\log p$, which
-costs $O(r^{3/2})$ in total. The prime number theorem then gives the integral, as in Theorem~\ref{thm:content}. The integral
-of the sawtooth contributes a multiple of $\log2$, and the rest is an exact rational integral. Both are bounded by the stated
-rational number.
+$p>t_1r$ on the bands used. For the other primes every entry has valuation at least $-3\log(2\bar N)/\log p$, which
+costs $O(r^{3/2})$ in total. The prime number theorem then gives the integral, as in Theorem~\ref{thm:content}, and
+Theorem~\ref{thm:periodic} gives the pieces of the translated bands from those of the period. All pieces are affine, so
+the integral is a rational number. It is at most the stated one.
 \end{proof}
+
+For $v=0$ we take the frame $F^{(2)}_{0,1}=\psi(z+1)-\psi(z+\frac12)$. Its matrix $M$ is $4$ times that of $F_{1/2}$
+in \eqref{eq:frames}, so the coefficient of $x^i$ in a member is $4^{n-i}$ times the corresponding coefficient for
+$F_{1/2}$, where $n$ is the size of the member. Its denominators are therefore at most those of $F_{1/2}$. Theorem~\ref{thm:content}, with an admissible
+table for $q=2$ and $c=\frac6{41}$, bounds them with the exponent $\Lambda_\pi=2.60981\,51766\ldots$, which is less
+than $\Lambda_2$.
 
 \subsection{Decay and proof of Theorem~\ref{thm:plane2}}
 By Theorem~\ref{thm:nvframe} with $d\le3$, one deleted node suffices for nonvanishing. The decay is
@@ -2549,28 +2601,33 @@ and $|\mathcal T|=3$. For it Theorem~\ref{thm:decay} gives $D\ge\DPlB$ and $\rho
 \end{proposition}
 
 \begin{proof}[Proof of Theorem~\ref{thm:plane2}]
-Let $a$ and $b$ be rationals, not both zero. If $b=0$ the number is a nonzero rational multiple of $\zeta(3)$, and
-Theorem~\ref{thm:ends} gives $\mu\le\MuZetaThree$. Let $b\ne0$. Choose a rational $\lambda\ne0$ for which $v=\lambda a$
-and $u=6\lambda b$ are integers. By \S\ref{ssec:frames} the number $\xi$ of $F^{(2)}_{v,u}$ is
-$-2\lambda(a\zeta(3)+b\pi^2)$, and $u\ne0$. For $a=0$ we have $v=0$. Then the frame is $u(\psi(z+1)-\psi(z+\frac12))$,
-whose trigamma term has weight zero. It has two simple poles per period. Theorem~\ref{thm:content2} gives the
-denominators for every $v$, Proposition~\ref{prop:cert2} with Theorem~\ref{thm:decayframe} the decay, and
-Theorem~\ref{thm:nvframe} nonvanishing with one deleted node. Theorem~\ref{thm:deduction} gives
+Let $a$ and $b$ be rationals, not both zero. Choose a rational $\lambda\ne0$ for which $v=\lambda a$ and $u=6\lambda b$
+are integers. By \S\ref{ssec:frames} the number $\xi$ of $F^{(2)}_{v,u}$ is $-2\lambda(a\zeta(3)+b\pi^2)$. For $a=0$ we
+take $\lambda$ with $u=1$, so the frame is $\psi(z+1)-\psi(z+\frac12)$. Its trigamma term has weight zero, and it has
+two simple poles per period. For $b=0$ we take $\lambda$ with $v=1$, so the frame is $\psi'(z+1)$. Its shift
+$\frac12$ has weight zero, and it has one double pole per period. Both are handled exactly as the first plane handles $a=0$, through a weight zero in a
+frame on the same shifts. The geometry is the same for all $(a,b)$. For $v\ne0$, Theorem~\ref{thm:content2} gives the
+denominators with $\Lambda_2$. For $v=0$, the exponent $\Lambda_\pi$ above gives them, and $\Lambda_\pi<\Lambda_2$.
+Proposition~\ref{prop:cert2} with Theorem~\ref{thm:decayframe} gives the decay for every frame, also when one weight is
+zero, and Theorem~\ref{thm:nvframe} gives nonvanishing with one deleted node, since $d\le3$. Theorem~\ref{thm:deduction}
+gives
 \[
  \mu(\xi)\le\frac\rho{D-\Lambda_2}\le\ExpPlB<\MuPlaneB .\qedhere
 \]
 \end{proof}
 
+Theorem~\ref{thm:ends} gives better bounds at the two ends, by separate proofs.
+
 \subsection{The value $\zeta(3)$}\label{ssec:zeta3}
-For $u=0$ the frame is $\psi'(z+1)$, with $d=2$ and $\xi=-2\zeta(3)$. Everything above holds with the half map set to $0$.
+For the separate bound of Theorem~\ref{thm:ends} we take $u=0$, $v=1$ and $c=\frac3{10}$. The frame is $\psi'(z+1)$,
+with $d=2$ and $\xi=-2\zeta(3)$. Everything above holds with the half map set to $0$.
 The cells are then the periods, $W_3$ takes the values $0$ and $2$, and $\varepsilon=0$ in
 Proposition~\ref{prop:rows2}. The bounds (P4) and (P5) become $6(r+m-p)$ and $3(\bar N-p)_+$, and (P6), (P7) vanish. In (R)
-the four cells become two, and the potentials are $(0,0,2,2)$ and $(2,2,0,0)$. With $c=\frac3{10}$ the integral of the
-profile is
-\begin{multline*}
- \Lambda_{\zeta(3)}=\frac{78871534239346376957366127790384501}{27370345362695344229217529371840000}+\frac9{200}\log2\\
- =2.91283\,35313\ldots
-\end{multline*}
+the four cells become two, and the potentials are $(0,0,2,2)$ and $(2,2,0,0)$. With $c=\frac3{10}$, and with (P1)
+without its last term on $(0,\frac3{500}]$, the profile has integral
+\[
+ \Lambda_{\zeta(3)}\le\frac{2912839}{10^6}.
+\]
 The reference frame is the function $F_{1/2}$, and its certificate is that of the row for $\pi^2$ in
 Table~\ref{tab:data}. Theorem~\ref{thm:nvframe} with $d=2$ gives nonvanishing with one deleted node.
 
@@ -2715,9 +2772,11 @@ the decay certificates. Numerical computations alone are not used as proof.
 The statements are in the file \lean{ChallengeHybrid.lean}. Their proofs are in \lean{SolutionHybrid.lean}, in the
 namespace \lean{TrigammaDifferences}. Each number $\xi$ is written as a series, or through \lean{Real.pi^2}. The
 series is the classical one where there is one. Otherwise it is $\Psi(s,t)$, and $\zeta(3)$ is the series
-$\sum_{n\ge0}(n+1)^{-3}$. Each theorem states that $b^{-\mu_0}<|\xi-a/b|$ for all $a\in\Z$ and all sufficiently large
-$b$. The plane theorems state this for all rationals $a$ and $b$, not both zero. The first plane theorem also states
-the irrationality of the number. The theorems are the following.
+$\sum_{n\ge0}(n+1)^{-3}$. Each point theorem states that $b^{-\mu_0}<|\xi-a/b|$ for all $a\in\Z$ and all sufficiently
+large $b$. The plane theorems take the rational coefficients $a$ and $b$, not both zero, and write the fraction as $p/q$.
+They state that $q^{-\mu_0}<|\xi-p/q|$ for all $p\in\Z$ and all sufficiently large $q$, where $\xi$ is $aL+b\pi^2$,
+respectively $a\zeta(3)+b\pi^2$. The statements have no separate irrationality clause, since the bound for all large
+denominators implies irrationality. The theorems are the following.
 \begin{itemize}
 \item \lean{plane1_measure}: Theorem~\ref{thm:plane1}, with $\mu_0=\MuPlaneA$.
 \item \lean{chi3_measure}: Theorem~\ref{thm:points1}(i), with $\mu_0=\MuChi$.
@@ -2756,6 +2815,12 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
  \lean{Decay.AltDecay.altGeom_hasScaledDecay_Tr}, with the same conclusion. There the cells on the contour at breakpoints use the
  truncated logarithm, proved in \lean{Decay/Breakpoint/TruncLog.lean} and \lean{Decay/Breakpoint/CellT.lean}.
 \item \lean{measure_of_family_nv0_even} is Theorem~\ref{thm:deduction} at the even scales.
+\item \lean{Content.BankShared.KTerm.hasScaledContent_of_periodic} is Theorem~\ref{thm:periodic} in the form used
+ for Theorems~\ref{thm:planecontent} and~\ref{thm:content2}.
+\item \lean{Bank.Plane1.Dips.dip_point} is Theorem~\ref{thm:dips} together with the deduction of
+ Theorem~\ref{thm:points1}(iii)--(v).
+\item \lean{Bank.Plane2.plane2_point_ab_of_content} is the proof of Theorem~\ref{thm:plane2}, for every rational
+ $(a,b)\ne(0,0)$, from the denominator bounds of the three cases $v\ne0$ with $u\ne0$, $u=0$ and $v=0$.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}. The command \texttt{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem in arithmetic
