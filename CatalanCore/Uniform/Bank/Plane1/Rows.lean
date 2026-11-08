@@ -94,6 +94,34 @@ theorem plane_frame_point (σ : Support) (a b c : ℤ) (h0 : a + b + c = 0) (ha 
   rw [one_mul] at h1 hE
   simpa using h1.affine (by simpa using hE) ((planeU σ a)⁻¹) 0 (inv_ne_zero hu)
 
+/-- **The zero-weight frame (0, 1, -1)** (a = 0, P119): `π²` has the measure bound `cc / (D - Λ)` and is irrational. -/
+theorem plane_frame_point_pi (σ : Support) {Λ D cc : ℚ}
+    (hΛ : HasScaledContent (AltEven planeC planeC_pos (planeFrame σ 0 1 (-1) (by norm_num)) planeDepth)
+      planeG.scale (Λ : ℝ))
+    (hD : HasScaledDecay (planeG.family (planeFrame σ 0 1 (-1) (by norm_num)) planeDepth) planeG.scale
+      (D : ℝ) (cc : ℝ))
+    (hη : Λ < D) (hcc : 0 < cc) :
+    MeasureLBAt (Real.pi ^ 2) ((cc : ℝ) / ((D : ℝ) - (Λ : ℝ))) ∧ Irrational (Real.pi ^ 2) := by
+  have hη' : (Λ : ℝ) < D := by exact_mod_cast hη
+  have hcc' : (0 : ℝ) < cc := by exact_mod_cast hcc
+  obtain ⟨hLB, hirr⟩ := alt_row_theorem planeC planeC_pos (planeFrame σ 0 1 (-1) (by norm_num)) planeDepth
+    hΛ hD hη' hcc' (plane_nv0_even_zero σ 1 (-1) (by norm_num) (by norm_num) planeDepth le_rfl)
+  have hconst : (planeFrame σ 0 1 (-1) (by norm_num)).const = Real.pi ^ 2 / 3 := by
+    rw [plane_const_ab]
+    have : planeU σ 0 = 0 := by simp [planeU]
+    rw [this]; push_cast; ring
+  have hE : (0 : ℝ) ≤ 1 * (cc : ℝ) / ((D : ℝ) - (Λ : ℝ)) := by
+    have : (0 : ℝ) < (D : ℝ) - Λ := by linarith
+    positivity
+  have h1 : MeasureLBAt (planeFrame σ 0 1 (-1) (by norm_num)).const (1 * (cc : ℝ) / ((D : ℝ) - (Λ : ℝ))) :=
+    (MeasureLB_iff _ _).mp hLB
+  rw [hconst] at h1 hirr
+  have hx : Real.pi ^ 2 = ((3 : ℚ) : ℝ) * (Real.pi ^ 2 / 3) + ((0 : ℚ) : ℝ) := by push_cast; ring
+  rw [hx]
+  rw [one_mul] at h1 hE
+  refine ⟨?_, irrational_affine hirr 3 0 (by norm_num)⟩
+  simpa using h1.affine (by simpa using hE) 3 0 (by norm_num)
+
 /-- **Sixths (P118)**: `t = 11/135`, the frame `(5, -2, -3)` on `S⁺` (`ψ′(1/6) - ζ(2) = (45/2)(L₃ + 11π²/135)`). -/
 theorem sixths_point {Λ D cc : ℚ}
     (hΛ : HasScaledContent (AltEven planeC planeC_pos
@@ -124,5 +152,6 @@ end CatalanCore.Uniform.Bank.Plane1
 
 #print axioms CatalanCore.Uniform.Bank.Plane1.alt_row_theorem
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_frame_point
+#print axioms CatalanCore.Uniform.Bank.Plane1.plane_frame_point_pi
 #print axioms CatalanCore.Uniform.Bank.Plane1.sixths_point
 #print axioms CatalanCore.Uniform.Bank.Plane1.mirror_point

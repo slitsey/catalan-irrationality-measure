@@ -10,7 +10,7 @@ set_option maxRecDepth 100000
 
 /-! # The plane 1 measure bound (wave P114; ledger P116, P117, P118)
 
-**`plane1_measure`** (a, b form; `a ≠ 0` for now, one place: P119 relaxes it) is derived from `plane1_measure_t`: for every rational `t`, `L₃ + t π²` is irrational and `μ(L₃ + t π²) ≤ 20.6622`, with no open
+**`plane1_measure`** (a, b form, `(a, b) ≠ (0, 0)`, P119) is `plane_point_ab`; its `a ≠ 0` half is `plane1_measure_t`: for every rational `t`, `L₃ + t π²` is irrational and `μ(L₃ + t π²) ≤ 20.6622`, with no open
 hypotheses: the content `planeLam` is `planeContent_data` (closed form, `N = 32` strips), the decay is the generated
 cover `Dp1` (`planeDecay_cover`), and `ccert / (Dt - planeLam) ≤ 20.6622` is an exact rational comparison.  The frame of `t`
 is `exists_planeRow t`: `S⁺`, or `S⁻` at `t ∈ {1/9, 1/27}`.  `plane1_sixths` is the corollary at `t = 11/135`
@@ -42,23 +42,13 @@ theorem plane1_measure_t (t : ℚ) :
   obtain ⟨h1, h2⟩ := plane_point t planeContent_data planeDecay_cover plane1_eta plane1_cc
   exact ⟨h1.mono plane1_ratio_real, h2⟩
 
-/-- **The plane 1 theorem in (a, b) form**: for rational `a ≠ 0` and `b`, `a L₃ + b π²` is irrational and
-`μ(a L₃ + b π²) ≤ 20.6622`.  The hypothesis `ha : a ≠ 0` enters only here (the affine transfer from `t = b / a`);
-the a = 0 case replaces this proof (P119) without touching the cover data. -/
-theorem plane1_measure (a b : ℚ) (ha : a ≠ 0) :
+/-- **The plane 1 theorem in (a, b) form**: for rational `(a, b) ≠ (0, 0)`, `a L₃ + b π²` is irrational and
+`μ(a L₃ + b π²) ≤ 20.6622`, by the plane route itself at `a = 0` too (the zero-weight frame `(0, 1, -1)`, `plane_pi_point`). -/
+theorem plane1_measure (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
     MeasureLBAt ((a : ℝ) * CatalanFrames.P6.chi3L2 + (b : ℝ) * Real.pi ^ 2) (206622 / 10000) ∧
       Irrational ((a : ℝ) * CatalanFrames.P6.chi3L2 + (b : ℝ) * Real.pi ^ 2) := by
-  obtain ⟨h1, h2⟩ := plane1_measure_t (b / a)
-  have e : (a : ℝ) * (CatalanFrames.P6.chi3L2 + ((b / a : ℚ) : ℝ) * Real.pi ^ 2) + ((0 : ℚ) : ℝ) =
-      (a : ℝ) * CatalanFrames.P6.chi3L2 + (b : ℝ) * Real.pi ^ 2 := by
-    have : (a : ℝ) ≠ 0 := by exact_mod_cast ha
-    push_cast
-    field_simp
-    ring
-  have m := h1.affine (by norm_num) a 0 ha
-  have i := irrational_affine h2 a 0 ha
-  rw [e] at m i
-  exact ⟨m, i⟩
+  obtain ⟨h1, h2⟩ := plane_point_ab a b hab planeContent_data planeDecay_cover plane1_eta plane1_cc
+  exact ⟨h1.mono plane1_ratio_real, h2⟩
 
 /-- **Sixths (P118)**: `t = 11/135`, `ψ′(1/6) - ζ(2) = (45/2)(L₃ + 11π²/135)`. -/
 theorem plane1_sixths :

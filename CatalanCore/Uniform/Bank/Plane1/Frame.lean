@@ -21,10 +21,25 @@ denominators `3k - 1`), normalisation `1`, contour data `xs = ¾` (`S⁺`), `¼`
   is needed only for `plane_nv0_even`);
 * `plane_const` (P112, generalising `p6Frame_const`): `const = u (L₃ + t π²)`, with `u = ± 9a/2`,
   `t = ± (3a + 2b)/(27 a)` (sign `+` on `S⁺`, `-` on `S⁻`);
+* `plane_const_ab` (P119): the constant `u L₃ + (a/2 + b/3) π²` for all weights, including `a = 0`;
+* `plane_nv0_even_zero` (P119): non-vanishing at the zero-weight frame `(0, b, -b)` (two-term frame);
 * `plane_nv0_even` (P110): non-vanishing of the even-scale family `altGeom (1/6)` for weights all nonzero
   (Theorem UNV, `L = 2`, `hasNV0`);
 * `exists_planeFrame` (P113, the frame of Theorem R): every rational `t` is `planeT σ a b` for a plane frame with
   three nonzero weights, `S⁺` except at `t ∈ {1/9, 1/27}` where the mirror support `S⁻` is used. -/
+
+namespace CatalanCore.Uniform
+open CatalanCore
+
+/-- The polynomial family of a frame reads the frame only through `Frame.Mn`: frames with the same Loewner entries
+(e.g. one differing by atoms of weight zero) have the same polynomials. -/
+theorem polynomial_congr_of_Mn {Fr Fr' : Frame} (hMn : Fr.Mn = Fr'.Mn) (G : NodeFamily) :
+    NodeFamily.polynomial Fr G = NodeFamily.polynomial Fr' G := by
+  funext i
+  unfold NodeFamily.polynomial Rect.FullN Rect.blkA Rect.blkB Rect.blkC Rect.blkD
+  rw [hMn]
+
+end CatalanCore.Uniform
 
 namespace CatalanCore.Uniform.Bank.Plane1
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanFrames.P6
@@ -226,6 +241,26 @@ theorem plane_const (σ : Support) (a b c : ℤ) (h0 : a + b + c = 0) (ha : a �
   field_simp
   linear_combination (-(486 * (a : ℝ) + 324 * b) * Real.pi ^ 2) * hs
 
+/-- **The constant in (a, b) form** (P112, P119): for all integer weights, with no non-vanishing hypothesis,
+`F'(0) = u L₃ + (a/2 + b/3) π²`, `u = ± 9a/2`.  At `a = 0` it is `(b/3) π²`. -/
+theorem plane_const_ab (σ : Support) (a b c : ℤ) (h0 : a + b + c = 0) :
+    (planeFrame σ a b c h0).const =
+      ((planeU σ a : ℚ) : ℝ) * chi3L2 + ((((a : ℚ) / 2 + b / 3 : ℚ)) : ℝ) * Real.pi ^ 2 := by
+  have e : (planeFrame σ a b c h0).const =
+      (∑ i : Fin 3, ((![a, b, c] i : ℤ) : ℝ) * hurwitzTail2 (![σ.shift, 1 / 2, 1] i)) /
+        ((1 : ℚ) : ℝ) := rfl
+  rw [e, Fin.sum_univ_three]
+  simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
+    Matrix.tail_cons]
+  rw [hurwitz_shift_pi, hurwitz_half_pi, hurwitz_one_pi]
+  have hc : (c : ℝ) = -a - b := by
+    have : c = -a - b := by omega
+    rw [this]; push_cast; ring
+  unfold planeU
+  push_cast
+  rw [hc]
+  ring
+
 /-- The rational form of `plane_const`, for a statement about `L₃ + t π²`. -/
 theorem plane_const_eq (σ : Support) (a b c : ℤ) (h0 : a + b + c = 0) (ha : a ≠ 0) (t : ℚ)
     (ht : planeT σ a b = t) :
@@ -335,9 +370,87 @@ theorem plane_nv0_even (σ : Support) (a b c : ℤ) (h0 : a + b + c = 0) (ha : a
   obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
   exact ⟨n, ⟨hn, by show n.1 % 2 = 0; have : planeG.scale n = n.1 := rfl; omega⟩, hsc, hne⟩
 
+/-! ### The zero-weight frame `(0, b, -b)` (P119)
+
+At `a = 0` the atom of weight `0` contributes nothing to `Frame.Delta`, `Frame.Dsq`, hence to `Frame.Mn`, the matrices
+and the polynomials: the family equals that of the two-term frame `(b, -b)` on `(1/2, 1)`, as in the halves bank. -/
+
+/-- The two-term frame `(b, -b)` on `(1/2, 1)`. -/
+def planeFrame2 (σ : Support) (b : ℤ) : Frame where
+  d := 2
+  μ := ![1 / 2, 1]
+  w := ![b, -b]
+  norm := 1
+  xs := σ.xs
+  δ0 := 1 / 4
+  n0off := 1
+  hμ := by
+    intro i
+    fin_cases i <;> norm_num
+  hμinj := by
+    intro i j hij h
+    fin_cases i <;> fin_cases j <;> simp at hij h <;> norm_num at h
+  hw := by simp [Fin.sum_univ_two]
+  hnorm := by norm_num
+
+theorem planeFrame_zero_Mn (σ : Support) (b c : ℤ) (h0 : 0 + b + c = 0) :
+    (planeFrame σ 0 b c h0).Mn = (planeFrame2 σ b).Mn := by
+  obtain rfl : c = -b := by omega
+  have hD : (planeFrame σ 0 b (-b) h0).Delta = (planeFrame2 σ b).Delta := by
+    funext k
+    show (∑ i : Fin 3, (((planeFrame σ 0 b (-b) h0).w i : ℤ) : ℚ) / ((k : ℚ) - 1 + (planeFrame σ 0 b (-b) h0).μ i)) =
+      ∑ i : Fin 2, (((planeFrame2 σ b).w i : ℤ) : ℚ) / ((k : ℚ) - 1 + (planeFrame2 σ b).μ i)
+    simp [Fin.sum_univ_three, Fin.sum_univ_two, planeFrame, planeFrame2]
+  have hS : (planeFrame σ 0 b (-b) h0).Dsq = (planeFrame2 σ b).Dsq := by
+    funext k
+    show (∑ i : Fin 3, (((planeFrame σ 0 b (-b) h0).w i : ℤ) : ℚ) / ((k : ℚ) - 1 + (planeFrame σ 0 b (-b) h0).μ i) ^ 2) =
+      ∑ i : Fin 2, (((planeFrame2 σ b).w i : ℤ) : ℚ) / ((k : ℚ) - 1 + (planeFrame2 σ b).μ i) ^ 2
+    simp [Fin.sum_univ_three, Fin.sum_univ_two, planeFrame, planeFrame2]
+  funext x y
+  simp only [Frame.Mn, hD, hS, planeFrame_norm]
+  rfl
+
+theorem planeFrame_zero_const (σ : Support) (b c : ℤ) (h0 : 0 + b + c = 0) :
+    (planeFrame σ 0 b c h0).const = (planeFrame2 σ b).const := by
+  obtain rfl : c = -b := by omega
+  show (∑ i : Fin 3, (((planeFrame σ 0 b (-b) h0).w i : ℤ) : ℝ) * hurwitzTail2 ((planeFrame σ 0 b (-b) h0).μ i)) / ((1 : ℚ) : ℝ) =
+    (∑ i : Fin 2, (((planeFrame2 σ b).w i : ℤ) : ℝ) * hurwitzTail2 ((planeFrame2 σ b).μ i)) / ((1 : ℚ) : ℝ)
+  simp [Fin.sum_univ_three, Fin.sum_univ_two, planeFrame, planeFrame2]
+
+theorem plane_nv0_even_zero (σ : Support) (b c : ℤ) (h0 : 0 + b + c = 0) (hb : b ≠ 0)
+    (depth : ℕ) (hdepth : planeDepth ≤ depth) :
+    ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
+      ∃ n, ((planeG.family (planeFrame σ 0 b c h0) depth).restrictAdm (fun i => i.1 % 2 = 0)).Adm n ∧
+        planeG.scale n = 2 * s ∧
+        ((planeG.family (planeFrame σ 0 b c h0) depth).restrictAdm (fun i => i.1 % 2 = 0)).evalQ n x ≠ 0 := by
+  have hpoly := polynomial_congr_of_Mn (planeFrame_zero_Mn σ b c h0) planeG.geometry
+  have hw : ∀ i, (planeFrame2 σ b).w i ≠ 0 := by
+    intro i; fin_cases i
+    · exact hb
+    · show -b ≠ 0
+      simpa using hb
+  have hdep : planeG.selectionDepth (planeFrame2 σ b) 2 ≤ depth := by
+    refine le_trans ?_ hdepth
+    show planeG.selectionDepth (planeFrame2 σ b) 2 ≤ planeG.selectionDepth (planeFrame σ 0 b c h0) 2
+    unfold BlockGeom.selectionDepth
+    apply Nat.div_le_div_right
+    show 2 * 2 + _ + _ - 2 ≤ 3 * 2 + _ + _ - 2
+    omega
+  obtain ⟨R0, hR⟩ := planeG.hasNV0 (planeFrame2 σ b) 2 depth (by norm_num) (by show 1 ≤ 2; norm_num) hw
+    (fun i => by simp [planeG, planeC, altGeom, single, commonB])
+    (fun i => by simp [planeG, planeC, altGeom, single, rowB])
+    (fun i => by simp [planeG, planeC, altGeom, single, colB]) hdep
+  refine ⟨R0, fun s hs x => ?_⟩
+  obtain ⟨n, hn, hsc, hne⟩ := hR (2 * s) (by omega) x
+  have hne' : (NodeFamily.polynomial (planeFrame2 σ b) planeG.geometry n).eval x ≠ 0 := hne
+  refine ⟨n, ⟨hn, by show n.1 % 2 = 0; have : planeG.scale n = n.1 := rfl; omega⟩, hsc, ?_⟩
+  show (NodeFamily.polynomial (planeFrame σ 0 b c h0) planeG.geometry n).eval x ≠ 0
+  rw [hpoly]; exact hne'
 end CatalanCore.Uniform.Bank.Plane1
 
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_const
+#print axioms CatalanCore.Uniform.Bank.Plane1.plane_const_ab
+#print axioms CatalanCore.Uniform.Bank.Plane1.plane_nv0_even_zero
 #print axioms CatalanCore.Uniform.Bank.Plane1.exists_planeRow
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_nv0_even
 #print axioms CatalanCore.Uniform.Bank.Plane1.planeFrame_contourCheck

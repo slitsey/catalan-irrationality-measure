@@ -43,6 +43,40 @@ theorem plane_point (t : ℚ) {Λ D cc : ℚ} (hΛ : PlaneContent Λ) (hD : Plan
   have := plane_frame_point σ a b c h0 ha hb hc (hΛ σ a b c h0) (hD σ a b c h0) hη hcc
   rwa [hT] at this
 
+/-- **The plane theorem at `a = 0`** (P119): `π²`, by the zero-weight frame `(0, 1, -1)`. -/
+theorem plane_pi_point {Λ D cc : ℚ} (hΛ : PlaneContent Λ) (hD : PlaneDecay D cc) (hη : Λ < D) (hcc : 0 < cc) :
+    MeasureLBAt (Real.pi ^ 2) ((cc : ℝ) / ((D : ℝ) - (Λ : ℝ))) ∧ Irrational (Real.pi ^ 2) :=
+  plane_frame_point_pi .plus (hΛ .plus 0 1 (-1) (by norm_num)) (hD .plus 0 1 (-1) (by norm_num)) hη hcc
+
+/-- **The plane theorem on the whole projective line** (P116, P119): `a L₃ + b π²` for rational `(a, b) ≠ (0, 0)`. -/
+theorem plane_point_ab (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) {Λ D cc : ℚ} (hΛ : PlaneContent Λ)
+    (hD : PlaneDecay D cc) (hη : Λ < D) (hcc : 0 < cc) :
+    MeasureLBAt ((a : ℝ) * chi3L2 + (b : ℝ) * Real.pi ^ 2) ((cc : ℝ) / ((D : ℝ) - (Λ : ℝ))) ∧
+      Irrational ((a : ℝ) * chi3L2 + (b : ℝ) * Real.pi ^ 2) := by
+  have hη' : (Λ : ℝ) < D := by exact_mod_cast hη
+  have hcc' : (0 : ℝ) < cc := by exact_mod_cast hcc
+  have hE : (0 : ℝ) ≤ (cc : ℝ) / ((D : ℝ) - (Λ : ℝ)) := by
+    have : (0 : ℝ) < (D : ℝ) - Λ := by linarith
+    positivity
+  by_cases ha : a = 0
+  · have hb : b ≠ 0 := by tauto
+    obtain ⟨h1, h2⟩ := plane_pi_point hΛ hD hη hcc
+    have e : (a : ℝ) * chi3L2 + (b : ℝ) * Real.pi ^ 2 = (b : ℝ) * Real.pi ^ 2 + ((0 : ℚ) : ℝ) := by
+      subst ha; push_cast; ring
+    rw [e]
+    have e2 : (b : ℝ) * Real.pi ^ 2 + ((0 : ℚ) : ℝ) = (b : ℝ) * Real.pi ^ 2 + ((0 : ℚ) : ℝ) := rfl
+    exact ⟨h1.affine hE b 0 hb, irrational_affine h2 b 0 hb⟩
+  · obtain ⟨h1, h2⟩ := plane_point (b / a) hΛ hD hη hcc
+    have e : (a : ℝ) * (chi3L2 + ((b / a : ℚ) : ℝ) * Real.pi ^ 2) + ((0 : ℚ) : ℝ) =
+        (a : ℝ) * chi3L2 + (b : ℝ) * Real.pi ^ 2 := by
+      have : (a : ℝ) ≠ 0 := by exact_mod_cast ha
+      push_cast
+      field_simp
+      ring
+    have m := h1.affine hE a 0 ha
+    have i := irrational_affine h2 a 0 ha
+    rw [e] at m i
+    exact ⟨m, i⟩
 /-- The data of a bank for the support `σ` (see `plane_content`). -/
 structure PlaneBankOK (σ : Support) (kd : KBankData) : Prop where
   check : kcheck kd = true
@@ -91,5 +125,6 @@ theorem plane_point_of_covers (t : ℚ) {kP kM : KBankData} (hP : PlaneBankOK .p
 end CatalanCore.Uniform.Bank.Plane1
 
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_point
+#print axioms CatalanCore.Uniform.Bank.Plane1.plane_point_ab
 #print axioms CatalanCore.Uniform.Bank.Plane1.planeContent_of_banks
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_point_of_covers
