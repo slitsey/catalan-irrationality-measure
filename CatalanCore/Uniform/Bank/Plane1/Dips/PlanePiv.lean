@@ -188,10 +188,11 @@ theorem hybPiv_plane (hN : 3 * (r + 2 * m) < p * p) (hm : 2 * m < p) :
     HybPiv r m p (planeFrame σ a b c h0) (pRd σ n p fl r m hm) (pCd σ n p fl r m hm)
       (fun i => lamNode σ a b c n p fl (r + 2 * i.1)) (fun i => lamNode σ a b c n p fl (r + 2 * i.1 + 1))
       (fun i => vsNode σ a b c h0 n p fl (r + 2 * i.1)) (fun i => vsNode σ a b c h0 n p fl (r + 2 * i.1 + 1)) where
-  hden := plane_den_le σ a b c h0
-  h5 := by omega
+  h3 := by omega
   hnorm := rfl
-  hN := hN
+  v_mem t ht := Vp_mem_Q (plane_den_le σ a b c h0) (by omega)
+  u_mem t ht := Up_mem_Q (plane_den_le σ a b c h0) (by omega)
+  square_free U V hU hV hne := diff_not_sq_of_lt (by omega) (by omega) hne
   hm := hm
   rowP i c' h := by
     have hi := i.2

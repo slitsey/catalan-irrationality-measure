@@ -44,7 +44,12 @@ theorem member_crude (hden : ∀ i, (Fr.μ i).den ≤ 3) (h5 : 5 ≤ p) (hnorm :
     GLE p (2 * (r + m) + 2 * (r - s.card)) (commonMinorPoly Fr r m s) := by
   have hP : HybPiv r m p Fr (fun _ => (none : Option (Fin r))) (fun _ => none) (fun _ => 0) (fun _ => 0)
       (fun i => Vp p Fr (r + 2 * i.1)) (fun i => Vp p Fr (r + 2 * i.1 + 1)) :=
-    { hden := hden, h5 := h5, hnorm := hnorm, hN := hN, hm := hm
+    { h3 := by omega
+      hnorm := hnorm
+      v_mem := fun t ht => Vp_mem_Q hden (by omega)
+      u_mem := fun t ht => Up_mem_Q hden (by omega)
+      square_free := fun U V hU hV hne => diff_not_sq_of_lt (by omega) (by omega) hne
+      hm := hm
       rowP := fun i c h => by simp at h
       rowN := fun i _ => rfl
       colP := fun i c h => by simp at h

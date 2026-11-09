@@ -142,11 +142,13 @@ noncomputable def restrictVc (p : ℕ) (Fr : Frame) (G : GData ι) (Vc : ι → 
 
 theorem restrict_GOK (hG : GOK p Fr G Vr Vc) (he : Function.Injective e) :
     GOK p Fr (G.restrict e) (restrictVr p Fr G Vr e) (restrictVc p Fr G Vc e) where
-  hden := hG.hden
-  h5 := hG.h5
+  h3 := hG.h3
   hnorm := hG.hnorm
-  small_r u := hG.small_r (e u)
-  small_c u := hG.small_c (e u)
+  v_r u := hG.v_r (e u)
+  v_c u := hG.v_c (e u)
+  u_r u := hG.u_r (e u)
+  u_c u := hG.u_c (e u)
+  square_free u v hne := hG.square_free (e u) (e v) hne
   isC_node u hu := hG.isC_node (e u) hu
   rowPiv x b h := by
     obtain ⟨hC, hCx, j, hj0, hX, hrel⟩ := hG.rowPiv (e x) (e b) (restrict_π_some he h)
@@ -369,10 +371,12 @@ theorem memKey_inj (s : Finset (Fin r)) : Function.Injective (memKey r m s) := b
 `VR`, `VC` are the effective levels `V*` of the border rows and columns. -/
 structure HybPiv (p : ℕ) [Fact p.Prime] (Fr : Frame) (pR pC : Fin m → Option (Fin r)) (lR lC : Fin m → ℚ)
     (VR VC : Fin m → ℚ) : Prop where
-  hden : ∀ i, (Fr.μ i).den ≤ 3
-  h5 : 5 ≤ p
+  h3 : 3 ≤ p
   hnorm : Fr.norm = 1
-  hN : 3 * (r + 2 * m) < p * p
+  v_mem : ∀ t, t < r + 2 * m → Vp p Fr t ∈ LocRing p
+  u_mem : ∀ t, t < r + 2 * m → Up p Fr t ∈ LocRing p
+  square_free : ∀ U V, U < r + 2 * m → V < r + 2 * m → U ≠ V →
+    ¬ (p : ℤ) * p ∣ (V : ℤ) - U
   hm : 2 * m < p
   rowP : ∀ i c, pR i = some c → ∃ j : ℕ, 0 < j ∧ r + 2 * i.1 = c.1 + j * p ∧
     lR i * (j * Up p Fr c.1) = Vp p Fr (r + 2 * i.1) - Vp p Fr c.1 ∧
@@ -394,17 +398,36 @@ variable {pR pC : Fin m → Option (Fin r)} {lR lC : Fin m → ℚ} {VR VC : Fin
 
 theorem hyb_GOK (h : HybPiv r m p Fr pR pC lR lC VR VC) :
     GOK p Fr (hfData r m pR pC lR lC) (hfVr r m p Fr VR) (hfVr r m p Fr VC) where
-  hden := h.hden
-  h5 := h.h5
+  h3 := h.h3
   hnorm := h.hnorm
-  small_r u := by
+  v_r u := by
+    apply h.v_mem
     rcases u with c | i
-    · have := c.2; have := h.hN; simp [hfData]; omega
-    · have := i.2; have := h.hN; simp [hfData]; omega
-  small_c u := by
+    · have := c.2; simp [hfData] <;> omega
+    · have := i.2; simp [hfData] <;> omega
+  v_c u := by
+    apply h.v_mem
     rcases u with c | i
-    · have := c.2; have := h.hN; simp [hfData]; omega
-    · have := i.2; have := h.hN; simp [hfData]; omega
+    · have := c.2; simp [hfData] <;> omega
+    · have := i.2; simp [hfData] <;> omega
+  u_r u := by
+    apply h.u_mem
+    rcases u with c | i
+    · have := c.2; simp [hfData] <;> omega
+    · have := i.2; simp [hfData] <;> omega
+  u_c u := by
+    apply h.u_mem
+    rcases u with c | i
+    · have := c.2; simp [hfData] <;> omega
+    · have := i.2; simp [hfData] <;> omega
+  square_free u v hne := by
+    apply h.square_free _ _ ?_ ?_ hne
+    · rcases u with c | i
+      · have := c.2; simp [hfData] <;> omega
+      · have := i.2; simp [hfData] <;> omega
+    · rcases v with c | i
+      · have := c.2; simp [hfData] <;> omega
+      · have := i.2; simp [hfData] <;> omega
   isC_node u hu := by
     rcases u with c | i
     · rfl
