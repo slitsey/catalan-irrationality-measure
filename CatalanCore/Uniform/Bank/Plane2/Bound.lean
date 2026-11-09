@@ -370,7 +370,7 @@ theorem plane2_family_point (D : Datum) (hdepth : D.d / 2 ≤ 1)
     show D.xi = _
     rw [hconst]; push_cast; ring
   have key := support_measureLB Famr (SeqFamily.scale P2G.geometry) hΛ' hD hη hc one_pos
-    (Nat.cast_nonneg _) hdeg heven hnv (ξ := ξ) (a := lam) (b := 0) hlam hconst'
+    (Nat.cast_nonneg _) hdeg hnv (ξ := ξ) (a := lam) (b := 0) hlam hconst'
   refine ⟨key.1.mono ?_, key.2⟩
   have e1 : p2Cert.cr = ((Cover.Dchi.ccert : ℚ) : ℝ) := rfl
   have e2 : p2Cert.Dr = ((Cover.Dchi.Dt : ℚ) : ℝ) := rfl
