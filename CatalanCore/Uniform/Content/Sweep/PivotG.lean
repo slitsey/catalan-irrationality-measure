@@ -251,7 +251,115 @@ theorem lemmaG_S (hodd : p % 2 = 1) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 
 
 end Inst
 
+/-! ### General integer-pole transfer at fixed mod-p² precision (Q05)
+
+The complete period class has one half-independent source. Order changes the
+concrete period levels, not the residue cancellation engine. Actual class solutions
+are hypotheses; no automatic nondegeneracy assertion is made.
+-/
+namespace HPole
+open CatalanCore.Uniform.Content.Sweep.Gen
+variable {p : ℕ} [hp : Fact p.Prime]
+  {R : Type*} [CommRing R] [Algebra (LocRing p) R]
+
+noncomputable def qS (ord : ℕ) (d : ℕ → ℚ) (ξ : R) (n t : ℕ) : S2 p R :=
+  pi2 p R (Qh (p := p) ord d ξ n t)
+noncomputable def BmS (ord : ℕ) (d : ℕ → ℚ) (ξ : R) (_half l j : ℕ) : S2 p R :=
+  pi2 p R (Bm (p := p) ord d ξ l j)
+noncomputable def sgS (ord : ℕ) (d : ℕ → ℚ) (j _half : ℕ) : S2 p R :=
+  pi2 p R (sigR (p := p) ord d j)
+noncomputable def YvS (Yr : ℕ → ℕ → ℕ → R) (b _half o j : ℕ) : S2 p R :=
+  pi2 p R (Yr b o j)
+
+theorem lemmaG_S (ord : ℕ) (hord : 3 ≤ ord) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (ord - 1), d j ∈ LocRing p) (hp5 : 5 ≤ p) {κ k' π N' : ℕ} (hN : 2 * N' < p * p)
+    (hH : (κ + 2 * k') * p ≤ N') (ξ : R)
+    (Yr : ℕ → ℕ → ℕ → R)
+    (hclassR : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+      ∑ j ∈ Cper κ k' o, Bm (p := p) ord d ξ l j * Yr b o j =
+        if b = 0 then 1 else sigR (p := p) ord d l)
+    (n : ℕ) (hn : n < N') (b : ℕ) (hb : b ≤ 1) :
+    ∑ t ∈ PCs p κ k' π, qS ord d ξ n t *
+        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS ord d) (ddS) (YvS Yr) (t % p) *
+          YvS Yr b (0) (oc p κ π (t % p)) (t / p)) =
+      Gen.eps (pi2 p R (p : R)) p κ k' π (sgS ord d) (ddS) (YvS Yr) (n % p) *
+          (∑ j ∈ Cper κ k' (oc p κ π (n % p)),
+            BmS ord d ξ (0) (n / p) j * YvS Yr b (0) (oc p κ π (n % p)) j) +
+        pi2 p R (p : R) * delta κ k' (sgS ord d) (YvS Yr) * Eres p κ π ddS (n % p) *
+          Gam (sgS ord d) b (0) (n / p) := by
+  have hp0 : 0 < p := hp.out.pos
+  have hPS := pi2_P_sq (p := p) (R := R)
+  have hmemt : ∀ t ∈ PCs p κ k' π, t < N' := by
+    intro t ht
+    rw [mem_PCs (p := p) (κ := κ) (k' := k') (π := π) hp0] at ht
+    have hj := ((mem_Cper (κ := κ) (k' := k')).1 ht).1
+    have : t / p < κ + 2 * k' := hj
+    have h1 := (Nat.div_lt_iff_lt_mul hp0).1 this
+    nlinarith
+  refine Gen.lemmaG (pi2 p R (p : R)) p π (sgS ord d) ddS (YvS Yr) hPS hp0 N'
+    (fun _ => 0) (fun _ => rfl) (fun _ => by omega)
+    (qS ord d ξ) (BmS ord d ξ) ?_ ?_ ?_ ?_ ?_ ?_ ?_
+    n hn b hb
+  · -- F1
+    intro n' hn' t ht hm
+    unfold qS BmS
+    rw [pi2_eq_iff]
+    exact F1 ord hord d hd ξ (by nlinarith) (by have := hmemt t ht; nlinarith) hm
+  · -- F2
+    intro n' hn' t ht hm
+    unfold qS sgS ddS
+    have hz : ¬ (p : ℤ) ∣ (t : ℤ) - n' := by
+      intro hd
+      apply hm
+      have := (ZMod.intCast_zmod_eq_zero_iff_dvd ((t : ℤ) - n') p).2 hd
+      push_cast at this
+      rw [sub_eq_zero, ZMod.natCast_eq_natCast_iff'] at this
+      exact this.symm
+    have h2 := F2 ord hord d hd ξ (by nlinarith : n' < p * p)
+      (by have := hmemt t ht; nlinarith : t < p * p) hm
+    have h3 := ddR_cong (p := p) (R := R) hz
+    simp only [← map_sub, ← map_mul]
+    rw [pi2_eq_iff]
+    have e : Qh (p := p) ord d ξ n' t -
+        (p : R) * (sigR (p := p) ord d (t / p) - sigR (p := p) ord d (n' / p)) *
+          ddR (p := p) (n' % p) (t % p) =
+        (Qh (p := p) ord d ξ n' t - (p : R) * (sigR (p := p) ord d (t / p) - sigR (p := p) ord d (n' / p)) *
+          toR p ((((t : ℚ) - n')⁻¹))) +
+        (p : R) * (sigR (p := p) ord d (t / p) - sigR (p := p) ord d (n' / p)) *
+          (toR p ((((t : ℚ) - n')⁻¹)) - ddR (p := p) (n' % p) (t % p)) := by
+      ring
+    rw [e]
+    obtain ⟨c, hc⟩ := h3
+    refine dvd_add h2 ?_
+    rw [hc]
+    exact ⟨(sigR (p := p) ord d (t / p) - sigR (p := p) ord d (n' / p)) * c, by ring⟩
+  · intro h l j
+    unfold BmS
+    rw [Bm_symm ord d ξ l j]
+  · intro j hj h hh
+    rfl
+  · intro b o ho j hj h hh
+    rfl
+  · intro ω hω
+    unfold ddS
+    rw [← map_sum, ← map_mul, pi2_eq_zero_iff]
+    obtain ⟨c, hc⟩ := sum_dd_dvd (p := p) (R := R) hp5 ω
+    rw [hc]
+    exact ⟨c, by ring⟩
+  · intro b h o ho l hl
+    have e := congrArg (pi2 p R) (hclassR b o ho l hl)
+    rw [map_sum] at e
+    simp only [map_mul] at e
+    unfold Gam sgS BmS YvS
+    by_cases hb0 : b = 0
+    · simp only [hb0, if_true, map_one] at e ⊢; exact e
+    · simp only [hb0, if_false] at e ⊢; exact e
+
+end HPole
+
 end CatalanCore.Uniform.Content.Sweep
 
 #print axioms CatalanCore.Uniform.Content.Sweep.lemmaG_S
 #print axioms CatalanCore.Uniform.Content.Sweep.sum_dd_dvd
+
+#print axioms CatalanCore.Uniform.Content.Sweep.HPole.lemmaG_S
