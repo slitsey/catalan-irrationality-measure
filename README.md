@@ -1,18 +1,19 @@
-# Irrationality measures for Catalan's constant and differences of trigamma values
+# Irrationality measures for Catalan's constant and related constants
 
-A Lean 4 formalization of irrationality measures for Catalan's constant and for differences of trigamma values. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be
-Catalan's constant, `L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` and `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2`
-the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
+A Lean 4 formalization of irrationality measures for Catalan's constant and, by a construction with Löwner
+determinants, for two planes of constants and further related constants. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
+`L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant, and
+`ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
 `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all sufficiently
 large integers `q`.
 
 > **Theorem.**
 >
 > - μ(G) ≤ 270;
-> - μ(a L(2, χ₋₃) + b π²) ≤ 20.6622 for all rationals a, b, not both zero;
-> - μ(L(2, χ₋₃)) ≤ 13.7046;
-> - μ(L(2, χ₋₃) ± π²/9) ≤ 9.4998, μ(L(2, χ₋₃) ± 2π²/27) ≤ 14, μ(L(2, χ₋₃) ± π²/27) ≤ 15.359 and
->   μ(L(2, χ₋₃) ± π²/18) ≤ 18.161, for both signs;
+> - μ(a L₋₃ + b π²) ≤ 20.6622 for all rationals a, b, not both zero;
+> - μ(L₋₃) ≤ 13.7046;
+> - μ(L₋₃ ± π²/9) ≤ 9.4998, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
+>   μ(L₋₃ ± π²/18) ≤ 18.161, for both signs;
 > - μ(a ζ(3) + b π²) ≤ 335.20 for all rationals a, b, not both zero;
 > - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5253 (weaker than the known bounds, included for completeness);
 > - μ(G ± 5π²/48) ≤ 31.2876, for both signs;
@@ -33,7 +34,7 @@ All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.s
 - S. Litsey, *An irrationality measure for Catalan's constant* (2026), the proof of μ(G) ≤ 270: LaTeX
   source and PDF in [`paper/`](paper/) (`catalan-measure-hexagon.tex` is the single-file version),
   Hexagon preprint [`hexagon:2610.00187`](https://hexagonmath.org/2610.00187).
-- S. Litsey, *Irrationality measures for differences of trigamma values* (2026), the other
+- S. Litsey, *Irrationality measures from Löwner determinants* (2026), the other
   measures: LaTeX source and PDF in [`paper-trigamma/`](paper-trigamma/) (`trigamma-irrationality-hexagon.tex`
   is the single-file version), Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
 
@@ -55,7 +56,7 @@ its Lean formalization. Other bounds in the literature:
   `GeneralNodalWeights` and `NodalRootDeletion`, which bound the weights of nodal polynomials. They are ported
   unchanged into [`CatalanMeasure/GenD/Signed/Davis/`](CatalanMeasure/GenD/Signed/Davis/); the other 31 ported
   files are in `archive/` and are not part of the build. See [`NOTICE`](NOTICE) and `PROVENANCE.json` there.
-- For `L(2, χ₋₃)` and its rational linear combinations with `ζ(2)`, Calegari, Dimitrov and Tang give
+- For `L₋₃` and its rational linear combinations with `π²`, Calegari, Dimitrov and Tang give
   24781 (arXiv:2510.04156, Theorem 5.1 and the remark after it).
 - We know of no earlier irrationality result for `G ± 5π²/48`, `ψ′(a/5) − ζ(2)` or `ψ′(a/7) − ζ(2)`.
 
@@ -67,7 +68,7 @@ its Lean formalization. Other bounds in the literature:
 | [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean) | their proofs, each file ending with `#print axioms` for its theorems |
 | [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa and con-ron kernels bundled with the toolchain; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json` is not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
 | [`CatalanMeasure/GenD/`](CatalanMeasure/GenD/) | the proof of μ(G) ≤ 270 |
-| [`CatalanCore/Uniform/`](CatalanCore/Uniform/) | the proofs for the differences of trigamma values |
+| [`CatalanCore/Uniform/`](CatalanCore/Uniform/) | the proofs of the plane theorems and the other measures |
 | [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml) | provenance, authorship, automation and scope |
 
 ## Catalan's constant: μ(G) ≤ 270
@@ -138,28 +139,32 @@ assembly (`T4Instance`, `T4Leaf*`, `TerminalC`). The generic valuation theorems 
 [`Measure270.lean`](CatalanMeasure/GenD/Signed/RouteI/Measure270.lean), and the public theorem is
 `CatalanIrrationalityMeasure.catalan_irrationalityMeasure_270`.
 
-## Differences of trigamma values
+## The Löwner-determinant measures
 
-For `0 < s < t ≤ 1` put `Ψ(s, t) = ψ′(s) − ψ′(t)`. The other numbers are, up to rational affine
-maps (which do not change `μ`), values of `Ψ` or rational combinations of them:
+The approximations are determinants of rectangular Löwner matrices, the matrices of divided differences, of
+a rational combination of digamma functions `ψ(z + s)` and their derivatives at integer nodes: a common
+block of `r` nodes, which carries the variable, and an interleaved border of about `cr/2` row nodes and
+`cr/2` column nodes, where `c` is the only parameter of the geometry.
+
+When the combination is a difference of two digamma functions, the constant is a difference of trigamma
+values. For `0 < s < t ≤ 1` put `Ψ(s, t) = ψ′(s) − ψ′(t)`. Many of the numbers above are, up to rational
+factors, values of `Ψ`:
 
 ```text
-Ψ(1/4, 1) = 8 (G + 5π²/48),              Ψ(3/4, 1) = −8 (G − 5π²/48),
-Ψ(1/3, 1) = (9/2) (L(2, χ₋₃) + π²/9),    Ψ(2/3, 1) = −(9/2) (L(2, χ₋₃) − π²/9),
-Ψ(1/3, 2/3) = 9 L(2, χ₋₃),               Ψ(a/q, 1) = ψ′(a/q) − ζ(2),
-Ψ(1/6, 1/3) = 18 (L(2, χ₋₃) + 2π²/27),   Ψ(2/3, 5/6) = 18 (L(2, χ₋₃) − 2π²/27),
-Ψ(1/3, 1/2) = (9/2) (L(2, χ₋₃) + π²/27), Ψ(1/2, 2/3) = (9/2) (L(2, χ₋₃) − π²/27).
+Ψ(1/4, 1) = 8 (G + 5π²/48),          Ψ(3/4, 1) = −8 (G − 5π²/48),
+Ψ(1/3, 1) = (9/2) (L₋₃ + π²/9),      Ψ(2/3, 1) = −(9/2) (L₋₃ − π²/9),
+Ψ(1/3, 2/3) = 9 L₋₃,                 Ψ(a/q, 1) = ψ′(a/q) − ζ(2),
+Ψ(1/6, 1/3) = 18 (L₋₃ + 2π²/27),     Ψ(2/3, 5/6) = 18 (L₋₃ − 2π²/27),
+Ψ(1/3, 1/2) = (9/2) (L₋₃ + π²/27),   Ψ(1/2, 2/3) = (9/2) (L₋₃ − π²/27).
 ```
 
 With `s, t` in `{1/6, 1/3, 1/2, 2/3, 5/6, 1}`, every `Ψ(s, t)` lies in the first plane, the rational span of
-`L(2, χ₋₃)` and `π²` modulo the rationals. The second plane is the rational span of `ζ(3)` and `π²`; it
-contains `ψ″(1) = −2ζ(3)`.
+`L₋₃` and `π²` modulo the rationals. The second plane is the rational span of `ζ(3)` and `π²`; it
+contains `ψ″(1) = −2ζ(3)`. A general point of the first plane needs three digamma terms, and `ζ(3)` comes from
+`ψ′(z + 1)` itself, so not every number here is a single value of `Ψ`.
 
-The approximations are determinants of rectangular Löwner matrices of a digamma difference
-`ψ(z+1) − ψ(z+s)` (for `L(2, χ₋₃)`, a combination of three digamma functions) at integer nodes: a common
-block of `r` nodes, which carries the variable, and an interleaved border of about `cr/2` row nodes and
-`cr/2` column nodes, where `c` is the only parameter of the geometry. Three estimates are proved once, for
-every shift.
+Three estimates are proved once, for every frame.
+
 
 - **Content.** As in the arithmetic method of Rhin and Viola, the `p`-adic valuation of the common
   denominator is bounded prime by prime, by a finite list of local bounds: assignment problems with
@@ -183,15 +188,15 @@ Together they give `μ ≤ γ/(D − Λ)`:
 
 | number | (s, t) | c | Λ | D | γ | γ/(D − Λ) | μ ≤ |
 |---|---|---|---|---|---|---|---|
-| a L(2, χ₋₃) + b π² | first plane | 1/6 | 3.2227428 | 3.5503512 | 6.7690926 | 20.66214 | 20.6622 |
-| L(2, χ₋₃) ± 2π²/27 | (1/6, 1/3), (2/3, 5/6) | 1/6 | 3.0668400 | 3.5503512 | 6.7690926 | 13.99987 | 14 |
-| L(2, χ₋₃) ± π²/27 | (1/3, 1/2), (1/2, 2/3) | 1/6 | 3.1096062 | 3.5503512 | 6.7690926 | 15.35830 | 15.359 |
-| L(2, χ₋₃) ± π²/18 | first plane | 1/6 | 3.1776039 | 3.5503512 | 6.7690926 | 18.16000 | 18.161 |
+| a L₋₃ + b π² | first plane | 1/6 | 3.2227428 | 3.5503512 | 6.7690926 | 20.66214 | 20.6622 |
+| L₋₃ ± 2π²/27 | (1/6, 1/3), (2/3, 5/6) | 1/6 | 3.0668400 | 3.5503512 | 6.7690926 | 13.99987 | 14 |
+| L₋₃ ± π²/27 | (1/3, 1/2), (1/2, 2/3) | 1/6 | 3.1096062 | 3.5503512 | 6.7690926 | 15.35830 | 15.359 |
+| L₋₃ ± π²/18 | first plane | 1/6 | 3.1776039 | 3.5503512 | 6.7690926 | 18.16000 | 18.161 |
 | a ζ(3) + b π² | second plane | 6/41 | 3.4768376 | 3.4982052 | 7.1600631 | 335.0886 | 335.20 |
 | ζ(3) | ψ′(z + 1) | 3/10 | 2.9128390 | 3.9785713 | 6.4350874 | 6.038184 | 6.0382 |
 | G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7447213 | 7.1904273 | 31.28751 | 31.2876 |
-| L(2, χ₋₃) | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.7046 |
-| L(2, χ₋₃) ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0291249 | 6.8272548 | 9.499725 | 9.4998 |
+| L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.7046 |
+| L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0291249 | 6.8272548 | 9.499725 | 9.4998 |
 | ψ′(a/5) − π²/6 | (a/5, 1) | 2/9 | 3.5128488 | 3.8135797 | 7.1655663 | 23.82717 | 23.8272 |
 | ψ′(a/7) − π²/6 | (a/7, 1) | 1/6 | 3.6391158643 | 3.6432250312 | 7.4218615374 | 1806.172 | 1806.1719 |
 | π² | (1/2, 1) | 3/10 | 2.9923824 | 3.9785713 | 6.4350874 | 6.525207 | 6.5253 |
@@ -214,7 +219,7 @@ frames, Cauchy determinants and Andréief's identity). The data of each family a
 
 ### The first plane
 
-The plane theorem is proved once for all rationals `a, b`, not both zero. Each point `a L(2, χ₋₃) + b π²` with
+The plane theorem is proved once for all rationals `a, b`, not both zero. Each point `a L₋₃ + b π²` with
 `a ≠ 0` is the constant of a frame `(a', b', c')` of three digamma terms with `a' + b' + c' = 0`, on one of two
 supports; the point `a = 0` uses a frame of weight zero. All frames share one decay cover. Their content is
 one instance of the periodic content theorem `Content.BankShared.KTerm.Periodic.hasScaledContent_of_periodic`:
@@ -223,7 +228,7 @@ a base cell certified once covers every translate. The data are in `Bank/Plane1/
 
 ### Special points of the first plane
 
-At `L(2, χ₋₃) ± 2π²/27`, `± π²/27` and `± π²/18` the frames `(2, −1, −1)`, `(1, −2, 1)` and `(4, −3, −1)` admit
+At `L₋₃ ± 2π²/27`, `± π²/27` and `± π²/18` the frames `(2, −1, −1)`, `(1, −2, 1)` and `(4, −3, −1)` admit
 further local bounds, from the rank of the reduction modulo `p` in an assignment form. At a boundary between
 two types of these bounds, the bound used near the boundary is the largest over the few configurations
 that occur there; that these configurations are all that occur is proved for every prime by linear integer
@@ -256,7 +261,7 @@ whose Boolean argument selects the sign; the public theorems are `TrigammaDiffer
 and `TrigammaDifferences.lambda_plus_measure` (the names refer to `λ± = G/2 ± 5π²/96`, so that
 `G ± 5π²/48 = 2λ±`).
 
-### L(2, χ₋₃)
+### L₋₃
 
 The frame is `−⅓ ψ(z + ⅓) + ½ ψ(z + ½) − ⅙ ψ(z + 1)`, with `c = 1/2`. It has three digamma terms, so the
 local bounds at a prime `p` involve two first poles; on each class of primes modulo 6 both are affine in
@@ -266,9 +271,9 @@ one index, and the content theorem applies with `q` replaced by 6. The content c
 the theorem is `CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k`; the public theorem is
 `TrigammaDifferences.chi3_measure`.
 
-### L(2, χ₋₃) ± π²/9
+### L₋₃ ± π²/9
 
-The shifts `1/3` and `2/3`: with `L = L(2, χ₋₃)`, `ψ′(1/3) = 2π²/3 + 9L/2` and `ψ′(2/3) = 2π²/3 − 9L/2`.
+The shifts `1/3` and `2/3`, with `ψ′(1/3) = 2π²/3 + 9L₋₃/2` and `ψ′(2/3) = 2π²/3 − 9L₋₃/2`.
 The content table uses the primes in the classes modulo 6. The data are in `Bank/Thirds/` and
 `Bank/ThirdsContent/`; the theorems are `CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.thirds_plus_measure`
 and `thirds_minus_measure`, and the public theorems `TrigammaDifferences.chi3_plus_pi2_measure` and

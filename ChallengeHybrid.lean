@@ -8,7 +8,7 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Real
 public section
 
 /-!
-Irrationality measures for differences of trigamma values, with every constant written as a series.
+Irrationality measures from Löwner determinants, with every constant written as a series.
 For rationals `a, b`, not both zero, `a L(2, χ₋₃) + b π²` has exponent 20.6622 and `a ζ(3) + b π²` has
 exponent 335.20.
 `L(2, χ₋₃)` has exponent 13.7046; `L(2, χ₋₃) + π²/9` and `L(2, χ₋₃) - π²/9` have exponent 9.4998;
