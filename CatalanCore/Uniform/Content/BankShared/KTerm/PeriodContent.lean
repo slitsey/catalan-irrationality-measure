@@ -337,11 +337,11 @@ theorem head_cov {D : KBankData} (hpar : KParams D) {c : ℚ} {hc : 0 < c} {cons
 set_option maxHeartbeats 4000000 in
 /-- **Theorem D with `PieceBasic` and `PieceCov` in place of `pieceOK`** (the proof of
 `hasScaledContent_of_kcheckFam`). -/
-theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
+theorem hasScaledContent_of_facts_control (D : KBankData) (hpar : KParams D)
     (hcls : kclassOK D = true) (hheads : ∀ x ∈ D.tmpls, ktmplHead D x.1 x.2 = true)
     (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
     (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
-    (hQ : AltQ c hc D.cF Q) (B : SmallBudget)
+    (hQ : AltContentControl c hc const depth D.M Q) (B : SmallBudget)
     (N0 : ℕ) (hbas : ∀ x ∈ D.tmpls, ∀ y ∈ x.2.pieces, PieceBasic y.1)
     (hcov : ∀ x ∈ D.tmpls, ∀ y ∈ x.2.pieces, PieceCov D c hc const depth Q N0 x.1 y.1)
     (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
@@ -380,8 +380,10 @@ theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
   -- the scale `R0`
   obtain ⟨tlo, htlo0, htlo⟩ := ktlo_exists' hheads
   have htl : (0 : ℝ) < tlo := by exact_mod_cast htlo0
-  obtain ⟨R0, hR0, hRt, hRP, hRq⟩ := exists_R0 N0 D.Rt ((D.Pbad : ℚ) / tlo)
+  obtain ⟨R0, hR0, hRtMax, hRP, hRq⟩ := exists_R0 N0 (max D.Rt 1) ((D.Pbad : ℚ) / tlo)
     ((D.Q : ℚ) * (2 + 2 * D.α) / (tlo * tlo)) htlo0
+  have hRt : (D.Rt : ℝ) ≤ R0 := le_trans (by exact_mod_cast (le_max_left D.Rt 1)) hRtMax
+  have hRone : (1 : ℝ) ≤ R0 := le_trans (by exact_mod_cast (le_max_right D.Rt 1)) hRtMax
   have hN0 : ∀ (r p : ℕ) (u : ℚ), R0 ≤ r → tlo ≤ u → (u : ℝ) * r < p → N0 < p := by
     intro r p u hr hu hp
     have h1 : (R0 : ℝ) ≤ r := by exact_mod_cast hr
@@ -394,7 +396,7 @@ theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
     exact_mod_cast this
   refine hasScaledContent_lift (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) R0
     (fun i => hQ.deg i) ?_
-  refine altContent_of_bounds c hc D.cF const depth R0 Q hQ D.M D.Λ B (fun _ => ktmplOf D) D.τ ?_ ?_ ?_ ?_ ?_
+  refine altContent_of_bounds_control c hc const depth R0 Q D.M hQ D.Λ B (fun _ => ktmplOf D) D.τ ?_ ?_ ?_ ?_ ?_
   · -- hmass (D6)
     intro ε hε
     have hcc : contentConstant D.M (ktmplOf D) = D.Λ := by
@@ -423,11 +425,10 @@ theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
   · -- tail: the tail branch of the class
     intro ε hε i hi c' hc' p hp hpc hlt _
     have hr2 : i.1 % 2 = 0 := hi.1.2
-    rcases Nat.eq_zero_or_pos i.1 with h0 | hr0
-    · have := hQ.crude i hr2 p
-      have h00 : Ecrude D.cF i.1 p = 0 := by simp [Ecrude, h0]
-      rw [h00] at this
-      exact this
+    have hr0 : 0 < i.1 := by
+      have hiR : (R0 : ℝ) ≤ i.1 := by exact_mod_cast hi.2
+      have : (0 : ℝ) < i.1 := by linarith
+      exact_mod_cast this
     obtain ⟨j, T, hj, hT⟩ := hclass c' hc'
     obtain ⟨hjq, hj0, hk⟩ := hdatum c' j p hj hpc
     set k := (j * p) / D.Q + 1 with hkdef
@@ -565,6 +566,20 @@ theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
     obtain ⟨n, hn, hb⟩ := hcov _ (hfind j T hT) x hx i hi.1 hr0 p _ hk' hN hPb hqN hrd hjs hs ht
     exact ⟨n, hn, hb⟩
 
+theorem hasScaledContent_of_facts (D : KBankData) (hpar : KParams D)
+    (hcls : kclassOK D = true) (hheads : ∀ x ∈ D.tmpls, ktmplHead D x.1 x.2 = true)
+    (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
+    (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (hQ : AltQ c hc D.cF Q) (B : SmallBudget)
+    (N0 : ℕ) (hbas : ∀ x ∈ D.tmpls, ∀ y ∈ x.2.pieces, PieceBasic y.1)
+    (hcov : ∀ x ∈ D.tmpls, ∀ y ∈ x.2.pieces, PieceCov D c hc const depth Q N0 x.1 y.1)
+    (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
+    (hpre : PreValidFam c hc const depth Q D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) := by
+  haveI : NeZero D.M := ⟨by have := hpar.2.2.1; omega⟩
+  exact hasScaledContent_of_facts_control D hpar hcls hheads c hc hcα const depth Q
+    (AltContentControl.ofAltQ c hc D.cF const depth Q D.M hQ) B N0 hbas hcov hcat hpre
+
 /-- The facts of an accepted closed bank. -/
 theorem kcheckC_facts {E : KBankDataC} (h : kcheckC E = true) :
     KParams E.toK ∧ 2 ≤ E.shifts.length ∧ 0 < E.α ∧ kclassOK E.toK = true ∧
@@ -668,3 +683,5 @@ end CatalanCore.Uniform.Content.BankShared.KTerm
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KTmplC.mass_toK
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.kcheckC_of
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.kclassOK_six
+
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_facts_control

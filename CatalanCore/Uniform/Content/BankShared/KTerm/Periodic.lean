@@ -639,6 +639,178 @@ theorem exp_cov_per {D : KBankData} (hpar : KParams D) {c : ℚ} {hc : 0 < c} {c
     rw [hC]
     linarith
 
+theorem exp_cov_per_large {D : KBankData} (hpar : KParams D) {c : ℚ} {hc : 0 < c} {const : ℝ} {depth : ℕ}
+    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]} {N0 : ℕ}
+    (hdepth : depth ≤ D.depth)
+    {b a Kc Ω : ℕ} (hab : D.α * b = a) {kb : List KBranch} (tr : Transl b a Kc Ω kb)
+    (hvalid : ∀ n, KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 (kb.map (tr.ρ n)))
+    {j : ℕ} {P : QPiece} {R : ℚ} (hP : PieceBasic P)
+    (hbase : BaseSound D (kb.map (KBranch.compile D.tS (D.bS j) D.cS)) j P R)
+    (hRlim : R * P.t ≤ (N0 : ℚ)) (n : ℕ) (hΩ : 1 / P.s + (n : ℚ) * b ≤ Ω) :
+    PieceCov D c hc const depth Q N0 j (trPiece b Kc D.cF R n P) := by
+  intro i hi hr0 p k _ hk hN hPb hqN hrd hjs hs ht
+  have hpar' := hpar
+  obtain ⟨hq2, hqP, -, -, -, -, hα, -, -, -⟩ := hpar'
+  have hpp : p.Prime := Fact.out
+  have hp2 : 2 ≤ p := hpp.two_le
+  have hr2 : i.1 % 2 = 0 := hi.2
+  have hdel : delCount (altGeom c hc) i ≤ D.depth :=
+    (show delCount (altGeom c hc) i ≤ depth from hi.1).trans hdepth
+  have hodd : p % 2 = 1 := by
+    rcases hpp.eq_two_or_odd with h | h
+    · omega
+    · exact h
+  obtain ⟨hle0, hr⟩ := kv_roots hpar hjs hk hPb
+  obtain ⟨kv, hkv⟩ : ∃ kv : ℕ → ℕ, kv = fun n => D.tS n * k - (D.bS j n * p + D.cS n) := ⟨_, rfl⟩
+  have hroots : ∀ n < D.shifts.length, ∃ jn,
+      (shAt D.shifts n).q * kv n = jn * p + (shAt D.shifts n).o ∧ 0 < jn ∧ jn < (shAt D.shifts n).q ∧
+      0 < kv n ∧ kv n < p := fun n hn => by
+    obtain ⟨-, -, -, h1, h2, h3, h4, h5⟩ := hr n hn
+    subst hkv
+    exact ⟨_, h1, h2, h3, h4, h5⟩
+  set r := i.1 with hrdef
+  set m := (altGeom c hc).borderSize r with hmdef
+  obtain ⟨hs0, hst, hC0, ha0, ha1⟩ := hP
+  have hP' : PieceBasic P := ⟨hs0, hst, hC0, ha0, ha1⟩
+  have ht0 : 0 < P.t := lt_trans hs0 hst
+  have hpQ : (0 : ℚ) < p := by exact_mod_cast hpp.pos
+  have hrQ : (0 : ℚ) < r := by exact_mod_cast hr0
+  have hds : (0 : ℚ) < 1 + (n : ℚ) * b * P.s := by positivity
+  have hdt : (0 : ℚ) < 1 + (n : ℚ) * b * P.t := by positivity
+  have hnb0 : (0 : ℚ) ≤ (n : ℚ) * b := by positivity
+  -- the translated cell in rational form
+  have hs' : P.s / (1 + (n : ℚ) * b * P.s) * (r : ℚ) < p := by
+    have h := hs
+    simp only [trPiece] at h
+    exact_mod_cast h
+  have ht' : (p : ℚ) ≤ P.t / (1 + (n : ℚ) * b * P.t) * (r : ℚ) := by
+    have h := ht
+    simp only [trPiece] at h
+    exact_mod_cast h
+  have hs'' : P.s * r < p * (1 + (n : ℚ) * b * P.s) := by
+    rw [div_mul_eq_mul_div, div_lt_iff₀ hds] at hs'
+    exact hs'
+  have ht'' : (p : ℚ) * (1 + (n : ℚ) * b * P.t) ≤ P.t * r := by
+    rw [div_mul_eq_mul_div, le_div_iff₀ hdt] at ht'
+    exact ht'
+  -- n b p < r
+  have hnbpQ : (n : ℚ) * b * p < r := by
+    by_contra h
+    push_neg at h
+    have := mul_le_mul_of_nonneg_left h ht0.le
+    nlinarith
+  have hnbp : n * b * p < r := by exact_mod_cast hnbpQ
+  obtain ⟨r', hr'eq⟩ : ∃ r', r' + n * b * p = r := ⟨r - n * b * p, by omega⟩
+  have hr'Q : (r : ℚ) = r' + (n : ℚ) * b * p := by
+    have : ((r' + n * b * p : ℕ) : ℚ) = r := by exact_mod_cast hr'eq
+    push_cast at this
+    linarith
+  -- the base configuration
+  have ht3 : (p : ℚ) ≤ P.t * r' := by
+    rw [hr'Q] at ht''
+    nlinarith
+  have hs3 : P.s * r' < p := by
+    rw [hr'Q] at hs''
+    nlinarith
+  have hr'pos : 0 < r' := by
+    rcases Nat.eq_zero_or_pos r' with h | h
+    · rw [h] at ht3
+      simp only [Nat.cast_zero, mul_zero] at ht3
+      linarith
+    · exact h
+  -- m' = m - n a p
+  have habR : (D.α : ℝ) * b = a := by exact_mod_cast hab
+  have hαR : (0 : ℝ) ≤ D.α := by exact_mod_cast hα
+  have hrR : (r : ℝ) = r' + (n : ℝ) * b * p := by
+    have : ((r' + n * b * p : ℕ) : ℝ) = r := by exact_mod_cast hr'eq
+    push_cast at this
+    linarith
+  have e1 : (D.α : ℝ) * (n * b * p) = n * a * p := by
+    rw [← habR]; ring
+  have e2 : (D.α : ℝ) * r = D.α * r' + n * a * p := by
+    rw [hrR, mul_add, e1]
+  have hnap : n * a * p ≤ m := by
+    by_contra h
+    push_neg at h
+    have h1 : ((m + 1 : ℕ) : ℝ) ≤ ((n * a * p : ℕ) : ℝ) := by exact_mod_cast h
+    push_cast at h1
+    have h2 := hrd.m_lo
+    have h3 : 0 ≤ (D.α : ℝ) * r' := mul_nonneg hαR (Nat.cast_nonneg _)
+    linarith
+  obtain ⟨m', hm'eq⟩ : ∃ m', m' + n * a * p = m := ⟨m - n * a * p, by omega⟩
+  have hmR : (m' : ℝ) + n * a * p = m := by
+    have : ((m' + n * a * p : ℕ) : ℝ) = m := by exact_mod_cast hm'eq
+    push_cast at this
+    linarith
+  have hrd' : Cond.Round D.Q r' p m' k D.α ((j : ℚ) / D.Q) := by
+    refine ⟨?_, ?_, hrd.k_lo, hrd.k_hi⟩
+    · have := hrd.m_lo
+      linarith
+    · have := hrd.m_hi
+      linarith
+  have hqN' : D.Q * (r' + 2 * m') < p * p :=
+    lt_of_le_of_lt (Nat.mul_le_mul_left _ (by omega)) hqN
+  -- the ambient range
+  have hΩp : r' + n * b * p ≤ Ω * p := by
+    rw [hr'eq]
+    have h1 : (r : ℚ) < p * (1 / P.s + (n : ℚ) * b) := by
+      have e : (p : ℚ) * (1 / P.s + (n : ℚ) * b) = p * (1 + (n : ℚ) * b * P.s) / P.s := by
+        field_simp
+      rw [e, lt_div_iff₀ hs0]
+      linarith
+    have h2 : (p : ℚ) * (1 / P.s + (n : ℚ) * b) ≤ p * Ω := mul_le_mul_of_nonneg_left hΩ hpQ.le
+    have : (r : ℚ) ≤ Ω * p := by linarith
+    exact_mod_cast this
+  -- the line of the translate is nonnegative on the cell
+  obtain ⟨-, -, -, hl0, hl1⟩ := trPiece_basic hP' b Kc D.cF R n
+  have hRn : R * (1 + (n : ℚ) * b * P.t) ≤ (r : ℚ) := by
+    have hNp : (N0 : ℚ) < p := by exact_mod_cast hN
+    have h1 := mul_lt_mul_of_pos_right (lt_of_le_of_lt hRlim hNp) hdt
+    have h2 : (R * (1 + (n : ℚ) * b * P.t)) * P.t < (r : ℚ) * P.t := by
+      nlinarith [ht'']
+    exact le_of_mul_le_mul_right h2.le ht0
+  -- large scale: Theorem B at the configuration (r', p, m', k)
+  have hRr' : R ≤ (r' : ℚ) := by
+    have h1 : (n : ℚ) * b * p ≤ (n : ℚ) * b * (P.t * r') := mul_le_mul_of_nonneg_left ht3 hnb0
+    have h2 : R * (1 + (n : ℚ) * b * P.t) ≤ r' * (1 + (n : ℚ) * b * P.t) := by nlinarith
+    exact le_of_mul_le_mul_right h2 hdt
+  have hs3R : (P.s : ℝ) * r' < p := by exact_mod_cast hs3
+  have ht3R : (p : ℝ) ≤ P.t * r' := by exact_mod_cast ht3
+  have hRr'R : (R : ℝ) ≤ r' := by exact_mod_cast hRr'
+  have hBV : BranchesValid (kb.map (KBranch.compile D.tS (D.bS j) D.cS)) D.Pbad D.Q r' p m' k
+      (delCount (altGeom c hc) i)
+      (fun e => GLE p (e + n * Kc * p) ((AltEvenFam c hc const depth Q).Q i)) := by
+    intro b' hb' _ _ hcond
+    obtain ⟨kbr, hkbr, rfl⟩ := List.mem_map.1 hb'
+    have hcondK : ∀ cd ∈ kbr.conds, cd.Holds r' p m' kv := by
+      intro cd hcd
+      have := (KCond.holds_compile D.tS (D.bS j) D.cS cd r' p m' k hle0).1
+        (hcond _ (List.mem_map.2 ⟨cd, hcd, rfl⟩))
+      rw [hkv]
+      exact this
+    have hcondX := tr.cond n kbr hkbr r' p m' kv hΩp hcondK
+    rw [hr'eq, hm'eq] at hcondX
+    obtain ⟨nn, hnn, hlen⟩ := hvalid n (tr.ρ n kbr) (List.mem_map.2 ⟨kbr, hkbr, rfl⟩) i hi hr0 p hPb hN
+      hqN kv hroots hcondX
+    have hpr := tr.price n kbr hkbr r' p m' kv
+    rw [hr'eq, hm'eq] at hpr
+    rw [hpr, tr.debit] at hlen
+    have e1 : (kbr.compile D.tS (D.bS j) D.cS).τ.evalN r' p m' k = kbr.τ.evalN r' p m' kv := by
+      rw [KBranch.evalN_compile, hkv]
+    have e2 : (kbr.compile D.tS (D.bS j) D.cS).debit = kbr.debit := rfl
+    refine ⟨nn - n * Kc * p, ?_, ?_⟩
+    · exact GLE.mono (by omega) hnn
+    · rw [e1, e2]
+      exact tsub_le_iff_right.2 (by linarith)
+  obtain ⟨e, he, hbd⟩ := hbase hpar hjs r' p m' k (delCount (altGeom c hc) i) _ hk hqN' hrd' hPb hodd hp2 hdel
+    hr'pos hRr'R hs3R ht3R hBV
+  refine ⟨e + n * Kc * p, he, ?_⟩
+  have hcr : (0 : ℝ) ≤ (crudeBd D.cF ⌈R * (1 + (n : ℚ) * b * P.t)⌉₊ : ℝ) := Nat.cast_nonneg _
+  simp only [trPiece]
+  push_cast
+  rw [hrR]
+  nlinarith [hbd, hcr]
+
 /-! ### Templates with a periodic layer -/
 
 /-- A class template with a periodic layer: the table `cells` (one period, increasing `θ`, each cell with its
@@ -698,16 +870,70 @@ theorem KTmplP.mass_toK (b Kc cF : ℕ) (α0 : ℚ) (T : KTmplP) :
 
 /-! ### Theorem PC for a bank -/
 
-/-- **Theorem PC (content of a bank whose periodic layer is the translate of a table).**  The templates of `D` are
+/- **Theorem PC (content of a bank whose periodic layer is the translate of a table).**  The templates of `D` are
 `expansion(N) ++ head` (`KTmplP`); the base cells are sound against the base catalogue `kb`, the translates of `kb`
 are valid on the family (T2), prices are covariant (T1, inside `tr`), and the head is a `pieceOK` catalogue piece
 list.  `hasScaledContent_of_facts` with `PieceBasic` and `PieceCov` of the expansion from `trPiece_basic` and
 `exp_cov_per`, of the head from `head_cov`. -/
-theorem hasScaledContent_of_periodic (D : KBankData) (hpar : KParams D)
+
+/-- Increase a catalogue's finite exceptional-prime threshold. -/
+theorem KCatValidFam.mono_threshold {c : ℚ} {hc : 0 < c} {const : ℝ} {depth : ℕ}
+    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]}
+    {sh : List Shift} {Q0 Pbad N0 N1 : ℕ} {cat : List KBranch}
+    (h : KCatValidFam c hc const depth Q sh Q0 Pbad N0 cat) (hle : N0 ≤ N1) :
+    KCatValidFam c hc const depth Q sh Q0 Pbad N1 cat := by
+  intro br hb i hi hr p _ hPb hN
+  exact h br hb i hi hr p hPb (lt_of_le_of_lt hle hN)
+
+/-- A head piece is sound above its finite scale threshold, without crude clearing. -/
+theorem head_cov_large {D : KBankData} (hpar : KParams D)
+    {c : ℚ} {hc : 0 < c} {const : ℝ} {depth : ℕ}
+    {Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]} {N0 : ℕ}
+    (hdepth : depth ≤ D.depth)
+    (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
+    {j : ℕ} {x : QPiece × Cert}
+    (hok : pieceOK (D.cat j) D.Q D.α ((j : ℚ) / D.Q) D.depth D.cF D.Pbad x.1 x.2 = true)
+    (hRlim : x.2.R * x.1.t ≤ (N0 : ℚ)) :
+    PieceCov D c hc const depth Q N0 j x.1 := by
+  intro i hi hr0 p k _ hk hN hPb hqN hrd hjs hs ht
+  have hpar' := hpar
+  obtain ⟨hq2, hqP, -, -, -, -, hα, -, -, -⟩ := hpar'
+  have hb := pieceBasic_of_ok hok
+  have htpos : (0 : ℝ) < x.1.t := by exact_mod_cast (lt_trans hb.1 hb.2.1)
+  have hlim : (x.2.R : ℝ) * x.1.t ≤ N0 := by exact_mod_cast hRlim
+  have hNp : (N0 : ℝ) < p := by exact_mod_cast hN
+  have hRr : (x.2.R : ℝ) ≤ i.1 := by
+    exact le_of_mul_le_mul_right (by linarith) htpos
+  have hodd : D.Pbad < p → p % 2 = 1 := by
+    intro hPb'
+    rcases (Fact.out : p.Prime).eq_two_or_odd with h | h
+    · omega
+    · exact h
+  have hdel : delCount (altGeom c hc) i ≤ D.depth :=
+    (show delCount (altGeom c hc) i ≤ depth from hi.1).trans hdepth
+  exact piece_sound_large x.1 x.2 hok (by omega) hα
+    (fun n => GLE p n ((AltEvenFam c hc const depth Q).Q i))
+    hrd hodd (Fact.out : p.Prime).two_le hdel (by exact_mod_cast hRr)
+    (branches_of_kcat' hpar hcat hjs i hi hr0 p k hk hN) hs ht
+
+private theorem exists_nat_bound_list (xs : List ℚ) :
+    ∃ N : ℕ, ∀ x ∈ xs, x ≤ (N : ℚ) := by
+  induction xs with
+  | nil => exact ⟨0, fun x hx => by cases hx⟩
+  | cons x xs ih =>
+    obtain ⟨N, hN⟩ := ih
+    obtain ⟨M, hM⟩ := exists_nat_ge x
+    refine ⟨max M N, ?_⟩
+    intro y hy
+    rcases List.mem_cons.mp hy with rfl | hy
+    · exact hM.trans (by exact_mod_cast (le_max_left M N))
+    · exact (hN y hy).trans (by exact_mod_cast (le_max_right M N))
+
+theorem hasScaledContent_of_periodic_control (D : KBankData) (hpar : KParams D)
     (hcls : kclassOK D = true) (hheads : ∀ x ∈ D.tmpls, ktmplHead D x.1 x.2 = true)
     (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
     (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
-    (hdepth : depth ≤ D.depth) (hQ : AltQ c hc D.cF Q) (B : SmallBudget) (N0 : ℕ)
+    (hdepth : depth ≤ D.depth) (hQ : AltContentControl c hc const depth D.M Q) (B : SmallBudget) (N0 : ℕ)
     {b a Kc Ω : ℕ} (hab : D.α * b = a) {kb : List KBranch} (tr : Transl b a Kc Ω kb)
     (Tm : List (ℕ × KTmplP)) (hTm : D.tmpls = Tm.map (fun x => (x.1, x.2.toK b Kc D.cF)))
     (hcellb : ∀ x ∈ Tm, ∀ y ∈ x.2.cells, PieceBasic y.1 ∧ 0 ≤ y.2.R ∧ 1 / y.1.s + (x.2.N : ℚ) * b ≤ Ω)
@@ -719,7 +945,23 @@ theorem hasScaledContent_of_periodic (D : KBankData) (hpar : KParams D)
     (hvalid : ∀ n, KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 (kb.map (tr.ρ n)))
     (hpre : PreValidFam c hc const depth Q D.M B D.t0 D.α0b) :
     HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) := by
-  refine hasScaledContent_of_facts D hpar hcls hheads c hc hcα const depth Q hQ B N0 ?_ ?_ hcat hpre
+  classical
+  let limits : List ℚ := Tm.flatMap (fun x =>
+    (x.2.head ++ x.2.cells).map (fun y => y.2.R * y.1.t))
+  obtain ⟨N, hN⟩ := exists_nat_bound_list limits
+  let N1 := max N0 N
+  have hN0 : N0 ≤ N1 := le_max_left _ _
+  have hlim : ∀ x ∈ Tm, ∀ y ∈ x.2.head ++ x.2.cells,
+      y.2.R * y.1.t ≤ (N1 : ℚ) := by
+    intro x hx y hy
+    have hm : y.2.R * y.1.t ∈ limits :=
+      List.mem_flatMap.mpr ⟨x, hx, List.mem_map.mpr ⟨y, hy, rfl⟩⟩
+    exact (hN _ hm).trans (by exact_mod_cast (le_max_right N0 N))
+  have hcat1 := hcat.mono_threshold hN0
+  have hvalid1 : ∀ n, KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N1 (kb.map (tr.ρ n)) :=
+    fun n => (hvalid n).mono_threshold hN0
+  refine hasScaledContent_of_facts_control D hpar hcls hheads c hc hcα const depth Q hQ B N1
+    ?_ ?_ hcat1 hpre
   · intro x hx z hz
     rw [hTm] at hx
     obtain ⟨y, hy, rfl⟩ := List.mem_map.1 hx
@@ -737,10 +979,32 @@ theorem hasScaledContent_of_periodic (D : KBankData) (hpar : KParams D)
       obtain ⟨hw1, hw2, hw3⟩ := hcellb y hy w hw
       have hnN : (n : ℚ) ≤ y.2.N := by exact_mod_cast hn
       have hb0 : (0 : ℚ) ≤ b := Nat.cast_nonneg _
-      exact exp_cov_per hpar hdepth hQ hab tr hvalid hw1 (hcells y hy w hw) n
+      exact exp_cov_per_large hpar hdepth hab tr hvalid1 hw1 (hcells y hy w hw)
+        (hlim y hy w (List.mem_append.mpr (Or.inr hw))) n
         (by linarith [mul_le_mul_of_nonneg_right hnN hb0, hw3])
-    · exact head_cov hpar hdepth hQ hcat (hhead y hy z hz)
+    · exact head_cov_large hpar hdepth hcat1 (hhead y hy z hz)
+        (hlim y hy z (List.mem_append.mpr (Or.inl hz)))
 
+theorem hasScaledContent_of_periodic (D : KBankData) (hpar : KParams D)
+    (hcls : kclassOK D = true) (hheads : ∀ x ∈ D.tmpls, ktmplHead D x.1 x.2 = true)
+    (c : ℚ) (hc : 0 < c) (hcα : c = 2 * D.α)
+    (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (hdepth : depth ≤ D.depth) (hQ : AltQ c hc D.cF Q) (B : SmallBudget) (N0 : ℕ)
+    {b a Kc Ω : ℕ} (hab : D.α * b = a) {kb : List KBranch} (tr : Transl b a Kc Ω kb)
+    (Tm : List (ℕ × KTmplP)) (hTm : D.tmpls = Tm.map (fun x => (x.1, x.2.toK b Kc D.cF)))
+    (hcellb : ∀ x ∈ Tm, ∀ y ∈ x.2.cells, PieceBasic y.1 ∧ 0 ≤ y.2.R ∧ 1 / y.1.s + (x.2.N : ℚ) * b ≤ Ω)
+    (hcells : ∀ x ∈ Tm, ∀ y ∈ x.2.cells,
+      BaseSound D (kb.map (KBranch.compile D.tS (D.bS x.1) D.cS)) x.1 y.1 y.2.R)
+    (hhead : ∀ x ∈ Tm, ∀ y ∈ x.2.head,
+      pieceOK (D.cat x.1) D.Q D.α ((x.1 : ℚ) / D.Q) D.depth D.cF D.Pbad y.1 y.2 = true)
+    (hcat : KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 D.kcat)
+    (hvalid : ∀ n, KCatValidFam c hc const depth Q D.shifts D.Q D.Pbad N0 (kb.map (tr.ρ n)))
+    (hpre : PreValidFam c hc const depth Q D.M B D.t0 D.α0b) :
+    HasScaledContent (AltEvenFam c hc const depth Q) (altGeom c hc).scale (D.Λ : ℝ) := by
+  haveI : NeZero D.M := ⟨by have := hpar.2.2.1; omega⟩
+  exact hasScaledContent_of_periodic_control D hpar hcls hheads c hc hcα const depth Q hdepth
+    (AltContentControl.ofAltQ c hc D.cF const depth Q D.M hQ) B N0 hab tr Tm hTm hcellb hcells hhead
+    hcat hvalid hpre
 
 /-! ### Boolean cell check and the `M = Q = 2` class sum -/
 
@@ -810,3 +1074,5 @@ end CatalanCore.Uniform.Content.BankShared.KTerm
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.cellOKb_facts
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_periodic_ok
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.kclassOK_two
+
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_periodic_control
