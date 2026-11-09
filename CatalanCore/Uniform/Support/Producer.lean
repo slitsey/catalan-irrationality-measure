@@ -2,6 +2,8 @@ module
 
 public import CatalanCore.Uniform.Support.SeqFamily
 public import CatalanCore.Uniform.Support.Datum
+public import CatalanCore.Uniform.Support.Content
+public import CatalanCore.Uniform.Content.Sweep.CellsB
 public import CatalanCore.Uniform.Content.BankShared.CrudeDet
 public import CatalanCore.Uniform.Content.BankShared.AltCrude
 public import CatalanCore.Uniform.Content.BankShared.KTerm.Content
@@ -45,7 +47,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 /-- Every entry of `seqFullN f g c xs ys X` is `p ^ e`-integral when every Löwner entry between nodes `≤ N`
 is. -/
-theorem seqFullN_entry_gle (f g : ℕ → ℚ) (c : ι → ℕ) (xs ys : κ → ℕ) {N e : ℕ}
+theorem seqFullN_entry_gle_uniform (f g : ℕ → ℚ) (c : ι → ℕ) (xs ys : κ → ℕ) {N e : ℕ}
     (hent : ∀ A B, A ≤ N → B ≤ N → GLE p e (C (lw f g A B)))
     (hc : ∀ a, c a ≤ N) (hx : ∀ i, xs i ≤ N) (hy : ∀ i, ys i ≤ N) (u v : ι ⊕ κ) :
     GLE p e (seqFullN f g c xs ys (X : ℚ[X]) u v) := by
@@ -72,7 +74,7 @@ theorem seqFullN_det_gle (f g : ℕ → ℚ) (c : ι → ℕ) (xs ys : κ → �
     (hc : ∀ a, c a ≤ N) (hx : ∀ i, xs i ≤ N) (hy : ∀ i, ys i ≤ N) :
     GLE p (Fintype.card (ι ⊕ κ) * e) (seqFullN f g c xs ys (X : ℚ[X])).det := by
   have h := det_gle (p := p) (seqFullN f g c xs ys (X : ℚ[X])) (fun _ _ => e)
-    (seqFullN_entry_gle f g c xs ys hent hc hx hy)
+    (seqFullN_entry_gle_uniform f g c xs ys hent hc hx hy)
   rwa [tropVal_const] at h
 
 end Entries
@@ -420,6 +422,650 @@ theorem altEvenFam_seq_eq (c : ℚ) (hc : 0 < c) (f g : ℕ → ℚ) (const : �
       (seqFamily f g const (altGeom c hc).geometry depth).restrictAdm
         (fun i => (altGeom c hc).scale i % 2 = 0) := rfl
 
+/-! ### All-order assignment prices (Q15) -/
+namespace IntegerPoleRows
+open CatalanCore.Uniform.Content.Sweep
+
+def ur (h p N t : ℕ) : ℕ :=
+  (h - 2) + if ((N - 1 - t) % p) % 2 = 0 then 1 else 0
+
+theorem ur_add_one (h p N t : ℕ) : ur h p N t + 1 = (h - 2) + uRow p N t := by
+  unfold ur uRow
+  split_ifs <;> omega
+
+theorem ur_add_uc (h p N t : ℕ) (hh : 2 ≤ h) : ur h p N t + uCol p N t = h := by
+  have hsum := uRow_add_uCol p N t
+  have hrow := ur_add_one h p N t
+  omega
+
+theorem weight_le_ur_uc (h p N : ℕ) (hh : 2 ≤ h) {s t : ℕ} (hs : s < N) (ht : t < N) :
+    hpoleWeight h p s t ≤ ur h p N s + uCol p N t := by
+  have hur : h - 2 ≤ ur h p N s := by unfold ur; omega
+  have huc : 1 ≤ uCol p N t := by unfold uCol; split_ifs <;> omega
+  by_cases he : s = t
+  · subst he
+    have hsum := ur_add_uc h p N s hh
+    unfold hpoleWeight
+    split_ifs <;> omega
+  by_cases hpq : s / p = t / p
+  · simp only [hpoleWeight, he, if_false, hpq, if_true]
+    omega
+  by_cases hm : s % p = t % p
+  · have hrow := uRow_cong hs ht hm
+    have hur1 := ur_add_one h p N s
+    have hur2 := ur_add_one h p N t
+    have hsum := ur_add_uc h p N t hh
+    simp only [hpoleWeight, he, hpq, hm, if_false, if_true]
+    omega
+  · simp only [hpoleWeight, he, hpq, hm, if_false]
+    omega
+
+section Rows
+variable {p : ℕ} [hp : Fact p.Prime]
+  {ι : Type} [Fintype ι] [DecidableEq ι]
+
+noncomputable def rowDet (h : ℕ) (d : ℕ → ℚ) (cn : ι → ℕ) (r m : ℕ) : ℚ[X] :=
+  (seqFullN (hpoleF h d) (hpoleE h d) cn
+    (fun i : Fin m => r + 2 * (i : ℕ)) (fun i : Fin m => r + 2 * (i : ℕ) + 1) (X : ℚ[X])).det
+
+theorem row_of_dual (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) {r m : ℕ} (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p)
+    (ur uc : ℕ → ℕ)
+    (he : ∀ s t, s < r + 2 * m → t < r + 2 * m → hpoleWeight h p s t ≤ ur s + uc t) :
+    GLE p (∑ a : ι, ur (cn a) + ∑ i : Fin m, ur (r + 2 * (i : ℕ)) +
+      (∑ a : ι, uc (cn a) + ∑ i : Fin m, uc (r + 2 * (i : ℕ) + 1))) (rowDet h d cn r m) := by
+  let xs := fun i : Fin m => r + 2 * (i : ℕ)
+  let ys := fun i : Fin m => r + 2 * (i : ℕ) + 1
+  have hr : ∀ a : ι ⊕ Fin m, Sum.elim cn xs a < r + 2 * m := by
+    intro a; rcases a with a | i
+    · have := hcr a; simp <;> omega
+    · have := i.2; simp [xs] <;> omega
+  have hc : ∀ a : ι ⊕ Fin m, Sum.elim cn ys a < r + 2 * m := by
+    intro a; rcases a with a | i
+    · have := hcr a; simp <;> omega
+    · have := i.2; simp [ys] <;> omega
+  have hv := seqFullN_det_gle_of_dual (hpoleF h d) (hpoleE h d) cn xs ys
+    (fun a b => hpoleWeight h p (Sum.elim cn xs a) (Sum.elim cn ys b))
+    (fun a b => hpole_weight_table h hh d hd _ _ (lt_trans (hr a) hN) (lt_trans (hc b) hN))
+    (fun a => ur (Sum.elim cn xs a)) (fun b => uc (Sum.elim cn ys b))
+    (fun a b => he _ _ (hr a) (hc b))
+  simpa only [Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, xs, ys, rowDet] using hv
+
+theorem window_ur_uc (h r m : ℕ) (hh : 2 ≤ h) (hodd : p % 2 = 1) :
+    (∑ i : Fin m, ur h p (r + 2 * m) (r + 2 * (i : ℕ))) +
+      (∑ i : Fin m, uCol p (r + 2 * m) (r + 2 * (i : ℕ) + 1)) =
+        (h - 1) * m + Aphi p (2 * m) := by
+  have hold : (∑ i : Fin m, uRow p (r + 2 * m) (r + 2 * (i : ℕ))) +
+      (∑ i : Fin m, uCol p (r + 2 * m) (r + 2 * (i : ℕ) + 1)) = 2 * m + Aphi p (2 * m) := by
+    rw [← Finset.sum_add_distrib]
+    have hv : ∀ i : Fin m, uRow p (r + 2 * m) (r + 2 * (i : ℕ)) +
+        uCol p (r + 2 * m) (r + 2 * (i : ℕ) + 1) =
+        ((1 + ((2 * (m - 1 - (i : ℕ)) + 1) / p) % 2) +
+          (1 + ((2 * (m - 1 - (i : ℕ))) / p) % 2)) := by
+      intro i
+      rw [uRow_window p _ r m i hodd rfl i.2, uCol_window p _ r m i hodd rfl i.2]
+    rw [Finset.sum_congr rfl (fun i _ => hv i),
+      Fin.sum_univ_eq_sum_range (fun i => ((1 + ((2 * (m - 1 - i) + 1) / p) % 2) +
+        (1 + ((2 * (m - 1 - i)) / p) % 2))) m,
+      Finset.sum_range_reflect (fun k => ((1 + ((2 * k + 1) / p) % 2) + (1 + ((2 * k) / p) % 2))) m,
+      window_sum]
+  have he := congrArg (fun f : Fin m → ℕ => ∑ i, f i)
+    (funext fun i : Fin m => ur_add_one h p (r + 2 * m) (r + 2 * (i : ℕ)))
+  simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
+    mul_one] at he
+  have hh2 : h - 2 + 2 = h := by omega
+  have hh1 : h - 1 + 1 = h := by omega
+  have he2 := congrArg (fun k => k * m) hh2
+  have he1 := congrArg (fun k => k * m) hh1
+  simp only [Nat.add_mul, Nat.one_mul] at he2 he1
+  nlinarith
+
+theorem row_first (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ} (hcr : ∀ a, cn a < r)
+    (hN : r + 2 * m < p * p) (hodd : p % 2 = 1) :
+    GLE p (h * (r + m) - min (m % p) (p - m % p)) (rowDet h d cn r m) := by
+  have hb := row_of_dual h hh d hd cn hcr hN (ur h p (r + 2 * m)) (uCol p (r + 2 * m))
+    (fun s t hs ht => weight_le_ur_uc h p (r + 2 * m) hh hs ht)
+  refine hb.mono ?_
+  have hcard : Fintype.card ι ≤ r := by
+    have hc := Fintype.card_le_of_injective (fun a : ι => (⟨cn a, hcr a⟩ : Fin r))
+      (fun a b hab => hinj (by simpa using hab))
+    simpa using hc
+  have hcom : ∑ a : ι, ur h p (r + 2 * m) (cn a) +
+      ∑ a : ι, uCol p (r + 2 * m) (cn a) = h * Fintype.card ι := by
+    rw [← Finset.sum_add_distrib]
+    simp only [ur_add_uc h p (r + 2 * m) _ hh, Finset.sum_const, Finset.card_univ, smul_eq_mul]
+    exact Nat.mul_comm _ _
+  have hwin := window_ur_uc h r m hh hodd
+  have hmin := Aphi_min p m hodd
+  have hc := Nat.mul_le_mul_left h hcard
+  have hh1 : h - 1 + 1 = h := by omega
+  have he1 := congrArg (fun k => k * m) hh1
+  simp only [Nat.add_mul, Nat.one_mul] at he1
+  have hdlt : min (m % p) (p - m % p) ≤ m := (min_le_left _ _).trans (Nat.mod_le _ _)
+  have hm : m ≤ h * (r + m) := by nlinarith
+  have hsub := Nat.sub_add_cancel (hdlt.trans hm)
+  nlinarith
+
+theorem row_of_potential (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ}
+    (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p)
+    (φ : ℕ → ℕ)
+    (he : ∀ s t, s < r + 2 * m → t < r + 2 * m → hpoleWeight h p s t ≤ φ s + φ t) :
+    GLE p ((∑ t ∈ range r, φ t) + ∑ t ∈ range (r + 2 * m), φ t) (rowDet h d cn r m) := by
+  have hb := row_of_dual h hh d hd cn hcr hN φ φ he
+  refine hb.mono ?_
+  have hcom : ∑ a : ι, φ (cn a) ≤ ∑ t ∈ range r, φ t := by
+    rw [← Finset.sum_image (f := φ) (g := cn) (s := Finset.univ) (fun a _ b _ he => hinj he)]
+    apply Finset.sum_le_sum_of_subset
+    intro t ht
+    obtain ⟨a, _, rfl⟩ := Finset.mem_image.mp ht
+    exact Finset.mem_range.mpr (hcr a)
+  have hwin := win_sum φ r m
+  have hfull := Finset.sum_range_add φ r (2 * m)
+  omega
+
+def phiStep (h p t : ℕ) : ℕ := if p ≤ t then h else 0
+
+theorem weight_le_step (h : ℕ) (hh : 2 ≤ h) (s t : ℕ) :
+    hpoleWeight h p s t ≤ phiStep h p s + phiStep h p t := by
+  have hb : hpoleWeight h p s t ≤ h := by unfold hpoleWeight; split_ifs <;> omega
+  by_cases hs : p ≤ s
+  · simp only [phiStep, hs, if_true]; omega
+  by_cases ht : p ≤ t
+  · simp only [phiStep, ht, if_true]; omega
+  have hs' : s < p := by omega
+  have ht' : t < p := by omega
+  have hd1 := Nat.div_eq_of_lt hs'
+  have hd2 := Nat.div_eq_of_lt ht'
+  simp [hpoleWeight, phiStep, hs, ht, hd1, hd2]
+
+theorem sum_phiStep (h p n : ℕ) : ∑ t ∈ range n, phiStep h p t = h * (n - p) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [Finset.sum_range_succ, ih]
+    by_cases hn : p ≤ n
+    · rw [phiStep, if_pos hn, show n + 1 - p = n - p + 1 by omega, Nat.mul_add, Nat.mul_one]
+    · have hn' : n ≤ p := by omega
+      have hn'' : n + 1 ≤ p := by omega
+      simp [phiStep, hn, Nat.sub_eq_zero_of_le hn', Nat.sub_eq_zero_of_le hn'']
+
+theorem row_step (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ}
+    (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p) :
+    GLE p (h * (r - p) + h * (r + 2 * m - p)) (rowDet h d cn r m) := by
+  have hb := row_of_potential h hh d hd cn hinj hcr hN (phiStep h p)
+    (fun s t _ _ => weight_le_step h hh s t)
+  simpa only [sum_phiStep] using hb
+
+theorem row_second (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ}
+    (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p) (hpr : p ≤ r) :
+    GLE p (2 * h * (r + m - p)) (rowDet h d cn r m) := by
+  have hb := row_step h hh d hd cn hinj hcr hN
+  have he : h * (r - p) + h * (r + 2 * m - p) = 2 * h * (r + m - p) := by
+    have h1 : r - p + p = r := Nat.sub_add_cancel hpr
+    have h2 : r + 2 * m - p + p = r + 2 * m := Nat.sub_add_cancel (by omega)
+    have h3 : r + m - p + p = r + m := Nat.sub_add_cancel (by omega)
+    nlinarith
+  rwa [he] at hb
+
+theorem row_fourth (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ}
+    (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p) (hpr : r ≤ p) :
+    GLE p (h * (r + 2 * m - p)) (rowDet h d cn r m) := by
+  simpa only [Nat.sub_eq_zero_of_le hpr, mul_zero, zero_add] using
+    row_step h hh d hd cn hinj hcr hN
+
+def phiThird (h p r t : ℕ) : ℕ :=
+  if t < r - p then 1 else if t < p then 0 else if t < r then h - 1
+    else if t < 2 * p then h else h - 1
+
+set_option maxHeartbeats 2000000 in
+theorem weight_le_third (h : ℕ) (hh : 2 ≤ h) {r m s t : ℕ}
+    (hpr : p ≤ r) (hrp : r ≤ 2 * p) (hmp : 2 * m ≤ p)
+    (hN : r + 2 * m ≤ 3 * p) (hs : s < r + 2 * m) (ht : t < r + 2 * m) :
+    hpoleWeight h p s t ≤ phiThird h p r s + phiThird h p r t := by
+  have hp0 := hp.out.pos
+  have hsd : s / p < 3 := (Nat.div_lt_iff_lt_mul hp0).mpr (by omega)
+  have htd : t / p < 3 := (Nat.div_lt_iff_lt_mul hp0).mpr (by omega)
+  have hse := Nat.div_add_mod s p
+  have hte := Nat.div_add_mod t p
+  have hsm := Nat.mod_lt s hp0
+  have htm := Nat.mod_lt t hp0
+  interval_cases hs' : s / p <;> interval_cases ht' : t / p <;>
+    (try simp only [hs', ht', Nat.mul_zero, Nat.mul_one] at hse hte) <;>
+    unfold hpoleWeight phiThird <;> split_ifs <;> omega
+
+theorem sum_prefix_const (f : ℕ → ℕ) {a b v : ℕ} (hab : a ≤ b)
+    (hf : ∀ t, a ≤ t → t < b → f t = v) :
+    ∑ t ∈ range b, f t = (∑ t ∈ range a, f t) + (b - a) * v := by
+  have hb : b = a + (b - a) := by omega
+  conv_lhs => rw [hb, Finset.sum_range_add]
+  congr 1
+  calc
+    ∑ t ∈ range (b - a), f (a + t) = ∑ _ ∈ range (b - a), v := by
+      apply Finset.sum_congr rfl
+      intro t ht
+      exact hf _ (by omega) (by have := Finset.mem_range.mp ht; omega)
+    _ = _ := by simp
+
+theorem third_sums (h : ℕ) (hh : 2 ≤ h) {r m : ℕ}
+    (hpr : p ≤ r) (hrp : r ≤ 2 * p) (hN : 2 * p ≤ r + 2 * m) :
+    (∑ t ∈ range r, phiThird h p r t) + (∑ t ∈ range (r + 2 * m), phiThird h p r t) =
+      (2 * h - 1) * r + 2 * (h - 1) * m - 2 * (h - 1) * p := by
+  have e0 := sum_prefix_const (phiThird h p r) (a := 0) (b := r - p) (v := 1)
+    (by omega) (fun t ht0 ht => by simp only [phiThird, ht, if_true])
+  have e1 := sum_prefix_const (phiThird h p r) (a := r - p) (b := p) (v := 0)
+    (by omega) (fun t ht0 ht => by simp only [phiThird, show ¬t < r - p by omega, ht, if_false, if_true])
+  have e2 := sum_prefix_const (phiThird h p r) (a := p) (b := r) (v := h - 1)
+    hpr (fun t ht0 ht => by
+      simp only [phiThird, show ¬t < r - p by omega, show ¬t < p by omega, ht, if_false, if_true])
+  have e3 := sum_prefix_const (phiThird h p r) (a := r) (b := 2 * p) (v := h)
+    hrp (fun t ht0 ht => by
+      simp only [phiThird, show ¬t < r - p by omega, show ¬t < p by omega,
+        show ¬t < r by omega, ht, if_false, if_true])
+  have e4 := sum_prefix_const (phiThird h p r) (a := 2 * p) (b := r + 2 * m) (v := h - 1)
+    hN (fun t ht0 ht => by
+      simp only [phiThird, show ¬t < r - p by omega, show ¬t < p by omega,
+        show ¬t < r by omega, show ¬t < 2 * p by omega, if_false])
+  simp only [Finset.sum_range_zero, zero_add, Nat.sub_zero, mul_one, mul_zero, add_zero] at e0 e1
+  have er : r - p + p = r := Nat.sub_add_cancel hpr
+  have er' : 2 * p - r + r = 2 * p := Nat.sub_add_cancel hrp
+  have en : r + 2 * m - 2 * p + 2 * p = r + 2 * m := Nat.sub_add_cancel hN
+  have hh1 : h - 1 + 1 = h := by omega
+  have hh2 : 2 * h - 1 + 1 = 2 * h := by omega
+  have heprod := Nat.mul_le_mul_left (2 * (h - 1)) hpr
+  have hprice : 2 * (h - 1) * p ≤ (2 * h - 1) * r + 2 * (h - 1) * m := by nlinarith
+  have hprice_eq := Nat.sub_add_cancel hprice
+  nlinarith
+
+theorem row_third (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (cn : ι → ℕ) (hinj : Function.Injective cn) {r m : ℕ}
+    (hcr : ∀ a, cn a < r) (hN : r + 2 * m < p * p)
+    (hpr : p ≤ r) (hrp : r ≤ 2 * p) (hmp : 2 * m ≤ p)
+    (hlo : 2 * p ≤ r + 2 * m) (hhi : r + 2 * m ≤ 3 * p) :
+    GLE p ((2 * h - 1) * r + 2 * (h - 1) * m - 2 * (h - 1) * p) (rowDet h d cn r m) := by
+  have hb := row_of_potential h hh d hd cn hinj hcr hN (phiThird h p r)
+    (fun s t hs ht => weight_le_third h hh hpr hrp hmp hhi hs ht)
+  simpa only [third_sums h hh hpr hrp hlo] using hb
+
+end Rows
+
+def delta (m p : ℕ) : ℕ := min (m % p) (p - m % p)
+def lowPrice (h r m p : ℕ) : ℕ := h * (r + m) - delta m p
+
+theorem delta_add_period (m n a p : ℕ) : delta (m + n * a * p) p = delta m p := by
+  simp only [delta, Nat.add_mul_mod_self_right]
+
+theorem lowPrice_cov (h : ℕ) (hh : 2 ≤ h) (r m n a b p : ℕ) :
+    lowPrice h (r + n * b * p) (m + n * a * p) p =
+      lowPrice h r m p + n * (h * (a + b)) * p := by
+  have hd : delta m p ≤ m := (min_le_left _ _).trans (Nat.mod_le _ _)
+  have hm : m ≤ h * (r + m) := by nlinarith
+  have he : h * (r + n * b * p + (m + n * a * p)) =
+      h * (r + m) + n * (h * (a + b)) * p := by ring
+  simp only [lowPrice, delta_add_period]
+  omega
+
+end IntegerPoleRows
+
+/-! ### Q07: arbitrary fixed multiplicative crude factor -/
+
+theorem altContentControl_of_scaled_crude (c : ℚ) (hc : 0 < c)
+    (const : ℝ) (depth : ℕ) (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (M : ℕ) [NeZero M] (K cF : ℕ)
+    (hdeg : ∀ i, (Q i).natDegree ≤ i.2.card)
+    (hclear : ∀ i, (AltEvenFam c hc const depth Q).Adm i →
+      ∀ (p : ℕ) [Fact p.Prime], GLE p (K * Ecrude cF i.1 p) (Q i)) :
+    AltContentControl c hc const depth M Q where
+  deg := hdeg
+  clear := fun i hi p _ => ⟨_, hclear i hi p⟩
+  exc := by
+    intro ε hε
+    have hK : (0 : ℝ) < (K : ℝ) + 1 := by positivity
+    have hε' : 0 < ε / ((K : ℝ) + 1) := div_pos hε hK
+    have hF : ∀ p ∈ M.primeFactors, 2 ≤ p := fun p hp =>
+      (Nat.prime_of_mem_primeFactors hp).two_le
+    obtain ⟨R0, hR0⟩ := Filter.eventually_atTop.mp
+      (fixed_exception_E_crude_small M.primeFactors hF cF (ε / ((K : ℝ) + 1)) hε')
+    refine ⟨R0, fun i hi hR => ?_⟩
+    have hsum : ∑ p ∈ M.primeFactors,
+        (lpOptA c hc const depth Q i p : ℝ) * Real.log p ≤
+        (K : ℝ) * ∑ p ∈ M.primeFactors, (Ecrude cF i.1 p : ℝ) * Real.log p := by
+      rw [Finset.mul_sum]
+      apply Finset.sum_le_sum
+      intro p hp
+      haveI : Fact p.Prime := ⟨Nat.prime_of_mem_primeFactors hp⟩
+      have hb := lpOptA_le c hc const depth Q i p (hclear i hi p)
+      have hb' : (lpOptA c hc const depth Q i p : ℝ) ≤ (K : ℝ) * Ecrude cF i.1 p := by
+        exact_mod_cast hb
+      exact (mul_le_mul_of_nonneg_right hb' (Real.log_natCast_nonneg p)).trans_eq (by ring)
+    have hbound := mul_le_mul_of_nonneg_left (hR0 i.1 hR) (Nat.cast_nonneg K : (0 : ℝ) ≤ K)
+    have hcoef : (K : ℝ) * (ε / ((K : ℝ) + 1)) ≤ ε := by
+      rw [mul_div_assoc', div_le_iff₀ hK]
+      nlinarith
+    calc
+      _ ≤ (K : ℝ) * ∑ p ∈ M.primeFactors, (Ecrude cF i.1 p : ℝ) * Real.log p := hsum
+      _ ≤ (K : ℝ) * (ε / ((K : ℝ) + 1) * (i.1 : ℝ)^2) := hbound
+      _ ≤ ε * (i.1 : ℝ)^2 := by
+        rw [← mul_assoc]
+        exact mul_le_mul_of_nonneg_right hcoef (sq_nonneg _)
+
+/-! ### Finite-order crude arithmetic, including coefficient denominator primes -/
+namespace IntegerPoleRows
+
+section Crude
+variable {p : ℕ} [hp : Fact p.Prime]
+
+theorem rat_scaled_mem (q : ℚ) : (p : ℚ) ^ q.den * q ∈ LocRing p := by
+  have hi := pow_mul_inv_mem (p := p) (n := q.den) (X := q.den) q.den_pos le_rfl
+  have hn : (q.num : ℚ) ∈ LocRing p := int_mem_locRing _
+  have hm := (LocRing p).mul_mem hn hi
+  have he : (q.num : ℚ) * ((p : ℚ) ^ Nat.log p q.den * (1 / (q.den : ℚ))) =
+      (p : ℚ) ^ Nat.log p q.den * q := by
+    calc
+      _ = (p : ℚ) ^ Nat.log p q.den * ((q.num : ℚ) / (q.den : ℚ)) := by ring
+      _ = _ := by rw [Rat.num_div_den]
+  rw [he] at hm
+  exact mem_of_le (Nat.log_le_self p q.den) hm
+
+def coeffCrude (h : ℕ) (d : ℕ → ℚ) : ℕ := ∑ j ∈ Icc 1 (h - 1), (d j).den
+
+theorem coeff_scaled_mem (h : ℕ) (d : ℕ → ℚ) {j : ℕ} (hj : j ∈ Icc 1 (h - 1)) :
+    (p : ℚ) ^ coeffCrude h d * d j ∈ LocRing p := by
+  have hle : (d j).den ≤ coeffCrude h d := by
+    simpa only [coeffCrude] using
+      Finset.single_le_sum (f := fun j => (d j).den) (fun _ _ => Nat.zero_le _) hj
+  exact mem_of_le hle (rat_scaled_mem (d j))
+
+theorem power_term_scaled_mem {N k C H j : ℕ} (hN : 0 < N) (hk : 0 < k) (hkN : k ≤ N)
+    (hj : j ≤ H) (q : ℚ) (hq : (p : ℚ) ^ C * q ∈ LocRing p) :
+    (p : ℚ) ^ (C + H * Nat.log p N) * (q / (k : ℚ) ^ j) ∈ LocRing p := by
+  have hinv := pow_mul_inv_mem (p := p) (n := k) (X := N) hk hkN
+  have hm := (LocRing p).mul_mem hq ((LocRing p).pow_mem hinv j)
+  have he : ((p : ℚ) ^ C * q) * ((p : ℚ) ^ Nat.log p N * (1 / (k : ℚ))) ^ j =
+      (p : ℚ) ^ (C + j * Nat.log p N) * (q / (k : ℚ) ^ j) := by
+    rw [mul_pow, _root_.one_div_pow, pow_add, ← pow_mul, Nat.mul_comm j (Nat.log p N)]
+    ring
+  rw [he] at hm
+  exact mem_of_le (Nat.add_le_add_left (Nat.mul_le_mul_right _ hj) C) hm
+
+theorem f_sub_scaled_mem (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ) (C : ℕ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), (p : ℚ) ^ C * d j ∈ LocRing p)
+    {N s t : ℕ} (hN : 0 < N) (hst : s ≤ t) (ht : t ≤ N) :
+    (p : ℚ) ^ (C + (h - 1) * Nat.log p N) * (hpoleF h d t - hpoleF h d s) ∈ LocRing p := by
+  have he : hpoleF h d t - hpoleF h d s =
+      ∑ k ∈ Ico s t, ∑ j ∈ Icc 1 (h - 1), d j / ((k : ℚ) + 1) ^ j := by
+    rw [hpoleF, hpoleF, Finset.sum_Ico_eq_sub _ hst]
+  rw [he, Finset.mul_sum]
+  apply (LocRing p).sum_mem
+  intro k hk
+  rw [Finset.mul_sum]
+  apply (LocRing p).sum_mem
+  intro j hj
+  have hkn := (Finset.mem_Ico.mp hk).2
+  have hb := power_term_scaled_mem hN (by omega : 0 < k + 1) (by omega : k + 1 ≤ N)
+    (Finset.mem_Icc.mp hj).2 (d j) (hd j hj)
+  simpa only [Nat.cast_add, Nat.cast_one] using hb
+
+theorem e_scaled_mem (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ) (C : ℕ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), (p : ℚ) ^ C * d j ∈ LocRing p)
+    {N t : ℕ} (hN : 0 < N) (ht : t ≤ N) :
+    (p : ℚ) ^ (C + h * Nat.log p N) * hpoleE h d t ∈ LocRing p := by
+  rw [hpoleE, Finset.mul_sum]
+  apply (LocRing p).sum_mem
+  intro k hk
+  rw [Finset.mul_sum]
+  apply (LocRing p).sum_mem
+  intro j hj
+  have hkn := Finset.mem_range.mp hk
+  have hb := power_term_scaled_mem (H := h) (j := j + 1) hN (by omega : 0 < k + 1)
+    (by omega : k + 1 ≤ N) (by have := (Finset.mem_Icc.mp hj).2; omega) (d j) (hd j hj)
+  have hm := (LocRing p).mul_mem (show (j : ℚ) ∈ LocRing p by
+    exact_mod_cast int_mem_locRing (ℓ := p) (j : ℤ)) hb
+  convert hm using 1 <;> push_cast <;> ring
+
+theorem hpole_lw_gle_crude (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ) (C : ℕ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), (p : ℚ) ^ C * d j ∈ LocRing p)
+    {N s t : ℕ} (hN : 0 < N) (hs : s ≤ N) (ht : t ≤ N) :
+    GLE p (C + h * Nat.log p N) (Polynomial.C (lw (hpoleF h d) (hpoleE h d) s t)) := by
+  rw [GLE.C_iff]
+  have hoff : ∀ s t : ℕ, s < t → t ≤ N →
+      (p : ℚ) ^ (C + h * Nat.log p N) *
+        ((hpoleF h d t - hpoleF h d s) / ((t : ℚ) - s)) ∈ LocRing p := by
+    intro s t hst ht
+    have hf := f_sub_scaled_mem h hh d C hd hN hst.le ht
+    have hi := pow_mul_inv_mem (p := p) (n := t - s) (X := N) (by omega) (by omega)
+    have hm := (LocRing p).mul_mem hf hi
+    have he : C + (h - 1) * Nat.log p N + Nat.log p N = C + h * Nat.log p N := by
+      have hh1 : h - 1 + 1 = h := by omega
+      calc
+        _ = C + (h - 1 + 1) * Nat.log p N := by ring
+        _ = _ := by rw [hh1]
+    have hpow : (p : ℚ) ^ (C + h * Nat.log p N) =
+        (p : ℚ) ^ (C + (h - 1) * Nat.log p N) * (p : ℚ) ^ Nat.log p N := by
+      rw [← pow_add, he]
+    convert hm using 1
+    rw [Nat.cast_sub hst.le, hpow]
+    ring
+  by_cases he : s = t
+  · subst he
+    simp only [lw, if_true, mul_neg]
+    exact (LocRing p).neg_mem (e_scaled_mem h hh d C hd hN hs)
+  rcases lt_or_gt_of_ne he with hst | hts
+  · simpa only [lw, if_neg he] using hoff s t hst ht
+  · rw [lw_symm (hpoleF h d) (hpoleE h d) s t]
+    simpa only [lw, if_neg (Ne.symm he)] using hoff t s hts hs
+
+end Crude
+end IntegerPoleRows
+
+theorem seqPoly_gle_scaled_Ecrude (f g : ℕ → ℚ) (K cF : ℕ)
+    (hent : ∀ (p : ℕ) [Fact p.Prime] (N A B : ℕ), 0 < N → A ≤ N → B ≤ N →
+      GLE p (K * (3 * Nat.log p N + cF)) (C (lw f g A B)))
+    (G : NodeFamily) (i : G.Index)
+    (hN : ∀ a ∈ (G i.1).C ∪ (G i.1).X' ∪ (G i.1).Y', a ≤ 14 * i.1)
+    (hcard : i.2.card + (G i.1).k ≤ 2 * i.1) (p : ℕ) [Fact p.Prime] :
+    GLE p (K * Ecrude cF i.1 p) (SeqFamily.poly f g G i) := by
+  unfold SeqFamily.poly
+  have hsz : Fintype.card (i.2 ⊕ Fin (G i.1).k) = i.2.card + (G i.1).k := by
+    simp [Fintype.card_sum, Fintype.card_coe]
+  rcases Nat.eq_zero_or_pos i.1 with h0 | hr
+  · have hz : Fintype.card (i.2 ⊕ Fin (G i.1).k) = 0 := by omega
+    have hE : IsEmpty (i.2 ⊕ Fin (G i.1).k) := Fintype.card_eq_zero_iff.1 hz
+    rw [Matrix.det_isEmpty]
+    exact (GLE.one (p := p)).mono (Nat.zero_le _)
+  · have hNpos : 0 < 14 * i.1 := by omega
+    have h := seqFullN_det_gle (p := p) f g (fun a : i.2 => ((a.1 : (G i.1).C) : ℕ))
+      (G i.1).xs (G i.1).ys (N := 14 * i.1) (e := K * (3 * Nat.log p (14 * i.1) + cF))
+      (fun A B hA hB => hent p (14 * i.1) A B hNpos hA hB)
+      (fun a => hN _ (by
+        have := a.1.2
+        simp [this]))
+      (fun j => hN _ (by
+        have := Finset.orderEmbOfFin_mem (G i.1).X' rfl j
+        simp [Rect.Geometry.xs, this]))
+      (fun j => hN _ (by
+        have := Finset.orderEmbOfFin_mem (G i.1).Y' (G i.1).card_eq.symm j
+        simp [Rect.Geometry.ys, this]))
+    refine h.mono ?_
+    rw [hsz]
+    unfold Ecrude
+    calc (i.2.card + (G i.1).k) * (K * (3 * Nat.log p (14 * i.1) + cF))
+        ≤ (2 * i.1) * (K * (3 * Nat.log p (14 * i.1) + cF)) := Nat.mul_le_mul hcard le_rfl
+      _ = K * (2 * i.1 * (3 * Nat.log p (14 * i.1) + cF)) := by ring
+
+/-- **`AltQ` for the Löwner minors of two sequences on `altGeom c`** from an entry bound. -/
+theorem seq_alt_scaled_crude (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (f g : ℕ → ℚ) (K cF : ℕ)
+    (hent : ∀ (p : ℕ) [Fact p.Prime] (N A B : ℕ), 0 < N → A ≤ N → B ≤ N →
+      GLE p (K * (3 * Nat.log p N + cF)) (C (lw f g A B))) :
+    ∀ i : NodeFamily.Index (altGeom c hc).geometry, i.1 % 2 = 0 →
+      ∀ (p : ℕ) [Fact p.Prime], GLE p (K * Ecrude cF i.1 p)
+        (SeqFamily.poly f g (altGeom c hc).geometry i) := by
+  intro i hi p _
+  have hbs := altGeom_borderSize_le c hc hc1 hi
+  have hX := altGeom_X c hc hi
+  have hY := altGeom_Y c hc hi
+  have hC := altGeom_C c hc i.1
+  have hk : ((altGeom c hc).geometry i.1).k = (altGeom c hc).borderSize i.1 :=
+    geometry_k_eq_borderSize _ _
+  refine seqPoly_gle_scaled_Ecrude f g K cF hent (altGeom c hc).geometry i ?_ ?_ p
+  · intro a ha
+    simp only [Finset.mem_union] at ha
+    rcases ha with (ha | ha) | ha
+    · rw [hC, Finset.mem_range] at ha; omega
+    · rw [hX, Finset.mem_image] at ha
+      obtain ⟨j, hj, rfl⟩ := ha
+      rw [Finset.mem_range] at hj; omega
+    · rw [hY, Finset.mem_image] at ha
+      obtain ⟨j, hj, rfl⟩ := ha
+      rw [Finset.mem_range] at hj; omega
+  · have h1 : i.2.card ≤ i.1 := by
+      have := Finset.card_le_univ i.2
+      have hc : ((altGeom c hc).geometry i.1).C.card = i.1 := by rw [hC, Finset.card_range]
+      rw [Fintype.card_coe] at this
+      omega
+    omega
+
+
+open CatalanCore.Uniform.Content.SmallPrimes
+theorem preValid_of_scaled_crude_rows (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) {K cF : ℕ}
+    (hclear : ∀ i, (AltEvenFam c hc const depth Q).Adm i →
+      ∀ (p : ℕ) [Fact p.Prime], GLE p (K * Ecrude cF i.1 p) (Q i))
+    (M : ℕ) (B : SmallBudget) (A C : ℕ) (hC : K * (30 + 2 * cF) ≤ C)
+    (hB : ∀ r p : ℕ, p * p ≤ A * r → p ≤ r → (C : ℝ) * r * ((Nat.log 2 r : ℝ) + 1) ≤ B.X r p)
+    (t0 α0b : ℚ) (ht0 : t0 ≤ 1) (hα : 0 ≤ α0b)
+    (hrow : ∀ i : (AltEvenFam c hc const depth Q).ι, (AltEvenFam c hc const depth Q).Adm i →
+      ∀ (p : ℕ) [Fact p.Prime], A * i.1 < p * p → p ≤ i.1 →
+        ∃ n, GLE p n ((AltEvenFam c hc const depth Q).Q i) ∧ (n : ℝ) ≤ (α0b : ℝ) * i.1) :
+    PreValidFam c hc const depth Q M B t0 α0b := by
+  intro i hi p _ _ hpt
+  have hpr : p ≤ i.1 := by
+    refine hpt.trans ?_
+    have h0 : (0 : ℝ) ≤ i.1 := Nat.cast_nonneg _
+    have : (t0 : ℝ) * i.1 ≤ i.1 := by
+      have : (t0 : ℝ) ≤ 1 := by exact_mod_cast ht0
+      nlinarith
+    exact Nat.floor_le_of_le this
+  have hr1 : 1 ≤ i.1 := by have := (Fact.out : p.Prime).two_le; omega
+  have hX0 := B.nonneg i.1 p
+  by_cases hsq : p * p ≤ A * i.1
+  · refine ⟨K * Ecrude cF i.1 p, hclear i hi p, ?_⟩
+    have h0 := Ecrude_le_budget cF (30 + 2 * cF) i.1 p le_rfl hr1 (Fact.out : p.Prime).two_le
+    have h1 : K * Ecrude cF i.1 p ≤ C * i.1 * (Nat.log 2 i.1 + 1) := by
+      calc
+        _ ≤ K * ((30 + 2 * cF) * i.1 * (Nat.log 2 i.1 + 1)) := Nat.mul_le_mul_left K h0
+        _ = (K * (30 + 2 * cF)) * i.1 * (Nat.log 2 i.1 + 1) := by ring
+        _ ≤ _ := Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ hC)
+    have h2 : (K * Ecrude cF i.1 p : ℝ) ≤ (C : ℝ) * i.1 * ((Nat.log 2 i.1 : ℝ) + 1) := by
+      exact_mod_cast (by simpa [mul_assoc] using h1 : K * Ecrude cF i.1 p ≤ C * i.1 * (Nat.log 2 i.1 + 1))
+    have h3 := hB i.1 p hsq hpr
+    have h4 : (0 : ℝ) ≤ (α0b : ℝ) * i.1 := by
+      have : (0 : ℝ) ≤ (α0b : ℝ) := by exact_mod_cast hα
+      positivity
+    push_cast
+    linarith
+  · push Not at hsq
+    obtain ⟨n, hn, hle⟩ := hrow i hi p hsq hpr
+    exact ⟨n, hn, by linarith⟩
+
+
+
+theorem seq_alt_control_of_scaled_entries (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
+    (f g : ℕ → ℚ) (const : ℝ) (depth M K cF : ℕ) [NeZero M]
+    (hent : ∀ (p : ℕ) [Fact p.Prime] (N A B : ℕ), 0 < N → A ≤ N → B ≤ N →
+      GLE p (K * (3 * Nat.log p N + cF)) (C (lw f g A B))) :
+    AltContentControl c hc const depth M (SeqFamily.poly f g (altGeom c hc).geometry) :=
+  altContentControl_of_scaled_crude c hc const depth _ M K cF
+    (fun i => SeqFamily.poly_natDegree f g _ i)
+    (fun i hi p _ => seq_alt_scaled_crude c hc hc1 f g K cF hent i hi.2 p)
+
+theorem hpole_alt_control (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+    (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1) (const : ℝ) (depth M : ℕ) [NeZero M] :
+    AltContentControl c hc const depth M
+      (SeqFamily.poly (hpoleF h d) (hpoleE h d) (altGeom c hc).geometry) := by
+  let C0 := IntegerPoleRows.coeffCrude h d
+  let K := C0 + h + 1
+  apply seq_alt_control_of_scaled_entries c hc hc1 (hpoleF h d) (hpoleE h d) const depth M K 1
+  intro p _ N A B hN hA hB
+  have hb := IntegerPoleRows.hpole_lw_gle_crude (p := p) h hh d C0
+    (fun j hj => IntegerPoleRows.coeff_scaled_mem (p := p) h d hj) hN hA hB
+  refine hb.mono ?_
+  have hC : C0 ≤ K := by dsimp [K]; omega
+  have hhK : h ≤ 3 * K := by dsimp [K]; omega
+  have hm := Nat.mul_le_mul_right (Nat.log p N) hhK
+  nlinarith
+
+/-! ### The four prices on actual family members, at arbitrary hybrid geometry -/
+namespace IntegerPoleRows
+open CatalanCore.Uniform.Content.Wire
+
+theorem seqPoly_window_eq (h : ℕ) (d : ℕ → ℚ) {G : BlockGeom} {r : ℕ}
+    (hs : HybShape G r) (S : Finset (G.geometry r).C) :
+    SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩ =
+      rowDet h d (fun a : S => ((a.1 : (G.geometry r).C) : ℕ)) r (G.geometry r).k := by
+  have hx : (G.geometry r).xs = fun i : Fin (G.geometry r).k => r + 2 * (i : ℕ) := funext hs.xs_eq
+  have hy : (G.geometry r).ys = fun i : Fin (G.geometry r).k => r + 2 * (i : ℕ) + 1 := funext hs.ys_eq
+  unfold SeqFamily.poly rowDet
+  rw [hx, hy]
+
+theorem family_of_window (h : ℕ) (d : ℕ → ℚ) {p : ℕ} [Fact p.Prime]
+    {G : BlockGeom} {r : ℕ} (hs : HybShape G r) (S : Finset (G.geometry r).C) (E : ℕ)
+    (hrow : ∀ {ι : Type} [Fintype ι] [DecidableEq ι] (cn : ι → ℕ),
+      Function.Injective cn → (∀ a, cn a < r) → GLE p E (rowDet h d cn r (G.geometry r).k)) :
+    GLE p E (SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩) := by
+  rw [seqPoly_window_eq h d hs S]
+  exact hrow _ (fun a b he => Subtype.ext (Subtype.ext he)) (fun a => hybShape_lt_scale hs a.1)
+
+section Family
+variable {p : ℕ} [Fact p.Prime] (h : ℕ) (hh : 2 ≤ h) (d : ℕ → ℚ)
+  (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+  {G : BlockGeom} {r : ℕ} (hs : HybShape G r) (S : Finset (G.geometry r).C)
+  (hN : r + 2 * (G.geometry r).k < p * p)
+
+include hh hd hN hs
+
+theorem family_first (hodd : p % 2 = 1) :
+    GLE p (h * (r + (G.geometry r).k) - delta (G.geometry r).k p)
+      (SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩) := by
+  apply family_of_window h d hs S
+  intro ι _ _ cn hinj hcr
+  exact row_first h hh d hd cn hinj hcr hN hodd
+
+theorem family_second (hpr : p ≤ r) :
+    GLE p (2 * h * (r + (G.geometry r).k - p))
+      (SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩) := by
+  apply family_of_window h d hs S
+  intro ι _ _ cn hinj hcr
+  exact row_second h hh d hd cn hinj hcr hN hpr
+
+theorem family_third (hpr : p ≤ r) (hrp : r ≤ 2 * p) (hmp : 2 * (G.geometry r).k ≤ p)
+    (hlo : 2 * p ≤ r + 2 * (G.geometry r).k) (hhi : r + 2 * (G.geometry r).k ≤ 3 * p) :
+    GLE p ((2 * h - 1) * r + 2 * (h - 1) * (G.geometry r).k - 2 * (h - 1) * p)
+      (SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩) := by
+  apply family_of_window h d hs S
+  intro ι _ _ cn hinj hcr
+  exact row_third h hh d hd cn hinj hcr hN hpr hrp hmp hlo hhi
+
+theorem family_fourth (hpr : r ≤ p) :
+    GLE p (h * (r + 2 * (G.geometry r).k - p))
+      (SeqFamily.poly (hpoleF h d) (hpoleE h d) G.geometry ⟨r, S⟩) := by
+  apply family_of_window h d hs S
+  intro ι _ _ cn hinj hcr
+  exact row_fourth h hh d hd cn hinj hcr hN hpr
+end Family
+end IntegerPoleRows
+
 end CatalanCore.Uniform.Support
 
 #print axioms CatalanCore.Uniform.Support.datum_lw_gle
@@ -428,3 +1074,12 @@ end CatalanCore.Uniform.Support
 #print axioms CatalanCore.Uniform.Support.preValid_of_crude_rows
 #print axioms CatalanCore.Uniform.Support.sweep_sq_guard
 #print axioms CatalanCore.Uniform.Support.kcatValid_of_rows
+
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.row_first
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.row_second
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.row_third
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.row_fourth
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.lowPrice_cov
+
+#print axioms CatalanCore.Uniform.Support.hpole_alt_control
+#print axioms CatalanCore.Uniform.Support.IntegerPoleRows.family_third

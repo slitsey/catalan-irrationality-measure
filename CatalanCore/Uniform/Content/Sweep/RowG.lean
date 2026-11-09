@@ -33,9 +33,9 @@ variable {R : Type*} [CommRing R] {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- **Leibniz bound**: if every entry `M a b` is divisible by `q^(e a b)` and `3 ≤ e a b + ur a + uc b`, then
 `q^K ∣ det M` for `K + ∑ ur + ∑ uc ≤ 3 |n|`. -/
-theorem det_dvd_of_potentials (q : R) (M : Matrix n n R) (e : n → n → ℕ) (ur uc : n → ℕ)
-    (hM : ∀ a b, q ^ e a b ∣ M a b) (he : ∀ a b, 3 ≤ e a b + ur a + uc b) (K : ℕ)
-    (hK : K + ∑ a, ur a + ∑ b, uc b ≤ 3 * Fintype.card n) : q ^ K ∣ M.det := by
+theorem det_dvd_of_potentials_h (h : ℕ) (q : R) (M : Matrix n n R) (e : n → n → ℕ) (ur uc : n → ℕ)
+    (hM : ∀ a b, q ^ e a b ∣ M a b) (he : ∀ a b, h ≤ e a b + ur a + uc b) (K : ℕ)
+    (hK : K + ∑ a, ur a + ∑ b, uc b ≤ h * Fintype.card n) : q ^ K ∣ M.det := by
   rw [Matrix.det_apply]
   refine Finset.dvd_sum fun σ _ => ?_
   rw [Units.smul_def, zsmul_eq_mul]
@@ -44,15 +44,50 @@ theorem det_dvd_of_potentials (q : R) (M : Matrix n n R) (e : n → n → ℕ) (
     Finset.prod_dvd_prod_of_dvd _ _ fun i _ => hM (σ i) i
   rw [Finset.prod_pow_eq_pow_sum] at h1
   refine (pow_dvd_pow q ?_).trans h1
-  have h2 : ∑ i, (3 : ℕ) ≤ ∑ i, (e (σ i) i + ur (σ i) + uc i) :=
+  have h2 : ∑ i, h ≤ ∑ i, (e (σ i) i + ur (σ i) + uc i) :=
     Finset.sum_le_sum fun i _ => he (σ i) i
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
     Equiv.sum_comp σ ur] at h2
   simp only [smul_eq_mul] at h2
+  rw [Nat.mul_comm (Fintype.card n) h] at h2
   omega
 
 
+theorem det_dvd_of_potentials (q : R) (M : Matrix n n R) (e : n → n → ℕ) (ur uc : n → ℕ)
+    (hM : ∀ a b, q ^ e a b ∣ M a b) (he : ∀ a b, 3 ≤ e a b + ur a + uc b) (K : ℕ)
+    (hK : K + ∑ a, ur a + ∑ b, uc b ≤ 3 * Fintype.card n) : q ^ K ∣ M.det :=
+  det_dvd_of_potentials_h 3 q M e ur uc hM he K hK
+
 end Leibniz
+
+
+/-! The determinant/Jacobi algebra is independent of the integer-pole source. -/
+theorem minor_dvd_h
+    {R : Type*} [CommRing R]
+    {Ω I J L L' : Type*}
+    [Fintype Ω] [DecidableEq Ω] [Fintype I] [DecidableEq I]
+    [Fintype J] [DecidableEq J] [Fintype L] [DecidableEq L]
+    [Fintype L'] [DecidableEq L']
+    (H : Matrix (Ω ⊕ I) (Ω ⊕ J) R) (A A' : Finset Ω)
+    (Z : Matrix Ω Ω R)
+    (hZ1 : Schur.Qm H * Z = 1) (hZ2 : Z * Schur.Qm H = 1)
+    (ρ : L → Ω ⊕ I) (κ : L → Ω ⊕ J)
+    (ρ' : L' → I ⊕ Ω) (κ' : L' → J ⊕ Ω)
+    (eL : L ≃ Schur.Xr A I) (eC : L ≃ Schur.Xr A' J)
+    (eL' : L' ≃ I ⊕ ↥A') (eC' : L' ≃ J ⊕ ↥A)
+    (hρ : ∀ l, ρ l = Sum.map Subtype.val id (eL l))
+    (hκ : ∀ l, κ l = Sum.map Subtype.val id (eC l))
+    (hρ' : ∀ l, ρ' l = Sum.map id Subtype.val (eL' l))
+    (hκ' : ∀ l, κ' l = Sum.map id Subtype.val (eC' l))
+    (h : ℕ) (q : R) (e : L' → L' → ℕ) (ur uc : L' → ℕ)
+    (hM : ∀ a b, q ^ e a b ∣ Schur.Sw H Z (ρ' a) (κ' b))
+    (he : ∀ a b, h ≤ e a b + ur a + uc b) (K : ℕ)
+    (hK : K + ∑ a, ur a + ∑ b, uc b ≤ h * Fintype.card L') :
+    q ^ K ∣ (Matrix.of fun a b => H (ρ a) (κ b)).det := by
+  have hJ := Schur.jacobi_L H A A' Z hZ1 hZ2 ρ κ ρ' κ' eL eC eL' eC' hρ hκ hρ' hκ'
+  have hD := det_dvd_of_potentials_h h q
+    (Matrix.of fun a b => Schur.Sw H Z (ρ' a) (κ' b)) e ur uc hM he K hK
+  exact hD.trans hJ.symm.dvd
 
 section Side
 
@@ -321,3 +356,6 @@ end MemberG
 end CatalanCore.Uniform.Content.Sweep
 
 #print axioms CatalanCore.Uniform.Content.Sweep.member_gle
+
+#print axioms CatalanCore.Uniform.Content.Sweep.det_dvd_of_potentials_h
+#print axioms CatalanCore.Uniform.Content.Sweep.minor_dvd_h

@@ -212,7 +212,55 @@ theorem gle_member (hN : 2 * N < p * p) (hr : ∀ a, memRow c xs a < N) (hcl : �
 
 end Member
 
+
+/-- Descent for any scaled sequence pencil. The supplied local matrix carries all source
+integrality obligations; no injectivity or separation premise is needed by descent. -/
+theorem gle_member_h
+    {p : ℕ} [Fact p.Prime] (h : ℕ) (f g : ℕ → ℚ)
+    {ι κw : Type} [Fintype ι] [DecidableEq ι]
+    [Fintype κw] [DecidableEq κw]
+    (c : ι → ℕ) (xs ys : κw → ℕ)
+    (B : Matrix (ι ⊕ κw) (ι ⊕ κw) (LocRing p)[X])
+    (hB : ∀ a b,
+      toQ p (B a b) = C ((p : ℚ) ^ h) *
+        seqFullN f g c xs ys (C (((p : ℚ) ^ h)⁻¹) * X) a b)
+    {K : ℕ}
+    (hdvd : ((p : ℕ) : RP p) ^ K ∣
+      algebraMap ((LocRing p)[X]) (RP p) B.det) :
+    GLE p (h * (Fintype.card ι + Fintype.card κw) - K)
+      (seqFullN f g c xs ys (X : ℚ[X])).det := by
+  have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  let Mt := seqFullN f g c xs ys (C (((p : ℚ) ^ h)⁻¹) * X)
+  have hB' : ∀ a b : ι ⊕ κw, toQ p (B a b) =
+      C ((p : ℚ) ^ ((fun _ : ι ⊕ κw => h) a + (fun _ : ι ⊕ κw => 0) b)) * Mt a b := by
+    intro a b
+    simpa only [Nat.add_zero] using hB a b
+  have hG := gle_det_of_scaled_dvd p Mt B (fun _ => h) (fun _ => 0) hB' K (descent p hdvd)
+  simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_zero, add_zero, Fintype.card_sum] at hG
+  let MX := seqFullN f g c xs ys (X : ℚ[X])
+  have hcomp : Mt = (Polynomial.compRingHom (C (((p : ℚ) ^ h)⁻¹) * X : ℚ[X])).mapMatrix MX := by
+    apply Matrix.ext
+    intro a b
+    rcases a with a | a <;> rcases b with b | b <;>
+      simp [Mt, MX, seqFullN, Blk, Matrix.fromBlocks, Matrix.one_apply]
+    by_cases he : a = b <;> simp [he]
+  have hdet : Mt.det = MX.det.comp (C (((p : ℚ) ^ h)⁻¹) * X) := by
+    rw [hcomp, ← RingHom.map_det]
+    rfl
+  intro i
+  have hi := hG i
+  rw [hdet, Polynomial.comp_C_mul_X_coeff] at hi
+  have hpi : ((p : ℚ) ^ (h * i)) ∈ LocRing p := by
+    exact_mod_cast int_mem_locRing (ℓ := p) ((p : ℤ) ^ (h * i))
+  have hm := (LocRing p).mul_mem hi hpi
+  convert hm using 1
+  have hph : ((p : ℚ) ^ h) ^ i ≠ 0 := pow_ne_zero _ (pow_ne_zero h hp0)
+  rw [inv_pow, pow_mul]
+  field_simp <;> (rw [Nat.mul_comm (Fintype.card ι + Fintype.card κw) h] <;> ring)
+
 end CatalanCore.Uniform.Content.Sweep
 
 #print axioms CatalanCore.Uniform.Content.Sweep.gle_member
 #print axioms CatalanCore.Uniform.Content.Sweep.descent
+
+#print axioms CatalanCore.Uniform.Content.Sweep.gle_member_h
