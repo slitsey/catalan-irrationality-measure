@@ -1,0 +1,135 @@
+module
+
+public import CatalanCore.Uniform.Content.BankShared.KTerm.Periodic
+
+@[expose] public section
+set_option Elab.async false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 1600000
+
+/-! # Plane 3: the complete four-price finite content bank (Q09, IB-C1)
+
+Fixed alpha 1/20. All four generic assignment prices are used, with no common-deletion
+debit. The low range is one PC table (N=1, top=0); its translation supplier is proved
+in Content from the shared covariance theorem. Each of the seven actual pieces is
+checked separately. The epsilon is leading profile slack, not a coefficient change.
+No decay certificate or public measure is asserted by this module.
+-/
+namespace CatalanCore.Uniform.Bank.Plane3
+open CatalanCore.Uniform.Content.BankShared.KTerm
+open CatalanCore.Uniform.Content.BankShared.Check
+
+def firstBranch : KBranch :=
+  ⟨.tsub (.smul 4 (.add .vr .vm)) (.dist .vm), [], 0⟩
+def secondBranch : KBranch :=
+  ⟨.smul 8 (.tsub (.add .vr .vm) .vp), [⟨1,-1,0,[],0,false⟩], 0⟩
+def thirdBranch : KBranch :=
+  ⟨.tsub (.add (.smul 7 .vr) (.smul 6 .vm)) (.smul 6 .vp),
+    [⟨1,-1,0,[],0,false⟩, ⟨-1,2,0,[],0,false⟩,
+     ⟨0,1,-2,[],0,false⟩, ⟨-1,3,-2,[],0,false⟩], 0⟩
+def fourthBranch : KBranch :=
+  ⟨.smul 4 (.tsub (.add .vr (.smul 2 .vm)) .vp), [⟨-1,1,0,[],0,false⟩], 0⟩
+def zeroBranch : KBranch := ⟨.cst 0, [⟨-1,1,-2,[],0,false⟩], 0⟩
+def plane3Catalogue : List KBranch :=
+  [firstBranch, secondBranch, thirdBranch, fourthBranch, zeroBranch]
+def plane3BaseCatalogue : List KBranch := [firstBranch]
+
+def plane3Slack : ℚ := 10000000000000000000000000
+def plane3Threshold : ℚ := 10000000000
+
+def contentPiece0 : QPiece := ⟨(1/40 : ℚ), (1/30 : ℚ), (425001/100000 : ℚ), (-2 : ℚ), plane3Slack⟩
+def contentCert0 : Cert := ⟨0, [], [], plane3Threshold⟩
+
+def contentPiece1 : QPiece := ⟨(1/30 : ℚ), (1/20 : ℚ), (415001/100000 : ℚ), (1 : ℚ), plane3Slack⟩
+def contentCert1 : Cert := ⟨0, [], [], plane3Threshold⟩
+
+def contentPiece2 : QPiece := ⟨(1/20 : ℚ), (1/10 : ℚ), (425001/100000 : ℚ), (-1 : ℚ), plane3Slack⟩
+def contentCert2 : Cert := ⟨0, [], [], plane3Threshold⟩
+
+def contentPiece3 : QPiece := ⟨(1/10 : ℚ), (21/40 : ℚ), (415001/100000 : ℚ), (0 : ℚ), plane3Slack⟩
+def contentCert3 : Cert := ⟨0, [], [], plane3Threshold⟩
+
+def contentPiece4 : QPiece := ⟨(21/40 : ℚ), (11/20 : ℚ), (730001/100000 : ℚ), (-6 : ℚ), plane3Slack⟩
+def contentCert4 : Cert := ⟨2, [], [], plane3Threshold⟩
+
+def contentPiece5 : QPiece := ⟨(11/20 : ℚ), (1 : ℚ), (840001/100000 : ℚ), (-8 : ℚ), plane3Slack⟩
+def contentCert5 : Cert := ⟨1, [], [], plane3Threshold⟩
+
+def contentPiece6 : QPiece := ⟨(1 : ℚ), (880001/800000 : ℚ), (440001/100000 : ℚ), (-4 : ℚ), plane3Slack⟩
+def contentCert6 : Cert := ⟨3, [(11/10 : ℚ)], [], plane3Threshold⟩
+
+def plane3PCTemplate : KTmplP :=
+  ⟨1/40, 1, 0, [(contentPiece0, contentCert0), (contentPiece1, contentCert1)],
+    [(contentPiece2, contentCert2), (contentPiece3, contentCert3),
+     (contentPiece4, contentCert4), (contentPiece5, contentCert5),
+     (contentPiece6, contentCert6)], 4⟩
+
+def plane3Bank (depth : ℕ) : KBankData where
+  Q := 2
+  M := 2
+  α := 1/20
+  a := 1
+  shifts := [⟨2,1,1⟩, ⟨2,1,1⟩]
+  depth := depth
+  cF := 1
+  Pbad := 2
+  α0 := 420001/100000
+  τ := 2
+  Λ := 3162410560009/960000000000
+  α0b := 420001/100000
+  t0 := 1/40
+  Rt := plane3Threshold
+  kcat := plane3Catalogue
+  tmpls := [(1, plane3PCTemplate.toK 20 84 1)]
+
+theorem plane3_params : kcheckParams (plane3Bank 0) = true := by decide +kernel
+theorem plane3_heads : ktmplHead (plane3Bank 0) 1 (plane3PCTemplate.toK 20 84 1) = true := by
+  decide +kernel
+theorem plane3_class : kclassOK (plane3Bank 0) = true := by decide +kernel
+
+theorem contentPiece0_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece0 contentCert0 = true := by
+  decide +kernel
+
+theorem contentPiece1_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece1 contentCert1 = true := by
+  decide +kernel
+
+theorem contentPiece2_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece2 contentCert2 = true := by
+  decide +kernel
+
+theorem contentPiece3_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece3 contentCert3 = true := by
+  decide +kernel
+
+theorem contentPiece4_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece4 contentCert4 = true := by
+  decide +kernel
+
+theorem contentPiece5_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece5 contentCert5 = true := by
+  decide +kernel
+
+theorem contentPiece6_check :
+    pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 contentPiece6 contentCert6 = true := by
+  decide +kernel
+
+theorem plane3_cell0 : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 1 20 64
+    (contentPiece0, contentCert0) = true := by decide +kernel
+theorem plane3_cell1 : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 1 20 64
+    (contentPiece1, contentCert1) = true := by decide +kernel
+
+end CatalanCore.Uniform.Bank.Plane3
+#print axioms CatalanCore.Uniform.Bank.Plane3.plane3_params
+#print axioms CatalanCore.Uniform.Bank.Plane3.plane3_heads
+#print axioms CatalanCore.Uniform.Bank.Plane3.plane3_class
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece0_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece1_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece2_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece3_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece4_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece5_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.contentPiece6_check
+#print axioms CatalanCore.Uniform.Bank.Plane3.plane3_cell0
+#print axioms CatalanCore.Uniform.Bank.Plane3.plane3_cell1
