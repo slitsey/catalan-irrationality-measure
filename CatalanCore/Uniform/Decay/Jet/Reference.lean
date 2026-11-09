@@ -3,6 +3,7 @@ module
 public import CatalanLambda.Decay.CauchyDetFull
 public import CatalanLambda.Decay.ThmNLog
 public import Mathlib.Analysis.Complex.Liouville
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 @[expose] public section
@@ -578,6 +579,368 @@ theorem sum_inv_sep_le {g : ℝ} (hg : 0 < g) (a : ℝ) (T : Finset ℝ)
         linarith
   exact (key T hsep hnear).1
 
+/-! ### Arbitrary fixed finite-order jets (Q04) -/
+
+universe u
+
+/-- A finite jet at a head and an unchanged Cauchy row elsewhere. -/
+noncomputable def jetRowFinite {L : Type u}
+    (head : L → Prop) [DecidablePred head]
+    (J : ℕ) (x y : L → ℂ) (A : L → Fin (J + 1) → ℂ)
+    (t : ℕ) (q : L) : ℂ :=
+  if head q then
+    ∑ j : Fin (J + 1), A q j * iteratedDeriv (j : ℕ) (fun z : ℂ => (z - (t : ℂ))⁻¹) (x q)
+  else (y q - (t : ℂ))⁻¹
+
+noncomputable def jvrFinite (J : ℕ) (A : Fin (J + 1) → ℂ) (s : Fin k → ℕ) (w : ℂ) :
+    Fin k → ℂ := fun i =>
+  ∑ j : Fin (J + 1), A j * iteratedDeriv (j : ℕ) (fun z : ℂ => (z - (s i : ℂ))⁻¹) w
+
+noncomputable def Df (J : ℕ) (A : Fin k → Fin (J + 1) → ℂ)
+    (s : Fin k → ℕ) (σ : Finset (Fin k)) (x : Fin k → ℂ) : ℂ :=
+  (Matrix.of fun l => if l ∈ σ then jvrFinite J (A l) s (x l) else vr s (x l)).det
+
+noncomputable def restMf (J : ℕ) (A : Fin k → Fin (J + 1) → ℂ)
+    (s : Fin k → ℕ) (σ : Finset (Fin k)) (x : Fin k → ℂ) : Matrix (Fin k) (Fin k) ℂ :=
+  Matrix.of fun l => if l ∈ σ then jvrFinite J (A l) s (x l) else vr s (x l)
+
+theorem Df_update (J : ℕ) (A : Fin k → Fin (J + 1) → ℂ)
+    (s : Fin k → ℕ) (σ : Finset (Fin k)) (x : Fin k → ℂ) (l : Fin k)
+    (hl : l ∉ σ) (w : ℂ) :
+    Df J A s σ (update x l w) = rowDetLin (restMf J A s σ x) l (vr s w) := by
+  rw [rowDetLin_apply]
+  unfold Df
+  congr 1
+  ext l' i
+  by_cases he : l' = l
+  · subst he; simp [Matrix.updateRow_self, hl]
+  · simp [Matrix.updateRow_ne he, restMf, update_of_ne he]
+
+theorem rowDetLin_coordinates (N : Matrix (Fin k) (Fin k) ℂ) (l : Fin k) (v : Fin k → ℂ) :
+    rowDetLin N l v = ∑ i, v i * rowDetLin N l (Pi.single i 1) := by
+  classical
+  have hv : v = ∑ i : Fin k, v i • Pi.single i 1 := by
+    funext i
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    rw [Finset.sum_eq_single i]
+    · simp
+    · intro j _ hji
+      simp [Pi.single_apply, hji, Ne.symm hji]
+    · intro hi
+      exact (hi (Finset.mem_univ i)).elim
+  calc
+    rowDetLin N l v = rowDetLin N l (∑ i : Fin k, v i • Pi.single i 1) := congrArg _ hv
+    _ = _ := by simp only [map_sum, map_smul, smul_eq_mul]
+
+theorem iteratedDeriv_rowDetLin (N : Matrix (Fin k) (Fin k) ℂ) (l : Fin k)
+    (s : Fin k → ℕ) (j : ℕ) {w : ℂ} (hw : ∀ i, w ≠ (s i : ℂ)) :
+    iteratedDeriv j (fun z => rowDetLin N l (vr s z)) w =
+      rowDetLin N l (fun i => iteratedDeriv j (fun z : ℂ => (z - (s i : ℂ))⁻¹) w) := by
+  have he : (fun z => rowDetLin N l (vr s z)) =
+      fun z => ∑ i, rowDetLin N l (Pi.single i 1) * (z - (s i : ℂ))⁻¹ := by
+    funext z
+    rw [rowDetLin_coordinates]
+    apply Finset.sum_congr rfl
+    intro i _
+    simp only [vr]
+    ring
+  rw [he, iteratedDeriv_fun_sum]
+  · simp only [iteratedDeriv_const_mul_field]
+    rw [rowDetLin_coordinates]
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+  · intro i _
+    have hid : ContDiffAt ℂ j (fun z : ℂ => z - (s i : ℂ)) w :=
+      contDiffAt_id.sub contDiffAt_const
+    exact contDiffAt_const.mul (hid.inv (sub_ne_zero.mpr (hw i)))
+
+theorem Df_insert (J : ℕ) (A : Fin k → Fin (J + 1) → ℂ)
+    (s : Fin k → ℕ) (σ : Finset (Fin k)) (x : Fin k → ℂ) (l : Fin k)
+    (hl : l ∉ σ) (hw : ∀ i, x l ≠ (s i : ℂ)) :
+    Df J A s (insert l σ) x =
+      ∑ j : Fin (J + 1), A l j * iteratedDeriv (j : ℕ)
+        (fun w => Df J A s σ (update x l w)) (x l) := by
+  have hfun : (fun w => Df J A s σ (update x l w)) =
+      fun w => rowDetLin (restMf J A s σ x) l (vr s w) := by
+    funext w; exact Df_update J A s σ x l hl w
+  have he : Df J A s (insert l σ) x = rowDetLin (restMf J A s σ x) l (jvrFinite J (A l) s (x l)) := by
+    rw [rowDetLin_apply]
+    unfold Df
+    congr 1
+    ext l' i
+    by_cases he : l' = l
+    · subst he; simp [Matrix.updateRow_self]
+    · simp [Matrix.updateRow_ne he, restMf, he]
+  have hrow : jvrFinite J (A l) s (x l) =
+      ∑ j : Fin (J + 1), A l j • (fun i =>
+        iteratedDeriv (j : ℕ) (fun w : ℂ => (w - (s i : ℂ))⁻¹) (x l)) := by
+    funext i
+    simp [jvrFinite, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  rw [he, hrow, map_sum]
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [map_smul, smul_eq_mul, hfun, iteratedDeriv_rowDetLin _ _ _ _ hw]
+
+theorem hasDerivAt_Df (ord : ℕ) (A : Fin k → Fin (ord + 1) → ℂ) (s : Fin k → ℕ) (σ : Finset (Fin k)) (x : Fin k → ℂ) (l : Fin k)
+    (hl : l ∉ σ) (hw : ∀ i, x l ≠ (s i : ℂ)) :
+    HasDerivAt (fun w => Df ord A s σ (update x l w))
+      (rowDetLin (restMf ord A s σ x) l (dvr s (x l))) (x l) := by
+  have hfun : (fun w => Df ord A s σ (update x l w)) =
+      (rowDetLin (restMf ord A s σ x) l).toContinuousLinearMap ∘ vr s := by
+    funext w
+    exact Df_update ord A s σ x l hl w
+  rw [hfun]
+  exact (rowDetLin (restMf ord A s σ x) l).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt (x l)
+    (hasDerivAt_vr s hw)
+
+
+theorem norm_Df_le (ord : ℕ) (A : Fin k → Fin (ord + 1) → ℂ) (s : Fin k → ℕ) (c : Fin k → ℂ) {ρ : ℝ} (hρ : 0 < ρ)
+    (J : Finset (Fin k)) (hpole : ∀ l ∈ J, ∀ i, ρ < ‖c l - (s i : ℂ)‖)
+    {M : ℝ} (hM : ∀ x : Fin k → ℂ, (∀ l ∈ J, ‖x l - c l‖ ≤ ρ) → (∀ l, l ∉ J → x l = c l) →
+      ‖Df ord A s ∅ x‖ ≤ M) :
+    ‖Df ord A s J c‖ ≤ (∏ l ∈ J, (∑ j : Fin (ord + 1), ‖A l j‖ * (j.val.factorial : ℝ) / ρ ^ j.val)) * M := by
+  classical
+  have key : ∀ σ : Finset (Fin k), σ ⊆ J → ∀ x : Fin k → ℂ,
+      (∀ l ∈ J, l ∉ σ → ‖x l - c l‖ ≤ ρ) → (∀ l, l ∈ σ ∨ l ∉ J → x l = c l) →
+      ‖Df ord A s σ x‖ ≤ (∏ l ∈ σ, (∑ j : Fin (ord + 1), ‖A l j‖ * (j.val.factorial : ℝ) / ρ ^ j.val)) * M := by
+    intro σ
+    induction σ using Finset.induction_on with
+    | empty =>
+      intro _ x hx1 hx2
+      simp only [Finset.prod_empty, one_mul]
+      exact hM x (fun l hl => hx1 l hl (Finset.notMem_empty l))
+        (fun l hl => hx2 l (Or.inr hl))
+    | insert l σ hl ih =>
+      intro hsub x hx1 hx2
+      have hlJ : l ∈ J := hsub (Finset.mem_insert_self l σ)
+      have hσJ : σ ⊆ J := (Finset.subset_insert l σ).trans hsub
+      have hxl : x l = c l := hx2 l (Or.inl (Finset.mem_insert_self l σ))
+      have hB0 : 0 ≤ (∏ l' ∈ σ, (∑ j : Fin (ord + 1), ‖A l' j‖ * (j.val.factorial : ℝ) / ρ ^ j.val)) * M := by
+        -- M bounds a norm, so it is nonnegative once the polydisc is nonempty
+        have := hM c (fun l' hl' => by simp [hρ.le]) (fun l' _ => rfl)
+        have hM0 : 0 ≤ M := (norm_nonneg _).trans this
+        exact mul_nonneg (Finset.prod_nonneg fun l' _ => by positivity) hM0
+      set B := (∏ l' ∈ σ, (∑ j : Fin (ord + 1), ‖A l' j‖ * (j.val.factorial : ℝ) / ρ ^ j.val)) * M with hB
+      -- the σ-bound on the whole disc in the variable l
+      have hall : ∀ w : ℂ, ‖w - c l‖ ≤ ρ → ‖Df ord A s σ (update x l w)‖ ≤ B := by
+        intro w hw
+        refine ih hσJ (update x l w) (fun l' hl' hl'σ => ?_) (fun l' hl' => ?_)
+        · by_cases h : l' = l
+          · subst h; simpa using hw
+          · rw [update_of_ne h]
+            exact hx1 l' hl' (by simp [h, hl'σ])
+        · by_cases h : l' = l
+          · subst h
+            rcases hl' with h1 | h1
+            · exact absurd h1 hl
+            · exact absurd hlJ h1
+          · rw [update_of_ne h]
+            refine hx2 l' ?_
+            rcases hl' with h1 | h1
+            · exact Or.inl (Finset.mem_insert_of_mem h1)
+            · exact Or.inr h1
+      have hw : ∀ i, x l ≠ (s i : ℂ) := by
+        intro i hi
+        have := hpole l hlJ i
+        rw [hxl] at hi
+        rw [hi, sub_self, norm_zero] at this
+        linarith
+      have hdiff : DiffContOnCl ℂ (fun w => Df ord A s σ (update x l w)) (Metric.ball (c l) ρ) := by
+        refine DifferentiableOn.diffContOnCl ?_
+        rw [closure_ball _ hρ.ne']
+        intro w hw'
+        have hwd : ∀ i, w ≠ (s i : ℂ) := by
+          intro i hi
+          have h1 := hpole l hlJ i
+          have h2 : ‖w - c l‖ ≤ ρ := by simpa [dist_eq_norm] using hw'
+          rw [hi] at h2
+          rw [norm_sub_rev] at h2
+          linarith
+        have hd := hasDerivAt_Df ord A s σ (update x l w) l hl (by simpa using hwd)
+        have hfun : (fun w' => Df ord A s σ (update (update x l w) l w')) =
+            (fun w' => Df ord A s σ (update x l w')) := by
+          funext w'; rw [update_idem]
+        rw [hfun] at hd
+        simpa using hd.differentiableAt.differentiableWithinAt
+      have hsph : ∀ w ∈ Metric.sphere (c l) ρ, ‖Df ord A s σ (update x l w)‖ ≤ B := by
+        intro w hw'
+        exact hall w (by simp [dist_eq_norm] at hw'; exact hw'.le)
+      have hder : ∀ j : Fin (ord + 1),
+          ‖iteratedDeriv j.val (fun w => Df ord A s σ (update x l w)) (c l)‖ ≤
+            (j.val.factorial : ℝ) * B / ρ ^ j.val := fun j =>
+        Complex.norm_iteratedDeriv_le_of_forall_mem_sphere_norm_le j.val hρ hdiff hsph
+      rw [Df_insert ord A s σ x l hl hw, Finset.prod_insert hl]
+      rw [hxl]
+      calc
+        ‖∑ j : Fin (ord + 1), A l j *
+            iteratedDeriv j.val (fun w => Df ord A s σ (update x l w)) (c l)‖ ≤
+            ∑ j : Fin (ord + 1), ‖A l j‖ *
+              ‖iteratedDeriv j.val (fun w => Df ord A s σ (update x l w)) (c l)‖ := by
+          simpa only [norm_mul] using norm_sum_le (Finset.univ : Finset (Fin (ord + 1)))
+            (fun j => A l j * iteratedDeriv j.val (fun w => Df ord A s σ (update x l w)) (c l))
+        _ ≤ ∑ j : Fin (ord + 1), ‖A l j‖ * ((j.val.factorial : ℝ) * B / ρ ^ j.val) := by
+          apply Finset.sum_le_sum
+          intro j _
+          exact mul_le_mul_of_nonneg_left (hder j) (norm_nonneg _)
+        _ = (∑ j : Fin (ord + 1), ‖A l j‖ * (j.val.factorial : ℝ) / ρ ^ j.val) * B := by
+          rw [Finset.sum_mul]
+          apply Finset.sum_congr rfl
+          intro j _
+          ring
+        _ = _ := by rw [hB]; ring
+  have := key J subset_rfl c (fun l hl hlJ => absurd hl hlJ) (fun l _ => rfl)
+  exact this
+
+
+theorem Df_empty_eq_cexpr (ord : ℕ) (A : Fin k → Fin (ord + 1) → ℂ) (s : Fin k → ℕ) (hs : Function.Injective s)
+    (x : Fin k → ℂ) (hx : ∀ l i, x l ≠ (s i : ℂ)) :
+    Df ord A s ∅ x = cexpr x (fun i => (s i : ℂ)) := by
+  have hy : Function.Injective (fun i => (s i : ℂ)) := fun a b h => hs (Nat.cast_injective (R := ℂ) h)
+  unfold Df cexpr
+  have := CatalanLambda.Decay.cauchy_det x (fun i => (s i : ℂ)) hy hx
+  simp only [Finset.notMem_empty, if_false]
+  rw [← this]
+  congr 1
+  ext l i
+  simp [vr, one_div]
+
+
+theorem lemmaJ_finite_abstract (ord : ℕ) (A : Fin k → Fin (ord + 1) → ℂ) (s : Fin k → ℕ) (hs : Function.Injective s)
+    (c x0 : Fin k → ℂ) (hx0 : Function.Injective x0) (hx0s : ∀ l i, x0 l ≠ (s i : ℂ))
+    {ρ eJ : ℝ} (hρ : 0 < ρ) (heJ : 0 ≤ eJ) (J : Finset (Fin k))
+    (hpole : ∀ l ∈ J, ∀ i, ρ < ‖c l - (s i : ℂ)‖)
+    (hcJ : ∀ l ∈ J, ρ + ‖c l - x0 l‖ ≤ eJ) (hcn : ∀ l, l ∉ J → c l = x0 l)
+    (m : Fin k → Fin k → ℝ) (hm : ∀ l i, 0 < m l i)
+    (hnode : ∀ x, InPoly J c ρ x → ∀ l i, m l i ≤ ‖x l - (s i : ℂ)‖)
+    (Tt : Fin k → Fin k → Prop) [DecidableRel Tt]
+    (htight : ∀ l l', l < l' → Tt l l' → ∀ x, InPoly J c ρ x → ‖x l' - x l‖ ≤ ‖x0 l' - x0 l‖) :
+    ‖Df ord A s J c‖ ≤ (∏ l ∈ J, (∑ j : Fin (ord + 1), ‖A l j‖ * (j.val.factorial : ℝ) / ρ ^ j.val)) * Real.exp (jetExponent J eJ x0 m Tt) *
+      ‖cexpr x0 (fun i => (s i : ℂ))‖ := by
+  classical
+  set e : Fin k → ℝ := fun l => if l ∈ J then eJ else 0 with he
+  have he0 : ∀ l, 0 ≤ e l := fun l => by simp only [he]; split_ifs <;> simp [heJ]
+  have hdist : ∀ x, InPoly J c ρ x → ∀ l, ‖x l - x0 l‖ ≤ e l := by
+    intro x hx l
+    by_cases hl : l ∈ J
+    · simp only [he, if_pos hl]
+      calc ‖x l - x0 l‖ = ‖(x l - c l) + (c l - x0 l)‖ := by ring_nf
+        _ ≤ ‖x l - c l‖ + ‖c l - x0 l‖ := norm_add_le _ _
+        _ ≤ ρ + ‖c l - x0 l‖ := by gcongr; exact hx.1 l hl
+        _ ≤ eJ := hcJ l hl
+    · simp only [he, if_neg hl]
+      rw [hx.2 l hl, hcn l hl, sub_self, norm_zero]
+  have hd0 : ∀ l l', l < l' → 0 < ‖x0 l' - x0 l‖ := fun l l' h =>
+    norm_pos_iff.2 (sub_ne_zero.2 (fun hh => (ne_of_lt h) (hx0 hh).symm))
+  have hnn : ∀ l l', 0 ≤ (if Tt l l' then (0 : ℝ) else (e l + e l') / ‖x0 l' - x0 l‖) := by
+    intro l l'
+    split_ifs
+    · exact le_rfl
+    · have := he0 l
+      have := he0 l'
+      positivity
+  let P : Fin k → Fin k → ℝ := fun l l' =>
+    1 + (if Tt l l' then 0 else (e l + e l') / ‖x0 l' - x0 l‖)
+  let q : Fin k → Fin k → ℝ := fun l i => 1 + e l / m l i
+  have hM : ∀ x : Fin k → ℂ, InPoly J c ρ x →
+      ‖Df ord A s ∅ x‖ ≤ Real.exp (jetExponent J eJ x0 m Tt) * ‖cexpr x0 (fun i => (s i : ℂ))‖ := by
+    intro x hx
+    have hxs : ∀ l i, x l ≠ (s i : ℂ) := by
+      intro l i h
+      have := hnode x hx l i
+      rw [h, sub_self, norm_zero] at this
+      exact absurd this (not_le.2 (hm l i))
+    rw [Df_empty_eq_cexpr ord A s hs x hxs]
+    have hmain := norm_cexpr_le x x0 s hs hx0 hx0s hxs P
+      (fun l l' => by
+        have := hnn l l'
+        simp only [P]; linarith)
+      (fun l l' hll' => by
+        simp only [P]
+        by_cases ht : Tt l l'
+        · rw [if_pos ht, add_zero, one_mul]
+          exact htight l l' hll' ht x hx
+        · rw [if_neg ht]
+          have hd := hd0 l l' hll'
+          have h1 : ‖x l' - x l‖ ≤ ‖x0 l' - x0 l‖ + e l' + e l := by
+            calc ‖x l' - x l‖ = ‖(x0 l' - x0 l) + (x l' - x0 l') - (x l - x0 l)‖ := by ring_nf
+              _ ≤ ‖(x0 l' - x0 l) + (x l' - x0 l')‖ + ‖x l - x0 l‖ := norm_sub_le _ _
+              _ ≤ ‖x0 l' - x0 l‖ + ‖x l' - x0 l'‖ + ‖x l - x0 l‖ := by
+                  gcongr
+                  exact norm_add_le _ _
+              _ ≤ ‖x0 l' - x0 l‖ + e l' + e l := by
+                  gcongr
+                  · exact hdist x hx l'
+                  · exact hdist x hx l
+          calc ‖x l' - x l‖ ≤ ‖x0 l' - x0 l‖ + e l' + e l := h1
+            _ = (1 + (e l + e l') / ‖x0 l' - x0 l‖) * ‖x0 l' - x0 l‖ := by
+                field_simp; ring)
+      q (fun l i => by
+        simp only [q]
+        have hmi := hnode x hx l i
+        have hmpos := hm l i
+        have h1 : ‖x0 l - (s i : ℂ)‖ ≤ ‖x l - (s i : ℂ)‖ + e l := by
+          calc ‖x0 l - (s i : ℂ)‖ = ‖(x l - (s i : ℂ)) - (x l - x0 l)‖ := by ring_nf
+            _ ≤ ‖x l - (s i : ℂ)‖ + ‖x l - x0 l‖ := norm_sub_le _ _
+            _ ≤ ‖x l - (s i : ℂ)‖ + e l := by gcongr; exact hdist x hx l
+        have h2 : e l ≤ e l / m l i * ‖x l - (s i : ℂ)‖ := by
+          rw [div_mul_eq_mul_div, le_div_iff₀ hmpos]
+          exact mul_le_mul_of_nonneg_left hmi (he0 l)
+        nlinarith)
+    have hP1 : (∏ l, ∏ l' ∈ Finset.Ioi l, P l l') ≤ Real.exp
+        (∑ l, ∑ l' ∈ Finset.Ioi l,
+          if Tt l l' then 0 else (e l + e l') / ‖x0 l' - x0 l‖) := by
+      rw [Real.exp_sum]
+      refine Finset.prod_le_prod₀ (fun l _ => Finset.prod_nonneg fun l' _ => ?_) (fun l _ => ?_)
+      · have := hnn l l'
+        simp only [P]; linarith
+      · rw [Real.exp_sum]
+        refine Finset.prod_le_prod₀ (fun l' _ => ?_) (fun l' _ => ?_)
+        · have := hnn l l'
+          simp only [P]; linarith
+        · simp only [P]
+          rw [add_comm]
+          exact Real.add_one_le_exp _
+    have hP2 : (∏ l, ∏ i, q l i) ≤ Real.exp (∑ l, ∑ i, e l / m l i) := by
+      rw [Real.exp_sum]
+      refine Finset.prod_le_prod₀ (fun l _ => Finset.prod_nonneg fun i _ => ?_) (fun l _ => ?_)
+      · have := he0 l
+        have := hm l i
+        simp only [q]; positivity
+      · rw [Real.exp_sum]
+        refine Finset.prod_le_prod₀ (fun i _ => ?_) (fun i _ => ?_)
+        · have := he0 l
+          have := hm l i
+          simp only [q]; positivity
+        · simp only [q]
+          rw [add_comm]
+          exact Real.add_one_le_exp _
+    have hex : Real.exp (jetExponent J eJ x0 m Tt) =
+        Real.exp (∑ l, ∑ l' ∈ Finset.Ioi l,
+          if Tt l l' then 0 else (e l + e l') / ‖x0 l' - x0 l‖) *
+        Real.exp (∑ l, ∑ i, e l / m l i) := by
+      rw [← Real.exp_add]; rfl
+    rw [hex]
+    calc ‖cexpr x (fun i => (s i : ℂ))‖
+        ≤ (∏ l, ∏ l' ∈ Finset.Ioi l, P l l') * (∏ l, ∏ i, q l i) *
+          ‖cexpr x0 (fun i => (s i : ℂ))‖ := hmain
+      _ ≤ (Real.exp (∑ l, ∑ l' ∈ Finset.Ioi l,
+          if Tt l l' then 0 else (e l + e l') / ‖x0 l' - x0 l‖) *
+          Real.exp (∑ l, ∑ i, e l / m l i)) * ‖cexpr x0 (fun i => (s i : ℂ))‖ := by
+        refine mul_le_mul_of_nonneg_right ?_ (norm_nonneg _)
+        exact mul_le_mul hP1 hP2
+          (Finset.prod_nonneg fun l _ => Finset.prod_nonneg fun i _ => by
+            have := he0 l
+            have := hm l i
+            simp only [q]; positivity)
+          (Real.exp_nonneg _)
+  have := norm_Df_le ord A s c hρ J hpole
+    (M := Real.exp (jetExponent J eJ x0 m Tt) * ‖cexpr x0 (fun i => (s i : ℂ))‖)
+    (fun x h1 h2 => hM x ⟨h1, h2⟩)
+  calc ‖Df ord A s J c‖ ≤ _ := this
+    _ = _ := by ring
+
+
 end CatalanCore.Uniform.Decay.Jet
 
 #print axioms CatalanCore.Uniform.Decay.Jet.Dj_insert
@@ -587,3 +950,7 @@ end CatalanCore.Uniform.Decay.Jet
 #print axioms CatalanCore.Uniform.Decay.Jet.harmonic_shift_le
 #print axioms CatalanCore.Uniform.Decay.Jet.sum_inv_node_le
 #print axioms CatalanCore.Uniform.Decay.Jet.sum_inv_sep_le
+
+#print axioms CatalanCore.Uniform.Decay.Jet.Df_insert
+#print axioms CatalanCore.Uniform.Decay.Jet.norm_Df_le
+#print axioms CatalanCore.Uniform.Decay.Jet.lemmaJ_finite_abstract
