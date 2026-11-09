@@ -146,6 +146,38 @@ K32.CreateToolhelp32Snapshot.restype = W.HANDLE
 K32.OpenProcess.restype = W.HANDLE
 
 
+_EXT = [0.0, 0.0]   # (time read, GB) cache for external_hold
+
+
+def external_hold():
+    """8 Nov: memory held for a process outside lanes (the WSL VM running the Comparator).
+    LANES/external.json = {"proc": "vmmemWSL", "hold_gb": 20}: the envelope keeps
+    max(0, hold_gb - current private bytes of that process) free, so the VM can grow to hold_gb
+    without lanes jobs taking its room. No file, no hold. Unreadable process: the full hold."""
+    f = LANES / 'external.json'
+    if not f.exists():
+        return 0.0
+    try:
+        cfg = json.loads(f.read_text(encoding='utf-8'))
+        name, hold = cfg['proc'].lower(), float(cfg['hold_gb'])
+    except (OSError, ValueError, KeyError):
+        return 0.0
+    # vmmem is protected (OpenProcess: access denied), so read it through PowerShell's
+    # process list, at most every 30 s.
+    now = time.time()
+    if now - _EXT[0] > 30:
+        try:
+            out = subprocess.run(['powershell', '-NoProfile', '-Command',
+                                  f"(Get-Process {cfg['proc']} -ErrorAction SilentlyContinue | "
+                                  "Measure-Object PrivateMemorySize64 -Sum).Sum"],
+                                 capture_output=True, text=True, timeout=20).stdout.strip()
+            _EXT[:] = [now, float(out or 0) / 2**30]
+        except (OSError, ValueError, subprocess.SubprocessError):
+            _EXT[:] = [now, 0.0]
+    used = _EXT[1]
+    return max(0.0, hold - used)
+
+
 def tree_usage(roots):
     """(working set GB, commit GB) of each root's descendant tree, keyed by root pid."""
     h = K32.CreateToolhelp32Snapshot(2, 0); e = PE(); e.size = C.sizeof(e); kids = {}
@@ -412,8 +444,9 @@ def drive():
                    for proc, s in running.values()]
             need_c = sum(r[0] for r in res)
             need_w = sum(r[1] for r in res)
-            env_w = min(24.0, phys + own_ws - FLOOR - MARGIN)
-            env_c = commit + own_c - FLOOR - MARGIN
+            ext = external_hold()
+            env_w = min(24.0, phys + own_ws - FLOOR - MARGIN - ext)
+            env_c = commit + own_c - FLOOR - MARGIN - ext
             # Backfill: the first queued job (priority order) that fits starts, so light
             # modules run beside a heavy one instead of waiting behind it.
             pending_rank = None   # rank of a higher-priority build still in preflight
@@ -451,7 +484,7 @@ def drive():
             # 1 Nov: never deadlock. A forecast can exceed what an idle host offers (E2 09:54,
             # Assembly 11:13); with nothing of ours running, the first ready job starts alone and
             # the guard enforces the real limit.
-            if pick is None and not running and first_ready is not None:
+            if pick is None and not running and first_ready is not None and ext == 0.0:
                 pick, spec = first_ready[0], first_ready[1]
                 log(f"admit-alone {spec['target']} forecast={first_ready[2]:.1f}GB env={env_w:.1f}GB")
         # 1 Nov: a queue that admits nothing for 5 min with nothing running is a stall; log it.
