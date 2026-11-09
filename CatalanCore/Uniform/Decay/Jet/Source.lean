@@ -1,6 +1,9 @@
 module
 
 public import CatalanCore.Uniform.Decay.Jet.Gram
+public import CatalanCore.Uniform.Decay.Jet.PoleSource
+public import CatalanCore.Uniform.Decay.Jet.PoleIntegral
+public import CatalanCore.Uniform.Decay.Jet.PoleHead
 public import CatalanCore.Uniform.Decay.Jet.Decay
 public import CatalanCore.Uniform.Decay.Jet.Field
 public import CatalanCore.Uniform.Support.Datum
@@ -1376,3 +1379,578 @@ end CatalanCore.Uniform.Decay.Jet
 
 #print axioms CatalanCore.Uniform.Decay.Jet.support_decay
 #print axioms CatalanCore.Uniform.Decay.Jet.RefMatch.jetSetup_of_polygon
+
+
+/-! # Arbitrary finite pole-order source and decay interface (Q04)
+The permanent generic analytic components are imported above. This final
+assembly proves the actual reference-space Gram entries and uniform JetRep
+family without an additional analytic hypothesis. All scales, natural nodes,
+finite jet orders, rational Gram splits and zero-weight padding remain generic.
+-/
+namespace CatalanCore.Uniform.Decay.Jet
+open CatalanCore CatalanCore.Uniform.Support
+open CatalanCore.Uniform.Decay.Polygon CatalanCore.Uniform.Decay.PolyChain
+open CatalanCore.Uniform.Decay.Assembly CatalanCore.Uniform.Decay.Cert
+open Finset MeasureTheory Set Filter Complex
+open CatalanLambda.Decay (sumM integrable_sumM_iff integral_sumM)
+
+/-! Uniform comparison with the unchanged reference majorant. -/
+
+theorem poleE_conj (D : PoleDatum) (z : ℂ) :
+    poleE D ((starRingEnd ℂ) z) = (starRingEnd ℂ) (poleE D z) := by
+  unfold poleE
+  rw [map_neg, Complex.conj_tsum]
+  congr 1
+  apply tsum_congr
+  intro n
+  simp only [map_sum, map_div₀, map_pow, map_add, map_intCast, map_ratCast]
+
+noncomputable def poleRayK (D : PoleDatum) (Fr : Frame) (q : ℝ) : ℝ :=
+  poleK D (kappaP (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off) q)
+
+noncomputable def poleCw {D : PoleDatum} {Fr : Frame}
+    (S : PoleGramSplit D) (R : PoleRefMatch D S Fr) (q : ℝ) : ℝ :=
+  1 + ∑ i : Fin Fr.d, ‖(S.weight (R.role i) : ℂ)‖ + poleRayK D Fr q / (2 * Real.pi)
+
+theorem poleRayK_nonneg (D : PoleDatum) (Fr : Frame)
+    (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK) (q : ℝ) :
+    0 ≤ poleRayK D Fr q := poleK_nonneg D (kappaP_pos hC q)
+
+theorem one_le_poleCw {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK) (q : ℝ) :
+    1 ≤ poleCw S R q := by
+  have h1 : 0 ≤ ∑ i : Fin Fr.d, ‖(S.weight (R.role i) : ℂ)‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
+  have h2 := div_nonneg (poleRayK_nonneg D Fr hC q) (by positivity : (0 : ℝ) ≤ 2 * Real.pi)
+  unfold poleCw
+  linarith
+
+theorem norm_poleE_path (D : PoleDatum) (Fr : Frame)
+    (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK) (N0 : ℕ)
+    {pts : List ℂ} {d : ℂ} (hlow : ∀ z ∈ pts, 1 / 8 ≤ z.im) (hd : 0 < d.im)
+    {u : ℝ} (hu : 0 < u) :
+    ‖poleE D (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u)‖ ≤
+      poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) *
+        Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u).im|)) := by
+  have him := pathPt_im_pos d hd pts ((Fr.xstar N0 : ℝ) : ℂ) (by simp)
+    (fun z hz => by linarith [hlow z hz]) u hu
+  rw [poleE_eq_closed D him.ne']
+  exact norm_poleClosed_le D (kappaP_pos hC _)
+    (fun i => path_sin_lower hC N0 hlow hd hu.le i)
+
+noncomputable def poleUpWeight (D : PoleDatum) (Fr : Frame) (N0 : ℕ)
+    (pts : List ℂ) (d : ℂ) (u : ℝ) : ℂ :=
+  -((2 * Real.pi * I)⁻¹ * poleE D (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u) *
+    pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts u)
+
+noncomputable def poleLowWeight (D : PoleDatum) (Fr : Frame) (N0 : ℕ)
+    (pts : List ℂ) (d : ℂ) (u : ℝ) : ℂ :=
+  (2 * Real.pi * I)⁻¹ *
+    poleE D (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u) *
+      pathDer ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u
+
+theorem norm_poleUpWeight_le (D : PoleDatum) (Fr : Frame)
+    (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK) (N0 : ℕ)
+    {pts : List ℂ} {d : ℂ} (hlow : ∀ z ∈ pts, 1 / 8 ≤ z.im) (hd : 0 < d.im)
+    {u : ℝ} (hu : 0 < u) :
+    ‖poleUpWeight D Fr N0 pts d u‖ ≤
+      poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) / (2 * Real.pi) *
+        Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u).im|)) *
+          ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts u‖ := by
+  have hE := norm_poleE_path D Fr hC N0 hlow hd hu
+  have h2 : ‖(2 * Real.pi * I : ℂ)⁻¹‖ = 1 / (2 * Real.pi) := by
+    rw [norm_inv, norm_mul, norm_mul, Complex.norm_I, Complex.norm_real,
+      Real.norm_of_nonneg Real.pi_pos.le]
+    simp
+  unfold poleUpWeight
+  rw [norm_neg, norm_mul, norm_mul, h2]
+  exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hE (by positivity))
+    (norm_nonneg _)).trans_eq (by ring)
+
+theorem norm_poleLowWeight (D : PoleDatum) (Fr : Frame) (N0 : ℕ)
+    (pts : List ℂ) (d : ℂ) (u : ℝ) :
+    ‖poleLowWeight D Fr N0 pts d u‖ = ‖poleUpWeight D Fr N0 pts d u‖ := by
+  unfold poleLowWeight poleUpWeight
+  rw [conjL_conj_path (Fr := Fr), conjL_conj_der (Fr := Fr), poleE_conj]
+  simp only [norm_mul, norm_neg, Complex.norm_conj]
+
+theorem poleW_weight {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK)
+    {N0 : ℕ} {pts : List ℂ} {d : ℂ} {C : ℝ}
+    (hlow : ∀ z ∈ pts, 1 / 8 ≤ z.im) (hd : 0 < d.im)
+    (hw : ∀ q, Fr.w q ≠ 0) {e : ℝ} (he0 : 0 < e) (he1 : e < 1) (z : Fr.XT N0) :
+    ‖poleW S R N0 pts d z‖ ≤ poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) *
+      (vP Fr N0 pts d C e z * qP Fr N0 pts d C e z) := by
+  have hcw := one_le_poleCw S R hC (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d)
+  have hA := amp_pos C
+  have hA1 := one_le_amp C
+  have hK := poleRayK_nonneg D Fr hC (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d)
+  have hsum0 : 0 ≤ ∑ i : Fin Fr.d, ‖(S.weight (R.role i) : ℂ)‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
+  have hK2 : poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) / (2 * Real.pi) ≤
+      poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) * amp C := by
+    have hh : poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) / (2 * Real.pi) ≤
+        poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) := by unfold poleCw; linarith
+    calc
+      _ ≤ poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) := hh
+      _ = poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) * 1 := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_left hA1 (by linarith)
+  rcases z with p | r | r
+  · simp only [poleW, Sum.elim_inl, vP, qP, mul_one]
+    have h1 : (1 : ℝ) ≤ |(Fr.w p.1.2 : ℝ)| := by
+      have hh : (1 : ℤ) ≤ |Fr.w p.1.2| := Int.one_le_abs (hw p.1.2)
+      exact_mod_cast hh
+    have h2 : ‖(S.weight (R.role p.1.2) : ℂ)‖ ≤ ∑ i : Fin Fr.d, ‖(S.weight (R.role i) : ℂ)‖ :=
+      Finset.single_le_sum (f := fun i : Fin Fr.d => ‖(S.weight (R.role i) : ℂ)‖)
+        (fun _ _ => norm_nonneg _) (Finset.mem_univ p.1.2)
+    have h3 : (∑ i : Fin Fr.d, ‖(S.weight (R.role i) : ℂ)‖) + 1 ≤
+        poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) := by
+      unfold poleCw
+      have hh := div_nonneg hK (by positivity : (0 : ℝ) ≤ 2 * Real.pi)
+      linarith
+    nlinarith [abs_nonneg (Fr.w p.1.2 : ℝ), norm_nonneg (S.weight (R.role p.1.2) : ℂ)]
+  · have hb := norm_poleUpWeight_le D Fr hC N0 hlow hd r.2
+    change ‖poleUpWeight D Fr N0 pts d r.1‖ ≤ _
+    simp only [vP, qP, vPath, gam, gamD, Sum.elim_inr, Sum.elim_inl]
+    rw [RefMatch.vq_ray_eq (amp C) _ _ e hA]
+    refine hb.trans ?_
+    have ht : 0 ≤ Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+        ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖ := by positivity
+    calc
+      _ = (poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) / (2 * Real.pi)) *
+          (Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+            ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖) := by ring
+      _ ≤ (poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) * amp C) *
+          (Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+            ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖) := mul_le_mul_of_nonneg_right hK2 ht
+      _ = _ := by ring
+  · have hb := norm_poleUpWeight_le D Fr hC N0 hlow hd r.2
+    change ‖poleLowWeight D Fr N0 pts d r.1‖ ≤ _
+    rw [norm_poleLowWeight]
+    simp only [vP, qP, vPath, gam, gamD, Sum.elim_inr, Sum.elim_inl]
+    rw [RefMatch.vq_ray_eq (amp C) _ _ e hA]
+    refine hb.trans ?_
+    have ht : 0 ≤ Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+        ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖ := by positivity
+    calc
+      _ = (poleRayK D Fr (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) / (2 * Real.pi)) *
+          (Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+            ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖) := by ring
+      _ ≤ (poleCw S R (qFirst ((Fr.xstar N0 : ℝ) : ℂ) pts d) * amp C) *
+          (Real.exp (-(2 * Real.pi * |(pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1).im|)) *
+            ‖pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1‖) := mul_le_mul_of_nonneg_right hK2 ht
+      _ = _ := by ring
+
+/-! The actual polygon-space entry and the conditional-side padded head matching. -/
+
+noncomputable def poleHeadRow {D : PoleDatum} (S : PoleGramSplit D)
+    (q : S.Role) (m t : ℕ) : ℂ :=
+  ∑ j : Fin (S.J + 1), (S.coeff q j : ℂ) *
+    iteratedDeriv j.val (fun z : ℂ => (z - (t : ℂ))⁻¹) (-(m : ℂ) - (D.s q.1 : ℂ))
+
+noncomputable def poleHeadEntry {D : PoleDatum} (S : PoleGramSplit D)
+    (q : S.Role) (m a b : ℕ) : ℂ :=
+  (S.weight q : ℂ) * poleHeadRow S q m a * poleHeadRow S q m b
+
+theorem poleRows_inl {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (N0 : ℕ) (pts : List ℂ) (d : ℂ) (t : ℕ)
+    (p : ↥(Fr.atomIdx N0)) :
+    poleRows S R N0 pts d t (Sum.inl p) = poleHeadRow S (R.role p.1.2) p.1.1 t := by
+  simp [poleRows, jetRowFinite, poleHead, poleCenter, poleCoefficients, poleHeadRow]
+
+theorem poleRows_up {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (N0 : ℕ) (pts : List ℂ) (d : ℂ) (t : ℕ) (r : Decay.RayP) :
+    poleRows S R N0 pts d t (Sum.inr (Sum.inl r)) =
+      (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r.1 - (t : ℂ))⁻¹ := by
+  simp [poleRows, jetRowFinite, poleHead, polyPt]
+
+theorem poleRows_low {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (N0 : ℕ) (pts : List ℂ) (d : ℂ) (t : ℕ) (r : Decay.RayP) :
+    poleRows S R N0 pts d t (Sum.inr (Sum.inr r)) =
+      (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) r.1 - (t : ℂ))⁻¹ := by
+  simp [poleRows, jetRowFinite, poleHead, polyPt]
+
+theorem pole_atom_sum {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (N0 a b : ℕ) :
+    (∑ p ∈ Fr.atomIdx N0, poleHeadEntry S (R.role p.2) p.1 a b) =
+      (poleHeadSum D Fr.xs N0 a b : ℂ) := by
+  classical
+  unfold Frame.atomIdx poleHeadSum
+  rw [Finset.sum_filter, Finset.sum_product, Complex.ofReal_sum]
+  apply Finset.sum_congr rfl
+  intro m hm
+  have he : (∑ q : Fin Fr.d,
+      if ¬ ((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (Fr.μ q : ℝ))
+        then poleHeadEntry S (R.role q) m a b else 0) =
+      ∑ q : S.Role,
+        if ¬ ((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (Fr.μ (R.role.symm q) : ℝ))
+          then poleHeadEntry S q m a b else 0 := by
+    simpa only [Equiv.apply_symm_apply] using
+      (Equiv.sum_comp R.role.symm (fun q =>
+        if ¬ ((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (Fr.μ q : ℝ))
+          then poleHeadEntry S (R.role q) m a b else 0)).symm
+  rw [he, Fintype.sum_sigma]
+  unfold poleHeadTerm
+  rw [Complex.ofReal_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  have hmask (k : Fin (S.count i)) :
+      (if ¬ ((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (Fr.μ (R.role.symm ⟨i, k⟩) : ℝ))
+        then poleHeadEntry S ⟨i, k⟩ m a b else 0) =
+      (if (N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (D.s i : ℝ)
+        then 0 else poleHeadEntry S ⟨i, k⟩ m a b) := by
+    by_cases hweight : S.weight ⟨i, k⟩ = 0
+    · simp [poleHeadEntry, hweight]
+    · have hs := R.side N0 m (R.role.symm ⟨i, k⟩) (by simpa using hweight)
+      simp only [Equiv.apply_symm_apply] at hs
+      simp only [hs]
+      split_ifs <;> rfl
+  simp_rw [hmask]
+  by_cases ht : (N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (D.s i : ℝ)
+  · simp [ht]
+  · simp only [ht, if_false]
+    push_cast
+    have hsplit := pole_head_split D S i m a b
+    push_cast at hsplit
+    simpa only [poleHeadEntry, poleHeadRow] using hsplit
+
+theorem pole_up_entry_eq (D : PoleDatum) (Fr : Frame) (N0 a b : ℕ)
+    {pts : List ℂ} {d : ℂ} (hP : PolyOK pts d) {u : ℝ} (hu : 0 < u) :
+    poleUpWeight D Fr N0 pts d u *
+      (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u - (a : ℂ))⁻¹ *
+      (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u - (b : ℂ))⁻¹ =
+        -(2 * Real.pi * I)⁻¹ *
+          (poleSrc D a b (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts u) *
+            pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts u) := by
+  have hi := pathPt_im_pos d hP.tail pts ((Fr.xstar N0 : ℝ) : ℂ) (by simp) hP.upper u hu
+  unfold poleUpWeight
+  rw [poleE_eq_closed D hi.ne']
+  unfold poleSrc
+  ring
+
+theorem pole_low_entry_eq (D : PoleDatum) (Fr : Frame) (N0 a b : ℕ)
+    {pts : List ℂ} {d : ℂ} (hP : PolyOK pts d) {u : ℝ} (hu : 0 < u) :
+    poleLowWeight D Fr N0 pts d u *
+      (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u - (a : ℂ))⁻¹ *
+      (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u - (b : ℂ))⁻¹ =
+        (2 * Real.pi * I)⁻¹ *
+          (poleSrc D a b (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u) *
+            pathDer ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u) := by
+  have hi := pathPt_im_pos d hP.tail pts ((Fr.xstar N0 : ℝ) : ℂ) (by simp) hP.upper u hu
+  have hl : (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) u).im ≠ 0 := by
+    rw [conjL_conj_path (Fr := Fr), Complex.conj_im]
+    linarith
+  unfold poleLowWeight
+  rw [poleE_eq_closed D hl]
+  unfold poleSrc
+  ring
+
+theorem pole_integrable_entry {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK)
+    (N0 a b : ℕ) {pts : List ℂ} {d : ℂ} (hP : PolyOK pts d) :
+    Integrable (fun z => poleW S R N0 pts d z * poleRows S R N0 pts d a z *
+      poleRows S R N0 pts d b z) (Fr.muT N0) := by
+  unfold Frame.muT
+  rw [integrable_sumM_iff, integrable_sumM_iff]
+  refine ⟨Integrable.of_finite, ?_, ?_⟩
+  · have hu := (poleSrc_path D Fr.xs Fr.δ0 Fr.n0off hC N0 a b
+      (by simp : |(1 : ℝ)| = 1) hP.upper' (by simpa using hP.tail)).1
+    have hi := hu.const_mul (-(2 * Real.pi * I)⁻¹)
+    refine Integrable.congr ((Decay.integrable_comap_Ioi (fun r => poleUpWeight D Fr N0 pts d r *
+      (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r - a)⁻¹ *
+      (pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts r - b)⁻¹)).mpr
+        (IntegrableOn.congr_fun hi (fun r hr => (pole_up_entry_eq D Fr N0 a b hP hr).symm)
+          measurableSet_Ioi)) (Filter.Eventually.of_forall fun z => ?_)
+    simp only [poleW, Sum.elim_inr, Sum.elim_inl, poleRows_up, poleUpWeight]
+  · have hl := (poleSrc_path D Fr.xs Fr.δ0 Fr.n0off hC N0 a b (pts := conjL pts) (d := (starRingEnd ℂ) d)
+      (by simp : |(-1 : ℝ)| = 1) hP.lower (by simpa using hP.tail)).1
+    have hi := hl.const_mul ((2 * Real.pi * I)⁻¹)
+    refine Integrable.congr ((Decay.integrable_comap_Ioi (fun r => poleLowWeight D Fr N0 pts d r *
+      (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) r - a)⁻¹ *
+      (pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) r - b)⁻¹)).mpr
+        (IntegrableOn.congr_fun hi (fun r hr => (pole_low_entry_eq D Fr N0 a b hP hr).symm)
+          measurableSet_Ioi)) (Filter.Eventually.of_forall fun z => ?_)
+    simp only [poleW, Sum.elim_inr, poleRows_low, poleLowWeight]
+
+theorem pole_entry {D : PoleDatum} {Fr : Frame} (S : PoleGramSplit D)
+    (R : PoleRefMatch D S Fr) (hC : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK)
+    (N0 a b : ℕ) {pts : List ℂ} {d : ℂ} (hP : PolyOK pts d) :
+    (∫ z, poleW S R N0 pts d z * poleRows S R N0 pts d a z *
+      poleRows S R N0 pts d b z ∂(Fr.muT N0)) =
+        (((lw D.f D.e a b : ℝ) + if a = b then D.xi else 0 : ℝ) : ℂ) := by
+  have hint := pole_integrable_entry S R hC N0 a b hP
+  unfold Frame.muT at hint ⊢
+  rw [integral_sumM _ _ _ hint]
+  have hint2 := ((integrable_sumM_iff _ _ _).mp hint).2
+  rw [integral_sumM _ _ _ hint2, integral_count]
+  have hA : (∑ p : ↥(Fr.atomIdx N0),
+      poleW S R N0 pts d (Sum.inl p) * poleRows S R N0 pts d a (Sum.inl p) *
+        poleRows S R N0 pts d b (Sum.inl p)) = (poleHeadSum D Fr.xs N0 a b : ℂ) := by
+    rw [← pole_atom_sum S R N0 a b]
+    rw [← Finset.sum_coe_sort (Fr.atomIdx N0) (fun p => poleHeadEntry S (R.role p.2) p.1 a b)]
+    apply Finset.sum_congr rfl
+    intro p _
+    simp only [poleW, Sum.elim_inl, poleRows_inl, poleHeadEntry]
+  let γ := pathPt d ((Fr.xstar N0 : ℝ) : ℂ) pts
+  let γ' := pathDer d ((Fr.xstar N0 : ℝ) : ℂ) pts
+  let η := pathPt ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts)
+  let η' := pathDer ((starRingEnd ℂ) d) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts)
+  have hU : (∫ z : Decay.RayP,
+      poleW S R N0 pts d (Sum.inr (Sum.inl z)) *
+        poleRows S R N0 pts d a (Sum.inr (Sum.inl z)) *
+        poleRows S R N0 pts d b (Sum.inr (Sum.inl z))
+      ∂(Measure.comap Subtype.val (volume : Measure ℝ))) =
+        ∫ u in Ioi (0 : ℝ), poleUpWeight D Fr N0 pts d u * (γ u - a)⁻¹ * (γ u - b)⁻¹ := by
+    have h := integral_subtype_comap (μ := (volume : Measure ℝ))
+      (measurableSet_Ioi (a := (0 : ℝ)))
+      (fun u => poleUpWeight D Fr N0 pts d u * (γ u - a)⁻¹ * (γ u - b)⁻¹)
+    simpa only [poleW, poleRows_up, Sum.elim_inr, Sum.elim_inl, poleUpWeight] using h
+  have hL : (∫ z : Decay.RayP,
+      poleW S R N0 pts d (Sum.inr (Sum.inr z)) *
+        poleRows S R N0 pts d a (Sum.inr (Sum.inr z)) *
+        poleRows S R N0 pts d b (Sum.inr (Sum.inr z))
+      ∂(Measure.comap Subtype.val (volume : Measure ℝ))) =
+        ∫ u in Ioi (0 : ℝ), poleLowWeight D Fr N0 pts d u * (η u - a)⁻¹ * (η u - b)⁻¹ := by
+    have h := integral_subtype_comap (μ := (volume : Measure ℝ))
+      (measurableSet_Ioi (a := (0 : ℝ)))
+      (fun u => poleLowWeight D Fr N0 pts d u * (η u - a)⁻¹ * (η u - b)⁻¹)
+    simpa only [poleW, poleRows_low, Sum.elim_inr, poleLowWeight] using h
+  have hx : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).xstar N0 = Fr.xstar N0 := rfl
+  have hu := poleSrc_path D Fr.xs Fr.δ0 Fr.n0off hC N0 a b
+    (by simp : |(1 : ℝ)| = 1) hP.upper' (by simpa using hP.tail)
+  have hl := poleSrc_path D Fr.xs Fr.δ0 Fr.n0off hC N0 a b (pts := conjL pts) (d := (starRingEnd ℂ) d)
+    (by simp : |(-1 : ℝ)| = 1) hP.lower (by simpa using hP.tail)
+  rw [hx] at hu hl
+  have eU : (∫ u in Ioi (0 : ℝ), poleUpWeight D Fr N0 pts d u * (γ u - a)⁻¹ * (γ u - b)⁻¹) =
+      -(2 * Real.pi * I)⁻¹ * polyI (poleSrc D a b) ((Fr.xstar N0 : ℝ) : ℂ) pts d := by
+    rw [← hu.2, ← integral_const_mul]
+    apply integral_congr_ae
+    refine (ae_restrict_iff' measurableSet_Ioi).mpr (Filter.Eventually.of_forall fun u hu => ?_)
+    exact pole_up_entry_eq D Fr N0 a b hP hu
+  have eL : (∫ u in Ioi (0 : ℝ), poleLowWeight D Fr N0 pts d u * (η u - a)⁻¹ * (η u - b)⁻¹) =
+      (2 * Real.pi * I)⁻¹ * polyI (poleSrc D a b) ((Fr.xstar N0 : ℝ) : ℂ)
+        (conjL pts) ((starRingEnd ℂ) d) := by
+    rw [← hl.2, ← integral_const_mul]
+    apply integral_congr_ae
+    refine (ae_restrict_iff' measurableSet_Ioi).mpr (Filter.Eventually.of_forall fun u hu => ?_)
+    exact pole_low_entry_eq D Fr N0 a b hP hu
+  rw [hA, hU, hL, eU, eL]
+  have hG := pole_gram_formula D Fr.xs Fr.δ0 Fr.n0off N0 a b hC hP.upper hP.tail
+  rw [hx] at hG
+  calc
+    _ = (poleHeadSum D Fr.xs N0 a b : ℂ) + (2 * Real.pi * I)⁻¹ *
+        (polyI (poleSrc D a b) ((Fr.xstar N0 : ℝ) : ℂ) (conjL pts) ((starRingEnd ℂ) d) -
+          polyI (poleSrc D a b) ((Fr.xstar N0 : ℝ) : ℂ) pts d) := by ring
+    _ = _ := hG.symm
+
+/-! Analytic obligations are separated from the unchanged JetRep/decay engine.
+The public pole_jetFamily is only closed after the unconditional constructor of
+this internal analytic record has been proved; the record is not an added public hypothesis.
+-/
+structure PoleAnalyticData (D : PoleDatum) (S : PoleGramSplit D) (Fr : Frame)
+    (R : PoleRefMatch D S Fr) (P : RatPolygon) where
+  cw : ℝ
+  hcw : 1 ≤ cw
+  weight : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) → (∀ q, Fr.w q ≠ 0) →
+    ∀ e : ℝ, 0 < e → e < 1 → ∀ z,
+      ‖poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir z‖ ≤
+        cw * (vP Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (CP Fr (P.qRat : ℝ)) e z *
+          qP Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (CP Fr (P.qRat : ℝ)) e z)
+  integrable_entry : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) → ∀ a b : ℕ,
+    Integrable (fun z => poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir z *
+      poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir a z *
+      poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir b z) (Fr.muT (N0Of Fr P.r0 r))
+  gram_entry : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) → ∀ a b : ℕ,
+    (∫ z, poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir z *
+      poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir a z *
+      poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir b z ∂(Fr.muT (N0Of Fr P.r0 r))) =
+        (((lw D.f D.e a b : ℝ) + if a = b then D.xi else 0 : ℝ) : ℂ)
+
+theorem pole_andreief_of_analytic {D : PoleDatum} {S : PoleGramSplit D} {Fr : Frame}
+    {R : PoleRefMatch D S Fr} {P : RatPolygon} (B : PoleAnalyticData D S Fr R P)
+    (r : ℕ) (hr : Rmin Fr P ≤ (r : ℝ)) (k : ℕ) (s t : Fin k → ℕ) :
+    ‖(Matrix.of fun i j : Fin k =>
+      (((lw D.f D.e (s i) (t j) : ℝ) + if s i = t j then D.xi else 0 : ℝ) : ℂ)).det‖ ≤
+      (1 / (k.factorial : ℝ)) * ∫ z : Fin k → Fr.XT (N0Of Fr P.r0 r),
+        (∏ l, ‖poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (z l)‖) *
+          (‖(Matrix.of fun i l : Fin k => poleRows S R (N0Of Fr P.r0 r)
+            (physL Fr P r) P.tailDir (s i) (z l)).det‖ *
+           ‖(Matrix.of fun j l : Fin k => poleRows S R (N0Of Fr P.r0 r)
+            (physL Fr P r) P.tailDir (t j) (z l)).det‖)
+          ∂(Measure.pi fun _ => Fr.muT (N0Of Fr P.r0 r)) := by
+  have hb := CatalanLambda.Decay.norm_det_le_andreief (Fr.muT (N0Of Fr P.r0 r))
+    (poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir)
+    (fun (i : Fin k) z => poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (s i) z)
+    (fun (j : Fin k) z => poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (t j) z)
+    (fun i j => B.integrable_entry r hr (s i) (t j))
+  have hM : (Matrix.of fun i j : Fin k => ∫ z,
+      poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir z *
+        poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (s i) z *
+        poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (t j) z
+        ∂(Fr.muT (N0Of Fr P.r0 r))) =
+      Matrix.of fun i j : Fin k =>
+        (((lw D.f D.e (s i) (t j) : ℝ) + if s i = t j then D.xi else 0 : ℝ) : ℂ) := by
+    apply Matrix.ext
+    intro i j
+    exact B.gram_entry r hr (s i) (t j)
+  rw [hM] at hb
+  refine hb.trans (le_of_eq ?_)
+  congr 1
+  apply integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
+  ring
+
+theorem pole_jetFamily_of_analytic (D : PoleDatum) (S : PoleGramSplit D)
+    (Fr : Frame) (R : PoleRefMatch D S Fr) {P : RatPolygon}
+    (B : PoleAnalyticData D S Fr R P)
+    (H C0 g d0 a : ℝ) (hH : 0 ≤ H) (hC0 : 0 ≤ C0)
+    (hg : 0 < g) (hd0 : 0 < d0) (ha : 0 < a)
+    (hsetup : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) →
+      PoleJetSetup D S Fr R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir H C0 g d0 a) :
+    ∃ cw c1 c2 : ℝ, 1 ≤ cw ∧ 0 ≤ c1 ∧ 0 ≤ c2 ∧
+      ∃ J : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) →
+        JetRep Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (CP Fr (P.qRat : ℝ)),
+        (∀ r hr x y, (J r hr).Φ x y = (lw D.f D.e x y : ℝ) + if x = y then D.xi else 0) ∧
+        (∀ r hr, (J r hr).cw = cw) ∧
+        (∀ r hr, (J r hr).c1 = c1) ∧ (∀ r hr, (J r hr).c2 = c2) := by
+  obtain ⟨c1, c2, hc1, hc2, hj⟩ := finite_jet_cauchy_bound S.J H C0 g d0 a hH hC0 hg hd0 ha
+  refine ⟨B.cw, c1, c2, B.hcw, hc1, hc2, ?_⟩
+  let J : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) →
+      JetRep Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir (CP Fr (P.qRat : ℝ)) := fun r hr =>
+    { W := poleW S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir
+      rows := poleRows S R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir
+      Φ := fun x y => (lw D.f D.e x y : ℝ) + if x = y then D.xi else 0
+      cw := B.cw
+      hcw := B.hcw
+      c1 := c1
+      c2 := c2
+      hc1 := hc1
+      hc2 := hc2
+      weight := B.weight r hr (hsetup r hr).weight_ne
+      andreief := fun k s t _ _ => pole_andreief_of_analytic B r hr k s t
+      jet := by
+        let hs := (hsetup r hr).jet_hypotheses
+        exact hj (poleHead Fr (N0Of Fr P.r0 r))
+          (poleCenter R (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir)
+          (polyPt Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir)
+          (poleCoefficients S R (N0Of Fr P.r0 r)) hs.center_real_neg hs.reference_real
+          hs.displacement hs.coeff_bound hs.contour_center hs.head_sep hs.contour_gap
+          hs.reference_node_ne hs.collision }
+  exact ⟨J, fun _ _ _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩
+
+/-! Unconditional constructor: all analytic fields are proved above, not hypotheses. -/
+
+theorem pole_physical_setup (Fr : Frame) (P : RatPolygon) (hP : P.OK)
+    (r : ℕ) (hr : Rmin Fr P ≤ (r : ℝ)) :
+    (∀ z ∈ physL Fr P r, 1 / 8 ≤ z.im) ∧ PolyOK (physL Fr P r) P.tailDir ∧
+      qFirst ((Fr.xstar (N0Of Fr P.r0 r) : ℝ) : ℂ) (physL Fr P r) P.tailDir = (P.qRat : ℝ) := by
+  have hr1 : (1 : ℝ) ≤ r := (le_max_left _ _).trans hr
+  have hrpos : (0 : ℝ) < r := by linarith
+  have hinv : (P.invIm : ℝ) ≤ r := ((le_max_left _ _).trans (le_max_right _ _)).trans hr
+  have hhigh := high_of_ge hP hinv
+  have hone := RatPolygon.physPts_high (Fr.xstar (N0Of Fr P.r0 r)) r hhigh
+  rw [physPts_eq_scaled] at hone
+  have hlow : ∀ z ∈ physL Fr P r, 1 / 8 ≤ z.im := fun z hz => by linarith [hone z hz]
+  have hPoly : PolyOK (physL Fr P r) P.tailDir := by
+    have hh := RatPolygon.polyOK hP (Fr.xstar (N0Of Fr P.r0 r)) hrpos
+    rw [physPts_eq_scaled] at hh
+    exact hh
+  have hq : qFirst ((Fr.xstar (N0Of Fr P.r0 r) : ℝ) : ℂ) (physL Fr P r) P.tailDir = (P.qRat : ℝ) := by
+    have hh := RatPolygon.qFirst_phys hP (Fr.xstar (N0Of Fr P.r0 r)) hrpos
+    rw [physPts_eq_scaled] at hh
+    exact hh
+  exact ⟨hlow, hPoly, hq⟩
+
+noncomputable def poleAnalyticData (D : PoleDatum) (S : PoleGramSplit D)
+    (Fr : Frame) (R : PoleRefMatch D S Fr) (P : RatPolygon)
+    (hP : P.OK) (hCr : Fr.ContourOK)
+    (hCd : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK) :
+    PoleAnalyticData D S Fr R P where
+  cw := poleCw S R (P.qRat : ℝ)
+  hcw := one_le_poleCw S R hCd _
+  weight := by
+    intro r hr hw e he0 he1 z
+    obtain ⟨hlow, hPoly, hq⟩ := pole_physical_setup Fr P hP r hr
+    have hh := poleW_weight (C := CP Fr (P.qRat : ℝ)) S R hCd hlow (RatPolygon.tailDir_im_pos hP) hw he0 he1 z
+    rw [hq] at hh
+    exact hh
+  integrable_entry := by
+    intro r hr a b
+    obtain ⟨hlow, hPoly, hq⟩ := pole_physical_setup Fr P hP r hr
+    exact pole_integrable_entry S R hCd _ a b hPoly
+  gram_entry := by
+    intro r hr a b
+    obtain ⟨hlow, hPoly, hq⟩ := pole_physical_setup Fr P hP r hr
+    exact pole_entry S R hCd _ a b hPoly
+
+/-! The exact frozen public family theorem, from the unconditional analytic constructor. -/
+theorem pole_jetFamily (D : PoleDatum) (S : PoleGramSplit D)
+    (Fr : Frame) (R : PoleRefMatch D S Fr)
+    {P : RatPolygon} (hP : P.OK) (hCr : Fr.ContourOK)
+    (hCd : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK)
+    (H C0 g d0 a : ℝ) (hH : 0 ≤ H) (hC0 : 0 ≤ C0)
+    (hg : 0 < g) (hd0 : 0 < d0) (ha : 0 < a)
+    (hsetup : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) →
+      PoleJetSetup D S Fr R (N0Of Fr P.r0 r)
+        (physL Fr P r) P.tailDir H C0 g d0 a) :
+    ∃ cw c1 c2 : ℝ, 1 ≤ cw ∧ 0 ≤ c1 ∧ 0 ≤ c2 ∧
+      ∃ J : ∀ r : ℕ, Rmin Fr P ≤ (r : ℝ) →
+        JetRep Fr (N0Of Fr P.r0 r) (physL Fr P r) P.tailDir
+          (CP Fr (P.qRat : ℝ)),
+        (∀ r hr x y, (J r hr).Φ x y =
+          (lw D.f D.e x y : ℝ) + (if x=y then D.xi else 0)) ∧
+        (∀ r hr, (J r hr).cw = cw) ∧
+        (∀ r hr, (J r hr).c1 = c1) ∧
+        (∀ r hr, (J r hr).c2 = c2) := by
+  exact pole_jetFamily_of_analytic D S Fr R (poleAnalyticData D S Fr R P hP hCr hCd)
+    H C0 g d0 a hH hC0 hg hd0 ha hsetup
+
+/-! Exact frozen Q04 final decay adapter; unconditional pole_jetFamily remains a prior obligation. -/
+theorem pole_support_decay
+    (D : PoleDatum) (S : PoleGramSplit D)
+    (G : BlockGeom) {Fr : Frame} (R : PoleRefMatch D S Fr)
+    (hC : Fr.ContourOK)
+    (hCd : (D.clearanceFrame Fr.xs Fr.δ0 Fr.n0off).ContourOK)
+    (hAR : ∀ i : Fin Fr.d,
+      ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off)
+    (Ct : Support.Certificate G.nodePot)
+    (hneg : ∀ p ∈ Ct.polygon.verts, p.1 + Ct.polygon.r0 ≤ 0)
+    (hMq : Ct.spline.Mq = G.totalMass)
+    (hd : Ct.spline.dim = Fr.d)
+    (hInu : (Ct.spline.Inu : ℝ) ≤ G.nodeEnergy)
+    (hVc : ∀ z, G.nodePot ((starRingEnd ℂ) z) = G.nodePot z)
+    (hUc : ContinuousOn (fun x : ℝ => G.nodePot (x : ℂ))
+      (Set.Icc (-(Ct.polygon.r0 : ℝ)) 0))
+    (hsupp : ∀ r n : ℕ, n ∈ (G.geometry r).C → (n : ℝ) ≤ r)
+    {Bd : ℝ} (hBd0 : 0 ≤ Bd)
+    (hBc : ∀ i, ((G.common.block i).v : ℝ) ≤ Bd)
+    (hBr : ∀ i, ((G.row.block i).v : ℝ) ≤ Bd)
+    (hBq : ∀ i, ((G.column.block i).v : ℝ) ≤ Bd)
+    {m0 : ℝ} (hm0 : 0 < m0) (hm0μ : ∀ i, m0 ≤ Fr.μ i)
+    {e : ℝ} (he0 : 0 < e) (heε : e < (Ct.spline.ε : ℝ))
+    (depth : ℕ)
+    (H C0 g d0 a : ℝ)
+    (hH : 0 ≤ H) (hC0 : 0 ≤ C0)
+    (hg : 0 < g) (hd0 : 0 < d0) (ha : 0 < a)
+    (hsetup : ∀ r : ℕ, Rmin Fr Ct.polygon ≤ (r : ℝ) →
+      PoleJetSetup D S Fr R
+        (N0Of Fr Ct.polygon.r0 r)
+        (physL Fr Ct.polygon r) Ct.polygon.tailDir H C0 g d0 a) :
+    HasScaledDecay (seqFamily D.f D.e D.xi G.geometry depth)
+      (SeqFamily.scale G.geometry) Ct.Dr Ct.cr := by
+  obtain ⟨B, hP, _, C, hCW, hCm, hCg, hCS, hCI, hCc⟩ := SplineData.checkP_sound Ct.checkP
+  obtain ⟨cw, c1, c2, hcw, hc1, hc2, hJall⟩ :=
+    pole_jetFamily D S Fr R hP hC hCd H C0 g d0 a hH hC0 hg hd0 ha hsetup
+  have h := hasScaledDecay_of_check_jet G hC hAR Ct.rules.toRules Ct.spline Ct.polygon Ct.checkP
+    hMq hd hInu hVc hUc hsupp hBd0 hBc hBr hBq hm0 hm0μ he0 heε depth
+    D.f D.e D.xi cw c1 c2 hJall
+  rw [Ct.hD, Ct.hc'] at h
+  exact h
+
+
+#print axioms poleW_weight
+#print axioms pole_atom_sum
+#print axioms pole_integrable_entry
+#print axioms pole_entry
+#print axioms pole_andreief_of_analytic
+#print axioms poleAnalyticData
+#print axioms pole_jetFamily
+#print axioms pole_support_decay
+end CatalanCore.Uniform.Decay.Jet
