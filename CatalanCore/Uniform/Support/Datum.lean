@@ -31,6 +31,78 @@ open Polynomial Finset
 
 namespace CatalanCore.Uniform.Support
 
+/-! ### Arbitrary finite pole orders (Q03, frozen shared contract)
+
+The coefficients below are coefficients of the rational increment, rather than
+coefficients of polygamma functions. No upper bound on the pole orders is imposed.
+-/
+
+structure PoleDatum where
+  n : ℕ
+  hn : 0 < n
+  s : Fin n → ℚ
+  w : Fin n → ℕ
+  coeff : Fin n → ℕ → ℚ
+  hs : ∀ i, 0 < s i ∧ s i ≤ 1
+  hinj : Function.Injective s
+  hw : ∀ i, 1 ≤ w i
+  coeff_zero : ∀ i, coeff i 0 = 0
+  coeff_above : ∀ i j, w i < j → coeff i j = 0
+  top_ne : ∀ i, coeff i (w i) ≠ 0
+  balance : ∑ i, coeff i 1 = 0
+
+namespace PoleDatum
+
+variable (D : PoleDatum)
+
+def d : ℕ := ∑ i, D.w i
+
+def delta (x : ℚ) : ℚ :=
+  ∑ i, ∑ j ∈ Icc 1 (D.w i), D.coeff i j / (x + D.s i) ^ j
+
+def delta1 (x : ℚ) : ℚ :=
+  -∑ i, ∑ j ∈ Icc 1 (D.w i), (j : ℚ) * D.coeff i j / (x + D.s i) ^ (j + 1)
+
+def f (t : ℕ) : ℚ := ∑ k ∈ range t, D.delta k
+
+def e (t : ℕ) : ℚ := -∑ k ∈ range t, D.delta1 k
+
+noncomputable def hurwitzTail (k : ℕ) (s : ℚ) : ℝ :=
+  ∑' t : ℕ, 1 / ((t : ℝ) + (s : ℝ)) ^ k
+
+noncomputable def xi : ℝ :=
+  ∑ i, ∑ j ∈ Icc 1 (D.w i),
+    (j : ℝ) * (D.coeff i j : ℝ) * hurwitzTail (j + 1) (D.s i)
+
+noncomputable def Dpoly : ℚ[X] := ∏ i, (X + C (D.s i)) ^ D.w i
+
+noncomputable def Dexc (i : Fin D.n) : ℚ[X] :=
+  ∏ k ∈ univ.erase i, (X + C (D.s k)) ^ D.w k
+
+noncomputable def Apoly : ℚ[X] :=
+  ∑ i, ∑ j ∈ Icc 1 (D.w i),
+    C (D.coeff i j) * (D.Dexc i * (X + C (D.s i)) ^ (D.w i - j))
+
+end PoleDatum
+
+/-! Finite integer-pole sequences used by the all-order sweep and assignment
+producers (Q05, Q15). Balance and a nonzero top coefficient are not needed here. -/
+
+def hpoleF (h : ℕ) (d : ℕ → ℚ) (t : ℕ) : ℚ :=
+  ∑ k ∈ range t, ∑ j ∈ Icc 1 (h - 1), d j / ((k : ℚ) + 1) ^ j
+
+def hpoleE (h : ℕ) (d : ℕ → ℚ) (t : ℕ) : ℚ :=
+  ∑ k ∈ range t, ∑ j ∈ Icc 1 (h - 1),
+    (j : ℚ) * d j / ((k : ℚ) + 1) ^ (j + 1)
+
+def hpoleSigma (p h : ℕ) (d : ℕ → ℚ) (l : ℕ) : ℚ :=
+  ∑ j ∈ Icc 1 (h - 1), d j * (p : ℚ) ^ (h - 1 - j) *
+    (∑ k ∈ range l, 1 / ((k : ℚ) + 1) ^ j)
+
+def hpoleTau (p h : ℕ) (d : ℕ → ℚ) (l : ℕ) : ℚ :=
+  ∑ j ∈ Icc 1 (h - 1), (j : ℚ) * d j * (p : ℚ) ^ (h - 1 - j) *
+    (∑ k ∈ range l, 1 / ((k : ℚ) + 1) ^ (j + 1))
+
 /-- The Hurwitz series `ζ(3, μ) = ∑_{n ≥ 0} 1/(n + μ)³`. -/
 noncomputable def hurwitzTail3 (μ : ℚ) : ℝ := ∑' n : ℕ, 1 / ((n : ℝ) + (μ : ℝ)) ^ 3
 
@@ -91,6 +163,85 @@ noncomputable def Dexc (i : Fin D.n) : ℚ[X] := ∏ j ∈ univ.erase i, (X + C 
 noncomputable def Apoly : ℚ[X] :=
   ∑ i, (C (D.a i : ℚ) * (D.Dexc i * (X + C (D.s i)) ^ (D.w i - 1)) -
     C (D.b i : ℚ) * (D.Dexc i * (X + C (D.s i)) ^ (D.w i - 2)))
+
+/-- Exact embedding of the old integer simple/double-pole API. -/
+def toPole : PoleDatum where
+  n := D.n
+  hn := D.hn
+  s := D.s
+  w := D.w
+  coeff := fun i j => if j = 1 then (D.a i : ℚ) else if j = 2 then -(D.b i : ℚ) else 0
+  hs := D.hs
+  hinj := D.hinj
+  hw := D.w_pos
+  coeff_zero := by intro i; simp
+  coeff_above := by
+    intro i j hj
+    by_cases hb : D.b i = 0
+    · have hw : D.w i = 1 := by simp [w, hb]
+      have hj1 : j ≠ 1 := by omega
+      simp [hj1, hb]
+    · have hw : D.w i = 2 := by simp [w, hb]
+      have hj1 : j ≠ 1 := by omega
+      have hj2 : j ≠ 2 := by omega
+      simp [hj1, hj2]
+  top_ne := by
+    intro i
+    by_cases hb : D.b i = 0
+    · have ha : D.a i ≠ 0 := (D.hab i).resolve_right (not_ne_iff.mpr hb)
+      simpa [w, hb] using ha
+    · simpa [w, hb] using hb
+  balance := by simpa using (show ∑ i, (D.a i : ℚ) = 0 by exact_mod_cast D.hbal)
+
+@[simp] theorem toPole_d : D.toPole.d = D.d := rfl
+
+@[simp] theorem toPole_Dpoly : D.toPole.Dpoly = D.Dpoly := rfl
+
+@[simp] theorem toPole_Dexc (i : Fin D.n) : D.toPole.Dexc i = D.Dexc i := rfl
+
+private theorem Icc_one_one : Icc (1 : ℕ) 1 = {1} := by decide
+private theorem Icc_one_two : Icc (1 : ℕ) 2 = {1, 2} := by decide
+
+@[simp] theorem toPole_delta (x : ℚ) : D.toPole.delta x = D.delta x := by
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hb : D.b i = 0
+  · simp [PoleDatum.delta, toPole, w, hb, Icc_one_one]
+  · simp [PoleDatum.delta, toPole, w, hb, Icc_one_two, sub_eq_add_neg]; ring
+
+@[simp] theorem toPole_delta1 (x : ℚ) : D.toPole.delta1 x = D.delta1 x := by
+  unfold PoleDatum.delta1 delta1
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hb : D.b i = 0
+  · simp [toPole, w, hb, Icc_one_one]; ring
+  · simp [toPole, w, hb, Icc_one_two]; ring
+
+@[simp] theorem toPole_f (t : ℕ) : D.toPole.f t = D.f t := by
+  simp [PoleDatum.f, f]
+
+@[simp] theorem toPole_e (t : ℕ) : D.toPole.e t = D.e t := by
+  simp [PoleDatum.e, e]
+
+@[simp] theorem toPole_xi : D.toPole.xi = D.xi := by
+  unfold PoleDatum.xi xi
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hb : D.b i = 0
+  · simp [toPole, w, hb, Icc_one_one, PoleDatum.hurwitzTail, CatalanCore.hurwitzTail2]
+  · simp [toPole, w, hb, Icc_one_two, PoleDatum.hurwitzTail,
+      CatalanCore.hurwitzTail2, hurwitzTail3]; ring
+
+@[simp] theorem toPole_Apoly : D.toPole.Apoly = D.Apoly := by
+  unfold PoleDatum.Apoly Apoly
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hb : D.b i = 0
+  · simp [toPole, w, hb, Icc_one_one, PoleDatum.Dexc, Dexc]
+    exact Or.inl rfl
+  · simp [toPole, w, hb, Icc_one_two, PoleDatum.Dexc, Dexc, sub_eq_add_neg]
+    rfl
 
 end Datum
 
@@ -177,3 +328,8 @@ theorem plane2_Apoly (v u : ℤ) (hv : v ≠ 0) (hu : u ≠ 0) :
   linear_combination ((u : ℚ[X]) * (X + 1)) * h2
 end Datum
 end CatalanCore.Uniform.Support
+
+#print axioms CatalanCore.Uniform.Support.Datum.toPole_f
+#print axioms CatalanCore.Uniform.Support.Datum.toPole_e
+#print axioms CatalanCore.Uniform.Support.Datum.toPole_xi
+#print axioms CatalanCore.Uniform.Support.Datum.toPole_Apoly

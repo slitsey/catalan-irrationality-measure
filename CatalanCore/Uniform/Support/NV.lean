@@ -320,6 +320,288 @@ theorem stepData (U : ℚ) :
 
 end Datum
 
+namespace PoleDatum
+
+variable (D : PoleDatum)
+
+theorem Dpoly_eq_mul (i : Fin D.n) :
+    D.Dpoly = (X + C (D.s i)) ^ D.w i * D.Dexc i := by
+  unfold Dpoly Dexc
+  exact (Finset.mul_prod_erase univ (fun j => (X + C (D.s j)) ^ D.w j) (mem_univ i)).symm
+
+theorem eval_Dpoly (x : ℚ) : D.Dpoly.eval x = ∏ i, (x + D.s i) ^ D.w i := by
+  simp [Dpoly, eval_prod]
+
+theorem eval_Dexc (i : Fin D.n) (x : ℚ) :
+    (D.Dexc i).eval x = ∏ j ∈ univ.erase i, (x + D.s j) ^ D.w j := by
+  simp [Dexc, eval_prod]
+
+theorem Dpoly_eval_ne (x : ℚ) (hx : ∀ i, x + D.s i ≠ 0) : D.Dpoly.eval x ≠ 0 := by
+  rw [eval_Dpoly]
+  exact Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (hx i)
+
+theorem Dpoly_eval_pole (i : Fin D.n) : D.Dpoly.eval (-D.s i) = 0 := by
+  rw [eval_Dpoly]
+  exact Finset.prod_eq_zero (mem_univ i) (by
+    have : (-D.s i + D.s i) = 0 := by ring
+    rw [this]; exact zero_pow (by have := D.hw i; omega))
+
+theorem Dexc_eval_pole_ne (i : Fin D.n) : (D.Dexc i).eval (-D.s i) ≠ 0 := by
+  rw [eval_Dexc]
+  refine Finset.prod_ne_zero_iff.2 fun j hj => pow_ne_zero _ ?_
+  have hji : j ≠ i := (Finset.mem_erase.1 hj).1
+  intro h
+  exact hji (D.hinj (by linarith))
+
+theorem Dexc_eval_pole_other (i j : Fin D.n) (hij : i ≠ j) : (D.Dexc i).eval (-D.s j) = 0 := by
+  rw [eval_Dexc]
+  exact Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hij.symm, mem_univ j⟩) (by
+    have : (-D.s j + D.s j) = 0 := by ring
+    rw [this]; exact zero_pow (by have := D.hw j; omega))
+
+
+noncomputable def Pterm (i : Fin D.n) (j : ℕ) : ℚ[X] :=
+  D.Dexc i * (X + C (D.s i)) ^ (D.w i - j)
+
+theorem Pterm_mul (i : Fin D.n) (j : ℕ) (hj : j ≤ D.w i) :
+    D.Pterm i j * (X + C (D.s i)) ^ j = D.Dpoly := by
+  rw [Dpoly_eq_mul D i, Pterm, mul_assoc, ← pow_add, Nat.sub_add_cancel hj]
+  ring
+
+theorem Pterm_eval (i : Fin D.n) (j : ℕ) (hj : j ≤ D.w i)
+    (x : ℚ) (hx : x + D.s i ≠ 0) :
+    (D.Pterm i j).eval x = D.Dpoly.eval x / (x + D.s i) ^ j := by
+  apply (eq_div_iff (pow_ne_zero j hx)).2
+  simpa using congrArg (fun P : ℚ[X] => P.eval x) (D.Pterm_mul i j hj)
+
+theorem Pterm_deriv_eval (i : Fin D.n) (j : ℕ) (hj0 : 1 ≤ j) (hj : j ≤ D.w i)
+    (x : ℚ) (hx : x + D.s i ≠ 0) :
+    (D.Pterm i j).derivative.eval x =
+      D.Dpoly.derivative.eval x / (x + D.s i) ^ j -
+      (j : ℚ) * D.Dpoly.eval x / (x + D.s i) ^ (j + 1) := by
+  have hd := congrArg (fun P : ℚ[X] => P.derivative.eval x) (D.Pterm_mul i j hj)
+  simp only [derivative_mul, derivative_pow, derivative_X_add_C, mul_one,
+    eval_add, eval_mul, eval_pow, eval_X, eval_C, eval_natCast] at hd
+  have hv := D.Pterm_eval i j hj x hx
+  have he : j - 1 + 1 = j := by omega
+  have hp : (x + D.s i) ^ (j - 1) * (x + D.s i) = (x + D.s i) ^ j := by
+    rw [← pow_succ, he]
+  have hu : (x + D.s i) ^ (j + 1) = (x + D.s i) ^ j * (x + D.s i) := pow_succ _ _
+  have hv' : (D.Pterm i j).eval x * (x + D.s i) ^ j = D.Dpoly.eval x :=
+    (eq_div_iff (pow_ne_zero j hx)).mp hv
+  have hd' : (D.Pterm i j).derivative.eval x *
+      ((x + D.s i) ^ j * (x + D.s i)) =
+      D.Dpoly.derivative.eval x * (x + D.s i) - (j : ℚ) * D.Dpoly.eval x := by
+    calc
+      _ = D.Dpoly.derivative.eval x * (x + D.s i) -
+          (D.Pterm i j).eval x * (j : ℚ) *
+            ((x + D.s i) ^ (j - 1) * (x + D.s i)) := by
+        linear_combination (x + D.s i) * hd
+      _ = _ := by rw [hp, ← hv']; ring
+  rw [hu]
+  have hdiv : D.Dpoly.derivative.eval x / (x + D.s i) ^ j =
+      (D.Dpoly.derivative.eval x * (x + D.s i)) /
+        ((x + D.s i) ^ j * (x + D.s i)) := by field_simp [hx]
+  rw [hdiv, ← sub_div]
+  exact (eq_div_iff (mul_ne_zero (pow_ne_zero j hx) hx)).2 hd'
+
+theorem Apoly_eval (x : ℚ) (hx : ∀ i, x + D.s i ≠ 0) :
+    D.Apoly.eval x = D.Dpoly.eval x * D.delta x := by
+  simp only [Apoly, delta, eval_finsetSum, eval_mul, eval_C, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [← eval_mul]
+  change D.coeff i j * (D.Pterm i j).eval x = _
+  rw [D.Pterm_eval i j (Finset.mem_Icc.mp hj).2 x (hx i)]
+  ring
+
+theorem Apoly_deriv_eval (x : ℚ) (hx : ∀ i, x + D.s i ≠ 0) :
+    D.Apoly.derivative.eval x =
+      D.Dpoly.derivative.eval x * D.delta x + D.Dpoly.eval x * D.delta1 x := by
+  unfold Apoly delta delta1
+  simp only [derivative_sum, derivative_C_mul, eval_finsetSum, eval_mul, eval_C]
+  rw [mul_neg, ← sub_eq_add_neg, Finset.mul_sum, Finset.mul_sum,
+    ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  change D.coeff i j * (D.Pterm i j).derivative.eval x = _
+  rw [D.Pterm_deriv_eval i j (Finset.mem_Icc.mp hj).1 (Finset.mem_Icc.mp hj).2 x (hx i)]
+  ring
+
+theorem Dexc_monic (i : Fin D.n) : (D.Dexc i).Monic :=
+  monic_prod_of_monic _ _ fun j _ => (monic_X_add_C (D.s j)).pow _
+
+theorem Dexc_natDegree (i : Fin D.n) : (D.Dexc i).natDegree = D.d - D.w i := by
+  have h : (D.Dexc i).natDegree = ∑ j ∈ univ.erase i, D.w j := by
+    unfold Dexc
+    rw [natDegree_prod_of_monic _ _ fun j _ => (monic_X_add_C (D.s j)).pow _]
+    exact Finset.sum_congr rfl fun j _ => by rw [natDegree_pow, natDegree_X_add_C, mul_one]
+  rw [h]
+  have := Finset.sum_erase_add univ D.w (mem_univ i)
+  unfold d
+  omega
+
+theorem Dpoly_monic : D.Dpoly.Monic :=
+  monic_prod_of_monic _ _ fun j _ => (monic_X_add_C (D.s j)).pow _
+
+theorem Dpoly_natDegree : D.Dpoly.natDegree = D.d := by
+  unfold Dpoly d
+  rw [natDegree_prod_of_monic _ _ fun j _ => (monic_X_add_C (D.s j)).pow _]
+  exact Finset.sum_congr rfl fun j _ => by rw [natDegree_pow, natDegree_X_add_C, mul_one]
+
+
+theorem w_le_d (i : Fin D.n) : D.w i ≤ D.d :=
+  Finset.single_le_sum (f := D.w) (fun _ _ => Nat.zero_le _) (mem_univ i)
+
+theorem d_ge_two : 2 ≤ D.d := by
+  by_contra h
+  let i0 : Fin D.n := ⟨0, D.hn⟩
+  have hwi : D.w i0 = 1 := by have := D.hw i0; have := D.w_le_d i0; omega
+  have hn1 : D.n = 1 := by
+    have hn : D.n ≤ D.d := by
+      calc D.n = ∑ _ : Fin D.n, 1 := by simp
+           _ ≤ ∑ i, D.w i := Finset.sum_le_sum (fun i _ => D.hw i)
+    have := D.hn
+    omega
+  have hall : ∀ j : Fin D.n, j = i0 := fun j => Fin.ext (by have := j.2; simp [i0]; omega)
+  have hs : ∑ i, D.coeff i 1 = D.coeff i0 1 :=
+    Finset.sum_eq_single_of_mem i0 (mem_univ _) fun j _ hj => absurd (hall j) hj
+  have hb := D.balance
+  rw [hs] at hb
+  apply D.top_ne i0
+  simpa [hwi] using hb
+
+theorem Pterm_monic (i : Fin D.n) (j : ℕ) : (D.Pterm i j).Monic :=
+  (D.Dexc_monic i).mul ((monic_X_add_C _).pow _)
+
+theorem Pterm_natDegree (i : Fin D.n) (j : ℕ) (hj : j ≤ D.w i) :
+    (D.Pterm i j).natDegree = D.d - j := by
+  unfold Pterm
+  rw [(D.Dexc_monic i).natDegree_mul ((monic_X_add_C _).pow _),
+    Dexc_natDegree, natDegree_pow, natDegree_X_add_C]
+  have := D.w_le_d i
+  omega
+
+theorem Pterm_coeff (i : Fin D.n) (j N : ℕ)
+    (hj : j ∈ Icc 1 (D.w i)) (hN : D.d - 2 < N) :
+    (D.Pterm i j).coeff N = if j = 1 ∧ N = D.d - 1 then 1 else 0 := by
+  obtain ⟨hj0, hjw⟩ := mem_Icc.mp hj
+  by_cases he : j = 1 ∧ N = D.d - 1
+  · rw [if_pos he]
+    have hdeg : (D.Pterm i j).natDegree = N := by
+      rw [D.Pterm_natDegree i j hjw, he.1, he.2]
+    rw [← hdeg]
+    exact (D.Pterm_monic i j).coeff_natDegree
+  · rw [if_neg he]
+    apply coeff_eq_zero_of_natDegree_lt
+    rw [D.Pterm_natDegree i j hjw]
+    have := D.d_ge_two
+    omega
+
+theorem Apoly_natDegree_le : D.Apoly.natDegree ≤ D.d - 2 := by
+  rw [natDegree_le_iff_coeff_eq_zero]
+  intro N hN
+  unfold Apoly
+  simp only [finsetSum_coeff, coeff_C_mul]
+  have hs : ∀ i, (∑ j ∈ Icc 1 (D.w i),
+      D.coeff i j * (D.Pterm i j).coeff N) =
+      if N = D.d - 1 then D.coeff i 1 else 0 := by
+    intro i
+    have hexp : (∑ j ∈ Icc 1 (D.w i), D.coeff i j * (D.Pterm i j).coeff N) =
+        ∑ j ∈ Icc 1 (D.w i), D.coeff i j * (if j = 1 ∧ N = D.d - 1 then 1 else 0) := by
+      apply Finset.sum_congr rfl
+      intro j hj
+      rw [D.Pterm_coeff i j N hj hN]
+    rw [hexp]
+    by_cases he : N = D.d - 1
+    · simp [he, D.hw i]
+    · simp [he]
+  change (∑ i, ∑ j ∈ Icc 1 (D.w i), D.coeff i j * (D.Pterm i j).coeff N) = 0
+  simp_rw [hs]
+  split_ifs
+  · exact D.balance
+  · simp
+
+theorem Apoly_eval_pole_eq (i : Fin D.n) :
+    D.Apoly.eval (-D.s i) = D.coeff i (D.w i) * (D.Dexc i).eval (-D.s i) := by
+  unfold Apoly
+  rw [eval_finsetSum, Finset.sum_eq_single_of_mem i (mem_univ _) ?_]
+  · rw [eval_finsetSum,
+      Finset.sum_eq_single_of_mem (D.w i) (mem_Icc.mpr ⟨D.hw i, le_rfl⟩) ?_]
+    · simp
+    · intro j hj hji
+      have hjw := (mem_Icc.mp hj).2
+      have hpos : 0 < D.w i - j := by omega
+      simp [zero_pow hpos.ne']
+  · intro k _ hki
+    rw [eval_finsetSum]
+    apply Finset.sum_eq_zero
+    intro j _
+    simp [D.Dexc_eval_pole_other k i hki]
+
+theorem Apoly_eval_pole (i : Fin D.n) : D.Apoly.eval (-D.s i) ≠ 0 := by
+  rw [D.Apoly_eval_pole_eq i]
+  exact mul_ne_zero (D.top_ne i) (D.Dexc_eval_pole_ne i)
+
+theorem isolatedPole (i : Fin D.n) :
+    NV.IsolatedStepPole ((1 : ℕ) : ℚ) (-D.s i) D.Dpoly D.Apoly where
+  step_ne_zero := by simp
+  pole := D.Dpoly_eval_pole i
+  residue := D.Apoly_eval_pole i
+  forward := by
+    intro n
+    apply D.Dpoly_eval_ne
+    intro j
+    have h1 := D.hs i
+    have h2 := D.hs j
+    have h3 : (0 : ℚ) ≤ n := Nat.cast_nonneg n
+    push_cast
+    intro h
+    linarith
+  backward := by
+    intro n
+    apply D.Dpoly_eval_ne
+    intro j
+    have h1 := D.hs i
+    have h2 := D.hs j
+    have h3 : (0 : ℚ) ≤ n := Nat.cast_nonneg n
+    push_cast
+    intro h
+    linarith
+
+theorem f_succ (t : ℕ) : D.f (t + 1) - D.f t = D.delta t := by
+  unfold f; rw [Finset.sum_range_succ]; ring
+
+theorem e_succ (t : ℕ) : D.e (t + 1) - D.e t = -D.delta1 t := by
+  unfold e; rw [Finset.sum_range_succ]; ring
+
+theorem shift_ne (a : ℕ) (i : Fin D.n) : (a : ℚ) + D.s i ≠ 0 := by
+  have h1 := D.hs i
+  have h3 : (0 : ℚ) ≤ a := Nat.cast_nonneg a
+  intro h; linarith
+
+/-- The cleared step equations of the datum, with step `L = 1`: the value field is `𝖣 δ = A` and the jet
+field is its derivative. -/
+theorem stepData (U : ℚ) :
+    NV.StepData 1 D.Dpoly D.Apoly (NV.onNaturals D.f) (NV.onNaturals fun t => U - D.e t) where
+  value a := by
+    have hc : (a : ℚ) + ((1 : ℕ) : ℚ) = ((a + 1 : ℕ) : ℚ) := by push_cast; ring
+    rw [hc, NV.onNaturals_nat, NV.onNaturals_nat, f_succ, D.Apoly_eval _ (D.shift_ne a)]
+  jet a := by
+    have hc : (a : ℚ) + ((1 : ℕ) : ℚ) = ((a + 1 : ℕ) : ℚ) := by push_cast; ring
+    rw [hc, NV.onNaturals_nat, NV.onNaturals_nat, NV.onNaturals_nat, NV.onNaturals_nat, f_succ,
+      D.Apoly_deriv_eval _ (D.shift_ne a)]
+    have := e_succ D a
+    have h2 : (U - D.e (a + 1)) - (U - D.e a) = D.delta1 a := by linarith
+    rw [h2]
+
+end PoleDatum
+
 /-! ### Transport of the matrix to the field-node model -/
 
 section Transport
@@ -495,6 +777,30 @@ theorem datum_common_deletion (D : Datum) (U : ℚ) (G : Rect.Geometry)
     · rw [Matrix.det_isEmpty]
       exact one_ne_zero
 
+theorem pole_common_deletion (D : PoleDatum) (U : ℚ) (G : Rect.Geometry)
+    (hvis : NV.componentCount (G.C ∪ G.X' ∪ G.Y') 1 + D.d ≤ G.C.card + 3) :
+    ∃ S : Finset G.C,
+      G.C.card - S.card ≤ (D.d + NV.componentCount (G.C ∪ G.X' ∪ G.Y') 1 +
+        NV.componentCount G.C 1 - 2) / 2 ∧
+      (seqFullN D.f D.e (fun a : S => ((a.1 : G.C) : ℕ)) G.xs G.ys U).det ≠ 0 := by
+  by_cases hn : 1 ≤ G.C.card + G.k
+  · let i0 : Fin D.n := ⟨0, D.hn⟩
+    obtain ⟨s, hs, hdet⟩ := NV.step_component_nv (model G) 1 D.d G.C.card G.k D.Dpoly D.Apoly
+      (NV.onNaturals D.f) (NV.onNaturals fun t => U - D.e t) (D.stepData U) (-D.s i0)
+      (D.isolatedPole i0) D.d_ge_two D.Dpoly_natDegree.le D.Apoly_natDegree_le
+      (G.C ∪ G.X' ∪ G.Y') G.C (fun a ha => Finset.mem_union_left _ (Finset.mem_union_left _ ha)) rfl
+      (full_nodes_card G) (model_union G) (model_inter G) (model_rows_card G) hn hvis
+    obtain ⟨S, hS, hdetS⟩ := seq_retained_of_model_deletion D.f D.e U G s hdet
+    exact ⟨S, hS ▸ hs, hdetS⟩
+  · have hc : G.C.card = 0 := by omega
+    have hk : G.k = 0 := by omega
+    let _ : IsEmpty G.C := Fintype.card_eq_zero_iff.mp (by simpa using hc)
+    let _ : IsEmpty (Fin G.k) := Fintype.card_eq_zero_iff.mp (by simpa using hk)
+    refine ⟨univ, ?_, ?_⟩
+    · exact le_trans (Nat.sub_le _ _) (by rw [hc]; exact Nat.zero_le _)
+    · rw [Matrix.det_isEmpty]
+      exact one_ne_zero
+
 theorem componentCount_range (n : ℕ) (hn : 0 < n) : NV.componentCount (Finset.range n) 1 = 1 := by
   unfold NV.componentCount
   rw [Finset.card_eq_one]
@@ -562,6 +868,26 @@ theorem support_nv0_even (D : Datum) (G : Rect.Geometry) (r : ℕ) (hr : max 1 (
   have : (D.d + 1 + 1 - 2) / 2 = D.d / 2 := by congr 1
   omega
 
+theorem pole_support_nv0_even (D : PoleDatum) (G : Rect.Geometry) (r : ℕ) (hr : max 1 (D.d - 2) ≤ r)
+    (hC : G.C = Finset.range r)
+    (hx : ∀ i : Fin G.k, G.xs i = r + 2 * (i : ℕ)) (hy : ∀ i : Fin G.k, G.ys i = r + 2 * (i : ℕ) + 1)
+    (U : ℚ) :
+    ∃ S : Finset G.C, G.C.card - S.card ≤ D.d / 2 ∧
+      (seqFullN D.f D.e (fun a : S => ((a.1 : G.C) : ℕ)) G.xs G.ys U).det ≠ 0 := by
+  have hZ := hybrid_nodes_eq G r hC hx hy
+  have hr1 : 1 ≤ r := (le_max_left _ _).trans hr
+  have hr2 : D.d - 2 ≤ r := (le_max_right _ _).trans hr
+  have hcard : G.C.card = r := by rw [hC, Finset.card_range]
+  have hc1 : NV.componentCount (G.C ∪ G.X' ∪ G.Y') 1 = 1 := by
+    rw [hZ]; exact componentCount_range _ (by omega)
+  have hc2 : NV.componentCount G.C 1 = 1 := by
+    rw [hC]; exact componentCount_range _ (by omega)
+  obtain ⟨S, hS, hdet⟩ := pole_common_deletion D U G (by rw [hc1, hcard]; omega)
+  refine ⟨S, ?_, hdet⟩
+  rw [hc1, hc2] at hS
+  have : (D.d + 1 + 1 - 2) / 2 = D.d / 2 := by congr 1
+  omega
+
 end TheoremN
 
 /-! ### The adapter for the family (P211) -/
@@ -599,6 +925,32 @@ theorem altGeom_seqFamily_nv0_even (D : Datum) (c : ℚ) (hc : 0 < c) (const : �
   seqFamily_nv0_even D (Content.Shape.altGeom c hc) const depth hdepth
     fun _ hr => Content.Shape.altGeom_hybShape c hc hr
 
+theorem pole_seqFamily_nv0_even (D : PoleDatum) (B : BlockGeom) (const : ℝ) (depth : ℕ) (hdepth : D.d / 2 ≤ depth)
+    (hyb : ∀ r, r % 2 = 0 → HybShape B r) :
+    ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
+      ∃ n, (B.seqFamily D.f D.e const depth).Adm n ∧ SeqFamily.scale B.geometry n = 2 * s ∧
+        (B.seqFamily D.f D.e const depth).evalQ n x ≠ 0 := by
+  refine ⟨max 1 D.d, fun s hs x => ?_⟩
+  have hs1 : 1 ≤ s := (le_max_left _ _).trans hs
+  have hsd : D.d ≤ s := (le_max_right _ _).trans hs
+  have hh := hyb (2 * s) (by omega)
+  obtain ⟨S, hS, hdet⟩ := pole_support_nv0_even D (B.geometry (2 * s)) (2 * s)
+    (by omega) hh.C_eq hh.xs_eq hh.ys_eq x
+  refine ⟨⟨2 * s, S⟩, hS.trans hdepth, rfl, ?_⟩
+  rw [SeqFamily.evalQ_poly]
+  exact hdet
+
+/-- The alternating geometry `altGeom c` is hybrid-shaped at every even scale, so the family
+`seqFamily D.f D.e` of any datum has nonvanishing members at every large even scale. -/
+theorem pole_altGeom_seqFamily_nv0_even (D : PoleDatum) (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (hdepth : D.d / 2 ≤ depth) :
+    ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
+      ∃ n, ((Content.Shape.altGeom c hc).seqFamily D.f D.e const depth).Adm n ∧
+        SeqFamily.scale (Content.Shape.altGeom c hc).geometry n = 2 * s ∧
+        ((Content.Shape.altGeom c hc).seqFamily D.f D.e const depth).evalQ n x ≠ 0 :=
+  pole_seqFamily_nv0_even D (Content.Shape.altGeom c hc) const depth hdepth
+    fun _ hr => Content.Shape.altGeom_hybShape c hc hr
+
 end Adapter
 
 end CatalanCore.Uniform.Support
@@ -606,3 +958,6 @@ end CatalanCore.Uniform.Support
 #print axioms CatalanCore.Uniform.Support.support_nv0_even
 #print axioms CatalanCore.Uniform.Support.altGeom_seqFamily_nv0_even
 #print axioms CatalanCore.Uniform.Support.Datum.plane2_Apoly
+
+#print axioms CatalanCore.Uniform.Support.PoleDatum.Apoly_natDegree_le
+#print axioms CatalanCore.Uniform.Support.pole_altGeom_seqFamily_nv0_even
