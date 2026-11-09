@@ -6,12 +6,12 @@ public import CatalanCore.Arith.Hybrid.PeriodicEntries
 @[expose] public section
 set_option Elab.async false
 
-/-! # Pole data of a frame with shifts of denominator at most `3` (wave H4; ledger P102, P103)
+/-! # Pole data of a frame with shift denominators bounded by an arbitrary Q (wave H4; ledger P102, P103)
 
 **Lemma 2.1 of the plane theorem** (pole data for all weights at once): for a frame whose shifts `μ i = num_i / den_i`
-have `den_i ≤ 3`, write `lin i k = den_i (k - 1) + num_i`, so that `k - 1 + μ i = lin i k / den_i`,
-`Δ_k = Σ_i w_i den_i / lin i k` and `D_k = Σ_i w_i den_i² / lin i k ²`.  Then for a prime `p ≥ 5` and `3 N < p²`
-every `lin i k` (`k < N`) is `≤ 3 N < p²`, so has `p`-adic valuation at most `1`, and none if `k` is not singular
+have `den_i ≤ Q`, write `lin i k = den_i (k - 1) + num_i`, so that `k - 1 + μ i = lin i k / den_i`,
+`Δ_k = Σ_i w_i den_i / lin i k` and `D_k = Σ_i w_i den_i² / lin i k ²`.  Then for a prime `p` and `Q N < p²`
+every `lin i k` (`k < N`) is `≤ Q N < p²`, so has `p`-adic valuation at most `1`, and none if `k` is not singular
 (`p ∣ lin i k` for some `i`).  Hence `v_p(δ_k) ≥ -1`, `v_p(ε_k) ≥ -2`, and `≥ 0` off the singular set, whatever the
 integer weights are: **nothing but integrality of `w` is used**, and a weight divisible by `p` only helps
 (`poleData_of_shifts`).
@@ -69,13 +69,13 @@ theorem lin_pos (i : Fin Fr.d) {k : ℕ} (hk : 1 ≤ k) : 0 < lin Fr i k := by
     rw [h]; nlinarith [(by exact_mod_cast hk : (1 : ℤ) ≤ k)]
   exact_mod_cast this
 
-theorem lin_le (i : Fin Fr.d) (hden : (Fr.μ i).den ≤ 3) {k : ℕ} (hk : 1 ≤ k) : lin Fr i k ≤ 3 * k := by
+theorem lin_le (i : Fin Fr.d) {Q : ℕ} (hden : (Fr.μ i).den ≤ Q) {k : ℕ} (hk : 1 ≤ k) : lin Fr i k ≤ Q * k := by
   have h := lin_cast_int i hk
   have h1 := mu_num_le_den i
   have hk' : (1 : ℤ) ≤ k := by exact_mod_cast hk
-  have : (lin Fr i k : ℤ) ≤ 3 * k := by
+  have : (lin Fr i k : ℤ) ≤ Q * k := by
     rw [h]
-    have hd : ((Fr.μ i).den : ℤ) ≤ 3 := by exact_mod_cast hden
+    have hd : ((Fr.μ i).den : ℤ) ≤ Q := by exact_mod_cast hden
     nlinarith
   exact_mod_cast this
 
@@ -135,17 +135,16 @@ theorem FrSing_periodic (p : ℕ) (t j : ℤ) : FrSing Fr p (t + j * p) ↔ FrSi
 
 variable {p N : ℕ} [Fact p.Prime]
 
-theorem lin_lt_sq (i : Fin Fr.d) (hden : (Fr.μ i).den ≤ 3) (hN : 3 * N < p * p) {k : ℕ} (hk : 1 ≤ k)
+theorem lin_lt_sq (i : Fin Fr.d) {Q : ℕ} (hden : (Fr.μ i).den ≤ Q) (hN : Q * N < p * p) {k : ℕ} (hk : 1 ≤ k)
     (hkN : k < N) : lin Fr i k < p * p := by
-  have := lin_le i hden hk
-  omega
+  exact (lin_le i hden hk).trans_lt (lt_of_le_of_lt (Nat.mul_le_mul_left Q hkN.le) hN)
 
-theorem good_lin_inv (i : Fin Fr.d) (hden : (Fr.μ i).den ≤ 3) (hN : 3 * N < p * p) {k : ℕ} (hk : 1 ≤ k)
+theorem good_lin_inv (i : Fin Fr.d) {Q : ℕ} (hden : (Fr.μ i).den ≤ Q) (hN : Q * N < p * p) {k : ℕ} (hk : 1 ≤ k)
     (hkN : k < N) : Good p ((p : ℚ) / (lin Fr i k : ℚ)) (invResidue p (lin Fr i k)) :=
   good_scaled_inverse (lin_pos i hk) (lin_lt_sq i hden hN hk hkN)
 
-/-- **Lemma 2.1 for any frame with shift denominators `≤ 3` and a `p`-unit norm.** -/
-noncomputable def poleData_of_shifts (hden : ∀ i, (Fr.μ i).den ≤ 3) (hN : 3 * N < p * p)
+/-- **Lemma 2.1 for any frame with shift denominators `≤ Q` and a `p`-unit norm.** -/
+noncomputable def poleData_of_shifts {Q : ℕ} (hden : ∀ i, (Fr.μ i).den ≤ Q) (hN : Q * N < p * p)
     (hn : Fr.norm ∈ S p) (hn0 : red p Fr.norm ≠ 0) : PoleData Fr p N where
   singular := fun t => FrSing Fr p t
   periodic := FrSing_periodic p

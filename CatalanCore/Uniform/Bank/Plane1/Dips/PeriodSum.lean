@@ -10,10 +10,10 @@ public import Mathlib.FieldTheory.Finite.Basic
 set_option Elab.async false
 set_option linter.unusedSectionVars false
 
-/-! # Lemma A (period sums) for a frame with shifts of denominator at most `3` (wave R0; ledger R01-R03)
+/-! # Lemma A (period sums) for any finite simple-pole frame (wave R0; ledger R01-R03)
 
 Lemma A of `DIP-RANK-CLOSED-FORM-2026-11-07.md` (Lemma 5.1' of the dip rows), in the `lin` language of `Plane1.PoleData`.
-For a prime `p ≥ 5` and a frame whose shifts have denominators `≤ 3` write `lin i k = den_i (k - 1) + num_i`, so that
+For an odd prime `p ≥ 3` and an arbitrary frame write `lin i k = den_i (k - 1) + num_i`, so that
 `Δ_k = Σ_i w_i den_i / lin i k` and `D_k = Σ_i w_i den_i² / lin i k²`.  A term is **polar** when `p ∣ lin i k`.
 Put
 
@@ -22,9 +22,9 @@ Put
 * `Vp t = Σ_{0 < k ≤ t} dvP k`  (the level `V(t)`: the polar parts of `f_t = Σ_{k ≤ t} Δ_k` are `Vp t / p`),
 * `Up t = - Σ_{0 < k ≤ t} dsP k`  (the polar part of the diagonal entry `e_t = - Σ_{k ≤ t} D_k` is `Up t / p²`).
 
-* `periodSum`: for `t' = t + s p`, `1 ≤ s < p`: `Σ_{t < k ≤ t'} Δ_k = (Vp t' - Vp t) / p + Δ` with `Δ / p` `p`-integral.
+* `periodSum`: for `t' = t + s p`, arbitrary `s`: `Σ_{t < k ≤ t'} Δ_k = (Vp t' - Vp t) / p + Δ` with `Δ / p` `p`-integral.
 * `diag_split`: `Σ_{k ≤ t} D_k = - Up t / p² + (a p-integer)`.
-* `Vp_mem`, `Up_mem`: with `3 k < p²` for the nodes involved, `Vp t` and `Up t` are `p`-integral.
+* `Vp_mem`, `Up_mem`: with atomwise prime-square-free linear denominators (or `Q k < p²`), `Vp t` and `Up t` are `p`-integral.
 * `offSum_split`: for any `t < t'`, `Σ_{t < k ≤ t'} Δ_k = (Vp t' - Vp t) / p + (a p-integer)` (no period condition). -/
 
 namespace CatalanCore.Uniform.Bank.Plane1.Dips
@@ -141,11 +141,10 @@ theorem polar_mem' {c : ℚ} (hc : c ∈ LocRing p) {L : ℕ} (hL : p ∣ L) (hL
   rw [this]
   exact (LocRing p).mul_mem hc ((LocRing p).mul_mem (inv_natCast_mem_locRing hm) (inv_natCast_mem_locRing hm))
 
-variable (hden : ∀ i, (Fr.μ i).den ≤ 3)
 
-include hden in
-/-- Below `p²` a polar form has `p`-adic valuation exactly one. -/
-theorem lin_not_sq {k : ℕ} (hk : 1 ≤ k) (hk3 : 3 * k < p * p) (i : Fin Fr.d) :
+/-- Geometric sufficient condition for an atomwise prime-square-free denominator. -/
+theorem lin_not_sq {Q k : ℕ} (hden : ∀ i, (Fr.μ i).den ≤ Q)
+    (hk : 1 ≤ k) (hkQ : Q * k < p * p) (i : Fin Fr.d) :
     ¬ p * p ∣ lin Fr i k := by
   intro h
   have h0 := lin_pos i hk
@@ -153,37 +152,47 @@ theorem lin_not_sq {k : ℕ} (hk : 1 ≤ k) (hk3 : 3 * k < p * p) (i : Fin Fr.d)
   have := Nat.le_of_dvd h0 h
   omega
 
-include hden in
-theorem dvP_mem {k : ℕ} (hk : 1 ≤ k) (hk3 : 3 * k < p * p) : dvP p Fr k ∈ LocRing p := by
+theorem dvP_mem {k : ℕ} (hk : 1 ≤ k)
+    (hsq : ∀ i, ¬ p * p ∣ lin Fr i k) : dvP p Fr k ∈ LocRing p := by
   refine (LocRing p).sum_mem fun i _ => ?_
   by_cases h : p ∣ lin Fr i k
   · simp only [h, ite_true]
     have hc := int_mem_locRing (ℓ := p) ((Fr.w i) * ((Fr.μ i).den : ℤ))
     push_cast at hc
-    exact polar_mem hc h (lin_not_sq hden hk hk3 i)
+    exact polar_mem hc h (hsq i)
   · simp only [h, ite_false]; exact (LocRing p).zero_mem
 
-include hden in
-theorem dsP_mem {k : ℕ} (hk : 1 ≤ k) (hk3 : 3 * k < p * p) : dsP p Fr k ∈ LocRing p := by
+theorem dsP_mem {k : ℕ} (hk : 1 ≤ k)
+    (hsq : ∀ i, ¬ p * p ∣ lin Fr i k) : dsP p Fr k ∈ LocRing p := by
   refine (LocRing p).sum_mem fun i _ => ?_
   by_cases h : p ∣ lin Fr i k
   · simp only [h, ite_true]
     have hc := int_mem_locRing (ℓ := p) ((Fr.w i) * ((Fr.μ i).den : ℤ) ^ 2)
     push_cast at hc
-    exact polar_mem' hc h (lin_not_sq hden hk hk3 i)
+    exact polar_mem' hc h (hsq i)
   · simp only [h, ite_false]; exact (LocRing p).zero_mem
 
-include hden in
-theorem Vp_mem {t : ℕ} (ht : 3 * t < p * p) : Vp p Fr t ∈ LocRing p := by
+theorem Vp_mem {t : ℕ}
+    (hsq : ∀ k, 1 ≤ k → k ≤ t → ∀ i, ¬ p * p ∣ lin Fr i k) : Vp p Fr t ∈ LocRing p := by
   refine (LocRing p).sum_mem fun k hk => ?_
-  have hk' := Finset.mem_Ioc.1 hk
-  exact dvP_mem hden hk'.1 (by omega)
+  obtain ⟨hk0, hkt⟩ := Finset.mem_Ioc.mp hk
+  exact dvP_mem (by omega) (hsq k (by omega) hkt)
 
-include hden in
-theorem Up_mem {t : ℕ} (ht : 3 * t < p * p) : Up p Fr t ∈ LocRing p := by
+theorem Up_mem {t : ℕ}
+    (hsq : ∀ k, 1 ≤ k → k ≤ t → ∀ i, ¬ p * p ∣ lin Fr i k) : Up p Fr t ∈ LocRing p := by
   refine (LocRing p).neg_mem ((LocRing p).sum_mem fun k hk => ?_)
-  have hk' := Finset.mem_Ioc.1 hk
-  exact dsP_mem hden hk'.1 (by omega)
+  obtain ⟨hk0, hkt⟩ := Finset.mem_Ioc.mp hk
+  exact dsP_mem (by omega) (hsq k (by omega) hkt)
+
+theorem Vp_mem_Q {Q t : ℕ} (hden : ∀ i, (Fr.μ i).den ≤ Q)
+    (ht : Q * t < p * p) : Vp p Fr t ∈ LocRing p :=
+  Vp_mem fun k hk hkt i => lin_not_sq hden hk
+    (lt_of_le_of_lt (Nat.mul_le_mul_left Q hkt) ht) i
+
+theorem Up_mem_Q {Q t : ℕ} (hden : ∀ i, (Fr.μ i).den ≤ Q)
+    (ht : Q * t < p * p) : Up p Fr t ∈ LocRing p :=
+  Up_mem fun k hk hkt i => lin_not_sq hden hk
+    (lt_of_le_of_lt (Nat.mul_le_mul_left Q hkt) ht) i
 
 /-- The sum of increments between two nodes: polar part plus a `p`-integer. -/
 theorem offSum_split {t t' : ℕ} (h : t ≤ t') :
@@ -262,7 +271,7 @@ theorem sum_inv_zmod (h3 : 3 ≤ p) : ∑ v : ZMod p, v⁻¹ = 0 := by
 variable {Fr : Frame}
 
 /-- One block of `p` consecutive indices: the nonpolar terms of one atom sum to a multiple of `p`. -/
-theorem block_good (i : Fin Fr.d) (h3 : 3 ≤ p) (hdp : ¬ p ∣ (Fr.μ i).den) (a : ℕ) :
+theorem block_good (i : Fin Fr.d) (h3 : 3 ≤ p) (a : ℕ) :
     CatalanCore.Good p (∑ k ∈ Ioc a (a + p),
       (if p ∣ lin Fr i k then (0 : ℚ) else ((Fr.w i : ℚ) * (Fr.μ i).den) / (lin Fr i k : ℚ))) 0 := by
   rw [sum_Ioc_eq_range (fun k => if p ∣ lin Fr i k then (0 : ℚ) else
@@ -291,18 +300,20 @@ theorem block_good (i : Fin Fr.d) (h3 : 3 ≤ p) (hdp : ¬ p ∣ (Fr.μ i).den) 
         (lin Fr i (a + 1 + j))) hne
       simpa [hG, hc, div_eq_mul_inv] using this
   have hs := CatalanCore.Good.sum (range p) _ _ hgood
-  have hden0 : ((Fr.μ i).den : ZMod p) ≠ 0 := fun h' => hdp ((ZMod.natCast_eq_zero_iff _ _).1 h')
   have hz : ∑ j ∈ range p, G (((Fr.μ i).den : ZMod p) * ((a + j : ℕ) : ZMod p) + ((Fr.μ i).num.toNat : ZMod p))
       = 0 := by
-    rw [sum_range_affine hden0 ((Fr.μ i).num.toNat : ZMod p) a G]
-    simp only [hG]
-    rw [← Finset.mul_sum, sum_inv_zmod h3, mul_zero]
+    by_cases hd0 : ((Fr.μ i).den : ZMod p) = 0
+    · have hc0 : (c : ZMod p) = 0 := by simp [hc, hd0]
+      simp [hG, hc0]
+    · rw [sum_range_affine hd0 ((Fr.μ i).num.toNat : ZMod p) a G]
+      simp only [hG]
+      rw [← Finset.mul_sum, sum_inv_zmod h3, mul_zero]
   rw [hz] at hs
   exact hs
 
 
 /-- Several blocks. -/
-theorem block_multi (i : Fin Fr.d) (h3 : 3 ≤ p) (hdp : ¬ p ∣ (Fr.μ i).den) (t s : ℕ) :
+theorem block_multi (i : Fin Fr.d) (h3 : 3 ≤ p) (t s : ℕ) :
     CatalanCore.Good p (∑ k ∈ Ioc t (t + s * p),
       (if p ∣ lin Fr i k then (0 : ℚ) else ((Fr.w i : ℚ) * (Fr.μ i).den) / (lin Fr i k : ℚ))) 0 := by
   induction s with
@@ -310,7 +321,7 @@ theorem block_multi (i : Fin Fr.d) (h3 : 3 ≤ p) (hdp : ¬ p ∣ (Fr.μ i).den)
   | succ s ih =>
     have e : t + (s + 1) * p = (t + s * p) + p := by ring
     rw [e, ← Finset.sum_Ioc_consecutive _ (show t ≤ t + s * p by omega) (show t + s * p ≤ t + s * p + p by omega)]
-    have := ih.add (block_good i h3 hdp (t + s * p))
+    have := ih.add (block_good i h3 (t + s * p))
     simpa using this
 
 /-- `Good p x 0` means `x / p` is `p`-integral. -/
@@ -326,29 +337,22 @@ theorem div_mem_of_good_zero {x : ℚ} (h : CatalanCore.Good p x 0) : x / p ∈ 
   field_simp
   exact y.2
 
-variable (hden : ∀ i, (Fr.μ i).den ≤ 3)
 
-include hden in
-/-- The nonpolar terms of `s` full periods sum to a multiple of `p` (`p ≥ 5`). -/
-theorem periodSum_nonpol (h5 : 5 ≤ p) (t s : ℕ) :
+/-- The nonpolar sum of any number of periods is divisible by every odd prime. -/
+theorem periodSum_nonpol (h3 : 3 ≤ p) (t s : ℕ) :
     (∑ k ∈ Ioc t (t + s * p), nonpolD p Fr k) / (p : ℚ) ∈ LocRing p := by
   apply div_mem_of_good_zero
   unfold nonpolD
   rw [Finset.sum_comm]
-  have := CatalanCore.Good.sum (univ : Finset (Fin Fr.d)) _ (fun _ => (0 : ZMod p)) (fun i _ => by
-    have hdp : ¬ p ∣ (Fr.μ i).den := fun h => by
-      have := Nat.le_of_dvd (Fr.μ i).den_pos h
-      have := hden i
-      omega
-    exact block_multi i (by omega) hdp t s)
+  have := CatalanCore.Good.sum (univ : Finset (Fin Fr.d)) _ (fun _ => (0 : ZMod p))
+    (fun i _ => block_multi i h3 t s)
   simpa using this
 
-include hden in
-/-- **Lemma A (period sums).**  For `t' = t + s p`: `Σ_{t < k ≤ t'} Δ_k = (V(t') - V(t)) / p + Δ`, `v_p(Δ) ≥ 1`. -/
-theorem lemmaA (h5 : 5 ≤ p) (t s : ℕ) :
+/-- Lemma A, without a shift-denominator or absolute-node restriction. -/
+theorem lemmaA (h3 : 3 ≤ p) (t s : ℕ) :
     ∃ D : ℚ, ∑ k ∈ Ioc t (t + s * p), Fr.Delta k = (Vp p Fr (t + s * p) - Vp p Fr t) / p + D ∧
       D / (p : ℚ) ∈ LocRing p :=
-  ⟨_, offSum_split (by nlinarith [Nat.zero_le (s * p)]), periodSum_nonpol hden h5 t s⟩
+  ⟨_, offSum_split (by nlinarith [Nat.zero_le (s * p)]), periodSum_nonpol h3 t s⟩
 
 end Block
 
