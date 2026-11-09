@@ -953,8 +953,619 @@ end PropW
 
 end SchurIface
 
+/-! ### Arbitrary-order integer-pole sweep source (Q05)
+
+The actual pivot determinant and period-class solutions are explicit inputs.
+The source is compared at mod-p² precision; the saving is 3−W₃ for every h≥3.
+-/
+namespace HPole
+
+variable {p : ℕ} [hp : Fact p.Prime]
+  {R : Type*} [CommRing R] [Algebra (LocRing p) R]
+
+noncomputable def fA (h : ℕ) (d : ℕ → ℚ) (n : ℕ) : R :=
+  toR p ((p : ℚ) ^ (h - 1) * hpoleF h d n)
+
+theorem fA_mem (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {n : ℕ} (hn : n < p * p) :
+    (p : ℚ) ^ (h - 1) * hpoleF h d n ∈ LocRing p := by
+  have hpN : n / p < p := (Nat.div_lt_iff_lt_mul hp.out.pos).mpr hn
+  rw [f_split]
+  exact (LocRing p).add_mem (sig_mem h d hd hpN)
+    ((LocRing p).mul_mem ((LocRing p).pow_mem p_mem_loc _) (regF_mem h d hd n))
+
+theorem fA_sub_sig (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {n : ℕ} (hn : n < p * p) :
+    (p : R) ^ 2 ∣ fA (p := p) h d n - sigR (p := p) h d (n / p) := by
+  have hpN : n / p < p := (Nat.div_lt_iff_lt_mul hp.out.pos).mpr hn
+  have hv := toR_dvd (R := R) (f_sub_sig h hh d hd n)
+  rw [toR_sub (fA_mem h hh d hd hn) (sig_mem h d hd hpN)] at hv
+  exact hv
+
+theorem Qh_disp (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (ξ : R)
+    {s t : ℕ} (hs : s < p * p) (ht : t < p * p) :
+    ((s : R) - (t : R)) * Qh (p := p) h d ξ s t =
+      (p : R) * fA (p := p) h d s - (p : R) * fA (p := p) h d t := by
+  by_cases hst : s = t
+  · subst hst; simp
+  · unfold Qh
+    rw [if_neg hst, zero_add]
+    have hq := q_mem h hh d hd hs ht
+    have hmf := fA_mem h hh d hd hs
+    have hmg := fA_mem h hh d hd ht
+    have hst' : ((s : ℚ) - t) ∈ LocRing p := by
+      have := int_mem_locRing (ℓ := p) ((s : ℤ) - t); push_cast at this; exact this
+    have e1 : ((s : ℚ) - t) * ((p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) s t) =
+        (p : ℚ) * ((p : ℚ) ^ (h - 1) * hpoleF h d s) -
+          (p : ℚ) * ((p : ℚ) ^ (h - 1) * hpoleF h d t) := by
+      rw [lw, if_neg hst, pow_h_eq h (by omega)]
+      have h1 : ((t : ℚ) - s) ≠ 0 := sub_ne_zero.mpr (by exact_mod_cast Ne.symm hst)
+      field_simp
+      ring
+    have e2 : ((s : R) - (t : R)) * toR p ((p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) s t) =
+        toR p (((s : ℚ) - t) * ((p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) s t)) := by
+      rw [toR_mul hst' hq, toR_sub (by exact_mod_cast int_mem_locRing (ℓ := p) (s : ℤ))
+        (by exact_mod_cast int_mem_locRing (ℓ := p) (t : ℤ)), toR_natCast, toR_natCast]
+    rw [e2, e1, toR_sub ((LocRing p).mul_mem p_mem_loc hmf) ((LocRing p).mul_mem p_mem_loc hmg),
+      toR_mul p_mem_loc hmf, toR_mul p_mem_loc hmg, toR_p]
+    rfl
+
+noncomputable def Qp (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R) :
+    Matrix (PivIdx p κ k') (PivIdx p κ k') R :=
+  Matrix.of fun x y => Qh (p := p) h d ξ (rowNode p κ k' π x) (colNode p κ k' π y)
+
+noncomputable def Zp (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R) :
+    Matrix (PivIdx p κ k') (PivIdx p κ k') R := (Qp (p := p) h d κ k' π ξ)⁻¹
+
+theorem Qp_mul_Zp (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R)
+    (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det) :
+    Qp (p := p) h d κ k' π ξ * Zp (p := p) h d κ k' π ξ = 1 :=
+  Matrix.mul_nonsing_inv _ hU
+
+theorem Zp_mul_Qp (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R)
+    (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det) :
+    Zp (p := p) h d κ k' π ξ * Qp (p := p) h d κ k' π ξ = 1 :=
+  Matrix.nonsing_inv_mul _ hU
+
+noncomputable def epsS (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ)
+    (Y : ℕ → ℕ → ℕ → R) (ω : ℕ) : S2 p R :=
+  Gen.eps (pi2 p R (p : R)) p κ k' π (sgS h d) ddS (YvS Y) ω
+
+noncomputable def Th (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ)
+    (Y : ℕ → ℕ → ℕ → R) (b : ℕ) (y : PivIdx p κ k') : S2 p R :=
+  epsS (p := p) h d κ k' π Y y.1 *
+    YvS Y b 0 (oc p κ π y.1) (colPer κ k' (oc p κ π y.1) y.2)
+
+noncomputable def GamR (h : ℕ) (d : ℕ → ℚ) (b l : ℕ) : R :=
+  if b = 0 then 1 else sigR (p := p) h d l
+
+theorem Gam_sgS_eq (h : ℕ) (d : ℕ → ℚ) (b h' l : ℕ) :
+    Gen.Gam (sgS (p := p) (R := R) h d) b h' l =
+      pi2 p R (GamR (p := p) h d b l) := by
+  by_cases hb : b = 0 <;> simp [Gen.Gam, sgS, GamR, hb]
+
+theorem master_Q_Th (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {N κ k' π : ℕ} (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
+    (hH : (κ + 2 * k') * p ≤ N) (ξ : R) (Y : ℕ → ℕ → ℕ → R)
+    (hclass : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+      ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j = GamR (p := p) h d b l)
+    {b : ℕ} (hb : b ≤ 1) (x : PivIdx p κ k') :
+    ∑ y, pi2 p R (Qp (p := p) h d κ k' π ξ x y) * Th (p := p) h d κ k' π Y b y =
+      Gen.Gam (sgS (p := p) (R := R) h d) b 0 (rowPer κ k' (oc p κ π x.1) x.2) := by
+  have hp0 : 0 < p := hp.out.pos
+  have hL := lemmaG_S (p := p) (π := π) h hh d hd hp5 hN hH ξ Y hclass
+    (rowNode p κ k' π x) (rowNode_lt hH x) b hb
+  have hL' : ∑ y : PivIdx p κ k', (fun t => qS (p := p) h d ξ (rowNode p κ k' π x) t *
+        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) h d) (ddS (p := p) (R := R))
+          (YvS (p := p) (R := R) Y) (t % p) *
+          YvS (p := p) (R := R) Y b 0 (oc p κ π (t % p)) (t / p)))
+        (colNode p κ k' π y) = _ := (sum_colNode κ k' π hp0 _).trans hL
+  have hS : ∀ y : PivIdx p κ k', (fun t => qS (p := p) h d ξ (rowNode p κ k' π x) t *
+        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) h d) (ddS (p := p) (R := R))
+          (YvS (p := p) (R := R) Y) (t % p) *
+          YvS (p := p) (R := R) Y b 0 (oc p κ π (t % p)) (t / p)))
+        (colNode p κ k' π y) =
+      pi2 p R (Qp (p := p) h d κ k' π ξ x y) * Th (p := p) h d κ k' π Y b y := by
+    intro y
+    simp only [colNode_mod, colNode_div hp0]
+    rfl
+  rw [Finset.sum_congr rfl (fun y _ => hS y)] at hL'
+  rw [hL']
+  have hmod : rowNode p κ k' π x % p = x.1 := rowNode_mod x
+  have hdiv : rowNode p κ k' π x / p = rowPer κ k' (oc p κ π x.1) x.2 := rowNode_div hp0 x
+  have hcl := congrArg (pi2 p R)
+    (hclass b (oc p κ π x.1) (oc_le x.1)
+      (rowPer κ k' (oc p κ π x.1) x.2) (rowPer_mem κ k' _ (oc_le x.1) x.2))
+  rw [map_sum] at hcl
+  simp only [map_mul] at hcl
+  have hsum : ∑ j ∈ Cper κ k' (oc p κ π x.1),
+      BmS (p := p) h d ξ 0 (rowPer κ k' (oc p κ π x.1) x.2) j *
+        YvS (p := p) (R := R) Y b 0 (oc p κ π x.1) j =
+      Gen.Gam (sgS (p := p) (R := R) h d) b 0 (rowPer κ k' (oc p κ π x.1) x.2) := by
+    unfold BmS YvS
+    rw [Gam_sgS_eq]
+    exact hcl
+  simp only [hmod, hdiv]
+  rw [hsum]
+  unfold Gen.eps
+  ring
+
+noncomputable def Rvec (h : ℕ) (d : ℕ → ℚ) (κ k' π b : ℕ)
+    (x : PivIdx p κ k') : R :=
+  if b = 0 then 1 else fA (p := p) h d (rowNode p κ k' π x)
+
+noncomputable def gv (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R) (b : ℕ) :
+    PivIdx p κ k' → R :=
+  Zp (p := p) h d κ k' π ξ *ᵥ Rvec (p := p) h d κ k' π b
+
+noncomputable def outG (h : ℕ) (d : ℕ → ℚ) (b n : ℕ) : R :=
+  if b = 0 then 1 else fA (p := p) h d n
+
+noncomputable def Vout (h : ℕ) (d : ℕ → ℚ) (κ k' π : ℕ) (ξ : R) (b n : ℕ) : R :=
+  outG (p := p) h d b n - ∑ y, Qh (p := p) h d ξ n (colNode p κ k' π y) *
+    gv (p := p) h d κ k' π ξ b y
+
+noncomputable def Gout (h : ℕ) (d : ℕ → ℚ) (κ k' : ℕ) (ξ : R)
+    (Y : ℕ → ℕ → ℕ → R) (b o l : ℕ) : R :=
+  GamR (p := p) h d b l - ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j
+
+theorem pi2_Rvec (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {N κ k' π : ℕ} (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+    (b : ℕ) (x : PivIdx p κ k') :
+    pi2 p R (Rvec (p := p) h d κ k' π b x) =
+      Gen.Gam (sgS (p := p) (R := R) h d) b 0 (rowPer κ k' (oc p κ π x.1) x.2) := by
+  by_cases hb : b = 0
+  · simp [Rvec, Gen.Gam, hb]
+  · simp only [Rvec, hb, if_false]
+    have hlt := rowNode_lt (π := π) hH x
+    have hv := fA_sub_sig (R := R) h hh d hd (by nlinarith : rowNode p κ k' π x < p * p)
+    rw [← pi2_eq_iff] at hv
+    rw [hv, rowNode_div hp.out.pos]
+    simp [Gen.Gam, sgS, hb]
+
+theorem pi2_outG (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {n : ℕ} (hn : n < p * p) (b : ℕ) :
+    pi2 p R (outG (p := p) h d b n) = Gen.Gam (sgS (p := p) (R := R) h d) b 0 (n / p) := by
+  by_cases hb : b = 0
+  · simp [outG, Gen.Gam, hb]
+  · simp only [outG, hb, if_false]
+    have hv := fA_sub_sig (R := R) h hh d hd hn
+    rw [← pi2_eq_iff] at hv
+    rw [hv]
+    simp [Gen.Gam, sgS, hb]
+
+section Vectors
+variable (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+  (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+  {N κ k' π : ℕ} {ξ : R} (hp5 : 5 ≤ p) (hN : 2 * N < p * p)
+  (hH : (κ + 2 * k') * p ≤ N) (Y : ℕ → ℕ → ℕ → R)
+  (hclass : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+    ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j = GamR (p := p) h d b l)
+  (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det)
+
+include hh hd hp5 hN hH hclass hU
+
+theorem pi2_gv {b : ℕ} (hb : b ≤ 1) (x : PivIdx p κ k') :
+    pi2 p R (gv (p := p) h d κ k' π ξ b x) = Th (p := p) h d κ k' π Y b x := by
+  set ZS := (pi2 p R).mapMatrix (Zp (p := p) h d κ k' π ξ) with hZS
+  set QS := (pi2 p R).mapMatrix (Qp (p := p) h d κ k' π ξ) with hQS
+  have hZQ : ZS * QS = 1 := by
+    rw [hZS, hQS, ← RingHom.map_mul, Zp_mul_Qp h d κ k' π ξ hU, map_one]
+  have hQT : QS *ᵥ (Th (p := p) h d κ k' π Y b) = fun x =>
+      Gen.Gam (sgS (p := p) (R := R) h d) b 0 (rowPer κ k' (oc p κ π x.1) x.2) := by
+    funext x'
+    rw [← master_Q_Th h hh d hd hp5 hN hH ξ Y hclass hb x']
+    simp [Matrix.mulVec, dotProduct, hQS]
+  have hTh : Th (p := p) h d κ k' π Y b = ZS *ᵥ (fun x =>
+      Gen.Gam (sgS (p := p) (R := R) h d) b 0 (rowPer κ k' (oc p κ π x.1) x.2)) := by
+    rw [← hQT, Matrix.mulVec_mulVec, hZQ, Matrix.one_mulVec]
+  rw [hTh]
+  unfold gv
+  simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, hZS, RingHom.mapMatrix_apply, Matrix.map_apply]
+  refine Finset.sum_congr rfl fun x' _ => ?_
+  rw [pi2_Rvec h hh d hd hN hH b x']
+
+theorem pi2_Vout {b : ℕ} (hb : b ≤ 1) {n : ℕ} (hn : n < N) :
+    pi2 p R (Vout (p := p) h d κ k' π ξ b n) =
+      epsS (p := p) h d κ k' π Y (n % p) *
+        pi2 p R (Gout (p := p) h d κ k' ξ Y b (oc p κ π (n % p)) (n / p)) := by
+  have hp0 : 0 < p := hp.out.pos
+  have hL := lemmaG_S (p := p) (π := π) h hh d hd hp5 hN hH ξ Y hclass n hn b hb
+  have hL' : ∑ y : PivIdx p κ k', (fun t => qS (p := p) h d ξ n t *
+        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) h d) (ddS (p := p) (R := R))
+          (YvS (p := p) (R := R) Y) (t % p) *
+          YvS (p := p) (R := R) Y b 0 (oc p κ π (t % p)) (t / p)))
+        (colNode p κ k' π y) = _ := (sum_colNode κ k' π hp0 _).trans hL
+  have hS : ∀ y : PivIdx p κ k', (fun t => qS (p := p) h d ξ n t *
+        (Gen.eps (pi2 p R (p : R)) p κ k' π (sgS (p := p) (R := R) h d) (ddS (p := p) (R := R))
+          (YvS (p := p) (R := R) Y) (t % p) *
+          YvS (p := p) (R := R) Y b 0 (oc p κ π (t % p)) (t / p)))
+        (colNode p κ k' π y) = pi2 p R
+          (Qh (p := p) h d ξ n (colNode p κ k' π y) * gv (p := p) h d κ k' π ξ b y) := by
+    intro y
+    simp only [colNode_mod, colNode_div hp0]
+    rw [map_mul, pi2_gv h hh d hd hp5 hN hH Y hclass hU hb y]
+    rfl
+  rw [Finset.sum_congr rfl (fun y _ => hS y), ← map_sum] at hL'
+  unfold Vout
+  rw [map_sub, hL', pi2_outG h hh d hd (by nlinarith : n < p * p)]
+  unfold Gout
+  rw [map_sub, map_sum, ← Gam_sgS_eq h d b 0]
+  simp only [map_mul]
+  unfold epsS Gen.eps BmS YvS
+  ring
+end Vectors
+
+section SchurIface
+
+variable {p : ℕ} [hp : Fact p.Prime] (h : ℕ) (d : ℕ → ℚ) {N : ℕ}
+  {R : Type*} [CommRing R] [Algebra (LocRing p) R] (κ k' π : ℕ) (ξ : R)
+  {I J : Type*} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J] (zn : I → ℕ) (yn : J → ℕ)
+
+/-- The matrix `Q = p^h H` on `(Ω ⊕ I) × (Ω ⊕ J)`: pivot rows `rowNode`, pivot columns `colNode`, outside rows
+`zn` and outside columns `yn`. -/
+noncomputable def Hq : Matrix (PivIdx p κ k' ⊕ I) (PivIdx p κ k' ⊕ J) R :=
+  Matrix.of fun x y => Qh (p := p) h d ξ (Sum.elim (rowNode p κ k' π) zn x)
+    (Sum.elim (colNode p κ k' π) yn y)
+
+/-- The node of a row-type label. -/
+def nR : I ⊕ PivIdx p κ k' → ℕ := Sum.elim zn (colNode p κ k' π)
+/-- The node of a column-type label. -/
+def nC : J ⊕ PivIdx p κ k' → ℕ := Sum.elim yn (rowNode p κ k' π)
+
+variable {κ k' π ξ}
+
+theorem Qm_Hq : Schur.Qm (Hq (p := p) h d κ k' π ξ zn yn) = Qp (p := p) h d κ k' π ξ := rfl
+
+theorem Qh_symm (ξ : R) (a b : ℕ) :
+    Qh (p := p) h d ξ a b = Qh (p := p) h d ξ b a := by
+  unfold Qh
+  rw [lw_symm (hpoleF h d) (hpoleE h d) a b]
+  by_cases hab : a = b
+  · subst hab; rfl
+  · rw [if_neg hab, if_neg (Ne.symm hab)]
+
+theorem Qp_transpose (hπ : π ≤ 1) :
+    Qp (p := p) h d κ k' (1 - π) ξ = (Qp (p := p) h d κ k' π ξ)ᵀ := by
+  ext x y
+  simp only [Qp, Matrix.of_apply, Matrix.transpose_apply]
+  have h1 : (1 - (1 - π)) = π := by omega
+  rw [rowNode_eq_colNode κ k' (1 - π) (by omega), h1, ← rowNode_eq_colNode κ k' π hπ]
+  exact Qh_symm h d ξ _ _
+
+theorem Zp_transpose (hπ : π ≤ 1) :
+    Zp (p := p) h d κ k' (1 - π) ξ = (Zp (p := p) h d κ k' π ξ)ᵀ := by
+  unfold Zp
+  rw [Qp_transpose h d hπ, Matrix.transpose_nonsing_inv]
+
+theorem colNode_one_sub (hπ : π ≤ 1) (x : PivIdx p κ k') :
+    colNode p κ k' (1 - π) x = rowNode p κ k' π x := (rowNode_eq_colNode κ k' π hπ x).symm
+
+theorem rowNode_one_sub (hπ : π ≤ 1) (x : PivIdx p κ k') :
+    rowNode p κ k' (1 - π) x = colNode p κ k' π x := by
+  rw [rowNode_eq_colNode κ k' (1 - π) (by omega), Nat.sub_sub_self hπ]
+
+variable (κ k' π ξ)
+
+/-- Row-type label vectors `R1` (b = 0) and `ρ0` (b = 1): outside rows and pivot columns. -/
+noncomputable def labR (b : ℕ) : I ⊕ PivIdx p κ k' → R :=
+  Sum.elim (fun z => Vout (p := p) h d κ k' π ξ b (zn z)) (gv (p := p) h d κ k' π ξ b)
+
+/-- Column-type label vectors `C0` (b = 0) and `γ1` (b = 1): the transposed system `1 − π`. -/
+noncomputable def labC (b : ℕ) : J ⊕ PivIdx p κ k' → R :=
+  Sum.elim (fun w => Vout (p := p) h d κ k' (1 - π) ξ b (yn w))
+    (gv (p := p) h d κ k' (1 - π) ξ b)
+
+variable {κ k' π ξ}
+
+/-- The data of the Schur transform for the arbitrary-order matrix. -/
+noncomputable def aF : PivIdx p κ k' ⊕ I → R := fun x => ((Sum.elim (rowNode p κ k' π) zn x : ℕ) : R)
+noncomputable def bF : PivIdx p κ k' ⊕ J → R := fun y => ((Sum.elim (colNode p κ k' π) yn y : ℕ) : R)
+noncomputable def phiF : PivIdx p κ k' ⊕ I → R :=
+  fun x => (p : R) * fA (p := p) h d (Sum.elim (rowNode p κ k' π) zn x)
+noncomputable def psiF : PivIdx p κ k' ⊕ J → R :=
+  fun y => (p : R) * fA (p := p) h d (Sum.elim (colNode p κ k' π) yn y)
+
+theorem isDisp_Hq (hh : 3 ≤ h) (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+    (hzn : ∀ z, zn z < N) (hyn : ∀ w, yn w < N) :
+    Schur.IsDisp (Hq (p := p) h d κ k' π ξ zn yn) (aF (p := p) (κ := κ) (k' := k') (π := π) zn)
+      (bF (p := p) (κ := κ) (k' := k') (π := π) yn) (phiF (p := p) h d (κ := κ) (k' := k') (π := π) zn)
+      (psiF (p := p) h d (κ := κ) (k' := k') (π := π) yn) := by
+  intro r c
+  have hr : Sum.elim (rowNode p κ k' π) zn r < N := by
+    rcases r with x | z
+    · exact rowNode_lt hH x
+    · exact hzn z
+  have hc : Sum.elim (colNode p κ k' π) yn c < N := by
+    rcases c with x | w
+    · exact colNode_lt hH x
+    · exact hyn w
+  simp only [Hq, Matrix.of_apply, aF, bF, phiF, psiF]
+  exact Qh_disp h hh d hd ξ (by nlinarith) (by nlinarith)
+
+section Gens
+
+variable (κ k' π ξ)
+
+theorem Rvec_zero : Rvec (p := p) (R := R) h d κ k' π 0 = fun _ => 1 := by
+  funext x; simp [Rvec]
+
+omit [DecidableEq J] in
+theorem R1_eq (hπ : π ≤ 1) :
+    Schur.R1 (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ)
+      = labR (p := p) h d κ k' π ξ zn 0 := by
+  funext r
+  rcases r with z | y
+  · simp only [Schur.R1, Sum.elim_inl, labR, Vout, outG, if_true]
+    unfold Schur.gA gv
+    rw [Rvec_zero]
+    simp [Matrix.mulVec, dotProduct, Schur.Vm, Hq, Matrix.submatrix_apply]
+  · simp only [Schur.R1, Sum.elim_inr, labR]
+    unfold Schur.gA gv
+    rw [Rvec_zero]
+
+omit [DecidableEq J] in
+theorem R0_eq (hπ : π ≤ 1) :
+    Schur.R0 (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ)
+      (phiF (p := p) h d (κ := κ) (k' := k') (π := π) zn)
+      = fun r => (p : R) * labR (p := p) h d κ k' π ξ zn 1 r := by
+  have hg : Schur.gB (Zp (p := p) h d κ k' π ξ) (phiF (p := p) h d (κ := κ) (k' := k') (π := π) zn) =
+      fun t => (p : R) * gv (p := p) h d κ k' π ξ 1 t := by
+    funext t
+    simp only [Schur.gB, gv, Rvec, phiF, Function.comp_apply, Sum.elim_inl, one_ne_zero, if_false,
+      Matrix.mulVec, dotProduct, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun x _ => by ring
+  funext r
+  rcases r with z | y
+  · simp only [Schur.R0, Sum.elim_inl, labR, Vout, outG, one_ne_zero, if_false]
+    rw [hg]
+    simp only [phiF, Sum.elim_inr, Matrix.mulVec, dotProduct, Schur.Vm, Hq, Matrix.submatrix_apply,
+      Matrix.of_apply, Sum.elim_inl, mul_sub, Finset.mul_sum]
+    congr 1
+    refine Finset.sum_congr rfl fun x _ => by ring
+  · simp only [Schur.R0, Sum.elim_inr, labR]
+    rw [hg]
+
+omit [DecidableEq I] in
+theorem C0_eq (hπ : π ≤ 1) :
+    Schur.C0 (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ)
+      = labC (p := p) h d κ k' π ξ yn 0 := by
+  have hA : Schur.gA' (Zp (p := p) h d κ k' π ξ) =
+      gv (p := p) h d κ k' (1 - π) ξ 0 := by
+    unfold Schur.gA' gv
+    rw [Rvec_zero, Zp_transpose h d hπ, Matrix.mulVec_transpose]
+  funext c
+  rcases c with w | x
+  · simp only [Schur.C0, Sum.elim_inl, labC, Vout, outG, if_true]
+    rw [hA]
+    simp only [Matrix.vecMul, dotProduct, Schur.Um, Hq, Matrix.submatrix_apply, Matrix.of_apply,
+      Sum.elim_inl, Sum.elim_inr]
+    congr 1
+    refine Finset.sum_congr rfl fun y _ => ?_
+    rw [colNode_one_sub hπ, Qh_symm h d ξ (rowNode p κ k' π y) (yn w)]
+    ring
+  · simp only [Schur.C0, Sum.elim_inr, labC]
+    rw [hA]
+
+omit [DecidableEq I] in
+theorem C1_eq (hπ : π ≤ 1) :
+    Schur.C1 (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ)
+      (psiF (p := p) h d (κ := κ) (k' := k') (π := π) yn)
+      = fun c => (p : R) * labC (p := p) h d κ k' π ξ yn 1 c := by
+  have hg : Schur.gB' (Zp (p := p) h d κ k' π ξ) (psiF (p := p) h d (κ := κ) (k' := k') (π := π) yn) =
+      fun x => (p : R) * gv (p := p) h d κ k' (1 - π) ξ 1 x := by
+    funext x
+    simp only [Schur.gB', gv, Rvec, psiF, Function.comp_apply, Sum.elim_inl, one_ne_zero, if_false,
+      Zp_transpose h d hπ, Matrix.vecMul, dotProduct, Matrix.mulVec, Matrix.transpose_apply,
+      Finset.mul_sum, rowNode_one_sub hπ]
+    refine Finset.sum_congr rfl fun s _ => by ring
+  funext c
+  rcases c with w | x
+  · simp only [Schur.C1, Sum.elim_inl, labC, Vout, outG, one_ne_zero, if_false]
+    rw [hg]
+    simp only [psiF, Sum.elim_inr, Matrix.vecMul, dotProduct, Schur.Um, Hq, Matrix.submatrix_apply,
+      Matrix.of_apply, Sum.elim_inl, mul_sub, Finset.mul_sum]
+    congr 1
+    refine Finset.sum_congr rfl fun y _ => ?_
+    rw [colNode_one_sub hπ, Qh_symm h d ξ (rowNode p κ k' π y) (yn w)]
+    ring
+  · simp only [Schur.C1, Sum.elim_inr, labC]
+    rw [hg]
+
+end Gens
+
+variable (κ k' π ξ)
+
+noncomputable def patF (Y : ℕ → ℕ → ℕ → R) (isOut : Bool) (b o l : ℕ) : R :=
+  if isOut then Gout (p := p) h d κ k' ξ Y b o l else Y b o l
+
+noncomputable def patR (Y : ℕ → ℕ → ℕ → R) (r : I ⊕ PivIdx p κ k') (b : ℕ) : R :=
+  patF (p := p) h d κ k' ξ Y r.isLeft b
+    (oc p κ π (nR (p := p) (κ := κ) (k' := k') (π := π) zn r % p))
+    (nR (p := p) (κ := κ) (k' := k') (π := π) zn r / p)
+
+noncomputable def patC (Y : ℕ → ℕ → ℕ → R) (c : J ⊕ PivIdx p κ k') (b : ℕ) : R :=
+  patF (p := p) h d κ k' ξ Y c.isLeft b
+    (oc p κ (1 - π) (nC (p := p) (κ := κ) (k' := k') (π := π) yn c % p))
+    (nC (p := p) (κ := κ) (k' := k') (π := π) yn c / p)
+
+variable {κ k' π ξ}
+
+section Patterns
+variable (hh : 3 ≤ h) (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+  (hp5 : 5 ≤ p) (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+  (Y : ℕ → ℕ → ℕ → R)
+  (hclass : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+    ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j = GamR (p := p) h d b l)
+  (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det)
+
+include hh hd hp5 hN hH hclass hU
+
+omit [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J] in
+theorem voutPat {n : ℕ} (hn : n < N) :
+    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ Vout (p := p) h d κ k' π ξ b n -
+      e * Gout (p := p) h d κ k' ξ Y b (oc p κ π (n % p)) (n / p) := by
+  obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (epsS (p := p) h d κ k' π Y (n % p))
+  refine ⟨e, fun b hb => ?_⟩
+  rw [← pi2_eq_iff, map_mul, pi2_Vout h hh d hd hp5 hN hH Y hclass hU hb hn]
+  have he' : pi2 p R e = epsS (p := p) h d κ k' π Y (n % p) := he
+  rw [he']
+
+omit [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J] in
+theorem gvPat (y : PivIdx p κ k') :
+    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ gv (p := p) h d κ k' π ξ b y -
+      e * Y b (oc p κ π (colNode p κ k' π y % p)) (colNode p κ k' π y / p) := by
+  obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (epsS (p := p) h d κ k' π Y y.1)
+  refine ⟨e, fun b hb => ?_⟩
+  rw [← pi2_eq_iff, map_mul, pi2_gv h hh d hd hp5 hN hH Y hclass hU hb y]
+  have he' : pi2 p R e = epsS (p := p) h d κ k' π Y y.1 := he
+  rw [he', colNode_mod, colNode_div hp.out.pos]
+  rfl
+
+theorem rowLab (hzn : ∀ z, zn z < N) (r : I ⊕ PivIdx p κ k') :
+    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ labR (p := p) h d κ k' π ξ zn b r -
+      e * patR (p := p) h d κ k' π ξ zn Y r b := by
+  rcases r with z | y
+  · obtain ⟨e, he⟩ := voutPat h d hh hd hp5 hN hH Y hclass hU (hzn z)
+    exact ⟨e, fun b hb => by simpa [labR, patR, patF, nR] using he b hb⟩
+  · obtain ⟨e, he⟩ := gvPat h d hh hd hp5 hN hH Y hclass hU y
+    exact ⟨e, fun b hb => by simpa [labR, patR, patF, nR] using he b hb⟩
+
+theorem colLab (hπ : π ≤ 1) (hyn : ∀ w, yn w < N) (c : J ⊕ PivIdx p κ k') :
+    ∃ e : R, ∀ b, b ≤ 1 → (p : R) ^ 2 ∣ labC (p := p) h d κ k' π ξ yn b c -
+      e * patC (p := p) h d κ k' π ξ yn Y c b := by
+  have hUt : IsUnit (Qp (p := p) h d κ k' (1 - π) ξ).det := by
+    rw [Qp_transpose h d hπ, Matrix.det_transpose]
+    exact hU
+  rcases c with w | x
+  · obtain ⟨e, he⟩ := voutPat h d hh hd hp5 hN hH Y hclass hUt (hyn w)
+    exact ⟨e, fun b hb => by simpa [labC, patC, patF, nC] using he b hb⟩
+  · obtain ⟨e, he⟩ := gvPat h d hh hd hp5 hN hH Y hclass hUt x
+    refine ⟨e, fun b hb => ?_⟩
+    have hx := he b hb
+    simp only [labC, patC, patF, nC, Sum.elim_inr, Sum.isLeft_inr, Bool.false_eq_true, if_false]
+    rw [rowNode_eq_colNode κ k' π hπ]
+    exact hx
+end Patterns
+
+theorem sw_mul (hh : 3 ≤ h) (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+    (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det) (hπ : π ≤ 1)
+    (hzn : ∀ z, zn z < N) (hyn : ∀ w, yn w < N) (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') :
+    (((nR (p := p) (κ := κ) (k' := k') (π := π) zn r : ℕ) : R) -
+        ((nC (p := p) (κ := κ) (k' := k') (π := π) yn c : ℕ) : R)) *
+      Schur.Sw (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ) r c =
+    (p : R) * (labR (p := p) h d κ k' π ξ zn 1 r * labC (p := p) h d κ k' π ξ yn 0 c -
+      labR (p := p) h d κ k' π ξ zn 0 r * labC (p := p) h d κ k' π ξ yn 1 c) := by
+  have hZ1 : Schur.Qm (Hq (p := p) h d κ k' π ξ zn yn) * Zp (p := p) h d κ k' π ξ = 1 := by
+    rw [Qm_Hq]; exact Qp_mul_Zp h d κ k' π ξ hU
+  have hZ2 : Zp (p := p) h d κ k' π ξ * Schur.Qm (Hq (p := p) h d κ k' π ξ zn yn) = 1 := by
+    rw [Qm_Hq]; exact Zp_mul_Qp h d κ k' π ξ hU
+  have hg := Schur.pivot_displacement
+    (isDisp_Hq h d zn yn hh hd hN hH hzn hyn (ξ := ξ) (π := π)) hZ1 hZ2 r c
+  have e0 := congrFun (R0_eq h d κ k' π ξ zn yn hπ) r
+  have e1 := congrFun (R1_eq h d κ k' π ξ zn yn hπ) r
+  have e2 := congrFun (C0_eq h d κ k' π ξ zn yn hπ) c
+  have e3 := congrFun (C1_eq h d κ k' π ξ zn yn hπ) c
+  have hnr : Schur.nodeR (aF (p := p) (κ := κ) (k' := k') (π := π) zn)
+      (bF (p := p) (κ := κ) (k' := k') (π := π) yn) r =
+      ((nR (p := p) (κ := κ) (k' := k') (π := π) zn r : ℕ) : R) := by
+    rcases r with z | y <;> rfl
+  have hnc : Schur.nodeC (aF (p := p) (κ := κ) (k' := k') (π := π) zn)
+      (bF (p := p) (κ := κ) (k' := k') (π := π) yn) c =
+      ((nC (p := p) (κ := κ) (k' := k') (π := π) yn c : ℕ) : R) := by
+    rcases c with w | x <;> rfl
+  rw [hnr, hnc, e0, e1, e2, e3] at hg
+  linear_combination hg
+
+theorem sw_dvd (hh : 3 ≤ h) (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (hp5 : 5 ≤ p) (hπ : π ≤ 1) (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+    (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det)
+    (Y : ℕ → ℕ → ℕ → R)
+    (hclass : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+      ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j = GamR (p := p) h d b l)
+    (hzc : ∀ z, (zn z / p + 1) * p ≤ N) (hyc : ∀ w, (yn w / p + 1) * p ≤ N)
+    (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') :
+    (p : R) ^ (h - ((h - 3) + CatalanCore.Uniform.Content.Sweep.wR 0 (p := p) (κ := κ) (k' := k') (π := π) zn yn r c)) ∣
+      Schur.Sw (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ) r c := by
+  have hp0 : 0 < p := hp.out.pos
+  have hzn : ∀ z, zn z < N := fun z => lt_of_complete hp0 (hzc z)
+  have hyn : ∀ w, yn w < N := fun w => lt_of_complete hp0 (hyc w)
+  have hexp : h - ((h - 3) + CatalanCore.Uniform.Content.Sweep.wR 0 (p := p) (κ := κ) (k' := k') (π := π) zn yn r c) =
+      3 - CatalanCore.Uniform.Content.Sweep.wR 0 (p := p) (κ := κ) (k' := k') (π := π) zn yn r c := by omega
+  rw [hexp]
+  change (p : R) ^ (3 - Wlab 0 p r.isLeft c.isLeft
+      (oc p κ π (nR (p := p) (κ := κ) (k' := k') (π := π) zn r % p))
+      (oc p κ (1 - π) (nC (p := p) (κ := κ) (k' := k') (π := π) yn c % p))
+      (nR (p := p) (κ := κ) (k' := k') (π := π) zn r)
+      (nC (p := p) (κ := κ) (k' := k') (π := π) yn c)) ∣ _
+  by_cases hcg : nR (p := p) (κ := κ) (k' := k') (π := π) zn r % p =
+      nC (p := p) (κ := κ) (k' := k') (π := π) yn c % p
+  · simp only [Wlab, hcg, if_true, Nat.sub_self, pow_zero]
+    exact one_dvd _
+  · obtain ⟨U, hUU⟩ := isUnit_natDiff (R := R) hcg
+    have hmul := sw_mul h d zn yn hh hd hN hH hU hπ hzn hyn r c
+    rw [← hUU] at hmul
+    have hSw : Schur.Sw (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ) r c =
+        ((U⁻¹ : Rˣ) : R) * ((p : R) * (labR (p := p) h d κ k' π ξ zn 1 r *
+          labC (p := p) h d κ k' π ξ yn 0 c - labR (p := p) h d κ k' π ξ zn 0 r *
+          labC (p := p) h d κ k' π ξ yn 1 c)) := by
+      rw [← hmul, ← mul_assoc, Units.inv_mul, one_mul]
+    rw [hSw]
+    refine Dvd.dvd.mul_left ?_ _
+    by_cases hpat : r.isLeft = c.isLeft ∧
+        oc p κ π (nR (p := p) (κ := κ) (k' := k') (π := π) zn r % p) =
+          oc p κ (1 - π) (nC (p := p) (κ := κ) (k' := k') (π := π) yn c % p) ∧
+        nR (p := p) (κ := κ) (k' := k') (π := π) zn r / p =
+          nC (p := p) (κ := κ) (k' := k') (π := π) yn c / p
+    · simp only [Wlab, hcg, if_false, hpat, if_true, half, Nat.sub_zero, and_self]
+      obtain ⟨hk, ho, hl⟩ := hpat
+      obtain ⟨e, he⟩ := rowLab h d zn hh hd hp5 hN hH Y hclass hU hzn r
+      obtain ⟨e', he'⟩ := colLab h d yn hh hd hp5 hN hH Y hclass hU hπ hyn c
+      have hP : ∀ b, patR (p := p) h d κ k' π ξ zn Y r b =
+          patC (p := p) h d κ k' π ξ yn Y c b := by
+        intro b; unfold patR patC; rw [hk, ← ho, ← hl]
+      have hw := omega_sq (p := p) (labR (p := p) h d κ k' π ξ zn 0 r)
+        (labR (p := p) h d κ k' π ξ zn 1 r) (labC (p := p) h d κ k' π ξ yn 0 c)
+        (labC (p := p) h d κ k' π ξ yn 1 c) e e' (patR (p := p) h d κ k' π ξ zn Y r 0)
+        (patR (p := p) h d κ k' π ξ zn Y r 1) (he 0 (by norm_num)) (he 1 (by norm_num))
+        (by rw [hP 0]; exact he' 0 (by norm_num)) (by rw [hP 1]; exact he' 1 (by norm_num))
+      have hpow : (p : R) ^ 3 = (p : R) * (p : R) ^ 2 := by ring
+      rw [hpow]
+      exact mul_dvd_mul_left _ hw
+    · simp only [Wlab, hcg, if_false, hpat]
+      norm_num
+
+/-- The frozen Q05 public supplier, retaining the local radical interface.
+The stronger helper above uses the supplied actual pivot unit directly. -/
+theorem integer_pole_sw_dvd (hh : 3 ≤ h) (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    (hp5 : 5 ≤ p) (hπ : π ≤ 1) (hN : 2 * N < p * p) (hH : (κ + 2 * k') * p ≤ N)
+    (hRad : ∀ x : R, IsUnit (1 + (p : R) * x))
+    (hU : IsUnit (Qp (p := p) h d κ k' π ξ).det)
+    (Y : ℕ → ℕ → ℕ → R)
+    (hclass : ∀ b o, o ≤ 1 → ∀ l ∈ Cper κ k' (1 - o),
+      ∑ j ∈ Cper κ k' o, Bm (p := p) h d ξ l j * Y b o j = GamR (p := p) h d b l)
+    (hzc : ∀ z, (zn z / p + 1) * p ≤ N) (hyc : ∀ w, (yn w / p + 1) * p ≤ N)
+    (r : I ⊕ PivIdx p κ k') (c : J ⊕ PivIdx p κ k') :
+    (p : R) ^ (h - ((h - 3) + CatalanCore.Uniform.Content.Sweep.wR 0 (p := p) (κ := κ) (k' := k') (π := π) zn yn r c)) ∣
+      Schur.Sw (Hq (p := p) h d κ k' π ξ zn yn) (Zp (p := p) h d κ k' π ξ) r c :=
+  sw_dvd h d zn yn hh hd hp5 hπ hN hH hU Y hclass hzc hyc r c
+
+end SchurIface
+end HPole
+
 end CatalanCore.Uniform.Content.Sweep
 
 #print axioms CatalanCore.Uniform.Content.Sweep.sw_dvd
 #print axioms CatalanCore.Uniform.Content.Sweep.pi2_Vout
 #print axioms CatalanCore.Uniform.Content.Sweep.oc_node
+
+#print axioms CatalanCore.Uniform.Content.Sweep.HPole.master_Q_Th
+
+#print axioms CatalanCore.Uniform.Content.Sweep.HPole.sw_dvd
