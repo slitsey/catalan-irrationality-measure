@@ -342,9 +342,252 @@ theorem Bm_halves (hodd : p % 2 = 1) (hN : 2 * N < p * p) (ξ : R) {l j : ℕ}
 
 end Facts
 
+
+/-! ### Arbitrary integer-pole source (Q05): fixed mod-p² precision -/
+
+namespace HPole
+
+variable {p : ℕ} [hp : Fact p.Prime]
+  {R : Type*} [CommRing R] [Algebra (LocRing p) R]
+
+noncomputable def Qh (h : ℕ) (d : ℕ → ℚ) (ξ : R) (n t : ℕ) : R :=
+  (if n = t then ξ else 0) + toR p ((p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) n t)
+
+noncomputable def sigR (h : ℕ) (d : ℕ → ℚ) (l : ℕ) : R :=
+  toR p (hpoleSigma p h d l)
+
+noncomputable def tauR (h : ℕ) (d : ℕ → ℚ) (l : ℕ) : R :=
+  toR p (hpoleTau p h d l)
+
+noncomputable def Bm (h : ℕ) (d : ℕ → ℚ) (ξ : R) (l j : ℕ) : R :=
+  if l = j then ξ - tauR (p := p) h d l
+  else toR p ((hpoleSigma p h d j - hpoleSigma p h d l) / ((j : ℚ) - l))
+
+def regF (h : ℕ) (d : ℕ → ℚ) (t : ℕ) : ℚ :=
+  powerRegular p (Icc 1 (h - 1)) id d t
+
+def regE (h : ℕ) (d : ℕ → ℚ) (t : ℕ) : ℚ :=
+  powerRegular p (Icc 1 (h - 1)) (fun j => j + 1) (fun j => (j : ℚ) * d j) t
+
+theorem f_split (h : ℕ) (d : ℕ → ℚ) (t : ℕ) :
+    (p : ℚ) ^ (h - 1) * hpoleF h d t = hpoleSigma p h d (t / p) +
+      (p : ℚ) ^ (h - 1) * regF (p := p) h d t :=
+  powerSum_split p (h - 1) hp.out.ne_zero (Icc 1 (h - 1)) id d
+    (fun j hj => (mem_Icc.mp hj).2) t
+
+theorem tau_eq_power (h : ℕ) (d : ℕ → ℚ) (l : ℕ) :
+    hpoleTau p h d l =
+      powerPolar p h (Icc 1 (h - 1)) (fun j => j + 1) (fun j => (j : ℚ) * d j) l := by
+  unfold hpoleTau powerPolar
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [show h - (j + 1) = h - 1 - j by omega]
+
+theorem e_split (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ) (t : ℕ) :
+    (p : ℚ) ^ h * hpoleE h d t = hpoleTau p h d (t / p) +
+      (p : ℚ) ^ h * regE (p := p) h d t := by
+  rw [tau_eq_power]
+  exact powerSum_split p h hp.out.ne_zero (Icc 1 (h - 1))
+    (fun j => j + 1) (fun j => (j : ℚ) * d j)
+    (fun j hj => by have := (mem_Icc.mp hj).2; omega) t
+
+theorem regF_mem (h : ℕ) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (t : ℕ) : regF (p := p) h d t ∈ LocRing p :=
+  powerRegular_mem _ _ _ hd t
+
+theorem regE_mem (h : ℕ) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (t : ℕ) : regE (p := p) h d t ∈ LocRing p :=
+  powerRegular_mem _ _ _ (fun j hj => (LocRing p).mul_mem
+    (by exact_mod_cast int_mem_locRing (ℓ := p) (j : ℤ)) (hd j hj)) t
+
+theorem sig_mem (h : ℕ) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) {l : ℕ} (hl : l < p) :
+    hpoleSigma p h d l ∈ LocRing p := powerPolar_mem (h - 1) _ _ _ hd hl
+
+theorem tau_mem (h : ℕ) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) {l : ℕ} (hl : l < p) :
+    hpoleTau p h d l ∈ LocRing p := by
+  rw [tau_eq_power]
+  exact powerPolar_mem h _ _ _ (fun j hj => (LocRing p).mul_mem
+    (by exact_mod_cast int_mem_locRing (ℓ := p) (j : ℤ)) (hd j hj)) hl
+
+theorem f_sub_sig (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (t : ℕ) :
+    Dv p 2 ((p : ℚ) ^ (h - 1) * hpoleF h d t - hpoleSigma p h d (t / p)) := by
+  have he : (p : ℚ) ^ (h - 1) * hpoleF h d t - hpoleSigma p h d (t / p) =
+      (p : ℚ) ^ (h - 1) * regF (p := p) h d t := by linear_combination f_split (p := p) h d t
+  rw [he]
+  exact (show Dv p (h - 1) _ from Dv.intro (regF_mem h d hd t)).mono (by omega)
+
+theorem e_sub_tau (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (t : ℕ) :
+    Dv p 2 ((p : ℚ) ^ h * hpoleE h d t - hpoleTau p h d (t / p)) := by
+  have he : (p : ℚ) ^ h * hpoleE h d t - hpoleTau p h d (t / p) =
+      (p : ℚ) ^ h * regE (p := p) h d t := by linear_combination e_split (p := p) h hh d t
+  rw [he]
+  exact (show Dv p h _ from Dv.intro (regE_mem h d hd t)).mono (by omega)
+
+theorem q_mem (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p)
+    {n t : ℕ} (hn : n < p * p) (ht : t < p * p) :
+    (p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) n t ∈ LocRing p := by
+  have hbase := hpole_weight_table h (by omega) d hd n t hn ht
+  have hW : hpoleWeight h p n t ≤ h := by unfold hpoleWeight; split_ifs <;> omega
+  have he : (p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) n t =
+      (p : ℚ) ^ (h - hpoleWeight h p n t) *
+        ((p : ℚ) ^ hpoleWeight h p n t * lw (hpoleF h d) (hpoleE h d) n t) := by
+    rw [← mul_assoc, ← pow_add, Nat.sub_add_cancel hW]
+  rw [he]
+  exact (LocRing p).mul_mem ((LocRing p).pow_mem
+    (by exact_mod_cast int_mem_locRing (ℓ := p) (p : ℤ)) _) hbase
+
+theorem period_inv_mem {l j : ℕ} (hl : l < p) (hj : j < p) (hne : l ≠ j) :
+    (((j : ℚ) - l)⁻¹) ∈ LocRing p := by
+  have forward : ∀ l j : ℕ, l < j → j < p → (((j : ℚ) - l)⁻¹) ∈ LocRing p := by
+    intro l j hlj hj
+    have hnd : ¬ p ∣ j - l := fun h => by
+      have := Nat.le_of_dvd (by omega : 0 < j - l) h
+      omega
+    rw [← Nat.cast_sub hlj.le]
+    exact inv_natCast_mem_locRing hnd
+  rcases lt_or_gt_of_ne hne with h | h
+  · exact forward l j h hj
+  · have hm := (LocRing p).neg_mem (forward j l h hl)
+    convert hm using 1
+    rw [← inv_neg]
+    congr 1
+    ring
+
+/-- Congruent node differences are exactly p times the period difference. -/
+theorem diff_eq_period {s t : ℕ} (hm : s % p = t % p) :
+    (t : ℚ) - s = (p : ℚ) * (((t / p : ℕ) : ℚ) - (s / p : ℕ)) := by
+  have hs := Nat.div_add_mod s p
+  have ht := Nat.div_add_mod t p
+  rw [hm] at hs
+  have hs' : (p : ℚ) * (s / p : ℕ) + (t % p : ℕ) = s := by exact_mod_cast hs
+  have ht' : (p : ℚ) * (t / p : ℕ) + (t % p : ℕ) = t := by exact_mod_cast ht
+  linarith
+
+theorem Bm_symm (h : ℕ) (d : ℕ → ℚ) (ξ : R) (l j : ℕ) :
+    Bm (p := p) h d ξ l j = Bm (p := p) h d ξ j l := by
+  by_cases he : l = j
+  · subst he; rfl
+  · simp only [Bm, he, Ne.symm he, if_false]
+    congr 1
+    have he1 : hpoleSigma p h d l - hpoleSigma p h d j =
+        -(hpoleSigma p h d j - hpoleSigma p h d l) := by ring
+    have he2 : (l : ℚ) - j = -((j : ℚ) - l) := by ring
+    rw [he1, he2, neg_div_neg_eq]
+
+
+theorem pow_h_eq (h : ℕ) (hh : 1 ≤ h) :
+    (p : ℚ) ^ h = (p : ℚ) * (p : ℚ) ^ (h - 1) := by
+  have he : h - 1 + 1 = h := by omega
+  calc
+    (p : ℚ) ^ h = (p : ℚ) ^ (h - 1 + 1) := congrArg (fun n => (p : ℚ) ^ n) he.symm
+    _ = _ := by rw [pow_succ]; ring
+
+/-- Congruent-node action at fixed mod-p² precision, for arbitrary pole order. -/
+theorem F1 (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (ξ : R)
+    {s t : ℕ} (hs : s < p * p) (ht : t < p * p) (hm : s % p = t % p) :
+    (p : R) ^ 2 ∣ Qh (p := p) h d ξ s t - Bm (p := p) h d ξ (s / p) (t / p) := by
+  have hsp : s / p < p := (Nat.div_lt_iff_lt_mul hp.out.pos).mpr hs
+  have htp : t / p < p := (Nat.div_lt_iff_lt_mul hp.out.pos).mpr ht
+  have hpq : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
+  by_cases hst : s = t
+  · subst hst
+    let q : ℚ := (p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) s s
+    have hq : q ∈ LocRing p := q_mem h hh d hd hs hs
+    have hτ := tau_mem h d hd hsp
+    have hDv : Dv p 2 (q + hpoleTau p h d (s / p)) := by
+      convert (e_sub_tau h hh d hd s).neg using 1
+      simp only [q, lw, if_true]
+      ring
+    have hv := toR_dvd (R := R) hDv
+    rw [toR_add hq hτ] at hv
+    simp only [Qh, Bm, if_true, tauR]
+    convert hv using 1 <;> ring
+  · have hls : s / p ≠ t / p := by
+      intro he
+      apply hst
+      have h1 := Nat.div_add_mod s p
+      have h2 := Nat.div_add_mod t p
+      rw [he, hm] at h1
+      omega
+    have hδ : (((t / p : ℕ) : ℚ) - (s / p : ℕ)) ≠ 0 :=
+      sub_ne_zero.mpr (by exact_mod_cast hls.symm)
+    have hinv := period_inv_mem hsp htp hls
+    let q : ℚ := (p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) s t
+    let b : ℚ := (hpoleSigma p h d (t / p) - hpoleSigma p h d (s / p)) /
+      (((t / p : ℕ) : ℚ) - (s / p : ℕ))
+    have hq : q ∈ LocRing p := q_mem h hh d hd hs ht
+    have hb : b ∈ LocRing p := by
+      dsimp [b]
+      rw [div_eq_mul_inv]
+      exact (LocRing p).mul_mem ((LocRing p).sub_mem (sig_mem h d hd htp) (sig_mem h d hd hsp)) hinv
+    have hDv : Dv p 2 (q - b) := by
+      have hD := ((f_sub_sig h hh d hd t).sub (f_sub_sig h hh d hd s)).mul_mem hinv
+      convert hD using 1
+      dsimp [q, b]
+      rw [lw, if_neg hst, diff_eq_period hm, pow_h_eq h (by omega)]
+      field_simp [hpq, hδ]
+      ring
+    have hv := toR_dvd (R := R) hDv
+    rw [toR_sub hq hb] at hv
+    simpa only [Qh, Bm, hst, hls, if_false, zero_add] using hv
+
+/-- Noncongruent-node action, with the scaled period level σ and no order ceiling. -/
+theorem F2 (h : ℕ) (hh : 3 ≤ h) (d : ℕ → ℚ)
+    (hd : ∀ j ∈ Icc 1 (h - 1), d j ∈ LocRing p) (ξ : R)
+    {n t : ℕ} (hn : n < p * p) (ht : t < p * p) (hm : n % p ≠ t % p) :
+    (p : R) ^ 2 ∣ Qh (p := p) h d ξ n t -
+      (p : R) * (sigR (p := p) h d (t / p) - sigR (p := p) h d (n / p)) *
+        toR p (((t : ℚ) - n)⁻¹) := by
+  have hne : n ≠ t := fun he => hm (by rw [he])
+  have hz : ¬ (p : ℤ) ∣ (t : ℤ) - n := by
+    intro he
+    apply hm
+    have hc := (ZMod.intCast_zmod_eq_zero_iff_dvd ((t : ℤ) - n) p).mpr he
+    push_cast at hc
+    rw [sub_eq_zero, ZMod.natCast_eq_natCast_iff'] at hc
+    exact hc.symm
+  have hinv : (((t : ℚ) - n)⁻¹) ∈ LocRing p := by
+    have hc := inv_int_mem (p := p) hz
+    push_cast at hc
+    exact hc
+  have hpm : (p : ℚ) ∈ LocRing p := by exact_mod_cast int_mem_locRing (ℓ := p) (p : ℤ)
+  have hsigt := sig_mem h d hd ((Nat.div_lt_iff_lt_mul hp.out.pos).mpr ht)
+  have hsign := sig_mem h d hd ((Nat.div_lt_iff_lt_mul hp.out.pos).mpr hn)
+  have hsig := (LocRing p).sub_mem hsigt hsign
+  let q : ℚ := (p : ℚ) ^ h * lw (hpoleF h d) (hpoleE h d) n t
+  let b : ℚ := (p : ℚ) * (hpoleSigma p h d (t / p) - hpoleSigma p h d (n / p)) * (((t : ℚ) - n)⁻¹)
+  have hq : q ∈ LocRing p := q_mem h hh d hd hn ht
+  have hb : b ∈ LocRing p := (LocRing p).mul_mem ((LocRing p).mul_mem hpm hsig) hinv
+  have hDv : Dv p 2 (q - b) := by
+    have hD := (((f_sub_sig h hh d hd t).sub (f_sub_sig h hh d hd n)).mul_mem hpm).mul_mem hinv
+    convert hD using 1
+    dsimp [q, b]
+    rw [lw, if_neg hne, pow_h_eq h (by omega)]
+    ring
+  have hv := toR_dvd (R := R) hDv
+  rw [toR_sub hq hb] at hv
+  have hmap : (toR p b : R) = (p : R) *
+      (sigR (p := p) h d (t / p) - sigR (p := p) h d (n / p)) * toR p (((t : ℚ) - n)⁻¹) := by
+    dsimp [b, sigR]
+    rw [toR_mul ((LocRing p).mul_mem hpm hsig) hinv, toR_mul hpm hsig, toR_p,
+      toR_sub hsigt hsign]
+  rw [hmap] at hv
+  simpa only [Qh, hne, if_false, zero_add] using hv
+
+end HPole
+
 end CatalanCore.Uniform.Content.Sweep
 
 #print axioms CatalanCore.Uniform.Content.Sweep.F1
 #print axioms CatalanCore.Uniform.Content.Sweep.F2
 #print axioms CatalanCore.Uniform.Content.Sweep.sig_step
 #print axioms CatalanCore.Uniform.Content.Sweep.Bm_halves
+
+#print axioms CatalanCore.Uniform.Content.Sweep.HPole.F1
+#print axioms CatalanCore.Uniform.Content.Sweep.HPole.F2

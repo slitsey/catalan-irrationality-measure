@@ -1,6 +1,13 @@
 module
 
 public import CatalanCore.Uniform.Decay.Polygon.Source
+public import CatalanCore.Uniform.Support.Datum
+public import Mathlib.LinearAlgebra.QuadraticForm.Basic
+public import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Matrix.BilinearForm
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.Data.Fin.Rev
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Cotangent
 
 @[expose] public section
@@ -1314,3 +1321,150 @@ end CatalanCore.Uniform.Decay.Jet
 #print axioms CatalanCore.Uniform.Decay.Jet.hasDerivAt_kk
 #print axioms CatalanCore.Uniform.Decay.Jet.JetFrame.EJ_closed
 
+
+
+/-! ### Arbitrary-order rational head forms (Q03, frozen shared layer) -/
+
+namespace CatalanCore.Uniform.Support
+
+open Finset Matrix
+
+/-- A rational rank-one split, allowing arbitrary overcomplete/zero-weight padding. -/
+structure PoleGramSplit (D : PoleDatum) where
+  J : ℕ
+  order_le : ∀ i, D.w i ≤ J + 1
+  count : Fin D.n → ℕ
+  weight : ((i : Fin D.n) × Fin (count i)) → ℚ
+  coeff : ((i : Fin D.n) × Fin (count i)) → Fin (J + 1) → ℚ
+  split : ∀ (i : Fin D.n) (j k : Fin (J + 1)),
+    D.coeff i ((j : ℕ) + (k : ℕ) + 1) /
+        ((j : ℕ).factorial * (k : ℕ).factorial : ℚ) =
+      ∑ q : Fin (count i), weight ⟨i, q⟩ * coeff ⟨i, q⟩ j * coeff ⟨i, q⟩ k
+
+abbrev PoleGramSplit.Role {D : PoleDatum} (S : PoleGramSplit D) :=
+  (i : Fin D.n) × Fin (S.count i)
+
+structure PoleRefMatch (D : PoleDatum) (S : PoleGramSplit D) (Fr : Frame) where
+  role : Fin Fr.d ≃ S.Role
+  side : ∀ (N0 m : ℕ) (q : Fin Fr.d), S.weight (role q) ≠ 0 →
+    (((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (Fr.μ q : ℝ)) ↔
+      ((N0 : ℝ) + (Fr.xs : ℝ) < (m : ℝ) + (D.s (role q).1 : ℝ)))
+
+/-- The head form in unnormalized derivative rows. -/
+def PoleDatum.headMatrix (D : PoleDatum) (i : Fin D.n) :
+    Matrix (Fin (D.w i)) (Fin (D.w i)) ℚ :=
+  fun j k => D.coeff i ((j : ℕ) + (k : ℕ) + 1) /
+    ((j : ℕ).factorial * (k : ℕ).factorial : ℚ)
+
+theorem PoleDatum.headMatrix_symm (D : PoleDatum) (i : Fin D.n) :
+    (D.headMatrix i).IsSymm := by
+  ext j k
+  simp [PoleDatum.headMatrix, Nat.add_comm, mul_comm]
+
+theorem PoleDatum.headMatrix_det_ne (D : PoleDatum) (i : Fin D.n) :
+    (D.headMatrix i).det ≠ 0 := by
+  classical
+  let M := D.headMatrix i
+  have ht : (M.submatrix id Fin.revPerm).IsUpperTriangular := by
+    intro j k hkj
+    have hj := j.isLt
+    have hk := k.isLt
+    have hcoeff : D.w i < (j : ℕ) + ((Fin.revPerm k : Fin (D.w i)) : ℕ) + 1 := by
+      simp only [Fin.revPerm_apply, Fin.val_rev]
+      have hkj' : (k : ℕ) < j := hkj
+      omega
+    simp only [Matrix.submatrix_apply, id_eq, M, PoleDatum.headMatrix,
+      D.coeff_above i _ hcoeff, zero_div]
+  have hn : (M.submatrix id Fin.revPerm).det ≠ 0 := by
+    rw [Matrix.det_of_isUpperTriangular ht]
+    apply Finset.prod_ne_zero_iff.mpr
+    intro j _
+    have he : (j : ℕ) + ((Fin.revPerm j : Fin (D.w i)) : ℕ) + 1 = D.w i := by
+      simp only [Fin.revPerm_apply, Fin.val_rev]
+      have := j.isLt
+      omega
+    change D.coeff i _ / _ ≠ 0
+    simp only [id_eq]
+    rw [he]
+    exact div_ne_zero (D.top_ne i) (mul_ne_zero
+      (by exact_mod_cast Nat.factorial_ne_zero (j : ℕ))
+      (by exact_mod_cast Nat.factorial_ne_zero ((Fin.revPerm j : Fin (D.w i)) : ℕ)))
+  intro h
+  apply hn
+  rw [Matrix.det_permute', h, mul_zero]
+
+/-- Every nondegenerate rational symmetric form has a split with exactly its dimension
+many nonzero rational weights. The orthogonal basis is independent of the source/certificate. -/
+theorem rational_rank_one_split {n : ℕ} (M : Matrix (Fin n) (Fin n) ℚ)
+    (hs : M.IsSymm) (hd : M.det ≠ 0) :
+    ∃ w : Fin n → ℚ, ∃ a : Fin n → Fin n → ℚ,
+      (∀ q, w q ≠ 0) ∧ ∀ j k, M j k = ∑ q, w q * a q j * a q k := by
+  classical
+  let B := M.toBilin'
+  letI : Invertible (2 : ℚ) := invertibleOfNonzero (by norm_num)
+  have hBs : B.IsSymm := Matrix.isSymm_toBilin'_iff_isSymm.mpr hs
+  have hBd : B.Nondegenerate :=
+    LinearMap.BilinForm.nondegenerate_toBilin'_of_det_ne_zero' M hd
+  obtain ⟨b, hb⟩ : ∃ b : Module.Basis (Fin n) ℚ (Fin n → ℚ), B.IsOrthoᵢ b := by
+    obtain ⟨b0, hb0⟩ := LinearMap.BilinForm.exists_orthogonal_basis
+      (LinearMap.BilinForm.isSymm_iff.mp hBs)
+    have hn : Module.finrank ℚ (Fin n → ℚ) = n :=
+      Module.finrank_fin_fun (R := ℚ)
+    let e : Fin (Module.finrank ℚ (Fin n → ℚ)) ≃ Fin n := finCongr hn
+    refine ⟨b0.reindex e, ?_⟩
+    apply LinearMap.BilinForm.iIsOrtho_def.mpr
+    intro i j hij
+    simp only [Module.Basis.reindex_apply]
+    exact (LinearMap.BilinForm.iIsOrtho_def.mp hb0) (e.symm i) (e.symm j)
+      (fun he => hij (e.symm.injective he))
+  have horth : ∀ q v, q ≠ v → B (b q) (b v) = 0 :=
+    LinearMap.BilinForm.iIsOrtho_def.mp hb
+  refine ⟨fun q => B (b q) (b q), fun q j => b.repr (Pi.single j 1) q, ?_, ?_⟩
+  · exact LinearMap.BilinForm.iIsOrtho.not_isOrtho_basis_self_of_nondegenerate hb hBd
+  · intro j k
+    calc
+      M j k = B (Pi.single j 1) (Pi.single k 1) := (Matrix.toBilin'_single M j k).symm
+      _ = B (∑ q, b.repr (Pi.single j 1) q • b q)
+          (∑ v, b.repr (Pi.single k 1) v • b v) := by rw [b.sum_repr, b.sum_repr]
+      _ = _ := by
+        rw [LinearMap.BilinForm.sum_left]
+        apply Finset.sum_congr rfl
+        intro q _
+        rw [LinearMap.BilinForm.sum_right]
+        simp only [LinearMap.BilinForm.smul_left, LinearMap.BilinForm.smul_right]
+        rw [Finset.sum_eq_single q]
+        · ring
+        · intro v _ hv
+          rw [horth q v hv.symm]
+          ring
+        · intro hq
+          exact False.elim (hq (mem_univ q))
+
+/-- Minimal label count exists; other source adapters may still use padded splits. -/
+theorem pole_gram_split_minimal (D : PoleDatum) :
+    ∃ S : PoleGramSplit D, (∀ i, S.count i = D.w i) ∧ (∀ q, S.weight q ≠ 0) := by
+  classical
+  choose w a hw ha using fun i =>
+    rational_rank_one_split (D.headMatrix i) (D.headMatrix_symm i) (D.headMatrix_det_ne i)
+  let S : PoleGramSplit D := {
+    J := D.d
+    order_le := fun i => (Finset.single_le_sum (f := D.w)
+      (fun _ _ => Nat.zero_le _) (mem_univ i)).trans (Nat.le_succ D.d)
+    count := D.w
+    weight := fun q => w q.1 q.2
+    coeff := fun q j => if hj : (j : ℕ) < D.w q.1 then a q.1 q.2 ⟨j, hj⟩ else 0
+    split := by
+      intro i j k
+      by_cases hj : (j : ℕ) < D.w i
+      · by_cases hk : (k : ℕ) < D.w i
+        · simpa only [PoleDatum.headMatrix, dif_pos hj, dif_pos hk] using ha i ⟨j, hj⟩ ⟨k, hk⟩
+        · rw [D.coeff_above i _ (by omega)]
+          simp [hk]
+      · rw [D.coeff_above i _ (by omega)]
+        simp [hj]
+  }
+  exact ⟨S, fun _ => rfl, fun q => hw q.1 q.2⟩
+
+end CatalanCore.Uniform.Support
+
+#print axioms CatalanCore.Uniform.Support.pole_gram_split_minimal
