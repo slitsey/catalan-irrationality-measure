@@ -383,7 +383,38 @@ theorem hasScaledContent_of_kcheck (D : KBankData) (hD : kcheck D = true)
   hasScaledContent_of_kcheckFam D hD c hc hcα Fr.const depth _ hdepth (AltQ.ofFrame c hc hc1 Fr hcF) B N0
     hcat hpre
 
+
+/-! ### P124: validity of the selected-shift embedding -/
+
+theorem _root_.CatalanCore.Uniform.Content.BankShared.Check.CatValidFam.liftK
+    (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (q o Pbad N0 : ℕ) (cat : List Branch) (sh : List Shift) (idx Q0 : ℕ)
+    (hidx : idx < sh.length) (hq : (shAt sh idx).q = q)
+    (ho : (shAt sh idx).o = o) (hqQ : q ≤ Q0)
+    (hcat : CatValidFam c hc const depth Q q o Pbad N0 cat) :
+    KCatValidFam c hc const depth Q sh Q0 Pbad N0 (cat.map (Branch.liftK idx)) := by
+  intro br hbr i hi hr p hp hPb hN0 hQN kv hroots hconds
+  obtain ⟨old, hold, rfl⟩ := List.mem_map.1 hbr
+  obtain ⟨jn, hroot, hj0, hjq, hk0, hkp⟩ := hroots idx hidx
+  rw [hq, ho] at hroot
+  rw [hq] at hjq
+  have hqN : q * (i.1 + 2 * (altGeom c hc).borderSize i.1) < p * p :=
+    lt_of_le_of_lt (Nat.mul_le_mul_right _ hqQ) hQN
+  have hcondOld : ∀ cd ∈ old.conds,
+      cd.Holds i.1 p ((altGeom c hc).borderSize i.1) (kv idx) := by
+    intro cd hcd
+    have h := hconds (cd.liftK idx) (List.mem_map.2 ⟨cd, hcd, rfl⟩)
+    exact (holds_liftK cd idx i.1 p ((altGeom c hc).borderSize i.1) kv).1 h
+  obtain ⟨n, hn, hbound⟩ := hcat old hold i hi hr p hPb hN0 hqN jn (kv idx)
+    hroot hj0 hjq hk0 hkp hcondOld
+  refine ⟨n, hn, ?_⟩
+  simpa only [Branch.liftK, evalN_liftK] using hbound
+
+
 end CatalanCore.Uniform.Content.BankShared.KTerm
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.branches_of_kcat
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_kcheckFam
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.hasScaledContent_of_kcheck
+
+#print axioms CatalanCore.Uniform.Content.BankShared.Check.CatValidFam.liftK

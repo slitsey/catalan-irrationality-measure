@@ -71,7 +71,6 @@ theorem support_measureLB (Fam : PolyFamily) (scale : Fam.ι → ℕ)
     (hD : HasScaledDecay Fam scale D c) (hη : Λ < D) (hc : 0 < c)
     (hγ : 0 < γ) (hK : 0 ≤ K)
     (hdeg : ∀ n, Fam.Adm n → (Fam.deg n : ℝ) ≤ γ * scale n + K)
-    (heven : ∀ n, Fam.Adm n → scale n % 2 = 0)
     (hnv : ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
       ∃ n, Fam.Adm n ∧ scale n = 2 * s ∧ Fam.evalQ n x ≠ 0)
     {ξ : ℝ} {a b : ℚ} (ha : a ≠ 0) (hconst : Fam.const = (a : ℝ) * ξ + b) :
@@ -118,12 +117,11 @@ theorem support_measureLB_of_certificate {Vnu : ℂ → ℝ} (C : Certificate Vn
     (hdecay : HasScaledDecay Fam scale C.Dr C.cr) (hη : C.Below Λ)
     (hγ : 0 < γ) (hK : 0 ≤ K)
     (hdeg : ∀ n, Fam.Adm n → (Fam.deg n : ℝ) ≤ γ * scale n + K)
-    (heven : ∀ n, Fam.Adm n → scale n % 2 = 0)
     (hnv : ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
       ∃ n, Fam.Adm n ∧ scale n = 2 * s ∧ Fam.evalQ n x ≠ 0)
     {ξ : ℝ} {a b : ℚ} (ha : a ≠ 0) (hconst : Fam.const = (a : ℝ) * ξ + b) :
     MeasureLBAt ξ (γ * C.cr / (C.Dr - Λ)) ∧ Irrational ξ :=
-  support_measureLB Fam scale hΛ hdecay hη (by exact_mod_cast C.hc) hγ hK hdeg heven hnv ha hconst
+  support_measureLB Fam scale hΛ hdecay hη (by exact_mod_cast C.hc) hγ hK hdeg hnv ha hconst
 
 end CatalanCore.Uniform.Support
 

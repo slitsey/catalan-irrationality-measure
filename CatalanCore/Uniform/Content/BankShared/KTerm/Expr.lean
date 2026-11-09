@@ -174,8 +174,82 @@ theorem KBranch.evalN_compile (t b cc : ℕ → ℕ) (br : KBranch) (r p m k : �
     (br.compile t b cc).τ.evalN r p m k = br.τ.evalN r p m (fun i => t i * k - (b i * p + cc i)) :=
   KExpr.evalN_compile _ r p m k br.τ
 
+
+/-! ### P124: embedding a one-index catalogue in any selected shift -/
+
+def _root_.CatalanCore.Uniform.Content.BankShared.Check.Expr.liftK
+    (idx : ℕ) : Expr → KExpr
+  | .vr => .vr
+  | .vp => .vp
+  | .vm => .vm
+  | .vk => .vk idx
+  | .cst c => .cst c
+  | .add a b => .add (a.liftK idx) (b.liftK idx)
+  | .smul c a => .smul c (a.liftK idx)
+  | .tsub a b => .tsub (a.liftK idx) (b.liftK idx)
+  | .mn a b => .mn (a.liftK idx) (b.liftK idx)
+  | .mx a b => .mx (a.liftK idx) (b.liftK idx)
+  | .dist a => .dist (a.liftK idx)
+  | .ap => .ap
+  | .sp => .sp
+
+theorem evalN_liftK (e : Expr) (idx r p m : ℕ) (kv : ℕ → ℕ) :
+    (e.liftK idx).evalN r p m kv = e.evalN r p m (kv idx) := by
+  induction e <;> simp_all [Expr.liftK, KExpr.evalN, Expr.evalN]
+
+def _root_.CatalanCore.Uniform.Content.BankShared.Check.Cond.liftK
+    (idx : ℕ) (cd : Cond) : KCond :=
+  ⟨cd.cr, cd.cp, cd.cm, List.replicate idx 0 ++ [cd.ck], cd.c1, cd.strict⟩
+
+theorem dot_single (idx : ℕ) (a : ℤ) (f : ℕ → ℤ) :
+    dot (List.replicate idx 0 ++ [a]) f = a * f idx := by
+  induction idx generalizing f with
+  | zero => simp [dot]
+  | succ idx ih =>
+      simpa [List.replicate_succ, dot] using ih (fun j => f (j + 1))
+
+theorem holds_liftK (cd : Cond) (idx r p m : ℕ) (kv : ℕ → ℕ) :
+    (cd.liftK idx).Holds r p m kv ↔ cd.Holds r p m (kv idx) := by
+  simp [Cond.liftK, KCond.Holds, Cond.Holds, KCond.L, Cond.L, dot_single]
+
+def _root_.CatalanCore.Uniform.Content.BankShared.Check.Branch.liftK
+    (idx : ℕ) (br : Branch) : KBranch :=
+  ⟨br.τ.liftK idx, br.conds.map (Cond.liftK idx), br.debit⟩
+
+theorem compile_liftK_err (e : Expr) (idx : ℕ) (t b cc : ℕ → ℕ)
+    (ht : t idx = 1) (hb : b idx = 0) (hc : cc idx = 0) (ε : ℚ) :
+    ((e.liftK idx).compile (fun i => subE (t i) (b i) (cc i))).err ε = e.err ε := by
+  induction e <;>
+    simp_all [Expr.liftK, KExpr.compile, subE, Expr.err]
+
+theorem compile_liftK_evalR (e : Expr) (idx : ℕ) (t b cc : ℕ → ℕ)
+    (ht : t idx = 1) (hb : b idx = 0) (hc : cc idx = 0)
+    (keep : Bool) (R P M K : ℝ) (hK : 0 ≤ K) :
+    ((e.liftK idx).compile (fun i => subE (t i) (b i) (cc i))).evalR keep R P M K =
+      e.evalR keep R P M K := by
+  induction e <;>
+    simp_all [Expr.liftK, KExpr.compile, subE, Expr.evalR, max_eq_left hK]
+
+theorem compile_liftK_prof (e : Expr) (idx : ℕ) (t b cc : ℕ → ℕ)
+    (ht : t idx = 1) (hb : b idx = 0) (hc : cc idx = 0)
+    (α κ : ℚ) (θ : ℝ) (hκθ : 0 ≤ (κ : ℝ) * θ) :
+    prof α κ θ ((e.liftK idx).compile (fun i => subE (t i) (b i) (cc i))) =
+      prof α κ θ e :=
+  compile_liftK_evalR e idx t b cc ht hb hc false 1 θ α ((κ : ℝ) * θ) hκθ
+
+theorem compile_liftK_cond (cd : Cond) (idx : ℕ) (t b cc : ℕ → ℕ)
+    (ht : t idx = 1) (hb : b idx = 0) (hc : cc idx = 0) :
+    (cd.liftK idx).compile t b cc = cd := by
+  cases cd
+  simp [Cond.liftK, KCond.compile, dot_single, ht, hb, hc]
+
+
 end CatalanCore.Uniform.Content.BankShared.KTerm
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KExpr.evalN_compile
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KCond.L_compile
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KCond.holds_compile
 #print axioms CatalanCore.Uniform.Content.BankShared.KTerm.KBranch.evalN_compile
+
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.evalN_liftK
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.compile_liftK_prof
+#print axioms CatalanCore.Uniform.Content.BankShared.KTerm.compile_liftK_err

@@ -106,7 +106,101 @@ theorem lpOptA_le (c : ℚ) (hc : 0 < c) (const : ℝ) (depth : ℕ)
   rw [dif_pos hp.out, dif_pos ⟨n, h⟩]
   exact Nat.find_min' _ h
 
-/-- **The generic content route** (the statement of `thirds_content_of_bounds` for every `altGeom c`). -/
+/-- Q07. Arbitrary-order clearing with the exact optimal exceptional-prime budget.
+No fixed coefficient of `log_p r` restricts the pole order. -/
+structure AltContentControl (c : ℚ) (hc : 0 < c) (const : ℝ) (depth M : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) : Prop where
+  deg : ∀ i, (Q i).natDegree ≤ i.2.card
+  clear : ∀ i, (AltEvenFam c hc const depth Q).Adm i →
+    ∀ (p : ℕ) [Fact p.Prime], ∃ n, GLE p n (Q i)
+  exc : ∀ ε : ℝ, 0 < ε → ∃ R0 : ℕ, ∀ i,
+    (AltEvenFam c hc const depth Q).Adm i → R0 ≤ i.1 →
+    ∑ p ∈ M.primeFactors,
+      (lpOptA c hc const depth Q i p : ℝ) * Real.log p ≤ ε * (i.1 : ℝ)^2
+
+/-- The old crude interface supplies the maximal control interface. -/
+theorem AltContentControl.ofAltQ (c : ℚ) (hc : 0 < c) (cF : ℕ)
+    (const : ℝ) (depth : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X])
+    (M : ℕ) [NeZero M] (hQ : AltQ c hc cF Q) :
+    AltContentControl c hc const depth M Q where
+  deg := hQ.deg
+  clear := fun i hi p _ => ⟨_, hQ.crude i hi.2 p⟩
+  exc := by
+    apply exc_of_Ecrude (AltEvenFam c hc const depth Q) (altGeom c hc).scale M
+      (lpOptA c hc const depth Q) cF
+    intro i hi p hp
+    haveI : Fact p.Prime := ⟨Nat.prime_of_mem_primeFactors hp⟩
+    exact lpOptA_le c hc const depth Q i p (hQ.crude i hi.2 p)
+
+/-- Q07. Optimal price at every prime; generic content control. -/
+theorem altContent_of_bounds_control (c : ℚ) (hc : 0 < c) (const : ℝ) (depth R0 : ℕ)
+    (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (M : ℕ) [NeZero M] (hQ : AltContentControl c hc const depth M Q) (Lam : ℝ)
+    (B : SmallBudget) (tmpl : ℝ → ZMod M → Template) (τ : ℝ)
+    (hmass : ∀ ε : ℝ, 0 < ε → contentConstant M (tmpl ε) ≤ Lam + ε)
+    (tend_le : ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' → (tmpl ε c').tend ≤ τ)
+    (tail : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+      ∀ p : ℕ, p.Prime → (p : ZMod M) = c' → ⌊(tmpl ε c').tend * (altGeom c hc).scale i⌋₊ < p →
+        ∀ [Fact p.Prime], GLE p 0 ((AltRFam c hc const depth Q R0).Q i))
+    (pre : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+      ∀ p : ℕ, p ≤ ⌊(tmpl ε c').t1 * (altGeom c hc).scale i⌋₊ → p.Prime → (p : ZMod M) = c' →
+        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltRFam c hc const depth Q R0).Q i) ∧
+          (n : ℝ) ≤ (tmpl ε c').α0 * (altGeom c hc).scale i + B.X ((altGeom c hc).scale i) p)
+    (cov : ∀ ε : ℝ, 0 < ε → ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ c' : ZMod M, IsUnit c' →
+      ∀ P ∈ (tmpl ε c').l, ∀ p : ℕ, ⌊P.s * (altGeom c hc).scale i⌋₊ < p →
+        p ≤ ⌊P.t * (altGeom c hc).scale i⌋₊ → p.Prime → (p : ZMod M) = c' →
+        ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltRFam c hc const depth Q R0).Q i) ∧
+          (n : ℝ) ≤ P.α * (altGeom c hc).scale i + P.β * p + P.C) :
+    HasScaledContent (AltRFam c hc const depth Q R0) (altGeom c hc).scale Lam := by
+  classical
+  let sc := (altGeom c hc).scale
+  let price : (AltRFam c hc const depth Q R0).ι → ℕ → ℕ :=
+    fun i p => lpOptA c hc const depth Q i p
+  have hlcut : ∀ i, (AltRFam c hc const depth Q R0).Adm i →
+      ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' →
+      ⌊(tmpl ε c').tend * sc i⌋₊ ≤ ⌊τ * sc i⌋₊ := by
+    intro i _ ε hε c' hc'
+    exact Nat.floor_le_floor
+      (mul_le_mul_of_nonneg_right (tend_le ε hε c' hc') (Nat.cast_nonneg _))
+  refine hasScaledContent_budgeted_lim (AltRFam c hc const depth Q R0) sc M
+    (fun i => hQ.deg i) price
+    (fun i => max (⌊τ * sc i⌋₊ + 1) (M + 1)) ?_ ?_ B Lam tmpl hmass ?_ ?_ ?_ ?_ ?_
+  · intro i hi p hpF
+    exact lpOptA_gle c hc const depth Q i p (hQ.clear i hi.1 p)
+  · intro i hi p hp hcut
+    have hM : ¬ p ∣ M := fun h => by
+      have := Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne M)) h
+      have := (le_max_right (⌊τ * sc i⌋₊ + 1) (M + 1)).trans hcut
+      omega
+    have hunit : IsUnit (p : ZMod M) := (ZMod.isUnit_prime_iff_not_dvd hp).2 hM
+    haveI : Fact p.Prime := ⟨hp⟩
+    have hlt : ⌊(tmpl 1 (p : ZMod M)).tend * sc i⌋₊ < p := by
+      have := hlcut i hi 1 one_pos _ hunit
+      have := (le_max_left (⌊τ * sc i⌋₊ + 1) (M + 1)).trans hcut
+      omega
+    exact Nat.le_zero.1
+      (lpOptA_le c hc const depth Q i p (tail 1 one_pos i hi _ hunit p hp rfl hlt))
+  · intro ε hε i hi c' hc' p hp hpc hlt
+    haveI : Fact p.Prime := ⟨hp⟩
+    exact Nat.le_zero.1
+      (lpOptA_le c hc const depth Q i p (tail ε hε i hi c' hc' p hp hpc hlt))
+  · intro ε hε i hi c' hc'
+    have := hlcut i hi ε hε c' hc'
+    exact lt_of_le_of_lt this
+      (lt_of_lt_of_le (Nat.lt_succ_self _) (le_max_left _ _))
+  · intro ε hε i hi c' hc' p h1 hp hpc
+    haveI : Fact p.Prime := ⟨hp⟩
+    obtain ⟨n, hn, hb⟩ := pre ε hε i hi c' hc' p h1 hp hpc
+    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
+  · intro ε hε i hi c' hc' P hP p h1 h2 hp hpc
+    haveI : Fact p.Prime := ⟨hp⟩
+    obtain ⟨n, hn, hb⟩ := cov ε hε i hi c' hc' P hP p h1 h2 hp hpc
+    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
+  · intro ε hε
+    obtain ⟨R, hR⟩ := hQ.exc ε hε
+    exact ⟨R, fun i hi hr => hR i hi.1 hr⟩
+
+/-- Compatibility wrapper for existing crude-bound producers. -/
 theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (cF : ℕ) (const : ℝ) (depth R0 : ℕ)
     (Q : NodeFamily.Index (altGeom c hc).geometry → ℚ[X]) (hQ : AltQ c hc cF Q)
     (M : ℕ) [NeZero M] (Lam : ℝ)
@@ -126,64 +220,9 @@ theorem altContent_of_bounds (c : ℚ) (hc : 0 < c) (cF : ℕ) (const : ℝ) (de
         ∀ [Fact p.Prime], ∃ n : ℕ, GLE p n ((AltRFam c hc const depth Q R0).Q i) ∧
           (n : ℝ) ≤ P.α * (altGeom c hc).scale i + P.β * p + P.C) :
     HasScaledContent (AltRFam c hc const depth Q R0) (altGeom c hc).scale Lam := by
-  classical
-  let sc := (altGeom c hc).scale
-  let price : (AltRFam c hc const depth Q R0).ι → ℕ → ℕ := fun i p =>
-    if p ∣ M then Ecrude cF i.1 p else lpOptA c hc const depth Q i p
-  have hpr : ∀ i p, ¬ p ∣ M → price i p = lpOptA c hc const depth Q i p := fun i p h => by
-    simp [price, h]
-  have hnd : ∀ {p : ℕ} {c' : ZMod M}, p.Prime → IsUnit c' → (p : ZMod M) = c' → ¬ p ∣ M := by
-    intro p c' hp hc' hpc
-    rw [← ZMod.isUnit_prime_iff_not_dvd hp, hpc]; exact hc'
-  have hlcut : ∀ i, (AltRFam c hc const depth Q R0).Adm i → ∀ ε : ℝ, 0 < ε → ∀ c' : ZMod M, IsUnit c' →
-      ⌊(tmpl ε c').tend * sc i⌋₊ ≤ ⌊τ * sc i⌋₊ := by
-    intro i _ ε hε c' hc'
-    exact Nat.floor_le_floor (mul_le_mul_of_nonneg_right (tend_le ε hε c' hc') (Nat.cast_nonneg _))
-  refine hasScaledContent_budgeted_lim (AltRFam c hc const depth Q R0) sc M
-    (fun i => hQ.deg i) price
-    (fun i => max (⌊τ * sc i⌋₊ + 1) (M + 1)) ?_ ?_ B Lam tmpl hmass ?_ ?_ ?_ ?_
-    (exc_of_Ecrude (AltRFam c hc const depth Q R0) sc M price cF ?_)
-  · intro i hi p hpF
-    by_cases h : p ∣ M
-    · simp only [price, h, if_true]
-      exact hQ.crude i hi.1.2 p
-    · simp only [price, h, if_false]
-      exact lpOptA_gle c hc const depth Q i p ⟨_, hQ.crude i hi.1.2 p⟩
-  · intro i hi p hp hcut
-    have hM : ¬ p ∣ M := fun h => by
-      have := Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne M)) h
-      have := (le_max_right (⌊τ * sc i⌋₊ + 1) (M + 1)).trans hcut
-      omega
-    have hunit : IsUnit (p : ZMod M) := (ZMod.isUnit_prime_iff_not_dvd hp).2 hM
-    haveI : Fact p.Prime := ⟨hp⟩
-    have hlt : ⌊(tmpl 1 (p : ZMod M)).tend * sc i⌋₊ < p := by
-      have := hlcut i hi 1 one_pos _ hunit
-      have := (le_max_left (⌊τ * sc i⌋₊ + 1) (M + 1)).trans hcut
-      omega
-    rw [hpr i p hM]
-    exact Nat.le_zero.1 (lpOptA_le c hc const depth Q i p (tail 1 one_pos i hi _ hunit p hp rfl hlt))
-  · intro ε hε i hi c' hc' p hp hpc hlt
-    haveI : Fact p.Prime := ⟨hp⟩
-    rw [hpr i p (hnd hp hc' hpc)]
-    exact Nat.le_zero.1 (lpOptA_le c hc const depth Q i p (tail ε hε i hi c' hc' p hp hpc hlt))
-  · intro ε hε i hi c' hc'
-    have := hlcut i hi ε hε c' hc'
-    exact lt_of_le_of_lt this (lt_of_lt_of_le (Nat.lt_succ_self _) (le_max_left _ _))
-  · intro ε hε i hi c' hc' p h1 hp hpc
-    haveI : Fact p.Prime := ⟨hp⟩
-    rw [hpr i p (hnd hp hc' hpc)]
-    obtain ⟨n, hn, hb⟩ := pre ε hε i hi c' hc' p h1 hp hpc
-    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
-  · intro ε hε i hi c' hc' P hP p h1 h2 hp hpc
-    haveI : Fact p.Prime := ⟨hp⟩
-    show (price i p : ℝ) ≤ _
-    rw [hpr i p (hnd hp hc' hpc)]
-    obtain ⟨n, hn, hb⟩ := cov ε hε i hi c' hc' P hP p h1 h2 hp hpc
-    exact (Nat.cast_le.2 (lpOptA_le c hc const depth Q i p hn)).trans hb
-  · intro i hi p hp
-    have hd := Nat.dvd_of_mem_primeFactors hp
-    simp only [price, hd, if_true]
-    exact le_rfl
+  exact altContent_of_bounds_control c hc const depth R0 Q M
+    (AltContentControl.ofAltQ c hc cF const depth Q M hQ)
+    Lam B tmpl τ hmass tend_le tail pre cov
 
 /-- **Lift from large scales.**  Content on the members of scale `≥ R0` gives content on the whole family: the
 small scales only need some clearing denominator (the product of the coefficient denominators). -/
@@ -681,3 +720,6 @@ theorem hasScaledContent_of_check (D : BankData) (hD : check D = true)
 end TheoremD
 
 end CatalanCore.Uniform.Content.BankShared.Check
+
+#print axioms CatalanCore.Uniform.Content.BankShared.Check.altContent_of_bounds_control
+#print axioms CatalanCore.Uniform.Content.BankShared.Check.AltContentControl.ofAltQ
