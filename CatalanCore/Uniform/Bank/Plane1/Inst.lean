@@ -106,7 +106,7 @@ theorem levF_pos {q c k : ℕ} (hk : k ∈ Icc 1 c) (hs : ∃ i : Fin Fr.d, q �
   unfold levF
   exact Finset.card_pos.mpr ⟨k, Finset.mem_filter.mpr ⟨hk, hs⟩⟩
 
-theorem levF_zero (hden : ∀ i, (Fr.μ i).den ≤ 3) {q N a : ℕ} (hq : 3 * N < q) (ha : a ≤ N) :
+theorem levF_zero {Q : ℕ} (hden : ∀ i, (Fr.μ i).den ≤ Q) {q N a : ℕ} (hq : Q * N < q) (ha : a ≤ N) :
     levF Fr q a = 0 := by
   classical
   unfold levF
@@ -115,6 +115,7 @@ theorem levF_zero (hden : ∀ i, (Fr.μ i).den ≤ 3) {q N a : ℕ} (hq : 3 * N 
   have hk' := Finset.mem_Icc.mp hk
   have h1 := Nat.le_of_dvd (lin_pos i hk'.1) hd
   have h2 := lin_le i (hden i) hk'.1
+  have hka : Q * k ≤ Q * N := Nat.mul_le_mul_left Q (hk'.2.trans ha)
   omega
 
 theorem fact_lin_le {p E : ℕ} [Fact p.Prime] (i : Fin Fr.d) {k : ℕ} (hk1 : 1 ≤ k)
@@ -153,11 +154,11 @@ theorem pow_sum_Dsq_mem {p : ℕ} [Fact p.Prime] (s : Finset ℕ) (W : ℕ)
   rw [e]
   exact (LocRing p).mul_mem (int_mem_locRing _) ((LocRing p).pow_mem hm 2)
 
-/-- The generic instance: any content table with `L = 3` over a frame with shift denominators `≤ 3`. -/
-noncomputable def planeInstOf (Fr : Frame) (cd : ContentData Fr) (hL : cd.L = 3)
-    (hden : ∀ i, (Fr.μ i).den ≤ 3) : HybInst Fr where
+/-- The generic instance: any content table with `L = Q` over a frame with shift denominators `≤ Q`. -/
+noncomputable def planeInstOf (Fr : Frame) (cd : ContentData Fr) {Q : ℕ} (hL : cd.L = Q)
+    (hden : ∀ i, (Fr.μ i).den ≤ Q) : HybInst Fr where
   cd := cd
-  Ebd := fun N => 3 * N
+  Ebd := fun N => Q * N
   lev := levF Fr
   off_val := by
     intro p _ E N lo hi h1 h2 hlo hhi
@@ -167,7 +168,9 @@ noncomputable def planeInstOf (Fr : Frame) (cd : ContentData Fr) (hL : cd.L = 3)
     · have hk' := Finset.mem_Ioc.mp hk
       have hk1 : 1 ≤ k := by omega
       have hlin : lin Fr i k < p ^ (E + 1) := by
-        have := lin_le i (hden i) hk1
+        have hlinQ := lin_le i (hden i) hk1
+        have hkhi := Nat.mul_le_mul_left Q hk'.2
+        have hhiN := Nat.mul_le_mul_left Q (by omega : hi ≤ N)
         omega
       exact fact_lin_le i hk1 hlin _ (fun e _ hdv => ne_of_lt (levF_lt hk ⟨i, hdv⟩))
   diag_val := by
@@ -176,7 +179,9 @@ noncomputable def planeInstOf (Fr : Frame) (cd : ContentData Fr) (hL : cd.L = 3)
     refine pow_sum_Dsq_mem _ _ (fun k hk => ⟨(Finset.mem_Icc.mp hk).1, fun i => ?_⟩)
     have hk' := Finset.mem_Icc.mp hk
     have hlin : lin Fr i k < p ^ (E + 1) := by
-      have := lin_le i (hden i) hk'.1
+      have hlinQ := lin_le i (hden i) hk'.1
+      have hka := Nat.mul_le_mul_left Q hk'.2
+      have haN := Nat.mul_le_mul_left Q (by omega : a ≤ N)
       omega
     exact fact_lin_le i hk'.1 hlin _ (fun e _ hdv => levF_pos (q := p ^ e) hk ⟨i, hdv⟩)
   lev_large := by

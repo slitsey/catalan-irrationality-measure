@@ -51,10 +51,10 @@ theorem nat_pow_mem (n : ℕ) : ((p : ℚ) ^ n) ∈ LocRing p := by
   push_cast at this
   exact this
 
-variable (hden : ∀ i, (Fr.μ i).den ≤ 3) (h5 : 5 ≤ p)
+variable (h3 : 3 ≤ p)
 
-include hden h5 in
-theorem offSum_form {u v : ℕ} (huv : u < v) (hv : v < p * p) :
+include h3 in
+theorem offSum_form {u v : ℕ} (huv : u < v) (hdiff : ¬ p * p ∣ v - u) :
     ∃ R : ℚ, ∑ k ∈ Ioc u v, Fr.Delta k = (Vp p Fr v - Vp p Fr u) / p + R ∧
       R / ((v : ℚ) - u) ∈ LocRing p := by
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
@@ -64,15 +64,17 @@ theorem offSum_form {u v : ℕ} (huv : u < v) (hv : v < p * p) :
       rcases Nat.eq_zero_or_pos s with h | h
       · subst h; omega
       · exact h
-    have hsp : s < p := by
-      have h1 : p * s < p * p := by omega
-      exact Nat.lt_of_mul_lt_mul_left h1
+    have hs0 : ¬ p ∣ s := by
+      rintro ⟨t, ht⟩
+      apply hdiff
+      refine ⟨t, ?_⟩
+      rw [hs, ht]
+      ring
     obtain rfl : v = u + s * p := by rw [Nat.mul_comm] at hs; omega
-    obtain ⟨D, hD1, hD2⟩ := lemmaA hden h5 u s
+    obtain ⟨D, hD1, hD2⟩ := lemmaA h3 u s
     refine ⟨D, hD1, ?_⟩
     have e : (((u + s * p : ℕ) : ℚ) - u) = (s : ℚ) * p := by push_cast; ring
     rw [e]
-    have hs0 : ¬ p ∣ s := fun h => by have := Nat.le_of_dvd (by omega) h; omega
     have : D / ((s : ℚ) * p) = (D / p) * (s : ℚ)⁻¹ := by
       have : (s : ℚ) ≠ 0 := by exact_mod_cast (by omega : s ≠ 0)
       field_simp
@@ -83,10 +85,10 @@ theorem offSum_form {u v : ℕ} (huv : u < v) (hv : v < p * p) :
     rw [hdq, div_eq_mul_inv]
     exact (LocRing p).mul_mem (offSum_nonpol_mem _ _) (inv_natCast_mem_locRing hd)
 
-include hden h5 in
-theorem Mn_lt_split (hnorm : Fr.norm = 1) {u v : ℕ} (huv : u < v) (hv : v < p * p) :
+include h3 in
+theorem Mn_lt_split (hnorm : Fr.norm = 1) {u v : ℕ} (huv : u < v) (hdiff : ¬ p * p ∣ v - u) :
     ∃ g ∈ LocRing p, Fr.Mn u v = (Vp p Fr v - Vp p Fr u) / (p * ((v : ℚ) - u)) + g := by
-  obtain ⟨R, hR1, hR2⟩ := offSum_form hden h5 huv hv
+  obtain ⟨R, hR1, hR2⟩ := offSum_form h3 huv hdiff
   refine ⟨R / ((v : ℚ) - u), hR2, ?_⟩
   have hne : ((v : ℚ) - u) ≠ 0 := by
     have : (u : ℚ) < v := by exact_mod_cast huv
@@ -97,19 +99,32 @@ theorem Mn_lt_split (hnorm : Fr.norm = 1) {u v : ℕ} (huv : u < v) (hv : v < p 
   push_cast
   field_simp
 
-include hden h5 in
-theorem Mn_ne_split (hnorm : Fr.norm = 1) {u v : ℕ} (huv : u ≠ v) (hu : u < p * p) (hv : v < p * p) :
+
+/-- Convert the oriented integer difference to a natural difference. -/
+theorem nat_diff_not_sq {u v : ℕ} (huv : u ≤ v)
+    (h : ¬ (p : ℤ) * p ∣ (v : ℤ) - u) : ¬ p * p ∣ v - u := by
+  intro hd
+  apply h
+  have hi := Int.natCast_dvd_natCast.mpr hd
+  simpa only [Nat.cast_mul, Nat.cast_sub huv] using hi
+
+include h3 in
+theorem Mn_ne_split (hnorm : Fr.norm = 1) {u v : ℕ} (huv : u ≠ v)
+    (hdiff : ¬ (p : ℤ) * p ∣ (v : ℤ) - u) :
     ∃ g ∈ LocRing p, Fr.Mn u v = (Vp p Fr v - Vp p Fr u) / (p * ((v : ℚ) - u)) + g := by
   rcases lt_or_gt_of_ne huv with h | h
-  · exact Mn_lt_split hden h5 hnorm h hv
-  · obtain ⟨g, hg, e⟩ := Mn_lt_split hden h5 hnorm h hu
+  · exact Mn_lt_split h3 hnorm h (nat_diff_not_sq h.le hdiff)
+  · have hrev : ¬ (p : ℤ) * p ∣ (u : ℤ) - v := by
+      intro hd
+      apply hdiff
+      convert dvd_neg.mpr hd using 1 <;> ring
+    obtain ⟨g, hg, e⟩ := Mn_lt_split h3 hnorm h (nat_diff_not_sq h.le hrev)
     refine ⟨g, hg, ?_⟩
     rw [Mn_comm, e]
     have e1 : Vp p Fr u - Vp p Fr v = -(Vp p Fr v - Vp p Fr u) := by ring
     have e2 : ((u : ℚ) - v) = -((v : ℚ) - u) := by ring
     rw [e1, e2, mul_neg, neg_div_neg_eq]
 
-include hden h5 in
 theorem Mn_diag_split (hnorm : Fr.norm = 1) (t : ℕ) :
     ∃ g ∈ LocRing p, Fr.Mn t t = Up p Fr t / (p : ℚ) ^ 2 + g := by
   refine ⟨-(∑ k ∈ Ioc 0 t, nonpolS p Fr k), (LocRing p).neg_mem (diag_nonpol_mem t), ?_⟩
@@ -125,49 +140,58 @@ noncomputable def w0 (p : ℕ) (Fr : Frame) (U V : ℕ) : ℕ :=
   open Classical in
   if U = V then (if Up p Fr U = 0 then 0 else 2) else (if Vp p Fr U = Vp p Fr V then 0 else 2)
 
-/-- Two distinct congruent nodes below `p²/3`: `V - U = p e` with `p ∤ e`. -/
-theorem fibre_quot {U V : ℕ} (hU : 3 * U < p * p) (hV : 3 * V < p * p) (hne : U ≠ V)
-    (hf : (U : ℤ) ≡ V [ZMOD p]) : ∃ e : ℤ, (V : ℤ) - U = p * e ∧ ¬ (p : ℤ) ∣ e := by
-  obtain ⟨e, he⟩ := (Int.ModEq.dvd hf)
-  refine ⟨e, he, fun ⟨f, hf'⟩ => ?_⟩
+
+/-- A bounded nonzero difference cannot be divisible by a prime square. -/
+theorem diff_not_sq_of_lt {U V : ℕ} (hU : U < p * p) (hV : V < p * p) (hne : U ≠ V) :
+    ¬ (p : ℤ) * p ∣ (V : ℤ) - U := by
+  rintro ⟨f, hf⟩
   have hf0 : f ≠ 0 := by
     rintro rfl
-    simp at hf'
-    subst hf'
-    simp at he
-    omega
-  have h1 : (p : ℤ) * p ≤ |(V : ℤ) - U| := by
-    rw [he, hf', abs_mul, abs_mul]
-    have : (1 : ℤ) ≤ |f| := Int.one_le_abs hf0
-    have hpp : (0 : ℤ) ≤ |(p : ℤ)| := abs_nonneg _
-    rw [abs_of_nonneg (by positivity : (0 : ℤ) ≤ p)]
-    nlinarith
-  have h2 : |(V : ℤ) - U| < p * p := by
+    simp only [mul_zero, sub_eq_zero] at hf
+    exact hne (by exact_mod_cast hf.symm)
+  have hbig : (p : ℤ) * p ≤ |(V : ℤ) - U| := by
+    rw [hf, abs_mul, abs_of_nonneg (by positivity : (0 : ℤ) ≤ (p : ℤ) * p)]
+    nlinarith [Int.one_le_abs hf0]
+  have hsmall : |(V : ℤ) - U| < p * p := by
     rw [abs_lt]
-    constructor <;> push_cast <;> nlinarith [(by exact_mod_cast hU : (3 * U : ℤ) < p * p),
-      (by exact_mod_cast hV : (3 * V : ℤ) < p * p)]
+    constructor <;> push_cast <;> nlinarith [(by exact_mod_cast hU : (U : ℤ) < p * p),
+      (by exact_mod_cast hV : (V : ℤ) < p * p)]
   linarith
 
-include hden h5 in
-theorem Mn_in_fibre (hnorm : Fr.norm = 1) {U V : ℕ} (hU : 3 * U < p * p) (hV : 3 * V < p * p)
+/-- The quotient of a square-free congruent difference is a local unit. -/
+theorem fibre_quot {U V : ℕ} (hdiff : ¬ (p : ℤ) * p ∣ (V : ℤ) - U)
+    (hf : (U : ℤ) ≡ V [ZMOD p]) : ∃ e : ℤ, (V : ℤ) - U = p * e ∧ ¬ (p : ℤ) ∣ e := by
+  obtain ⟨e, he⟩ := Int.ModEq.dvd hf
+  refine ⟨e, he, ?_⟩
+  rintro ⟨f, hf⟩
+  apply hdiff
+  refine ⟨f, ?_⟩
+  rw [he, hf]
+  ring
+
+include h3 in
+theorem Mn_in_fibre (hnorm : Fr.norm = 1) {U V : ℕ}
+    (hVU : Vp p Fr U ∈ LocRing p) (hVV : Vp p Fr V ∈ LocRing p)
+    (hUU : Up p Fr U ∈ LocRing p)
+    (hsq : U ≠ V → ¬ (p : ℤ) * p ∣ (V : ℤ) - U)
     (hf : (U : ℤ) ≡ V [ZMOD p]) : (p : ℚ) ^ (w0 p Fr U V) * Fr.Mn U V ∈ LocRing p := by
   classical
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   by_cases hUV : U = V
   · subst hUV
-    obtain ⟨g, hg, e⟩ := Mn_diag_split hden h5 hnorm U
+    obtain ⟨g, hg, e⟩ := Mn_diag_split (p := p) hnorm U
     by_cases hu : Up p Fr U = 0
     · simp only [w0, if_true, hu, pow_zero, one_mul, e, zero_div, zero_add]
       exact hg
     · simp only [w0, if_true, hu, if_false]
       rw [e, mul_add, mul_div_cancel₀ _ (pow_ne_zero 2 hp0)]
-      exact (LocRing p).add_mem (Up_mem hden hU) ((LocRing p).mul_mem (nat_pow_mem 2) hg)
-  · obtain ⟨g, hg, e⟩ := Mn_ne_split hden h5 hnorm hUV (by nlinarith) (by nlinarith)
+      exact (LocRing p).add_mem hUU ((LocRing p).mul_mem (nat_pow_mem 2) hg)
+  · obtain ⟨g, hg, e⟩ := Mn_ne_split h3 hnorm hUV (hsq hUV)
     by_cases hv : Vp p Fr U = Vp p Fr V
     · simp only [w0, hUV, if_false, hv, if_true, pow_zero, one_mul, e, sub_self, zero_div, zero_add]
       exact hg
     · simp only [w0, hUV, if_false, hv]
-      obtain ⟨q, hq1, hq2⟩ := fibre_quot hU hV hUV hf
+      obtain ⟨q, hq1, hq2⟩ := fibre_quot (hsq hUV) hf
       have hq1' : ((V : ℚ) - U) = (p : ℚ) * (q : ℚ) := by exact_mod_cast hq1
       have hq0 : (q : ℚ) ≠ 0 := by
         intro h0
@@ -178,18 +202,18 @@ theorem Mn_in_fibre (hnorm : Fr.norm = 1) {U V : ℕ} (hU : 3 * U < p * p) (hV :
           (Vp p Fr V - Vp p Fr U) * (q : ℚ)⁻¹ := by field_simp
       rw [this]
       exact (LocRing p).add_mem ((LocRing p).mul_mem
-        ((LocRing p).sub_mem (Vp_mem hden hV) (Vp_mem hden hU)) (int_inv_mem hq2))
+        ((LocRing p).sub_mem hVV hVU) (int_inv_mem hq2))
         ((LocRing p).mul_mem (nat_pow_mem 2) hg)
 
-include hden h5 in
+include h3 in
 /-- **The pivot entry** (weight `0`). -/
-theorem pivot_alg (hnorm : Fr.norm = 1) {A X j : ℕ} (hX : X = A + j * p) (hj0 : 0 < j) (hXs : 3 * X < p * p)
+theorem pivot_alg (hnorm : Fr.norm = 1) {A X j : ℕ} (hX : X = A + j * p) (hj0 : 0 < j) (hsq : ¬ (p : ℤ) * p ∣ (X : ℤ) - A)
     {l : ℚ} (hl : l ∈ LocRing p) (hrel : l * (j * Up p Fr A) = Vp p Fr X - Vp p Fr A) :
     Fr.Mn A X - l * Fr.Mn A A ∈ LocRing p := by
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   have hAX : A < X := by rw [hX]; nlinarith [hp.out.pos]
-  obtain ⟨g1, hg1, e1⟩ := Mn_lt_split hden h5 hnorm hAX (by nlinarith)
-  obtain ⟨g2, hg2, e2⟩ := Mn_diag_split hden h5 hnorm A
+  obtain ⟨g1, hg1, e1⟩ := Mn_lt_split h3 hnorm hAX (nat_diff_not_sq hAX.le hsq)
+  obtain ⟨g2, hg2, e2⟩ := Mn_diag_split (p := p) hnorm A
   have hj : (j : ℚ) ≠ 0 := by exact_mod_cast hj0.ne'
   have hXA : ((X : ℚ) - A) = j * p := by rw [hX]; push_cast; ring
   have key : (Vp p Fr X - Vp p Fr A) / (p * ((X : ℚ) - A)) - l * (Up p Fr A / (p : ℚ) ^ 2) = 0 := by
@@ -222,10 +246,10 @@ theorem diff_unit {V : ℚ} (hV : V ∈ LocRing p) {d d0 : ℤ} (hd : ¬ (p : �
   exact (LocRing p).mul_mem ((LocRing p).mul_mem ((LocRing p).mul_mem hV (int_mem_locRing e))
     (int_inv_mem hd)) (int_inv_mem hd0)
 
-include hden h5 in
+include h3 in
 /-- Off the fibre, with `U ≡ X₀`, `V ≡ Y₀`: the entry in terms of the reference difference `d₀ = Y₀ - X₀`. -/
-theorem Mn_off_form (hnorm : Fr.norm = 1) {U V X0 Y0 : ℕ} (hU : 3 * U < p * p) (hV : 3 * V < p * p)
-    (hX0 : 3 * X0 < p * p) (hY0 : 3 * Y0 < p * p) (hUX : (U : ℤ) ≡ X0 [ZMOD p]) (hVY : (V : ℤ) ≡ Y0 [ZMOD p])
+theorem Mn_off_form (hnorm : Fr.norm = 1) {U V X0 Y0 : ℕ}
+    (hVU : Vp p Fr U ∈ LocRing p) (hVV : Vp p Fr V ∈ LocRing p) (hUX : (U : ℤ) ≡ X0 [ZMOD p]) (hVY : (V : ℤ) ≡ Y0 [ZMOD p])
     (hoff : ¬ (X0 : ℤ) ≡ Y0 [ZMOD p]) :
     ∃ g ∈ LocRing p, Fr.Mn U V = (Vp p Fr V - Vp p Fr U) / (p * ((Y0 : ℚ) - X0)) + g := by
   have hdV : ¬ (p : ℤ) ∣ ((V : ℤ) - U) := by
@@ -241,13 +265,13 @@ theorem Mn_off_form (hnorm : Fr.norm = 1) {U V X0 Y0 : ℕ} (hU : 3 * U < p * p)
   have hd0 : ¬ (p : ℤ) ∣ ((Y0 : ℤ) - X0) := fun h => hoff (Int.modEq_iff_dvd.2 h)
   have hUV : U ≠ V := by
     rintro rfl; exact hdV (by simp)
-  obtain ⟨g, hg, e⟩ := Mn_ne_split hden h5 hnorm hUV (by nlinarith) (by nlinarith)
+  obtain ⟨g, hg, e⟩ := Mn_ne_split h3 hnorm hUV (fun hd => hdV (dvd_trans (dvd_mul_right (p : ℤ) (p : ℤ)) hd))
   have hdd : (p : ℤ) ∣ ((Y0 : ℤ) - X0) - ((V : ℤ) - U) := by
     have h2 := (Int.ModEq.dvd hUX)    -- p ∣ X0 - U
     have h3 := (Int.ModEq.dvd hVY)    -- p ∣ Y0 - V
     have := dvd_sub h3 h2
     convert this using 1; ring
-  have hdiff := diff_unit (p := p) ((LocRing p).sub_mem (Vp_mem hden hV) (Vp_mem hden hU)) hdV hd0 hdd
+  have hdiff := diff_unit (p := p) ((LocRing p).sub_mem hVV hVU) hdV hd0 hdd
   refine ⟨g + ((Vp p Fr V - Vp p Fr U) / (p * (((V : ℤ) - U : ℤ) : ℚ)) -
     (Vp p Fr V - Vp p Fr U) / (p * (((Y0 : ℤ) - X0 : ℤ) : ℚ))), ?_, ?_⟩
   · refine (LocRing p).add_mem hg hdiff
@@ -349,11 +373,13 @@ variable {p : ℕ} [hp : Fact p.Prime] {Fr : Frame}
 
 /-- The hypotheses of the entry lemma.  `Vr`, `Vc` are the effective levels `V*` of rows and columns. -/
 structure GOK (p : ℕ) [Fact p.Prime] (Fr : Frame) (G : GData ι) (Vr Vc : ι → ℚ) : Prop where
-  hden : ∀ i, (Fr.μ i).den ≤ 3
-  h5 : 5 ≤ p
+  h3 : 3 ≤ p
   hnorm : Fr.norm = 1
-  small_r : ∀ u, 3 * G.rn u < p * p
-  small_c : ∀ u, 3 * G.cn u < p * p
+  v_r : ∀ u, Vp p Fr (G.rn u) ∈ LocRing p
+  v_c : ∀ u, Vp p Fr (G.cn u) ∈ LocRing p
+  u_r : ∀ u, Up p Fr (G.rn u) ∈ LocRing p
+  u_c : ∀ u, Up p Fr (G.cn u) ∈ LocRing p
+  square_free : ∀ u v, G.rn u ≠ G.cn v → ¬ (p : ℤ) * p ∣ (G.cn v : ℤ) - G.rn u
   isC_node : ∀ u, G.isC u = true → G.rn u = G.cn u
   rowPiv : ∀ x a, G.π x = some a → G.isC a = true ∧ G.isC x = false ∧ ∃ j : ℕ, 0 < j ∧
     G.rn x = G.rn a + j * p ∧ G.lr x * (j * Up p Fr (G.rn a)) = Vp p Fr (G.rn x) - Vp p Fr (G.rn a)
@@ -419,6 +445,12 @@ theorem term_mem {W w : ℕ} (hW : w ≤ W) {c m : ℚ} (hc : c ∈ LocRing p) (
   rw [this]
   exact (LocRing p).mul_mem ((LocRing p).mul_mem (nat_pow_mem _) hc) hm
 
+
+theorem GOK.in_fibre (hG : GOK p Fr G Vr Vc) (u v : ι)
+    (hf : (G.rn u : ℤ) ≡ G.cn v [ZMOD p]) :
+    (p : ℚ) ^ (w0 p Fr (G.rn u) (G.cn v)) * Fr.Mn (G.rn u) (G.cn v) ∈ LocRing p :=
+  Mn_in_fibre hG.h3 hG.hnorm (hG.v_r u) (hG.v_c v) (hG.u_r u) (hG.square_free u v) hf
+
 /-- **The constant term of every gauged entry is `p^{Wd}`-integral.** -/
 theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
     (p : ℚ) ^ (Wd p Fr G Vr Vc x y) * G.cst Fr x y ∈ LocRing p := by
@@ -437,7 +469,13 @@ theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
       have e3 : G.aC y = y := by simp [GData.aC, hπ'y]
       have e4 : G.cc y = 0 := by simp [GData.cc, hπ'y]
       have hc := hG.isC_node y hCa
-      have key := pivot_alg hG.hden hG.h5 hG.hnorm hX hj0 (hG.small_r x) (hG.lr_mem x) hrel
+      have hne : G.rn x ≠ G.rn y := by rw [hX]; nlinarith [hp.out.pos]
+      have hsq : ¬ (p : ℤ) * p ∣ (G.rn x : ℤ) - G.rn y := by
+        intro hd
+        apply hG.square_free x y (by rw [← hc]; exact hne)
+        rw [← hc]
+        convert dvd_neg.mpr hd using 1 <;> ring
+      have key := pivot_alg hG.h3 hG.hnorm hX hj0 hsq (hG.lr_mem x) hrel
       have e5 := Mn_comm (Fr := Fr) (G.rn x) (G.rn y)
       unfold GData.cst GData.m
       rw [e1, e2, e3, e4, ← hc]
@@ -455,7 +493,8 @@ theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
       have e4 : G.cc y = G.lc y := by simp [GData.cc, h]
       have hc := hG.isC_node x hCa
       rw [← hc] at hY hrel
-      have key := pivot_alg hG.hden hG.h5 hG.hnorm hY hj0 (hG.small_c y) (hG.lc_mem y) hrel
+      have hne : G.rn x ≠ G.cn y := by rw [hY]; nlinarith [hp.out.pos]
+      have key := pivot_alg hG.h3 hG.hnorm hY hj0 (hG.square_free x y hne) (hG.lc_mem y) hrel
       unfold GData.cst GData.m
       rw [e1, e2, e3, e4, ← hc]
       convert key using 1
@@ -467,12 +506,10 @@ theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
           (G.rn u : ℤ) ≡ G.cn v [ZMOD p] := fun u v hu hv => hu.trans (hfi.trans hv.symm)
       have hrefl : (G.rn x : ℤ) ≡ G.rn x [ZMOD p] := Int.ModEq.refl _
       have hrefl' : (G.cn y : ℤ) ≡ G.cn y [ZMOD p] := Int.ModEq.refl _
-      have m1 := Mn_in_fibre hG.hden hG.h5 hG.hnorm (hG.small_r x) (hG.small_c y) (hfx x y hrefl hrefl')
-      have m2 := Mn_in_fibre hG.hden hG.h5 hG.hnorm (hG.small_r x) (hG.small_c (G.aC y))
-        (hfx x (G.aC y) hrefl (cn_aC_mod hG y))
-      have m3 := Mn_in_fibre hG.hden hG.h5 hG.hnorm (hG.small_r (G.aR x)) (hG.small_c y)
-        (hfx (G.aR x) y (rn_aR_mod hG x) hrefl')
-      have m4 := Mn_in_fibre hG.hden hG.h5 hG.hnorm (hG.small_r (G.aR x)) (hG.small_c (G.aC y))
+      have m1 := hG.in_fibre x y (hfx x y hrefl hrefl')
+      have m2 := hG.in_fibre x (G.aC y) (hfx x (G.aC y) hrefl (cn_aC_mod hG y))
+      have m3 := hG.in_fibre (G.aR x) y (hfx (G.aR x) y (rn_aR_mod hG x) hrefl')
+      have m4 := hG.in_fibre (G.aR x) (G.aC y)
         (hfx (G.aR x) (G.aC y) (rn_aR_mod hG x) (cn_aC_mod hG y))
       set W := max (max (w0 p Fr (G.rn x) (G.cn y)) (w0 p Fr (G.rn x) (G.cn (G.aC y))))
         (max (w0 p Fr (G.rn (G.aR x)) (G.cn y)) (w0 p Fr (G.rn (G.aR x)) (G.cn (G.aC y)))) with hW
@@ -493,14 +530,14 @@ theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
       have hl_mem : l ∈ LocRing p := rr_mem hG x
       have hl'_mem : l' ∈ LocRing p := cc_mem hG y
       have hd0 : ¬ (p : ℤ) ∣ ((G.cn y : ℤ) - G.rn x) := fun h => hfi (Int.modEq_iff_dvd.2 h)
-      have g1 := Mn_off_form hG.hden hG.h5 hG.hnorm (hG.small_r x) (hG.small_c y) (hG.small_r x)
-        (hG.small_c y) (Int.ModEq.refl _) (Int.ModEq.refl _) hfi
-      have g2 := Mn_off_form hG.hden hG.h5 hG.hnorm (hG.small_r x) (hG.small_c (G.aC y)) (hG.small_r x)
-        (hG.small_c y) (Int.ModEq.refl _) (cn_aC_mod hG y) hfi
-      have g3 := Mn_off_form hG.hden hG.h5 hG.hnorm (hG.small_r (G.aR x)) (hG.small_c y) (hG.small_r x)
-        (hG.small_c y) (rn_aR_mod hG x) (Int.ModEq.refl _) hfi
-      have g4 := Mn_off_form hG.hden hG.h5 hG.hnorm (hG.small_r (G.aR x)) (hG.small_c (G.aC y)) (hG.small_r x)
-        (hG.small_c y) (rn_aR_mod hG x) (cn_aC_mod hG y) hfi
+      have g1 := Mn_off_form hG.h3 hG.hnorm (hG.v_r x) (hG.v_c y)
+        (Int.ModEq.refl _) (Int.ModEq.refl _) hfi
+      have g2 := Mn_off_form hG.h3 hG.hnorm (hG.v_r x) (hG.v_c (G.aC y))
+        (Int.ModEq.refl _) (cn_aC_mod hG y) hfi
+      have g3 := Mn_off_form hG.h3 hG.hnorm (hG.v_r (G.aR x)) (hG.v_c y)
+        (rn_aR_mod hG x) (Int.ModEq.refl _) hfi
+      have g4 := Mn_off_form hG.h3 hG.hnorm (hG.v_r (G.aR x)) (hG.v_c (G.aC y))
+        (rn_aR_mod hG x) (cn_aC_mod hG y) hfi
       obtain ⟨a1, ha1, e1⟩ := g1
       obtain ⟨a2, ha2, e2⟩ := g2
       obtain ⟨a3, ha3, e3⟩ := g3
@@ -514,10 +551,10 @@ theorem entry_const (hG : GOK p Fr G Vr Vc) (x y : ι) :
         ring
       have hBmem : B ∈ LocRing p := by
         refine (LocRing p).sub_mem ((LocRing p).mul_mem ((LocRing p).sub_mem (LocRing p).one_mem hl_mem)
-          ((LocRing p).sub_mem (Vp_mem hG.hden (hG.small_c y)) ((LocRing p).mul_mem hl'_mem
-            (Vp_mem hG.hden (hG.small_c _))))) ((LocRing p).mul_mem ((LocRing p).sub_mem (LocRing p).one_mem hl'_mem)
-          ((LocRing p).sub_mem (Vp_mem hG.hden (hG.small_r x)) ((LocRing p).mul_mem hl_mem
-            (Vp_mem hG.hden (hG.small_r _)))))
+          ((LocRing p).sub_mem (hG.v_c y) ((LocRing p).mul_mem hl'_mem
+            (hG.v_c _)))) ((LocRing p).mul_mem ((LocRing p).sub_mem (LocRing p).one_mem hl'_mem)
+          ((LocRing p).sub_mem (hG.v_r x) ((LocRing p).mul_mem hl_mem
+            (hG.v_r _))))
       have hgmem : (a1 - l' * a2 - l * a3 + l * l' * a4) ∈ LocRing p := by
         refine (LocRing p).add_mem ((LocRing p).sub_mem ((LocRing p).sub_mem ha1 ((LocRing p).mul_mem hl'_mem ha2))
           ((LocRing p).mul_mem hl_mem ha3)) ((LocRing p).mul_mem ((LocRing p).mul_mem hl_mem hl'_mem) ha4)
