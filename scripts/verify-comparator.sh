@@ -3,8 +3,11 @@ set -euo pipefail
 
 # Judge Solution against Challenge the way Palomar does: with the `lake
 # comparator` that ships in this project's own toolchain, replaying the proof
-# through Lean's kernel and the toolchain's bundled independent kernels
-# (NanoDa and con-ron). Nothing is built from a pin; everything that judges
+# through Lean's kernel and the toolchain's bundled NanoDa kernel. Palomar
+# requires both to accept. It then runs con-ron as an advisory replay with a
+# 30-minute cap, whose decline or timeout does not fail a submission
+# (PalomarPolicy docs/specification.md). This script does not run that
+# advisory step. Nothing is built from a pin; everything that judges
 # comes from `lean-toolchain`, which Palomar requires to be v4.35.0-rc2 or
 # later.
 repository_root=$(cd "$(dirname "$0")/.." && pwd)
@@ -28,8 +31,9 @@ for tool in lake leanexport leanchecker nanoda_bin con-ron; do
 done
 
 # Palomar ignores `enable_nanoda` and rejects `external_kernels` in a submitted
-# comparator.json: it registers the toolchain's bundled kernels itself. This
-# generated copy does the same, so the local check judges as the registry does.
+# comparator.json: it writes its own protected configuration with NanoDa
+# enabled. This generated copy does the same, so the local check judges as the
+# registry's mandatory step does.
 config=$(mktemp "${TMPDIR:-/tmp}/palomar-comparator.XXXXXX")
 trap 'rm -f "$config"' EXIT
 python3 - comparator.json "$config" "$prefix" <<'PY'
@@ -52,9 +56,6 @@ if "external_kernels" in config:
 config.pop("enable_nanoda", None)
 config["external_kernels"] = {
     "nanoda": [f"{prefix}/bin/nanoda_bin"],
-    # One worker avoids con-ron's concurrent result-table allocation on small
-    # hosted runners. The standard verified mode and embedded pins are unchanged.
-    "con-ron": [f"{prefix}/bin/con-ron", "--jobs=1", "--progress=100"],
 }
 pathlib.Path(destination).write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
 PY
