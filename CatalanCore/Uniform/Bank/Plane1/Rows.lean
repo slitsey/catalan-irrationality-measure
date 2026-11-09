@@ -3,6 +3,7 @@ module
 public import CatalanCore.Uniform.Bank.Plane1.Content
 public import CatalanCore.Uniform.Bank.Plane1.Decay
 public import CatalanCore.Uniform.Content.Shape.Irrational
+public import CatalanCore.Uniform.Support.Theorem
 
 @[expose] public section
 set_option Elab.async false
@@ -24,7 +25,43 @@ namespace CatalanCore.Uniform.Bank.Plane1
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Measure
   CatalanCore.Uniform.Content.BankShared.Check CatalanFrames.P6
 
-/-- **Theorem R, row form (P113)**: content, decay and non-vanishing for an alternating geometry. -/
+/-- P120. Every alternating Frame point is an instance of S07, with its
+own geometry, content, decay, selection depth and rational affine target. -/
+theorem alt_point (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) {Λ D cc : ℝ}
+    (hΛ : HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale Λ)
+    (hD : HasScaledDecay ((altGeom c hc).family Fr depth) (altGeom c hc).scale D cc)
+    (hη : Λ < D) (hcc : 0 < cc)
+    (hnv : ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
+      ∃ n, (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).Adm n ∧
+        (altGeom c hc).scale n = 2 * s ∧
+        (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).evalQ n x ≠ 0)
+    {ξ : ℝ} {u v : ℚ} (hu : u ≠ 0) (hconst : Fr.const = (u : ℝ)*ξ+v) :
+    MeasureLBAt ξ (cc / (D - Λ)) ∧ Irrational ξ := by
+  have hmass : ((altGeom c hc).common.mass : ℝ) = 1 := by
+    have : (altGeom c hc).common.mass = 1 := by
+      simp [altGeom, single_mass, commonB, PeriodicBlock.mass]
+    rw [this]; norm_num
+  have hdeg : ∀ n, ((altGeom c hc).family Fr depth).Adm n →
+      (((altGeom c hc).family Fr depth).deg n : ℝ) ≤
+        1 * ((altGeom c hc).scale n : ℝ) + (altGeom c hc).common.n := by
+    intro n _
+    have := (altGeom c hc).degree_bound Fr depth n
+    rw [hmass] at this
+    exact this
+  have hnvFull : ∃ R0 : ℕ, ∀ s : ℕ, R0 ≤ s → ∀ x : ℚ,
+      ∃ n, ((altGeom c hc).family Fr depth).Adm n ∧
+        (altGeom c hc).scale n = 2*s ∧
+        ((altGeom c hc).family Fr depth).evalQ n x ≠ 0 := by
+    obtain ⟨R0, hR⟩ := hnv
+    refine ⟨R0, fun s hs x => ?_⟩
+    obtain ⟨n, hn, hsc, hne⟩ := hR s hs x
+    exact ⟨n, hn.1, hsc, hne⟩
+  have key := Support.support_measureLB ((altGeom c hc).family Fr depth) (altGeom c hc).scale
+    (γ := 1) (K := (altGeom c hc).common.n) hΛ hD hη hcc one_pos (Nat.cast_nonneg _)
+    hdeg hnvFull hu hconst
+  simpa only [one_mul] using key
+
+/-- The existing row API, now a corollary of the shared point theorem. -/
 theorem alt_row_theorem (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) {Λ D cc : ℝ}
     (hΛ : HasScaledContent (AltEven c hc Fr depth) (altGeom c hc).scale Λ)
     (hD : HasScaledDecay ((altGeom c hc).family Fr depth) (altGeom c hc).scale D cc)
@@ -35,26 +72,10 @@ theorem alt_row_theorem (c : ℚ) (hc : 0 < c) (Fr : Frame) (depth : ℕ) {Λ D 
         (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).evalQ n x ≠ 0) :
     (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).MeasureLB (1 * cc / (D - Λ)) ∧
       Irrational Fr.const := by
-  have hmass : ((altGeom c hc).common.mass : ℝ) = 1 := by
-    have : (altGeom c hc).common.mass = 1 := by
-      simp [altGeom, single_mass, commonB, PeriodicBlock.mass]
-    rw [this]; norm_num
-  have hdeg : ∀ n, (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).Adm n →
-      ((((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).deg n : ℝ) ≤
-        1 * ((altGeom c hc).scale n : ℝ) + (altGeom c hc).common.n := by
-    intro n _
-    have := (altGeom c hc).degree_bound Fr depth n
-    rw [hmass] at this
-    exact this
-  have hD' : HasScaledDecay (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0))
-      (altGeom c hc).scale D cc := by
-    intro ε hε
-    obtain ⟨R0, hR⟩ := hD ε hε
-    exact ⟨R0, fun n (hn : (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)).Adm n) => hR n hn.1⟩
-  refine ⟨measure_of_family_nv0_even (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)) (altGeom c hc).scale (γ := 1) (K := (altGeom c hc).common.n)
-    hΛ hD' hη hcc one_pos (Nat.cast_nonneg _) hdeg (fun n hn => hn.2) hnv, ?_⟩
-  exact irrational_of_family_nv0_even (((altGeom c hc).family Fr depth).restrictAdm (fun i => i.1 % 2 = 0)) (altGeom c hc).scale hΛ hD' hη hcc one_pos (Nat.cast_nonneg _)
-    hdeg (fun n hn => hn.2) hnv
+  rw [one_mul]
+  change MeasureLBAt Fr.const (cc / (D - Λ)) ∧ Irrational Fr.const
+  exact alt_point c hc Fr depth hΛ hD hη hcc hnv
+      (ξ := Fr.const) (u := 1) (v := 0) one_ne_zero (by simp)
 
 /-- **A plane frame with three nonzero weights** (P116 at the frame level): the number `L₃ + t π²`,
 `t = planeT σ a b`, has the measure bound `cc / (D - Λ)` and is irrational, given content `Λ`, decay `(D, cc)`
@@ -155,3 +176,5 @@ end CatalanCore.Uniform.Bank.Plane1
 #print axioms CatalanCore.Uniform.Bank.Plane1.plane_frame_point_pi
 #print axioms CatalanCore.Uniform.Bank.Plane1.sixths_point
 #print axioms CatalanCore.Uniform.Bank.Plane1.mirror_point
+
+#print axioms CatalanCore.Uniform.Bank.Plane1.alt_point
