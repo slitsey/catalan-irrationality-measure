@@ -99,11 +99,12 @@ related_formalizations:
 
 status:
   scope: >-
-    The twenty-five statements of ChallengeHybrid.lean (namespace
+    The twenty-six statements of ChallengeHybrid.lean (namespace
     TrigammaDifferences), with every constant written as a series, are fully
     proved in SolutionHybrid.lean from
     CatalanCore.Uniform.Bank.Plane1.plane_point_ab (the first plane),
     CatalanCore.Uniform.Bank.Plane2.plane2_point_ab_of_content (the second plane),
+    CatalanCore.Uniform.Bank.Plane3.plane3_final (the third plane),
     CatalanCore.Uniform.Bank.Plane1.Dips.dip_point (the six special points
     L(2, chi_{-3}) +- 2 pi^2/27, +- pi^2/27, +- pi^2/18),
     CatalanCore.Uniform.Bank.Plane2.zeta3_measure_le,
@@ -113,7 +114,7 @@ status:
     CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.thirds_plus_measure and
     thirds_minus_measure,
     CatalanCore.Uniform.Bank.FifthsContent.Level3Bound.fifths1_measure, ...,
-    fifths4_measure, and
+    fifths4_measure,
     CatalanCore.Uniform.Bank.HalvesContent.Bound.pi2_measure, and
     CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound.sevenths_measure (whose
     argument a - 1 runs over Fin 6). Every theorem, proposition and lemma used in
@@ -155,15 +156,15 @@ fidelity:
     affine map. The three plane theorems take the rational coefficients a, b as
     arguments, with the fraction written p/q. Each bound is stated for all
     integer numerators and all sufficiently large denominators, with the
-    exponents 206622/10000, 33520/100, 137046/10000, 47499/5000, 14, 15359/1000,
-    18161/1000, 60382/10000, 65253/10000, 78219/2500, 14892/625 and
-    18061719/10000 as rationals cast to R.
+    exponents 206622/10000, 33520/100, 1821/25, 136839/10000, 94913/10000, 14,
+    15359/1000, 4373/250, 60382/10000, 65214/10000, 311973/10000, 237756/10000
+    and 18061719/10000, represented exactly in R.
 
 review:
   status: "self-assessed"
   reviewers: []
   notes: >-
-    The statements in ChallengeHybrid.lean were checked against Theorems 1.1-1.5
+    The statements in ChallengeHybrid.lean were checked against Theorems 1.1-1.6
     and Table 1 of the companion paper, and the constants stated in the paper were
     checked against the Lean development. No independent human review has been
     performed.
@@ -171,82 +172,82 @@ review:
 alignment:
   namespace: "TrigammaDifferences"
   statements:
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(i)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(i)"
       lean: "TrigammaDifferences.lambda_minus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "G - 5 pi^2/48, exponent 31.1973."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(i)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(i)"
       lean: "TrigammaDifferences.lambda_plus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "G + 5 pi^2/48, exponent 31.1973."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(i)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(i)"
       lean: "TrigammaDifferences.chi3_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}), exponent 13.6839."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(ii)"
       lean: "TrigammaDifferences.chi3_plus_pi2_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) + pi^2/9, exponent 9.4913."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(ii)"
       lean: "TrigammaDifferences.chi3_minus_pi2_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) - pi^2/9, exponent 9.4913."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(ii)"
       lean: "TrigammaDifferences.fifths1_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(1/5) - pi^2/6, exponent 23.7756."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(ii)"
       lean: "TrigammaDifferences.fifths2_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(2/5) - pi^2/6, exponent 23.7756."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(ii)"
       lean: "TrigammaDifferences.fifths3_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(3/5) - pi^2/6, exponent 23.7756."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(ii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(ii)"
       lean: "TrigammaDifferences.fifths4_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(4/5) - pi^2/6, exponent 23.7756."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths1_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(1/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths2_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(2/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths3_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(3/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths4_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(4/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths5_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(5/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.6(iii)"
       lean: "TrigammaDifferences.sevenths6_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "psi'(6/7) - pi^2/6, exponent 1806.1719."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5"
       lean: "TrigammaDifferences.pi2_measure"
       module: "ChallengeHybrid"
       status: proved
@@ -256,48 +257,48 @@ alignment:
       module: "ChallengeHybrid"
       status: proved
       note: "a L(2, chi_{-3}) + b pi^2 for all rationals (a, b) not both zero, exponent 20.6622."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.3"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2"
       lean: "TrigammaDifferences.plane2_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "a zeta(3) + b pi^2 for all rationals (a, b) not both zero, exponent 335.20."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(iii)"
       lean: "TrigammaDifferences.dip_2_27_plus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) + 2 pi^2/27 = Psi(1/6,1/3)/18, exponent 14."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(iii)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(iii)"
       lean: "TrigammaDifferences.dip_2_27_minus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) - 2 pi^2/27 = Psi(2/3,5/6)/18, exponent 14."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(iv)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(iv)"
       lean: "TrigammaDifferences.dip_1_27_plus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) + pi^2/27 = 2 Psi(1/3,1/2)/9, exponent 15.359."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(iv)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(iv)"
       lean: "TrigammaDifferences.dip_1_27_minus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) - pi^2/27 = 2 Psi(1/2,2/3)/9, exponent 15.359."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(v)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(v)"
       lean: "TrigammaDifferences.dip_1_18_plus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) + pi^2/18, exponent 17.492."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.2(v)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4(v)"
       lean: "TrigammaDifferences.dip_1_18_minus_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "L(2, chi_{-3}) - pi^2/18, exponent 17.492."
-    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.4"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.5"
       lean: "TrigammaDifferences.zeta3_measure"
       module: "ChallengeHybrid"
       status: proved
       note: "zeta(3), exponent 6.0382."
 
-    - source: "Litsey, third plane construction (2026)"
+    - source: "Litsey, Irrationality measures from Löwner determinants (2026), Theorem 1.3"
       lean: "TrigammaDifferences.plane3_measure"
       module: "ChallengeHybrid"
       status: proved

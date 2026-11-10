@@ -28,9 +28,8 @@ irrational. One Löwner structure gives all three planes. The irrationality of t
 by other methods: by Calegari, Dimitrov and Tang for the first plane, by Q. Tang for the second and by Lai
 for the third. The bound 20.6622 improves the published bound 24781 of Calegari, Dimitrov and Tang on the first
 plane. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the whole
-plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.84, and Marcovecchio and Zudilin
-prove μ(ζ(4)) ≤ 12.51086, which is better than 72.84. The third plane and π⁴ are included because their function has a
-pole of order three.
+plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.84. The third plane is
+included because its function has a pole of order three.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
 `Classical.choice`.
@@ -70,7 +69,7 @@ its Lean formalization. Other bounds in the literature:
 
 | File | Content |
 |---|---|
-| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean) | the twenty-six statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`) and the other twenty-five in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`). This is the whole trusted statement surface |
+| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean) | the twenty-seven statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`) and the other twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`). This is the whole trusted statement surface |
 | [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean) | their proofs, each file ending with `#print axioms` for its theorems |
 | [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json` is not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
 | [`CatalanMeasure/GenD/`](CatalanMeasure/GenD/) | the proof of μ(G) ≤ 270 |
@@ -200,7 +199,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 | L₋₃ ± π²/18 | first plane | 1/4 | 3.4140176 | 3.8109776 | 6.9434368 | 17.49153 | 17.492 |
 | a ζ(3) + b π² | second plane | 6/41 | 3.4768376 | 3.4982052 | 7.1600631 | 335.0886 | 335.20 |
 | ζ(3) | ψ′(z + 1) | 3/10 | 2.9128390 | 3.9790633 | 6.4345402 | 6.034884 | 6.0382 |
-| a ζ(3) + b π⁴ | third plane | 13/100 | 3.3497814 | 3.4456170 | 6.9798542 | 72.8316 | 72.84 |
+| a ζ(3) + b π⁴ | third plane | 13/100 | 3.3497815 | 3.4456170 | 6.9798542 | 72.8316 | 72.84 |
 | G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7453322 | 7.1887383 | 31.19724 | 31.1973 |
 | L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6442402 | 7.5030223 | 13.68385 | 13.6839 |
 | L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0295805 | 6.8255087 | 9.491278 | 9.4913 |
@@ -211,7 +210,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 Here `Λ` is the content constant, `D` the decay constant and `γ` the window constant. They are the
 rational numbers of the formal proof, rounded outward (`Λ` and `γ` up, `D` down); the column
 `γ/(D − Λ)` is the exact quotient, rounded up. The last column is the bound stated in Lean. The row for π² uses `Ψ(1/2, 1) = π²/3`. The bounds for `ζ(3)`,
-`π²`, `π⁴` and the third plane are weaker than the known bounds and are included for completeness.
+`π²` and the third plane are weaker than the known bounds and are included for completeness.
 
 The shared results are in `CatalanCore/Uniform/` (namespace `CatalanCore.Uniform`): the content theorem
 `Content.BankShared.Check.hasScaledContent_of_check`, and its form for frames with several first poles,
@@ -251,6 +250,14 @@ with `c = 6/41` and one decay cover. Its content is again an instance of the per
 two ends `a = 0` and `b = 0` are one-term data on the same cover. The data are in `Bank/Plane2/`; the theorem is
 `CatalanCore.Uniform.Bank.Plane2.plane2_point_ab_of_content`, and the public theorem
 `TrigammaDifferences.plane2_measure`.
+
+### The third plane
+
+The whole rational plane `a ζ(3) + b π⁴` uses `c = 13/100` and a coefficient-independent refined
+content table with 31 pieces. The full-period bound applies without requiring a coefficient numerator to
+be a unit. Together with the checked decay cover it gives the exact quotient `72.8315472490… < 72.84`.
+The line `b = 0` uses the stronger ζ(3) bound. The content, decay and point proofs are in `Bank/Plane3/`;
+the public theorem is `TrigammaDifferences.plane3_measure`. The plane theorem includes π⁴.
 
 ### ζ(3)
 
