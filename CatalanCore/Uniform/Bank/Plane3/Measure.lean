@@ -14,7 +14,7 @@ open CatalanCore CatalanCore.Measure CatalanCore.Uniform
 
 theorem plane3_final (a b : ℚ) (hab : a≠0 ∨ b≠0) :
     ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-      (q:ℝ)^(-(118:ℝ))<|((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
+      (q:ℝ)^(-(118:ℝ))< |((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
   have hex : ∃ E : ℝ,0≤E ∧ E<118 ∧
       MeasureLBAt ((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4) E ∧
       Irrational ((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4) := by
@@ -41,7 +41,7 @@ theorem plane3_final (a b : ℚ) (hab : a≠0 ∨ b≠0) :
   simpa only [show E+(118-E)=118 by ring] using h
 
 theorem pi4_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-(118:ℝ))<|Real.pi^4-(p:ℝ)/q| := by
+    (q:ℝ)^(-(118:ℝ))< |Real.pi^4-(p:ℝ)/q| := by
   simpa using plane3_final 0 1 (Or.inr one_ne_zero)
 
 end CatalanCore.Uniform.Bank.Plane3
