@@ -45,31 +45,33 @@
 \newcommand{\cI}{\mathcal I}
 \newcommand{\Lt}{L_{-3}}             % the constant L(2,chi_{-3})
 
-\newcommand{\MuLamU}{31.2876}
-\newcommand{\MuThirdsU}{9.4998}
-\newcommand{\MuFifthsU}{23.8272}
+\newcommand{\MuLamU}{31.1973}
+\newcommand{\MuThirdsU}{9.4913}
+\newcommand{\MuFifthsU}{23.7756}
 \newcommand{\MuSeventhsU}{1806.1719}
-\newcommand{\MuChi}{13.7046}
-\newcommand{\MuHalvesU}{6.5253}
+\newcommand{\MuChi}{13.6839}
+\newcommand{\MuHalvesU}{6.5214}
 \newcommand{\MuPlaneA}{20.6622}
 \newcommand{\MuPlaneB}{335.20}
+\newcommand{\MuPlaneC}{118}
 \newcommand{\MuZetaThree}{6.0382}
 \newcommand{\MuDipA}{14}
 \newcommand{\MuDipB}{15.359}
-\newcommand{\MuDipC}{18.161}
-\newcommand{\LamFour}{3.5149036}  \newcommand{\DFour}{3.7447213}  \newcommand{\gFour}{7.1904273}  \newcommand{\ExpFour}{31.28751}
-\newcommand{\LamThree}{3.3104458} \newcommand{\DThree}{4.0291249} \newcommand{\gThree}{6.8272548} \newcommand{\ExpThree}{9.499725}
-\newcommand{\LamFive}{3.5128488}  \newcommand{\DFive}{3.8135797}  \newcommand{\gFive}{7.1655663}  \newcommand{\ExpFive}{23.82717}
+\newcommand{\MuDipC}{17.492}
+\newcommand{\LamFour}{3.5149036}  \newcommand{\DFour}{3.7453322}  \newcommand{\gFour}{7.1887383}  \newcommand{\ExpFour}{31.19724}
+\newcommand{\LamThree}{3.3104458} \newcommand{\DThree}{4.0295805} \newcommand{\gThree}{6.8255087} \newcommand{\ExpThree}{9.491278}
+\newcommand{\LamFive}{3.5128488}  \newcommand{\DFive}{3.8141613}  \newcommand{\gFive}{7.1638755}  \newcommand{\ExpFive}{23.77556}
 \newcommand{\LamSeven}{3.6391158643} \newcommand{\DSeven}{3.6432250312} \newcommand{\gSeven}{7.4218615374} \newcommand{\ExpSeven}{1806.172}
-\newcommand{\LamHalf}{2.9923824}  \newcommand{\DHalf}{3.9785713}  \newcommand{\gHalf}{6.4350874}  \newcommand{\ExpHalf}{6.525207}
-\newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6435117}   \newcommand{\gChi}{7.5043742}  \newcommand{\ExpChi}{13.70452}
+\newcommand{\LamHalf}{2.9923824}  \newcommand{\DHalf}{3.9790633}  \newcommand{\gHalf}{6.4345402}  \newcommand{\ExpHalf}{6.521399}
+\newcommand{\LamChi}{4.0959278}   \newcommand{\DChi}{4.6442402}   \newcommand{\gChi}{7.5030223}  \newcommand{\ExpChi}{13.68385}
 \newcommand{\LamPl}{3.2227428}    \newcommand{\DPl}{3.5503512}    \newcommand{\gPl}{6.7690926}   \newcommand{\ExpPl}{20.66214}
 \newcommand{\LamDA}{3.0668400}    \newcommand{\ExpDA}{13.99987}
 \newcommand{\LamDB}{3.1096062}    \newcommand{\ExpDB}{15.35830}
-\newcommand{\LamDC}{3.1776039}    \newcommand{\ExpDC}{18.16000}
+\newcommand{\LamDC}{3.4140176}    \newcommand{\DDC}{3.8109776}    \newcommand{\gDC}{6.9434368}   \newcommand{\ExpDC}{17.49153}
 \newcommand{\LamPlB}{3.4768376}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.0886}
-\newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.038184}
-\newcommand{\MuChiExact}{13.704516}
+\newcommand{\LamPlC}{3.2941777}   \newcommand{\DPlC}{3.3533776}   \newcommand{\gPlC}{6.9643459}  \newcommand{\ExpPlC}{117.6410}
+\newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.034884}
+\newcommand{\MuChiExact}{13.683844}
 
 \begin{document}
 
@@ -78,7 +80,7 @@
 \author{Sean Litsey}
 \email{sean.litsey.math@gmail.com}
 
-\date{November 8, 2026}
+\date{November 10, 2026}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 15A15, 31A15, 68V20}
 
@@ -92,11 +94,11 @@ first plane was $24781$, due to Calegari, Dimitrov and Tang. Every number on the
 irrational by a theorem of Q.~Tang, and as far as we know no irrationality measure valid on the whole plane was known. At special
 points of the first plane the bound is lower. We prove $\mu(L(2,\chi_{-3}))\le\MuChi$, and the bounds $\MuThirdsU$,
 $\MuDipA$, $\MuDipB$ and $\MuDipC$ for $L(2,\chi_{-3})\pm\pi^2/9$, $\pm2\pi^2/27$, $\pm\pi^2/27$ and $\pm\pi^2/18$. For
-completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$, which are weaker than the known
-bounds.
+completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$, $\mu(\pi^2)\le\MuHalvesU$ and
+$\mu(a\zeta(3)+b\pi^4)\le\MuPlaneC$, which are weaker than the known bounds.
 
 The approximations are determinants of rectangular L\"owner matrices, the matrices of divided differences, of
-rational combinations of the digamma function and its derivative at integer nodes. Many of the numbers above are
+rational combinations of the digamma function and its derivatives at integer nodes. Many of the numbers above are
 differences of two values of the trigamma function. The same construction gives
 $\mu(G\pm5\pi^2/48)\le\MuLamU$, where $G$ is Catalan's constant, and bounds $\MuFifthsU$ and $\MuSeventhsU$ for the
 numbers $\psi'(k/5)-\pi^2/6$ and $\psi'(k/7)-\pi^2/6$ with $k$ prime to the denominator. For these numbers we know of no
@@ -135,8 +137,8 @@ Let $a$ and $b$ be rational numbers, not both zero. Then $a\Lt+b\pi^2$ is irrati
 At five pairs of points of the plane we prove better bounds. They do not follow from Theorem~\ref{thm:plane1}. Each
 has its own proof. The point $\Lt$ uses its own construction (Section~\ref{sec:chi3-quarter}). The points
 $\Lt\pm\pi^2/9$ use the construction of the off-plane results below (Section~\ref{sec:proof}). The other three pairs
-use the construction of the plane with further arithmetic that holds only at these points
-(\S\ref{ssec:levels}).
+use the functions of the plane with further arithmetic that holds only at these points (\S\ref{ssec:levels}). The pair
+$\Lt\pm\pi^2/18$ also has its own geometry and decay certificate.
 
 \begin{theorem}[special points of the first plane]\label{thm:points1}
 The following bounds hold.
@@ -169,10 +171,24 @@ $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
 $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
 \end{theorem}
 
+The same construction reaches a third plane, spanned by $\zeta(3)$ and $\pi^4$ modulo $\Q$. Here the function has a pole
+of order three, and we include the result to show that the method handles it. The bound is weaker than the bound
+$\mu(a\zeta(3)+b\zeta(4))<66.3$ of Leibtag et al.\ \cite{LBKWSK26} on the same plane.
+
+\begin{theorem}[third plane]\label{thm:plane3}
+Let $a$ and $b$ be rational numbers, not both zero. Then
+\[
+ \mu(a\zeta(3)+b\pi^4)\le\MuPlaneC .
+\]
+\end{theorem}
+
+On the line $b=0$ the theorem follows from Theorem~\ref{thm:ends}. On the line $a=0$ it gives $\mu(\pi^4)\le\MuPlaneC$.
+Marcovecchio and Zudilin proved the much better bound $\mu(\zeta(4))\le12.51085940\ldots$ \cite{MarcovecchioZudilin20}.
+
 \emph{The construction.} All these bounds come from one construction. Let $\psi$ be the digamma function, the
 logarithmic derivative of Euler's gamma function. The approximations to a number $\xi$ are determinants of L\"owner
 matrices \cite{Loewner34}, the matrices of divided differences, of a rational combination $F$ of the functions
-$\psi(z+s)$ and $\psi'(z+s)$ with rational shifts $s$, at integer nodes. The number $\xi$ is $F'(0)$, up to a rational
+$\psi(z+s)$, $\psi'(z+s)$ and $\psi''(z+s)$ with rational shifts $s$, at integer nodes. The number $\xi$ is $F'(0)$, up to a rational
 factor. Section~\ref{sec:overview} explains the construction and why it gives measures.
 
 \emph{The trigamma form.} The derivative $\psi'(s)=\sum_{n\ge0}(n+s)^{-2}$ is the trigamma function. When $F$ is a
@@ -189,9 +205,10 @@ The trigamma values with denominators $2$, $3$ and $6$ lie in the $\Q$-span of $
 These follow from the reflection formula $\psi'(s)+\psi'(1-s)=\pi^2/\sin^2\pi s$ and from splitting the series for
 $\Lt$ by residues modulo~$6$. So each difference $\Psi(s,t)$ of these values is a point of the first plane, and
 Table~\ref{tab:main} gives the form of each special point. A general point of the first plane needs three digamma
-terms, and $\zeta(3)$ comes from $\psi'$ itself, so not every number here is a single difference $\Psi(s,t)$.
+terms, and $\zeta(3)$ and $\pi^4$ come from $\psi'$ and $\psi''$ themselves, so not every number here is a single
+difference $\Psi(s,t)$.
 
-The trigamma form also gives numbers off both planes. Let
+The trigamma form also gives numbers off the planes. Let
 \[
  G=L(2,\chi_{-4})=\sum_{n\ge0}\Bigl(\frac1{(4n+1)^2}-\frac1{(4n+3)^2}\Bigr)=0.91596\,55941\ldots
 \]
@@ -216,7 +233,7 @@ sufficiently large integers $q$. Table~\ref{tab:main} collects the results.
 \renewcommand{\arraystretch}{1.25}
 \begin{tabular}{@{}l@{\hspace{2em}}l@{\hspace{2em}}r@{\hspace{2em}}l@{}}
 \toprule
-Number & Trigamma form & Bound on $\mu$ & Previous bound\\
+Number & Trigamma form & Bound on $\mu$ & Other bound\\
 \midrule
 $a\Lt+b\pi^2$ & & $\MuPlaneA$ & $24781$ \cite{CDT2025}\\
 $\Lt$ & $\Psi(\frac13,\frac23)$ & $\MuChi$ & $24781$\\
@@ -229,13 +246,16 @@ $a\zeta(3)+b\pi^2$ & & $\MuPlaneB$ & none\\
 $\zeta(3)$ & & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
 $\pi^2$ & $\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
 \addlinespace
+$a\zeta(3)+b\pi^4$ & & $\MuPlaneC$ & $66.3$ \cite{LBKWSK26}\\
+\addlinespace
 $G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$,\; $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
 $\psi'(\frac k5)-\frac{\pi^2}{6}$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
 $\psi'(\frac k7)-\frac{\pi^2}{6}$ & $\Psi(\frac k7,1)$ & $\MuSeventhsU$ & none\\
 \bottomrule
 \end{tabular}
-\caption{The results of this paper. The trigamma form is a rational multiple of the number, where one exists. In the plane rows $a$ and $b$ are rationals, not both zero. ``None'' means that we know of no
-irrationality measure. A bound of about $9.7\cdot10^3$ for the first plane follows from an unrefereed supplement to
+\caption{The results of this paper. The trigamma form is a rational multiple of the number, where one exists. In the
+plane rows $a$ and $b$ are rationals, not both zero. The last column gives the best bound from other work that we know.
+``None'' means that we know of no irrationality measure. A bound of about $9.7\cdot10^3$ for the first plane follows from an unrefereed supplement to
 \cite{LBKWSK26} (\S\ref{ssec:background}).}\label{tab:main}
 \end{table}
 
@@ -275,7 +295,10 @@ $\zeta(2)$ \cite{Giraudin26} and to $5.5138800$ for $\zeta(3)$ \cite{Giraudin26z
 Shalyt and Kaminer \cite{LBKWSK26} showed that the classical constructions are one-dimensional trajectories in
 conservative matrix fields. By searching over other trajectories they obtained $\mu(\pi^2)<4.62675$ and
 $\mu(\zeta(3))<5.4197$. They also proved the uniform bound $\mu(a\zeta(3)+b\zeta(4))<66.3$ on the plane spanned by
-$\zeta(3)$ and $\pi^4$, which is the closest analogue of Theorem~\ref{thm:plane2}. The linear forms in $1$, $\zeta(2)$
+$\zeta(3)$ and $\pi^4$. This is the closest analogue of Theorem~\ref{thm:plane2}, and it is better than our
+Theorem~\ref{thm:plane3} on the same plane. For $\zeta(4)$ alone, Marcovecchio and Zudilin
+\cite{MarcovecchioZudilin20} obtained $\mu(\zeta(4))\le12.51085940\ldots$ from hypergeometric rational approximations.
+The linear forms in $1$, $\zeta(2)$
 and $\zeta(3)$ have a longer history. Dauguet and Zudilin \cite{DauguetZudilin14} bounded such forms from below when
 the coefficients satisfy divisibility and size conditions. They noted that this does not give the linear independence of
 $1$, $\zeta(2)$, $\zeta(3)$, which remained open. For a fixed number $a\zeta(3)+b\zeta(2)$ their theorem
@@ -343,7 +366,7 @@ Here nonvanishing is proved in characteristic zero, so the size $r$ is free. A p
 $a\Lt+b\pi^2$ is, up to a rational factor, the value $F'(0)$ for a combination $F$ of three digamma functions whose
 weights depend on $(a,b)$. The three estimates must then hold with constants that do not depend on the weights. For
 the second plane the function $F$ has a pole of order two, so the matrices are no longer Cauchy-like at every pole,
-and both the arithmetic and the analysis need a new argument.
+and both the arithmetic and the analysis need a new argument. For the third plane the pole has order three.
 
 \subsection{New ideas}
 The proofs rest on the following ideas. Section~\ref{sec:overview} explains the first five in more detail.
@@ -377,9 +400,13 @@ The proofs rest on the following ideas. Section~\ref{sec:overview} explains the 
  constant on half-periods. This follows from the displacement identity of L\"owner matrices and from
  $\sum_{v\in\F_p^\times}v^{-1}=0$. A uniform pivot on complete double periods extends it to primes smaller than the border.
  The required nondegeneracy modulo $p$ is the Wronskian argument of item~5 in characteristic $p$.
-\item \emph{Jets reduced to simple poles.} At a double pole the Gram representation of the L\"owner matrix carries a
- derivative. A rank-one splitting of this term, and Cauchy's estimate on small circles, bound every jet determinant by
- the Cauchy determinant of a fixed function with simple poles. The decay certificate of that function then applies.
+\item \emph{Jets reduced to simple poles.} At a pole of order $w$ the Gram representation of the L\"owner matrix
+ carries derivatives up to order $w-1$. The atom term is a nondegenerate symmetric bilinear form in the jets, and it
+ splits into $w$ rank-one terms. These splittings, and Cauchy's estimate on small circles, bound every jet determinant
+ by the Cauchy determinant of a fixed function with simple poles. The decay certificate of that function then applies.
+\item \emph{Assignment bounds for a pole of any order.} For a single shift with a pole of order $h-1$, four explicit
+ systems of potentials in Lemma~\ref{lem:trop} bound the denominators. They use no rank argument. Their minimum
+ integrates to a closed form in $h$ and the geometry parameter, and gives the third plane.
 \end{enumerate}
 The constants of the proofs are listed in Table~\ref{tab:data}.
 
@@ -389,7 +416,8 @@ deduction. Section~\ref{sec:construction} gives the construction. Sections~\ref{
 and~\ref{sec:decay} prove the three estimates for differences of two digamma functions. They also prove nonvanishing and
 decay for general combinations. Section~\ref{sec:plane1} proves Theorem~\ref{thm:plane1} and the special points of
 Theorem~\ref{thm:points1}, and Section~\ref{sec:chi3-quarter} treats the point $\Lt$ itself. Section~\ref{sec:plane2}
-proves Theorem~\ref{thm:plane2}. Section~\ref{sec:proof} completes the proofs and gives the data.
+proves Theorem~\ref{thm:plane2}, and Section~\ref{sec:plane3} proves Theorem~\ref{thm:plane3}. Section~\ref{sec:proof}
+completes the proofs and gives the data.
 Section~\ref{sec:limits} discusses the limits of the method and the nearest constants that it does not reach.
 Section~\ref{sec:lean} describes the formalization. The
 disclosure of AI use follows it.
@@ -600,19 +628,19 @@ $-\frac16F_\chi'(0)=\frac1{36}\Psi(\frac13,\frac23)=\xi_\chi$.
 \end{proof}
 
 \subsection{Combinations with several terms}\label{ssec:frames}
-The planes need combinations with more than two terms, and the second plane needs the trigamma function itself. We
-call a \emph{frame} a function
+The planes need combinations with more than two terms. The second plane needs the trigamma function itself, and the
+third plane needs its derivative $\psi''$. We call a \emph{frame} a function
 \[
- F(z)=\sum_{s\in S}\bigl(w_s\psi(z+s)+w'_s\psi'(z+s)\bigr),
+ F(z)=\sum_{s\in S}\bigl(w_s\psi(z+s)+w'_s\psi'(z+s)+w''_s\psi''(z+s)\bigr),
 \]
-where $S\subset\Q\cap(0,1]$ is a finite set of shifts, the weights $w_s,w'_s$ are rational, not all zero, and
-$\sum_sw_s=0$. The \emph{order} of a shift is $2$ if $w'_s\ne0$, $1$ if $w'_s=0\ne w_s$, and
-$0$ if $w_s=w'_s=0$. A shift of order $0$ carries no pole of $F$. We keep such shifts in $S$, because the planes are
+where $S\subset\Q\cap(0,1]$ is a finite set of shifts, the weights $w_s,w'_s,w''_s$ are rational, not all zero, and
+$\sum_sw_s=0$. The \emph{order} of a shift is $3$ if $w''_s\ne0$, $2$ if $w''_s=0\ne w'_s$, $1$ if
+$w''_s=w'_s=0\ne w_s$, and $0$ if all three weights vanish. A shift of order $0$ carries no pole of $F$. We keep such shifts in $S$, because the planes are
 families of frames on a fixed set of shifts, and some members of a family have a weight zero. We write $d$ for the sum
 of the orders, the number of poles of $F$ in a period counted with order. The balance $\sum_sw_s=0$ gives
 $F(z)=O(1/|z|)$ in the right half-plane. Put $\xi=F'(0)$ and
 \[
- \delta(z)=F(z+1)-F(z)=\sum_{s\in S}\Bigl(\frac{w_s}{z+s}-\frac{w'_s}{(z+s)^2}\Bigr),
+ \delta(z)=F(z+1)-F(z)=\sum_{s\in S}\Bigl(\frac{w_s}{z+s}-\frac{w'_s}{(z+s)^2}+\frac{2w''_s}{(z+s)^3}\Bigr),
 \]
 and put $f_t=\sum_{k<t}\delta(k)$ and $e_t=-\sum_{k<t}\delta'(k)$.
 Then $f_t=F(t)-F(0)$ and $F'(t)=\xi-e_t$ for integers $t\ge0$. So the L\"owner matrix of $F$ at nonnegative integer
@@ -660,6 +688,19 @@ $\gamma_1=6\lambda b$ are integers. Then $\xi=-2\lambda(a\zeta(3)+b\pi^2)$, and 
 $b\ne0$. The frame $F^{(2)}_{1,0}=\psi'(z+1)$ gives $\zeta(3)$. Its increment is $\delta(k)=-(k+1)^{-2}$, so
 $M[t,t']=-(t'-t)^{-1}\sum_{k=t+1}^{t'}k^{-2}$ and $M[t,t]=\sum_{k\le t}2k^{-3}$.
 
+\emph{The frames of the third plane.} For rationals $\gamma_2$ and $\gamma_3$ with $\gamma_3\ne0$ put
+\[
+ F^{(3)}_{\gamma_2,\gamma_3}(z)=\gamma_2\,\psi'(z+1)+\gamma_3\,\psi''(z+1).
+\]
+It has the single shift $1$, of order $3$, so $d=3$. Its increment is
+$\delta(k-1)=-\gamma_2k^{-2}+2\gamma_3k^{-3}$ for $k\ge1$. Since $\psi''(1)=-2\zeta(3)$ and
+$\psi'''(1)=6\zeta(4)=\frac{\pi^4}{15}$,
+\[
+ \xi=-2\gamma_2\,\zeta(3)+\frac{\gamma_3}{15}\pi^4 .
+\]
+Given rationals $a$ and $b$ with $b\ne0$, the choice $\gamma_2=-\frac a2$ and $\gamma_3=15b$ gives
+$\xi=a\zeta(3)+b\pi^4$. The line $b=0$ is the multiples of $\zeta(3)$, which the second plane already contains.
+
 Since $\mu$ is invariant under rational affine maps, the theorems of the introduction are statements about the
 numbers $\xi$ of these frames and of \eqref{eq:frames}.
 
@@ -685,7 +726,10 @@ $[r,r+2m)$ has length $cr+O(1)$. For a depth $K\ge0$, its \emph{members} are the
 $\Phi_{r,I}=\Phi_{\mathcal G,I}$ with $|I|\le K$. We put $P_{r,I}=\det\Phi_{r,I}$.
 \end{definition}
 
-For the functions $F_s$ we use $c=\frac3{10},\frac15,\frac3{10},\frac29,\frac16$ when $s$ has denominator $2,4,3,5,7$. For the frames of the first plane we use $c=\frac16$, for those of the second plane $c=\frac6{41}$, and for $\zeta(3)$ $c=\frac3{10}$. For $F_\chi$ we use
+For the functions $F_s$ we use $c=\frac3{10},\frac15,\frac3{10},\frac29,\frac16$ when $s$ has denominator
+$2,4,3,5,7$. For the frames of the first plane we use $c=\frac16$, except $c=\frac14$ for the points
+$\Lt\pm\frac{\pi^2}{18}$. For the frames of the second plane we use $c=\frac6{41}$, for $\zeta(3)$ $c=\frac3{10}$, and for
+the frames of the third plane $c=\frac1{10}$. For $F_\chi$ we use
 $c=\frac12$, as explained in Section~\ref{sec:chi3-quarter}. All $o(1)$ terms below are uniform over the members as
 $r\to\infty$.
 
@@ -1485,7 +1529,7 @@ Let $\mathsf g$ be the greatest common divisor of $\mathsf u$ and $\mathsf w$, a
 and $\mathsf w=\mathsf g\mathsf w_1$. Then $\mathsf E=\mathsf g(z)\mathsf g(z+1)\mathsf E_1$, where $\mathsf E_1$ is the
 same expression for $(\mathsf u_1,\mathsf w_1)$. So $\mathsf E_1=0$, with $\mathsf u_1\ne0$ and $\mathsf u_1$,
 $\mathsf w_1$ coprime. Take a shift $s_0$ of positive order and put $a=-s_0$. Then $\mathsf D(a)=0$, and $\mathsf A(a)$
-is $w_{s_0}$ or $-w'_{s_0}$, according to the order, times $\prod_{s\ne s_0}(s-s_0)^{\nu_s}$. So $\mathsf A(a)\ne0$.
+is $w_{s_0}$, $-w'_{s_0}$ or $2w''_{s_0}$, according to the order, times $\prod_{s\ne s_0}(s-s_0)^{\nu_s}$. So $\mathsf A(a)\ne0$.
 The points $a+j$ with $j\in\Z\setminus\{0\}$ are not roots of $\mathsf D$, since distinct shifts in $(0,1]$ differ by
 less than $1$. Evaluating $\mathsf E_1=0$ at $a$ gives $\mathsf A(a)\mathsf u_1(a)\mathsf u_1(a+1)=0$.
 
@@ -1553,8 +1597,10 @@ $P_{r,I}(x_0)=\det\Phi[R\setminus I,Q\setminus I]\ne0$.
 For the frames of the first plane $d\le3$, and one deleted node suffices. For the frames $F^{(2)}_{\gamma_2,\gamma_1}$ with $\gamma_1\gamma_2\ne0$
 we have $\mathsf D=(z+1)^2(z+\frac12)$ and $\mathsf A=-(\gamma_2+\frac{\gamma_1}2)z-\frac{\gamma_2+\gamma_1}2$, with
 $\mathsf A(-1)=\frac{\gamma_2}2\ne0$. For $\gamma_2=0$ we have $\mathsf D=(z+1)(z+\frac12)$ and
-$\mathsf A=-\frac{\gamma_1}2$. For $\gamma_1=0$ we have $\mathsf D=(z+1)^2$ and $\mathsf A=-\gamma_2$. So again one deleted node suffices. The formal proof uses the same interpolation argument for every
-frame.
+$\mathsf A=-\frac{\gamma_1}2$. For $\gamma_1=0$ we have $\mathsf D=(z+1)^2$ and $\mathsf A=-\gamma_2$. So again one
+deleted node suffices. For the frames $F^{(3)}_{\gamma_2,\gamma_3}$ of the third plane we have $\mathsf D=(z+1)^3$ and
+$\mathsf A=-\gamma_2(z+1)+2\gamma_3$, with $\mathsf A(-1)=2\gamma_3\ne0$ and $d=3$. One deleted node suffices here too.
+The formal proof uses the same interpolation argument for every frame, with poles of any finite order.
 
 \subsection{The functions of \eqref{eq:frames}}
 \begin{theorem}[selection]\label{thm:selection}
@@ -1770,7 +1816,7 @@ uniformly in $C''$. Insert this into \eqref{eq:expand} with $|h|e^{\rho r}\le1$.
 $2^{|C'|}=e^{O(r)}$ terms, each at most $e^{-(D-o(1))r^2}$. This gives Theorem~\ref{thm:decay}. The deletion of at most
 $K$ common nodes in a member changes the energy by $O(r)$.
 
-\subsection{Frames with several terms and double poles}\label{ssec:decaydouble}
+\subsection{Frames with several terms and multiple poles}\label{ssec:decaydouble}
 For a frame of \S\ref{ssec:frames} with all orders at most $1$ the argument above applies verbatim, with $|\mathcal T|=|S|$.
 It reads the frame only through the source bound $|E(z)|\le C_Ee^{-2\pi|\Im z|}$ on $\Gamma$, through the positions of
 the poles and through the bound on the atom masses. The weights enter only through $C_E$ and the atom masses. A change of
@@ -1783,25 +1829,26 @@ free point sits at one of these heads. So the bound obtained with all $|S|$ shif
 is unchanged. Only the number $\xi$ loses the term of that shift. We use this for the first plane in
 Section~\ref{sec:plane1}, and for the second plane at the multiples of $\zeta(3)$ and of $\pi^2$.
 
-At a double pole the Gram representation carries a derivative. Write
+At a pole of higher order the Gram representation carries derivatives. Write
 \[
- E(z)=-\pi\sum_sw_s\cot\pi(z+s)+\pi^2\sum_s\frac{w'_s}{\sin^2\pi(z+s)},
+ E(z)=-\pi\sum_sw_s\cot\pi(z+s)+\pi^2\sum_s\frac{w'_s}{\sin^2\pi(z+s)}-2\pi^3\sum_s\frac{w''_s\cos\pi(z+s)}{\sin^3\pi(z+s)},
 \]
 and let $\Gamma$ cross the negative axis at $x^*$, with heads $x_{s,n}=-s-n>x^*$.
 
 \begin{lemma}[Gram formula]\label{lem:gramjet}
-For nonnegative integers $t,t'$,
+For nonnegative integers $t,t'$, with $g=\upsilon_t\upsilon_{t'}$,
 \[
- \Lw_F[t,t']=\frac1{2\pi i}\int_\Gamma\upsilon_t\upsilon_{t'}E\,dz-\sum_{s,n}\bigl(w'_s(\upsilon_t\upsilon_{t'})'(x_{s,n})-w_s\upsilon_t\upsilon_{t'}(x_{s,n})\bigr).
+ \Lw_F[t,t']=\frac1{2\pi i}\int_\Gamma g\,E\,dz-\sum_{s,n}\bigl(w'_sg'(x_{s,n})-w_sg(x_{s,n})-w''_sg''(x_{s,n})\bigr).
 \]
 \end{lemma}
 \begin{proof}
-Put $\tilde F(z)=\sum_s(w_s\psi(1-s-z)-w'_s\psi'(1-s-z))$. The reflection formulas $\psi(1-w)=\psi(w)+\pi\cot\pi w$ and
-$\psi'(1-w)=\pi^2/\sin^2\pi w-\psi'(w)$ give $F=\tilde F+E$. The residues of $F\upsilon_t\upsilon_{t'}$ at $t$ and $t'$
-give the L\"owner entry, also for $t=t'$. At a head, $\psi$ has residue $-1$ and $\psi'$ has principal part
-$(z-x_{s,n})^{-2}$, which gives the atom terms. The function $\tilde F$ is holomorphic to the left of $\Gamma$ and
-$O(1/|z|)$ there by the balance, so its integral against $\upsilon_t\upsilon_{t'}$ vanishes. The function $E$ decays like
-$e^{-2\pi|\Im z|}$, again by the balance.
+Put $\tilde F(z)=\sum_s(w_s\psi(1-s-z)-w'_s\psi'(1-s-z)+w''_s\psi''(1-s-z))$. The reflection formula
+$\psi(1-w)=\psi(w)+\pi\cot\pi w$ and its first two derivatives give $F=\tilde F+E$. The residues of
+$F\upsilon_t\upsilon_{t'}$ at $t$ and $t'$ give the L\"owner entry, also for $t=t'$. At a head, $\psi$ has residue $-1$,
+$\psi'$ has principal part $(z-x_{s,n})^{-2}$ and $\psi''$ has principal part $-2(z-x_{s,n})^{-3}$. This gives the atom
+terms. The function $\tilde F$ is holomorphic to the left of $\Gamma$ and $O(1/|z|)$ there by the balance, so its
+integral against $\upsilon_t\upsilon_{t'}$ vanishes. The function $E$ decays like $e^{-2\pi|\Im z|}$, again by the
+balance.
 \end{proof}
 
 The atom term at a double head is a symmetric bilinear form of rank two in the row and column functions, and it splits
@@ -1814,50 +1861,65 @@ double head, carrying the weights $-w'_s/2$ and $w'_s/2$, and one label at each 
 measure space, so it writes every minor of $\Lw_F$ as an integral of products of two determinants. A repeated label
 gives two equal rows, so its term vanishes.
 
-The determinants now contain derivatives of Cauchy kernels at the double heads. We compare them with a frame that has
-only simple poles. A \emph{reference frame} for $F$ is a frame $\mathcal R$ with simple poles on a set of shifts
-$S_{\mathcal R}$ with the following properties. It contains every shift of $F$ of positive order. For each shift $s$ of
-order $2$ it contains a further shift $s^*$, whose heads lie on the same side of $x^*$ as those of $s$, at a distance
-$\delta_s$ from them with $\frac14\le\delta_s\le\frac12$. It may contain further shifts. The poles of $S_{\mathcal R}$ are
-separated from $x^*$. For every frame $F^{(2)}_{\gamma_2,\gamma_1}$ we take the shifts $1$, $\frac34$, $\frac12$, with heads $-n$,
-$-n+\frac14$, $\frac12-n$ for $n\ge1$, and $\delta_1=\frac14$. This also serves $\gamma_2=0$, where all orders are
-at most $1$, and $\gamma_1=0$, where the shift $\frac12$ has order $0$. In the separate proof for $\zeta(3)$ in
-\S\ref{ssec:zeta3} we take for $F^{(2)}_{1,0}$ the shifts $1$, $\frac12$ of the function $F_{1/2}$, with
-$\delta_1=\frac12$.
+The same holds at a head of order $w=3$. Write the principal part of $F$ at the head as $\sum_{j\le w}c_j(z-x)^{-j}$.
+The atom term is then $-\sum_{i,j\ge0}B_{ij}\,g^{(i)}(x)h^{(j)}(x)$ with $B_{ij}=c_{i+j+1}/(i!\,j!)$ and $c_j=0$ for $j>w$.
+The symmetric matrix $B$ of size $w$ vanishes below its antidiagonal, and its antidiagonal entries are nonzero
+multiples of $c_w$. So $\det B\ne0$, and over $\Q$ the form $B$ is a sum $\sum_{l=1}^w\lambda_l\,\ell_l\ell_l^{\top}$ of
+$w$ rank-one terms, with $\lambda_l\ne0$. This gives $w$ labels at the head, with the functions
+$\sum_j\ell_{l,j}g^{(j)}(x)$ and the weights $-\lambda_l$. For the frames of the third plane the head $-n$ has
+$c_1=0$, $c_2=\gamma_2$ and $c_3=-2\gamma_3$, so
+\[
+ B=\begin{pmatrix}0&\gamma_2&-\gamma_3\\ \gamma_2&-2\gamma_3&0\\ -\gamma_3&0&0\end{pmatrix},\qquad \det B=2\gamma_3^3\ne0 .
+\]
+For $w=2$ this is \eqref{eq:rankone}.
+
+The determinants now contain derivatives of Cauchy kernels at the heads of order at least $2$, which we call
+\emph{multiple heads}. We compare them with a frame that has only simple poles. A \emph{reference frame} for $F$ is a
+frame $\mathcal R$ with simple poles on a set of shifts $S_{\mathcal R}$ with the following properties. It contains every
+shift of $F$ of positive order. For each shift $s$ of order $w\ge2$ it contains $w-1$ further shifts, the \emph{helpers}
+of $s$. Their heads lie on the same side of $x^*$ as those of $s$, at distances $\delta$ from them with
+$\frac14\le\delta\le\frac12$, and at mutual distances at least $\frac14$. It may contain further shifts. The poles of
+$S_{\mathcal R}$ are separated from $x^*$. For every frame $F^{(2)}_{\gamma_2,\gamma_1}$ we take the shifts $1$,
+$\frac34$, $\frac12$, with heads $-n$, $-n+\frac14$, $\frac12-n$ for $n\ge1$, and the helper $\frac34$ of the shift
+$1$. This also serves $\gamma_2=0$, where all orders are at most $1$, and $\gamma_1=0$, where the shift $\frac12$ has
+order $0$. For the frames $F^{(3)}_{\gamma_2,\gamma_3}$ of the third plane we take the same shifts $1$, $\frac34$,
+$\frac12$. Now $\frac34$ and $\frac12$ are both helpers of the shift $1$, at distances $\frac14$ and $\frac12$. In the
+separate proof for $\zeta(3)$ in \S\ref{ssec:zeta3} we take for $F^{(2)}_{1,0}$ the shifts $1$, $\frac12$ of the
+function $F_{1/2}$, with the helper $\frac12$.
 
 Each label of Andr\'eief's integral now has a \emph{reference point}. For a point of $\Gamma$ it is the point itself.
-For a simple head it is the head, which is a head of $\mathcal R$. For the two labels at a head $x_{s,n}$ of a double
-shift they are $x_{s,n}$ and the head $x_{s^*,n}$ of $s^*$. Distinct labels have distinct reference points. In our
-frames the only shift of order $2$ is $1$, so the double heads are the points $-n$ with $n\ge1$.
+For a simple head it is the head, which is a head of $\mathcal R$. For the $w$ labels at a multiple head $x_{s,n}$ they
+are $x_{s,n}$ and the heads $x_{s^*,n}$ of the helpers $s^*$ of $s$. Distinct labels have distinct reference points. In
+our frames the only shift of order at least $2$ is $1$, so the multiple heads are the points $-n$ with $n\ge1$.
 
 \begin{lemma}[jets]\label{lem:jet}
 Let $k=O(r)$. Let $t_1,\dots,t_k$ be distinct integers in $[0,\bar N)$, and let $z_1,\dots,z_k$ be an injective list of
-labels. Each label is a point of $\Gamma$ or a head of $F$ in $[x^*,0]$, and each double head may occur with either of
-its two labels. Let $\phi_l$ be the function of \eqref{eq:rankone} attached to $z_l$, that is $\upsilon_t(z_l)$ for a
-point of $\Gamma$ or a simple head, and $(g\pm\hat g)(z_l)$ with $g=\upsilon_t$ at a double head. Let $x^0_l$ be the
-reference point of $z_l$. Then
+labels. Each label is a point of $\Gamma$ or a head of $F$ in $[x^*,0]$, and each multiple head may occur with any of
+its labels. Let $\phi_l$ be the function attached to $z_l$, that is $\upsilon_t(z_l)$ for a point of $\Gamma$ or a
+simple head, and the combination $\sum_j\ell_{l,j}\upsilon_t^{(j)}$ at the head for a label of a multiple head. Let
+$x^0_l$ be the reference point of $z_l$. Then
 \[
  \bigl|\det[\phi_l(t_i)]\bigr|\le e^{O(r\log r)}\,\bigl|\det[(x^0_l-t_i)^{-1}]\bigr| ,
 \]
 where the implied constant depends only on $\Gamma$, on $\mathcal R$ and on the weights of $F$.
 \end{lemma}
 \begin{proof}
-A row at a double head is $\pm(\kappa_l\upsilon_t+\upsilon_t')$ at the head, with a constant $\kappa_l$. Give each
-double-head label its own variable $y_l$, and keep the other labels fixed at their points. By multilinearity the
-determinant is $\prod_l(\pm(\kappa_l+\partial_{y_l}))$, over the double-head labels, applied to the Cauchy determinant
-$\det[(y_l-t_i)^{-1}]$ and evaluated at the heads. The double heads are at distance at least $1$ from the nodes. So
-Cauchy's estimate on circles of radius $\frac18$, one variable at a time, bounds the determinant by
-$\prod_l(|\kappa_l|+8)=e^{O(r)}$ times the supremum of the Cauchy determinant over the polydisc. On the polydisc a
-double-head label is within $e_l$ of its reference point, where $e_l=\frac18$ for the label at $x_{s,n}$ and
-$e_l=\delta_s+\frac18$ for the label at $x_{s^*,n}$. So $e_l\le\frac38$ for $\delta_s=\frac14$ and $e_l\le\frac58$ for
-$\delta_s=\frac12$. All other labels have $e_l=0$.
+A row at a multiple head is $\sum_j\ell_{l,j}\upsilon_t^{(j)}$ at the head, with fixed rational coefficients
+$\ell_{l,j}$ and $j\le2$. Give each label of a multiple head its own variable $y_l$, and keep the other labels fixed at
+their points. By multilinearity the determinant is $\prod_l\bigl(\sum_j\ell_{l,j}\partial_{y_l}^j\bigr)$, over these labels,
+applied to the Cauchy determinant $\det[(y_l-t_i)^{-1}]$ and evaluated at the heads. The multiple heads are at
+distance at least $1$ from the nodes. So Cauchy's estimate on circles of radius $\frac18$, one variable at a time,
+bounds the determinant by $\prod_l\sum_j|\ell_{l,j}|\,j!\,8^j=e^{O(r)}$ times the supremum of the Cauchy determinant over
+the polydisc. On the polydisc a label of a multiple head is within $e_l$ of its reference point, where $e_l=\frac18$ for
+the label at $x_{s,n}$ and $e_l=\delta+\frac18$ for the label at a helper head at distance $\delta$. So
+$e_l\le\frac58$. All other labels have $e_l=0$.
 
 Compare each factor of Cauchy's product formula
 \[
  \bigl|\det[(y_l-t_i)^{-1}]\bigr|=\frac{\prod_{l<l'}|y_l-y_{l'}|\prod_{i<i'}|t_i-t_{i'}|}{\prod_{l,i}|y_l-t_i|}
 \]
-with its value at the reference points. The two labels of one double head stay at distance at most $\frac14$, and
-their reference points are at distance $\delta_s\ge\frac14$. So their factor does not increase. For any other pair of
+with its value at the reference points. The labels of one multiple head stay at mutual distance at most $\frac14$,
+and their reference points are at mutual distance at least $\frac14$. So their factors do not increase. For any other pair of
 labels put $d_{ll'}=|x^0_l-x^0_{l'}|>0$. Then $|y_l-y_{l'}|\le d_{ll'}(1+e_l/d_{ll'})(1+e_{l'}/d_{ll'})$. For a node
 $t_i$ we have $|x^0_l-t_i|\le|y_l-t_i|(1+e_l/|y_l-t_i|)$, and $|y_l-t_i|\ge t_i+\frac78$. Hence the logarithm of the
 ratio is at most the sum of $e_l/d_{ll'}$ over pairs, plus the sum of $e_l/(t_i+\frac78)$ over the moved labels $l$ and
@@ -1877,7 +1939,7 @@ $|\mathcal T|$ the number of shifts of $\mathcal R$. Then the conclusion of Theo
 member of the alternating geometry of parameter $c$ for $F$, with the same $D$ and $\rho$.
 \end{theorem}
 \begin{proof}
-By Lemma~\ref{lem:gramjet}, \eqref{eq:rankone} and Andr\'eief's identity, each minor is an integral over the labels of
+By Lemma~\ref{lem:gramjet}, the rank-one splittings and Andr\'eief's identity, each minor is an integral over the labels of
 products of two determinants, one for the rows and one for the columns. Lemma~\ref{lem:jet} bounds each of them by the
 Cauchy determinant at the reference points, at a cost $e^{O(r\log r)}=e^{o(r^2)}$. The label weights are bounded and
 $|E|\le C_Ee^{-2\pi|\Im z|}$. Distinct labels have distinct reference points, all of them heads of $\mathcal R$ or points
@@ -1886,17 +1948,20 @@ which every head of $\mathcal R$ carries an atom of bounded mass. Those are the 
 \end{proof}
 
 The certificate of the second plane is that of the reference frame $(1,\frac34,\frac12)$, with $|\mathcal T|=3$. It serves
-every frame $F^{(2)}_{\gamma_2,\gamma_1}$, including $\gamma_2=0$ and $\gamma_1=0$. The certificate of the separate proof for $\zeta(3)$ is that of
-the function $F_{1/2}$, with $|\mathcal T|=2$. It is the certificate of the row for $\pi^2$, unchanged.
+every frame $F^{(2)}_{\gamma_2,\gamma_1}$, including $\gamma_2=0$ and $\gamma_1=0$. The certificate of the third plane
+is another certificate for the same reference frame, for its own geometry parameter. The certificate of the separate
+proof for $\zeta(3)$ is that of the function $F_{1/2}$, with $|\mathcal T|=2$. It is the certificate of the row for
+$\pi^2$.
 
 %% =====================================================================
 \section{The first plane}\label{sec:plane1}
 
 In this section we prove Theorem~\ref{thm:plane1} and parts (iii)--(v) of Theorem~\ref{thm:points1}. We use the frames
 $F^\pm_{\vec w}$ of \S\ref{ssec:frames} with the alternating geometry of parameter $c=\frac16$, so $\alpha=\frac1{12}$
-and $m=\lceil r/12-\frac12\rceil$. The point of the section is that the denominator exponent and the decay certificate
-do not depend on the weights $\vec w$, and that a weight zero is allowed. Nonvanishing is Theorem~\ref{thm:nvframe} with
-$d\le3$, so one deleted node suffices.
+and $m=\lceil r/12-\frac12\rceil$. The only exception is the pair $\Lt\pm\frac{\pi^2}{18}$, for which we take
+$c=\frac14$. The point of the section is that the denominator exponent and the decay certificate do not depend on the
+weights $\vec w$, and that a weight zero is allowed. Nonvanishing is Theorem~\ref{thm:nvframe} with $d\le3$, so one
+deleted node suffices.
 
 \subsection{Polar data}
 Fix a frame $F^\pm_{\vec w}$ with integer weights. Let $\varrho=2$ on $S^+$ and $\varrho=1$ on $S^-$. For $j\ge1$ the
@@ -2125,11 +2190,29 @@ p2$, $\frac{2p}3$, $p$, $\frac{3p}2$, with residues $-2$, $3$, $-1$, so $V$ retu
 $[\frac{3p}2,\frac{5p}3)$ has level $-\frac23$. Its common node in $[\frac p2,\frac{2p}3)$ has level $-2$ and $U=4$. Then
 $\lambda=\frac13$ and $V^*=0$, so after the row operation the border node behaves like a node at the returned level.
 
+For the frame $(4,-3,-1)$ we use a longer border, and a simpler consequence of the level return. Let $\mathcal K$ be
+the set of nodes $t<p$ with $V(t)=0$, and with $U(t)=0$ if $t$ is a common node. It contains every node below the
+first singular index. At a level return after the second singular index $k'_p<p$ it also contains the border nodes in
+$[k'_p,p)$. Two distinct nodes of $\mathcal K$ that are not congruent modulo $p$ have a $p$-integral entry, since
+$f_t=V(t)/p$ up to a $p$-integer. The diagonal entry of a common node of $\mathcal K$ is $p$-integral too. Suppose that
+$\bar N\le2p$. The potentials of Proposition~\ref{prop:chi3-local}(ii), with $\mathcal K$ in place of the regular
+nodes, then give
+\begin{equation}\label{eq:knownzero}
+ e_p(r,I)\le2r+2m-n_{\mathcal K}.
+\end{equation}
+Here $n_{\mathcal K}$ is the number of pairs formed by a node $t\in\mathcal K$ and a side on which $t$ lies, row or
+column, such that $t+p$ is not a node of the other side. The proof is that of Proposition~\ref{prop:chi3-local}(ii).
+
 \begin{theorem}[the special points]\label{thm:dips}
-For the frames $(2,-1,-1)$, $(1,-2,1)$ and $(4,-3,-1)$, on $S^+$ and on $S^-$, the minimum of the bounds of
+For the frames $(2,-1,-1)$ and $(1,-2,1)$, on $S^+$ and on $S^-$, with $c=\frac16$, the minimum of the bounds of
 Proposition~\ref{prop:planelocal} and Lemma~\ref{lem:levels} gives the denominator exponents
 \[
- \Lambda=3.06683997\ldots,\qquad 3.10960617\ldots,\qquad 3.17760386\ldots
+ \Lambda=3.06683997\ldots\qquad\text{and}\qquad 3.10960617\ldots
+\]
+For the frame $(4,-3,-1)$, on $S^+$ and on $S^-$, with $c=\frac14$, the minimum of the bounds of
+Proposition~\ref{prop:planelocal} and \eqref{eq:knownzero} gives the denominator exponent
+\[
+ \Lambda=3.41401753\ldots
 \]
 \end{theorem}
 \begin{proof}
@@ -2143,19 +2226,28 @@ cells the bounds of the two sides take the same value. A prime with $p/r$ near $
 the rounding of $m$ or a coincidence of two residues. So on the window $|p/r-\theta_e|\le10^{-4}\theta_e$, in each class of primes
 modulo $6$, we use the largest of the bounds of all cells that occur in the window. There are at most three. That one of
 them applies to each $(r,p,m)$ in the window is a statement of linear integer arithmetic in $r$, $p$, $m$, $k_A$ and
-$k_B$, and it is proved for every prime $p$. This bound is the second bound of (C3) at $\theta_e$. All pivots used have $\lambda\in\Z[\frac1{30}]$, so every prime $p\ge7$ is
-admissible. The level branches act only for $\theta\ge\frac3{10}$. The frames on $S^-$ give the same profiles with the
-classes exchanged.
+$k_B$, and it is proved for every prime $p$. This bound is the second bound of (C3) at $\theta_e$. For the first two
+frames all pivots used have $\lambda\in\Z[\frac1{30}]$, so every prime $p\ge7$ is admissible, and the level branches act
+only for $\theta\ge\frac3{10}$. For the frame $(4,-3,-1)$ the bound \eqref{eq:knownzero} takes the place of
+Lemma~\ref{lem:levels}, and no pivot is used. On the strips $\theta\le\alpha$ the content is again an instance of
+Theorem~\ref{thm:periodic}. The frames on $S^-$ give the same profiles with the classes exchanged.
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:points1}(iii)--(v)]
 The frame $(2,-1,-1)$ has $\tau=\frac2{27}$. On $S^+$ its number is $9(\Lt+\frac{2\pi^2}{27})=\frac12\Psi(\frac16,\frac13)$,
 and on $S^-$ it is $-9(\Lt-\frac{2\pi^2}{27})=-\frac12\Psi(\frac23,\frac56)$. The frame $(1,-2,1)$ has $\tau=-\frac1{27}$
 and gives $\Psi(\frac12,\frac23)$ on $S^+$ and $\Psi(\frac13,\frac12)$ on $S^-$, up to sign. The frame $(4,-3,-1)$ has
-$\tau=\frac1{18}$ and gives $\Lt\pm\frac{\pi^2}{18}$. With the denominator exponents of Theorem~\ref{thm:dips}, the decay of
-Proposition~\ref{prop:planecert} and Theorem~\ref{thm:nvframe}, the deduction gives
+$\tau=\frac1{18}$ and gives $\Lt\pm\frac{\pi^2}{18}$. For the first two frames the decay is that of
+Proposition~\ref{prop:planecert}. For the frame $(4,-3,-1)$ with $c=\frac14$, a trial measure on a polygon $\Gamma$, with
+a cover by cells satisfying the checks of \S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and $|\mathcal T|=3$, gives
+\begin{gather*}
+ D=\frac{15243910584818244128783}{4\cdot10^{21}}=3.81097\ldots,\\
+ \rho=\frac{34717183947859923}{5\cdot10^{15}}=6.94343\ldots
+\end{gather*}
+This certificate contains no weight either, so it serves the frame on $S^+$ and on $S^-$. With the denominator
+exponents of Theorem~\ref{thm:dips} and Theorem~\ref{thm:nvframe}, the deduction gives
 \[
- \frac\rho{D-\Lambda}=13.99986\,39\ldots,\qquad 15.35829\,31\ldots,\qquad 18.15999\,83\ldots,
+ \frac\rho{D-\Lambda}=13.99986\,39\ldots,\qquad 15.35829\,31\ldots,\qquad 17.49152\,28\ldots,
 \]
 below $\MuDipA$, $\MuDipB$ and $\MuDipC$.
 \end{proof}
@@ -2254,10 +2346,11 @@ measure $\nu_{1/2}$ has mass $\frac54$ and energy
 \[
  \cI(\nu_{1/2})=\frac{75}{32}-\frac98\log\frac32-\frac1{16}\log2 .
 \]
-A trial measure on a polygon, with a cover by cells satisfying the checks of \S\ref{ssec:slope-cert}, gives
+A trial measure on a polygon, with a cover by cells satisfying the checks of \S\ref{ssec:slope-cert} with
+$\varepsilon_0=10^{-6}$, gives
 \[
 \begin{gathered}
- D=\frac{4643511791526209475773}{10^{21}}=4.64351\ldots,\\ \rho=\frac{37521870783566737}{5\cdot10^{15}}=7.50437\ldots
+ D=\frac{580530026928040140331}{125\cdot10^{18}}=4.64424\ldots,\\ \rho=\frac{18757555738219881}{25\cdot10^{14}}=7.50302\ldots
 \end{gathered}
 \]
 Nonvanishing is Theorem~\ref{thm:selection} for $F_\chi$, which has $d=3$. The pole of its increment at $-1$ is
@@ -2647,6 +2740,158 @@ Section~\ref{sec:proof}, together with Theorem~\ref{thm:offplane}.
 \end{proof}
 
 %% =====================================================================
+\section{The third plane}\label{sec:plane3}
+
+In this section we prove Theorem~\ref{thm:plane3}. We use the frames $F^{(3)}_{\gamma_2,\gamma_3}$ of
+\S\ref{ssec:frames}, with rationals $\gamma_2$ and $\gamma_3\ne0$, and the alternating geometry of parameter
+$c=\frac1{10}$. So $\alpha=\frac1{20}$ and $m=\lceil r/20-\frac12\rceil$. The pole at the shift $1$ now has order
+three. The elimination of complete periods of Section~\ref{sec:plane2} is not needed here. Four assignment bounds,
+each given by explicit potentials, already give a denominator exponent below the decay rate.
+
+\subsection{Weights}
+We state the bounds for a single shift with a pole of any order. Let $h\ge3$, and let $F$ be a combination of
+$\psi'(z+1),\dots,\psi^{(h-2)}(z+1)$ with rational coefficients, the last one nonzero. Its increment is
+$\delta(k-1)=\sum_{j=2}^{h-1}c_jk^{-j}$ with rationals $c_j$. The frames of the third plane are the case $h=4$, with
+$c_2=-\gamma_2$ and $c_3=2\gamma_3$. As in Section~\ref{sec:plane2}, write a node as $t=jp+\omega$ with $0\le\omega<p$,
+and call $j$ its period.
+
+\begin{lemma}[weights]\label{lem:weights3}
+Let $p$ be an odd prime with $p^2>\bar N$ that divides no denominator of the $c_j$. Let $W(t,t')$ be $0$ for distinct
+nodes in the same period, $h-1$ for nodes in different periods that are not congruent modulo $p$, and $h$ for distinct
+congruent nodes. Let $W(t,t)=h\cdot\mathbf 1[t\ge p]$. Then the entry of $\Phi_{r,I}$ at $(t,t')$ has Gauss valuation at
+least $-W(t,t')$.
+\end{lemma}
+\begin{proof}
+For $t<t'$ the entry is $(f_{t'}-f_t)/(t'-t)$, and $f_{t'}-f_t$ is a sum of the terms $c_jk^{-j}$ with $t<k\le t'$.
+Since $p^2>\bar N$, every $k\le\bar N$ has $v_p(k)\le1$. So each term has valuation at least $-(h-1)$, and it is a
+$p$-integer unless $p\mid k$. If $t$ and $t'$ lie in one period, no multiple of $p$ lies in $(t,t']$. The difference
+$t'-t$ has valuation $1$ if $t\equiv t'\pmod p$ and $0$ otherwise. The diagonal entry is $x-e_t$, and $e_t$ is a sum of
+the terms $jc_jk^{-j-1}$ with $k\le t$. These have valuation at least $-h$, and they are $p$-integers for $t<p$.
+\end{proof}
+
+No coefficient needs to be a $p$-unit. A prime that divides a numerator can only raise the valuations.
+
+\subsection{Four assignment bounds}
+\begin{proposition}\label{prop:rows3}
+Let $p$ be as in Lemma~\ref{lem:weights3}. For every member $P_{r,I}$, $e_p(r,I)$ is at most each of the following,
+under its condition.
+\begin{center}
+{\renewcommand{\arraystretch}{1.2}\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & bound & condition\\
+\midrule
+(Q1) & $h(r+m)-\|m\|_p$ & none\\
+(Q2) & $2h(r+m-p)$ & $p\le r$\\
+(Q3) & $(2h-1)r+2(h-1)m-2(h-1)p$ & $\frac r2\le p\le r$, $2m\le p$, $2p\le\bar N\le3p$\\
+(Q4) & $h(\bar N-p)_+$ & $p\ge r$\\
+\bottomrule
+\end{tabular}}
+\end{center}
+\end{proposition}
+\begin{proof}
+In each case we give potentials $u$ on the rows and $u'$ on the columns with $W\le u+u'$, and apply
+Lemma~\ref{lem:trop}. The potentials are nonnegative. So deleting common nodes only removes terms, and the bound
+holds for every member.
+
+(Q1) For a residue $a$ modulo $p$ let $\varepsilon_a$ be the number of border rows in the class $a$ minus the number of
+border columns, and put $\varsigma_a=-\frac12\operatorname{sign}(\varepsilon_a)$. Take $u=\frac h2+\varsigma_a$ on every
+row of the class $a$ and $u'=\frac h2-\varsigma_a$ on every column. Two nodes of one class receive the sum $h$, and two
+nodes of different classes at least $h-1$. The common nodes contribute $h$ each. The border contributes
+$hm-\frac12\sum_a|\varepsilon_a|$. Every block of $2p$ consecutive border nodes meets each class once as a row and once
+as a column, since $p$ is odd. The remaining $2(m\bmod p)$ consecutive nodes give $\sum_a|\varepsilon_a|=2\|m\|_p$.
+
+(Q2) and (Q4) Take $u=u'=h\cdot\mathbf 1[t\ge p]$. Two nodes below $p$ lie in the period $0$ and have weight $0$. Every
+other pair has a node of potential $h$. For $p\le r$ there are $r-p+m$ nodes at least $p$ on each side. For $p\ge r$
+the nodes at least $p$ are border nodes, $(\bar N-p)_+$ in all.
+
+(Q3) Take $u=u'$ with the values $1$, $0$, $h-1$, $h$, $h-1$ on the intervals $[0,r-p)$, $[r-p,p)$, $[p,r)$, $[r,2p)$ and
+$[2p,\bar N)$. The conditions make these intervals consecutive, and every node lies in the periods $0$, $1$ or $2$. A
+diagonal entry at $t\ge p$ receives $2(h-1)\ge h$. Let $t<p\le t'$ be two nodes. If they are not congruent, $t'$ has
+potential at least $h-1$. If $t'=t+p<r$, then $t<r-p$, and the sum is $1+(h-1)=h$. If $t'=t+p\ge r$, then $t'$ has
+potential $h$. If $t'=t+2p$, then $t<\bar N-2p\le r-p$ since $2m\le p$, and the sum is again $h$. Two nodes at least $p$
+in different periods receive at least $2(h-1)\ge h$. Counting the common nodes twice and the border nodes once gives
+$2(r-p)+2(h-1)(r-p)+h(2p-r)+(h-1)(\bar N-2p)$, which is the stated bound.
+\end{proof}
+
+\subsection{The denominator exponent}
+Homogenise with $\theta=p/r$ and $m\mapsto\alpha r$ as in \S\ref{ssec:profiles}. For $0<\alpha\le\frac13$ the minimum
+$\mathcal P_h(\theta)$ of the four homogenised bounds is
+\begin{center}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}ll@{}}
+\toprule
+range of $\theta$ & $\mathcal P_h(\theta)$\\
+\midrule
+$0<\theta\le\frac{1+\alpha}2$ & $h(1+\alpha)-\theta\|\alpha/\theta\|$\\
+$\frac{1+\alpha}2\le\theta\le\frac12+\alpha$ & $2h-1+2(h-1)\alpha-2(h-1)\theta$\\
+$\frac12+\alpha\le\theta\le1$ & $2h(1+\alpha-\theta)$\\
+$1\le\theta\le1+2\alpha$ & $h(1+2\alpha-\theta)$\\
+$\theta\ge1+2\alpha$ & $0$\\
+\bottomrule
+\end{tabular}}
+\end{center}
+The values agree at the ends of the ranges. The low range is the sawtooth of \S\ref{ssec:checker}, with the integral
+$\int_0^{2\alpha}\theta\|\alpha/\theta\|\,d\theta=(2-2\log2)\alpha^2$. Integrating the four ranges gives
+\[
+ \int_0^\infty\mathcal P_h(\theta)\,d\theta=\frac{3h}4+\frac{(3h-1)\alpha}2+\Bigl(\frac{7h-3}4+2\log2\Bigr)\alpha^2 .
+\]
+For $h=4$ and $\alpha=\frac1{20}$ this is $3.29409073\ldots$ The formal proof does not use this closed form. It uses a
+table for $\Lambda$ that resolves the sawtooth only down to a fixed $\theta$, as in \S\ref{ssec:checker}.
+
+\begin{theorem}[denominators on the third plane]\label{thm:content3}
+Let $\alpha=\frac1{20}$, and let $\gamma_2$ and $\gamma_3\ne0$ be rationals. Let $K\ge0$ and $\epsilon>0$. For every
+even $r\ge R(\epsilon,K)$, every member of $F^{(3)}_{\gamma_2,\gamma_3}$ with $|I|\le K$ satisfies
+$\log\den P_{r,I}\le(\Lambda_3+\epsilon)r^2$, where
+\[
+ \Lambda_3=\frac{3162410560009}{960000000000}=3.29417766\ldots
+\]
+\end{theorem}
+\begin{proof}
+For a prime $p$ as in Lemma~\ref{lem:weights3}, Proposition~\ref{prop:rows3} gives
+$e_p(r,I)\le r\,\mathcal P_4(p/r)+O(1)$. As in Theorem~\ref{thm:planecontent}, each integer condition differs from its
+homogenised form only for $p$ in an interval of bounded length, where (Q1) costs $O(r\log r)$. The primes with
+$p^2\le\bar N$, the prime $2$ and the finitely many primes dividing a denominator of $\gamma_2$ or $\gamma_3$ remain.
+For them every entry has valuation at least $-O(\log r)$, so they contribute $O(r^{3/2}\log r)$ in total. The prime
+number theorem then gives the integral, as in Theorem~\ref{thm:content}. On the strips $\theta\le2\alpha$ only (Q1)
+acts. It is closed under translation in the sense of Theorem~\ref{thm:periodic} with $K_0=4(1+\alpha)$, since the
+translation of order $\nu$ keeps $\|m\|_p$ and raises $r+m$ by $\nu(20+1)p$. So the table is checked on one period of
+$1/\theta$ and on the head $\theta\ge2\alpha$. Its translates give the other strips, and a constant piece near $0$ ends
+the table. All pieces are affine, and the integral of the table is the rational number $\Lambda_3$.
+\end{proof}
+
+The threshold $R(\epsilon,K)$ depends on the frame only through the primes dividing the denominators of $\gamma_2$ and
+$\gamma_3$.
+
+\subsection{Decay and proof of Theorem~\ref{thm:plane3}}
+The decay is Theorem~\ref{thm:decayframe} with the reference frame of shifts $1$, $\frac34$, $\frac12$ of
+\S\ref{ssec:decaydouble}, in which $\frac34$ and $\frac12$ are the helpers of the triple pole.
+
+\begin{proposition}\label{prop:cert3}
+Take the reference frame of shifts $1$, $\frac34$, $\frac12$ and $c=\frac1{10}$. There is a trial measure on a polygon
+$\Gamma$, with a cover by cells satisfying the checks of \S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and
+$|\mathcal T|=3$, for which Theorem~\ref{thm:decay} gives
+\begin{gather*}
+ D=\frac{670675532185005206293}{2\cdot10^{20}}=3.35337\ldots,\\
+ \rho=\frac{272044759206281}{39062500000000}=6.96434\ldots
+\end{gather*}
+\end{proposition}
+
+\begin{proof}[Proof of Theorem~\ref{thm:plane3}]
+Let $a$ and $b$ be rationals, not both zero. If $b=0$, then $a\ne0$, and $\mu(a\zeta(3))=\mu(\zeta(3))\le\MuZetaThree$ by
+Theorem~\ref{thm:ends}. Let $b\ne0$. The frame $F^{(3)}_{\gamma_2,\gamma_3}$ with $\gamma_2=-\frac a2$ and
+$\gamma_3=15b$ has $\xi=a\zeta(3)+b\pi^4$, by \S\ref{ssec:frames}. Theorem~\ref{thm:content3} gives the denominators
+with $\Lambda_3$. Proposition~\ref{prop:cert3} with Theorem~\ref{thm:decayframe} gives the decay. The certificate
+contains no weight, so it serves every frame of the third plane. Theorem~\ref{thm:nvframe} with $d=3$ gives
+nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at the even scales gives
+\[
+ \mu(\xi)\le\frac\rho{D-\Lambda_3}=117.64098\,8\ldots<\MuPlaneC .\qedhere
+\]
+\end{proof}
+
+The thresholds depend on $(a,b)$. No uniformity in $(a,b)$ is claimed.
+
+%% =====================================================================
 \section{The deduction and the remaining proofs}\label{sec:proof}
 
 The three estimates combine as follows.
@@ -2684,8 +2929,8 @@ and all sufficiently large $q$.
 \end{proof}
 
 Theorem~\ref{thm:points1}(i) is proved in Section~\ref{sec:chi3-quarter}, parts (iii)--(v) and Theorem~\ref{thm:plane1}
-in Section~\ref{sec:plane1}, and Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Section~\ref{sec:plane2}. In each
-case the bound is attained in the same strong form.
+in Section~\ref{sec:plane1}, Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Section~\ref{sec:plane2}, and
+Theorem~\ref{thm:plane3} in Section~\ref{sec:plane3}. In each case the bound is attained in the same strong form.
 
 \begin{table}[ht]
 \centering
@@ -2699,11 +2944,13 @@ $(\frac13,\frac23)$ & $\frac12$ & $\LamChi$ & $\DChi$ & $\gChi$ & $\ExpChi$ & $\
 $(\frac k3,1)$ & $\frac3{10}$ & $\LamThree$ & $\DThree$ & $\gThree$ & $\ExpThree$ & $\MuThirdsU$\\
 $\Lt\pm\frac{2\pi^2}{27}$ & $\frac16$ & $\LamDA$ & $\DPl$ & $\gPl$ & $\ExpDA$ & $\MuDipA$\\
 $\Lt\pm\frac{\pi^2}{27}$ & $\frac16$ & $\LamDB$ & $\DPl$ & $\gPl$ & $\ExpDB$ & $\MuDipB$\\
-$\Lt\pm\frac{\pi^2}{18}$ & $\frac16$ & $\LamDC$ & $\DPl$ & $\gPl$ & $\ExpDC$ & $\MuDipC$\\
+$\Lt\pm\frac{\pi^2}{18}$ & $\frac14$ & $\LamDC$ & $\DDC$ & $\gDC$ & $\ExpDC$ & $\MuDipC$\\
 \addlinespace
 plane 2 & $\frac6{41}$ & $\LamPlB$ & $\DPlB$ & $\gPlB$ & $\ExpPlB$ & $\MuPlaneB$\\
 $\zeta(3)$ & $\frac3{10}$ & $\LamZ$ & $\DHalf$ & $\gHalf$ & $\ExpZ$ & $\MuZetaThree$\\
 $(\frac12,1)$ & $\frac3{10}$ & $\LamHalf$ & $\DHalf$ & $\gHalf$ & $\ExpHalf$ & $\MuHalvesU$\\
+\addlinespace
+plane 3 & $\frac1{10}$ & $\LamPlC$ & $\DPlC$ & $\gPlC$ & $\ExpPlC$ & $\MuPlaneC$\\
 \addlinespace
 $(\frac k4,1)$ & $\frac15$ & $\LamFour$ & $\DFour$ & $\gFour$ & $\ExpFour$ & $\MuLamU$\\
 $(\frac k5,1)$ & $\frac29$ & $\LamFive$ & $\DFive$ & $\gFive$ & $\ExpFive$ & $\MuFifthsU$\\
@@ -2714,7 +2961,7 @@ $(\frac k7,1)$ & $\frac16$ & $\LamSeven$ & $\DSeven$ & $\gSeven$ & $\ExpSeven$ &
 prime to the denominator. For each row the table gives the geometry parameter $c$, the denominator exponent $\Lambda$, the
 decay rate $D$, the neighbourhood exponent $\rho$ and the bound for $\mu$. The constants are rational numbers, rounded outward to
 the digits shown: $\Lambda$ and $\rho$ up, $D$ down. The column $\rho/\eta$, with $\eta=D-\Lambda$, is the exact quotient,
-rounded up. The three rows $\Lt\pm\dots$ share the decay certificate of plane 1. The row for $\zeta(3)$ shares the
+rounded up. The rows $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ share the decay certificate of plane 1. The row for $\zeta(3)$ shares the
 certificate of the row $(\frac12,1)$.}\label{tab:data}
 \end{table}
 
@@ -2735,20 +2982,21 @@ poles from the contour. For $q=4$ the root classes $j\equiv kp^{-1}\pmod 4$ of $
 primes modulo $4$. For $q=3$ the table uses the primes in the classes modulo $6$, and the root classes $j=1,2$ correspond to
 first poles near $p/3$ and $2p/3$. For $q=7$ there are six root classes. Here $D-\Lambda$ is only about $4\cdot10^{-3}$,
 which explains the large exponent. A small further gain in either constant would lower it substantially
-(Section~\ref{sec:limits}). The certificate for $q=7$ therefore takes $\varepsilon_0=10^{-6}$ in the function $\Upsilon$,
-where the cases $q=2,3,4,5$ take $\varepsilon_0=10^{-3}$. Its trial measure has $22$ polynomial pieces, and its cells on
+(Section~\ref{sec:limits}). All certificates take $\varepsilon_0=10^{-6}$ in the function $\Upsilon$. The trial measure
+for $q=7$ has $22$ polynomial pieces, and its cells on
 $\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of \S\ref{ssec:slope-cert}. For $q=2$ there is one root
 class, $j=1$, with first pole $k_p=\frac{p+1}2$.
 
-The certificates of the two planes also take $\varepsilon_0=10^{-6}$. On the second plane $D-\Lambda$ is about
-$0.021$, which explains the size of its exponent. On the first plane the points of Theorem~\ref{thm:points1}(iii)--(v)
-gain only in $\Lambda$, since they use the certificate of the plane.
+On the second plane $D-\Lambda$ is about $0.021$, and on the third plane about $0.059$. This explains the size of their
+exponents. On the first plane the points $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ gain only in $\Lambda$,
+since they use the certificate of the plane. The points $\Lt\pm\frac{\pi^2}{18}$ use a longer border, with $c=\frac14$,
+and their own certificate.
 %% =====================================================================
 \section{Limits of the method}\label{sec:limits}
 
 The exponents are determined by three constants through $\rho/(D-\Lambda)$. The derivative of $\rho/(D-\Lambda)$ with
 respect to $D$ is $-\rho/\eta^2$, so the exponent is most sensitive to the decay where $\eta$ is small. For the shifts $\frac14$ and $\frac34$,
-$\rho/\eta^2\approx136$. For the shifts $\frac k7$ it is about $4.4\cdot10^5$.
+$\rho/\eta^2\approx135$. For the shifts $\frac k7$ it is about $4.4\cdot10^5$.
 
 On the arithmetic side, the profiles $\mathcal P_j$ are minima of the bounds of Theorem~\ref{thm:local}. Every further
 local bound lowers $\Lambda$ by the integral of the amount by which it lies below $\mathcal P_j$. The denominator exponent of
@@ -2799,7 +3047,7 @@ namespace \lean{TrigammaDifferences}. Each number $\xi$ is written as a series, 
 series is the classical one where there is one. Otherwise it is $\Psi(s,t)$, and $\zeta(3)$ is the series
 $\sum_{n\ge0}(n+1)^{-3}$. Each theorem states that $q^{-\mu_0}<|\xi-p/q|$ for all $p\in\Z$ and all sufficiently
 large $q$. The plane theorems take rational coefficients $a$ and $b$, not both zero, and $\xi$ is $a\Lt+b\pi^2$,
-respectively $a\zeta(3)+b\pi^2$. The statements have no separate irrationality clause, since the bound for all large
+$a\zeta(3)+b\pi^2$ or $a\zeta(3)+b\pi^4$. The statements have no separate irrationality clause, since the bound for all large
 denominators implies irrationality. The theorems are the following.
 \begin{itemize}
 \item \lean{plane1_measure}: Theorem~\ref{thm:plane1}, with $\mu_0=\MuPlaneA$.
@@ -2812,6 +3060,8 @@ denominators implies irrationality. The theorems are the following.
 \item \lean{plane2_measure}: Theorem~\ref{thm:plane2}, with $\mu_0=\MuPlaneB$.
 \item \lean{zeta3_measure} and \lean{pi2_measure}: Theorem~\ref{thm:ends}, with $\mu_0=\MuZetaThree$ and
  $\MuHalvesU$.
+\item \lean{plane3_measure}: Theorem~\ref{thm:plane3}, with $\mu_0=\MuPlaneC$. \lean{pi4_measure} is its case $a=0$,
+ $b=1$.
 \item \lean{lambda_plus_measure} and \lean{lambda_minus_measure}: Theorem~\ref{thm:offplane}(i), with
  $\mu_0=\MuLamU$.
 \item \lean{fifths1_measure}, \dots, \lean{fifths4_measure}: Theorem~\ref{thm:offplane}(ii), with
@@ -2846,6 +3096,12 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
 \item \lean{Bank.Plane2.plane2_point_ab_of_content} is the proof of Theorem~\ref{thm:plane2}, for every rational
  $(a,b)\ne(0,0)$, from the denominator bounds of the three cases $\gamma_2\ne0$ with $\gamma_1\ne0$, $\gamma_2\ne0$ with
  $\gamma_1=0$, and $\gamma_2=0$.
+\item \lean{Bank.Plane3.plane3_content} is Theorem~\ref{thm:content3}, \lean{Bank.Plane3.plane3_decay} is the decay of
+ Proposition~\ref{prop:cert3}, and \lean{Bank.Plane3.plane3_final} is the proof of Theorem~\ref{thm:plane3}.
+\item \lean{Support.pole_gram_split_minimal} is the rank-one splitting of \S\ref{ssec:decaydouble} for a pole of any
+ order. \lean{Support.pole_altGeom_seqFamily_nv0_even} is Theorem~\ref{thm:nvframe} for such poles.
+\item \lean{Support.support_measureLB} is the general form of Theorem~\ref{thm:deduction}. Every point result is an
+ instance of \lean{Bank.Plane1.alt_point}, which applies it to an alternating geometry.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}. The command \texttt{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem in arithmetic
@@ -3034,6 +3290,11 @@ Karl L\"owner, \emph{\"{U}ber monotone {M}atrixfunktionen}, Math. Z.
 \bibitem{Marcovecchio09}
 Raffaele Marcovecchio, \emph{The {R}hin--{V}iola method for {$\log 2$}}, Acta
   Arith. \textbf{139} (2009), no.~2, 147--184.
+
+\bibitem{MarcovecchioZudilin20}
+Raffaele Marcovecchio and Wadim Zudilin, \emph{Hypergeometric rational
+  approximations to {$\zeta(4)$}}, Proc. Edinb. Math. Soc. (2) \textbf{63}
+  (2020), no.~2, 374--397.
 
 \bibitem{Nesterenko85}
 Yu.~V. Nesterenko, \emph{On the linear independence of numbers}, Vestnik

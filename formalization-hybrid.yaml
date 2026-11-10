@@ -301,12 +301,12 @@ alignment:
       lean: "TrigammaDifferences.plane3_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent118; zeta(3) endpoint reuses6.0382."
+      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 118; zeta(3) endpoint reuses 6.0382."
     - source: "Litsey, third plane construction (2026)"
       lean: "TrigammaDifferences.pi4_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "pi^4, exponent118; included to illustrate the construction, no record claim."
+      note: "pi^4, exponent 118; included to illustrate the construction, no record claim."
 
 acknowledgements: >-
   OpenAI's proof of the irrationality of Catalan's constant and its Lean
