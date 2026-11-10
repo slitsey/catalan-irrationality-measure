@@ -2,6 +2,11 @@ module
 
 public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B00
 public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B01
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B02
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B03
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B04
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B05
+public import CatalanCore.Uniform.Bank.Fifths.Cover.Cap.B06
 
 @[expose] public section
 set_option Elab.async false
@@ -15,9 +20,11 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def capC : List PLCap := kblk00 ++ (kblk01)
+def capC : List PLCap := kblk00 ++ (kblk01 ++ (kblk02 ++ (kblk03 ++ (kblk04 ++ (kblk05 ++ (kblk06))))))
 
-theorem cap_all : capC.all (plUbOk nuC none Rtw eWc ePc Dn) = true :=
-  allT_append kblk00_ok (kblk01_ok)
+theorem cap_all : capC.all (plUbFoldOk qsF Dn.W Rtw eWc ePc Dn) = true :=
+  allT_append kblk00_ok (allT_append kblk01_ok (allT_append kblk02_ok (allT_append kblk03_ok (allT_append kblk04_ok (allT_append kblk05_ok (kblk06_ok))))))
 
 end CatalanCore.Uniform.Bank.Fifths.Cover
+
+#print axioms CatalanCore.Uniform.Bank.Fifths.Cover.cap_all

@@ -14,6 +14,8 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-theorem glob_ok : globalOk (cellPieces Dn nuC) Mopt = true := by decide +kernel
+theorem glob_ok : globalOk (cellPieces Dn nuC) Mopt = true := rfl
 
 end CatalanCore.Uniform.Bank.Halves.Cover
+
+#print axioms CatalanCore.Uniform.Bank.Halves.Cover.glob_ok

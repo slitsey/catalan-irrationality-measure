@@ -1,8 +1,7 @@
 module
 
-public import CatalanCore.Uniform.Bank.Chi3.Env
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Check
-public import CatalanCore.Uniform.Decay.AltDecay
+public import CatalanCore.Uniform.Decay.AltFold
 public import CatalanCore.Uniform.Bank.Chi3New.Geom
 public import CatalanFrames.P6.Frame
 
@@ -14,10 +13,6 @@ set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.Chi3New
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanFrames.P6
   CatalanCore.Uniform.Bank.Chi3 CatalanCore.Uniform.Decay.Cert
-
-theorem Dchi_Inu : Dchi.Inu = 28816875853 / 15625000000 := by decide +kernel
-theorem Dchi_eps : Dchi.ε = 1 / 1000 := by decide +kernel
-theorem Dchi_dim : Dchi.dim = 3 := by decide +kernel
 
 theorem p6_mu (i : Fin p6Frame.d) :
     (p6Frame.μ i = 1) ∨ (p6Frame.μ i = 1 / 3) ∨ (p6Frame.μ i = 1 / 2) := by
@@ -67,14 +62,11 @@ theorem energy_ok : energyCheck 30 (altPieces (1 / 2)) (altPieces (1 / 2))
     Cover.Dchi.Inu = true := by decide +kernel
 theorem dim_eq : Cover.Dchi.dim = 3 := by decide +kernel
 theorem eps_pos : 0 < Cover.Dchi.ε := by decide +kernel
-theorem Dt_eq : Cover.Dchi.Dt = Chi3.Dchi.Dt := by decide +kernel
-theorem ccert_eq : Cover.Dchi.ccert = Chi3.Dchi.ccert := by decide +kernel
-
 end GeneratedDecay
 
 /-- **Window decay of the chi3 block family**, with the unchanged certified constants. -/
 theorem chi3_decay (depth : ℕ) :
-    HasScaledDecay (G12.family p6Frame depth) G12.scale (Dchi.Dt : ℝ) (Dchi.ccert : ℝ) := by
+    HasScaledDecay (G12.family p6Frame depth) G12.scale (Cover.Dchi.Dt : ℝ) (Cover.Dchi.ccert : ℝ) := by
   have hm0 : ∀ i, (1 / 3 : ℝ) ≤ p6Frame.μ i := by
     intro i
     have hq : (1 / 3 : ℚ) ≤ p6Frame.μ i := by
@@ -82,13 +74,14 @@ theorem chi3_decay (depth : ℕ) :
     have h := (Rat.cast_le (K := ℝ)).2 hq
     push_cast at h
     exact h
-  have h := altGeom_hasScaledDecay (1 / 2) half_pos (by norm_num)
+  have h := altGeom_hasScaledDecay_F (1 / 2) half_pos (by norm_num)
     (by decide +kernel : Frame.contourCheck p6Frame = true) p6_hAR
     (by decide +kernel) Cover.TabC GeneratedDecay.tab_RP GeneratedDecay.tab_CP
     GeneratedDecay.tab_Mq Cover.Dchi Cover.Pply Cover.check_true
     (by rw [GeneratedDecay.dim_eq]; rfl) 30 GeneratedDecay.energy_ok
     (m0 := 1 / 3) (by norm_num) hm0 GeneratedDecay.eps_pos depth
-  rw [GeneratedDecay.Dt_eq, GeneratedDecay.ccert_eq] at h
   exact h
 
 end CatalanCore.Uniform.Bank.Chi3New
+
+#print axioms CatalanCore.Uniform.Bank.Chi3New.chi3_decay

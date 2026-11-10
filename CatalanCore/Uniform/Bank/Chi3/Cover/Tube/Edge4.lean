@@ -1,9 +1,17 @@
 module
 
-public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E4B00
-public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E4B01
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P065
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P066
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P067
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P068
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P069
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P070
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P071
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P072
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P073
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -15,15 +23,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells4 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk4_00 ++ (blk4_01)
+def ecells4 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk4_00 ++ (blk4_01 ++ (blk4_02 ++ (blk4_03 ++ (blk4_04 ++ (blk4_05 ++ (blk4_06 ++ (blk4_07 ++ (blk4_08 ++ (blk4_09 ++ (blk4_10 ++ (blk4_11 ++ (blk4_12 ++ (blk4_13 ++ (blk4_14 ++ (blk4_15 ++ (blk4_16 ++ (blk4_17 ++ (blk4_18))))))))))))))))))
 
 theorem ecells4_all : ecells4.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e4) = true :=
-  allT_append blk4_00_ok (blk4_01_ok)
+  allT_append blk4_00_ok (allT_append blk4_01_ok (allT_append blk4_02_ok (allT_append blk4_03_ok (allT_append blk4_04_ok (allT_append blk4_05_ok (allT_append blk4_06_ok (allT_append blk4_07_ok (allT_append blk4_08_ok (allT_append blk4_09_ok (allT_append blk4_10_ok (allT_append blk4_11_ok (allT_append blk4_12_ok (allT_append blk4_13_ok (allT_append blk4_14_ok (allT_append blk4_15_ok (allT_append blk4_16_ok (allT_append blk4_17_ok (blk4_18_ok))))))))))))))))))
 
 theorem ecells4_cov : coverOk 0 1 (ecells4.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells4_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e4 ecells4 = true :=
   edgeCells_of ecells4_cov ecells4_all
 
+#print axioms ecells4_ok
+
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+end

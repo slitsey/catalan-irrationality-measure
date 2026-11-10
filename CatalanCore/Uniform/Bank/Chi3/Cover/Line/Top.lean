@@ -4,6 +4,24 @@ public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B00
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B01
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B02
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B03
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B04
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B05
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B06
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B07
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B08
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B09
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B10
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B11
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B12
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B13
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B14
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B15
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B16
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B17
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B18
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B19
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B20
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.B21
 
 @[expose] public section
 set_option Elab.async false
@@ -17,11 +35,14 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def lineC : List CatalanCore.Uniform.Decay.PolyWire3.TCell := lblk00 ++ (lblk01 ++ (lblk02 ++ (lblk03)))
+def lineC : List CatalanCore.Uniform.Decay.PolyWire3.TCell := lblk00 ++ (lblk01 ++ (lblk02 ++ (lblk03 ++ (lblk04 ++ (lblk05 ++ (lblk06 ++ (lblk07 ++ (lblk08 ++ (lblk09 ++ (lblk10 ++ (lblk11 ++ (lblk12 ++ (lblk13 ++ (lblk14 ++ (lblk15 ++ (lblk16 ++ (lblk17 ++ (lblk18 ++ (lblk19 ++ (lblk20 ++ (lblk21)))))))))))))))))))))
 
-theorem line_all : lineC.all (lineCellOk nuC Mopt Rtw eWc ePc Dn) = true :=
-  allT_append lblk00_ok (allT_append lblk01_ok (allT_append lblk02_ok (lblk03_ok)))
+theorem line_all : lineC.all (lineFoldOk qsF MoptF Dn.W Rtw eWc ePc Dn) = true :=
+  allT_append lblk00_ok (allT_append lblk01_ok (allT_append lblk02_ok (allT_append lblk03_ok (allT_append lblk04_ok (allT_append lblk05_ok (allT_append lblk06_ok (allT_append lblk07_ok (allT_append lblk08_ok (allT_append lblk09_ok (allT_append lblk10_ok (allT_append lblk11_ok (allT_append lblk12_ok (allT_append lblk13_ok (allT_append lblk14_ok (allT_append lblk15_ok (allT_append lblk16_ok (allT_append lblk17_ok (allT_append lblk18_ok (allT_append lblk19_ok (allT_append lblk20_ok (lblk21_ok)))))))))))))))))))))
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem line_eq : Dn.lineCells = lineC.map (fun c => (c.ulo, c.uhi)) := by decide +kernel
+
+#print axioms line_eq
 
 end CatalanCore.Uniform.Bank.Chi3.Cover

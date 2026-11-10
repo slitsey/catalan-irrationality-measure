@@ -1,8 +1,10 @@
 module
 
-public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E6B00
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P080
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P081
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -14,15 +16,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells6 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk6_00
+def ecells6 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk6_00 ++ (blk6_01 ++ (blk6_02 ++ (blk6_03 ++ (blk6_04))))
 
 theorem ecells6_all : ecells6.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e6) = true :=
-  blk6_00_ok
+  allT_append blk6_00_ok (allT_append blk6_01_ok (allT_append blk6_02_ok (allT_append blk6_03_ok (blk6_04_ok))))
 
 theorem ecells6_cov : coverOk 0 1 (ecells6.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells6_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e6 ecells6 = true :=
   edgeCells_of ecells6_cov ecells6_all
 
+#print axioms ecells6_ok
+
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+end

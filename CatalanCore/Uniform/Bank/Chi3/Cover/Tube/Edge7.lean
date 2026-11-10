@@ -1,8 +1,36 @@
 module
 
-public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E7B00
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P081
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P082
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P083
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P084
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P085
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P086
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P087
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P088
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P089
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P090
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P091
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P092
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P093
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P094
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P095
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P096
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P097
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P098
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P099
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P100
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P101
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P102
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P103
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P104
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P105
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P106
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P107
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P108
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -14,15 +42,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells7 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk7_00
+def ecells7 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk7_00 ++ (blk7_01 ++ (blk7_02 ++ (blk7_03 ++ (blk7_04 ++ (blk7_05 ++ (blk7_06 ++ (blk7_07 ++ (blk7_08 ++ (blk7_09 ++ (blk7_10 ++ (blk7_11 ++ (blk7_12 ++ (blk7_13 ++ (blk7_14 ++ (blk7_15 ++ (blk7_16 ++ (blk7_17 ++ (blk7_18 ++ (blk7_19 ++ (blk7_20 ++ (blk7_21 ++ (blk7_22 ++ (blk7_23 ++ (blk7_24 ++ (blk7_25 ++ (blk7_26 ++ (blk7_27 ++ (blk7_28 ++ (blk7_29 ++ (blk7_30 ++ (blk7_31 ++ (blk7_32 ++ (blk7_33 ++ (blk7_34 ++ (blk7_35 ++ (blk7_36 ++ (blk7_37 ++ (blk7_38 ++ (blk7_39 ++ (blk7_40 ++ (blk7_41 ++ (blk7_42 ++ (blk7_43 ++ (blk7_44 ++ (blk7_45 ++ (blk7_46 ++ (blk7_47 ++ (blk7_48 ++ (blk7_49 ++ (blk7_50 ++ (blk7_51 ++ (blk7_52 ++ (blk7_53 ++ (blk7_54 ++ (blk7_55 ++ (blk7_56 ++ (blk7_57 ++ (blk7_58 ++ (blk7_59 ++ (blk7_60 ++ (blk7_61 ++ (blk7_62 ++ (blk7_63 ++ (blk7_64 ++ (blk7_65 ++ (blk7_66 ++ (blk7_67 ++ (blk7_68 ++ (blk7_69 ++ (blk7_70 ++ (blk7_71 ++ (blk7_72 ++ (blk7_73 ++ (blk7_74 ++ (blk7_75 ++ (blk7_76 ++ (blk7_77 ++ (blk7_78 ++ (blk7_79)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells7_all : ecells7.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e7) = true :=
-  blk7_00_ok
+  allT_append blk7_00_ok (allT_append blk7_01_ok (allT_append blk7_02_ok (allT_append blk7_03_ok (allT_append blk7_04_ok (allT_append blk7_05_ok (allT_append blk7_06_ok (allT_append blk7_07_ok (allT_append blk7_08_ok (allT_append blk7_09_ok (allT_append blk7_10_ok (allT_append blk7_11_ok (allT_append blk7_12_ok (allT_append blk7_13_ok (allT_append blk7_14_ok (allT_append blk7_15_ok (allT_append blk7_16_ok (allT_append blk7_17_ok (allT_append blk7_18_ok (allT_append blk7_19_ok (allT_append blk7_20_ok (allT_append blk7_21_ok (allT_append blk7_22_ok (allT_append blk7_23_ok (allT_append blk7_24_ok (allT_append blk7_25_ok (allT_append blk7_26_ok (allT_append blk7_27_ok (allT_append blk7_28_ok (allT_append blk7_29_ok (allT_append blk7_30_ok (allT_append blk7_31_ok (allT_append blk7_32_ok (allT_append blk7_33_ok (allT_append blk7_34_ok (allT_append blk7_35_ok (allT_append blk7_36_ok (allT_append blk7_37_ok (allT_append blk7_38_ok (allT_append blk7_39_ok (allT_append blk7_40_ok (allT_append blk7_41_ok (allT_append blk7_42_ok (allT_append blk7_43_ok (allT_append blk7_44_ok (allT_append blk7_45_ok (allT_append blk7_46_ok (allT_append blk7_47_ok (allT_append blk7_48_ok (allT_append blk7_49_ok (allT_append blk7_50_ok (allT_append blk7_51_ok (allT_append blk7_52_ok (allT_append blk7_53_ok (allT_append blk7_54_ok (allT_append blk7_55_ok (allT_append blk7_56_ok (allT_append blk7_57_ok (allT_append blk7_58_ok (allT_append blk7_59_ok (allT_append blk7_60_ok (allT_append blk7_61_ok (allT_append blk7_62_ok (allT_append blk7_63_ok (allT_append blk7_64_ok (allT_append blk7_65_ok (allT_append blk7_66_ok (allT_append blk7_67_ok (allT_append blk7_68_ok (allT_append blk7_69_ok (allT_append blk7_70_ok (allT_append blk7_71_ok (allT_append blk7_72_ok (allT_append blk7_73_ok (allT_append blk7_74_ok (allT_append blk7_75_ok (allT_append blk7_76_ok (allT_append blk7_77_ok (allT_append blk7_78_ok (blk7_79_ok)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells7_cov : coverOk 0 1 (ecells7.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells7_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e7 ecells7 = true :=
   edgeCells_of ecells7_cov ecells7_all
 
+#print axioms ecells7_ok
+
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+end

@@ -10,6 +10,7 @@ public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.Edge6
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.Edge7
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -27,3 +28,7 @@ theorem tube_ok : tubeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) edgesLit tubeC =
   tubeCells_cons ecells0_ok (tubeCells_cons ecells1_ok (tubeCells_cons ecells2_ok (tubeCells_cons ecells3_ok (tubeCells_cons ecells4_ok (tubeCells_cons ecells5_ok (tubeCells_cons ecells6_ok (tubeCells_cons ecells7_ok (tubeCells_nil _))))))))
 
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+#print axioms CatalanCore.Uniform.Bank.Chi3.Cover.tube_ok
+
+end

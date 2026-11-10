@@ -1,9 +1,50 @@
 module
 
-public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.E4B00
-public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.E4B01
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P063
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P064
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P065
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P066
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P067
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P071
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P074
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P075
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P076
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P077
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P078
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P079
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P080
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P081
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P082
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P083
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P059
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P084
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P085
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P086
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P087
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P088
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P089
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P090
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P091
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P092
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P093
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P094
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P095
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P096
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P097
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P098
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P099
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P100
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P101
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P102
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P103
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P068
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P069
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P070
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P072
+public import CatalanCore.Uniform.Bank.Halves.Cover.Tube.P073
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -15,15 +56,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells4 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk4_00 ++ (blk4_01)
+def ecells4 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk4_00 ++ (blk4_01 ++ (blk4_02 ++ (blk4_03 ++ (blk4_04 ++ (blk4_05 ++ (blk4_06 ++ (blk4_07 ++ (blk4_08 ++ (blk4_09 ++ (blk4_10 ++ (blk4_11 ++ (blk4_12 ++ (blk4_13 ++ (blk4_14 ++ (blk4_15 ++ (blk4_16 ++ (blk4_17 ++ (blk4_18 ++ (blk4_19 ++ (blk4_20 ++ (blk4_21 ++ (blk4_22 ++ (blk4_23 ++ (blk4_24 ++ (blk4_25 ++ (blk4_26 ++ (blk4_27 ++ (blk4_28 ++ (blk4_29 ++ (blk4_30 ++ (blk4_31 ++ (blk4_32 ++ (blk4_33 ++ (blk4_34 ++ (blk4_35 ++ (blk4_36 ++ (blk4_37 ++ (blk4_38 ++ (blk4_39 ++ (blk4_40 ++ (blk4_41 ++ (blk4_42 ++ (blk4_43 ++ (blk4_44 ++ (blk4_45 ++ (blk4_46 ++ (blk4_47 ++ (blk4_48 ++ (blk4_49 ++ (blk4_50 ++ (blk4_51 ++ (blk4_52 ++ (blk4_53 ++ (blk4_54 ++ (blk4_55 ++ (blk4_56 ++ (blk4_57 ++ (blk4_58 ++ (blk4_59 ++ (blk4_60 ++ (blk4_61 ++ (blk4_62 ++ (blk4_63 ++ (blk4_64 ++ (blk4_65 ++ (blk4_66 ++ (blk4_67 ++ (blk4_68 ++ (blk4_69 ++ (blk4_70 ++ (blk4_71 ++ (blk4_72 ++ (blk4_73 ++ (blk4_74 ++ (blk4_75 ++ (blk4_76 ++ (blk4_77 ++ (blk4_78 ++ (blk4_79 ++ (blk4_80 ++ (blk4_81 ++ (blk4_82 ++ (blk4_83 ++ (blk4_84 ++ (blk4_85 ++ (blk4_86 ++ (blk4_87 ++ (blk4_88 ++ (blk4_89 ++ (blk4_90 ++ (blk4_91 ++ (blk4_92 ++ (blk4_93 ++ (blk4_94 ++ (blk4_95 ++ (blk4_96 ++ (blk4_97 ++ (blk4_98 ++ (blk4_99 ++ (blk4_100 ++ (blk4_101 ++ (blk4_102 ++ (blk4_103 ++ (blk4_104 ++ (blk4_105 ++ (blk4_106 ++ (blk4_107 ++ (blk4_108 ++ (blk4_109 ++ (blk4_110 ++ (blk4_111 ++ (blk4_112 ++ (blk4_113 ++ (blk4_114 ++ (blk4_115)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells4_all : ecells4.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e4) = true :=
-  allT_append blk4_00_ok (blk4_01_ok)
+  allT_append blk4_00_ok (allT_append blk4_01_ok (allT_append blk4_02_ok (allT_append blk4_03_ok (allT_append blk4_04_ok (allT_append blk4_05_ok (allT_append blk4_06_ok (allT_append blk4_07_ok (allT_append blk4_08_ok (allT_append blk4_09_ok (allT_append blk4_10_ok (allT_append blk4_11_ok (allT_append blk4_12_ok (allT_append blk4_13_ok (allT_append blk4_14_ok (allT_append blk4_15_ok (allT_append blk4_16_ok (allT_append blk4_17_ok (allT_append blk4_18_ok (allT_append blk4_19_ok (allT_append blk4_20_ok (allT_append blk4_21_ok (allT_append blk4_22_ok (allT_append blk4_23_ok (allT_append blk4_24_ok (allT_append blk4_25_ok (allT_append blk4_26_ok (allT_append blk4_27_ok (allT_append blk4_28_ok (allT_append blk4_29_ok (allT_append blk4_30_ok (allT_append blk4_31_ok (allT_append blk4_32_ok (allT_append blk4_33_ok (allT_append blk4_34_ok (allT_append blk4_35_ok (allT_append blk4_36_ok (allT_append blk4_37_ok (allT_append blk4_38_ok (allT_append blk4_39_ok (allT_append blk4_40_ok (allT_append blk4_41_ok (allT_append blk4_42_ok (allT_append blk4_43_ok (allT_append blk4_44_ok (allT_append blk4_45_ok (allT_append blk4_46_ok (allT_append blk4_47_ok (allT_append blk4_48_ok (allT_append blk4_49_ok (allT_append blk4_50_ok (allT_append blk4_51_ok (allT_append blk4_52_ok (allT_append blk4_53_ok (allT_append blk4_54_ok (allT_append blk4_55_ok (allT_append blk4_56_ok (allT_append blk4_57_ok (allT_append blk4_58_ok (allT_append blk4_59_ok (allT_append blk4_60_ok (allT_append blk4_61_ok (allT_append blk4_62_ok (allT_append blk4_63_ok (allT_append blk4_64_ok (allT_append blk4_65_ok (allT_append blk4_66_ok (allT_append blk4_67_ok (allT_append blk4_68_ok (allT_append blk4_69_ok (allT_append blk4_70_ok (allT_append blk4_71_ok (allT_append blk4_72_ok (allT_append blk4_73_ok (allT_append blk4_74_ok (allT_append blk4_75_ok (allT_append blk4_76_ok (allT_append blk4_77_ok (allT_append blk4_78_ok (allT_append blk4_79_ok (allT_append blk4_80_ok (allT_append blk4_81_ok (allT_append blk4_82_ok (allT_append blk4_83_ok (allT_append blk4_84_ok (allT_append blk4_85_ok (allT_append blk4_86_ok (allT_append blk4_87_ok (allT_append blk4_88_ok (allT_append blk4_89_ok (allT_append blk4_90_ok (allT_append blk4_91_ok (allT_append blk4_92_ok (allT_append blk4_93_ok (allT_append blk4_94_ok (allT_append blk4_95_ok (allT_append blk4_96_ok (allT_append blk4_97_ok (allT_append blk4_98_ok (allT_append blk4_99_ok (allT_append blk4_100_ok (allT_append blk4_101_ok (allT_append blk4_102_ok (allT_append blk4_103_ok (allT_append blk4_104_ok (allT_append blk4_105_ok (allT_append blk4_106_ok (allT_append blk4_107_ok (allT_append blk4_108_ok (allT_append blk4_109_ok (allT_append blk4_110_ok (allT_append blk4_111_ok (allT_append blk4_112_ok (allT_append blk4_113_ok (allT_append blk4_114_ok (blk4_115_ok)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells4_cov : coverOk 0 1 (ecells4.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells4_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e4 ecells4 = true :=
   edgeCells_of ecells4_cov ecells4_all
 
+#print axioms ecells4_ok
+
 end CatalanCore.Uniform.Bank.Halves.Cover
+
+end

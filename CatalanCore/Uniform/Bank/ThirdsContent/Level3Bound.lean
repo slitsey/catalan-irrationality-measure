@@ -1,65 +1,103 @@
 module
-
 public import CatalanCore.Uniform.Bank.Thirds.Cover.Check
-public import CatalanCore.Uniform.Decay.AltDecay
-public import CatalanCore.Uniform.Bank.ThirdsContent.Level3Measure
-
+public import CatalanCore.Uniform.Bank.ThirdsContent.Level3Auto
+public import CatalanCore.Uniform.Decay.AltFold
+public import CatalanCore.Uniform.Bank.Plane1.Rows
+public import CatalanCore.Uniform.Frame.NVAdapter
 @[expose] public section
 set_option Elab.async false
-
-/-! # The thirds bounds (coordinator)
-
-The decay of both thirds members follows from the generated cover (`Thirds.Cover`, with
-`TabC.check Dchi Pply = true`) by `AltDecay.altGeom_hasScaledDecay` for `altGeom (3/10)`. Each frame
-supplies its contour and floor conditions, which are decided. With the automatic content
-(`MeasureUF`), this gives the two measures. -/
-
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3200000
 namespace CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound
-open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Bank.Thirds CatalanFrames.Thirds CatalanFrames.P6
-  CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Bank.ThirdsContent
-  CatalanCore.Uniform.Decay.AltDecay CatalanCore.Uniform.Decay.Nodes CatalanCore.Uniform.Bank.Thirds.Cover
+open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape
+  CatalanCore.Uniform.Bank.Thirds CatalanCore.Uniform.Bank.Thirds.Cover
+  CatalanCore.Uniform.Bank.ThirdsContent.Level3Auto
+  CatalanCore.Uniform.Decay.AltDecay CatalanCore.Uniform.Decay.Nodes
+  CatalanCore.Uniform.Decay.PolyFull
+open CatalanFrames.Thirds CatalanFrames.P6
 
-theorem tab_RP : TabC.RP = altPieces (3 / 10) := by decide +kernel
-theorem tab_CP : TabC.CP = altPieces (3 / 10) := by decide +kernel
-theorem tab_Mq : TabC.Mq = 1 + (3 / 10 : ℚ) / 2 := by decide +kernel
-theorem energy_ok : energyCheck 30 (altPieces (3 / 10)) (altPieces (3 / 10)) Dchi.Inu = true := by
+def publicMu : ℚ := 94913/10000
+theorem eta : bankData.Λ<Dchi.Dt := by decide +kernel
+theorem cc_pos : (0:ℚ)<Dchi.ccert := by decide +kernel
+theorem mu_strict : Dchi.ccert/(Dchi.Dt-bankData.Λ)<publicMu := by decide +kernel
+theorem ratio_pos : 0<(Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ)) := by
+  have hgap : (0:ℝ)<(Dchi.Dt:ℝ)-(bankData.Λ:ℝ) := by exact_mod_cast (sub_pos.mpr eta)
+  have hcc : (0:ℝ)<(Dchi.ccert:ℝ) := by exact_mod_cast cc_pos
+  exact div_pos hcc hgap
+
+theorem tab_RP : TabC.RP=altPieces (3/10) := by decide +kernel
+theorem tab_CP : TabC.CP=altPieces (3/10) := by decide +kernel
+theorem tab_Mq : TabC.Mq=1+(3/10:ℚ)/2 := by decide +kernel
+theorem energy_ok : energyCheck 30 (altPieces (3/10)) (altPieces (3/10)) Dchi.Inu=true := by decide +kernel
+theorem dim_eq : Dchi.dim=2 := by decide +kernel
+theorem eps_pos : 0<Dchi.ε := by decide +kernel
+
+/-- Actual current refit rate and constant; no old Level3Measure rate is imported. -/
+theorem decay_of_frame {Fr:Frame} (hC:Frame.contourCheck Fr=true)
+    (hAR:∀ i:Fin Fr.d,((⌊Fr.xs-Fr.μ i⌋:ℤ):ℚ)+Fr.μ i≤Fr.n0off)
+    (hnorm1:(1:ℚ)≤Fr.norm) (hd:Fr.d=2) (hm0:∀ i,(1/3:ℚ)≤Fr.μ i) (depth:ℕ) :
+    HasScaledDecay ((altGeom (3/10) c310_pos).family Fr depth) (altGeom (3/10) c310_pos).scale
+      (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) :=
+  altGeom_hasScaledDecay_F (3/10) c310_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP tab_Mq
+    Dchi Pply check_true (by rw [dim_eq,hd]) 30 energy_ok (m0:=1/3) (by norm_num)
+    (fun i => by exact_mod_cast hm0 i) eps_pos depth
+
+noncomputable def depth0 (Fr:Frame) : ℕ := (altGeom (3/10) c310_pos).selectionDepth Fr 2
+theorem depth0_le {Fr:Frame} (hd:Fr.d=2) : depth0 Fr≤64 := by
+  unfold depth0 BlockGeom.selectionDepth
+  rw [hd]
   decide +kernel
-theorem dim_eq : Dchi.dim = 2 := by decide +kernel
-theorem eps_pos : 0 < Dchi.ε := by decide +kernel
-theorem Dt_eq : Dchi.Dt = DtT := by decide +kernel
-theorem ccert_eq : Dchi.ccert = ctT := by decide +kernel
 
-/-- **Decay of a thirds frame from the generated cover.** -/
-theorem decay_of_frame {Fr : Frame} (hC : Frame.contourCheck Fr = true)
-    (hAR : ∀ i : Fin Fr.d, ((⌊Fr.xs - Fr.μ i⌋ : ℤ) : ℚ) + Fr.μ i ≤ Fr.n0off)
-    (hnorm1 : (1 : ℚ) ≤ Fr.norm) (hd : Fr.d = 2) (hm0 : ∀ i, (1 / 3 : ℚ) ≤ Fr.μ i) (depth : ℕ) :
-    ThirdsDecay Fr depth := by
-  have h := altGeom_hasScaledDecay (3 / 10) c310_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP
-    tab_Mq Dchi Pply check_true (by rw [dim_eq, hd]) 30 energy_ok (m0 := 1 / 3) (by norm_num)
-    (fun i => by
-      have h := (Rat.cast_le (K := ℝ)).2 (hm0 i)
-      push_cast at h
-      exact h) eps_pos depth
-  rw [Dt_eq, ccert_eq] at h
-  exact h
+theorem nv0_even (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0) :
+    ∃ R0:ℕ,∀ s:ℕ,R0≤s → ∀ x:ℚ,∃ n,
+      (((altGeom (3/10) c310_pos).family Fr (depth0 Fr)).restrictAdm (fun i=>i.1%2=0)).Adm n ∧
+      (altGeom (3/10) c310_pos).scale n=2*s ∧
+      (((altGeom (3/10) c310_pos).family Fr (depth0 Fr)).restrictAdm (fun i=>i.1%2=0)).evalQ n x≠0 := by
+  have hnv := (altGeom (3/10) c310_pos).hasNV0 Fr 2 (depth0 Fr) (by norm_num) hd hw
+    (fun i=>by simp [altGeom,single,commonB])
+    (fun i=>by simp [altGeom,single,rowB])
+    (fun i=>by simp [altGeom,single,colB]) le_rfl
+  obtain ⟨R0,hR⟩:=hnv
+  refine ⟨R0,fun s hs x=>?_⟩
+  obtain ⟨n,hn,hsc,hne⟩:=hR (2*s) (by omega) x
+  exact ⟨n,⟨hn,by have hscale:(altGeom (3/10) c310_pos).scale n=n.1:=rfl;omega⟩,hsc,hne⟩
 
-theorem thirdsAc_decay : ThirdsDecay thirdsAc (depth0 thirdsAc) :=
+theorem point_of_frame (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0)
+    {ξ:ℝ} {u v:ℚ} (hu:u≠0) (hconst:Fr.const=(u:ℝ)*ξ+v)
+    (hS:HasScaledContent (AltEven (3/10) c310_pos Fr (depth0 Fr)) (altGeom (3/10) c310_pos).scale (bankData.Λ:ℝ))
+    (hD:HasScaledDecay ((altGeom (3/10) c310_pos).family Fr (depth0 Fr)) (altGeom (3/10) c310_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ)) :
+    Measure.MeasureLBAt ξ ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational ξ :=
+  CatalanCore.Uniform.Bank.Plane1.alt_point (3/10) c310_pos Fr (depth0 Fr) hS hD
+    (by exact_mod_cast eta) (by exact_mod_cast cc_pos) (nv0_even Fr hd hw) hu hconst
+
+theorem mu_le_real : (Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))≤(publicMu:ℝ) := by
+  exact_mod_cast (le_of_lt mu_strict)
+
+theorem thirdsAc_decay : HasScaledDecay ((altGeom (3/10) c310_pos).family thirdsAc (depth0 thirdsAc))
+    (altGeom (3/10) c310_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) :=
   decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl (by decide +kernel) _
+theorem thirds_plus_point_exact : Measure.MeasureLBAt (chi3L2+Real.pi^2/9)
+    ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (chi3L2+Real.pi^2/9) :=
+  point_of_frame thirdsAc (by decide +kernel) (by decide +kernel) (u:=-1/2) (v:=0) (by norm_num)
+    (by simpa only [add_zero] using thirdsAc_const) (thirdsAc_content_autoUF _ (depth0_le rfl)) thirdsAc_decay
+theorem thirds_plus_point : Measure.MeasureLBAt (chi3L2+Real.pi^2/9) (publicMu:ℝ) ∧ Irrational (chi3L2+Real.pi^2/9) :=
+  ⟨Measure.MeasureLBAt.mono mu_le_real thirds_plus_point_exact.1,thirds_plus_point_exact.2⟩
+theorem thirds_plus_measure : Measure.MeasureLBAt (chi3L2+Real.pi^2/9) (publicMu:ℝ) := thirds_plus_point.1
 
-theorem thirdsBc_decay : ThirdsDecay thirdsBc (depth0 thirdsBc) :=
+theorem thirdsBc_decay : HasScaledDecay ((altGeom (3/10) c310_pos).family thirdsBc (depth0 thirdsBc))
+    (altGeom (3/10) c310_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) :=
   decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl (by decide +kernel) _
-
-/-- **`μ(L(2,χ₋₃) + π²/9) ≤ 9.5133`.** -/
-theorem thirds_plus_measure :
-    Measure.MeasureLBAt (chi3L2 + Real.pi ^ 2 / 9) ((47499 / 5000 : ℚ) : ℝ) :=
-  Level3Measure.thirds_measure_plus thirdsAc_decay
-
-/-- **`μ(L(2,χ₋₃) − π²/9) ≤ 9.5133`.** -/
-theorem thirds_minus_measure :
-    Measure.MeasureLBAt (chi3L2 - Real.pi ^ 2 / 9) ((47499 / 5000 : ℚ) : ℝ) :=
-  Level3Measure.thirds_measure_minus thirdsBc_decay
+theorem thirds_minus_point_exact : Measure.MeasureLBAt (chi3L2-Real.pi^2/9)
+    ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (chi3L2-Real.pi^2/9) :=
+  point_of_frame thirdsBc (by decide +kernel) (by decide +kernel) (u:=1/2) (v:=0) (by norm_num)
+    (by simpa only [add_zero] using thirdsBc_const) (thirdsBc_content_autoUF _ (depth0_le rfl)) thirdsBc_decay
+theorem thirds_minus_point : Measure.MeasureLBAt (chi3L2-Real.pi^2/9) (publicMu:ℝ) ∧ Irrational (chi3L2-Real.pi^2/9) :=
+  ⟨Measure.MeasureLBAt.mono mu_le_real thirds_minus_point_exact.1,thirds_minus_point_exact.2⟩
+theorem thirds_minus_measure : Measure.MeasureLBAt (chi3L2-Real.pi^2/9) (publicMu:ℝ) := thirds_minus_point.1
 
 end CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound
-
-#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.thirds_plus_measure
-#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.thirds_minus_measure
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.eta
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.cc_pos
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.mu_strict
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.nv0_even
+#print axioms CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound.point_of_frame

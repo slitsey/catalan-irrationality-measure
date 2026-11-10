@@ -2,7 +2,7 @@ module
 
 public import CatalanCore.Uniform.Bank.Plane2.Const
 public import CatalanCore.Uniform.Bank.HalvesContent.Bound
-public import CatalanCore.Uniform.Decay.PolyWire3.RulesOfTables
+public import CatalanCore.Uniform.Decay.PolyWire3.TopFold
 public import CatalanCore.Uniform.Decay.Jet.Source
 public import CatalanCore.Uniform.Support.Theorem
 public import CatalanCore.Uniform.Support.NV
@@ -53,15 +53,15 @@ theorem halves_hMq : TabC.Mq = FH.totalMass := by
 
 /-- The decay certificate of the halves cover, as a `Support.Certificate` over the node potential of `FH`. -/
 noncomputable def halvesCert : Support.Certificate FH.nodePot where
-  rules := rulesOfTables3 FH TabC halves_hrow halves_hcol halves_hMq
+  rules := rulesOfTablesF FH TabC halves_hrow halves_hcol halves_hMq
   spline := Dchi
   polygon := Pply
-  ok := checkPB_of_tables3 FH TabC halves_hrow halves_hcol halves_hMq check_true
+  ok := checkPB_of_tablesF FH TabC halves_hrow halves_hcol halves_hMq check_true
   D := Dchi.Dt
   c := Dchi.ccert
   hD := rfl
   hc' := rfl
-  hc := by rw [ccert_eq]; unfold cH; norm_num
+  hc := cc_pos
 
 
 /-- The roles of the two atoms of the halves frame: the shift `1` stands for the shift of the datum, the shift
@@ -279,12 +279,12 @@ theorem zeta3_content (depth : ℕ) :
   zeta3_content_of depth zL zT1 zA0 zLam (by unfold zT1; norm_num) (by unfold zT1; norm_num)
     (le_refl _) zL_chain (by rw [zL_end]; norm_num) zL_cov zL_mass
 
-theorem zeta3_numeric : (zLam : ℚ) < Dchi.Dt ∧ cH ≤ 60382 / 10000 * (Dchi.Dt - zLam) := by
+theorem zeta3_numeric : (zLam : ℚ) < Dchi.Dt ∧ Dchi.ccert ≤ 60382 / 10000 * (Dchi.Dt - zLam) := by
   unfold zLam; constructor <;> decide +kernel
 
-/-- **ζ(3) has irrationality measure at most `B`** whenever `cH ≤ B (D - Λ)` (the one-term datum on the halves cover, `α = 3/20`,
+/-- **ζ(3) has irrationality measure at most `B`** whenever `Dchi.ccert ≤ B (D - Λ)` (the one-term datum on the halves cover, `α = 3/20`,
 the sweep rows `B1, B2, B4, E1, P1` at `u = 0`, `K = 17` bands). -/
-theorem zeta3_measure_le {B : ℚ} (hB : cH ≤ B * (Dchi.Dt - zLam)) : MeasureLBAt (riemannZeta 3).re (B : ℝ) := by
+theorem zeta3_measure_le {B : ℚ} (hB : Dchi.ccert ≤ B * (Dchi.Dt - zLam)) : MeasureLBAt (riemannZeta 3).re (B : ℝ) := by
   set P : (FH.seqFamily zeta3Datum.f zeta3Datum.e zeta3Datum.xi 1).ι → Prop :=
     fun n => SeqFamily.scale FH.geometry n % 2 = 0 with hP
   set Famr := (FH.seqFamily zeta3Datum.f zeta3Datum.e zeta3Datum.xi 1).restrictAdm P with hFamr
@@ -323,15 +323,15 @@ theorem zeta3_measure_le {B : ℚ} (hB : cH ≤ B * (Dchi.Dt - zLam)) : MeasureL
     show zeta3Datum.xi = _
     rw [zeta3Datum_xi]; push_cast; ring
   have key := support_measureLB Famr (SeqFamily.scale FH.geometry) hΛ hD hη hc one_pos
-    (Nat.cast_nonneg _) hdeg heven hnv (ξ := (riemannZeta 3).re) (a := -2) (b := 0) (by norm_num) hconst
+    (Nat.cast_nonneg _) hdeg hnv (ξ := (riemannZeta 3).re) (a := -2) (b := 0) (by norm_num) hconst
   refine key.1.mono ?_
   have hpos : (0 : ℝ) < halvesCert.Dr - zLam := sub_pos.2 hη
   rw [div_le_iff₀ hpos]
-  have hmuR : ((cH : ℚ) : ℝ) ≤ ((B : ℚ) : ℝ) * (((Dchi.Dt : ℚ) : ℝ) - (zLam : ℝ)) := by
+  have hmuR : ((Dchi.ccert : ℚ) : ℝ) ≤ ((B : ℚ) : ℝ) * (((Dchi.Dt : ℚ) : ℝ) - (zLam : ℝ)) := by
     exact_mod_cast hmu
-  have e1 : halvesCert.cr = ((cH : ℚ) : ℝ) := by
+  have e1 : halvesCert.cr = ((Dchi.ccert : ℚ) : ℝ) := by
     show ((Dchi.ccert : ℚ) : ℝ) = _
-    rw [ccert_eq]
+    rfl
   have e2 : halvesCert.Dr = ((Dchi.Dt : ℚ) : ℝ) := rfl
   rw [e1, e2]
   linarith

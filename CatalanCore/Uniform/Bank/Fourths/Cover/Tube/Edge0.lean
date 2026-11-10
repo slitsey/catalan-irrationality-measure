@@ -1,11 +1,30 @@
 module
 
-public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.E0B00
-public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.E0B01
-public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.E0B02
-public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.E0B03
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P000
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P001
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P002
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P003
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P004
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P005
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P006
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P007
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P008
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P009
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P010
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P011
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P012
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P013
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P014
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P015
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P016
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P017
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P018
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P019
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P020
+public import CatalanCore.Uniform.Bank.Fourths.Cover.Tube.P021
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -17,15 +36,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells0 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk0_00 ++ (blk0_01 ++ (blk0_02 ++ (blk0_03)))
+def ecells0 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk0_00 ++ (blk0_01 ++ (blk0_02 ++ (blk0_03 ++ (blk0_04 ++ (blk0_05 ++ (blk0_06 ++ (blk0_07 ++ (blk0_08 ++ (blk0_09 ++ (blk0_10 ++ (blk0_11 ++ (blk0_12 ++ (blk0_13 ++ (blk0_14 ++ (blk0_15 ++ (blk0_16 ++ (blk0_17 ++ (blk0_18 ++ (blk0_19 ++ (blk0_20 ++ (blk0_21 ++ (blk0_22 ++ (blk0_23 ++ (blk0_24 ++ (blk0_25 ++ (blk0_26 ++ (blk0_27 ++ (blk0_28 ++ (blk0_29 ++ (blk0_30 ++ (blk0_31 ++ (blk0_32 ++ (blk0_33 ++ (blk0_34 ++ (blk0_35 ++ (blk0_36 ++ (blk0_37 ++ (blk0_38 ++ (blk0_39 ++ (blk0_40 ++ (blk0_41 ++ (blk0_42 ++ (blk0_43 ++ (blk0_44 ++ (blk0_45 ++ (blk0_46 ++ (blk0_47 ++ (blk0_48 ++ (blk0_49 ++ (blk0_50 ++ (blk0_51 ++ (blk0_52 ++ (blk0_53 ++ (blk0_54 ++ (blk0_55 ++ (blk0_56 ++ (blk0_57 ++ (blk0_58 ++ (blk0_59 ++ (blk0_60))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells0_all : ecells0.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e0) = true :=
-  allT_append blk0_00_ok (allT_append blk0_01_ok (allT_append blk0_02_ok (blk0_03_ok)))
+  allT_append blk0_00_ok (allT_append blk0_01_ok (allT_append blk0_02_ok (allT_append blk0_03_ok (allT_append blk0_04_ok (allT_append blk0_05_ok (allT_append blk0_06_ok (allT_append blk0_07_ok (allT_append blk0_08_ok (allT_append blk0_09_ok (allT_append blk0_10_ok (allT_append blk0_11_ok (allT_append blk0_12_ok (allT_append blk0_13_ok (allT_append blk0_14_ok (allT_append blk0_15_ok (allT_append blk0_16_ok (allT_append blk0_17_ok (allT_append blk0_18_ok (allT_append blk0_19_ok (allT_append blk0_20_ok (allT_append blk0_21_ok (allT_append blk0_22_ok (allT_append blk0_23_ok (allT_append blk0_24_ok (allT_append blk0_25_ok (allT_append blk0_26_ok (allT_append blk0_27_ok (allT_append blk0_28_ok (allT_append blk0_29_ok (allT_append blk0_30_ok (allT_append blk0_31_ok (allT_append blk0_32_ok (allT_append blk0_33_ok (allT_append blk0_34_ok (allT_append blk0_35_ok (allT_append blk0_36_ok (allT_append blk0_37_ok (allT_append blk0_38_ok (allT_append blk0_39_ok (allT_append blk0_40_ok (allT_append blk0_41_ok (allT_append blk0_42_ok (allT_append blk0_43_ok (allT_append blk0_44_ok (allT_append blk0_45_ok (allT_append blk0_46_ok (allT_append blk0_47_ok (allT_append blk0_48_ok (allT_append blk0_49_ok (allT_append blk0_50_ok (allT_append blk0_51_ok (allT_append blk0_52_ok (allT_append blk0_53_ok (allT_append blk0_54_ok (allT_append blk0_55_ok (allT_append blk0_56_ok (allT_append blk0_57_ok (allT_append blk0_58_ok (allT_append blk0_59_ok (blk0_60_ok))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells0_cov : coverOk 0 1 (ecells0.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells0_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e0 ecells0 = true :=
   edgeCells_of ecells0_cov ecells0_all
 
+#print axioms ecells0_ok
+
 end CatalanCore.Uniform.Bank.Fourths.Cover
+
+end

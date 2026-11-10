@@ -12,22 +12,22 @@ open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert
 
 def s_sl : ℚ := q1 (raw_ints% [100000, 25253])
 def s_Mq : ℚ := q1 (raw_ints% [11, 10])
-def s_eps : ℚ := q1 (raw_ints% [1, 1000])
+def s_eps : ℚ := q1 (raw_ints% [1, 1000000])
 def s_r0 : ℚ := q1 (raw_ints% [4161, 31250])
 def s_W : ℚ := q1 (raw_ints% [1, 1000000000000000])
 def s_umax : ℚ := q1 (raw_ints% [8, 1])
-def s_mprime : ℚ := q1 (raw_ints% [4237467689331319, 2000000000000000])
-def s_gmin : ℚ := q1 (raw_ints% [-738239892830379, 500000000000000])
-def s_Scap : ℚ := q1 (raw_ints% [-466394071550203804161, 7812500000000000000000])
-def s_Ibound : ℚ := q1 (raw_ints% [193829207631, 100000000000])
-def s_ccert : ℚ := q1 (raw_ints% [1438085452130567, 200000000000000])
+def s_mprime : ℚ := q1 (raw_ints% [5297248653771819, 2500000000000000])
+def s_gmin : ℚ := q1 (raw_ints% [-461084271306491, 312500000000000])
+def s_Scap : ℚ := q1 (raw_ints% [-466564084542391304161, 7812500000000000000000])
+def s_Ibound : ℚ := q1 (raw_ints% [558595191023088135, 288230376151711744])
+def s_ccert : ℚ := q1 (raw_ints% [8985922824223747, 1250000000000000])
 def s_rho : ℚ := q1 (raw_ints% [1, 1000000000000])
 def s_theta : ℚ := q1 (raw_ints% [1, 1000000000000000000000000])
 def s_etaS : ℚ := q1 (raw_ints% [3328804161, 7812500000000000000000])
-def s_lossS : ℚ := q1 (raw_ints% [733729, 10000000000000000])
+def s_lossS : ℚ := q1 (raw_ints% [42144689, 576460752303423488])
 def s_Rc : ℚ := q1 (raw_ints% [2, 1])
 def s_Inu : ℚ := q1 (raw_ints% [1667634099983, 1000000000000])
-def s_Dt : ℚ := q1 (raw_ints% [14627817894518751186053, 3906250000000000000000])
+def s_Dt : ℚ := q1 (raw_ints% [1872666140237747, 500000000000000])
 
 def data : SplineData where
   segs := segs
@@ -54,3 +54,5 @@ def data : SplineData where
   dim := 2
 
 end CatalanCore.Uniform.Bank.Common.Data.Fourths
+
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Fourths.data

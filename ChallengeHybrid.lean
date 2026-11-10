@@ -1,175 +1,240 @@
 module
-
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Topology.Algebra.InfiniteSum.Real
-
-public section
-
-/-!
-Irrationality measures from Löwner determinants, with every constant written as a series.
-For rationals `a, b`, not both zero, `a L(2, χ₋₃) + b π²` has exponent 20.6622 and `a ζ(3) + b π²` has
-exponent 335.20.
-`L(2, χ₋₃)` has exponent 13.7046; `L(2, χ₋₃) + π²/9` and `L(2, χ₋₃) - π²/9` have exponent 9.4998;
-`L(2, χ₋₃) ± 2π²/27` have exponent 14, `L(2, χ₋₃) ± π²/27` exponent 15.359 and `L(2, χ₋₃) ± π²/18` exponent 18.161.
-`ζ(3)` has exponent 6.0382 and `π²` has exponent 6.5253.
-`G - 5π²/48` and `G + 5π²/48` have exponent 31.2876;
-the four numbers `ψ'(a/5) - π²/6` (a = 1, ..., 4) have exponent 23.8272;
-the six numbers `ψ'(a/7) - π²/6` (a = 1, ..., 6) have exponent 1806.1719.
-Each bound `|ξ - a/b| > b^(-μ)` holds for all integers `a` and all sufficiently large `b`.
--/
-
+public import CatalanCore.Uniform.Bank.Irrational
+@[expose] public section
+set_option Elab.async false
 namespace TrigammaDifferences
+
+
+open CatalanCore
 
 theorem lambda_minus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((78219 / 2500 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((311973 / 10000 : ℚ) : ℝ)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48) - (a : ℝ) / b| := by
-  sorry
+    have h := Aux.lambda_final false
+    have e : CatalanCore.Uniform.Bank.Fourths.lambdaTarget false = (∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) - 5 * Real.pi ^ 2 / 48 := by
+      simp [CatalanCore.Uniform.Bank.Fourths.lambdaTarget, sub_eq_add_neg]
+    rw [e] at h
+    exact h
 
 theorem lambda_plus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((78219 / 2500 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((311973 / 10000 : ℚ) : ℝ)) <
         |((∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48) - (a : ℝ) / b| := by
-  sorry
+    have h := Aux.lambda_final true
+    have e : CatalanCore.Uniform.Bank.Fourths.lambdaTarget true = (∑' j : ℕ, (-1 : ℝ) ^ j / ((2 * j + 1 : ℕ) : ℝ) ^ 2) + 5 * Real.pi ^ 2 / 48 := by
+      simp [CatalanCore.Uniform.Bank.Fourths.lambdaTarget]
+    rw [e] at h
+    exact h
 
 theorem chi3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((137046 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((136839 / 10000 : ℚ) : ℝ)) <
         |(∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.chi3_final
 
 theorem chi3_plus_pi2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((47499 / 5000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((94913 / 10000 : ℚ) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 9) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.thirds_plus_final
 
 theorem chi3_minus_pi2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((47499 / 5000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((94913 / 10000 : ℚ) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 9) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.thirds_minus_final
 
 theorem fifths1_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((14892 / 625 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((59439 / 2500 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.fifths1_final
 
 theorem fifths2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((14892 / 625 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((59439 / 2500 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.fifths2_final
 
 theorem fifths3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((14892 / 625 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((59439 / 2500 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.fifths3_final
 
 theorem fifths4_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((14892 / 625 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((59439 / 2500 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 5 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.fifths4_final
 
 theorem sevenths1_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((1 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨0, by decide⟩
 
 theorem sevenths2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((2 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨1, by decide⟩
 
 theorem sevenths3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((3 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨2, by decide⟩
 
 theorem sevenths4_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((4 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨3, by decide⟩
 
 theorem sevenths5_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((5 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨4, by decide⟩
 
 theorem sevenths6_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((18061719 / 10000 : ℚ) : ℝ)) <
         |((∑' n : ℕ, 1 / ((n : ℝ) + ((((((6 : ℕ) : ℚ) / 7 : ℚ)) : ℝ))) ^ 2) - Real.pi ^ 2 / 6) - (a : ℝ) / b| := by
-  sorry
+  exact Aux.sevenths_final ⟨5, by decide⟩
 
 theorem pi2_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-((65253 / 10000 : ℚ) : ℝ)) <
+      (b : ℝ) ^ (-((32607 / 5000 : ℚ) : ℝ)) <
         |Real.pi ^ 2 - (a : ℝ) / b| := by
-  sorry
+  exact Aux.pi2_final
 
 theorem plane1_measure (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
     ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ,
       (q : ℝ) ^ (-((206622 / 10000 : ℚ) : ℝ)) <
         |((a : ℝ) * (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + (b : ℝ) * Real.pi ^ 2) - (p : ℝ) / q| := by
-  sorry
+  exact Aux.plane1_final a b hab
 
 theorem plane2_measure (a b : ℚ) (hab : a ≠ 0 ∨ b ≠ 0) :
     ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ,
       (q : ℝ) ^ (-((33520 / 100 : ℚ) : ℝ)) <
         |((a : ℝ) * (∑' n : ℕ, 1 / ((n : ℝ) + 1) ^ 3) + (b : ℝ) * Real.pi ^ 2) - (p : ℝ) / q| := by
-  sorry
+  have h := Aux.plane2_final a b hab
+  rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
+  exact h
 
 theorem dip_2_27_plus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + 2 * Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_2_27_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + 2 * Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem dip_2_27_minus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(((14 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - 2 * Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_2_27_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - 2 * Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-2 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem dip_1_27_plus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_1_27_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem dip_1_27_minus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-(((15359 / 1000 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 27) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_1_27_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 27 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-1 / 27 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem dip_1_18_plus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+      (b : ℝ) ^ (-(((4373 / 250 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 18) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_1_18_plus_final
+  have e : CatalanFrames.P6.chi3L2 + ((1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + Real.pi ^ 2 / 18 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem dip_1_18_minus_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
-      (b : ℝ) ^ (-(((18161 / 1000 : ℚ)) : ℝ)) <
+      (b : ℝ) ^ (-(((4373 / 250 : ℚ)) : ℝ)) <
         |((∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 18) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.dip_1_18_minus_final
+  have e : CatalanFrames.P6.chi3L2 + ((-1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) - Real.pi ^ 2 / 18 := by
+    show (∑' k : ℕ, (1 / ((3 * k + 1 : ℕ) : ℝ) ^ 2 - 1 / ((3 * k + 2 : ℕ) : ℝ) ^ 2)) + ((-1 / 18 : ℚ) : ℝ) * Real.pi ^ 2 = _
+    push_cast; ring
+  rw [e] at h
+  exact h
 
 theorem zeta3_measure :
     ∀ᶠ b : ℕ in Filter.atTop, ∀ a : ℤ,
       (b : ℝ) ^ (-((60382 / 10000 : ℚ) : ℝ)) <
         |(∑' n : ℕ, 1 / ((n : ℝ) + 1) ^ 3) - (a : ℝ) / b| := by
-  sorry
+  have h := Aux.zeta3_final
+  rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
+  exact h
 
+#print axioms lambda_minus_measure
+#print axioms lambda_plus_measure
+#print axioms chi3_measure
+#print axioms chi3_plus_pi2_measure
+#print axioms chi3_minus_pi2_measure
+#print axioms fifths1_measure
+#print axioms fifths2_measure
+#print axioms fifths3_measure
+#print axioms fifths4_measure
+#print axioms sevenths1_measure
+#print axioms sevenths2_measure
+#print axioms sevenths3_measure
+#print axioms sevenths4_measure
+#print axioms sevenths5_measure
+#print axioms sevenths6_measure
+#print axioms pi2_measure
+#print axioms plane1_measure
+#print axioms plane2_measure
+#print axioms dip_2_27_plus_measure
+#print axioms dip_2_27_minus_measure
+#print axioms dip_1_27_plus_measure
+#print axioms dip_1_27_minus_measure
+#print axioms dip_1_18_plus_measure
+#print axioms dip_1_18_minus_measure
+#print axioms zeta3_measure
+
+
+theorem plane3_measure (a b : ℚ) (hab : a≠0 ∨ b≠0) :
+    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-(118:ℝ))<
+      |((a:ℝ)*(∑' n : ℕ,1/((n:ℝ)+1)^3)+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
+  have h := CatalanCore.Uniform.Bank.Plane3.plane3_final a b hab
+  rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
+  exact h
+theorem pi4_measure : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
+    (q:ℝ)^(-(118:ℝ))<|Real.pi^4-(p:ℝ)/q| :=
+  CatalanCore.Uniform.Bank.Plane3.pi4_final
+#print axioms plane3_measure
+#print axioms pi4_measure
 end TrigammaDifferences

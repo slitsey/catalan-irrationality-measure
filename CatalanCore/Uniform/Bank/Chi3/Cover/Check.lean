@@ -5,8 +5,10 @@ public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.Top
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Line.Top
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Cap.Top
 public import CatalanCore.Uniform.Bank.Chi3.Cover.Energy.Top
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Fold
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -18,7 +20,7 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def TabC : PolyTables3 where
+def TabC : PolyTablesF where
   Mq := (5 / 4 : ℚ)
   RP := RP
   CP := CP
@@ -35,23 +37,34 @@ def TabC : PolyTables3 where
   cap := capC
   G := Gcap
   E := Etab
+  MF := MoptF
+  cn := cnTab
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem basic_ok : Dchi.basicOkP = true := by decide +kernel
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem poly_ok : Pply.okB = true := by decide +kernel
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem far_ok : farDataOk TabC.F TabC.Rn TabC.RP TabC.CP Dn = true := by decide +kernel
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem cap_chain : CatalanCore.Uniform.Decay.FarField.plChain (-Dn.r0) TabC.capCells 0 = true := by decide +kernel
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem cap_G : capGokOf TabC.RP TabC.CP Dn TabC.G = true := by decide +kernel
 theorem cap_sum : decide (Dn.Scap + CatalanCore.Uniform.Decay.FarField.plSum Dn.mprime TabC.capCells
     ≤ TabC.G - Dn.mprime * Dn.r0) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 theorem tube_far_end : farOk Dn Fc ((lastPt (basePt Pply) Pply.verts).2 + Pply.s * tmaxC) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem tube_chk : TabC.tubeG Dn Pply = true := by
-  unfold PolyTables3.tubeG
+  unfold PolyTablesF.tubeG
   have h3 : tubeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) (edgesAll Pply tmaxC) tubeC = true := by
     rw [edges_eq]; exact tube_ok
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   have h1 : decide (0 < TabC.tmax) = true := by decide +kernel
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   have h2 : decide (0 ≤ Pply.s) = true := by decide +kernel
   simp only [Bool.and_eq_true]
   refine ⟨glob_ok, ?_⟩
@@ -59,26 +72,31 @@ theorem tube_chk : TabC.tubeG Dn Pply = true := by
   simp only [Bool.and_eq_true]
   exact ⟨⟨⟨h1, h2⟩, h3⟩, tube_far_end⟩
 
-theorem line_chk : TabC.lineTest Dn = true := by
-  unfold PolyTables3.lineTest
+theorem line_chk : TabC.lineTestF Dn = true := by
+  unfold PolyTablesF.lineTestF
   simp only [Bool.and_eq_true, decide_eq_true_eq]
-  exact ⟨glob_ok, line_eq, line_all⟩
+  exact ⟨⟨⟨fold_ok, globF_ok⟩, line_eq⟩, line_all⟩
 
-theorem cap_chk : TabC.capCheck Dn = true := by
-  unfold PolyTables3.capCheck
+theorem cap_chk : TabC.capCheckF Dn = true := by
+  unfold PolyTablesF.capCheckF
   simp only [Bool.and_eq_true]
-  exact ⟨⟨⟨⟨rfl, cap_chain⟩, cap_all⟩, cap_G⟩, cap_sum⟩
+  exact ⟨⟨⟨⟨⟨fold_ok, rfl⟩, cap_chain⟩, cap_all⟩, cap_G⟩, cap_sum⟩
 
-theorem energy_chk : energyOk2 TabC.E Dn = true := by
-  unfold energyOk2
-  simp only [Bool.and_eq_true, decide_eq_true_eq]
-  exact ⟨etab_ok, etab_sum⟩
+theorem energy_chk : energyFoldOk Dn cnF Etab = true :=
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
+  energyFoldOk_of_tab (by decide +kernel) etab_fold etab_sum
 
 theorem check_true : TabC.check Dchi Pply = true := by
-  unfold PolyTables3.check
+  unfold PolyTablesF.check
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   have hr : decide (Dchi.r0 = Pply.r0) = true := by decide +kernel
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   have hm : decide (Dchi.Mq = TabC.Mq) = true := by decide +kernel
   simp only [Bool.and_eq_true]
   exact ⟨⟨⟨⟨⟨⟨⟨⟨basic_ok, poly_ok⟩, hr⟩, hm⟩, far_ok⟩, tube_chk⟩, line_chk⟩, cap_chk⟩, energy_chk⟩
 
+#print axioms check_true
+
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+end

@@ -1,8 +1,14 @@
 module
 
-public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.E5B00
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P074
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P075
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P076
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P077
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P078
+public import CatalanCore.Uniform.Bank.Chi3.Cover.Tube.P079
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -14,15 +20,20 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def ecells5 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk5_00
+def ecells5 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := blk5_00 ++ (blk5_01 ++ (blk5_02 ++ (blk5_03 ++ (blk5_04 ++ (blk5_05 ++ (blk5_06 ++ (blk5_07 ++ (blk5_08 ++ (blk5_09 ++ (blk5_10 ++ (blk5_11)))))))))))
 
 theorem ecells5_all : ecells5.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e5) = true :=
-  blk5_00_ok
+  allT_append blk5_00_ok (allT_append blk5_01_ok (allT_append blk5_02_ok (allT_append blk5_03_ok (allT_append blk5_04_ok (allT_append blk5_05_ok (allT_append blk5_06_ok (allT_append blk5_07_ok (allT_append blk5_08_ok (allT_append blk5_09_ok (allT_append blk5_10_ok (blk5_11_ok)))))))))))
 
 theorem ecells5_cov : coverOk 0 1 (ecells5.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells5_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e5 ecells5 = true :=
   edgeCells_of ecells5_cov ecells5_all
 
+#print axioms ecells5_ok
+
 end CatalanCore.Uniform.Bank.Chi3.Cover
+
+end

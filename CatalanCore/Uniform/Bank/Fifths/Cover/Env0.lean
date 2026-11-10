@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Common.Data.Fifths.Data
-public import CatalanCore.Uniform.Bank.Common.Data.Fifths.Frame
 public import CatalanCore.Uniform.Decay.PolyWire3.Decode
 public import CatalanCore.Uniform.Decay.PolyFull.Full
 
@@ -20,7 +19,7 @@ def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2
 def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (11 / 9 : ℚ))]
 def nuC : List Seg := nodeSegs RP CP
 def Dbase : SplineData := CatalanCore.Uniform.Bank.Common.Data.Fifths.data
-def Pply : RatPolygon := ⟨(16741 / 125000 : ℚ), CatalanCore.Uniform.Bank.Common.Data.Fifths.polygon.vertices.tail, (12500 / 3259 : ℚ)⟩
+def Pply : RatPolygon := ⟨(16741 / 125000 : ℚ), [((-219513 / 1250000 : ℚ), (2 / 25 : ℚ)), ((-1121309 / 5000000 : ℚ), (11 / 50 : ℚ))], (12500 / 3259 : ℚ)⟩
 def tmaxC : ℚ := (1267751 / 625000 : ℚ)
 def Rtw : ℚ := 4
 def eWc : ℕ := 50
@@ -34,6 +33,9 @@ def e2 : Pt × Pt := ((qOfP (-1121309) (5000000), qOfP (11) (50)), (qOfP (-11263
 
 def edgesLit : List (Pt × Pt) := [e0, e1, e2]
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem edges_eq : edgesAll Pply tmaxC = edgesLit := by decide +kernel
+
+#print axioms edges_eq
 
 end CatalanCore.Uniform.Bank.Fifths.Cover
