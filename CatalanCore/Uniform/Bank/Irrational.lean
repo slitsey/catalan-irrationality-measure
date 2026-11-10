@@ -275,17 +275,17 @@ open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
 theorem dip_2_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
     (q:ℝ)^(-((14:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.plus 2 (-1) (-1)
-    (by norm_num) (by norm_num) bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankP_ok
+    (by norm_num) (by norm_num) CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankP_ok
     (planeDecay_cover Support.plus 2 (-1) (-1) (by norm_num))
-    (by exact_mod_cast bankP_eta) (by exact_mod_cast plane1_cc)
+    (by exact_mod_cast CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankP_eta) (by exact_mod_cast plane1_cc)
     (plane_nv0_even Support.plus 2 (-1) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) planeDepth le_rfl)
   have ht : planeT Support.plus 2 (-1)=(2/27:ℚ) := by simp only [planeT,Support.sgn];norm_num
   rw [ht] at h
-  have hη := (Rat.cast_lt (K:=ℝ)).2 bankP_eta
+  have hη := (Rat.cast_lt (K:=ℝ)).2 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankP_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 plane1_cc
   apply eventually_of_point ?_ ?_ h
   · positivity
-  · have hn : Dp1.ccert/(Dp1.Dt-bankP.Λ)<(14:ℚ) := by decide +kernel
+  · have hn : Dp1.ccert/(Dp1.Dt-CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankP.Λ)<(14:ℚ) := by decide +kernel
     exact_mod_cast hn
 
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
@@ -293,17 +293,17 @@ open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
 theorem dip_2_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
     (q:ℝ)^(-((14:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((-2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.minus 2 (-1) (-1)
-    (by norm_num) (by norm_num) bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankM_ok
+    (by norm_num) (by norm_num) CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankM_ok
     (planeDecay_cover Support.minus 2 (-1) (-1) (by norm_num))
-    (by exact_mod_cast bankM_eta) (by exact_mod_cast plane1_cc)
+    (by exact_mod_cast CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankM_eta) (by exact_mod_cast plane1_cc)
     (plane_nv0_even Support.minus 2 (-1) (-1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) planeDepth le_rfl)
   have ht : planeT Support.minus 2 (-1)=(-2/27:ℚ) := by simp only [planeT,Support.sgn];norm_num
   rw [ht] at h
-  have hη := (Rat.cast_lt (K:=ℝ)).2 bankM_eta
+  have hη := (Rat.cast_lt (K:=ℝ)).2 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankM_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 plane1_cc
   apply eventually_of_point ?_ ?_ h
   · positivity
-  · have hn : Dp1.ccert/(Dp1.Dt-bankM.Λ)<(14:ℚ) := by decide +kernel
+  · have hn : Dp1.ccert/(Dp1.Dt-CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227.bankM.Λ)<(14:ℚ) := by decide +kernel
     exact_mod_cast hn
 
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
@@ -311,17 +311,17 @@ open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
 theorem dip_1_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
     (q:ℝ)^(-((15359/1000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.minus 1 (-2) (1)
-    (by norm_num) (by norm_num) bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankM_ok
+    (by norm_num) (by norm_num) CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankM_ok
     (planeDecay_cover Support.minus 1 (-2) (1) (by norm_num))
-    (by exact_mod_cast bankM_eta) (by exact_mod_cast plane1_cc)
+    (by exact_mod_cast CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankM_eta) (by exact_mod_cast plane1_cc)
     (plane_nv0_even Support.minus 1 (-2) (1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) planeDepth le_rfl)
   have ht : planeT Support.minus 1 (-2)=(1/27:ℚ) := by simp only [planeT,Support.sgn];norm_num
   rw [ht] at h
-  have hη := (Rat.cast_lt (K:=ℝ)).2 bankM_eta
+  have hη := (Rat.cast_lt (K:=ℝ)).2 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankM_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 plane1_cc
   apply eventually_of_point ?_ ?_ h
   · positivity
-  · have hn : Dp1.ccert/(Dp1.Dt-bankM.Λ)<(15359/1000:ℚ) := by decide +kernel
+  · have hn : Dp1.ccert/(Dp1.Dt-CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankM.Λ)<(15359/1000:ℚ) := by decide +kernel
     exact_mod_cast hn
 
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
@@ -329,17 +329,17 @@ open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
 theorem dip_1_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
     (q:ℝ)^(-((15359/1000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((-1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.plus 1 (-2) (1)
-    (by norm_num) (by norm_num) bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankP_ok
+    (by norm_num) (by norm_num) CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankP_ok
     (planeDecay_cover Support.plus 1 (-2) (1) (by norm_num))
-    (by exact_mod_cast bankP_eta) (by exact_mod_cast plane1_cc)
+    (by exact_mod_cast CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankP_eta) (by exact_mod_cast plane1_cc)
     (plane_nv0_even Support.plus 1 (-2) (1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) planeDepth le_rfl)
   have ht : planeT Support.plus 1 (-2)=(-1/27:ℚ) := by simp only [planeT,Support.sgn];norm_num
   rw [ht] at h
-  have hη := (Rat.cast_lt (K:=ℝ)).2 bankP_eta
+  have hη := (Rat.cast_lt (K:=ℝ)).2 CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankP_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 plane1_cc
   apply eventually_of_point ?_ ?_ h
   · positivity
-  · have hn : Dp1.ccert/(Dp1.Dt-bankP.Λ)<(15359/1000:ℚ) := by decide +kernel
+  · have hn : Dp1.ccert/(Dp1.Dt-CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127.bankP.Λ)<(15359/1000:ℚ) := by decide +kernel
     exact_mod_cast hn
 
 open CatalanCore.Uniform.Bank.Plane1.Dips
