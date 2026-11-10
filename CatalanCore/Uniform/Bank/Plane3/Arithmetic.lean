@@ -2,7 +2,7 @@ module
 
 public import CatalanCore.Uniform.Bank.Plane3.Frame
 public import CatalanCore.Uniform.Bank.Plane3.Data
-public import CatalanCore.Uniform.Support.HPoleCatalogue
+public import CatalanCore.Uniform.Support.HPoleRefinedCatalogue
 
 @[expose] public section
 set_option Elab.async false
@@ -64,16 +64,12 @@ theorem plane3_catalogue (v u : ℚ) (c : ℚ) (hc : 0 < c) (const : ℝ) (depth
       (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
         (altGeom c hc).geometry)
       [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u) plane3Catalogue := by
-  change KCatValidFam c hc const depth
-    (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
-      (altGeom c hc).geometry)
-    [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
-    (IntegerPoleRows.catalogue 4)
-  exact hpole_catalogue 4 (by decide) (coefficients v u) c hc const depth
-    [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
+  exact hpole_refined_catalogue 4 (by decide) (coefficients v u) c hc const depth
+    [⟨2,1,1⟩,⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
     (by decide) (by decide) (fun p _ hp => coefficients_mem v u hp)
+    plane3Chambers (by intro j hj; norm_num [plane3Chambers] at hj; omega)
 
-def plane3Translation : Transl 20 1 84 64 plane3BaseCatalogue where
+def plane3Translation : Transl 200 13 852 232 plane3BaseCatalogue where
   ρ _ br := br
   debit _ _ := rfl
   price := by
@@ -81,7 +77,7 @@ def plane3Translation : Transl 20 1 84 64 plane3BaseCatalogue where
     simp only [plane3BaseCatalogue, List.mem_singleton] at hbr
     subst br
     simpa [firstBranch, KExpr.evalN, IntegerPoleRows.lowPrice, IntegerPoleRows.delta] using
-      IntegerPoleRows.lowPrice_cov 4 (by decide) r m n 1 20 p
+      IntegerPoleRows.lowPrice_cov 4 (by decide) r m n 13 200 p
   cond := by
     intro n br hbr r p m kv hΩ hcond cd hcd
     simp only [plane3BaseCatalogue, List.mem_singleton] at hbr
@@ -96,10 +92,14 @@ theorem plane3_translated_catalogue (v u : ℚ) (c : ℚ) (hc : 0 < c)
       [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
       (plane3BaseCatalogue.map (plane3Translation.ρ n)) := by
   intro br hbr
-  apply plane3_catalogue v u c hc const depth br
-  simp only [plane3BaseCatalogue, List.map_cons, List.map_nil, List.mem_singleton, plane3Translation] at hbr
+  have hm : br = firstBranch := by
+    simpa only [plane3BaseCatalogue,List.map_cons,List.map_nil,List.mem_singleton,plane3Translation] using hbr
   subst br
-  simp [plane3Catalogue]
+  have old := hpole_catalogue 4 (by decide) (coefficients v u) c hc const depth
+    [⟨2,1,1⟩,⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
+    (by decide) (by decide) (fun p _ hp => coefficients_mem v u hp)
+  apply old firstBranch
+  simp [IntegerPoleRows.catalogue,IntegerPoleRows.firstBranch,firstBranch]
 
 def prefixCutoff (v u : ℚ) : ℕ := 400001 + (coefficientThreshold v u + 1)^2
 def crudeFactor (v u : ℚ) : ℕ := coefficientThreshold v u + 5
@@ -124,17 +124,17 @@ theorem plane3_scaled_crude (v u : ℚ) (c : ℚ) (hc : 0 < c) (hc1 : c ≤ 1)
   nlinarith
 
 theorem plane3_pre (v u : ℚ) (const : ℝ) (depth : ℕ) :
-    PreValidFam (1/10) (by norm_num) const depth
+    PreValidFam (13/100) (by norm_num) const depth
       (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
-        (altGeom (1/10) (by norm_num)).geometry) 2
+        (altGeom (13/100) (by norm_num)).geometry) 2
       (SmallBudget.sqrtLog (prefixCutoff v u) (32*crudeFactor v u))
-      (1/40) (420001/100000) := by
-  apply preValid_of_scaled_crude_rows (1/10) (by norm_num) const depth _
-    (plane3_scaled_crude v u (1/10) (by norm_num) (by norm_num) const depth)
+      (13/400) (426001/100000) := by
+  apply preValid_of_scaled_crude_rows (13/100) (by norm_num) const depth _
+    (plane3_scaled_crude v u (13/100) (by norm_num) (by norm_num) const depth)
     2 (SmallBudget.sqrtLog (prefixCutoff v u) (32*crudeFactor v u))
     (prefixCutoff v u) (32*crudeFactor v u) (by omega)
     (fun r p hp hpr => by rw [SmallBudget.sqrtLog_X_of _ _ _ _ hp])
-    (1/40) (420001/100000) (by norm_num) (by norm_num)
+    (13/400) (426001/100000) (by norm_num) (by norm_num)
   intro i hi p _ hsq hpr
   have hr : 0 < i.1 := lt_of_lt_of_le (Fact.out : p.Prime).pos hpr
   have hlarge : prefixCutoff v u < i.1 := by
@@ -149,9 +149,9 @@ theorem plane3_pre (v u : ℚ) (const : ℝ) (depth : ℕ) :
       dsimp [prefixCutoff]
       nlinarith
     omega
-  have hs := altGeom_hybShape (1/10) (by norm_num) hi.2
-  have hwin : i.1 + 2*((altGeom (1/10) (by norm_num)).geometry i.1).k < p*p := by
-    have hm := altGeom_borderSize_le (1/10) (by norm_num) (by norm_num) hi.2
+  have hs := altGeom_hybShape (13/100) (by norm_num) hi.2
+  have hwin : i.1 + 2*((altGeom (13/100) (by norm_num)).geometry i.1).k < p*p := by
+    have hm := altGeom_borderSize_le (13/100) (by norm_num) (by norm_num) hi.2
     rw [geometry_k_eq_borderSize]
     have hA : 3 ≤ prefixCutoff v u := by dsimp [prefixCutoff]; omega
     have hmA := Nat.mul_le_mul_right i.1 hA
@@ -165,20 +165,20 @@ theorem plane3_pre (v u : ℚ) (const : ℝ) (depth : ℕ) :
   have hrow := IntegerPoleRows.family_first 4 (by decide) (coefficients v u)
     (coefficients_mem v u hp) hs i.2 hwin hodd
   refine ⟨_, hrow, ?_⟩
-  have hle : 4*(i.1+((altGeom (1/10) (by norm_num)).geometry i.1).k) -
-      IntegerPoleRows.delta ((altGeom (1/10) (by norm_num)).geometry i.1).k p ≤
-      4*(i.1+((altGeom (1/10) (by norm_num)).geometry i.1).k) := Nat.sub_le _ _
-  have hb := (TwoTerm.altGeom_border (1/10) (by norm_num) hi.2).2
+  have hle : 4*(i.1+((altGeom (13/100) (by norm_num)).geometry i.1).k) -
+      IntegerPoleRows.delta ((altGeom (13/100) (by norm_num)).geometry i.1).k p ≤
+      4*(i.1+((altGeom (13/100) (by norm_num)).geometry i.1).k) := Nat.sub_le _ _
+  have hb := (TwoTerm.altGeom_border (13/100) (by norm_num) hi.2).2
   have hbR := (Rat.cast_lt (K := ℝ)).2 hb
   push_cast at hbR
   have hrR : (400001 : ℝ) < i.1 := by
     exact_mod_cast (show 400001 < i.1 by dsimp [prefixCutoff] at hlarge; omega)
-  have hleR : ((4*(i.1+((altGeom (1/10) (by norm_num)).geometry i.1).k) -
-      IntegerPoleRows.delta ((altGeom (1/10) (by norm_num)).geometry i.1).k p : ℕ) : ℝ) ≤
-      4*((i.1 : ℝ)+((altGeom (1/10) (by norm_num)).geometry i.1).k) := by exact_mod_cast hle
-  change _ ≤ (420001/100000 : ℚ) * (i.1 : ℝ)
+  have hleR : ((4*(i.1+((altGeom (13/100) (by norm_num)).geometry i.1).k) -
+      IntegerPoleRows.delta ((altGeom (13/100) (by norm_num)).geometry i.1).k p : ℕ) : ℝ) ≤
+      4*((i.1 : ℝ)+((altGeom (13/100) (by norm_num)).geometry i.1).k) := by exact_mod_cast hle
+  change _ ≤ (426001/100000 : ℚ) * (i.1 : ℝ)
   push_cast
-  change _ ≤ (420001/100000 : ℝ) * (i.1 : ℝ)
+  change _ ≤ (426001/100000 : ℝ) * (i.1 : ℝ)
   rw [geometry_k_eq_borderSize] at hleR ⊢
   linarith
 

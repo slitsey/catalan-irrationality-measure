@@ -15,44 +15,54 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def E23_23 : ℚ := qOfP (122910966123943) (1152921504606846976)
+def E23_23 : ℚ := qOfP (211454133224297) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (23,23), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe23_23 : pairOracle.pairOk Dn 23 23 E23_23 = true := by decide +kernel
 #print axioms pe23_23
-def E23_24 : ℚ := qOfP (13259906476191) (288230376151711744)
+def E23_24 : ℚ := qOfP (70158349469911) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (23,24), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe23_24 : pairOracle.pairOk Dn 23 24 E23_24 = true := by decide +kernel
 #print axioms pe23_24
-def E23_25 : ℚ := qOfP (149974779) (1152921504606846976)
+def E23_25 : ℚ := qOfP (125497693) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (23,25), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe23_25 : pairOracle.pairOk Dn 23 25 E23_25 = true := by decide +kernel
 #print axioms pe23_25
-def E23_26 : ℚ := qOfP (27124407) (288230376151711744)
+def E23_26 : ℚ := qOfP (84160285) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (23,26), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe23_26 : pairOracle.pairOk Dn 23 26 E23_26 = true := by decide +kernel
 #print axioms pe23_26
-def E24_24 : ℚ := qOfP (43315206162675) (1152921504606846976)
+def E24_24 : ℚ := qOfP (187958102464747) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (24,24), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe24_24 : pairOracle.pairOk Dn 24 24 E24_24 = true := by decide +kernel
 #print axioms pe24_24
-def E24_25 : ℚ := qOfP (834175) (9007199254740992)
+def E24_25 : ℚ := qOfP (151065815) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (24,25), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe24_25 : pairOracle.pairOk Dn 24 25 E24_25 = true := by decide +kernel
 #print axioms pe24_25
-def E24_26 : ℚ := qOfP (37412649) (576460752303423488)
+def E24_26 : ℚ := qOfP (97210301) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (24,26), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe24_26 : pairOracle.pairOk Dn 24 26 E24_26 = true := by decide +kernel
 #print axioms pe24_26
-def E25_25 : ℚ := qOfP (979) (1152921504606846976)
+def E25_25 : ℚ := qOfP (199) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (25,25), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe25_25 : pairOracle.pairOk Dn 25 25 E25_25 = true := by decide +kernel
 #print axioms pe25_25
-def E25_26 : ℚ := qOfP (151) (288230376151711744)
+def E25_26 : ℚ := qOfP (57) (288230376151711744)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (25,26), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe25_26 : pairOracle.pairOk Dn 25 26 E25_26 = true := by decide +kernel
 #print axioms pe25_26
-def E26_26 : ℚ := qOfP (773) (1152921504606846976)
+def E26_26 : ℚ := qOfP (271) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (26,26), 10 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe26_26 : pairOracle.pairOk Dn 26 26 E26_26 = true := by decide +kernel
 #print axioms pe26_26
 

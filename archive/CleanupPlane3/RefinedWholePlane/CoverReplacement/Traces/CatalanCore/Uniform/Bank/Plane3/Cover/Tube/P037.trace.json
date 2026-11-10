@@ -1,0 +1,47 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"rs": "81381560e2f3c782.ir.sig",
+  "r": "78d4ef8828347aec.ir",
+  "o":
+  ["0688372c725a33d1.olean",
+   "0301657d288f74cf.olean.server",
+   "9c903dbe36e6b7c7.olean.private"],
+  "m": true,
+  "i": "6adbee726624f17a.ilean",
+  "c": "633d87024097c8df.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\Cli\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\batteries\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\aesop\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\proofwidgets\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\importGraph\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\LeanSearchClient\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\plausible\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean c:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\lean-runtime\\lean-4.35.0-rc2-windows\\bin\\lean.exe C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.lean -o C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.olean -i C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.ilean -c C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\ir\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.c --setup C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\ir\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "CatalanCore/Uniform/Bank/Plane3/Cover/Tube/P037.lean:42:0: 'CatalanCore.Uniform.Bank.Plane3.Cover.ok2_00_00' depends on axioms: [propext, Classical.choice, Quot.sound]",
+   "level": "info"},
+  {"message":
+   "CatalanCore/Uniform/Bank/Plane3/Cover/Tube/P037.lean:44:0: 'CatalanCore.Uniform.Bank.Plane3.Cover.ok2_01_00' depends on axioms: [propext, Classical.choice, Quot.sound]",
+   "level": "info"}],
+ "inputs":
+ [["deps",
+   [["CatalanIrrationalityMeasure/CatalanCore:extraDep",
+     [["@CatalanIrrationalityMeasure:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["CatalanCore.Uniform.Bank.Plane3.Cover.Env transitive imports (public)",
+       "f435ebad6a64adad"],
+      ["CatalanCore.Uniform.Bank.Plane3.Cover.Env:importArts",
+       "059f9a8b1185e0fa"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.35.0, commit 11acb17ec6b07a8f9e9173e6845197929540936b",
+   "2044b061b657ebda"],
+  ["C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P037.lean",
+   "9cced6242e0f0a2e"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: true", "760fcc16989f4b9b"],
+  ["Module.name: CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P037",
+   "d031f162468bffe7"],
+  ["Package.id?: (some CatalanIrrationalityMeasure)", "3d1d4ea1101f9d35"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "804ca74c279b4271"}

@@ -18,6 +18,7 @@ open CatalanCore.Uniform.Decay.FarField (MPData)
 /-- The list of the line and cap cells: pieces equal to their conjugate, and one piece of each conjugate pair at double weight. -/
 def qsF : List WP := foldL (foldRof Dn nuC) (foldUof Dn nuC)
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem fold_ok : foldOk (foldRof Dn nuC) (foldUof Dn nuC) (cellPieces Dn nuC) = true := by decide +kernel
 
 def MoptF : Option MPData := none

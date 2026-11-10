@@ -23,3 +23,6 @@ theorem cap_all : capC.all (plUbFoldOk qsF Dn.W Rtw eWc ePc Dn) = true :=
   allT_append kblk00_ok (allT_append kblk01_ok (allT_append kblk02_ok (kblk03_ok)))
 
 end CatalanCore.Uniform.Bank.Plane3.Cover
+
+#print axioms CatalanCore.Uniform.Bank.Plane3.Cover.capC
+#print axioms CatalanCore.Uniform.Bank.Plane3.Cover.cap_all

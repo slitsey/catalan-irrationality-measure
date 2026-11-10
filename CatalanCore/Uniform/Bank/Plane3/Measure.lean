@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Plane3.Point
-public import CatalanCore.Uniform.Bank.Plane3.Pi4Point
 public import CatalanCore.Uniform.Bank.Plane2.Measure
 public import CatalanCore.Uniform.Bank.Plane2.Zeta3
 
@@ -15,8 +14,8 @@ open CatalanCore CatalanCore.Measure CatalanCore.Uniform
 
 theorem plane3_final (a b : ℚ) (hab : a≠0 ∨ b≠0) :
     ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-      (q:ℝ)^(-(118:ℝ))< |((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
-  have hex : ∃ E : ℝ,0≤E ∧ E<118 ∧
+      (q:ℝ)^(-(72.84:ℝ))< |((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
+  have hex : ∃ E : ℝ,0≤E ∧ E<72.84 ∧
       MeasureLBAt ((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4) E ∧
       Irrational ((a:ℝ)*(riemannZeta 3).re+(b:ℝ)*Real.pi^4) := by
     by_cases hb : b=0
@@ -33,18 +32,17 @@ theorem plane3_final (a b : ℚ) (hab : a≠0 ∨ b≠0) :
       have hη : (p3Lam:ℝ)<p3Cert.Dr := by exact_mod_cast p3_eta
       have hcc : 0<p3Cert.cr := by exact_mod_cast p3_cc
       refine ⟨p3Cert.cr/(p3Cert.Dr-(p3Lam:ℝ)),(div_pos hcc (sub_pos.mpr hη)).le,?_,key.1,key.2⟩
-      change ((Cover.Dchi.ccert:ℚ):ℝ)/(((Cover.Dchi.Dt:ℚ):ℝ)-(p3Lam:ℝ))<118
-      exact_mod_cast p3_ratio
+      change ((Cover.Dchi.ccert:ℚ):ℝ)/(((Cover.Dchi.Dt:ℚ):ℝ)-(p3Lam:ℝ))<72.84
+      have hrat : Cover.Dchi.ccert/(Cover.Dchi.Dt-p3Lam)<(1821/25:ℚ) := by
+        convert p3_ratio using 1 <;> norm_num
+      have hreal := (Rat.cast_lt (K:=ℝ)).2 hrat
+      push_cast at hreal
+      convert hreal using 1 <;> norm_num
   obtain ⟨E,hE,hlt,hm,hi⟩ := hex
-  obtain ⟨q0,hq⟩ := MeasureLBAt.all_of_irrational hE hi hm (118-E) (sub_pos.mpr hlt)
+  obtain ⟨q0,hq⟩ := MeasureLBAt.all_of_irrational hE hi hm (72.84-E) (sub_pos.mpr hlt)
   filter_upwards [Filter.eventually_ge_atTop q0] with q hqq p
   have h := hq p q hqq
-  simpa only [show E+(118-E)=118 by ring] using h
-
-theorem pi4_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-(75:ℝ))< |Real.pi^4-(p:ℝ)/q| :=
-  pi4_dedicated_final
+  simpa only [show E+(72.84-E)=72.84 by ring] using h
 
 end CatalanCore.Uniform.Bank.Plane3
 #print axioms CatalanCore.Uniform.Bank.Plane3.plane3_final
-#print axioms CatalanCore.Uniform.Bank.Plane3.pi4_final

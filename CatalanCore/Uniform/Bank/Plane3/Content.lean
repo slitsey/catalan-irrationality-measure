@@ -6,7 +6,7 @@ public import CatalanCore.Uniform.Bank.Plane3.Arithmetic
 set_option Elab.async false
 set_option maxHeartbeats 1600000
 
-/-! # Plane 3: finite four-price periodic content (Q09)
+/-! # Plane 3: finite refined periodic content (Q09)
 The accepted numeric bank is connected to the actual family, with all rational
 coefficients, every common deletion, and every finite depth. No ND assumption.
 -/
@@ -40,10 +40,15 @@ private theorem pieceOK_zero_debit (cat : List Branch)
     simp only [hb, Nat.zero_mul, zero_mul, Nat.cast_zero, add_zero]
     simp_rw [stripOK_zero_debit cat hz q α κ depth]
 
-private theorem catalogue_debit : ∀ br ∈ plane3Catalogue, br.debit = 0 := by
+private theorem catalogue_debit : ∀ br ∈ plane3Catalogue,br.debit=0 := by
   intro br hb
-  simp only [plane3Catalogue, List.mem_cons, List.not_mem_nil, or_false] at hb
-  rcases hb with rfl | rfl | rfl | rfl | rfl <;> rfl
+  change br ∈ IntegerPoleRows.catalogue 4 ++ plane3Chambers.flatMap (HPolePeriodRows.refinedBranches 4) at hb
+  rcases List.mem_append.mp hb with hb | hb
+  · simp only [IntegerPoleRows.catalogue,List.mem_cons,List.not_mem_nil,or_false] at hb
+    rcases hb with rfl | rfl | rfl | rfl | rfl <;> rfl
+  · obtain ⟨j,hj,hb⟩ := List.mem_flatMap.mp hb
+    simp only [HPolePeriodRows.refinedBranches,List.mem_cons,List.not_mem_nil,or_false] at hb
+    rcases hb with rfl | rfl | rfl <;> rfl
 
 private theorem compiled_debit (depth j : ℕ) :
     ∀ br ∈ (plane3Bank depth).cat j, br.debit = 0 := by
@@ -64,26 +69,26 @@ private theorem base_compiled_debit (depth j : ℕ) :
   rfl
 
 private theorem head_depth (depth : ℕ) (P : QPiece) (cert : Cert)
-    (h : pieceOK ((plane3Bank 0).cat 1) 2 (1/20) (1/2) 0 1 2 P cert = true) :
-    pieceOK ((plane3Bank depth).cat 1) 2 (1/20) (1/2) depth 1 2 P cert = true := by
+    (h : pieceOK ((plane3Bank 0).cat 1) 2 (13/200) (1/2) 0 1 2 P cert = true) :
+    pieceOK ((plane3Bank depth).cat 1) 2 (13/200) (1/2) depth 1 2 P cert = true := by
   rw [pieceOK_zero_debit _ (compiled_debit depth 1)]
   exact h
 
 private theorem cell_depth (depth : ℕ) (y : QPiece × Cert)
-    (h : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 1 20 64 y = true) :
-    cellOKb (plane3Bank depth) plane3BaseCatalogue 1 1 20 64 y = true := by
+    (h : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 1 200 232 y = true) :
+    cellOKb (plane3Bank depth) plane3BaseCatalogue 1 1 200 232 y = true := by
   unfold cellOKb
-  change (pieceOK _ 2 (1/20) (1/2) depth 1 2 y.1 y.2 && _) = true
+  change (pieceOK _ 2 (13/200) (1/2) depth 1 2 y.1 y.2 && _) = true
   rw [pieceOK_zero_debit _ (base_compiled_debit depth 1)]
   exact h
 
 theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
     HasScaledContent
-      (AltEvenFam (1/10) (by norm_num) const depth
+      (AltEvenFam (13/100) (by norm_num) const depth
         (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
-          (altGeom (1/10) (by norm_num)).geometry))
-      (altGeom (1/10) (by norm_num)).scale
-      ((3162410560009/960000000000 : ℚ) : ℝ) := by
+          (altGeom (13/100) (by norm_num)).geometry))
+      (altGeom (13/100) (by norm_num)).scale
+      (plane3Lambda:ℝ) := by
   let D := plane3Bank depth
   let Tm : List (ℕ × KTmplP) := [(1,plane3PCTemplate)]
   have hpar : KParams D := kparams_of plane3_params
@@ -93,7 +98,7 @@ theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
     subst x
     exact plane3_heads
   have hcells : ∀ x ∈ Tm, ∀ y ∈ x.2.cells,
-      cellOKb D plane3BaseCatalogue x.1 x.2.N 20 64 y = true := by
+      cellOKb D plane3BaseCatalogue x.1 x.2.N 200 232 y = true := by
     intro x hx y hy
     simp only [Tm, List.mem_singleton] at hx
     subst x
@@ -107,16 +112,40 @@ theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
     simp only [Tm, List.mem_singleton] at hx
     subst x
     simp only [plane3PCTemplate, List.mem_cons, List.not_mem_nil, or_false] at hy
-    rcases hy with rfl | rfl | rfl | rfl | rfl
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact head_depth depth _ _ contentPiece2_check
     · exact head_depth depth _ _ contentPiece3_check
     · exact head_depth depth _ _ contentPiece4_check
     · exact head_depth depth _ _ contentPiece5_check
     · exact head_depth depth _ _ contentPiece6_check
+    · exact head_depth depth _ _ contentPiece7_check
+    · exact head_depth depth _ _ contentPiece8_check
+    · exact head_depth depth _ _ contentPiece9_check
+    · exact head_depth depth _ _ contentPiece10_check
+    · exact head_depth depth _ _ contentPiece11_check
+    · exact head_depth depth _ _ contentPiece12_check
+    · exact head_depth depth _ _ contentPiece13_check
+    · exact head_depth depth _ _ contentPiece14_check
+    · exact head_depth depth _ _ contentPiece15_check
+    · exact head_depth depth _ _ contentPiece16_check
+    · exact head_depth depth _ _ contentPiece17_check
+    · exact head_depth depth _ _ contentPiece18_check
+    · exact head_depth depth _ _ contentPiece19_check
+    · exact head_depth depth _ _ contentPiece20_check
+    · exact head_depth depth _ _ contentPiece21_check
+    · exact head_depth depth _ _ contentPiece22_check
+    · exact head_depth depth _ _ contentPiece23_check
+    · exact head_depth depth _ _ contentPiece24_check
+    · exact head_depth depth _ _ contentPiece25_check
+    · exact head_depth depth _ _ contentPiece26_check
+    · exact head_depth depth _ _ contentPiece27_check
+    · exact head_depth depth _ _ contentPiece28_check
+    · exact head_depth depth _ _ contentPiece29_check
+    · exact head_depth depth _ _ contentPiece30_check
   haveI : NeZero D.M := ⟨by change (2 : ℕ) ≠ 0; decide⟩
   exact hasScaledContent_of_periodic_control D hpar plane3_class hheads
-    (1/10) (by norm_num) (by norm_num [D, plane3Bank]) const depth _ (by rfl)
-    (hpole_alt_control 4 (by decide) (coefficients v u) (1/10) (by norm_num)
+    (13/100) (by norm_num) (by norm_num [D, plane3Bank]) const depth _ (by rfl)
+    (hpole_alt_control 4 (by decide) (coefficients v u) (13/100) (by norm_num)
       (by norm_num) const depth 2)
     (Content.SmallPrimes.SmallBudget.sqrtLog (prefixCutoff v u) (32*crudeFactor v u))
     (coefficientThreshold v u) (by norm_num [D,plane3Bank]) plane3Translation Tm rfl
@@ -124,17 +153,17 @@ theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
       (hcells x hx y hy)).1)
     (fun x hx y hy => (cellOKb_facts (by change (1 : ℕ) ≤ 2; decide : 1 ≤ D.Q) (by norm_num [D,plane3Bank])
       (hcells x hx y hy)).2)
-    hhead (plane3_catalogue v u (1/10) (by norm_num) const depth)
-    (plane3_translated_catalogue v u (1/10) (by norm_num) const depth)
+    hhead (plane3_catalogue v u (13/100) (by norm_num) const depth)
+    (plane3_translated_catalogue v u (13/100) (by norm_num) const depth)
     (plane3_pre v u const depth)
 
 theorem plane3_content (v u : ℚ) (hu : u ≠ 0) (depth : ℕ) :
   HasScaledContent
-    (((Content.Shape.altGeom (1/10) (by norm_num)).seqFamily
+    (((Content.Shape.altGeom (13/100) (by norm_num)).seqFamily
       (Plane3.datum v u hu).f (Plane3.datum v u hu).e (Plane3.datum v u hu).xi depth).restrictAdm
-        (fun n => SeqFamily.scale (Content.Shape.altGeom (1/10) (by norm_num)).geometry n % 2 = 0))
-    (SeqFamily.scale (Content.Shape.altGeom (1/10) (by norm_num)).geometry)
-    ((3162410560009 / 960000000000 : ℚ) : ℝ) := by
+        (fun n => SeqFamily.scale (Content.Shape.altGeom (13/100) (by norm_num)).geometry n % 2 = 0))
+    (SeqFamily.scale (Content.Shape.altGeom (13/100) (by norm_num)).geometry)
+    (plane3Lambda:ℝ) := by
   rw [datum_f, datum_e]
   exact plane3_content_hpole v u (datum v u hu).xi depth
 

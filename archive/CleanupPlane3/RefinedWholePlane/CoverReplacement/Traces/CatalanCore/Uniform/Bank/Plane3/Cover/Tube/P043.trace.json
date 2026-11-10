@@ -1,0 +1,50 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"rs": "a1097342a39b03ea.ir.sig",
+  "r": "cb163e72297e6d42.ir",
+  "o":
+  ["0f441eafdf03aaf8.olean",
+   "ac28665c7e557873.olean.server",
+   "6abda774f1510cae.olean.private"],
+  "m": true,
+  "i": "26c64461a659b61c.ilean",
+  "c": "a566321d68d83e84.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\Cli\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\batteries\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\aesop\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\proofwidgets\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\importGraph\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\LeanSearchClient\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\plausible\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean;C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean c:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\lean-runtime\\lean-4.35.0-rc2-windows\\bin\\lean.exe C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.lean -o C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.olean -i C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\lib\\lean\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.ilean -c C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\ir\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.c --setup C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\.lake\\build\\ir\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "CatalanCore/Uniform/Bank/Plane3/Cover/Tube/P043.lean:53:0: 'CatalanCore.Uniform.Bank.Plane3.Cover.ok2_104_00' depends on axioms: [propext, Classical.choice, Quot.sound]",
+   "level": "info"},
+  {"message":
+   "CatalanCore/Uniform/Bank/Plane3/Cover/Tube/P043.lean:55:0: 'CatalanCore.Uniform.Bank.Plane3.Cover.ok2_105_00' depends on axioms: [propext, Classical.choice, Quot.sound]",
+   "level": "info"},
+  {"message":
+   "CatalanCore/Uniform/Bank/Plane3/Cover/Tube/P043.lean:57:0: 'CatalanCore.Uniform.Bank.Plane3.Cover.ok2_106_00' depends on axioms: [propext, Classical.choice, Quot.sound]",
+   "level": "info"}],
+ "inputs":
+ [["deps",
+   [["CatalanIrrationalityMeasure/CatalanCore:extraDep",
+     [["@CatalanIrrationalityMeasure:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["CatalanCore.Uniform.Bank.Plane3.Cover.Env transitive imports (public)",
+       "f435ebad6a64adad"],
+      ["CatalanCore.Uniform.Bank.Plane3.Cover.Env:importArts",
+       "059f9a8b1185e0fa"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.35.0, commit 11acb17ec6b07a8f9e9173e6845197929540936b",
+   "2044b061b657ebda"],
+  ["C:\\Users\\seanl\\Documents\\Codex\\2026-10-11\\plea\\work\\catalan-uniform\\CatalanCore\\Uniform\\Bank\\Plane3\\Cover\\Tube\\P043.lean",
+   "6be1c692d4099114"],
+  ["options", [["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: true", "760fcc16989f4b9b"],
+  ["Module.name: CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P043",
+   "04c8a787b0a59182"],
+  ["Package.id?: (some CatalanIrrationalityMeasure)", "3d1d4ea1101f9d35"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "d816f522220aabff"}

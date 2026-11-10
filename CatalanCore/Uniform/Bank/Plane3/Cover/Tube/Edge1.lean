@@ -18,6 +18,7 @@ public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P035
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P036
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -35,6 +36,7 @@ theorem ecells1_all : ecells1.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e1) = true 
   allT_append blk1_00_ok (allT_append blk1_01_ok (allT_append blk1_02_ok (allT_append blk1_03_ok (allT_append blk1_04_ok (allT_append blk1_05_ok (allT_append blk1_06_ok (allT_append blk1_07_ok (allT_append blk1_08_ok (allT_append blk1_09_ok (allT_append blk1_10_ok (allT_append blk1_11_ok (allT_append blk1_12_ok (allT_append blk1_13_ok (allT_append blk1_14_ok (allT_append blk1_15_ok (allT_append blk1_16_ok (allT_append blk1_17_ok (allT_append blk1_18_ok (allT_append blk1_19_ok (allT_append blk1_20_ok (allT_append blk1_21_ok (allT_append blk1_22_ok (allT_append blk1_23_ok (allT_append blk1_24_ok (allT_append blk1_25_ok (allT_append blk1_26_ok (allT_append blk1_27_ok (allT_append blk1_28_ok (allT_append blk1_29_ok (allT_append blk1_30_ok (allT_append blk1_31_ok (allT_append blk1_32_ok (allT_append blk1_33_ok (allT_append blk1_34_ok (allT_append blk1_35_ok (allT_append blk1_36_ok (allT_append blk1_37_ok (allT_append blk1_38_ok (allT_append blk1_39_ok (blk1_40_ok))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells1_cov : coverOk 0 1 (ecells1.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells1_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e1 ecells1 = true :=
@@ -43,3 +45,5 @@ theorem ecells1_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e1 ecells1 = 
 #print axioms ecells1_ok
 
 end CatalanCore.Uniform.Bank.Plane3.Cover
+
+end

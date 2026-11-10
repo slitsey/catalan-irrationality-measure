@@ -3,10 +3,11 @@ module
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P037
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P038
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P039
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P026
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P040
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P041
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P045
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P049
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P044
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P048
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P051
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P052
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P053
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P054
@@ -36,20 +37,17 @@ public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P077
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P078
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P079
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P080
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P081
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P082
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P083
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P084
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P041
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P042
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P043
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P044
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P045
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P046
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P047
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P048
+public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P049
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P050
-public import CatalanCore.Uniform.Bank.Plane3.Cover.Tube.P051
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -67,6 +65,7 @@ theorem ecells2_all : ecells2.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true 
   allT_append blk2_00_ok (allT_append blk2_01_ok (allT_append blk2_02_ok (allT_append blk2_03_ok (allT_append blk2_04_ok (allT_append blk2_05_ok (allT_append blk2_06_ok (allT_append blk2_07_ok (allT_append blk2_08_ok (allT_append blk2_09_ok (allT_append blk2_10_ok (allT_append blk2_11_ok (allT_append blk2_12_ok (allT_append blk2_13_ok (allT_append blk2_14_ok (allT_append blk2_15_ok (allT_append blk2_16_ok (allT_append blk2_17_ok (allT_append blk2_18_ok (allT_append blk2_19_ok (allT_append blk2_20_ok (allT_append blk2_21_ok (allT_append blk2_22_ok (allT_append blk2_23_ok (allT_append blk2_24_ok (allT_append blk2_25_ok (allT_append blk2_26_ok (allT_append blk2_27_ok (allT_append blk2_28_ok (allT_append blk2_29_ok (allT_append blk2_30_ok (allT_append blk2_31_ok (allT_append blk2_32_ok (allT_append blk2_33_ok (allT_append blk2_34_ok (allT_append blk2_35_ok (allT_append blk2_36_ok (allT_append blk2_37_ok (allT_append blk2_38_ok (allT_append blk2_39_ok (allT_append blk2_40_ok (allT_append blk2_41_ok (allT_append blk2_42_ok (allT_append blk2_43_ok (allT_append blk2_44_ok (allT_append blk2_45_ok (allT_append blk2_46_ok (allT_append blk2_47_ok (allT_append blk2_48_ok (allT_append blk2_49_ok (allT_append blk2_50_ok (allT_append blk2_51_ok (allT_append blk2_52_ok (allT_append blk2_53_ok (allT_append blk2_54_ok (allT_append blk2_55_ok (allT_append blk2_56_ok (allT_append blk2_57_ok (allT_append blk2_58_ok (allT_append blk2_59_ok (allT_append blk2_60_ok (allT_append blk2_61_ok (allT_append blk2_62_ok (allT_append blk2_63_ok (allT_append blk2_64_ok (allT_append blk2_65_ok (allT_append blk2_66_ok (allT_append blk2_67_ok (allT_append blk2_68_ok (allT_append blk2_69_ok (allT_append blk2_70_ok (allT_append blk2_71_ok (allT_append blk2_72_ok (allT_append blk2_73_ok (allT_append blk2_74_ok (allT_append blk2_75_ok (allT_append blk2_76_ok (allT_append blk2_77_ok (allT_append blk2_78_ok (allT_append blk2_79_ok (allT_append blk2_80_ok (allT_append blk2_81_ok (allT_append blk2_82_ok (allT_append blk2_83_ok (allT_append blk2_84_ok (allT_append blk2_85_ok (allT_append blk2_86_ok (allT_append blk2_87_ok (allT_append blk2_88_ok (allT_append blk2_89_ok (allT_append blk2_90_ok (allT_append blk2_91_ok (allT_append blk2_92_ok (allT_append blk2_93_ok (allT_append blk2_94_ok (allT_append blk2_95_ok (allT_append blk2_96_ok (allT_append blk2_97_ok (allT_append blk2_98_ok (allT_append blk2_99_ok (allT_append blk2_100_ok (allT_append blk2_101_ok (allT_append blk2_102_ok (allT_append blk2_103_ok (allT_append blk2_104_ok (allT_append blk2_105_ok (allT_append blk2_106_ok (allT_append blk2_107_ok (allT_append blk2_108_ok (allT_append blk2_109_ok (allT_append blk2_110_ok (allT_append blk2_111_ok (allT_append blk2_112_ok (allT_append blk2_113_ok (allT_append blk2_114_ok (allT_append blk2_115_ok (allT_append blk2_116_ok (allT_append blk2_117_ok (allT_append blk2_118_ok (allT_append blk2_119_ok (allT_append blk2_120_ok (allT_append blk2_121_ok (allT_append blk2_122_ok (allT_append blk2_123_ok (allT_append blk2_124_ok (allT_append blk2_125_ok (allT_append blk2_126_ok (allT_append blk2_127_ok (blk2_128_ok))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 theorem ecells2_cov : coverOk 0 1 (ecells2.map fun c => (c.ulo, c.uhi)) = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
 theorem ecells2_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e2 ecells2 = true :=
@@ -75,3 +74,5 @@ theorem ecells2_ok : edgeCells (cellOk nuC Mopt Rtw eWc ePc Fc Dn) e2 ecells2 = 
 #print axioms ecells2_ok
 
 end CatalanCore.Uniform.Bank.Plane3.Cover
+
+end

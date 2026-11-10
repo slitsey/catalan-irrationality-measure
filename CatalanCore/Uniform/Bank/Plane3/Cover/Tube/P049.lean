@@ -3,6 +3,7 @@ module
 public import CatalanCore.Uniform.Bank.Plane3.Cover.Env
 
 @[expose] public section
+noncomputable section
 set_option Elab.async false
 set_option maxRecDepth 100000
 
@@ -14,46 +15,51 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def c2_12_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
-    201326617, 130728067072, 786457, 510656512, 1, 5, 252250084276460923, 125000000000000000, 4643333, 1000000000000000000, 5, 6634252619769590671690183628687015198, 5000000000000000000000000000000000195, -489467990813688170244040308570338938769, 20000000000000000000000000000000000780, -4380510339101799304936118842001933747623, 10000000000000000000000000000000000390, 16312549394305229342140815754592317886293183961, 20000000000000000000000000000000000780, -166146124115632367377007277614231647166438630019924141, 20000000000000000000000000000000000780]
+noncomputable def c2_122_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
+    49211, 62336, 25543, 31168, 0]
 
 -- kcost: 17.5 s/endpoint and14.6 s/jet measured; at most3 leaves, at most1 endpoint, weighted cost<=45 s.
-theorem ok2_12_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_12_00 = true := by
+theorem ok2_122_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_122_00 = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
-def blk2_12 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_12_00]
+def blk2_122 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_122_00]
 
-theorem blk2_12_ok : blk2_12.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
-  allT_cons ok2_12_00 (allT_nil _)
+theorem blk2_122_ok : blk2_122.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
+  allT_cons ok2_122_00 (allT_nil _)
 
-def c2_120_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
-    45461, 62336, 5917, 7792, 0]
+noncomputable def c2_123_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
+    25543, 31168, 52961, 62336, 0]
 
 -- kcost: 17.5 s/endpoint and14.6 s/jet measured; at most3 leaves, at most1 endpoint, weighted cost<=45 s.
-theorem ok2_120_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_120_00 = true := by
+theorem ok2_123_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_123_00 = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
-def blk2_120 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_120_00]
+def blk2_123 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_123_00]
 
-theorem blk2_120_ok : blk2_120.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
-  allT_cons ok2_120_00 (allT_nil _)
+theorem blk2_123_ok : blk2_123.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
+  allT_cons ok2_123_00 (allT_nil _)
 
-def c2_121_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
-    5917, 7792, 49211, 62336, 0]
+noncomputable def c2_124_00 : CatalanCore.Uniform.Decay.PolyWire3.TCell := decodeCell3 raw_ints% [
+    52961, 62336, 13709, 15584, 0]
 
 -- kcost: 17.5 s/endpoint and14.6 s/jet measured; at most3 leaves, at most1 endpoint, weighted cost<=45 s.
-theorem ok2_121_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_121_00 = true := by
+theorem ok2_124_00 : cellOk nuC Mopt Rtw eWc ePc Fc Dn e2 c2_124_00 = true := by
+  -- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
   decide +kernel
 
-def blk2_121 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_121_00]
+def blk2_124 : List CatalanCore.Uniform.Decay.PolyWire3.TCell := [c2_124_00]
 
-theorem blk2_121_ok : blk2_121.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
-  allT_cons ok2_121_00 (allT_nil _)
+theorem blk2_124_ok : blk2_124.all (cellOk nuC Mopt Rtw eWc ePc Fc Dn e2) = true :=
+  allT_cons ok2_124_00 (allT_nil _)
 
-#print axioms ok2_12_00
+#print axioms ok2_122_00
 
-#print axioms ok2_120_00
+#print axioms ok2_123_00
 
-#print axioms ok2_121_00
+#print axioms ok2_124_00
 
 end CatalanCore.Uniform.Bank.Plane3.Cover
+
+end

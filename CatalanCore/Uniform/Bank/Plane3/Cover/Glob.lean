@@ -17,3 +17,5 @@ open CatalanCore.Uniform.Decay.FarField (MPData)
 theorem glob_ok : globalOk (cellPieces Dn nuC) Mopt = true := rfl
 
 end CatalanCore.Uniform.Bank.Plane3.Cover
+
+#print axioms CatalanCore.Uniform.Bank.Plane3.Cover.glob_ok

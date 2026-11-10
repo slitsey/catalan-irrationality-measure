@@ -15,100 +15,124 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def E5_16 : ℚ := qOfP (5493421312777641) (1152921504606846976)
+def E5_16 : ℚ := qOfP (2975871245941313) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,16), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_16 : pairOracle.pairOk Dn 5 16 E5_16 = true := by decide +kernel
 #print axioms pe5_16
-def E5_17 : ℚ := qOfP (239271979113277) (288230376151711744)
+def E5_17 : ℚ := qOfP (1162040636025153) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,17), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_17 : pairOracle.pairOk Dn 5 17 E5_17 = true := by decide +kernel
 #print axioms pe5_17
-def E5_18 : ℚ := qOfP (860449497972275) (1152921504606846976)
+def E5_18 : ℚ := qOfP (32663852774833) (36028797018963968)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,18), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_18 : pairOracle.pairOk Dn 5 18 E5_18 = true := by decide +kernel
 #print axioms pe5_18
-def E5_19 : ℚ := qOfP (365049081) (1152921504606846976)
+def E5_19 : ℚ := qOfP (341800405) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,19), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_19 : pairOracle.pairOk Dn 5 19 E5_19 = true := by decide +kernel
 #print axioms pe5_19
-def E5_20 : ℚ := qOfP (10201771) (36028797018963968)
+def E5_20 : ℚ := qOfP (38230291) (144115188075855872)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,20), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_20 : pairOracle.pairOk Dn 5 20 E5_20 = true := by decide +kernel
 #print axioms pe5_20
-def E5_21 : ℚ := qOfP (622506953) (1152921504606846976)
+def E5_21 : ℚ := qOfP (557807707) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,21), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_21 : pairOracle.pairOk Dn 5 21 E5_21 = true := by decide +kernel
 #print axioms pe5_21
-def E5_22 : ℚ := qOfP (389295353) (1152921504606846976)
+def E5_22 : ℚ := qOfP (185823751) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,22), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_22 : pairOracle.pairOk Dn 5 22 E5_22 = true := by decide +kernel
 #print axioms pe5_22
-def E5_23 : ℚ := qOfP (25200142811051) (576460752303423488)
+def E5_23 : ℚ := qOfP (76943898474891) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,23), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_23 : pairOracle.pairOk Dn 5 23 E5_23 = true := by decide +kernel
 #print axioms pe5_23
-def E5_24 : ℚ := qOfP (15763608001829) (1152921504606846976)
+def E5_24 : ℚ := qOfP (9247164762059) (288230376151711744)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,24), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_24 : pairOracle.pairOk Dn 5 24 E5_24 = true := by decide +kernel
 #print axioms pe5_24
-def E5_25 : ℚ := qOfP (-44932727) (1152921504606846976)
+def E5_25 : ℚ := qOfP (-22790403) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,25), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_25 : pairOracle.pairOk Dn 5 25 E5_25 = true := by decide +kernel
 #print axioms pe5_25
-def E5_26 : ℚ := qOfP (-40482291) (576460752303423488)
+def E5_26 : ℚ := qOfP (-22618947) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (5,26), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe5_26 : pairOracle.pairOk Dn 5 26 E5_26 = true := by decide +kernel
 #print axioms pe5_26
-def E7_7 : ℚ := qOfP (21572986043839161) (1152921504606846976)
+def E7_7 : ℚ := qOfP (11494617446552051) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,7), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_7 : pairOracle.pairOk Dn 7 7 E7_7 = true := by decide +kernel
 #print axioms pe7_7
-def E7_8 : ℚ := qOfP (1247283876897323) (144115188075855872)
+def E7_8 : ℚ := qOfP (5318968248729679) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,8), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_8 : pairOracle.pairOk Dn 7 8 E7_8 = true := by decide +kernel
 #print axioms pe7_8
-def E7_9 : ℚ := qOfP (13162713857193279) (1152921504606846976)
+def E7_9 : ℚ := qOfP (3468769639268843) (288230376151711744)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,9), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_9 : pairOracle.pairOk Dn 7 9 E7_9 = true := by decide +kernel
 #print axioms pe7_9
-def E7_10 : ℚ := qOfP (7471858278902905) (1152921504606846976)
+def E7_10 : ℚ := qOfP (7881833183817387) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,10), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_10 : pairOracle.pairOk Dn 7 10 E7_10 = true := by decide +kernel
 #print axioms pe7_10
-def E7_11 : ℚ := qOfP (15144179448495377) (1152921504606846976)
+def E7_11 : ℚ := qOfP (15883805679404509) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,11), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_11 : pairOracle.pairOk Dn 7 11 E7_11 = true := by decide +kernel
 #print axioms pe7_11
-def E7_12 : ℚ := qOfP (10136350065149477) (1152921504606846976)
+def E7_12 : ℚ := qOfP (10635645358846243) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,12), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_12 : pairOracle.pairOk Dn 7 12 E7_12 = true := by decide +kernel
 #print axioms pe7_12
-def E7_13 : ℚ := qOfP (636578465067325) (576460752303423488)
+def E7_13 : ℚ := qOfP (1332316806699979) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,13), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_13 : pairOracle.pairOk Dn 7 13 E7_13 = true := by decide +kernel
 #print axioms pe7_13
-def E7_14 : ℚ := qOfP (902784647021183) (1152921504606846976)
+def E7_14 : ℚ := qOfP (945085122397499) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,14), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_14 : pairOracle.pairOk Dn 7 14 E7_14 = true := by decide +kernel
 #print axioms pe7_14
-def E7_15 : ℚ := qOfP (6528815307902655) (1152921504606846976)
+def E7_15 : ℚ := qOfP (6901858387995779) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,15), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_15 : pairOracle.pairOk Dn 7 15 E7_15 = true := by decide +kernel
 #print axioms pe7_15
-def E7_16 : ℚ := qOfP (4715784779360313) (1152921504606846976)
+def E7_16 : ℚ := qOfP (1246814111785155) (288230376151711744)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,16), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_16 : pairOracle.pairOk Dn 7 16 E7_16 = true := by decide +kernel
 #print axioms pe7_16
-def E7_17 : ℚ := qOfP (504786938262389) (576460752303423488)
+def E7_17 : ℚ := qOfP (1196670657190473) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,17), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_17 : pairOracle.pairOk Dn 7 17 E7_17 = true := by decide +kernel
 #print axioms pe7_17
-def E7_18 : ℚ := qOfP (369627700150565) (576460752303423488)
+def E7_18 : ℚ := qOfP (876547871906629) (1152921504606846976)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,18), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_18 : pairOracle.pairOk Dn 7 18 E7_18 = true := by decide +kernel
 #print axioms pe7_18
-def E7_19 : ℚ := qOfP (385400473) (1152921504606846976)
+def E7_19 : ℚ := qOfP (176152281) (576460752303423488)
 -- kcost: 0.84 s/pair measured in24-pair unit; representative (7,19), 24 independent checks here.
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem pe7_19 : pairOracle.pairOk Dn 7 19 E7_19 = true := by decide +kernel
 #print axioms pe7_19
 

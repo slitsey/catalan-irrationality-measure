@@ -15,8 +15,8 @@ large integers `q`.
 > - μ(L₋₃ ± π²/9) ≤ 9.4913, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
 >   μ(L₋₃ ± π²/18) ≤ 17.492, for both signs;
 > - μ(a ζ(3) + b π²) ≤ 335.20 for all rationals a, b, not both zero;
-> - μ(a ζ(3) + b π⁴) ≤ 118 for all rationals a, b, not both zero;
-> - μ(ζ(3)) ≤ 6.0382, μ(π²) ≤ 6.5214 and μ(π⁴) ≤ 75 (weaker than the known bounds, included for completeness);
+> - μ(a ζ(3) + b π⁴) ≤ 72.84 for all rationals a, b, not both zero;
+> - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5214 (weaker than the known bounds, included for completeness);
 > - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
 > - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
 > - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6.
@@ -28,8 +28,8 @@ irrational. One Löwner structure gives all three planes. The irrationality of t
 by other methods: by Calegari, Dimitrov and Tang for the first plane, by Q. Tang for the second and by Lai
 for the third. The bound 20.6622 improves the published bound 24781 of Calegari, Dimitrov and Tang on the first
 plane. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the whole
-plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 118, and Marcovecchio and Zudilin
-prove μ(ζ(4)) ≤ 12.51086, which is better than 75. The third plane and π⁴ are included because their function has a
+plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.84, and Marcovecchio and Zudilin
+prove μ(ζ(4)) ≤ 12.51086, which is better than 72.84. The third plane and π⁴ are included because their function has a
 pole of order three.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
@@ -200,8 +200,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 | L₋₃ ± π²/18 | first plane | 1/4 | 3.4140176 | 3.8109776 | 6.9434368 | 17.49153 | 17.492 |
 | a ζ(3) + b π² | second plane | 6/41 | 3.4768376 | 3.4982052 | 7.1600631 | 335.0886 | 335.20 |
 | ζ(3) | ψ′(z + 1) | 3/10 | 2.9128390 | 3.9790633 | 6.4345402 | 6.034884 | 6.0382 |
-| a ζ(3) + b π⁴ | third plane | 1/10 | 3.2941777 | 3.3533776 | 6.9643459 | 117.6410 | 118 |
-| π⁴ | 15 ψ″(z + 1) | 1/10 | 3.2600726 | 3.3533776 | 6.9643459 | 74.6406 | 75 |
+| a ζ(3) + b π⁴ | third plane | 13/100 | 3.3497814 | 3.4456170 | 6.9798542 | 72.8316 | 72.84 |
 | G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7453322 | 7.1887383 | 31.19724 | 31.1973 |
 | L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6442402 | 7.5030223 | 13.68385 | 13.6839 |
 | L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0295805 | 6.8255087 | 9.491278 | 9.4913 |

@@ -11,23 +11,23 @@ open CatalanCore.Uniform.Bank.Common CatalanCore.Uniform.Decay.Cert
 /-! Generated; scalar certificate numbers and the assembled `SplineData`. -/
 
 def s_sl : ℚ := q1 (raw_ints% [1000, 271])
-def s_Mq : ℚ := q1 (raw_ints% [21, 20])
+def s_Mq : ℚ := q1 (raw_ints% [213, 200])
 def s_eps : ℚ := q1 (raw_ints% [1, 1000000])
-def s_r0 : ℚ := q1 (raw_ints% [1, 10])
+def s_r0 : ℚ := q1 (raw_ints% [9, 100])
 def s_W : ℚ := q1 (raw_ints% [1, 1000000000000000])
 def s_umax : ℚ := q1 (raw_ints% [8, 1])
-def s_mprime : ℚ := q1 (raw_ints% [10089946145697407, 5000000000000000])
-def s_gmin : ℚ := q1 (raw_ints% [-7320918443504577, 5000000000000000])
-def s_Scap : ℚ := q1 (raw_ints% [-195819562702325003, 7500000000000000000])
-def s_Ibound : ℚ := q1 (raw_ints% [2424089303356047783, 1152921504606846976])
-def s_ccert : ℚ := q1 (raw_ints% [272044759206281, 39062500000000])
+def s_mprime : ℚ := q1 (raw_ints% [10170586122671399, 5000000000000000])
+def s_gmin : ℚ := q1 (raw_ints% [-14558098535023393, 10000000000000000])
+def s_Scap : ℚ := q1 (raw_ints% [-1803000706946127527, 75000000000000000000])
+def s_Ibound : ℚ := q1 (raw_ints% [599090308765092567, 288230376151711744])
+def s_ccert : ℚ := q1 (raw_ints% [34899270780366191, 5000000000000000])
 def s_rho : ℚ := q1 (raw_ints% [1, 1000000000000])
 def s_theta : ℚ := q1 (raw_ints% [1, 1000000000000000000000000])
-def s_etaS : ℚ := q1 (raw_ints% [775001, 2500000000000000000])
-def s_lossS : ℚ := q1 (raw_ints% [102246383, 1152921504606846976])
+def s_etaS : ℚ := q1 (raw_ints% [7042509, 25000000000000000000])
+def s_lossS : ℚ := q1 (raw_ints% [847293, 9007199254740992])
 def s_Rc : ℚ := q1 (raw_ints% [2, 1])
-def s_Inu : ℚ := q1 (raw_ints% [397582719621, 250000000000])
-def s_Dt : ℚ := q1 (raw_ints% [670675532185005206293, 200000000000000000000])
+def s_Inu : ℚ := q1 (raw_ints% [322937543877, 200000000000])
+def s_Dt : ℚ := q1 (raw_ints% [68912340510797043323527, 20000000000000000000000])
 
 def data : SplineData where
   segs := segs
@@ -54,3 +54,23 @@ def data : SplineData where
   dim := 3
 
 end CatalanCore.Uniform.Bank.Common.Data.Plane3
+
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_sl
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Mq
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_eps
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_r0
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_W
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_umax
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_mprime
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_gmin
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Scap
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Ibound
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_ccert
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_rho
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_theta
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_etaS
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_lossS
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Rc
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Inu
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.s_Dt
+#print axioms CatalanCore.Uniform.Bank.Common.Data.Plane3.data

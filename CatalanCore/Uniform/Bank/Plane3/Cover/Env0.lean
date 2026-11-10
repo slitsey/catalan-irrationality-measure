@@ -15,24 +15,27 @@ open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire CatalanCo
   CatalanCore.Uniform.Decay.Cells CatalanCore.Uniform.Decay.NearCells CatalanCore.Uniform.Decay.PolyFull
 open CatalanCore.Uniform.Decay.FarField (MPData)
 
-def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (11 / 10 : ℚ))]
-def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (11 / 10 : ℚ))]
+def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (113 / 100 : ℚ))]
+def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (113 / 100 : ℚ))]
 def nuC : List Seg := nodeSegs RP CP
 def Dbase : SplineData := CatalanCore.Uniform.Bank.Common.Data.Plane3.data
-def Pply : RatPolygon := ⟨(1 / 10 : ℚ), [((-17477 / 125000 : ℚ), (79 / 1000 : ℚ)), ((-94289 / 500000 : ℚ), (26 / 125 : ℚ))], (1000 / 271 : ℚ)⟩
+def Pply : RatPolygon := ⟨(9 / 100 : ℚ), [((-16227 / 125000 : ℚ), (79 / 1000 : ℚ)), ((-89289 / 500000 : ℚ), (26 / 125 : ℚ))], (1000 / 271 : ℚ)⟩
 def tmaxC : ℚ := (131977 / 62500 : ℚ)
 def Rtw : ℚ := 4
 def eWc : ℕ := 50
 def ePc : ℕ := 51
-def Fc : FarData := ⟨(651 / 200 : ℚ), (4 : ℚ)⟩
+def Fc : FarData := ⟨(66669 / 20000 : ℚ), (4 : ℚ)⟩
 def Dn0 : SplineData := Dbase.noRay
 
-def e0 : Pt × Pt := ((qOfP (-1) (10), qOfP (0) (1)), (qOfP (-17477) (125000), qOfP (79) (1000)))
-def e1 : Pt × Pt := ((qOfP (-17477) (125000), qOfP (79) (1000)), (qOfP (-94289) (500000), qOfP (26) (125)))
-def e2 : Pt × Pt := ((qOfP (-94289) (500000), qOfP (26) (125)), (qOfP (-230021) (100000), qOfP (8) (1)))
+def e0 : Pt × Pt := ((qOfP (-9) (100), qOfP (0) (1)), (qOfP (-16227) (125000), qOfP (79) (1000)))
+def e1 : Pt × Pt := ((qOfP (-16227) (125000), qOfP (79) (1000)), (qOfP (-89289) (500000), qOfP (26) (125)))
+def e2 : Pt × Pt := ((qOfP (-89289) (500000), qOfP (26) (125)), (qOfP (-229021) (100000), qOfP (8) (1)))
 
 def edgesLit : List (Pt × Pt) := [e0, e1, e2]
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem edges_eq : edgesAll Pply tmaxC = edgesLit := by decide +kernel
+
+#print axioms edges_eq
 
 end CatalanCore.Uniform.Bank.Plane3.Cover

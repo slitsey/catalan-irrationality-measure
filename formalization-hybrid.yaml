@@ -15,7 +15,7 @@ project:
     Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 and
     L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2), these are
     mu(a L(2, chi_{-3}) + b pi^2) <= 20.6622 and mu(a zeta(3) + b pi^2) <= 335.20
-    and mu(a zeta(3) + b pi^4) <= 118 for all rationals a,b not both zero; mu(pi^4) <= 75; mu(L(2, chi_{-3})) <= 13.6839;
+    and mu(a zeta(3) + b pi^4) <= 72.84 for all rationals a,b not both zero; mu(L(2, chi_{-3})) <= 13.6839;
     mu(L(2, chi_{-3}) +- pi^2/9) <= 9.4913; mu(L(2, chi_{-3}) +- 2 pi^2/27) <= 14;
     mu(L(2, chi_{-3}) +- pi^2/27) <= 15.359; mu(L(2, chi_{-3}) +- pi^2/18) <= 17.492;
     mu(zeta(3)) <= 6.0382; mu(pi^2) <= 6.5214; mu(G +- 5 pi^2/48) <= 31.1973;
@@ -301,13 +301,7 @@ alignment:
       lean: "TrigammaDifferences.plane3_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 118; the line b = 0 uses the zeta(3) bound 6.0382. Leibtag et al. prove the better bound 66.3 on this plane."
-    - source: "Litsey, third plane construction (2026)"
-      lean: "TrigammaDifferences.pi4_measure"
-      module: "ChallengeHybrid"
-      status: proved
-      note: "pi^4, frame 15 psi''(z+1), exponent 75; included for completeness. Marcovecchio-Zudilin prove the better bound mu(zeta(4)) <= 12.51086."
-
+      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 72.84; the line b = 0 uses the zeta(3) bound 6.0382. Leibtag et al. prove the better bound 66.3 on this plane."
 acknowledgements: >-
   OpenAI's proof of the irrationality of Catalan's constant and its Lean
   formalization; Lean 4, Mathlib and the PNT+ project.
