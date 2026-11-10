@@ -141,14 +141,14 @@ Let $a$ and $b$ be rational numbers, not both zero. Then $a\Lt+b\pi^2$ is irrati
 \end{theorem}
 
 \begin{theorem}[second plane]\label{thm:plane2}
-Let $a$ and $b$ be rational numbers, not both zero. Then
+Let $a$ and $b$ be rational numbers, not both zero. Then $a\zeta(3)+b\pi^2$ is irrational and
 \[
  \mu(a\zeta(3)+b\pi^2)\le\MuPlaneB .
 \]
 \end{theorem}
 
 \begin{theorem}[third plane]\label{thm:plane3}
-Let $a$ and $b$ be rational numbers, not both zero. Then
+Let $a$ and $b$ be rational numbers, not both zero. Then $a\zeta(3)+b\pi^4$ is irrational and
 \[
  \mu(a\zeta(3)+b\pi^4)\le\MuPlaneC .
 \]
@@ -167,7 +167,7 @@ $\mu(a\zeta(3)+b\zeta(4))<66.3$, which is better than Theorem~\ref{thm:plane3}. 
 function has a pole of order three, and it shows that the structure handles such a pole.
 
 At special points of the planes we prove better bounds. They do not follow from the plane theorems, and each has its
-own proof. On the first plane there are five pairs of points. The point $\Lt$ uses its own construction
+own proof. On the first plane we treat one point and four pairs of points. The point $\Lt$ uses its own construction
 (Section~\ref{sec:chi3-quarter}). The points $\Lt\pm\pi^2/9$ use the construction of the off-plane results below
 (Section~\ref{sec:proof}). The other three pairs use the functions of the plane with further arithmetic that holds
 only at these points (\S\ref{ssec:levels}). The pair $\Lt\pm\pi^2/18$ also has its own geometry and decay
@@ -289,7 +289,7 @@ corollary, and remark that $\psi'(\frac n6)$ is irrational for every $n$. In \ci
 effective. Theorem~5.1 there gives $\mu(\Lt)\le24781$. The remark that follows it states that the same theorem and
 proof hold for any $\Q$-linear combination of $\Lt$ and $\pi^2$. So $24781$ is the best published bound at every point
 of the first plane. Theorem~\ref{thm:plane1} improves it to $\MuPlaneA$ everywhere, and Theorem~\ref{thm:points1}
-improves it further at five pairs of points. Leibtag et al.\ \cite{LBKWSK26} find numerically that Ap\'ery-like
+improves it further at these special points. Leibtag et al.\ \cite{LBKWSK26} find numerically that Ap\'ery-like
 approximations from conservative matrix fields have positive approximation exponents for $\Lt\pm\pi^2/9$. A supplement
 to their paper uses one such field to give an Ap\'ery-style proof of the theorem of Calegari, Dimitrov and Tang. For
 every point of the plane it proves an approximation exponent $\delta>10^{-4}$, and it certifies the comparison value
@@ -832,12 +832,13 @@ LP duality for the assignment problem. The weight of a perfect matching is at mo
 Let $(u,u')$ be integer potentials with $W_{tt'}\le u_t+u'_{t'}$ for the matrix $\Phi_{r,I}$ at $p$. Then $\widetilde\Phi=\operatorname{diag}(p^{u})\,\Phi_{r,I}\,
 \operatorname{diag}(p^{u'})$ has entries in $\cO$, and
 \[
- e_p(r,I)\le\sum_tu_t+\sum_{t'}u'_{t'}-\corank_{\F_p(x)}(\widetilde\Phi\bmod p).
+ e_p(r,I)\le\Bigl(\sum_tu_t+\sum_{t'}u'_{t'}-\corank_{\F_p(x)}(\widetilde\Phi\bmod p)\Bigr)_+.
 \]
 \end{lemma}
 \begin{proof}
 We have $v(\det\Phi_{r,I})=-\sum_tu_t-\sum_{t'}u'_{t'}+v(\det\widetilde\Phi)$. Over the discrete valuation ring $\cO$ the Smith normal form
 shows $v(\det\widetilde\Phi)\ge\corank(\widetilde\Phi\bmod p)$.
+Taking $\max(0,-v(\det\Phi_{r,I}))$ gives the claim.
 \end{proof}
 
 \subsection{Second-order information}\label{ssec:second}
@@ -1255,7 +1256,7 @@ $(\mathcal N,\mathcal D)$ with $\mathcal N=\mathcal L_{\mathcal A}\mathcal D$ on
 at most $n$, this means $\Delta^l(\mathcal L_{\mathcal A}\mathcal D)(0)=0$ for $n<l\le2n$. Write
 $\mathcal D=\sum_k\mathsf d_k\binom tk$ and insert the two formulas. After removing nonzero factors of the rows and
 columns, these $n$ equations become a system for the coefficients $\mathsf d_k$ with $k<n$. Its matrix is the Cauchy
-matrix $\bigl(1/(l-k)\bigr)_{n<l\le2n,\,0\le k<n}$, and its right-hand side comes from $\mathsf d_n=1$. The Cauchy matrix
+matrix $\bigl(1/(l-k)\bigr)_{n<l\le2n,\,0\le k<n}$, and its right-hand side comes from $\mathsf d_n=n!$. The Cauchy matrix
 is nonsingular. So $\mathcal D$ is unique, which is the nonsingularity.
 
 The same computation shows that $\mathsf d_k/(\mathcal A+k)_{n-k}$ does not depend on $\mathcal A$. For $k<n$,
@@ -1316,9 +1317,10 @@ $\err(m)=\frac12$, $\err(k)=1-\frac1q$ and the rules $\err(\tau+\tau')=\err(\tau
 $\err(\min(\tau,\tau'))\le\max(\err(\tau),\err(\tau'))$.
 \end{lemma}
 \begin{proof}
-The real version of $\tau$, with the constants dropped, is positively homogeneous of degree one. Every operation is
-$1$-Lipschitz in the maximum norm. The inputs differ from their homogeneous values by $|m-\alpha r|\le\frac12$ and
-$|k_p-\kappa p|\le1-\frac1q$. Induct on $\tau$.
+The real version of $\tau$, with the constants dropped, is positively homogeneous of degree one.
+The recursive Lipschitz bounds for the operations give the stated error rules. The inputs differ from their
+homogeneous values by $|m-\alpha r|\le\frac12$ and $|k_p-\kappa p|\le1-\frac1q$.
+The quotient and remainder terms are unchanged, since $r$ and $p$ are exact inputs. Induct on $\tau$.
 \end{proof}
 
 The conditions of Theorem~\ref{thm:local} are linear inequalities in $r,p,m,k$, strict or not. They homogenise to
@@ -1795,8 +1797,9 @@ one polynomial.
 
 For (a) the cells are intervals of the arclength on each edge of $\Gamma$. The bound is proved on a horizontal
 neighbourhood of the edge of fixed width. Beyond the last vertex the ray is handled by an analytic tail bound. For (b)
-the cells are intervals of $[0,1]$. For (c) the integrand is bounded above on each cell of $[-r_0,0]$ by a constant or by
-a chord. Then $J$ is the sum of the integrals of these majorants.
+the cells are intervals of $[0,1]$. For (c) the positive part $(\Upsilon-\Upsilon_\Gamma)_+$ is bounded above on each
+cell of $[-r_0,0]$ by a constant or a chord. A separate lower bound for $\int_{-r_0}^0\Upsilon(x)\,dx$, together with
+$\min(t,0)=t-\max(t,0)$, then gives a lower bound $J$ for the integral in (c).
 
 \begin{proposition}[certified constants]\label{prop:cert}
 For each row of Table~\ref{tab:data} there is a trial measure $\sigma$ on a polygon $\Gamma$, with a cover by cells
@@ -3187,8 +3190,8 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
  $C\setminus I$, and the bounds are stated for the Gauss valuation over the local ring at $p$.
 \item \lean{Support.pole_gram_split_minimal} is the rank-one splitting of \S\ref{ssec:decaydouble} for a pole of any
  order. \lean{Support.pole_altGeom_seqFamily_nv0_even} is Theorem~\ref{thm:nvframe} for such poles.
-\item \lean{Support.support_measureLB} is the general form of Theorem~\ref{thm:deduction}. Every point result is an
- instance of \lean{Bank.Plane1.alt_point}, which applies it to an alternating geometry.
+\item \lean{Support.support_measureLB} is the general form of Theorem~\ref{thm:deduction}. For simple-pole frames,
+ \lean{Bank.Plane1.alt_point} applies it to an alternating geometry. The multiple-pole instances use the support theorem directly.
 \end{itemize}
 The solution has no \lean{sorry} and no \lean{native_decide}. The command \texttt{\#print axioms} reports only the three
 standard axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The prime number theorem in arithmetic
