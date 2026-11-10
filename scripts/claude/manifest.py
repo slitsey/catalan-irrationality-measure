@@ -18,7 +18,9 @@ after rc 0. Coordinator CLI:
   manifest.py owner <module> <owner>
   manifest.py show [prefix]
 """
-import hashlib, json, os, sys, time
+import hashlib, json, os, sys, time, uuid, ctypes
+from contextlib import contextmanager
+from functools import wraps
 from pathlib import Path
 
 ROOT = Path(r'C:\Users\seanl\Documents\Codex\2026-10-11\plea')
@@ -29,6 +31,51 @@ EA44 = ROOT / ('outputs/Compatibility programme/leads-tests-2026-11-02/g-design-
 COLS = ['module', 'owner', 'row', 'wave', 'status', 'src_sha', 'note']
 DEFAULT_SCOPE = ['CatalanMeasure.GenD.Signed.RouteI', 'CatalanMeasure.GenD.Signed.Davis.DesignWeights',
                  'CatalanMeasure.GenD.Signed.ChebSquare', 'CatalanMeasure.GenD.Signed.Count']
+
+
+@contextmanager
+def write_lock(timeout=30):
+    """Process-wide writer mutex, keyed by the actual manifest path.
+
+    Windows releases abandoned mutex ownership if a writer exits. The mutex
+    is reentrant on one thread, so mark_built/main may safely call save.
+    Readers see the prior or next complete atomic file and need no lock.
+    """
+    from ctypes import wintypes
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateMutexW.argtypes = [ctypes.c_void_p, wintypes.BOOL, wintypes.LPCWSTR]
+    kernel.CreateMutexW.restype = wintypes.HANDLE
+    kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+    kernel.WaitForSingleObject.restype = wintypes.DWORD
+    kernel.ReleaseMutex.argtypes = [wintypes.HANDLE]
+    kernel.ReleaseMutex.restype = wintypes.BOOL
+    kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel.CloseHandle.restype = wintypes.BOOL
+    key = hashlib.sha256(str(MAN.resolve()).lower().encode('utf-8')).hexdigest()
+    handle = kernel.CreateMutexW(None, False, 'Local\\CodexManifestWrite_' + key)
+    if not handle:
+        raise ctypes.WinError(ctypes.get_last_error())
+    acquired = False
+    try:
+        result = kernel.WaitForSingleObject(handle, int(timeout * 1000))
+        if result not in (0, 0x80):
+            if result == 0x102:
+                raise TimeoutError('manifest writer mutex timed out: ' + str(MAN))
+            raise ctypes.WinError(ctypes.get_last_error())
+        acquired = True
+        yield
+    finally:
+        if acquired:
+            kernel.ReleaseMutex(handle)
+        kernel.CloseHandle(handle)
+
+
+def _write_locked(fn):
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        with write_lock():
+            return fn(*args, **kwargs)
+    return wrapped
 
 
 def src_path(m):
@@ -59,14 +106,27 @@ def load():
     return scope, rows
 
 
+@_write_locked
 def save(scope, rows):
     out = ['# Route-I build manifest. Edit only via scripts/claude/manifest.py (the driver also writes it).']
     out += [f'# scope: {s}' for s in scope]
     out.append('\t'.join(COLS))
     out += ['\t'.join(rows[m].get(c, '') for c in COLS) for m in sorted(rows)]
-    tmp = MAN.with_suffix('.tmp')
-    tmp.write_text('\n'.join(out) + '\n', encoding='utf-8')
-    tmp.replace(MAN)
+    tmp = MAN.with_name(MAN.name + f'.{os.getpid()}.{uuid.uuid4().hex}.tmp')
+    try:
+        tmp.write_text('\n'.join(out) + '\n', encoding='utf-8')
+        deadline = time.monotonic() + 5
+        while True:
+            try:
+                tmp.replace(MAN)
+                break
+            except PermissionError:
+                if time.monotonic() >= deadline:
+                    raise
+                time.sleep(.05)
+    finally:
+        if tmp.exists():
+            tmp.unlink()
 
 
 def fresh(m):
@@ -104,6 +164,7 @@ def refusal(target, owner):
     return 93, f'{target} has unknown manifest status {st!r}'
 
 
+@_write_locked
 def mark_built(target, rc):
     if rc != 0:
         return
@@ -116,6 +177,7 @@ def mark_built(target, rc):
     save(scope, rows)
 
 
+@_write_locked
 def init():
     scope, rows = load()
     added = 0
@@ -151,7 +213,8 @@ def init():
     print(f'manifest: {len(rows)} modules ({added} added); {c}')
 
 
-if __name__ == '__main__':
+@_write_locked
+def main():
     a = sys.argv[1:]
     if not a or a[0] == 'init':
         init()
@@ -177,3 +240,7 @@ if __name__ == '__main__':
         for m in sorted(rows):
             if len(a) < 2 or m.startswith(a[1]):
                 print('\t'.join(rows[m][c] for c in COLS))
+
+
+if __name__ == '__main__':
+    main()
