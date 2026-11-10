@@ -26,7 +26,9 @@
     "TrigammaDifferences.dip_1_27_minus_measure",
     "TrigammaDifferences.dip_1_18_plus_measure",
     "TrigammaDifferences.dip_1_18_minus_measure",
-    "TrigammaDifferences.zeta3_measure"
+    "TrigammaDifferences.zeta3_measure",
+    "TrigammaDifferences.plane3_measure",
+    "TrigammaDifferences.pi4_measure"
   ],
   "definition_names": [],
   "permitted_axioms": [

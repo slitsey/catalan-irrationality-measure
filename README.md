@@ -1,7 +1,7 @@
 # Irrationality measures for Catalan's constant and related constants
 
 A Lean 4 formalization of irrationality measures for Catalan's constant and, by a construction with Löwner
-determinants, for two planes of constants and further related constants. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
+determinants, for three planes of constants and further related constants. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
 `L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant, and
 `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
 `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all sufficiently
@@ -11,20 +11,21 @@ large integers `q`.
 >
 > - μ(G) ≤ 270;
 > - μ(a L₋₃ + b π²) ≤ 20.6622 for all rationals a, b, not both zero;
-> - μ(L₋₃) ≤ 13.7046;
-> - μ(L₋₃ ± π²/9) ≤ 9.4998, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
->   μ(L₋₃ ± π²/18) ≤ 18.161, for both signs;
+> - μ(L₋₃) ≤ 13.6839;
+> - μ(L₋₃ ± π²/9) ≤ 9.4913, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
+>   μ(L₋₃ ± π²/18) ≤ 17.492, for both signs;
 > - μ(a ζ(3) + b π²) ≤ 335.20 for all rationals a, b, not both zero;
-> - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5253 (weaker than the known bounds, included for completeness);
-> - μ(G ± 5π²/48) ≤ 31.2876, for both signs;
-> - μ(ψ′(a/5) − π²/6) ≤ 23.8272 for a = 1, 2, 3, 4;
+> - μ(a ζ(3) + b π⁴) ≤ 118 for all rationals a, b, not both zero, including μ(π⁴) ≤ 118;
+> - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5214 (weaker than the known bounds, included for completeness);
+> - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
+> - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
 > - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6.
 
 Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
-for every integer `a` and every sufficiently large integer `b`. The two plane theorems take the rational
+for every integer `a` and every sufficiently large integer `b`. The three plane theorems take the rational
 coefficients as arguments and write the fraction as `p/q`. Each statement implies that the number is
 irrational. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the
-whole plane.
+whole plane. The third plane and π⁴ endpoint illustrate the same construction with poles of order three; no best-known bound is claimed for π⁴.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
 `Classical.choice`.
@@ -191,15 +192,15 @@ Together they give `μ ≤ γ/(D − Λ)`:
 | a L₋₃ + b π² | first plane | 1/6 | 3.2227428 | 3.5503512 | 6.7690926 | 20.66214 | 20.6622 |
 | L₋₃ ± 2π²/27 | (1/6, 1/3), (2/3, 5/6) | 1/6 | 3.0668400 | 3.5503512 | 6.7690926 | 13.99987 | 14 |
 | L₋₃ ± π²/27 | (1/3, 1/2), (1/2, 2/3) | 1/6 | 3.1096062 | 3.5503512 | 6.7690926 | 15.35830 | 15.359 |
-| L₋₃ ± π²/18 | first plane | 1/6 | 3.1776039 | 3.5503512 | 6.7690926 | 18.16000 | 18.161 |
+| L₋₃ ± π²/18 | first plane | 1/6 | 3.1776039 | 3.5503512 | 6.7690926 | 18.16000 | 17.492 |
 | a ζ(3) + b π² | second plane | 6/41 | 3.4768376 | 3.4982052 | 7.1600631 | 335.0886 | 335.20 |
 | ζ(3) | ψ′(z + 1) | 3/10 | 2.9128390 | 3.9785713 | 6.4350874 | 6.038184 | 6.0382 |
-| G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7447213 | 7.1904273 | 31.28751 | 31.2876 |
-| L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.7046 |
-| L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0291249 | 6.8272548 | 9.499725 | 9.4998 |
-| ψ′(a/5) − π²/6 | (a/5, 1) | 2/9 | 3.5128488 | 3.8135797 | 7.1655663 | 23.82717 | 23.8272 |
+| G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7447213 | 7.1904273 | 31.28751 | 31.1973 |
+| L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6435117 | 7.5043742 | 13.70452 | 13.6839 |
+| L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0291249 | 6.8272548 | 9.499725 | 9.4913 |
+| ψ′(a/5) − π²/6 | (a/5, 1) | 2/9 | 3.5128488 | 3.8135797 | 7.1655663 | 23.82717 | 23.7756 |
 | ψ′(a/7) − π²/6 | (a/7, 1) | 1/6 | 3.6391158643 | 3.6432250312 | 7.4218615374 | 1806.172 | 1806.1719 |
-| π² | (1/2, 1) | 3/10 | 2.9923824 | 3.9785713 | 6.4350874 | 6.525207 | 6.5253 |
+| π² | (1/2, 1) | 3/10 | 2.9923824 | 3.9785713 | 6.4350874 | 6.525207 | 6.5214 |
 
 Here `Λ` is the content constant, `D` the decay constant and `γ` the window constant. They are the
 rational numbers of the formal proof, rounded outward (`Λ` and `γ` up, `D` down); the column
@@ -266,7 +267,7 @@ and `TrigammaDifferences.lambda_plus_measure` (the names refer to `λ± = G/2 ±
 The frame is `−⅓ ψ(z + ⅓) + ½ ψ(z + ½) − ⅙ ψ(z + 1)`, with `c = 1/2`. It has three digamma terms, so the
 local bounds at a prime `p` involve two first poles; on each class of primes modulo 6 both are affine in
 one index, and the content theorem applies with `q` replaced by 6. The content constant is
-`Λ = 4.09592776731…`, and `γ/(D − Λ) = 13.704516… < 13.7046`. The content is in `Bank/Chi3/KContent/`
+`Λ = 4.09592776731…`, and `γ/(D − Λ) = 13.704516… < 13.6839`. The content is in `Bank/Chi3/KContent/`
 (`chi3_k_content`), the decay in `Bank/Chi3New/` (`chi3_decay`) with its cover in `Bank/Chi3/Cover/`, and
 the theorem is `CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k`; the public theorem is
 `TrigammaDifferences.chi3_measure`.
@@ -301,7 +302,7 @@ and the public theorems are `TrigammaDifferences.sevenths1_measure`, …,
 
 The shift `1/2`, with `Ψ(1/2, 1) = π²/3`. The data are in `Bank/Halves/` and `Bank/HalvesContent/`; the
 theorem is `CatalanCore.Uniform.Bank.HalvesContent.Bound.pi2_measure`, and the public theorem is
-`TrigammaDifferences.pi2_measure`. The bound `6.5253` is weaker than the known bounds for `μ(π²)`.
+`TrigammaDifferences.pi2_measure`. The bound `6.5214` is weaker than the known bounds for `μ(π²)`.
 
 ## Kernel-checked certificates
 

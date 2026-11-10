@@ -1,0 +1,38 @@
+{
+  "challenge_module": "ChallengeHybrid",
+  "solution_module": "SolutionHybrid",
+  "theorem_names": [
+    "TrigammaDifferences.lambda_minus_measure",
+    "TrigammaDifferences.lambda_plus_measure",
+    "TrigammaDifferences.chi3_measure",
+    "TrigammaDifferences.chi3_plus_pi2_measure",
+    "TrigammaDifferences.chi3_minus_pi2_measure",
+    "TrigammaDifferences.fifths1_measure",
+    "TrigammaDifferences.fifths2_measure",
+    "TrigammaDifferences.fifths3_measure",
+    "TrigammaDifferences.fifths4_measure",
+    "TrigammaDifferences.sevenths1_measure",
+    "TrigammaDifferences.sevenths2_measure",
+    "TrigammaDifferences.sevenths3_measure",
+    "TrigammaDifferences.sevenths4_measure",
+    "TrigammaDifferences.sevenths5_measure",
+    "TrigammaDifferences.sevenths6_measure",
+    "TrigammaDifferences.pi2_measure",
+    "TrigammaDifferences.plane1_measure",
+    "TrigammaDifferences.plane2_measure",
+    "TrigammaDifferences.dip_2_27_plus_measure",
+    "TrigammaDifferences.dip_2_27_minus_measure",
+    "TrigammaDifferences.dip_1_27_plus_measure",
+    "TrigammaDifferences.dip_1_27_minus_measure",
+    "TrigammaDifferences.dip_1_18_plus_measure",
+    "TrigammaDifferences.dip_1_18_minus_measure",
+    "TrigammaDifferences.zeta3_measure"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
