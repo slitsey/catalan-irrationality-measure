@@ -78,7 +78,22 @@ def est(t):
         sib = sorted(v for k, v in tp.items() if cls(k) == cls(t))
         ws = sib[len(sib) // 2] if sib else peaks().get(cls(t))
     return (1.75 * ws + 1.0, ws) if ws else (7.0, 3.5)
-WARM = 180.0   # s after start before a run job's reservation follows its measured peak
+# 9 Nov (Sean: "we have run up to 16 lanes"): run jobs never learned their peak, so every
+# 1-minute production job held its declared 4-6 GB for life and the host idled at 2 lanes,
+# 2 % CPU. Run jobs now learn their measured peak per job class (label minus a trailing
+# -NN / .PNNN index), and a later job of that class reserves 1.25 x the class's largest
+# measured peak instead of its declared budget. WARM drops 180 -> 30 s.
+WARM = 30.0    # s after start before a run job's reservation follows its measured peak
+JLEARN = LANES / 'jpeaks.json'
+def jcls(t): return re.sub(r'([-.]P?\d+)+$', '', t)
+def jpeaks():
+    try: return json.loads(JLEARN.read_text(encoding='utf-8'))
+    except Exception: return {}
+def jlearn(t, peak, rc):
+    if rc != 0 or not peak or peak[0] <= 0: return
+    jp = jpeaks(); k = jcls(t); old = jp.get(k, [0.0, 0.0])
+    jp[k] = [max(old[0], peak[0]), max(old[1], peak[1])]
+    JLEARN.write_text(json.dumps(jp, indent=1), encoding='utf-8')
 PEAK = {}      # pid -> (max working set, max commit) seen, GB
 def reserve(spec, used=(0.0, 0.0), peak=None):
     """(commit, working set) GB held for a job: the larger of forecast and declared budget; a job
@@ -92,6 +107,9 @@ def reserve(spec, used=(0.0, 0.0), peak=None):
         # the queue with 15 GB free. A run job holds its declared budget; growth past it is
         # still caught by the 1.25 x use rule below.
         ew = max(bb, 1.0); ec = 1.75 * ew + 1.0
+        jp = jpeaks().get(jcls(spec['target']))
+        if jp:
+            ew = max(1.25 * jp[0], 1.0); ec = max(1.25 * jp[1], ew + 1.0)
         # 7 Nov 21:30: H generators declared 14 GB and used 5.3, and G's RN builds (top
         # priority) sat queued with 15 GB free. After WARM seconds a run job holds 1.25 x its
         # measured peak (never below 1 GB); growth is still caught by the 1.25 x use rule.
@@ -358,6 +376,8 @@ def drive():
                 (DONE / f'{jid}.json').write_text(json.dumps(spec), encoding='utf-8')
                 (RUN / f'{jid}.json').unlink(missing_ok=True)
                 learn(spec['target'], out, proc.returncode)
+                if spec['target'].startswith('job.'):
+                    jlearn(spec['target'], PEAK.pop(proc.pid, None), proc.returncode)
                 log(f"done {spec['target']} rc={proc.returncode}")
                 del running[jid]
         # Own-tree shedding (skill: kill only owned trees, by PID): if the host nears the floor,
