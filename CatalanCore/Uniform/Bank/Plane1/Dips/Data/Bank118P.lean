@@ -7,8 +7,8 @@ open CatalanCore CatalanCore.Uniform CatalanCore.Measure CatalanFrames.P6
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
 abbrev bankP := Content118.bankP
 abbrev dipLamP := dip18Lam
-theorem bankP_check := Content118.bankP_check
-theorem bankP_ok := Content118.bankP_ok
+theorem bankP_check : CatalanCore.Uniform.Content.BankShared.KTerm.kcheckC bankP = true := Content118.bankP_check
+theorem bankP_ok : DipBankOK (1/4) Content118.quarter_pos 64 Support.plus 4 (-3) (-1) (by norm_num) bankP Content118.dipBudget 0 := Content118.bankP_ok
 theorem dip_1_18_plus_point :
     MeasureLBAt (chi3L2+((1/18:ℚ):ℝ)*Real.pi^2) ((DipD.ccert:ℝ)/((DipD.Dt:ℝ)-(dip18Lam:ℝ))) ∧
       Irrational (chi3L2+((1/18:ℚ):ℝ)*Real.pi^2) := by

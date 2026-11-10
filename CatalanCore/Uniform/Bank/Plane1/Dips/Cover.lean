@@ -10,7 +10,7 @@ open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Decay.Nodes
 open CatalanCore.Uniform.Decay.Cert CatalanCore.Uniform.Decay.PolyWire3
 open CatalanCore.Uniform.Decay.PolyFull CatalanCore.Uniform.Decay.Polygon CatalanCore.Uniform.Decay.AltDecay
 abbrev DipD := Cover.Dchi
-abbrev DipTab := Cover.TabC
+noncomputable abbrev DipTab := Cover.TabC
 theorem dipC_pos : (0:ℚ)<1/4 := by norm_num
 -- kcost: 1.0 s C estimate from the retained dip scalar class measured1.0s; two-piece exact geometry bindings, no physicalcell checks.
 theorem dip_RP : DipTab.RP=altPieces (1/4) := by decide +kernel

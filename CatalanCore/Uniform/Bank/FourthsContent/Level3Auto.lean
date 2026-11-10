@@ -58,7 +58,7 @@ theorem lamMinus_catValid (depth : ℕ) :
     · exact catValid_bankUFwP lamInst (arith_of_bad lam_badInfo).L_eq lam_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
         (by norm_num) lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
         (by norm_num) (by norm_num) (by norm_num) le_rfl
-        (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
+        (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega, by omega,
           not_bad_of_levels lam_tropFacts.toLevelFacts hp (show 5 ≤ p by omega), (show 5 ≤ p by omega),
           by omega⟩)
         (fun p hp h j k hk hj0 hjq _ _ => by
@@ -70,8 +70,8 @@ theorem lamMinus_catValid (depth : ℕ) :
           show lamCD.kq p = k
           rw [h1, h2])
         bankWins bankPres
-    · exact CatalanCore.Uniform.Content.UFSimple.WrapCheck.catValid_wrap (1 / 5) one_fifth_pos lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega⟩)
-  · exact CatalanCore.Uniform.Content.UFSimple.catValid_prefixBranches (1 / 5) one_fifth_pos lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ 24 (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega⟩)
+    · exact CatalanCore.Uniform.Content.UFSimple.WrapCheck.catValid_wrap (1 / 5) one_fifth_pos lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega⟩)
+  · exact CatalanCore.Uniform.Content.UFSimple.catValid_prefixBranches (1 / 5) one_fifth_pos lam_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ 24 (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega⟩)
 
 /-- The prefix bound of `lamFrame` (`pre_gle_any`), for `p ≤ r/1000`, `α0 = 11/5`. -/
 theorem lamMinus_preValid (depth : ℕ) :
@@ -109,7 +109,7 @@ theorem mirN_catValid (depth : ℕ) :
     · exact catValid_bankUFwP mirNInst (arith_of_bad mirBad).L_eq mirN_tropFacts.toLevelFacts (1 / 5) one_fifth_pos
         (by norm_num) mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 10 44
         (by norm_num) (by norm_num) (by norm_num) le_rfl
-        (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega, by omega,
+        (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega, by omega,
           not_bad_of_levels mirN_tropFacts.toLevelFacts hp (show 5 ≤ p by omega), (show 5 ≤ p by omega),
           by omega⟩)
         (fun p hp h j k hk hj0 hjq _ _ => by
@@ -120,8 +120,8 @@ theorem mirN_catValid (depth : ℕ) :
           have h2 := (rootClass_unique hp (by norm_num) (by norm_num) (by omega) hjq hk').2
           rw [h1, h2])
         bankWins bankPres
-    · exact CatalanCore.Uniform.Content.UFSimple.WrapCheck.catValid_wrap (1 / 5) one_fifth_pos mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega⟩)
-  · exact CatalanCore.Uniform.Content.UFSimple.catValid_prefixBranches (1 / 5) one_fifth_pos mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ 24 (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega), by omega⟩)
+    · exact CatalanCore.Uniform.Content.UFSimple.WrapCheck.catValid_wrap (1 / 5) one_fifth_pos mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega⟩)
+  · exact CatalanCore.Uniform.Content.UFSimple.catValid_prefixBranches (1 / 5) one_fifth_pos mirN_twoTerm (nm := 4 * 4) (by show (16 : ℚ) = ((4 * 4 : ℕ) : ℚ); norm_num) depth 28 _ 24 (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega), by omega⟩)
 
 /-- The prefix bound of `mirNFrame` (`pre_gle_any`), for `p ≤ r/1000`, `α0 = 11/5`. -/
 theorem mirN_preValid (depth : ℕ) :
@@ -219,27 +219,27 @@ theorem pc_content_o {Fr : Frame} (o depth Nold : ℕ) (B : SmallBudget)
   have hpre (ν j0 j1 : ℕ) : KCatValid (1/5) one_fifth_pos Fr depth D.shifts D.Q D.Pbad N [(brPre ν j0 j1).liftK 0] := by
     have h := (hAllPre ν j0 j1).liftK (1/5) one_fifth_pos Fr.const depth
       (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) 4 o bankHead.Pbad Nold [brPre ν j0 j1]
-      (legacyShifts 4 o) 0 4 (by decide) rfl rfl le_rfl
+      (legacyShifts 4 o) 0 4 (by simp [legacyShifts]) rfl rfl le_rfl
     exact (show KCatValid (1/5) one_fifth_pos Fr depth D.shifts D.Q D.Pbad Nold [(brPre ν j0 j1).liftK 0] by
-      simpa only [List.map_cons,List.map_nil] using h).mono_threshold hNold
+      simpa only [KCatValid,D,pcBank,pcHead,bankHead,List.map_cons,List.map_nil] using h).mono_threshold hNold
   have hwrap (ν : ℕ) (hν : 1≤ν) : KCatValid (1/5) one_fifth_pos Fr depth D.shifts D.Q D.Pbad N [(WrapPrefixCheck.brPrefix ν).liftK 0] := by
     have h := (hAllWrap ν hν).liftK (1/5) one_fifth_pos Fr.const depth
       (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) 4 o bankHead.Pbad Nold [WrapPrefixCheck.brPrefix ν]
-      (legacyShifts 4 o) 0 4 (by decide) rfl rfl le_rfl
+      (legacyShifts 4 o) 0 4 (by simp [legacyShifts]) rfl rfl le_rfl
     exact (show KCatValid (1/5) one_fifth_pos Fr depth D.shifts D.Q D.Pbad Nold [(WrapPrefixCheck.brPrefix ν).liftK 0] by
-      simpa only [List.map_cons,List.map_nil] using h).mono_threshold hNold
+      simpa only [KCatValid,D,pcBank,pcHead,bankHead,List.map_cons,List.map_nil] using h).mono_threshold hNold
   have hallowed (S : CatalogueSeed pcLegacyCatalogue) :
       S.law.Allowed (KCatValidFam (1/5) one_fifth_pos Fr.const depth
         (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) D.shifts D.Q D.Pbad N) 0 := by
     cases h:S.law with
-    | constant indices => simpa only [h,CatalogueOrbitLaw.Allowed] using hlegacy
-    | d1x => simpa only [h,CatalogueOrbitLaw.Allowed] using hd1x
-    | pre ν j0 j1 => simpa only [h,CatalogueOrbitLaw.Allowed] using (fun ν' => hpre ν' j0 j1)
-    | wrap ν hν => simpa only [h,CatalogueOrbitLaw.Allowed] using hwrap
+    | constant indices => simpa only [h,CatalogueOrbitLaw.Allowed,KCatValid] using hlegacy
+    | d1x => simpa only [h,CatalogueOrbitLaw.Allowed,KCatValid] using hd1x
+    | pre ν j0 j1 => simpa only [h,CatalogueOrbitLaw.Allowed,KCatValid] using (fun ν' => hpre ν' j0 j1)
+    | wrap ν hν => simpa only [h,CatalogueOrbitLaw.Allowed,KCatValid] using hwrap
   have hab (S : CatalogueSeed pcLegacyCatalogue) : D.α*S.law.shiftB 10=S.law.shiftA 1 := by
     cases S.law <;> norm_num [CatalogueOrbitLaw.shiftB,CatalogueOrbitLaw.shiftA,D,pcBank,pcHead,bankHead,qq]
   have hhead1 : ∀ z∈pcHead1,PieceBasic z.1 ∧
-      PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 1 z.1 := by
+      CatalanCore.Uniform.Content.BankShared.KTerm.PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 1 z.1 := by
     rw [pcHead1_eq]
     apply catalogueHead_facts hpar hd' hL pcRawSeeds1 10 1 10000 0
     · intro S hS;exact hab S
@@ -258,16 +258,16 @@ theorem pc_content_o {Fr : Frame} (o depth Nold : ℕ) (B : SmallBudget)
         rw [show cellOKb D pcBase 1 125 10 10000 pcCellBase1_0=
           cellOKb (pcHead 1) pcBase 1 125 10 10000 pcCellBase1_0 from pcCellTransport o _ _ _ _ _ _]
         exact pcCell1_0
-      have hf := cellOKb_facts (by decide : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
+      have hf := cellOKb_facts (by norm_num [D,pcBank,pcHead,bankHead] : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
       exact ⟨hf.1,hf.2,(pcCellLimit1_0).trans (by exact_mod_cast hL)⟩
     · have hk : cellOKb D pcBase 1 125 10 10000 pcCellBase1_1=true := by
         rw [show cellOKb D pcBase 1 125 10 10000 pcCellBase1_1=
           cellOKb (pcHead 1) pcBase 1 125 10 10000 pcCellBase1_1 from pcCellTransport o _ _ _ _ _ _]
         exact pcCell1_1
-      have hf := cellOKb_facts (by decide : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
+      have hf := cellOKb_facts (by norm_num [D,pcBank,pcHead,bankHead] : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
       exact ⟨hf.1,hf.2,(pcCellLimit1_1).trans (by exact_mod_cast hL)⟩
   have hf1 : ∀ z∈(pcTmpl1.toK 10 22 bankHead.cF).pieces,PieceBasic z.1 ∧
-      PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 1 z.1 := by
+      CatalanCore.Uniform.Content.BankShared.KTerm.PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 1 z.1 := by
     intro z hz
     change z∈expPer 10 22 bankHead.cF 125 0 pcCells1++pcHead1 at hz
     rcases List.mem_append.mp hz with hz | hz
@@ -276,11 +276,11 @@ theorem pc_content_o {Fr : Frame} (o depth Nold : ℕ) (B : SmallBudget)
       have hn' : (n:ℚ)≤125 := by exact_mod_cast hn
       exact ⟨trPiece_basic hbasic 10 22 D.cF y.2.R n,
         exp_cov_per_large hpar hd' (by norm_num [D,pcBank,pcHead,bankHead,qq])
-          (d1xTranslation 10 1 10000) (by intro n;simpa only [pcBase,d1xTranslation,List.map_cons,List.map_nil] using hd1x)
+          (d1xTranslation 10 1 10000) (by intro n;simpa only [pcBase,d1xTranslation,List.map_cons,List.map_nil,KCatValid] using hd1x)
           hbasic hbase hRlim n (by linarith)⟩
     · exact hhead1 z hz
   have hhead3 : ∀ z∈pcHead3,PieceBasic z.1 ∧
-      PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 3 z.1 := by
+      CatalanCore.Uniform.Content.BankShared.KTerm.PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 3 z.1 := by
     rw [pcHead3_eq]
     apply catalogueHead_facts hpar hd' hL pcRawSeeds3 10 1 10000 0
     · intro S hS;exact hab S
@@ -299,16 +299,16 @@ theorem pc_content_o {Fr : Frame} (o depth Nold : ℕ) (B : SmallBudget)
         rw [show cellOKb D pcBase 3 125 10 10000 pcCellBase3_0=
           cellOKb (pcHead 1) pcBase 3 125 10 10000 pcCellBase3_0 from pcCellTransport o _ _ _ _ _ _]
         exact pcCell3_0
-      have hf := cellOKb_facts (by decide : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
+      have hf := cellOKb_facts (by norm_num [D,pcBank,pcHead,bankHead] : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
       exact ⟨hf.1,hf.2,(pcCellLimit3_0).trans (by exact_mod_cast hL)⟩
     · have hk : cellOKb D pcBase 3 125 10 10000 pcCellBase3_1=true := by
         rw [show cellOKb D pcBase 3 125 10 10000 pcCellBase3_1=
           cellOKb (pcHead 1) pcBase 3 125 10 10000 pcCellBase3_1 from pcCellTransport o _ _ _ _ _ _]
         exact pcCell3_1
-      have hf := cellOKb_facts (by decide : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
+      have hf := cellOKb_facts (by norm_num [D,pcBank,pcHead,bankHead] : 1≤D.Q) (by norm_num [D,pcBank,pcHead,bankHead,qq] : 0≤D.α) hk
       exact ⟨hf.1,hf.2,(pcCellLimit3_1).trans (by exact_mod_cast hL)⟩
   have hf3 : ∀ z∈(pcTmpl3.toK 10 22 bankHead.cF).pieces,PieceBasic z.1 ∧
-      PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 3 z.1 := by
+      CatalanCore.Uniform.Content.BankShared.KTerm.PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N 3 z.1 := by
     intro z hz
     change z∈expPer 10 22 bankHead.cF 125 0 pcCells3++pcHead3 at hz
     rcases List.mem_append.mp hz with hz | hz
@@ -317,11 +317,11 @@ theorem pc_content_o {Fr : Frame} (o depth Nold : ℕ) (B : SmallBudget)
       have hn' : (n:ℚ)≤125 := by exact_mod_cast hn
       exact ⟨trPiece_basic hbasic 10 22 D.cF y.2.R n,
         exp_cov_per_large hpar hd' (by norm_num [D,pcBank,pcHead,bankHead,qq])
-          (d1xTranslation 10 1 10000) (by intro n;simpa only [pcBase,d1xTranslation,List.map_cons,List.map_nil] using hd1x)
+          (d1xTranslation 10 1 10000) (by intro n;simpa only [pcBase,d1xTranslation,List.map_cons,List.map_nil,KCatValid] using hd1x)
           hbasic hbase hRlim n (by linarith)⟩
     · exact hhead3 z hz
   have hall : ∀ x∈D.tmpls,∀ z∈x.2.pieces,PieceBasic z.1 ∧
-      PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N x.1 z.1 := by
+      CatalanCore.Uniform.Content.BankShared.KTerm.PieceCov D (1/5) one_fifth_pos Fr.const depth (NodeFamily.polynomial Fr (altGeom (1/5) one_fifth_pos).geometry) N x.1 z.1 := by
     intro x hx
     change x∈[(1,pcTmpl1.toK 10 22 bankHead.cF), (3,pcTmpl3.toK 10 22 bankHead.cF)] at hx
     simp only [List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hx
@@ -338,9 +338,9 @@ theorem lamMinus_content_auto (depth : ℕ) (hd : depth≤64) :
     HasScaledContent (AltEven (1/5) one_fifth_pos (lambdaFrame false) depth) (altGeom (1/5) one_fifth_pos).scale (bankData.Λ:ℝ) := by
   apply pc_content_o 1 depth (max (NFr (1/lamFrame.norm) (-1/lamFrame.norm) 4 10) 44) (SmallBudget.add (SmallBudget.sqrtLog 5 96) SmallBudget.unit) hd cFr_lamMinus (lamMinus_catValid depth) (lamMinus_preValid depth)
   · intro ν j0 j1
-    exact catValid_pre (1/5) one_fifth_pos lam_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/lamFrame.norm) (-1/lamFrame.norm) 4 10) 44) (by norm_num) (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega),by omega,by omega⟩) ν j0 j1
+    exact catValid_pre (1/5) one_fifth_pos lam_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/lamFrame.norm) (-1/lamFrame.norm) 4 10) 44) (by norm_num) (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega),by omega,by omega⟩) ν j0 j1
   · intro ν hν
-    exact WrapPrefixCheck.catValid_prefix_full (1/5) one_fifth_pos lam_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/lamFrame.norm) (-1/lamFrame.norm) 4 10) 44) ν hν (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega),by omega⟩)
+    exact WrapPrefixCheck.catValid_prefix_full (1/5) one_fifth_pos lam_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/lamFrame.norm) (-1/lamFrame.norm) 4 10) 44) ν hν (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega),by omega⟩)
   · exact pcParams1
   · exact pcClasses1
   · intro x hx
@@ -354,9 +354,9 @@ theorem lamPlus_content_auto (depth : ℕ) (hd : depth≤64) :
     HasScaledContent (AltEven (1/5) one_fifth_pos (lambdaFrame true) depth) (altGeom (1/5) one_fifth_pos).scale (bankData.Λ:ℝ) := by
   apply pc_content_o 3 depth (max (NFr (1/mirNFrame.norm) (-1/mirNFrame.norm) 4 10) 44) (SmallBudget.add (SmallBudget.sqrtLog 5 96) SmallBudget.unit) hd cFr_lamPlus (catValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (mirN_catValid depth)) (preValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (mirN_preValid depth))
   · intro ν j0 j1
-    exact catValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (catValid_pre (1/5) one_fifth_pos mirN_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/mirNFrame.norm) (-1/mirNFrame.norm) 4 10) 44) (by norm_num) (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega),by omega,by omega⟩) ν j0 j1)
+    exact catValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (catValid_pre (1/5) one_fifth_pos mirN_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/mirNFrame.norm) (-1/mirNFrame.norm) 4 10) 44) (by norm_num) (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega),by omega,by omega⟩) ν j0 j1)
   · intro ν hν
-    exact catValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (WrapPrefixCheck.catValid_prefix_full (1/5) one_fifth_pos mirN_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/mirNFrame.norm) (-1/mirNFrame.norm) 4 10) 44) ν hν (fun p hp h => ⟨not_dvd_sq_of_lt hp (by norm_num) (by omega),by omega⟩))
+    exact catValid_neg (Fr:=lambdaFrame true) mir_Mn_neg (WrapPrefixCheck.catValid_prefix_full (1/5) one_fifth_pos mirN_twoTerm (nm:=16) (by rfl) depth 28 (max (NFr (1/mirNFrame.norm) (-1/mirNFrame.norm) 4 10) 44) ν hν (fun p hp h => ⟨not_dvd_sq_of_lt (q:=4) hp (by norm_num) (by omega),by omega⟩))
   · exact pcParams3
   · exact pcClasses3
   · intro x hx
