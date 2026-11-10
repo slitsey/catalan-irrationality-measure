@@ -9,7 +9,7 @@ project:
     For 0 < s < t <= 1 let Psi(s,t) = psi'(s) - psi'(t), where
     psi'(x) = sum_{n>=0} 1/(n+x)^2 is the trigamma function. We prove
     irrationality measures on three planes, the rational combinations of
-    L(2, chi_{-3}) and pi^2 and of zeta(3) and pi^2, with better bounds at
+    L(2, chi_{-3}) and pi^2, of zeta(3) and pi^2, and of zeta(3) and pi^4, with better bounds at
     special points, and for Psi(a/q,1) = psi'(a/q) - zeta(2) with q in {4,5,7}
     and gcd(a,q) = 1. With
     Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 and
@@ -301,12 +301,12 @@ alignment:
       lean: "TrigammaDifferences.plane3_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 118; zeta(3) endpoint reuses 6.0382."
+      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 118; the line b = 0 uses the zeta(3) bound 6.0382. Leibtag et al. prove the better bound 66.3 on this plane."
     - source: "Litsey, third plane construction (2026)"
       lean: "TrigammaDifferences.pi4_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "pi^4, dedicated pure triple-pole frame, exponent 75; illustrates the construction, no record claim. Marcovecchio-Zudilin give the stronger literature bound 12.51."
+      note: "pi^4, frame 15 psi''(z+1), exponent 75; included for completeness. Marcovecchio-Zudilin prove the better bound mu(zeta(4)) <= 12.51086."
 
 acknowledgements: >-
   OpenAI's proof of the irrationality of Catalan's constant and its Lean

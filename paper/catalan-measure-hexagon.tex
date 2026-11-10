@@ -213,20 +213,22 @@ A preprint of Sun \cite{Sun2026} claimed the irrationality of $G$, but Wachs
 \cite{Wachs2026} showed that its main estimate is not justified.
 
 \subsection{The companion paper}
-The companion paper \cite{Litsey2026b} proves irrationality measures on two planes of constants. For all
-$r,r'\in\Q$, not both zero,
-\[
- \mu(rL_{-3}+r'\pi^2)\le20.6622\qquad\text{and}\qquad\mu(r\zeta(3)+r'\pi^2)\le335.20.
-\]
-As far as we know, the second bound is the first irrationality measure valid on the whole plane.
-At special points of the first plane the bounds are smaller. For example, $\mu(L_{-3})\le13.6839$ and
-$\mu(L_{-3}\pm\pi^2/9)\le9.4913$. The constructions use differences of values of the trigamma function
+The companion paper \cite{Litsey2026b} proves irrationality measures on three planes of constants. One
+L\"owner structure produces all three. For all $r,r'\in\Q$, not both zero,
+\begin{gather*}
+ \mu(rL_{-3}+r'\pi^2)\le20.6622,\qquad\mu(r\zeta(3)+r'\pi^2)\le335.20,\\
+ \mu(r\zeta(3)+r'\pi^4)\le118.
+\end{gather*}
+The numbers on these planes were already known to be irrational, by unrelated methods. On the first plane the
+measure improves the published bound $24781$. On the second it is, as far as we know, the first measure valid on
+the whole plane. On the third a better bound is known. At special points the bounds are smaller. For
+example, $\mu(L_{-3})\le13.6839$ and $\mu(L_{-3}\pm\pi^2/9)\le9.4913$. The constructions use differences of values of the trigamma function
 $\psi'$,
 \[
  \Psi(s,t)=\psi'(s)-\psi'(t)=\sum_{n\ge0}\Bigl(\frac1{(n+s)^2}-\frac1{(n+t)^2}\Bigr)\qquad(0<s<t\le1).
 \]
-Catalan's constant is one of them: $G=\frac1{16}\Psi(\frac14,\frac34)$. The companion paper also proves
-measures for $G\pm5\pi^2/48$, which are rational multiples of $\Psi(\frac14,1)$ and $\Psi(\frac34,1)$, and for
+Catalan's constant is one of them: $G=\frac1{16}\Psi(\frac14,\frac34)$. The same structure reaches points off the planes.
+The companion paper proves measures for $G\pm5\pi^2/48$, which are rational multiples of $\Psi(\frac14,1)$ and $\Psi(\frac34,1)$, and for
 $\Psi(\frac k5,1)$ and $\Psi(\frac k7,1)$. For these numbers they are the first proofs of irrationality that
 we know of. The determinants of the companion paper are L\"owner matrices of digamma differences. They are
 much smaller than OpenAI's. That method also applies to $(\frac14,\frac34)$, but there its
@@ -2846,7 +2848,7 @@ Marcos Costa Santos~Carreira, \emph{Determinant constructions for the
 \bibitem{Carreira2026}
 \bysame, \emph{General designs and an irrationality exponent for {C}atalan's
   constant}, Preprint, 9 October 2026, revised 21 October and 7 November 2026,
-  \href{https://doi.org/10.5281/zenodo.23532239}{doi:10.5281/zenodo.23532239};
+  \href{https://doi.org/10.5281/zenodo.24042950}{doi:10.5281/zenodo.24042950};
   sources at \url{https://github.com/MarcosCarreira/catalan-designs}, 2026.
 
 \bibitem{Davis2026}
@@ -2913,8 +2915,8 @@ Masayoshi Hata, \emph{Rational approximations to {$\pi$} and some other
   numbers}, Acta Arith. \textbf{63} (1993), no.~4, 335--349.
 
 \bibitem{Jha2026}
-R.~K. Jha, \emph{A finite irrationality measure for {C}atalan's constant},
-  Preprint v1, October 8, 2026,
+Rohit~Kumar Jha, \emph{A finite irrationality measure for {C}atalan's
+  constant}, Preprint v1, October 8, 2026,
   \href{https://doi.org/10.5281/zenodo.23237269}{doi:10.5281/zenodo.23237269};
   Lean sources at \url{https://github.com/rohitkrjha/catalan-measure}, 2026.
 
@@ -2998,9 +3000,11 @@ Yu.~V. Nesterenko, \emph{On {C}atalan's constant}, Proc. Steklov Inst. Math.
 
 \bibitem{OpenAIPi2026}
 \bysame, \emph{The irrationality exponent of {$\pi$} is 2}, Preprint dated
-  September 24, 2026, released October 6, 2026,
-  \url{https://github.com/openai/math/tree/main/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026},
-  2026.
+  September 24, 2026, released October 6, 2026, with a Lean formalization,
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}{paper}
+  and
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/PiExponent}{Lean
+  formalization} (repository commit \texttt{fd4aeeb}), 2026.
 
 \bibitem{Prellberg26}
 Thomas Prellberg, \emph{Three irrationality results for the dilogarithm:

@@ -59,7 +59,7 @@
 }
 
 @misc{Jha2026,
-  author       = {Jha, R. K.},
+  author       = {Jha, Rohit Kumar},
   title        = {A finite irrationality measure for {C}atalan's constant},
   year         = {2026},
   howpublished = {Preprint v1, October 8, 2026, \href{https://doi.org/10.5281/zenodo.23237269}{doi:10.5281/zenodo.23237269};
@@ -94,12 +94,13 @@
   author       = {Costa Santos Carreira, Marcos},
   title        = {General designs and an irrationality exponent for {C}atalan's constant},
   year         = {2026},
-  howpublished = {Preprint, 9 October 2026, revised 21 October 2026, \href{https://doi.org/10.5281/zenodo.23532239}{doi:10.5281/zenodo.23532239};
+  howpublished = {Preprint, 9 October 2026, revised 21 October and 7 November 2026, \href{https://doi.org/10.5281/zenodo.24042950}{doi:10.5281/zenodo.24042950};
                   sources at \url{https://github.com/MarcosCarreira/catalan-designs}}
 }
+% v3: Zenodo record 24042950 (2026-11-07, concept DOI 10.5281/zenodo.23326324), read 10 Nov 2026 via the Zenodo API; Section 7, mu(G) <= 280.59.
 % Carreira2026: Zenodo record 23326325 gives publication date 2026-10-12 (version v1; creator listed as Costa Santos Carreira, Marcos).
 
-% Litsey2026: the author's mu(G) paper, Hexagon listing hexagon:2610.00187, unversioned because the 295 version follows this release.
+% Litsey2026: the author's mu(G) paper, Hexagon listing hexagon:2610.00187 (title "An Irrationality Measure for Catalan's Constant", read 10 Nov 2026).
 @misc{Litsey2026,
   author       = {Litsey, Sean},
   title        = {An irrationality measure for {C}atalan's constant},
@@ -504,7 +505,7 @@
 @misc{Repo,
   author       = {Litsey, Sean},
   title        = {catalan-irrationality-measure: {L}ean 4 formalization},
-  howpublished = {\url{https://github.com/slitsey/catalan-irrationality-measure}, branch \texttt{claude/thmA-lean}},
+  howpublished = {\url{https://github.com/slitsey/catalan-irrationality-measure}, branch \texttt{main}},
   year         = {2026}
 }
 
@@ -527,11 +528,62 @@
 }
 
 
+% Checked 10 Nov 2026 at arxiv.org/abs/2609.11276 (v1 10 Sep, v2 11 Sep 2026; abstract: mu(pi) < 7.101862832357);
+% also cited as [2] in Giraudin, arXiv:2609.26980.
+@misc{Bai26,
+  author        = {Bai, Yufei},
+  title         = {The irrationality measure of {$\pi$} is at most {$7.101862832357$}},
+  year          = {2026},
+  note          = {Preprint, 10 September 2026, revised 11 September 2026, \href{https://arxiv.org/abs/2609.11276}{arXiv:2609.11276}},
+  eprint        = {2609.11276},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+% Davis2026: checked 1 Nov 2026. README and NOTICE read at commit 3c45153 (raw.githubusercontent):
+% mu(G) <= 528.23288 = 6602911/12500, design (58,9,3,5,3), nodes from the roots of T_K(P(t)) with a rational
+% P of degree 130, support trimmed on the negative side, rho = 299.43407727; reuses the design, nonvanishing,
+% denominator, rank profile and trials of slitsey/catalan-irrationality-measure (pinned aa2a42f).
+% Verifier issue bigospeedrun/verifier#87: "Lean Verified" for commit 3c45153, 31 Oct 2026.
+% Author name from the GitHub profile of 1337isnot1337 ("Cinna Davis").
+@misc{Davis2026,
+  author       = {Davis, Cinna},
+  title        = {Catalan's constant: irrationality exponent research},
+  year         = {2026},
+  howpublished = {GitHub repository, \url{https://github.com/1337isnot1337/catalan-constant};
+                  Lean verification at \url{https://github.com/bigospeedrun/verifier/issues/87}, October 31}
+}
+
+% Checked 6 Nov 2026. darkhipo/catalan-constant-gen5 at 47a36df5 (2 Nov 2026), bound 1056463/2000.
+% Verifier issue 103 closed 2 Nov; leaderboard (6 Nov) shows Lean Verified.
+% Credit "MultiAgency swarm" per bigospeedrun/site issue 15 (5 Nov 2026): the account is shared
+% and the work was done by the agent swarm. Fork of Davis's repository at f90b5ab.
+% The README at 47a36df still says 528.2327; the bound 528.2315 is in the Lean submission.
+@misc{MultiAgency2026,
+  author       = {{MultiAgency swarm}},
+  title        = {Catalan: {$\mu(G)\le528.2315$}},
+  year         = {2026},
+  howpublished = {GitHub repository, \url{https://github.com/darkhipo/catalan-constant-gen5};
+                  verifier submission \url{https://github.com/bigospeedrun/verifier/issues/103}, November 2}
+}
+
 @misc{OpenAIPi2026,
   author       = {{OpenAI}},
   title        = {The irrationality exponent of {$\pi$} is 2},
   year         = {2026},
-  howpublished = {Preprint dated September 24, 2026, released October 6, 2026, \url{https://github.com/openai/math/tree/main/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}}
+  howpublished = {Preprint dated September 24, 2026, released October 6, 2026, with a Lean formalization,
+                  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}{paper}
+                  and \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/PiExponent}{Lean formalization}
+                  (repository commit \texttt{fd4aeeb})}
+}
+
+% Palomar registry record read 6 Nov 2026 (data.palomar-registry.org). Irrationality only, no measure.
+@misc{Fasten26,
+  author       = {Fasten, Azriel},
+  title        = {Irrationality of the {R}iemann zeta value at five},
+  year         = {2026},
+  howpublished = {Lean formalization, Palomar registry entry PALOMAR-2026-09-25-000018,
+                  \url{https://github.com/realazthat/zeta5-lean2}, commit \texttt{2fa4e82}}
 }
 
 @misc{Fauzan2026,

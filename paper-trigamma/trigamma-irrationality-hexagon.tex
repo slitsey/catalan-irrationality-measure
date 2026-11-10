@@ -54,6 +54,7 @@
 \newcommand{\MuPlaneA}{20.6622}
 \newcommand{\MuPlaneB}{335.20}
 \newcommand{\MuPlaneC}{118}
+\newcommand{\MuPiFour}{75}
 \newcommand{\MuZetaThree}{6.0382}
 \newcommand{\MuDipA}{14}
 \newcommand{\MuDipB}{15.359}
@@ -70,6 +71,7 @@
 \newcommand{\LamDC}{3.4140176}    \newcommand{\DDC}{3.8109776}    \newcommand{\gDC}{6.9434368}   \newcommand{\ExpDC}{17.49153}
 \newcommand{\LamPlB}{3.4768376}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.0886}
 \newcommand{\LamPlC}{3.2941777}   \newcommand{\DPlC}{3.3533776}   \newcommand{\gPlC}{6.9643459}  \newcommand{\ExpPlC}{117.6410}
+\newcommand{\LamPiFour}{3.2600726} \newcommand{\ExpPiFour}{74.6406}
 \newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.034884}
 \newcommand{\MuChiExact}{13.683844}
 
@@ -88,21 +90,24 @@
 Hermite interpolation, Andr\'eief's identity, logarithmic energy, formal verification, Lean}
 
 \begin{abstract}
-Let $\mu$ denote the irrationality exponent. We prove that $\mu(aL(2,\chi_{-3})+b\pi^2)\le\MuPlaneA$ and
-$\mu(a\zeta(3)+b\pi^2)\le\MuPlaneB$ for all rationals $a$ and $b$, not both zero. The best published bound on the
-first plane was $24781$, due to Calegari, Dimitrov and Tang. Every number on the second plane is
-irrational by a theorem of Q.~Tang, and as far as we know no irrationality measure valid on the whole plane was known. At special
-points of the first plane the bound is lower. We prove $\mu(L(2,\chi_{-3}))\le\MuChi$, and the bounds $\MuThirdsU$,
-$\MuDipA$, $\MuDipB$ and $\MuDipC$ for $L(2,\chi_{-3})\pm\pi^2/9$, $\pm2\pi^2/27$, $\pm\pi^2/27$ and $\pm\pi^2/18$. For
-completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$, $\mu(\pi^2)\le\MuHalvesU$ and
-$\mu(a\zeta(3)+b\pi^4)\le\MuPlaneC$, which are weaker than the known bounds.
+Let $\mu$ denote the irrationality exponent. One construction, by determinants of rectangular L\"owner matrices of
+rational combinations of the digamma function and its derivatives at integer nodes, gives irrationality measures on
+three planes of numbers. For all rationals $a$ and $b$, not both zero, we prove
+$\mu(aL(2,\chi_{-3})+b\pi^2)\le\MuPlaneA$, $\mu(a\zeta(3)+b\pi^2)\le\MuPlaneB$ and
+$\mu(a\zeta(3)+b\pi^4)\le\MuPlaneC$. The irrationality of these numbers was proved recently by other methods: on the
+first plane by Calegari, Dimitrov and Tang, on the second by Q.~Tang and on the third by Lai. On the first plane the
+best published bound was $24781$, due to Calegari, Dimitrov and Tang. On the second plane, as far as we know, no
+irrationality measure was known. On the third plane the bound $66.3$ of Leibtag et al.\ is better than ours.
 
-The approximations are determinants of rectangular L\"owner matrices, the matrices of divided differences, of
-rational combinations of the digamma function and its derivatives at integer nodes. Many of the numbers above are
-differences of two values of the trigamma function. The same construction gives
-$\mu(G\pm5\pi^2/48)\le\MuLamU$, where $G$ is Catalan's constant, and bounds $\MuFifthsU$ and $\MuSeventhsU$ for the
-numbers $\psi'(k/5)-\pi^2/6$ and $\psi'(k/7)-\pi^2/6$ with $k$ prime to the denominator. For these numbers we know of no
-other proof of irrationality. The denominators are bounded prime by prime, and on each plane one table of local
+At special points of the planes the bounds are lower. We prove $\mu(L(2,\chi_{-3}))\le\MuChi$, and the bounds
+$\MuThirdsU$, $\MuDipA$, $\MuDipB$ and $\MuDipC$ for $L(2,\chi_{-3})\pm\pi^2/9$, $\pm2\pi^2/27$, $\pm\pi^2/27$ and
+$\pm\pi^2/18$. For completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$, $\mu(\pi^2)\le\MuHalvesU$ and
+$\mu(\pi^4)\le\MuPiFour$, which are weaker than the known bounds.
+
+The construction also reaches numbers off the planes, many of which are differences of two values of the trigamma
+function. It gives $\mu(G\pm5\pi^2/48)\le\MuLamU$, where $G$ is Catalan's constant, and bounds $\MuFifthsU$ and
+$\MuSeventhsU$ for the numbers $\psi'(k/5)-\pi^2/6$ and $\psi'(k/7)-\pi^2/6$ with $k$ prime to the denominator. For
+these numbers we know of no other proof of irrationality. The denominators are bounded prime by prime, and on each plane one table of local
 bounds and one decay certificate serve every point. Nonvanishing at rational points follows from Hermite
 interpolation in characteristic zero. The size of the determinants is bounded by Andr\'eief's identity and an energy
 estimate. The proofs are formalized in Lean~4.
@@ -124,8 +129,11 @@ Let $\chi_{-3}$ be the nontrivial Dirichlet character modulo $3$. We write
  \Lt=L(2,\chi_{-3})=\sum_{n\ge0}\Bigl(\frac1{(3n+1)^2}-\frac1{(3n+2)^2}\Bigr)=0.78130\,24128\ldots
 \]
 Calegari, Dimitrov and Tang gave the first proof that $\Lt$ is irrational \cite{CDT2024}, and we call $\Lt$ the
-Calegari--Dimitrov--Tang constant. Our
-first main result is a uniform irrationality measure on the plane spanned by $\Lt$ and $\pi^2$ modulo $\Q$.
+Calegari--Dimitrov--Tang constant.
+
+Our main results are uniform irrationality measures on three planes of numbers. One L\"owner structure, described
+below, produces all three. The first plane is spanned by $\Lt$ and $\pi^2$ modulo $\Q$, the second by $\zeta(3)$ and
+$\pi^2$, and the third by $\zeta(3)$ and $\pi^4$.
 
 \begin{theorem}[first plane]\label{thm:plane1}
 Let $a$ and $b$ be rational numbers, not both zero. Then $a\Lt+b\pi^2$ is irrational and
@@ -134,11 +142,38 @@ Let $a$ and $b$ be rational numbers, not both zero. Then $a\Lt+b\pi^2$ is irrati
 \]
 \end{theorem}
 
-At five pairs of points of the plane we prove better bounds. They do not follow from Theorem~\ref{thm:plane1}. Each
-has its own proof. The point $\Lt$ uses its own construction (Section~\ref{sec:chi3-quarter}). The points
-$\Lt\pm\pi^2/9$ use the construction of the off-plane results below (Section~\ref{sec:proof}). The other three pairs
-use the functions of the plane with further arithmetic that holds only at these points (\S\ref{ssec:levels}). The pair
-$\Lt\pm\pi^2/18$ also has its own geometry and decay certificate.
+\begin{theorem}[second plane]\label{thm:plane2}
+Let $a$ and $b$ be rational numbers, not both zero. Then
+\[
+ \mu(a\zeta(3)+b\pi^2)\le\MuPlaneB .
+\]
+\end{theorem}
+
+\begin{theorem}[third plane]\label{thm:plane3}
+Let $a$ and $b$ be rational numbers, not both zero. Then
+\[
+ \mu(a\zeta(3)+b\pi^4)\le\MuPlaneC .
+\]
+\end{theorem}
+
+The irrationality of the numbers on these planes, that is, the linear independence of $1$ and the two spanning
+numbers over $\Q$, was proved in the last two years by methods unrelated to ours. Calegari, Dimitrov and Tang proved
+it for the first plane with an arithmetic holonomy bound \cite{CDT2024}. Q.~Tang proved it for the second plane in
+Lean \cite{Tang26}. Lai proved it for the third plane with Fauzan's determinant method and the simultaneous
+approximations of Zudilin and of Dauguet and Zudilin \cite{Lai2026}.
+
+On two of the planes our measures are better than those known. On the first plane the best published bound was
+$24781$, due to Calegari, Dimitrov and Tang \cite{CDT2025}. As far as we know, Theorem~\ref{thm:plane2} is the first
+irrationality measure valid on the whole of it. On the third plane, Leibtag et al.\ \cite{LBKWSK26} proved
+$\mu(a\zeta(3)+b\zeta(4))<66.3$, which is better than Theorem~\ref{thm:plane3}. The third plane is included because its
+function has a pole of order three, and it shows that the structure handles such a pole.
+
+At special points of the planes we prove better bounds. They do not follow from the plane theorems, and each has its
+own proof. On the first plane there are five pairs of points. The point $\Lt$ uses its own construction
+(Section~\ref{sec:chi3-quarter}). The points $\Lt\pm\pi^2/9$ use the construction of the off-plane results below
+(Section~\ref{sec:proof}). The other three pairs use the functions of the plane with further arithmetic that holds
+only at these points (\S\ref{ssec:levels}). The pair $\Lt\pm\pi^2/18$ also has its own geometry and decay
+certificate.
 
 \begin{theorem}[special points of the first plane]\label{thm:points1}
 The following bounds hold.
@@ -151,39 +186,22 @@ The following bounds hold.
 \end{enumerate}
 \end{theorem}
 
-Our second main result concerns the plane spanned by $\zeta(3)$ and $\pi^2$ modulo $\Q$. It contains $\zeta(2)+\zeta(3)$, and
-$\zeta(3)$ plus any rational multiple of $\zeta(2)$.
-
-\begin{theorem}[second plane]\label{thm:plane2}
-Let $a$ and $b$ be rational numbers, not both zero. Then
-\[
- \mu(a\zeta(3)+b\pi^2)\le\MuPlaneB .
-\]
-\end{theorem}
-
-As far as we know, this is the first irrationality measure valid on the whole plane. The irrationality of these numbers
-is due to Q.~Tang, who proved in Lean that $1$, $\zeta(2)$ and $\zeta(3)$ are linearly independent over $\Q$ \cite{Tang26}.
-At the two ends of the plane we prove the following bounds, each by its own argument (\S\ref{ssec:zeta3} and
-Section~\ref{sec:proof}). We include them for completeness. Both are weaker than the bounds $\mu(\zeta(3))<5.4197$ and
-$\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
+At the two ends of the second plane, and at the point $\pi^4$ of the third, we prove the following bounds, each by its
+own argument (\S\ref{ssec:zeta3}, Section~\ref{sec:proof} and \S\ref{ssec:pi4}). We include them for completeness. They
+are weaker than the bounds $\mu(\zeta(3))<5.4197$ and $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26} and the
+bound $\mu(\zeta(4))\le12.51085940\ldots$ of Marcovecchio and Zudilin \cite{MarcovecchioZudilin20}.
 
 \begin{theorem}[the ends of the second plane]\label{thm:ends}
 $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
 \end{theorem}
 
-The same construction reaches a third plane, spanned by $\zeta(3)$ and $\pi^4$ modulo $\Q$. Here the function has a pole
-of order three, and we include the result to show that the method handles it. The bound is weaker than the bound
-$\mu(a\zeta(3)+b\zeta(4))<66.3$ of Leibtag et al.\ \cite{LBKWSK26} on the same plane.
-
-\begin{theorem}[third plane]\label{thm:plane3}
-Let $a$ and $b$ be rational numbers, not both zero. Then
-\[
- \mu(a\zeta(3)+b\pi^4)\le\MuPlaneC .
-\]
+\begin{theorem}[the point $\pi^4$]\label{thm:pi4}
+$\mu(\pi^4)\le\MuPiFour$.
 \end{theorem}
 
-On the line $b=0$ the theorem follows from Theorem~\ref{thm:ends}. On the line $a=0$ it gives $\mu(\pi^4)\le\MuPlaneC$.
-Marcovecchio and Zudilin proved the much better bound $\mu(\zeta(4))\le12.51085940\ldots$ \cite{MarcovecchioZudilin20}.
+On the line $b=0$ Theorem~\ref{thm:plane3} follows from Theorem~\ref{thm:ends}. Theorem~\ref{thm:pi4} uses the
+function of the third plane at $a=0$, with one further local bound for the denominators that comes from eliminating
+complete periods.
 
 \emph{The construction.} All these bounds come from one construction. Let $\psi$ be the digamma function, the
 logarithmic derivative of Euler's gamma function. The approximations to a number $\xi$ are determinants of L\"owner
@@ -236,17 +254,17 @@ sufficiently large integers $q$. Table~\ref{tab:main} collects the results.
 Number & Trigamma form & Bound on $\mu$ & Other bound\\
 \midrule
 $a\Lt+b\pi^2$ & & $\MuPlaneA$ & $24781$ \cite{CDT2025}\\
+$a\zeta(3)+b\pi^2$ & & $\MuPlaneB$ & none\\
+$a\zeta(3)+b\pi^4$ & & $\MuPlaneC$ & $66.3$ \cite{LBKWSK26}\\
+\addlinespace
 $\Lt$ & $\Psi(\frac13,\frac23)$ & $\MuChi$ & $24781$\\
 $\Lt\pm\frac{\pi^2}{9}$ & $\Psi(\frac13,1)$,\; $\Psi(\frac23,1)$ & $\MuThirdsU$ & $24781$\\
 $\Lt\pm\frac{2\pi^2}{27}$ & $\Psi(\frac16,\frac13)$,\; $\Psi(\frac23,\frac56)$ & $\MuDipA$ & $24781$\\
 $\Lt\pm\frac{\pi^2}{27}$ & $\Psi(\frac13,\frac12)$,\; $\Psi(\frac12,\frac23)$ & $\MuDipB$ & $24781$\\
 $\Lt\pm\frac{\pi^2}{18}$ & & $\MuDipC$ & $24781$\\
-\addlinespace
-$a\zeta(3)+b\pi^2$ & & $\MuPlaneB$ & none\\
 $\zeta(3)$ & & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
 $\pi^2$ & $\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
-\addlinespace
-$a\zeta(3)+b\pi^4$ & & $\MuPlaneC$ & $66.3$ \cite{LBKWSK26}\\
+$\pi^4$ & & $\MuPiFour$ & $12.51086$ \cite{MarcovecchioZudilin20}\\
 \addlinespace
 $G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$,\; $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
 $\psi'(\frac k5)-\frac{\pi^2}{6}$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
@@ -255,7 +273,7 @@ $\psi'(\frac k7)-\frac{\pi^2}{6}$ & $\Psi(\frac k7,1)$ & $\MuSeventhsU$ & none\\
 \end{tabular}
 \caption{The results of this paper. The trigamma form is a rational multiple of the number, where one exists. In the
 plane rows $a$ and $b$ are rationals, not both zero. The last column gives the best bound from other work that we know.
-``None'' means that we know of no irrationality measure. A bound of about $9.7\cdot10^3$ for the first plane follows from an unrefereed supplement to
+``None'' means that we know of no irrationality measure. A bound of $1+10^4$ for the first plane follows from an unrefereed supplement to
 \cite{LBKWSK26} (\S\ref{ssec:background}).}\label{tab:main}
 \end{table}
 
@@ -263,8 +281,8 @@ Other named numbers on the first plane are covered by Theorem~\ref{thm:plane1}, 
 $24781$. Examples are $\psi'(\frac13)$, $\psi'(\frac23)$, $\psi'(\frac16)$ and $\psi'(\frac56)$, whose irrationality
 Calegari, Dimitrov and Tang state explicitly \cite[Corollary~B]{CDT2024}. The Clausen value
 $\mathrm{Cl}_2(\frac\pi3)=\frac{3\sqrt3}4\Lt$ and the Mahler measure $m(1+x+y)=\frac{3\sqrt3}{4\pi}\Lt$ are not on the
-plane, and our results say nothing about them. On the second plane, Theorem~\ref{thm:plane2} gives for example
-$\mu(\zeta(2)+\zeta(3))\le\MuPlaneB$, but nothing for $\zeta(3)/\pi^2$. The nearest numbers that the method misses are
+plane, and our results say nothing about them. Theorem~\ref{thm:plane2} says nothing about
+$\zeta(3)/\pi^2$, which is not on the second plane. The nearest numbers that the method misses are
 discussed in \S\ref{ssec:unreached}.
 
 All the theorems above have been verified in the Lean~4 proof assistant, together with every theorem, proposition and
@@ -284,11 +302,13 @@ of the first plane. Theorem~\ref{thm:plane1} improves it to $\MuPlaneA$ everywhe
 improves it further at five pairs of points. Leibtag et al.\ \cite{LBKWSK26} find numerically that Ap\'ery-like
 approximations from conservative matrix fields have positive approximation exponents for $\Lt\pm\pi^2/9$. A supplement
 to their paper uses one such field to give an Ap\'ery-style proof of the theorem of Calegari, Dimitrov and Tang. For
-every point of the plane it proves an approximation exponent $\delta>0.000103$. With the bound $\mu\le1+1/\delta$ of their \S2 this gives $\mu\lesssim9.7\cdot10^3$, a consequence not stated there. The
+every point of the plane it proves an approximation exponent $\delta>10^{-4}$, and it certifies the comparison value
+$0.000103\ldots$. With the bound $\mu\le1+1/\delta$ of their \S2 the proved exponent gives $\mu\le1+10^4$, a
+consequence not stated there. The comparison value would give about $9.7\cdot10^3$. The
 supplement is unrefereed and is not part of the arXiv version.
 
-\emph{The values $\zeta(2)$, $\zeta(3)$ and the second plane.} Ap\'ery proved that $\zeta(2)$ and $\zeta(3)$ are
-irrational \cite{Apery79}, and Beukers gave his integral proofs \cite{Beukers79}. Rhin and Viola obtained
+\emph{The values $\zeta(2)$, $\zeta(3)$ and the second plane.} Legendre proved that $\pi^2$ is irrational. Ap\'ery
+proved that $\zeta(3)$ is irrational and gave a new proof for $\zeta(2)$ \cite{Apery79}, and Beukers gave his integral proofs \cite{Beukers79}. Rhin and Viola obtained
 $\mu(\zeta(2))<5.441243$ and $\mu(\zeta(3))<5.513891$ with permutation groups of integrals \cite{RhinViola96,RhinViola01}.
 Zudilin lowered the bound for $\zeta(2)$ to $5.095412$ \cite{Zudilin14}. Giraudin lowered the bounds to $5.0193784$ for
 $\zeta(2)$ \cite{Giraudin26} and to $5.5138800$ for $\zeta(3)$ \cite{Giraudin26z3}. Leibtag, Barkan, Kalisch, Weinbaum,
@@ -298,19 +318,22 @@ $\mu(\zeta(3))<5.4197$. They also proved the uniform bound $\mu(a\zeta(3)+b\zeta
 $\zeta(3)$ and $\pi^4$. This is the closest analogue of Theorem~\ref{thm:plane2}, and it is better than our
 Theorem~\ref{thm:plane3} on the same plane. For $\zeta(4)$ alone, Marcovecchio and Zudilin
 \cite{MarcovecchioZudilin20} obtained $\mu(\zeta(4))\le12.51085940\ldots$ from hypergeometric rational approximations.
+This is much better than Theorem~\ref{thm:pi4}.
 The linear forms in $1$, $\zeta(2)$
 and $\zeta(3)$ have a longer history. Dauguet and Zudilin \cite{DauguetZudilin14} bounded such forms from below when
 the coefficients satisfy divisibility and size conditions. They noted that this does not give the linear independence of
 $1$, $\zeta(2)$, $\zeta(3)$, which remained open. For a fixed number $a\zeta(3)+b\zeta(2)$ their theorem
 gives no measure. In 2026 Q.~Tang \cite{Tang26} proved the linear independence in Lean. This proof is a formalization
 with no accompanying written paper. Lai
-\cite{Lai2026} then proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent. As far as we know, no
+\cite{Lai2026} then proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent, and Leibtag et al.\ gave a
+second proof with a uniform measure \cite{LBKWSK26}. As far as we know, no
 irrationality measure valid on the whole plane of $\zeta(3)$ and $\pi^2$ was known before Theorem~\ref{thm:plane2}.
 
 \emph{Catalan's constant.} In October 2026 OpenAI \cite{OpenAI2026} proved that $G$ is irrational and formalized the
 proof in Lean. Sun's preprint \cite{Sun2026} had claimed a proof of the irrationality of $G$. Wachs \cite{Wachs2026}
 reports that its main estimate is not justified. Finite irrationality exponents for $G$ were obtained after OpenAI's
-proof by Jha \cite{Jha2026}, Carreira \cite{Carreira2026}, Bojnal \cite{Bojnal2026}, Xu \cite{Xu2026} and the author
+proof by Jha \cite{Jha2026}, Carreira \cite{Carreira2026}, Bojnal \cite{Bojnal2026}, Xu \cite{Xu2026}, Davis \cite{Davis2026}, the MultiAgency agent swarm
+\cite{MultiAgency2026} and the author
 \cite{Litsey2026}. Carreira \cite{Carreira2026b} also records attempts to carry the determinant method to $\beta(4)$. For
 the arithmetic of $G$ and related values before these results see
 \cite{RivoalZudilin2003,Zudilin2003,Zudilin02Cheb,KrattRivoal08,KrattZudilin19} and the survey \cite{Zudilin19Survey}.
@@ -325,12 +348,14 @@ them. Prellberg \cite{Prellberg26} proved that $\mathrm{Li}_2(1/5)$ is irrationa
 
 \emph{Recent results.} Since September 2026 a series of new results has appeared in this area. Several of them were
 obtained with AI systems. OpenAI proved $\mu(\pi)=2$, with a Lean formalization \cite{OpenAIPi2026}. This improves the
-bound $\mu(\pi)<7.1033$ of Zeilberger and Zudilin \cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log r)=2$
+bound $\mu(\pi)<7.101863$ of Bai \cite{Bai26}, which in turn lowered the bound $7.1033$ of Zeilberger and Zudilin
+\cite{ZeilbergerZudilin20}. Liu, Jiang and Zhang proved $\mu(\log r)=2$
 for every rational $r>0$ with $r\ne1$ \cite{LiuJiangZhang26}, improving the classical bound $\mu(\log2)<3.5746$ of
 Marcovecchio \cite{Marcovecchio09}. Their result also covers nonzero rational combinations of such logarithms. Prellberg
 \cite{Prellberg26} proved that $\mathrm{Li}_2(-1/4)$, $\mathrm{Li}_2(1/5)$ and $\mathrm{Li}_2(-1/3)$ are irrational. These
 are three cases left open in \cite{CDT2024}. The proof uses the integrals of Rhin--Viola and Viola--Zudilin. Fauzan
-\cite{Fauzan2026} announced a proof that $\zeta(5)$ is irrational, using rationally normalized Hankel determinants.
+proved that $\zeta(5)$ is irrational, using rationally normalized Hankel determinants \cite{Fauzan2026}, and Fasten
+verified the irrationality statement in Lean \cite{Fasten26}.
 
 \emph{Determinant methods.} Irrationality proofs built on determinants of large size have a precedent in Zudilin's
 determinantal criterion with Hankel determinants \cite{Zudilin}. The preprint of Liu, Jiang and Zhang on logarithms
@@ -372,9 +397,10 @@ and both the arithmetic and the analysis need a new argument. For the third plan
 The proofs rest on the following ideas. Section~\ref{sec:overview} explains the first five in more detail.
 \begin{enumerate}[leftmargin=*]
 \item \emph{L\"owner determinants of digamma combinations.} The approximations are determinants of L\"owner matrices,
- the matrices of divided differences, of a combination $F$ of $\psi(z+s)$ and $\psi'(z+s)$ at integer nodes. The rows
- and columns share a long block of nodes, which carries the variable. A further border of row nodes and column nodes
- alternates beyond it. The degree in the variable stays small, while the decay is that of a larger node set.
+ the matrices of divided differences, of a combination $F$ of $\psi(z+s)$, $\psi'(z+s)$ and $\psi''(z+s)$ at integer
+ nodes. The rows and columns share a long block of nodes, which carries the variable. A further border of row nodes and
+ column nodes alternates beyond it. The degree in the variable stays small, while the decay is that of a larger node
+ set. This one structure gives all three planes. Only the function $F$ changes.
 \item \emph{Denominators from local bounds.} For each prime we prove a list of upper bounds for the valuation of the
  common denominator. Each is an explicit integer expression in a few integers attached to the prime. Integrated
  against $\log p$, their minimum gives the denominator exponent, and checking it reduces to finitely many comparisons of
@@ -406,7 +432,10 @@ The proofs rest on the following ideas. Section~\ref{sec:overview} explains the 
  by the Cauchy determinant of a fixed function with simple poles. The decay certificate of that function then applies.
 \item \emph{Assignment bounds for a pole of any order.} For a single shift with a pole of order $h-1$, four explicit
  systems of potentials in Lemma~\ref{lem:trop} bound the denominators. They use no rank argument. Their minimum
- integrates to a closed form in $h$ and the geometry parameter, and gives the third plane.
+ integrates to a closed form in $h$ and the geometry parameter, and gives the third plane. The elimination of the
+ complete periods below the border, as in item~7, carries over to a pole of any order. It gives a fifth bound. When the
+ border meets no multiple of $p$, this bound lies below the first one by two units for each border pair. It gives the
+ bound for $\pi^4$.
 \end{enumerate}
 The constants of the proofs are listed in Table~\ref{tab:data}.
 
@@ -416,7 +445,7 @@ deduction. Section~\ref{sec:construction} gives the construction. Sections~\ref{
 and~\ref{sec:decay} prove the three estimates for differences of two digamma functions. They also prove nonvanishing and
 decay for general combinations. Section~\ref{sec:plane1} proves Theorem~\ref{thm:plane1} and the special points of
 Theorem~\ref{thm:points1}, and Section~\ref{sec:chi3-quarter} treats the point $\Lt$ itself. Section~\ref{sec:plane2}
-proves Theorem~\ref{thm:plane2}, and Section~\ref{sec:plane3} proves Theorem~\ref{thm:plane3}. Section~\ref{sec:proof}
+proves Theorem~\ref{thm:plane2}, and Section~\ref{sec:plane3} proves Theorems~\ref{thm:plane3} and~\ref{thm:pi4}. Section~\ref{sec:proof}
 completes the proofs and gives the data.
 Section~\ref{sec:limits} discusses the limits of the method and the nearest constants that it does not reach.
 Section~\ref{sec:lean} describes the formalization. The
@@ -2742,18 +2771,22 @@ Section~\ref{sec:proof}, together with Theorem~\ref{thm:offplane}.
 %% =====================================================================
 \section{The third plane}\label{sec:plane3}
 
-In this section we prove Theorem~\ref{thm:plane3}. We use the frames $F^{(3)}_{\gamma_2,\gamma_3}$ of
-\S\ref{ssec:frames}, with rationals $\gamma_2$ and $\gamma_3\ne0$, and the alternating geometry of parameter
+In this section we prove Theorems~\ref{thm:plane3} and~\ref{thm:pi4}. We use the frames $F^{(3)}_{\gamma_2,\gamma_3}$
+of \S\ref{ssec:frames}, with rationals $\gamma_2$ and $\gamma_3\ne0$, and the alternating geometry of parameter
 $c=\frac1{10}$. So $\alpha=\frac1{20}$ and $m=\lceil r/20-\frac12\rceil$. The pole at the shift $1$ now has order
-three. The elimination of complete periods of Section~\ref{sec:plane2} is not needed here. Four assignment bounds,
-each given by explicit potentials, already give a denominator exponent below the decay rate.
+three. For the plane, the elimination of complete periods of Section~\ref{sec:plane2} is not needed. Four assignment
+bounds, each given by explicit potentials, already give a denominator exponent below the decay rate. For $\pi^4$ we
+add a fifth bound, which comes from that elimination (\S\ref{ssec:pi4}).
 
 \subsection{Weights}
-We state the bounds for a single shift with a pole of any order. Let $h\ge3$, and let $F$ be a combination of
-$\psi'(z+1),\dots,\psi^{(h-2)}(z+1)$ with rational coefficients, the last one nonzero. Its increment is
-$\delta(k-1)=\sum_{j=2}^{h-1}c_jk^{-j}$ with rationals $c_j$. The frames of the third plane are the case $h=4$, with
-$c_2=-\gamma_2$ and $c_3=2\gamma_3$. As in Section~\ref{sec:plane2}, write a node as $t=jp+\omega$ with $0\le\omega<p$,
-and call $j$ its period.
+We state the bounds for a single shift with a pole of any order. Let $h\ge2$, and let $c_1,\dots,c_{h-1}$ be rationals,
+any of which may vanish. Let $M$ be the matrix of \S\ref{ssec:frames} built from the increment
+\[
+ \delta(k-1)=\sum_{j=1}^{h-1}c_jk^{-j}\qquad(k\ge1),
+\]
+the increment of a rational combination of $\psi(z+1),\psi'(z+1),\dots,\psi^{(h-2)}(z+1)$. The frames of the third
+plane are the case $h=4$, with $c_1=0$, $c_2=-\gamma_2$ and $c_3=2\gamma_3$. As in Section~\ref{sec:plane2}, write a
+node as $t=jp+\omega$ with $0\le\omega<p$, and call $j$ its period.
 
 \begin{lemma}[weights]\label{lem:weights3}
 Let $p$ be an odd prime with $p^2>\bar N$ that divides no denominator of the $c_j$. Let $W(t,t')$ be $0$ for distinct
@@ -2815,7 +2848,7 @@ $2(r-p)+2(h-1)(r-p)+h(2p-r)+(h-1)(\bar N-2p)$, which is the stated bound.
 \end{proof}
 
 \subsection{The denominator exponent}
-Homogenise with $\theta=p/r$ and $m\mapsto\alpha r$ as in \S\ref{ssec:profiles}. For $0<\alpha\le\frac13$ the minimum
+Homogenise with $\theta=p/r$ and $m\mapsto\alpha r$ as in \S\ref{ssec:profiles}. For $h\ge3$ and $0<\alpha\le\frac13$ the minimum
 $\mathcal P_h(\theta)$ of the four homogenised bounds is
 \begin{center}
 {\renewcommand{\arraystretch}{1.2}
@@ -2891,6 +2924,106 @@ nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at the even scal
 
 The thresholds depend on $(a,b)$. No uniformity in $(a,b)$ is claimed.
 
+\subsection{The point $\pi^4$}\label{ssec:pi4}
+For Theorem~\ref{thm:pi4} we take $\gamma_2=0$ and $\gamma_3=15$. The frame is $F^{(3)}_{0,15}=15\,\psi''(z+1)$, and its
+number is $\xi=\pi^4$ by \S\ref{ssec:frames}. Its decay and nonvanishing are those of the plane. The gain is in the
+denominators, through one more local bound. It eliminates the complete periods below the border, as in part~(i) of
+Theorem~\ref{thm:rows2}, now for a pole of order $h-1$.
+
+\begin{proposition}\label{prop:rows3e}
+Let $h\ge3$, and let $p\ge5$ be a prime with $p^2>2\bar N+2p$ that divides no denominator of the $c_j$. Suppose that
+$2m<p$. Let $A=(\lfloor r/p\rfloor+1)p$ be the least multiple of $p$ above $r$, and put
+$\beta=\max(0,\min(A-r,\bar N-A))$. Then every member satisfies
+\[
+ e_p(r,I)\le hr+(h-3)m+2\beta .\tag{Q5}
+\]
+\end{proposition}
+
+So $\beta$ is the number of border nodes on the smaller side of $A$, and $\beta=0$ when the border lies below $A$. Since
+$2m<p$, the bound (Q1) is $hr+(h-1)m$. So (Q5) lies below (Q1) by $2(m-\beta)$.
+
+\begin{proof}
+We follow \S\ref{sec:plane2} with $\kappa=A/p$ and $k'=0$. Put $\bar N'=\max(\bar N,A)\le\bar N+p$, so that $p^2>2\bar N'$,
+and let $H=M+p^{-h}T\Id$ on $[0,\bar N')$. The pivot consists of the complete periods $[0,A)$, on the rows and on the
+columns. Lemma~\ref{lem:displace} uses only the displacement identity, so it holds for this $H$.
+
+\emph{The pivot.} Let $S(j)$ be the sum of the terms $c_ik^{-i}$ of $f_t$ with $p\mid k$, for a node $t$ of the period
+$j$, and $G(j)$ the same for $e_t$. Then $f_t-S(j)$ and $e_t-G(j)$ are $p$-integers. Since $p^2>\bar N'$, the numbers
+$s(j)=p^{h-1}S(j)$ and $s'(j)=p^hG(j)$ are $p$-integers. Define $B$ on the period indices $[0,\kappa)$ by
+\[
+ B(l,j)=\frac{s(j)-s(l)}{j-l}\ (l\ne j),\qquad B(j,j)=T-s'(j).
+\]
+If $t\equiv t'\pmod p$, then $p^hH(t,t')\equiv B(j_t,j_{t'})\pmod{p^{h-1}}$. If $t\not\equiv t'$, then
+$p^hH(t,t')\in p\cO$, because every entry has valuation at least $-(h-1)$ off the diagonal. So $p^hH[[0,A),[0,A)]$ is
+congruent modulo $p$ to a direct sum of copies of $\bar B$, one for each residue class. The variable $T$ occurs only on
+the diagonal of $B$, so $\det\bar B$ is monic in $T$, and the pivot is invertible over $\cO$. No coefficient $c_j$ needs
+to be a $p$-unit.
+
+\emph{The weights of the Schur complement.} Since $h\ge3$, the right side $(\mathbf 1,p^{h-1}f)$ of the pivot system is,
+modulo $p^2$, a function of the period. The pivot has the same complete periods on both sides, so $B$ is symmetric and
+every residue class carries the same matrix. The proof of Proposition~\ref{prop:gen} then applies with the halves
+omitted, with $p^3$ and $p^2$ replaced by $p^h$ and $p^{h-1}$, and with $\delta_{\rm rot}=0$. It gives vectors
+$\mathcal V(j)$ with $\tilde g_z\equiv\eta_z\mathcal V(j_z)\pmod{p^2}$ and $\eta_z\equiv1\pmod p$, for the labels $z$ in
+the periods $\kappa-1$ and $\kappa$. The rescaled Schur complement has entries $p^{-(h-1)}(\tilde g_z\wedge\tilde
+g_{z'})/(z'-z)$. So for labels $z\ne z'$ its entry has valuation at least $-h$ if $z\equiv z'\pmod p$, at least $-(h-3)$
+if $z\not\equiv z'$ lie in one period, and at least $-(h-1)$ otherwise. On the diagonal it has valuation at least $-h$.
+
+\emph{Potentials.} The labels outside $I$ are the border nodes and, when $\bar N<A$, the virtual nodes $[\bar N,A)$. A
+virtual node is a label once as a row and once as a column. All labels lie in an interval of length at most $p$ that
+starts at $r$. So they lie in the periods $\kappa-1$ and $\kappa$, the latter only from $A$ on, and a row label is
+congruent to a column label only when both are the same virtual node. If $\bar N>A$, let $\chi(t)=1$ for the border
+nodes on the side of $A$ that has fewer of them, and $\chi(t)=0$ for the others. If $\bar N\le A$, let $\chi=0$. Give a
+border row the potential $h-3+2\chi$, a border column $2\chi$, a virtual node $h-3$ as a row and $3$ as a column, and a
+deleted node $h$ on both sides. A virtual node against itself has weight $h=(h-3)+3$. Two labels in one period that are
+not congruent have weight $h-3$. Two labels on opposite sides of $A$ have weight $h-1$, and exactly one of them has
+$\chi=1$. A deleted node carries the largest weight $h$. So the potentials dominate the weights. As in the proof of
+Theorem~\ref{thm:rows2}(i), Lemma~\ref{lem:displace}(a) and the count of the pivot give
+$e_p(r,I)\le hr+\sum u+\sum u'$, with the sums over the border rows and columns. The border carries $m$ rows and
+$\beta$ nodes with $\chi=1$, so the sum is $(h-3)m+2\beta$.
+\end{proof}
+
+\emph{The profile.} Homogenise as before. On $\frac1j\le\theta\le\frac1{j-1}$ with $j\ge2$ and $\theta\ge2\alpha$ the
+multiple $A$ becomes $j\theta$, and (Q5) becomes
+\[
+ h+(h-3)\alpha+2\max\bigl(0,\min(j\theta-1,1+2\alpha-j\theta)\bigr).
+\]
+On $2\alpha\le\theta\le\frac{1+\alpha}2$ this lies below the low range of $\mathcal P_h$ by $2\alpha$ minus a tent of
+height $2\alpha$ on each interval $\frac1j\le\theta\le\frac{1+2\alpha}j$. Beyond $\frac{1+\alpha}2$ it exceeds (Q3) by
+$(h-3)(2\theta-1-\alpha)\ge0$. For $\alpha=\frac1{20}$ the tents with $j=3,\dots,10$ are complete and the tent with $j=2$
+is cut at its peak. So the integral of the minimum of (Q1)--(Q5) is
+\[
+ \int_0^\infty\mathcal P_h(\theta)\,d\theta-\alpha(1-3\alpha)+2\alpha^2\Bigl(H_{10}-\frac54\Bigr),
+\]
+where $H_{10}=\sum_{k\le10}k^{-1}$. For $h=4$ this is $3.25998557\ldots$ As before, the formal proof uses a table
+instead.
+
+\begin{theorem}[denominators at $\pi^4$]\label{thm:content4}
+Let $\alpha=\frac1{20}$. For every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member of $F^{(3)}_{0,15}$ with
+$|I|\le1$ satisfies $\log\den P_{r,I}\le(\Lambda_{\pi^4}+\epsilon)r^2$, where
+\[
+ \Lambda_{\pi^4}=\frac{41076914608111573}{12600000000000000}=3.26007258\ldots
+\]
+\end{theorem}
+\begin{proof}
+The proof is that of Theorem~\ref{thm:content3}, with (Q5) added on the head $\theta\ge2\alpha$. The table applies
+(Q5) on the intervals $\frac1j\le\theta\le\frac1{j-1}$ for $j=2,\dots,10$, which cover $[2\alpha,1]$. On each of them
+(Q5) takes three affine forms: $hr+(h-3)m$ if $\bar N\le jp$, $hr+(h-3)m+2(jp-r)$ if $jp\le r+m$, and
+$hr+(h-3)m+2(\bar N-jp)$ if $r+m\le jp\le\bar N$. The hypotheses of Proposition~\ref{prop:rows3e} hold there for
+large $r$, since $p$ is odd and $2m\le p$. The strips $\theta<2\alpha$ and their translates are those of
+Theorem~\ref{thm:content3}. All pieces are affine, and the integral of the table is the rational number
+$\Lambda_{\pi^4}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:pi4}]
+The frame $F^{(3)}_{0,15}$ has $\xi=\pi^4$. Theorem~\ref{thm:content4} gives the denominators with $\Lambda_{\pi^4}$.
+Proposition~\ref{prop:cert3} with Theorem~\ref{thm:decayframe} gives the decay, since the certificate contains no
+weight. Theorem~\ref{thm:nvframe} with $d=3$ gives nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at
+the even scales gives
+\[
+ \mu(\pi^4)\le\frac\rho{D-\Lambda_{\pi^4}}=74.64059\,148\ldots<\MuPiFour .\qedhere
+\]
+\end{proof}
+
 %% =====================================================================
 \section{The deduction and the remaining proofs}\label{sec:proof}
 
@@ -2930,7 +3063,7 @@ and all sufficiently large $q$.
 
 Theorem~\ref{thm:points1}(i) is proved in Section~\ref{sec:chi3-quarter}, parts (iii)--(v) and Theorem~\ref{thm:plane1}
 in Section~\ref{sec:plane1}, Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Section~\ref{sec:plane2}, and
-Theorem~\ref{thm:plane3} in Section~\ref{sec:plane3}. In each case the bound is attained in the same strong form.
+Theorems~\ref{thm:plane3} and~\ref{thm:pi4} in Section~\ref{sec:plane3}. In each case the bound is attained in the same strong form.
 
 \begin{table}[ht]
 \centering
@@ -2951,6 +3084,7 @@ $\zeta(3)$ & $\frac3{10}$ & $\LamZ$ & $\DHalf$ & $\gHalf$ & $\ExpZ$ & $\MuZetaTh
 $(\frac12,1)$ & $\frac3{10}$ & $\LamHalf$ & $\DHalf$ & $\gHalf$ & $\ExpHalf$ & $\MuHalvesU$\\
 \addlinespace
 plane 3 & $\frac1{10}$ & $\LamPlC$ & $\DPlC$ & $\gPlC$ & $\ExpPlC$ & $\MuPlaneC$\\
+$\pi^4$ & $\frac1{10}$ & $\LamPiFour$ & $\DPlC$ & $\gPlC$ & $\ExpPiFour$ & $\MuPiFour$\\
 \addlinespace
 $(\frac k4,1)$ & $\frac15$ & $\LamFour$ & $\DFour$ & $\gFour$ & $\ExpFour$ & $\MuLamU$\\
 $(\frac k5,1)$ & $\frac29$ & $\LamFive$ & $\DFive$ & $\gFive$ & $\ExpFive$ & $\MuFifthsU$\\
@@ -2962,7 +3096,7 @@ prime to the denominator. For each row the table gives the geometry parameter $c
 decay rate $D$, the neighbourhood exponent $\rho$ and the bound for $\mu$. The constants are rational numbers, rounded outward to
 the digits shown: $\Lambda$ and $\rho$ up, $D$ down. The column $\rho/\eta$, with $\eta=D-\Lambda$, is the exact quotient,
 rounded up. The rows $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ share the decay certificate of plane 1. The row for $\zeta(3)$ shares the
-certificate of the row $(\frac12,1)$.}\label{tab:data}
+certificate of the row $(\frac12,1)$, and the row for $\pi^4$ that of plane 3.}\label{tab:data}
 \end{table}
 
 \begin{remark}[relation to linear independence criteria]
@@ -2988,7 +3122,7 @@ $\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of \S\ref{ss
 class, $j=1$, with first pole $k_p=\frac{p+1}2$.
 
 On the second plane $D-\Lambda$ is about $0.021$, and on the third plane about $0.059$. This explains the size of their
-exponents. On the first plane the points $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ gain only in $\Lambda$,
+exponents. At $\pi^4$ the bound (Q5) raises the gap to about $0.093$. On the first plane the points $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ gain only in $\Lambda$,
 since they use the certificate of the plane. The points $\Lt\pm\frac{\pi^2}{18}$ use a longer border, with $c=\frac14$,
 and their own certificate.
 %% =====================================================================
@@ -3043,7 +3177,7 @@ It combines analytic and arithmetic proofs with generated rational data. Kernel 
 the decay certificates. Numerical computations alone are not used as proof.
 
 The statements are in the file \lean{ChallengeHybrid.lean}. Their proofs are in \lean{SolutionHybrid.lean}, in the
-namespace \lean{TrigammaDifferences}. Each number $\xi$ is written as a series, or through \lean{Real.pi^2}. The
+namespace \lean{TrigammaDifferences}. Each number $\xi$ is written as a series, or through \lean{Real.pi^2} and \lean{Real.pi^4}. The
 series is the classical one where there is one. Otherwise it is $\Psi(s,t)$, and $\zeta(3)$ is the series
 $\sum_{n\ge0}(n+1)^{-3}$. Each theorem states that $q^{-\mu_0}<|\xi-p/q|$ for all $p\in\Z$ and all sufficiently
 large $q$. The plane theorems take rational coefficients $a$ and $b$, not both zero, and $\xi$ is $a\Lt+b\pi^2$,
@@ -3060,8 +3194,8 @@ denominators implies irrationality. The theorems are the following.
 \item \lean{plane2_measure}: Theorem~\ref{thm:plane2}, with $\mu_0=\MuPlaneB$.
 \item \lean{zeta3_measure} and \lean{pi2_measure}: Theorem~\ref{thm:ends}, with $\mu_0=\MuZetaThree$ and
  $\MuHalvesU$.
-\item \lean{plane3_measure}: Theorem~\ref{thm:plane3}, with $\mu_0=\MuPlaneC$. \lean{pi4_measure} is its case $a=0$,
- $b=1$.
+\item \lean{plane3_measure}: Theorem~\ref{thm:plane3}, with $\mu_0=\MuPlaneC$.
+\item \lean{pi4_measure}: Theorem~\ref{thm:pi4}, with $\mu_0=\MuPiFour$.
 \item \lean{lambda_plus_measure} and \lean{lambda_minus_measure}: Theorem~\ref{thm:offplane}(i), with
  $\mu_0=\MuLamU$.
 \item \lean{fifths1_measure}, \dots, \lean{fifths4_measure}: Theorem~\ref{thm:offplane}(ii), with
@@ -3098,6 +3232,13 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
  $\gamma_1=0$, and $\gamma_2=0$.
 \item \lean{Bank.Plane3.plane3_content} is Theorem~\ref{thm:content3}, \lean{Bank.Plane3.plane3_decay} is the decay of
  Proposition~\ref{prop:cert3}, and \lean{Bank.Plane3.plane3_final} is the proof of Theorem~\ref{thm:plane3}.
+\item \lean{Support.IntegerPoleRows.assignment_bounds} is Proposition~\ref{prop:rows3} for every $h\ge2$, and
+ \lean{Support.hpole_catalogue} turns it into the table branches. \lean{Support.HPolePeriodRows.row_refined_first} is
+ Proposition~\ref{prop:rows3e}, and \lean{Support.hpole_refined_catalogue} gives its branches on the intervals of
+ Theorem~\ref{thm:content4}. In the formal statements the members are indexed by the remaining common nodes
+ $C\setminus I$, and the bounds are stated for the Gauss valuation over the local ring at $p$.
+\item \lean{Bank.Plane3.pi4_content} is Theorem~\ref{thm:content4}, and \lean{Bank.Plane3.pi4_final} is the proof of
+ Theorem~\ref{thm:pi4}.
 \item \lean{Support.pole_gram_split_minimal} is the rank-one splitting of \S\ref{ssec:decaydouble} for a pole of any
  order. \lean{Support.pole_altGeom_seqFamily_nv0_even} is Theorem~\ref{thm:nvframe} for such poles.
 \item \lean{Support.support_measureLB} is the general form of Theorem~\ref{thm:deduction}. Every point result is an
@@ -3134,6 +3275,11 @@ We thank the authors of Mathlib and of the PNT+ project, and OpenAI for making i
 \bibitem{Apery79}
 Roger Ap\'ery, \emph{Irrationalit\'e de {$\zeta(2)$} et {$\zeta(3)$}},
   Ast\'erisque \textbf{61} (1979), 11--13.
+
+\bibitem{Bai26}
+Yufei Bai, \emph{The irrationality measure of {$\pi$} is at most
+  {$7.101862832357$}}, 2026, Preprint, 10 September 2026, revised 11 September
+  2026, \href{https://arxiv.org/abs/2609.11276}{arXiv:2609.11276}.
 
 \bibitem{BallRivoal01}
 Keith Ball and Tanguy Rivoal, \emph{Irrationalit\'e d'une infinit\'e de valeurs
@@ -3175,8 +3321,8 @@ Marcos Costa Santos~Carreira, \emph{Determinant constructions for the
 
 \bibitem{Carreira2026}
 \bysame, \emph{General designs and an irrationality exponent for {C}atalan's
-  constant}, Preprint, 9 October 2026, revised 21 October 2026,
-  \href{https://doi.org/10.5281/zenodo.23532239}{doi:10.5281/zenodo.23532239};
+  constant}, Preprint, 9 October 2026, revised 21 October and 7 November 2026,
+  \href{https://doi.org/10.5281/zenodo.24042950}{doi:10.5281/zenodo.24042950};
   sources at \url{https://github.com/MarcosCarreira/catalan-designs}, 2026.
 
 \bibitem{DauguetZudilin14}
@@ -3184,6 +3330,12 @@ Simon Dauguet and Wadim Zudilin, \emph{On simultaneous diophantine
   approximations to {$\zeta(2)$} and {$\zeta(3)$}}, J. Number Theory
   \textbf{145} (2014), 362--387,
   \href{https://arxiv.org/abs/1401.5322}{arXiv:1401.5322}.
+
+\bibitem{Davis2026}
+Cinna Davis, \emph{Catalan's constant: irrationality exponent research}, GitHub
+  repository, \url{https://github.com/1337isnot1337/catalan-constant}; Lean
+  verification at \url{https://github.com/bigospeedrun/verifier/issues/87},
+  October 31, 2026.
 
 \bibitem{Lean4}
 Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
@@ -3200,6 +3352,12 @@ Payman Eskandari, V.~Kumar Murty, and Yusuke Nemoto, \emph{Mixed motives and
   linear forms in the {C}atalan constant}, J. Lond. Math. Soc. (2) \textbf{114}
   (2026), no.~4, Paper No. e70708,
   \href{https://arxiv.org/abs/2510.20648}{arXiv:2510.20648}.
+
+\bibitem{Fasten26}
+Azriel Fasten, \emph{Irrationality of the {R}iemann zeta value at five}, Lean
+  formalization, Palomar registry entry PALOMAR-2026-09-25-000018,
+  \url{https://github.com/realazthat/zeta5-lean2}, commit \texttt{2fa4e82},
+  2026.
 
 \bibitem{Fauzan2026}
 Aabir Fauzan, \emph{{$\zeta(5)$} is irrational}, Preprint v1, September 17,
@@ -3227,8 +3385,8 @@ David~Niedbala Giraudin, \emph{A new upper bound for the irrationality exponent
   \href{https://arxiv.org/abs/2609.26980}{arXiv:2609.26980}.
 
 \bibitem{Jha2026}
-R.~K. Jha, \emph{A finite irrationality measure for {C}atalan's constant},
-  Preprint v1, October 8, 2026,
+Rohit~Kumar Jha, \emph{A finite irrationality measure for {C}atalan's
+  constant}, Preprint v1, October 8, 2026,
   \href{https://doi.org/10.5281/zenodo.23237269}{doi:10.5281/zenodo.23237269};
   Lean sources at \url{https://github.com/rohitkrjha/catalan-measure}, 2026.
 
@@ -3296,6 +3454,11 @@ Raffaele Marcovecchio and Wadim Zudilin, \emph{Hypergeometric rational
   approximations to {$\zeta(4)$}}, Proc. Edinb. Math. Soc. (2) \textbf{63}
   (2020), no.~2, 374--397.
 
+\bibitem{MultiAgency2026}
+{MultiAgency swarm}, \emph{Catalan: {$\mu(G)\le528.2315$}}, GitHub repository,
+  \url{https://github.com/darkhipo/catalan-constant-gen5}; verifier submission
+  \url{https://github.com/bigospeedrun/verifier/issues/103}, November 2, 2026.
+
 \bibitem{Nesterenko85}
 Yu.~V. Nesterenko, \emph{On the linear independence of numbers}, Vestnik
   Moskov. Univ. Ser. I Mat. Mekh. (1985), no.~1, 46--49, In Russian; English
@@ -3317,9 +3480,11 @@ E.~M. Nikishin and V.~N. Sorokin, \emph{Rational approximations and
 
 \bibitem{OpenAIPi2026}
 \bysame, \emph{The irrationality exponent of {$\pi$} is 2}, Preprint dated
-  September 24, 2026, released October 6, 2026,
-  \url{https://github.com/openai/math/tree/main/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026},
-  2026.
+  September 24, 2026, released October 6, 2026, with a Lean formalization,
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}{paper}
+  and
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/PiExponent}{Lean
+  formalization} (repository commit \texttt{fd4aeeb}), 2026.
 
 \bibitem{Prellberg26}
 Thomas Prellberg, \emph{Three irrationality results for the dilogarithm:

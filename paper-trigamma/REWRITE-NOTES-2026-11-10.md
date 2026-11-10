@@ -85,3 +85,97 @@ The L₋₃ ratio is now 13.683844…. formalization-hybrid.yaml: spacing fixed 
   `plane3_catalogue`, the generic `hpole` suppliers and `plane3_pre`. I matched the statements, not every intermediate
   lemma.
 - No push. Nothing outside the named paths was touched.
+
+## 10 Nov: π⁴ and general h (root 619e3cc9, proof commit 03abfb2e, 27 exports)
+
+### Changed numbers and their Lean names
+
+| Number | Lean name | μ | Λ | D | ρ | ρ/(D−Λ) |
+|---|---|---|---|---|---|---|
+| π⁴ | `pi4_measure` (`Bank.Plane3.pi4_final`, `pi4_content`, `pi4_eta`, `pi4_ratio`) | 75 | 41076914608111573/12600000000000000 = 3.26007258… (rounded up 3.2600726) | 3.3533776 (plane-3 certificate, reused) | 6.9643459 | 74.64059148… (rounded up 74.6406) |
+
+Frame 15ψ″(z+1) (`datum 0 15`, γ₂ = 0, γ₃ = 15), c = 1/10, α = 1/20, depth 1, even scales. All other numbers are
+unchanged and were re-checked against `SolutionHybrid.lean`: plane3_measure stays 118. The quotient was recomputed with
+mpmath from the exact rationals.
+
+### Paper II changes
+
+- Framing (Sean's additional instructions): abstract and §1.1 now open with the three plane theorems (1.1–1.3), say that
+  one Löwner structure gives all three, credit the irrationality to Calegari–Dimitrov–Tang (holonomy), Q. Tang (Lean) and
+  Lai (Fauzan's determinant method with Zudilin/Dauguet–Zudilin approximations), and state that two planes beat the
+  known measures: plane 1 (24781 → 20.6622) and plane 2 (no known measure, as far as we know). Plane 3 is not a
+  record (Leibtag et al. 66.3). Then the special points (Theorem 1.4, Theorem 1.5 ends, new Theorem 1.6 μ(π⁴) ≤ 75,
+  all "for completeness" where weaker; Marcovecchio–Zudilin 12.51086 quoted), then the off-plane Theorem 1.7.
+  Table 1 reordered: three planes, then special points (π⁴ row added, other bound 12.51086 [MZ20]), then off-plane.
+- New-ideas item 1 says the one structure gives all three planes. Item 9 adds the fifth bound for a pole of any order.
+- §10 Weights: stated at Lean's generality, h ≥ 2 and arbitrary rationals c₁,…,c_{h−1} (any may vanish; the plane is
+  c₁ = 0). Lemma 10.1 and Proposition 10.2 (Q1–Q4) proofs hold unchanged for h ≥ 2. The closed-form profile remark is
+  marked h ≥ 3. No "h = 4 only" remark existed in the paper; none remains.
+- §10 Q1–Q4 correspondence (from the report, recorded in the formalization section): Lean's `assignment_bounds`
+  indexes members by the remaining common nodes C∖I and states Gauss-valuation (GLE) bounds over the local ring. Q1 in
+  Lean uses an integer dual; the paper's half-integer potentials prove the same bound. Q4 is the positive part
+  (already so in the paper). The catalogue's third branch covers N̄ < 2p by Q2; the paper's Q3 keeps its guard
+  2p ≤ N̄, which is all the profile uses.
+- New §10.5 "The point π⁴": Proposition 10.5 (Q5) e_p ≤ hr + (h−3)m + 2β, β = number of border nodes on the smaller side
+  of A = (⌊r/p⌋+1)p, for h ≥ 3, p ≥ 5, p² > 2N̄+2p, 2m < p (= `Support.HPolePeriodRows.row_refined_first`). Proof:
+  §9 elimination with κ = A/p, k′ = 0; pivot monic in T, so no unit condition on the c_j; generators as in Prop 9.5
+  with δ_rot = 0; Schur weights h (congruent), h−3 (same period), h−1 (otherwise), matching `HPole.k0Weight`; potentials
+  exactly Lean's `phiR`/`phiC` (border row h−3+2χ, column 2χ, virtual h−3 / 3, deleted h). Profile: Q5 replaces Q1 on
+  [2α,(1+α)/2]; closed form ∫P_h − α(1−3α) + 2α²(H₁₀ − 5/4) = 3.25998557… at h = 4 (checked by mpmath quadrature;
+  not used formally). Theorem 10.6 (Λ_{π⁴}, three affine branches on chambers j = 2..10 = `hpole_refined_catalogue`
+  with `pi4Chambers`), and the proof of Theorem 1.6.
+- Table 2: π⁴ row. §11 notes: gap ≈ 0.093 at π⁴. Formalization section: pi4_measure bullet; new bullets for
+  `Support.IntegerPoleRows.assignment_bounds`, `Support.hpole_catalogue`, `Support.HPolePeriodRows.row_refined_first`,
+  `Support.hpole_refined_catalogue`, `Bank.Plane3.pi4_content`, `Bank.Plane3.pi4_final`. All names grepped in the tree.
+
+### Paper I, README, YAML
+
+- Paper I "The companion paper": three planes from one Löwner structure, μ ≤ 20.6622 / 335.20 / 118, irrational by
+  unrelated methods, better on two planes (published 24781; first on plane 2), a better bound known on plane 3, special
+  points 13.6839 and 9.4913, off-plane points including G ± 5π²/48. Nothing else in Paper I changed.
+- README: π⁴ moved to the "for completeness" line; the plane-attribution and no-record wording rewritten (Leibtag et
+  al. 66.3, Marcovecchio–Zudilin 12.51086); table label "15 ψ″(z + 1)"; π⁴ listed among the weaker bounds.
+- formalization-hybrid.yaml: description lists the third plane; plane3/pi4 notes use the no-record wording.
+  formalization.yaml mentions neither.
+
+### Build
+
+- Paper II: Tectonic offline in a scratch copy, rc 0, no undefined references, 0 overfull boxes, `.bbl` grep for
+  `$[a-z](` 0 hits. PDF copied back. Hexagon regenerated with make_hexagon.py; it builds with rc 0 and no undefined
+  references.
+- Paper I: same, rc 0, no undefined, 0 overfull (one overfull display fixed by splitting it), hexagon regenerated and
+  built rc 0.
+- Rendered Theorems 1.1–1.7, Table 1 and Table 2 read against the 27 root exports.
+- Greps of both papers, README and formalization*.yaml: no 118 in a π⁴-alone context, no ∓/\mp, no "dedicated"/
+  "endpoint" jargon, no h = 4 restriction (the h = 4 hits are the instance values), no earlier/previous wording about
+  our own results.
+
+### Open
+
+- `hpole_refined_catalogue` and `row_refined_first` are generic in the coefficients, and the π⁴ table's integral does
+  not depend on them. The same table, with `coefficients v u` in place of `coefficients 0 15`, would very likely give
+  the whole third plane Λ ≈ 3.2600726 and μ ≤ 75 at the cost of one more content module. Lean does not prove this
+  now, so the paper does not claim it.
+- No push.
+
+### Later additions in the same revision (author and literature review)
+
+- 2ζ(3) + π²/3 (= 2(ζ(2)+ζ(3))) is no longer named as a point: both "ζ(2)+ζ(3)" mentions in Paper II §1 were removed.
+  No other paper, README or YAML text named it.
+- Literature fixes from `outputs/Compatibility programme/LIT-REVIEW-FINAL-2026-11-10.md`:
+  - A1: Paper II recent results now say μ(π)=2 improves Bai's μ(π) < 7.101863 [Bai26], which lowered Zeilberger–Zudilin's
+    7.1033. `Bai26` added as given in the review (abstract checked by the coordinator). The Salikhov clause was not used,
+    since Bai's text was not read.
+  - A2: "Legendre proved that π² is irrational. Apéry proved that ζ(3) is irrational and gave a new proof for ζ(2)."
+  - A3/A4: Carreira v3 DOI 10.5281/zenodo.24042950 and the v3 comment in both bibs.
+  - A7: the supplement proves δ > 10⁻⁴, giving μ ≤ 1 + 10⁴; 0.000103… is the certified comparison value, giving about
+    9.7·10³. Table 1 caption now says 1 + 10⁴.
+  - A8: `Litsey2026` comment no longer mentions a superseded bound. A9: `Repo` branch is `main`.
+  - Optional: O2 (OpenAIPi2026 pinned to fd4aeeb, both bibs), O3 (Jha, Rohit Kumar, both bibs), O4 (Davis and the
+    MultiAgency swarm added to Paper II's list, entries copied from Paper I's bib), O5 (Leibtag et al. give a second
+    proof of the independence of 1, ζ(3), ζ(4)). O1 not applied (Paper I text, and "12" unverified).
+  - A6 not applied, per the coordinator.
+- Fauzan (author's decision): Paper II now says Fauzan proved ζ(5) irrational and Fasten verified the statement in
+  Lean; `Fasten26` copied unchanged from Paper I's bib. No "announced" remains in either paper.
+- Rebuilt after these: Paper II and Paper I rc 0, no undefined references, 0 overfull, bbl grep 0; both hexagon files
+  regenerated and built rc 0.
