@@ -1,0 +1,37 @@
+module
+
+public import CatalanCore.Uniform.Bank.FifthsContent.Level3Data.PC.U2O000
+public import CatalanCore.Uniform.Bank.FifthsContent.Level3Data.PC.U2O001
+public import CatalanCore.Uniform.Bank.FifthsContent.Level3Data.PC.U2O002
+public import CatalanCore.Uniform.Bank.FifthsContent.Level3Data.PC.U2O003
+public import CatalanCore.Uniform.Bank.FifthsContent.Level3Data.PC.U2O004
+
+@[expose] public section
+set_option Elab.async false
+set_option maxRecDepth 100000
+namespace CatalanCore.Uniform.Bank.FifthsContent.Level3Auto
+open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
+def pcRawSeeds2 : List (CatalogueSeed pcLegacyCatalogue) := pcRawSeeds2O000 ++ pcRawSeeds2O001 ++ pcRawSeeds2O002 ++ pcRawSeeds2O003 ++ pcRawSeeds2O004
+theorem pcRawSeeds2_ok : ∀ S∈pcRawSeeds2,
+    seedOK (pcHead 1) (S.law.palette 0) 2 pcSeedLimit (S.toSeed 9 1 10000)=true := by
+  intro S hS
+  simp only [pcRawSeeds2,List.mem_append] at hS
+  rcases hS with hS | hS | hS | hS | hS
+  · exact pcRawSeeds2O000_ok S hS
+  · exact pcRawSeeds2O001_ok S hS
+  · exact pcRawSeeds2O002_ok S hS
+  · exact pcRawSeeds2O003_ok S hS
+  · exact pcRawSeeds2O004_ok S hS
+def pcUnsortedHead2 := pcRawSeeds2.flatMap (CatalogueSeed.pieces 9 1 10000 bankHead.cF)
+def pcHead2 := sortFuel (fun x y : QPiece × Cert => decide (x.1.s≤y.1.s)) pcUnsortedHead2.length pcUnsortedHead2
+theorem pcHead2_eq : pcHead2=catalogueHead 9 1 10000 bankHead.cF pcRawSeeds2 :=
+  sortFuel_eq_mergeSort _ _ _ le_rfl
+
+def pcCellBase2_0 : QPiece × Cert := (⟨(qq (1) 234), (qq (2) 459), (qq (7) 3), (qq (-26) 1), (qq (1000000000000) 1)⟩, ⟨0, [], [], (qq (608400) 1)⟩)
+def pcCellBase2_1 : QPiece × Cert := (⟨(qq (2) 459), (qq (1) 225), (qq (19) 9), (qq (25) 1), (qq (1000000000000) 1)⟩, ⟨0, [], [], (qq (585225) 1)⟩)
+def pcCells2 : List (QPiece × Cert) := [pcCellBase2_0, pcCellBase2_1]
+def pcTmpl2 : KTmplP := ⟨1/1350, 125, 0, pcCells2, pcHead2, 91⟩
+def tmpl2 : QTmpl := (pcTmpl2.toK 9 20 bankHead.cF).toQ
+end CatalanCore.Uniform.Bank.FifthsContent.Level3Auto
+
+#print axioms CatalanCore.Uniform.Bank.FifthsContent.Level3Auto.tmpl2

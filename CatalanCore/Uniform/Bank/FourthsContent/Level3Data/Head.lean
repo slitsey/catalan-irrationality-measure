@@ -1,8 +1,12 @@
 module
+public import CatalanMeasure.CellCert.RawInts
 
 public import CatalanCore.Uniform.Content.UFSimple.WrapCheck
 public import CatalanCore.Uniform.Content.UFSimple.PrefixBranches
 
+public import CatalanCore.Uniform.Content.BankShared.KTerm.LegacyPeriodic
+public import CatalanCore.Uniform.Content.BankShared.KTerm.CatalogueOrbit.Data
+public import CatalanCore.Uniform.Content.BankShared.Check.StructuralSort
 public import CatalanCore.Uniform.Content.BankShared.Check.Split
 public import CatalanCore.Uniform.Content.BankShared.Check.Prefix
 
@@ -50,4 +54,55 @@ def bankHead : BankData where
   extra := bankExtra
   tmpls := []
 
+
+open CatalanCore.Uniform.Content.BankShared.KTerm
+
+/-- Exact literal-zero tail under N<k_0; validity is supplied in the thin instance. -/
+def pcZero : KBranch := legacyZero
+def pcBase : List KBranch := [kbD1xB]
+
+/-- Master offset is o, hence master member a=q-o; duplicate the selected shift. -/
+def pcHead (o : ℕ) : KBankData where
+  Q := bankHead.q
+  M := bankHead.M
+  α := bankHead.α
+  a := bankHead.q-o
+  shifts := legacyShifts bankHead.q o
+  depth := bankHead.depth
+  cF := bankHead.cF
+  Pbad := bankHead.Pbad
+  α0 := bankHead.α0
+  τ := bankHead.τ
+  Λ := 0
+  α0b := bankHead.α0b
+  t0 := bankHead.t0
+  Rt := 10
+  kcat := bankHead.cat.map (Branch.liftK 0) ++ [pcZero]
+  tmpls := []
+
+end CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+
+namespace CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
+def pcSeedLimit : ℕ := 400001
+def pcLegacyAt (i : Fin bankHead.cat.length) : KBranch :=
+  (bankHead.cat[i.val]'i.isLt).liftK 0
+theorem pcLegacyAt_mem (o : ℕ) (i : Fin bankHead.cat.length) :
+    pcLegacyAt i∈(pcHead o).kcat := by
+  change (bankHead.cat[i.val]'i.isLt).liftK 0∈bankHead.cat.map (Branch.liftK 0)++[pcZero]
+  apply List.mem_append.mpr
+  left
+  exact List.mem_map.mpr ⟨_,List.getElem_mem i.isLt,rfl⟩
+end CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+#print axioms CatalanCore.Uniform.Bank.FourthsContent.Level3Auto.pcLegacyAt_mem
+
+namespace CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+open CatalanCore.Uniform.Content.BankShared.Check
+def pcLegacyCatalogue := bankHead.cat.map (Branch.liftK 0)
+end CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+
+namespace CatalanCore.Uniform.Bank.FourthsContent.Level3Auto
+def pcRat (xs : List ℤ) : ℚ := (xs.getD 0 0 : ℚ)/(xs.getD 1 1 : ℚ)
+def pcMassVal1 : ℚ := pcRat (raw_ints% [52580982930474260254847356019166032244007691664695386345274160162606641169707436014034927958621043030521719413321902149015059881341998566693492717649154737096482798069718224716337370371473319864973795200198978403245010953429096698011914593711086404987010498008190859207542829141661238932582879455223049385968828280270291528294539135486121183098011,10531960218722859295744079514821088183213643215742291331531141660672224929399462965421799228941555132436073366012978165977502320950775107260354640005701165829997668041168710555374766953529571956355559532863209512049531379401444108489144372280272858350387163424179594061862790115117387926932640961458125961204968140615045308444617974294007120000000])
+def pcMassVal3 : ℚ := pcRat (raw_ints% [6581438575019403954902034231855188079319304026244689857010265921108708276765968769227066565674615865537543341216371819923730097453441359166502416937069324330576992693656491290877916821166709283302200030676837836934227914501368876581793777245115247162180624325788888424841828882383304511764375056966446067528947583769965268399268225557332439917368663,3230485532692201682355358304404988711312199126936386629752827633884248891680688381625829502595587499080867964178838955278519896727898937951337084194242524698770044799400124390267339004990134939568094808473812956839157207363231798115874211254203148316439112779707287466514811438079313614729485050460918941601897106027294829740905691204062735760000000])
 end CatalanCore.Uniform.Bank.FourthsContent.Level3Auto

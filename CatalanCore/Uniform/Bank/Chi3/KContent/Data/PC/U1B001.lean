@@ -1,0 +1,31 @@
+module
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.PC.Head
+@[expose] public section
+set_option Elab.async false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3200000
+namespace CatalanCore.Uniform.Bank.Chi3.KContent
+open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
+def pcBase1_24 : QPiece × Cert := (⟨(qq (3) 13), (qq (15) 64), (qq (1) 1), (qq (19) 3), (qq (1000000000000) 1)⟩, ⟨3, [], [], (qq (845) 3)⟩)
+-- kcost: one actual complete basepiece, one period only; no16fold repeated checks.
+set_option profiler true in
+theorem pcBase1_24_ok : cellOKb kHead pcBaseCat 1 16 4 10000 pcBase1_24=true := by
+  -- kcost: 0.20 s basepiece budget; actual max0.146s typecheck, accepted100check/fullmetadata unit38.719s; at most24pieces/module
+  decide +kernel
+#print axioms pcBase1_24_ok
+def pcBase1_25 : QPiece × Cert := (⟨(qq (15) 64), (qq (9) 38), (qq (7) 2), (qq (-13) 3), (qq (1000000000000) 1)⟩, ⟨1, [], [], (qq (4096) 15)⟩)
+-- kcost: one actual complete basepiece, one period only; no16fold repeated checks.
+set_option profiler true in
+theorem pcBase1_25_ok : cellOKb kHead pcBaseCat 1 16 4 10000 pcBase1_25=true := by
+  -- kcost: 0.20 s basepiece budget; actual max0.146s typecheck, accepted100check/fullmetadata unit38.719s; at most24pieces/module
+  decide +kernel
+#print axioms pcBase1_25_ok
+def pcBase1_26 : QPiece × Cert := (⟨(qq (9) 38), (qq (1) 4), (qq (2) 1), (qq (2) 1), (qq (1000000000000) 1)⟩, ⟨1, [], [], (qq (7220) 27)⟩)
+-- kcost: one actual complete basepiece, one period only; no16fold repeated checks.
+set_option profiler true in
+theorem pcBase1_26_ok : cellOKb kHead pcBaseCat 1 16 4 10000 pcBase1_26=true := by
+  -- kcost: 0.20 s basepiece budget; actual max0.146s typecheck, accepted100check/fullmetadata unit38.719s; at most24pieces/module
+  decide +kernel
+#print axioms pcBase1_26_ok
+
+end CatalanCore.Uniform.Bank.Chi3.KContent

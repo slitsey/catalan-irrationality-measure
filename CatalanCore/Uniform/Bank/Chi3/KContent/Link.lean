@@ -4,6 +4,8 @@ public import CatalanCore.Uniform.Bank.Chi3.KContent.Content
 public import CatalanCore.Uniform.Bank.Chi3New.Geom
 public import CatalanCore.Uniform.Content.Shape.Reindex
 public import CatalanCore.Uniform.Frame.NVAdapter
+public import CatalanCore.Uniform.Bank.Plane1.Rows
+public import CatalanFrames.P6.Const
 
 @[expose] public section
 set_option Elab.async false
@@ -77,7 +79,18 @@ theorem chi3_measureLB_of_decay {D c : ℚ}
       exact this)
     (fun n hn => hn.2) chi3_nv0_even
 
+/-- Exact affine point theorem, with this full periodic content and any certified decay. -/
+theorem chi3_point_of_decay {D cc : ℝ}
+    (hD : HasScaledDecay (G12.family p6Frame kDepth0) G12.scale D cc)
+    (heta : (kData.Λ:ℝ)<D) (hcc : 0<cc) :
+    Measure.MeasureLBAt chi3L2 (cc/(D-(kData.Λ:ℝ))) ∧ Irrational chi3L2 := by
+  exact CatalanCore.Uniform.Bank.Plane1.alt_point (1/2) c12_pos p6Frame kDepth0
+    chi3_content_G12 hD heta hcc chi3_nv0_even (u:=1/4) (v:=0) (by norm_num)
+    (by rw [p6Frame_const];push_cast;ring)
+
 end CatalanCore.Uniform.Bank.Chi3.KContent
 
 #print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_content_G12
 #print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measureLB_of_decay
+
+#print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_point_of_decay

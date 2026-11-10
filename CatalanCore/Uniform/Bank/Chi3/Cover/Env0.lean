@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Common.Data.Chi3.Data
-public import CatalanCore.Uniform.Bank.Common.Data.Chi3.Frame
 public import CatalanCore.Uniform.Decay.PolyWire3.Decode
 public import CatalanCore.Uniform.Decay.PolyFull.Full
 
@@ -20,7 +19,7 @@ def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2
 def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (3 / 2 : ℚ))]
 def nuC : List Seg := nodeSegs RP CP
 def Dbase : SplineData := CatalanCore.Uniform.Bank.Common.Data.Chi3.data
-def Pply : RatPolygon := ⟨(49 / 500 : ℚ), CatalanCore.Uniform.Bank.Common.Data.Chi3.polygon.vertices.tail, (200 / 191 : ℚ)⟩
+def Pply : RatPolygon := ⟨(49 / 500 : ℚ), [((-490443917 / 4000000000 : ℚ), (8499 / 200000 : ℚ)), ((-3309377731 / 20000000000 : ℚ), (25497 / 200000 : ℚ)), ((-20605923921 / 100000000000 : ℚ), (233723 / 1000000 : ℚ)), ((-23555728229 / 100000000000 : ℚ), (339961 / 1000000 : ℚ)), ((-25788245549 / 100000000000 : ℚ), (424951 / 1000000 : ℚ)), ((-491041141 / 1562500000 : ℚ), (140619 / 250000 : ℚ)), ((-2222019581 / 5000000000 : ℚ), (7 / 10 : ℚ))], (200 / 191 : ℚ)⟩
 def tmaxC : ℚ := (13943 / 2000 : ℚ)
 def Rtw : ℚ := 4
 def eWc : ℕ := 50
@@ -39,6 +38,9 @@ def e7 : Pt × Pt := ((qOfP (-2222019581) (5000000000), qOfP (7) (10)), (qOfP (-
 
 def edgesLit : List (Pt × Pt) := [e0, e1, e2, e3, e4, e5, e6, e7]
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem edges_eq : edgesAll Pply tmaxC = edgesLit := by decide +kernel
+
+#print axioms edges_eq
 
 end CatalanCore.Uniform.Bank.Chi3.Cover

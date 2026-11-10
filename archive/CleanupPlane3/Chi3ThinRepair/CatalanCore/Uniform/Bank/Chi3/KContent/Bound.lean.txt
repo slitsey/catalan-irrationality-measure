@@ -1,0 +1,29 @@
+module
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Link
+public import CatalanCore.Uniform.Bank.Chi3New.Decay
+@[expose] public section
+set_option Elab.async false
+namespace CatalanCore.Uniform.Bank.Chi3.KContent
+open CatalanCore CatalanCore.Uniform CatalanFrames.P6 CatalanCore.Uniform.Bank.Chi3New
+open CatalanCore.Uniform.Bank.Chi3.Cover
+theorem kData_Λ_eq : kData.Λ=
+  225706514569840812587646472267088130901573531845819693981955101571429004212021774333976142337325032023820324915415861 /
+  55105101308379468249764243581140517776104156182333546862848918712563705179921864016722641907400253805397160894208000 := kData_Λ
+-- kcost: one rational comparison, no profile checks.
+theorem chi3_eta : kData.Λ<Dchi.Dt := by decide +kernel
+-- kcost: one rational comparison, no profile checks.
+theorem chi3_cc : (0:ℚ)<Dchi.ccert := by decide +kernel
+-- kcost: exact fixed scalar rational division/comparison; the entire content price remains present.
+theorem chi3_ratio : Dchi.ccert/(Dchi.Dt-kData.Λ)<(136839/10000:ℚ) := by decide +kernel
+theorem chi3_point_exact : Measure.MeasureLBAt chi3L2 ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(kData.Λ:ℝ))) ∧ Irrational chi3L2 :=
+  chi3_point_of_decay (chi3_decay kDepth0) (by exact_mod_cast chi3_eta) (by exact_mod_cast chi3_cc)
+theorem chi3_point_k : Measure.MeasureLBAt chi3L2 ((136839/10000:ℚ):ℝ) ∧ Irrational chi3L2 := by
+  have h := chi3_point_of_decay (chi3_decay kDepth0)
+    (by exact_mod_cast chi3_eta) (by exact_mod_cast chi3_cc)
+  exact ⟨Measure.MeasureLBAt.mono (by exact_mod_cast (le_of_lt chi3_ratio)) h.1,h.2⟩
+/-- The refitted prefix-inclusive measure, obtained from the generic point theorem. -/
+theorem chi3_measure_L2_k : Measure.MeasureLBAt chi3L2 ((136839/10000:ℚ):ℝ) := chi3_point_k.1
+end CatalanCore.Uniform.Bank.Chi3.KContent
+#print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_point_k
+#print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_point_exact
+#print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_measure_L2_k

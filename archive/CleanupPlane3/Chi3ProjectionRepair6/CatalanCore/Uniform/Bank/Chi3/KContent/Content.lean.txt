@@ -1,0 +1,190 @@
+module
+
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Win
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Pre
+public import CatalanCore.Uniform.Content.BankShared.KTerm.PeriodTranslation
+
+@[expose] public section
+set_option Elab.async false
+
+@[expose] public section
+set_option Elab.async false
+set_option maxHeartbeats 3200000
+namespace CatalanCore.Uniform.Bank.Chi3.KContent
+open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Content.Shape CatalanCore.Uniform.Content.BankShared
+open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
+open CatalanCore.Uniform.Content.SmallPrimes CatalanFrames.P6
+theorem kCat_valid (depth N0 : ℕ) :
+    KCatValid (1 / 2) c12_pos p6Frame depth kShifts 6 6 N0 kCat := by
+  intro b hb
+  simp only [kCat, List.mem_append, List.mem_map] at hb
+  rcases hb with (hb | ⟨w, -, rfl⟩) | ⟨x, -, rfl⟩
+  · exact kcat_trop_valid depth N0 b hb
+  · exact kbrWin_valid depth N0 w.1 w.2.1 w.2.2 _ (List.mem_singleton_self _)
+  · exact kbrPre_valid depth N0 x.1 x.2.1 x.2.2.1 x.2.2.2 _ (List.mem_singleton_self _)
+
+theorem cFr_p6 : cFr p6Frame ≤ 60 := by decide +kernel
+
+theorem pcBaseKind : ∀ br∈pcBaseCat,br=kbD1xB ∨ IsPre br := by
+  intro br hbr
+  simp only [pcBaseCat,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hbr
+  rcases hbr with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  · exact Or.inl rfl
+  · exact Or.inr ⟨(1,0,0,0),rfl⟩
+  · exact Or.inr ⟨(1,0,0,1),rfl⟩
+  · exact Or.inr ⟨(1,0,1,0),rfl⟩
+  · exact Or.inr ⟨(1,0,1,1),rfl⟩
+  · exact Or.inr ⟨(1,1,1,1),rfl⟩
+  · exact Or.inr ⟨(1,1,1,2),rfl⟩
+  · exact Or.inr ⟨(1,1,2,1),rfl⟩
+  · exact Or.inr ⟨(1,1,2,2),rfl⟩
+noncomputable def pcTranslation : Transl 4 1 10 10000 pcBaseCat := preTransl 4 1 10000 pcBaseCat pcBaseKind
+theorem pcBaseValid (depth N0 n : ℕ) :
+    KCatValid (1/2) c12_pos p6Frame depth kShifts 6 6 N0 (pcBaseCat.map (pcTranslation.ρ n)) := by
+  intro br hbr
+  obtain ⟨b,hb,rfl⟩ := List.mem_map.mp hbr
+  simp only [pcTranslation,preTransl]
+  rcases pcBaseKind b hb with rfl | hpre
+  · rw [preRho_d1x]
+    apply kCat_valid depth N0
+    change kD1x∈kCat
+    simp [kCat]
+  · obtain ⟨x,hx,hρ⟩ := preRho_pre (a:=1) (t:=n) hpre
+    rw [hρ]
+    exact kbrPre_valid depth N0 (x.1+1*n) x.2.1 x.2.2.1 x.2.2.2 _ (by simp)
+
+theorem pcCellsOK : ∀ x∈([(1,pcTmpl1),(5,pcTmpl5)] : List (ℕ×KTmplP)),
+    ∀ y∈x.2.cells,cellOKb kData pcBaseCat x.1 x.2.N 4 10000 y=true := by
+  intro x hx y hy
+  simp only [List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hx
+  rcases hx with rfl | rfl
+  · change y∈pcBases1 at hy
+    simp only [pcBases1,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hy
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact pcBase1_0_ok
+    · exact pcBase1_1_ok
+    · exact pcBase1_2_ok
+    · exact pcBase1_3_ok
+    · exact pcBase1_4_ok
+    · exact pcBase1_5_ok
+    · exact pcBase1_6_ok
+    · exact pcBase1_7_ok
+    · exact pcBase1_8_ok
+    · exact pcBase1_9_ok
+    · exact pcBase1_10_ok
+    · exact pcBase1_11_ok
+    · exact pcBase1_12_ok
+    · exact pcBase1_13_ok
+    · exact pcBase1_14_ok
+    · exact pcBase1_15_ok
+    · exact pcBase1_16_ok
+    · exact pcBase1_17_ok
+    · exact pcBase1_18_ok
+    · exact pcBase1_19_ok
+    · exact pcBase1_20_ok
+    · exact pcBase1_21_ok
+    · exact pcBase1_22_ok
+    · exact pcBase1_23_ok
+    · exact pcBase1_24_ok
+    · exact pcBase1_25_ok
+    · exact pcBase1_26_ok
+  · change y∈pcBases5 at hy
+    simp only [pcBases5,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hy
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact pcBase5_0_ok
+    · exact pcBase5_1_ok
+    · exact pcBase5_2_ok
+    · exact pcBase5_3_ok
+    · exact pcBase5_4_ok
+    · exact pcBase5_5_ok
+    · exact pcBase5_6_ok
+    · exact pcBase5_7_ok
+    · exact pcBase5_8_ok
+    · exact pcBase5_9_ok
+    · exact pcBase5_10_ok
+    · exact pcBase5_11_ok
+    · exact pcBase5_12_ok
+    · exact pcBase5_13_ok
+    · exact pcBase5_14_ok
+    · exact pcBase5_15_ok
+    · exact pcBase5_16_ok
+    · exact pcBase5_17_ok
+    · exact pcBase5_18_ok
+    · exact pcBase5_19_ok
+    · exact pcBase5_20_ok
+    · exact pcBase5_21_ok
+    · exact pcBase5_22_ok
+    · exact pcBase5_23_ok
+    · exact pcBase5_24_ok
+    · exact pcBase5_25_ok
+    · exact pcBase5_26_ok
+theorem pcHeadsOK : ∀ x∈([(1,pcTmpl1),(5,pcTmpl5)] : List (ℕ×KTmplP)),
+    ∀ y∈x.2.head,pieceOK (kData.cat x.1) kData.Q kData.α ((x.1:ℚ)/kData.Q) kData.depth kData.cF kData.Pbad y.1 y.2=true := by
+  intro x hx y hy
+  simp only [List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hx
+  rcases hx with rfl | rfl
+  · change y∈pcHeads1 at hy
+    simp only [pcHeads1,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hy
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_0_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_1_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_2_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_3_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_4_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_5_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_6_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_7_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_8_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_9_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_10_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_11_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_12_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_13_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_14_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_15_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_16_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_17_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_18_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_19_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_20_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_21_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead1_22_ok
+  · change y∈pcHeads5 at hy
+    simp only [pcHeads5,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hy
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_0_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_1_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_2_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_3_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_4_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_5_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_6_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_7_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_8_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_9_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_10_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_11_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_12_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_13_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_14_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_15_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_16_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_17_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_18_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_19_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_20_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_21_ok
+    · simpa only [kData,KBankData.cat,KBankData.tS,KBankData.bS,KBankData.cS,KBankData.oM,kpieceAll,List.all_cons,List.all_nil,Bool.and_true] using pcHead5_22_ok
+/-- The entire original chi3 content bank is an instance of the frozen periodic theorem. -/
+theorem chi3_k_content (depth : ℕ) (hd : depth≤64) :
+    HasScaledContent (AltEven (1/2) c12_pos p6Frame depth) (altGeom (1/2) c12_pos).scale (kData.Λ:ℝ) := by
+  exact hasScaledContent_of_periodic_ok kData (kparams_of kdata_params) kdata_classes kdata_heads
+    (1/2) c12_pos (by norm_num [kData,kHead,qq]) p6Frame.const depth
+    (NodeFamily.polynomial p6Frame (altGeom (1/2) c12_pos).geometry) hd
+    (AltQ.ofFrame (1/2) c12_pos (by norm_num) p6Frame cFr_p6)
+    (SmallBudget.add (SmallBudget.sqrtLog 5 10) SmallBudget.unit) 0
+    (by norm_num [kData,kHead,qq]) pcTranslation [(1,pcTmpl1),(5,pcTmpl5)] rfl
+    pcCellsOK pcHeadsOK (kCat_valid depth 0) (pcBaseValid depth 0) (p6_preValid depth)
+end CatalanCore.Uniform.Bank.Chi3.KContent
+#print axioms CatalanCore.Uniform.Bank.Chi3.KContent.chi3_k_content

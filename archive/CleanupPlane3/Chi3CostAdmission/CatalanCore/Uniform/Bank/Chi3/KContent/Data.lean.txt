@@ -1,0 +1,27 @@
+module
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U1
+public import CatalanCore.Uniform.Bank.Chi3.KContent.Data.U5
+@[expose] public section
+set_option Elab.async false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3200000
+namespace CatalanCore.Uniform.Bank.Chi3.KContent
+open CatalanCore.Uniform.Content.BankShared.KTerm CatalanCore.Uniform.Content.BankShared.Check
+def kData : KBankData := { kHead with Λ := (pcRat (raw_ints% [225706514569840812587646472267088130901573531845819693981955101571429004212021774333976142337325032023820324915415861,55105101308379468249764243581140517776104156182333546862848918712563705179921864016722641907400253805397160894208000])), tmpls := [(1,ktmpl1),(5,ktmpl5)] }
+-- kcost: scalar parameter check only.
+theorem kdata_params : kcheckParams kData=true := by decide +kernel
+-- kcost: full mass bookkeeping, original exactLambda retained; full metadata family measured9.625GiB/322s, no routine6GiBcap.
+set_option profiler true in
+theorem kdata_classes : kclassOK kData=true := by decide +kernel
+theorem kdata_heads : ∀ x∈kData.tmpls,ktmplHead kData x.1 x.2=true := by
+  intro x hx
+  simp only [kData,List.mem_cons,List.mem_singleton,List.not_mem_nil,or_false] at hx
+  rcases hx with rfl | rfl
+  · exact ktmpl1_head
+  · exact ktmpl5_head
+theorem kData_Λ : kData.Λ=(pcRat (raw_ints% [225706514569840812587646472267088130901573531845819693981955101571429004212021774333976142337325032023820324915415861,55105101308379468249764243581140517776104156182333546862848918712563705179921864016722641907400253805397160894208000])) := rfl
+#print axioms kdata_params
+#print axioms kdata_classes
+#print axioms kdata_heads
+
+end CatalanCore.Uniform.Bank.Chi3.KContent

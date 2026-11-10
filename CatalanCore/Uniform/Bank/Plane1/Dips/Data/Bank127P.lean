@@ -1,7 +1,8 @@
 module
 
 public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Lines127
-public import CatalanCore.Uniform.Bank.Plane1.Dips.Rows
+public import CatalanCore.Uniform.Bank.Plane1.Dips.Data.Legacy
+public import CatalanCore.Uniform.Bank.Plane1.Cover
 public import CatalanCore.Uniform.Bank.Plane1.Data.Common
 public import CatalanCore.Uniform.Bank.Plane1.Data.Exp1
 public import CatalanCore.Uniform.Bank.Plane1.Data.Exp5
@@ -17,6 +18,8 @@ The catalogue `dipCat` = plane branches, the 10 lines (ln19, ln22, ln24, ln25, l
 (br15, br18, br21, br24, br26) and the 7 prefix windows; the head pieces of the two root classes
 (`θ ∈ (1/12, 9]`) with their certificates; the content `Λ = 3.109606175540`.  The periodic layer (cells, expansion,
 masses) is the plane 1 layer unchanged (`Plane1.Data.Exp1`, `Exp5`): the lines act on `θ ≥ 0.3 > 1/12` only. -/
+
+open CatalanCore.Uniform.Content.SmallPrimes
 
 namespace CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127
 open Finset CatalanCore CatalanCore.Basic CatalanCore.Arith CatalanCore.Arith.Hybrid CatalanCore.Uniform
@@ -408,20 +411,21 @@ theorem bankP_class : kcClass bankP = true :=
 theorem bankP_check : kcheckC bankP = true :=
   kcheckC_of bankP_params bankP_heads bankP_cells bankP_pieces bankP_class
 
-theorem bankP_ok : DipBankOK Support.plus 1 (-2) (1) (by norm_num) bankP lnsP brsP where
-  check := bankP_check
-  shifts := rfl
-  alpha := by norm_num [planeC, bankP, eHeadP, planeHeadC, qq]
-  hlns := lnsP_ok
-  hbr := brsP_ok
-  cat := dipCat_mem Support.plus.rho lnsP brsP presP
-  hQ := by decide
-  hP := by decide
-  hM := by decide
-  ht0 := by norm_num [bankP, eHeadP, planeHeadC, qq]
-  hα0 := by norm_num [bankP, eHeadP, planeHeadC, qq]
-  hcF := by decide
-  hdepth := planeDepth_le
+theorem bankP_ok : DipBankOK planeC planeC_pos planeDepth Support.plus 1 (-2) (1) (by norm_num) bankP (SmallBudget.add (SmallBudget.sqrtLog 5 10) SmallBudget.unit) 0 :=
+  legacyBankOK Support.plus 1 (-2) (1) (by norm_num) bankP lnsP brsP
+    (bankP_check)
+    (rfl)
+    (by norm_num [planeC, bankP, eHeadP, planeHeadC, qq])
+    (lnsP_ok)
+    (brsP_ok)
+    (dipCat_mem Support.plus.rho lnsP brsP presP)
+    (by decide)
+    (by decide)
+    (by decide)
+    (by norm_num [bankP, eHeadP, planeHeadC, qq])
+    (by norm_num [bankP, eHeadP, planeHeadC, qq])
+    (by decide)
+    (planeDepth_le)
 
 theorem bankP_eta : (dipLamP : ℚ) < Dp1.Dt := by
   -- kcost: 1.0 s measured (one rational comparison)
@@ -435,13 +439,17 @@ theorem bankP_mu : Dp1.ccert / (Dp1.Dt - dipLamP) ≤ (15359 / 1000 : ℚ) := by
 theorem dip_1_27_minus_measure :
     MeasureLBAt (chi3L2 + (((-1 / 27 : ℚ) : ℚ) : ℝ) * Real.pi ^ 2) (((15359 / 1000 : ℚ) : ℚ) : ℝ) ∧
       Irrational (chi3L2 + (((-1 / 27 : ℚ) : ℚ) : ℝ) * Real.pi ^ 2) := by
-  have h := dip_point Support.plus 1 (-2) (1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) bankP_ok bankP_eta
-    (by decide +kernel) (B := (15359 / 1000 : ℚ)) bankP_mu
+  have heta : (bankP.Λ:ℝ)<(Dp1.Dt:ℝ) := by exact_mod_cast bankP_eta
+  have hcc : (0:ℝ)<(Dp1.ccert:ℝ) := by exact_mod_cast (show (0:ℚ)<Dp1.ccert by decide +kernel)
+  have h := dip_point planeC planeC_pos planeDepth Support.plus 1 (-2) (1)
+    (by norm_num) (by norm_num) bankP (SmallBudget.add (SmallBudget.sqrtLog 5 10) SmallBudget.unit) 0 bankP_ok
+    (planeDecay_cover Support.plus 1 (-2) (1) (by norm_num)) heta hcc
+    (plane_nv0_even Support.plus 1 (-2) (1) (by norm_num) (by norm_num) (by norm_num) (by norm_num) planeDepth le_rfl)
   have ht : planeT Support.plus 1 (-2) = (-1 / 27 : ℚ) := by
     simp only [planeT, Support.sgn]
     norm_num
   rw [ht] at h
-  exact h
+  exact ⟨MeasureLBAt.mono (by exact_mod_cast bankP_mu) h.1,h.2⟩
 
 end CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127
 

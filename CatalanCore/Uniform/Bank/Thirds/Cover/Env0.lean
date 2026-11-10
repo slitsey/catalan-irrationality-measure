@@ -1,7 +1,6 @@
 module
 
 public import CatalanCore.Uniform.Bank.Common.Data.Thirds.Data
-public import CatalanCore.Uniform.Bank.Common.Data.Thirds.Frame
 public import CatalanCore.Uniform.Decay.PolyWire3.Decode
 public import CatalanCore.Uniform.Decay.PolyFull.Full
 
@@ -20,7 +19,7 @@ def RP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2
 def CP : List (ℚ × ℚ × ℚ) := [((1 : ℚ), (0 : ℚ), (1 : ℚ)), ((1 / 2 : ℚ), (1 : ℚ), (13 / 10 : ℚ))]
 def nuC : List Seg := nodeSegs RP CP
 def Dbase : SplineData := CatalanCore.Uniform.Bank.Common.Data.Thirds.data
-def Pply : RatPolygon := ⟨(33 / 250 : ℚ), CatalanCore.Uniform.Bank.Common.Data.Thirds.polygon.vertices.tail, (100000 / 31399 : ℚ)⟩
+def Pply : RatPolygon := ⟨(33 / 250 : ℚ), [((-332250187 / 2500000000 : ℚ), (193 / 25000 : ℚ)), ((-15970759447 / 100000000000 : ℚ), (59449 / 1000000 : ℚ)), ((-4979766249 / 25000000000 : ℚ), (9497 / 62500 : ℚ)), ((-6391350939 / 25000000000 : ℚ), (43189 / 125000 : ℚ))], (100000 / 31399 : ℚ)⟩
 def tmaxC : ℚ := (30042908589 / 12500000000 : ℚ)
 def Rtw : ℚ := 4
 def eWc : ℕ := 50
@@ -36,6 +35,9 @@ def e4 : Pt × Pt := ((qOfP (-6391350939) (25000000000), qOfP (43189) (125000)),
 
 def edgesLit : List (Pt × Pt) := [e0, e1, e2, e3, e4]
 
+-- kcost: fixed assembly <1s estimated, or complete per-cell rate above; no hidden extra cells.
 theorem edges_eq : edgesAll Pply tmaxC = edgesLit := by decide +kernel
+
+#print axioms edges_eq
 
 end CatalanCore.Uniform.Bank.Thirds.Cover
