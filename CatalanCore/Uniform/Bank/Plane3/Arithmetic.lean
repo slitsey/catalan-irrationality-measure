@@ -2,7 +2,7 @@ module
 
 public import CatalanCore.Uniform.Bank.Plane3.Frame
 public import CatalanCore.Uniform.Bank.Plane3.Data
-public import CatalanCore.Uniform.Support.Producer
+public import CatalanCore.Uniform.Support.HPoleCatalogue
 
 @[expose] public section
 set_option Elab.async false
@@ -64,69 +64,14 @@ theorem plane3_catalogue (v u : ℚ) (c : ℚ) (hc : 0 < c) (const : ℝ) (depth
       (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
         (altGeom c hc).geometry)
       [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u) plane3Catalogue := by
-  intro br hbr i hi hr p _ hpb hpn hN kv hkv hcond
-  have hd := coefficients_mem v u hpn
-  have hs := altGeom_hybShape c hc hi.2
-  have hwin : i.1 + 2 * ((altGeom c hc).geometry i.1).k < p*p := by
-    rw [geometry_k_eq_borderSize]
-    omega
-  have hodd : p % 2 = 1 := by
-    rcases (Fact.out : p.Prime).eq_two_or_odd with hp | hp
-    · omega
-    · exact hp
-  have first := IntegerPoleRows.family_first 4 (by decide) (coefficients v u) hd hs i.2 hwin hodd
-  simp only [plane3Catalogue, List.mem_cons, List.not_mem_nil, or_false] at hbr
-  rcases hbr with rfl | rfl | rfl | rfl | rfl
-  · refine ⟨_, first, ?_⟩
-    simp [firstBranch, KExpr.evalN, IntegerPoleRows.delta, geometry_k_eq_borderSize]
-  · have hpr : p ≤ i.1 := by
-      have h := hcond ⟨1,-1,0,[],0,false⟩ (by simp [secondBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      omega
-    refine ⟨_, IntegerPoleRows.family_second 4 (by decide) (coefficients v u) hd hs i.2 hwin hpr, ?_⟩
-    simp [secondBranch, KExpr.evalN, geometry_k_eq_borderSize]
-  · have hpr : p ≤ i.1 := by
-      have h := hcond ⟨1,-1,0,[],0,false⟩ (by simp [thirdBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      omega
-    have hrp : i.1 ≤ 2*p := by
-      have h := hcond ⟨-1,2,0,[],0,false⟩ (by simp [thirdBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      omega
-    have hmp : 2*((altGeom c hc).geometry i.1).k ≤ p := by
-      have h := hcond ⟨0,1,-2,[],0,false⟩ (by simp [thirdBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      rw [geometry_k_eq_borderSize]
-      omega
-    have hhi : i.1 + 2*((altGeom c hc).geometry i.1).k ≤ 3*p := by
-      have h := hcond ⟨-1,3,-2,[],0,false⟩ (by simp [thirdBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      rw [geometry_k_eq_borderSize]
-      omega
-    by_cases hlo : 2*p ≤ i.1 + 2*((altGeom c hc).geometry i.1).k
-    · refine ⟨_, IntegerPoleRows.family_third 4 (by decide) (coefficients v u) hd hs i.2 hwin hpr hrp hmp hlo hhi, ?_⟩
-      simp [thirdBranch, KExpr.evalN, geometry_k_eq_borderSize]
-    · have hrow := IntegerPoleRows.family_second 4 (by decide) (coefficients v u) hd hs i.2 hwin hpr
-      refine ⟨_, hrow, ?_⟩
-      simp only [thirdBranch, KExpr.evalN, Nat.zero_mul, add_zero]
-      simp only [geometry_k_eq_borderSize] at hlo hmp hhi ⊢
-      omega
-  · have hpr : i.1 ≤ p := by
-      have h := hcond ⟨-1,1,0,[],0,false⟩ (by simp [fourthBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      omega
-    refine ⟨_, IntegerPoleRows.family_fourth 4 (by decide) (coefficients v u) hd hs i.2 hwin hpr, ?_⟩
-    simp [fourthBranch, KExpr.evalN, geometry_k_eq_borderSize]
-  · have hnp : i.1 + 2*((altGeom c hc).geometry i.1).k ≤ p := by
-      have h := hcond ⟨-1,1,-2,[],0,false⟩ (by simp [zeroBranch])
-      norm_num [KCond.Holds, KCond.L, dot] at h
-      rw [geometry_k_eq_borderSize]
-      omega
-    have hrow := IntegerPoleRows.family_fourth 4 (by decide) (coefficients v u) hd hs i.2 hwin (by omega)
-    refine ⟨0, ?_, ?_⟩
-    · rw [Nat.sub_eq_zero_of_le hnp, Nat.mul_zero] at hrow
-      exact hrow
-    · simp [zeroBranch, KExpr.evalN]
+  change KCatValidFam c hc const depth
+    (SeqFamily.poly (hpoleF 4 (coefficients v u)) (hpoleE 4 (coefficients v u))
+      (altGeom c hc).geometry)
+    [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
+    (IntegerPoleRows.catalogue 4)
+  exact hpole_catalogue 4 (by decide) (coefficients v u) c hc const depth
+    [⟨2,1,1⟩, ⟨2,1,1⟩] 2 2 (coefficientThreshold v u)
+    (by decide) (by decide) (fun p _ hp => coefficients_mem v u hp)
 
 def plane3Translation : Transl 20 1 84 64 plane3BaseCatalogue where
   ρ _ br := br
