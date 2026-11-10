@@ -25,23 +25,23 @@ public import CatalanCore.Uniform.Bank.Plane3.Measure
 @[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Uniform.Bank.FourthsContent.Level3Bound
-theorem lambda_irrational (sgn : Bool) := (lambda_point_exact sgn).2
+theorem lambda_irrational (sgn : Bool) : Irrational (CatalanCore.Uniform.Bank.Fourths.lambdaTarget sgn) := (lambda_point_exact sgn).2
 end CatalanCore.Uniform.Bank.FourthsContent.Level3Bound
 namespace CatalanCore.Uniform.Bank.Chi3.KContent
-theorem chi3_irrational := (chi3_point_exact).2
+theorem chi3_irrational : Irrational CatalanFrames.P6.chi3L2 := (chi3_point_exact).2
 end CatalanCore.Uniform.Bank.Chi3.KContent
 namespace CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound
-theorem thirds_plus_irrational := (thirds_plus_point_exact).2
-theorem thirds_minus_irrational := (thirds_minus_point_exact).2
+theorem thirds_plus_irrational : Irrational (CatalanFrames.P6.chi3L2+Real.pi^2/9) := (thirds_plus_point_exact).2
+theorem thirds_minus_irrational : Irrational (CatalanFrames.P6.chi3L2-Real.pi^2/9) := (thirds_minus_point_exact).2
 end CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound
 namespace CatalanCore.Uniform.Bank.FifthsContent.Level3Bound
-theorem fifths1_irrational := (fifths1_point_exact).2
-theorem fifths2_irrational := (fifths2_point_exact).2
-theorem fifths3_irrational := (fifths3_point_exact).2
-theorem fifths4_irrational := (fifths4_point_exact).2
+theorem fifths1_irrational : Irrational (CatalanCore.Uniform.Bank.Fifths.fifthsTarget 1) := (fifths1_point_exact).2
+theorem fifths2_irrational : Irrational (CatalanCore.Uniform.Bank.Fifths.fifthsTarget 2) := (fifths2_point_exact).2
+theorem fifths3_irrational : Irrational (CatalanCore.Uniform.Bank.Fifths.fifthsTarget 3) := (fifths3_point_exact).2
+theorem fifths4_irrational : Irrational (CatalanCore.Uniform.Bank.Fifths.fifthsTarget 4) := (fifths4_point_exact).2
 end CatalanCore.Uniform.Bank.FifthsContent.Level3Bound
 namespace CatalanCore.Uniform.Bank.HalvesContent.Bound
-theorem pi2_irrational := (pi2_point_exact).2
+theorem pi2_irrational : Irrational (Real.pi^2) := (pi2_point_exact).2
 end CatalanCore.Uniform.Bank.HalvesContent.Bound
 namespace CatalanCore.Uniform.Bank.SeventhsContent.Level3Bound
 open CatalanCore CatalanCore.Uniform CatalanCore.Uniform.Bank.Sevenths CatalanCore.Uniform.Content.Shape
@@ -104,14 +104,14 @@ theorem eventually_of_exact {x : ℝ} {c D Λ B : ℚ} (hc : 0 < c) (hΛ : Λ < 
 
 theorem eventually_of_point {x E M : ℝ} (hE : 0≤E) (hM : E<M)
     (h : Measure.MeasureLBAt x E ∧ Irrational x) :
-    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-M)<|x-(p:ℝ)/q| := by
+    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-M)< |x-(p:ℝ)/q| := by
   obtain ⟨q0,hq⟩ := Measure.MeasureLBAt.all_of_irrational hE h.2 h.1 (M-E) (sub_pos.mpr hM)
   filter_upwards [Filter.eventually_ge_atTop q0] with q hqq p
   simpa only [show E+(M-E)=M by ring] using hq p q hqq
 
 open CatalanCore.Uniform.Bank.FourthsContent.Level3Bound in
 theorem lambda_final (sgn : Bool) : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((311973/10000:ℚ):ℝ))<|(CatalanCore.Uniform.Bank.Fourths.lambdaTarget sgn)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((311973/10000:ℚ):ℝ))< |(CatalanCore.Uniform.Bank.Fourths.lambdaTarget sgn)-(p:ℝ)/q| := by
   have h := lambda_point_exact sgn
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -120,7 +120,7 @@ theorem lambda_final (sgn : Bool) : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound in
 theorem thirds_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((94913/10000:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+Real.pi^2/9)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((94913/10000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+Real.pi^2/9)-(p:ℝ)/q| := by
   have h := thirds_plus_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -129,7 +129,7 @@ theorem thirds_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.ThirdsContent.Level3Bound in
 theorem thirds_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((94913/10000:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2-Real.pi^2/9)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((94913/10000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2-Real.pi^2/9)-(p:ℝ)/q| := by
   have h := thirds_minus_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -138,7 +138,7 @@ theorem thirds_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.Chi3.KContent in
 theorem chi3_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((136839/10000:ℚ):ℝ))<|CatalanFrames.P6.chi3L2-(p:ℝ)/q| := by
+    (q:ℝ)^(-((136839/10000:ℚ):ℝ))< |CatalanFrames.P6.chi3L2-(p:ℝ)/q| := by
   have h := chi3_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 chi3_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 chi3_cc
@@ -147,7 +147,7 @@ theorem chi3_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.FifthsContent.Level3Bound in
 theorem fifths1_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((59439/2500:ℚ):ℝ))<|(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 1)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((59439/2500:ℚ):ℝ))< |(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 1)-(p:ℝ)/q| := by
   have h := fifths1_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -156,7 +156,7 @@ theorem fifths1_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.FifthsContent.Level3Bound in
 theorem fifths2_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((59439/2500:ℚ):ℝ))<|(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((59439/2500:ℚ):ℝ))< |(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 2)-(p:ℝ)/q| := by
   have h := fifths2_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -165,7 +165,7 @@ theorem fifths2_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.FifthsContent.Level3Bound in
 theorem fifths3_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((59439/2500:ℚ):ℝ))<|(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 3)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((59439/2500:ℚ):ℝ))< |(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 3)-(p:ℝ)/q| := by
   have h := fifths3_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -174,7 +174,7 @@ theorem fifths3_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 
 open CatalanCore.Uniform.Bank.FifthsContent.Level3Bound in
 theorem fifths4_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((59439/2500:ℚ):ℝ))<|(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 4)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((59439/2500:ℚ):ℝ))< |(CatalanCore.Uniform.Bank.Fifths.fifthsTarget 4)-(p:ℝ)/q| := by
   have h := fifths4_point_exact
   have hη := (Rat.cast_lt (K:=ℝ)).2 eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
@@ -223,7 +223,7 @@ theorem sevenths_final (a : Fin 6) :
 open CatalanCore.Uniform.Bank.HalvesContent.Bound
   CatalanCore.Uniform.Bank.HalvesContent.Auto CatalanCore.Uniform.Bank.Halves.Cover in
 theorem pi2_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((32607/5000:ℚ):ℝ))<|Real.pi^2-(p:ℝ)/q| := by
+    (q:ℝ)^(-((32607/5000:ℚ):ℝ))< |Real.pi^2-(p:ℝ)/q| := by
   have hη := (Rat.cast_lt (K:=ℝ)).2 lam_lt
   have hc := (Rat.cast_lt (K:=ℝ)).2 cc_pos
   apply eventually_of_point ?_ ?_ pi2_point_exact
@@ -273,7 +273,7 @@ theorem zeta3_final :
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Data CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227 in
 theorem dip_2_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((14:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((14:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.plus 2 (-1) (-1)
     (by norm_num) (by norm_num) bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankP_ok
     (planeDecay_cover Support.plus 2 (-1) (-1) (by norm_num))
@@ -291,7 +291,7 @@ theorem dip_2_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Data CatalanCore.Uniform.Bank.Plane1.Dips.Data.F227 in
 theorem dip_2_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((14:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((-2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((14:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((-2/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.minus 2 (-1) (-1)
     (by norm_num) (by norm_num) bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankM_ok
     (planeDecay_cover Support.minus 2 (-1) (-1) (by norm_num))
@@ -309,7 +309,7 @@ theorem dip_2_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Data CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127 in
 theorem dip_1_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((15359/1000:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((15359/1000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.minus 1 (-2) (1)
     (by norm_num) (by norm_num) bankM (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankM_ok
     (planeDecay_cover Support.minus 1 (-2) (1) (by norm_num))
@@ -327,7 +327,7 @@ theorem dip_1_27_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 open CatalanCore.Uniform.Bank.Plane1 CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Data CatalanCore.Uniform.Bank.Plane1.Dips.Data.F127 in
 theorem dip_1_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((15359/1000:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((-1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((15359/1000:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((-1/27:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have h := dip_point planeC planeC_pos planeDepth Support.plus 1 (-2) (1)
     (by norm_num) (by norm_num) bankP (CatalanCore.Uniform.Content.BankShared.SmallBudget.add (CatalanCore.Uniform.Content.SmallPrimes.SmallBudget.sqrtLog 5 10) CatalanCore.Uniform.Content.BankShared.SmallBudget.unit) 0 bankP_ok
     (planeDecay_cover Support.plus 1 (-2) (1) (by norm_num))
@@ -345,7 +345,7 @@ theorem dip_1_27_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 open CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Dips.Data.F118 in
 theorem dip_1_18_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((4373/250:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((1/18:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((4373/250:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((1/18:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have hη := (Rat.cast_lt (K:=ℝ)).2 dip18_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 dip18_cc
   apply eventually_of_point ?_ (by exact_mod_cast dip18_mu) dip_1_18_plus_point
@@ -354,7 +354,7 @@ theorem dip_1_18_plus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
 open CatalanCore.Uniform.Bank.Plane1.Dips
   CatalanCore.Uniform.Bank.Plane1.Dips.Data.F118 in
 theorem dip_1_18_minus_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-((4373/250:ℚ):ℝ))<|(CatalanFrames.P6.chi3L2+((-1/18:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
+    (q:ℝ)^(-((4373/250:ℚ):ℝ))< |(CatalanFrames.P6.chi3L2+((-1/18:ℚ):ℝ)*Real.pi^2)-(p:ℝ)/q| := by
   have hη := (Rat.cast_lt (K:=ℝ)).2 dip18_eta
   have hc := (Rat.cast_lt (K:=ℝ)).2 dip18_cc
   apply eventually_of_point ?_ (by exact_mod_cast dip18_mu) dip_1_18_minus_point
