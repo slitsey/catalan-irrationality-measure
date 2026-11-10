@@ -39,7 +39,10 @@ theorem decay_of_frame {Fr:Frame} (hC:Frame.contourCheck Fr=true)
       (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) :=
   altGeom_hasScaledDecay_F (1/5) one_fifth_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP tab_Mq
     Dchi Pply check_true (by rw [dim_eq,hd]) 30 energy_ok (m0:=1/4) (by norm_num)
-    (fun i => by exact_mod_cast hm0 i) eps_pos depth
+    (fun i => by
+      have h : (((1/4:ℚ):ℝ)) ≤ (Fr.μ i:ℝ) := Rat.cast_le.mpr (hm0 i)
+      norm_num only [Rat.cast_div, Rat.cast_one, Rat.cast_ofNat] at h
+      exact h) eps_pos depth
 
 noncomputable def depth0 (Fr:Frame) : ℕ := (altGeom (1/5) one_fifth_pos).selectionDepth Fr 2
 theorem depth0_le {Fr:Frame} (hd:Fr.d=2) : depth0 Fr≤64 := by
@@ -63,7 +66,7 @@ theorem nv0_even (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0) :
 
 theorem point_of_frame (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0)
     {ξ:ℝ} {u v:ℚ} (hu:u≠0) (hconst:Fr.const=(u:ℝ)*ξ+v)
-    (hS:HasScaledContent (AltEven (1/5) one_fifth_pos Fr (depth0 Fr)) (altGeom (1/5) one_fifth_pos).scale (bankData.Λ:ℝ))
+    (hS:HasScaledContent (CatalanCore.Uniform.Content.BankShared.Check.AltEven (1/5) one_fifth_pos Fr (depth0 Fr)) (altGeom (1/5) one_fifth_pos).scale (bankData.Λ:ℝ))
     (hD:HasScaledDecay ((altGeom (1/5) one_fifth_pos).family Fr (depth0 Fr)) (altGeom (1/5) one_fifth_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ)) :
     Measure.MeasureLBAt ξ ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational ξ :=
   CatalanCore.Uniform.Bank.Plane1.alt_point (1/5) one_fifth_pos Fr (depth0 Fr) hS hD
@@ -75,7 +78,7 @@ theorem mu_le_real : (Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))≤(publi
 theorem lambda_decay (sgn:Bool) : HasScaledDecay ((altGeom (1/5) one_fifth_pos).family (lambdaFrame sgn) (depth0 (lambdaFrame sgn)))
     (altGeom (1/5) one_fifth_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) := by
   cases sgn <;> exact decay_of_frame (by decide +kernel) (by decide +kernel) (by decide +kernel) rfl (by decide +kernel) _
-theorem lambda_content (sgn:Bool) : HasScaledContent (AltEven (1/5) one_fifth_pos (lambdaFrame sgn) (depth0 (lambdaFrame sgn)))
+theorem lambda_content (sgn:Bool) : HasScaledContent (CatalanCore.Uniform.Content.BankShared.Check.AltEven (1/5) one_fifth_pos (lambdaFrame sgn) (depth0 (lambdaFrame sgn)))
     (altGeom (1/5) one_fifth_pos).scale (bankData.Λ:ℝ) := by
   cases sgn
   · exact lamMinus_content_auto _ (depth0_le (lambdaFrame_d false))
@@ -83,7 +86,7 @@ theorem lambda_content (sgn:Bool) : HasScaledContent (AltEven (1/5) one_fifth_po
 theorem lambda_point_exact (sgn:Bool) : Measure.MeasureLBAt (lambdaTarget sgn)
     ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (lambdaTarget sgn) :=
   point_of_frame (lambdaFrame sgn) (by rw [lambdaFrame_d];norm_num) (lambdaFrame_w_ne sgn)
-    (u:=1/2) (v:=0) (by norm_num) (by simpa only [add_zero] using lambdaFrame_const sgn)
+    (u:=1/2) (v:=0) (by norm_num) (by simpa only [Rat.cast_zero, add_zero] using lambdaFrame_const sgn)
     (lambda_content sgn) (lambda_decay sgn)
 theorem lambda_point (sgn:Bool) : Measure.MeasureLBAt (lambdaTarget sgn) (publicMu:ℝ) ∧ Irrational (lambdaTarget sgn) :=
   ⟨Measure.MeasureLBAt.mono mu_le_real (lambda_point_exact sgn).1,(lambda_point_exact sgn).2⟩

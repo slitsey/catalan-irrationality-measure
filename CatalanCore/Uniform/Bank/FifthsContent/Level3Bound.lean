@@ -39,7 +39,10 @@ theorem decay_of_frame {Fr:Frame} (hC:Frame.contourCheck Fr=true)
       (Dchi.Dt:ℝ) (Dchi.ccert:ℝ) :=
   altGeom_hasScaledDecay_F (2/9) two_ninths_pos (by norm_num) hC hAR hnorm1 TabC tab_RP tab_CP tab_Mq
     Dchi Pply check_true (by rw [dim_eq,hd]) 30 energy_ok (m0:=1/5) (by norm_num)
-    (fun i => by exact_mod_cast hm0 i) eps_pos depth
+    (fun i => by
+      have h : (((1/5:ℚ):ℝ)) ≤ (Fr.μ i:ℝ) := Rat.cast_le.mpr (hm0 i)
+      norm_num only [Rat.cast_div,Rat.cast_one,Rat.cast_ofNat] at h
+      exact h) eps_pos depth
 
 noncomputable def depth0 (Fr:Frame) : ℕ := (altGeom (2/9) two_ninths_pos).selectionDepth Fr 2
 theorem depth0_le {Fr:Frame} (hd:Fr.d=2) : depth0 Fr≤64 := by
@@ -63,7 +66,7 @@ theorem nv0_even (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0) :
 
 theorem point_of_frame (Fr:Frame) (hd:1≤Fr.d) (hw:∀ i,Fr.w i≠0)
     {ξ:ℝ} {u v:ℚ} (hu:u≠0) (hconst:Fr.const=(u:ℝ)*ξ+v)
-    (hS:HasScaledContent (AltEven (2/9) two_ninths_pos Fr (depth0 Fr)) (altGeom (2/9) two_ninths_pos).scale (bankData.Λ:ℝ))
+    (hS:HasScaledContent (CatalanCore.Uniform.Content.BankShared.Check.AltEven (2/9) two_ninths_pos Fr (depth0 Fr)) (altGeom (2/9) two_ninths_pos).scale (bankData.Λ:ℝ))
     (hD:HasScaledDecay ((altGeom (2/9) two_ninths_pos).family Fr (depth0 Fr)) (altGeom (2/9) two_ninths_pos).scale (Dchi.Dt:ℝ) (Dchi.ccert:ℝ)) :
     Measure.MeasureLBAt ξ ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational ξ :=
   CatalanCore.Uniform.Bank.Plane1.alt_point (2/9) two_ninths_pos Fr (depth0 Fr) hS hD
@@ -78,7 +81,7 @@ theorem fifths1_decay : HasScaledDecay ((altGeom (2/9) two_ninths_pos).family fi
 theorem fifths1_point_exact : Measure.MeasureLBAt (fifthsTarget 1)
     ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (fifthsTarget 1) :=
   point_of_frame fifths1 (by decide +kernel) (by decide +kernel) (u:=-1/25) (v:=0) (by norm_num)
-    (by simpa only [add_zero] using fifths1_const) (fifths1_content_auto _ (depth0_le rfl)) fifths1_decay
+    (by simpa only [Rat.cast_zero,add_zero] using fifths1_const) (fifths1_content_auto _ (depth0_le (Fr:=fifths1) rfl)) fifths1_decay
 theorem fifths1_point : Measure.MeasureLBAt (fifthsTarget 1) (publicMu:ℝ) ∧ Irrational (fifthsTarget 1) :=
   ⟨Measure.MeasureLBAt.mono mu_le_real fifths1_point_exact.1,fifths1_point_exact.2⟩
 theorem fifths1_measure : Measure.MeasureLBAt (fifthsTarget 1) (publicMu:ℝ) := fifths1_point.1
@@ -89,7 +92,7 @@ theorem fifths2_decay : HasScaledDecay ((altGeom (2/9) two_ninths_pos).family fi
 theorem fifths2_point_exact : Measure.MeasureLBAt (fifthsTarget 2)
     ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (fifthsTarget 2) :=
   point_of_frame fifths2 (by decide +kernel) (by decide +kernel) (u:=-1/25) (v:=0) (by norm_num)
-    (by simpa only [add_zero] using fifths2_const) (fifths2_content_auto _ (depth0_le rfl)) fifths2_decay
+    (by simpa only [Rat.cast_zero,add_zero] using fifths2_const) (fifths2_content_auto _ (depth0_le (Fr:=fifths2) rfl)) fifths2_decay
 theorem fifths2_point : Measure.MeasureLBAt (fifthsTarget 2) (publicMu:ℝ) ∧ Irrational (fifthsTarget 2) :=
   ⟨Measure.MeasureLBAt.mono mu_le_real fifths2_point_exact.1,fifths2_point_exact.2⟩
 theorem fifths2_measure : Measure.MeasureLBAt (fifthsTarget 2) (publicMu:ℝ) := fifths2_point.1
@@ -100,7 +103,7 @@ theorem fifths3_decay : HasScaledDecay ((altGeom (2/9) two_ninths_pos).family fi
 theorem fifths3_point_exact : Measure.MeasureLBAt (fifthsTarget 3)
     ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (fifthsTarget 3) :=
   point_of_frame fifths3 (by decide +kernel) (by decide +kernel) (u:=-1/25) (v:=0) (by norm_num)
-    (by simpa only [add_zero] using fifths3_const) (fifths3_content_auto _ (depth0_le rfl)) fifths3_decay
+    (by simpa only [Rat.cast_zero,add_zero] using fifths3_const) (fifths3_content_auto _ (depth0_le (Fr:=fifths3) rfl)) fifths3_decay
 theorem fifths3_point : Measure.MeasureLBAt (fifthsTarget 3) (publicMu:ℝ) ∧ Irrational (fifthsTarget 3) :=
   ⟨Measure.MeasureLBAt.mono mu_le_real fifths3_point_exact.1,fifths3_point_exact.2⟩
 theorem fifths3_measure : Measure.MeasureLBAt (fifthsTarget 3) (publicMu:ℝ) := fifths3_point.1
@@ -111,7 +114,7 @@ theorem fifths4_decay : HasScaledDecay ((altGeom (2/9) two_ninths_pos).family fi
 theorem fifths4_point_exact : Measure.MeasureLBAt (fifthsTarget 4)
     ((Dchi.ccert:ℝ)/((Dchi.Dt:ℝ)-(bankData.Λ:ℝ))) ∧ Irrational (fifthsTarget 4) :=
   point_of_frame fifths4 (by decide +kernel) (by decide +kernel) (u:=-1/25) (v:=0) (by norm_num)
-    (by simpa only [add_zero] using fifths4_const) (fifths4_content_auto _ (depth0_le rfl)) fifths4_decay
+    (by simpa only [Rat.cast_zero,add_zero] using fifths4_const) (fifths4_content_auto _ (depth0_le (Fr:=fifths4) rfl)) fifths4_decay
 theorem fifths4_point : Measure.MeasureLBAt (fifthsTarget 4) (publicMu:ℝ) ∧ Irrational (fifthsTarget 4) :=
   ⟨Measure.MeasureLBAt.mono mu_le_real fifths4_point_exact.1,fifths4_point_exact.2⟩
 theorem fifths4_measure : Measure.MeasureLBAt (fifthsTarget 4) (publicMu:ℝ) := fifths4_point.1
