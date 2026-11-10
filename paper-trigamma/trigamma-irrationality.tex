@@ -53,8 +53,7 @@
 \newcommand{\MuHalvesU}{6.5214}
 \newcommand{\MuPlaneA}{20.6622}
 \newcommand{\MuPlaneB}{335.20}
-\newcommand{\MuPlaneC}{118}
-\newcommand{\MuPiFour}{75}
+\newcommand{\MuPlaneC}{72.84}
 \newcommand{\MuZetaThree}{6.0382}
 \newcommand{\MuDipA}{14}
 \newcommand{\MuDipB}{15.359}
@@ -70,8 +69,7 @@
 \newcommand{\LamDB}{3.1096062}    \newcommand{\ExpDB}{15.35830}
 \newcommand{\LamDC}{3.4140176}    \newcommand{\DDC}{3.8109776}    \newcommand{\gDC}{6.9434368}   \newcommand{\ExpDC}{17.49153}
 \newcommand{\LamPlB}{3.4768376}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.0886}
-\newcommand{\LamPlC}{3.2941777}   \newcommand{\DPlC}{3.3533776}   \newcommand{\gPlC}{6.9643459}  \newcommand{\ExpPlC}{117.6410}
-\newcommand{\LamPiFour}{3.2600726} \newcommand{\ExpPiFour}{74.6406}
+\newcommand{\LamPlC}{3.3497815}   \newcommand{\DPlC}{3.4456170}   \newcommand{\gPlC}{6.9798542}  \newcommand{\ExpPlC}{72.8316}
 \newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.034884}
 \newcommand{\MuChiExact}{13.683844}
 
@@ -101,8 +99,8 @@ irrationality measure was known. On the third plane the bound $66.3$ of Leibtag 
 
 At special points of the planes the bounds are lower. We prove $\mu(L(2,\chi_{-3}))\le\MuChi$, and the bounds
 $\MuThirdsU$, $\MuDipA$, $\MuDipB$ and $\MuDipC$ for $L(2,\chi_{-3})\pm\pi^2/9$, $\pm2\pi^2/27$, $\pm\pi^2/27$ and
-$\pm\pi^2/18$. For completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$, $\mu(\pi^2)\le\MuHalvesU$ and
-$\mu(\pi^4)\le\MuPiFour$, which are weaker than the known bounds.
+$\pm\pi^2/18$. For completeness we also prove $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$,
+which are weaker than the known bounds.
 
 The construction also reaches numbers off the planes, many of which are differences of two values of the trigamma
 function. It gives $\mu(G\pm5\pi^2/48)\le\MuLamU$, where $G$ is Catalan's constant, and bounds $\MuFifthsU$ and
@@ -186,22 +184,15 @@ The following bounds hold.
 \end{enumerate}
 \end{theorem}
 
-At the two ends of the second plane, and at the point $\pi^4$ of the third, we prove the following bounds, each by its
-own argument (\S\ref{ssec:zeta3}, Section~\ref{sec:proof} and \S\ref{ssec:pi4}). We include them for completeness. They
-are weaker than the bounds $\mu(\zeta(3))<5.4197$ and $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26} and the
-bound $\mu(\zeta(4))\le12.51085940\ldots$ of Marcovecchio and Zudilin \cite{MarcovecchioZudilin20}.
+At the two ends of the second plane we prove the following bounds
+(\S\ref{ssec:zeta3} and Section~\ref{sec:proof}). We include them for completeness. They are weaker than the bounds
+$\mu(\zeta(3))<5.4197$ and $\mu(\pi^2)<4.62675$ of Leibtag et al.\ \cite{LBKWSK26}.
 
 \begin{theorem}[the ends of the second plane]\label{thm:ends}
 $\mu(\zeta(3))\le\MuZetaThree$ and $\mu(\pi^2)\le\MuHalvesU$.
 \end{theorem}
 
-\begin{theorem}[the point $\pi^4$]\label{thm:pi4}
-$\mu(\pi^4)\le\MuPiFour$.
-\end{theorem}
-
-On the line $b=0$ Theorem~\ref{thm:plane3} follows from Theorem~\ref{thm:ends}. Theorem~\ref{thm:pi4} uses the
-function of the third plane at $a=0$, with one further local bound for the denominators that comes from eliminating
-complete periods.
+On the line $b=0$ Theorem~\ref{thm:plane3} follows from Theorem~\ref{thm:ends}.
 
 \emph{The construction.} All these bounds come from one construction. Let $\psi$ be the digamma function, the
 logarithmic derivative of Euler's gamma function. The approximations to a number $\xi$ are determinants of L\"owner
@@ -264,7 +255,6 @@ $\Lt\pm\frac{\pi^2}{27}$ & $\Psi(\frac13,\frac12)$,\; $\Psi(\frac12,\frac23)$ & 
 $\Lt\pm\frac{\pi^2}{18}$ & & $\MuDipC$ & $24781$\\
 $\zeta(3)$ & & $\MuZetaThree$ & $5.4197$ \cite{LBKWSK26}\\
 $\pi^2$ & $\Psi(\frac12,1)$ & $\MuHalvesU$ & $4.62675$ \cite{LBKWSK26}\\
-$\pi^4$ & & $\MuPiFour$ & $12.51086$ \cite{MarcovecchioZudilin20}\\
 \addlinespace
 $G\pm\frac{5\pi^2}{48}$ & $\Psi(\frac14,1)$,\; $\Psi(\frac34,1)$ & $\MuLamU$ & none\\
 $\psi'(\frac k5)-\frac{\pi^2}{6}$ & $\Psi(\frac k5,1)$ & $\MuFifthsU$ & none\\
@@ -316,9 +306,7 @@ Shalyt and Kaminer \cite{LBKWSK26} showed that the classical constructions are o
 conservative matrix fields. By searching over other trajectories they obtained $\mu(\pi^2)<4.62675$ and
 $\mu(\zeta(3))<5.4197$. They also proved the uniform bound $\mu(a\zeta(3)+b\zeta(4))<66.3$ on the plane spanned by
 $\zeta(3)$ and $\pi^4$. This is the closest analogue of Theorem~\ref{thm:plane2}, and it is better than our
-Theorem~\ref{thm:plane3} on the same plane. For $\zeta(4)$ alone, Marcovecchio and Zudilin
-\cite{MarcovecchioZudilin20} obtained $\mu(\zeta(4))\le12.51085940\ldots$ from hypergeometric rational approximations.
-This is much better than Theorem~\ref{thm:pi4}.
+Theorem~\ref{thm:plane3} on the same plane.
 The linear forms in $1$, $\zeta(2)$
 and $\zeta(3)$ have a longer history. Dauguet and Zudilin \cite{DauguetZudilin14} bounded such forms from below when
 the coefficients satisfy divisibility and size conditions. They noted that this does not give the linear independence of
@@ -432,10 +420,9 @@ The proofs rest on the following ideas. Section~\ref{sec:overview} explains the 
  by the Cauchy determinant of a fixed function with simple poles. The decay certificate of that function then applies.
 \item \emph{Assignment bounds for a pole of any order.} For a single shift with a pole of order $h-1$, four explicit
  systems of potentials in Lemma~\ref{lem:trop} bound the denominators. They use no rank argument. Their minimum
- integrates to a closed form in $h$ and the geometry parameter, and gives the third plane. The elimination of the
- complete periods below the border, as in item~7, carries over to a pole of any order. It gives a fifth bound. When the
- border meets no multiple of $p$, this bound lies below the first one by two units for each border pair. It gives the
- bound for $\pi^4$.
+ gives a denominator bound for the third plane. The elimination of the complete periods below the border, as in
+ item~7, carries over to a pole of any order. It gives a fifth bound. When the border meets no multiple of $p$, this
+ bound lies below the first one by two units for each border pair. We use all five bounds on the third plane.
 \end{enumerate}
 The constants of the proofs are listed in Table~\ref{tab:data}.
 
@@ -445,7 +432,7 @@ deduction. Section~\ref{sec:construction} gives the construction. Sections~\ref{
 and~\ref{sec:decay} prove the three estimates for differences of two digamma functions. They also prove nonvanishing and
 decay for general combinations. Section~\ref{sec:plane1} proves Theorem~\ref{thm:plane1} and the special points of
 Theorem~\ref{thm:points1}, and Section~\ref{sec:chi3-quarter} treats the point $\Lt$ itself. Section~\ref{sec:plane2}
-proves Theorem~\ref{thm:plane2}, and Section~\ref{sec:plane3} proves Theorems~\ref{thm:plane3} and~\ref{thm:pi4}. Section~\ref{sec:proof}
+proves Theorem~\ref{thm:plane2}, and Section~\ref{sec:plane3} proves Theorem~\ref{thm:plane3}. Section~\ref{sec:proof}
 completes the proofs and gives the data.
 Section~\ref{sec:limits} discusses the limits of the method and the nearest constants that it does not reach.
 Section~\ref{sec:lean} describes the formalization. The
@@ -758,7 +745,7 @@ $\Phi_{r,I}=\Phi_{\mathcal G,I}$ with $|I|\le K$. We put $P_{r,I}=\det\Phi_{r,I}
 For the functions $F_s$ we use $c=\frac3{10},\frac15,\frac3{10},\frac29,\frac16$ when $s$ has denominator
 $2,4,3,5,7$. For the frames of the first plane we use $c=\frac16$, except $c=\frac14$ for the points
 $\Lt\pm\frac{\pi^2}{18}$. For the frames of the second plane we use $c=\frac6{41}$, for $\zeta(3)$ $c=\frac3{10}$, and for
-the frames of the third plane $c=\frac1{10}$. For $F_\chi$ we use
+the frames of the third plane $c=\frac{13}{100}$. For $F_\chi$ we use
 $c=\frac12$, as explained in Section~\ref{sec:chi3-quarter}. All $o(1)$ terms below are uniform over the members as
 $r\to\infty$.
 
@@ -2771,12 +2758,11 @@ Section~\ref{sec:proof}, together with Theorem~\ref{thm:offplane}.
 %% =====================================================================
 \section{The third plane}\label{sec:plane3}
 
-In this section we prove Theorems~\ref{thm:plane3} and~\ref{thm:pi4}. We use the frames $F^{(3)}_{\gamma_2,\gamma_3}$
+In this section we prove Theorem~\ref{thm:plane3}. We use the frames $F^{(3)}_{\gamma_2,\gamma_3}$
 of \S\ref{ssec:frames}, with rationals $\gamma_2$ and $\gamma_3\ne0$, and the alternating geometry of parameter
-$c=\frac1{10}$. So $\alpha=\frac1{20}$ and $m=\lceil r/20-\frac12\rceil$. The pole at the shift $1$ now has order
-three. For the plane, the elimination of complete periods of Section~\ref{sec:plane2} is not needed. Four assignment
-bounds, each given by explicit potentials, already give a denominator exponent below the decay rate. For $\pi^4$ we
-add a fifth bound, which comes from that elimination (\S\ref{ssec:pi4}).
+$c=\frac{13}{100}$. Thus $\alpha=\frac{13}{200}$ and $m=\lceil13r/200-\frac12\rceil$. The pole at the shift $1$ has
+order three. We combine four assignment bounds with a fifth bound obtained by eliminating complete periods.
+None of these bounds requires a nonzero coefficient to be a unit modulo $p$.
 
 \subsection{Weights}
 We state the bounds for a single shift with a pole of any order. Let $h\ge2$, and let $c_1,\dots,c_{h-1}$ be rationals,
@@ -2847,88 +2833,9 @@ in different periods receive at least $2(h-1)\ge h$. Counting the common nodes t
 $2(r-p)+2(h-1)(r-p)+h(2p-r)+(h-1)(\bar N-2p)$, which is the stated bound.
 \end{proof}
 
-\subsection{The denominator exponent}
-Homogenise with $\theta=p/r$ and $m\mapsto\alpha r$ as in \S\ref{ssec:profiles}. For $h\ge3$ and $0<\alpha\le\frac13$ the minimum
-$\mathcal P_h(\theta)$ of the four homogenised bounds is
-\begin{center}
-{\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{@{}ll@{}}
-\toprule
-range of $\theta$ & $\mathcal P_h(\theta)$\\
-\midrule
-$0<\theta\le\frac{1+\alpha}2$ & $h(1+\alpha)-\theta\|\alpha/\theta\|$\\
-$\frac{1+\alpha}2\le\theta\le\frac12+\alpha$ & $2h-1+2(h-1)\alpha-2(h-1)\theta$\\
-$\frac12+\alpha\le\theta\le1$ & $2h(1+\alpha-\theta)$\\
-$1\le\theta\le1+2\alpha$ & $h(1+2\alpha-\theta)$\\
-$\theta\ge1+2\alpha$ & $0$\\
-\bottomrule
-\end{tabular}}
-\end{center}
-The values agree at the ends of the ranges. The low range is the sawtooth of \S\ref{ssec:checker}, with the integral
-$\int_0^{2\alpha}\theta\|\alpha/\theta\|\,d\theta=(2-2\log2)\alpha^2$. Integrating the four ranges gives
-\[
- \int_0^\infty\mathcal P_h(\theta)\,d\theta=\frac{3h}4+\frac{(3h-1)\alpha}2+\Bigl(\frac{7h-3}4+2\log2\Bigr)\alpha^2 .
-\]
-For $h=4$ and $\alpha=\frac1{20}$ this is $3.29409073\ldots$ The formal proof does not use this closed form. It uses a
-table for $\Lambda$ that resolves the sawtooth only down to a fixed $\theta$, as in \S\ref{ssec:checker}.
-
-\begin{theorem}[denominators on the third plane]\label{thm:content3}
-Let $\alpha=\frac1{20}$, and let $\gamma_2$ and $\gamma_3\ne0$ be rationals. Let $K\ge0$ and $\epsilon>0$. For every
-even $r\ge R(\epsilon,K)$, every member of $F^{(3)}_{\gamma_2,\gamma_3}$ with $|I|\le K$ satisfies
-$\log\den P_{r,I}\le(\Lambda_3+\epsilon)r^2$, where
-\[
- \Lambda_3=\frac{3162410560009}{960000000000}=3.29417766\ldots
-\]
-\end{theorem}
-\begin{proof}
-For a prime $p$ as in Lemma~\ref{lem:weights3}, Proposition~\ref{prop:rows3} gives
-$e_p(r,I)\le r\,\mathcal P_4(p/r)+O(1)$. As in Theorem~\ref{thm:planecontent}, each integer condition differs from its
-homogenised form only for $p$ in an interval of bounded length, where (Q1) costs $O(r\log r)$. The primes with
-$p^2\le\bar N$, the prime $2$ and the finitely many primes dividing a denominator of $\gamma_2$ or $\gamma_3$ remain.
-For them every entry has valuation at least $-O(\log r)$, so they contribute $O(r^{3/2}\log r)$ in total. The prime
-number theorem then gives the integral, as in Theorem~\ref{thm:content}. On the strips $\theta\le2\alpha$ only (Q1)
-acts. It is closed under translation in the sense of Theorem~\ref{thm:periodic} with $K_0=4(1+\alpha)$, since the
-translation of order $\nu$ keeps $\|m\|_p$ and raises $r+m$ by $\nu(20+1)p$. So the table is checked on one period of
-$1/\theta$ and on the head $\theta\ge2\alpha$. Its translates give the other strips, and a constant piece near $0$ ends
-the table. All pieces are affine, and the integral of the table is the rational number $\Lambda_3$.
-\end{proof}
-
-The threshold $R(\epsilon,K)$ depends on the frame only through the primes dividing the denominators of $\gamma_2$ and
-$\gamma_3$.
-
-\subsection{Decay and proof of Theorem~\ref{thm:plane3}}
-The decay is Theorem~\ref{thm:decayframe} with the reference frame of shifts $1$, $\frac34$, $\frac12$ of
-\S\ref{ssec:decaydouble}, in which $\frac34$ and $\frac12$ are the helpers of the triple pole.
-
-\begin{proposition}\label{prop:cert3}
-Take the reference frame of shifts $1$, $\frac34$, $\frac12$ and $c=\frac1{10}$. There is a trial measure on a polygon
-$\Gamma$, with a cover by cells satisfying the checks of \S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and
-$|\mathcal T|=3$, for which Theorem~\ref{thm:decay} gives
-\begin{gather*}
- D=\frac{670675532185005206293}{2\cdot10^{20}}=3.35337\ldots,\\
- \rho=\frac{272044759206281}{39062500000000}=6.96434\ldots
-\end{gather*}
-\end{proposition}
-
-\begin{proof}[Proof of Theorem~\ref{thm:plane3}]
-Let $a$ and $b$ be rationals, not both zero. If $b=0$, then $a\ne0$, and $\mu(a\zeta(3))=\mu(\zeta(3))\le\MuZetaThree$ by
-Theorem~\ref{thm:ends}. Let $b\ne0$. The frame $F^{(3)}_{\gamma_2,\gamma_3}$ with $\gamma_2=-\frac a2$ and
-$\gamma_3=15b$ has $\xi=a\zeta(3)+b\pi^4$, by \S\ref{ssec:frames}. Theorem~\ref{thm:content3} gives the denominators
-with $\Lambda_3$. Proposition~\ref{prop:cert3} with Theorem~\ref{thm:decayframe} gives the decay. The certificate
-contains no weight, so it serves every frame of the third plane. Theorem~\ref{thm:nvframe} with $d=3$ gives
-nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at the even scales gives
-\[
- \mu(\xi)\le\frac\rho{D-\Lambda_3}=117.64098\,8\ldots<\MuPlaneC .\qedhere
-\]
-\end{proof}
-
-The thresholds depend on $(a,b)$. No uniformity in $(a,b)$ is claimed.
-
-\subsection{The point $\pi^4$}\label{ssec:pi4}
-For Theorem~\ref{thm:pi4} we take $\gamma_2=0$ and $\gamma_3=15$. The frame is $F^{(3)}_{0,15}=15\,\psi''(z+1)$, and its
-number is $\xi=\pi^4$ by \S\ref{ssec:frames}. Its decay and nonvanishing are those of the plane. The gain is in the
-denominators, through one more local bound. It eliminates the complete periods below the border, as in part~(i) of
-Theorem~\ref{thm:rows2}, now for a pole of order $h-1$.
+\subsection{The refined period bound}
+Eliminating the complete periods below the border improves the first assignment bound.
+The argument applies to every rational choice of the coefficients.
 
 \begin{proposition}\label{prop:rows3e}
 Let $h\ge3$, and let $p\ge5$ be a prime with $p^2>2\bar N+2p$ that divides no denominator of the $c_j$. Suppose that
@@ -2982,47 +2889,90 @@ $e_p(r,I)\le hr+\sum u+\sum u'$, with the sums over the border rows and columns.
 $\beta$ nodes with $\chi=1$, so the sum is $(h-3)m+2\beta$.
 \end{proof}
 
-\emph{The profile.} Homogenise as before. On $\frac1j\le\theta\le\frac1{j-1}$ with $j\ge2$ and $\theta\ge2\alpha$ the
-multiple $A$ becomes $j\theta$, and (Q5) becomes
+\subsection{The denominator exponent}
+Homogenise with $\theta=p/r$ and $m\mapsto\alpha r$ as in \S\ref{ssec:profiles}. For $h\ge3$ and $0<\alpha\le\frac13$ the minimum
+$\mathcal P_h(\theta)$ of the four homogenised bounds is
+\begin{center}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}ll@{}}
+\toprule
+range of $\theta$ & $\mathcal P_h(\theta)$\\
+\midrule
+$0<\theta\le\frac{1+\alpha}2$ & $h(1+\alpha)-\theta\|\alpha/\theta\|$\\
+$\frac{1+\alpha}2\le\theta\le\frac12+\alpha$ & $2h-1+2(h-1)\alpha-2(h-1)\theta$\\
+$\frac12+\alpha\le\theta\le1$ & $2h(1+\alpha-\theta)$\\
+$1\le\theta\le1+2\alpha$ & $h(1+2\alpha-\theta)$\\
+$\theta\ge1+2\alpha$ & $0$\\
+\bottomrule
+\end{tabular}}
+\end{center}
+The values agree at the ends of the ranges. The low range is the sawtooth of \S\ref{ssec:checker}.
+We take the minimum with (Q5). On $\frac1j\le\theta\le\frac1{j-1}$, away from the endpoints, its homogenised form is
 \[
  h+(h-3)\alpha+2\max\bigl(0,\min(j\theta-1,1+2\alpha-j\theta)\bigr).
 \]
-On $2\alpha\le\theta\le\frac{1+\alpha}2$ this lies below the low range of $\mathcal P_h$ by $2\alpha$ minus a tent of
-height $2\alpha$ on each interval $\frac1j\le\theta\le\frac{1+2\alpha}j$. Beyond $\frac{1+\alpha}2$ it exceeds (Q3) by
-$(h-3)(2\theta-1-\alpha)\ge0$. For $\alpha=\frac1{20}$ the tents with $j=3,\dots,10$ are complete and the tent with $j=2$
-is cut at its peak. So the integral of the minimum of (Q1)--(Q5) is
-\[
- \int_0^\infty\mathcal P_h(\theta)\,d\theta-\alpha(1-3\alpha)+2\alpha^2\Bigl(H_{10}-\frac54\Bigr),
-\]
-where $H_{10}=\sum_{k\le10}k^{-1}$. For $h=4$ this is $3.25998557\ldots$ As before, the formal proof uses a table
-instead.
+At an endpoint we use the next multiple of $p$ in Proposition~\ref{prop:rows3e}.
+The formal proof integrates an affine majorant of these bounds, rather than the ideal profile.
 
-\begin{theorem}[denominators at $\pi^4$]\label{thm:content4}
-Let $\alpha=\frac1{20}$. For every $\epsilon>0$ and every even $r\ge R(\epsilon)$, every member of $F^{(3)}_{0,15}$ with
-$|I|\le1$ satisfies $\log\den P_{r,I}\le(\Lambda_{\pi^4}+\epsilon)r^2$, where
+\begin{theorem}[denominators on the third plane]\label{thm:content3}
+Let $\alpha=\frac{13}{200}$, and let $\gamma_2$ and $\gamma_3\ne0$ be rationals. Let $K\ge0$ and $\epsilon>0$.
+For every sufficiently large even $r$, every member of $F^{(3)}_{\gamma_2,\gamma_3}$ with $|I|\le K$ satisfies
+$\log\den P_{r,I}\le(\Lambda_3+\epsilon)r^2$, where
 \[
- \Lambda_{\pi^4}=\frac{41076914608111573}{12600000000000000}=3.26007258\ldots
+ \Lambda_3=\frac{14069082037637989}{4200000000000000}=3.3497814375\ldots
 \]
 \end{theorem}
 \begin{proof}
-The proof is that of Theorem~\ref{thm:content3}, with (Q5) added on the head $\theta\ge2\alpha$. The table applies
-(Q5) on the intervals $\frac1j\le\theta\le\frac1{j-1}$ for $j=2,\dots,10$, which cover $[2\alpha,1]$. On each of them
-(Q5) takes three affine forms: $hr+(h-3)m$ if $\bar N\le jp$, $hr+(h-3)m+2(jp-r)$ if $jp\le r+m$, and
-$hr+(h-3)m+2(\bar N-jp)$ if $r+m\le jp\le\bar N$. The hypotheses of Proposition~\ref{prop:rows3e} hold there for
-large $r$, since $p$ is odd and $2m\le p$. The strips $\theta<2\alpha$ and their translates are those of
-Theorem~\ref{thm:content3}. All pieces are affine, and the integral of the table is the rational number
-$\Lambda_{\pi^4}$.
+Apply (Q1)--(Q4) and add (Q5) on the head $\theta\ge2\alpha$.
+The chambers $\frac1j\le\theta\le\frac1{j-1}$ for $j=2,\dots,8$ cover $[2\alpha,1]$.
+In each chamber (Q5) has three affine forms: $hr+(h-3)m$ if $\bar N\le jp$,
+$hr+(h-3)m+2(jp-r)$ if $jp\le r+m$, and $hr+(h-3)m+2(\bar N-jp)$ if $r+m\le jp\le\bar N$.
+The endpoints are checked with the actual next multiple in Proposition~\ref{prop:rows3e}.
+Its prime-square condition holds for large $r$ on this head. Oddness of $p$ turns $2m\le p$ into $2m<p$.
+
+The low part uses (Q1) and Theorem~\ref{thm:periodic}. Translation preserves $\|m\|_p$ and increases $r+m$ by
+$213\nu p$ when $r$ and $m$ increase by $200\nu p$ and $13\nu p$.
+The checked table has two low pieces and twenty-nine head pieces. It includes the constant prefix and the boundary
+corrections for $m=\lceil\alpha r-\frac12\rceil$. Its integral is the rational number $\Lambda_3$ above.
+
+The local bounds and the table contain no coefficient parameters. Only primes dividing the denominators of
+$\gamma_2$ or $2\gamma_3$ need to be excluded. Their contribution, together with the small primes, is $o(r^2)$
+for each fixed frame. The weighted prime number theorem and the periodic summation give the stated bound,
+as in Theorem~\ref{thm:planecontent}. Deleting common nodes does not change the upper bound.
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:pi4}]
-The frame $F^{(3)}_{0,15}$ has $\xi=\pi^4$. Theorem~\ref{thm:content4} gives the denominators with $\Lambda_{\pi^4}$.
-Proposition~\ref{prop:cert3} with Theorem~\ref{thm:decayframe} gives the decay, since the certificate contains no
-weight. Theorem~\ref{thm:nvframe} with $d=3$ gives nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at
-the even scales gives
+The threshold depends on the fixed frame, $K$ and $\epsilon$. No threshold uniform over the rational coefficients is asserted.
+
+\subsection{Decay and proof of Theorem~\ref{thm:plane3}}
+The decay is Theorem~\ref{thm:decayframe} with the reference frame of shifts $1$, $\frac34$, $\frac12$ of
+\S\ref{ssec:decaydouble}, in which $\frac34$ and $\frac12$ are the helpers of the triple pole.
+
+\begin{proposition}\label{prop:cert3}
+Take the reference frame of shifts $1$, $\frac34$, $\frac12$ and $c=\frac{13}{100}$. There is a trial measure on a polygon
+$\Gamma$, with a cover by cells satisfying the checks of \S\ref{ssec:slope-cert} with $\varepsilon_0=10^{-6}$ and
+$|\mathcal T|=3$, for which Theorem~\ref{thm:decay} gives
+\begin{gather*}
+ D=\frac{68912340510797043323527}{2\cdot10^{22}}=3.4456170255\ldots,\\
+ \rho=\frac{34899270780366191}{5\cdot10^{15}}=6.9798541560\ldots
+\end{gather*}
+\end{proposition}
+
+\begin{proof}[Proof of Theorem~\ref{thm:plane3}]
+Let $a$ and $b$ be rationals, not both zero. If $b=0$, then $a\ne0$, and $\mu(a\zeta(3))=\mu(\zeta(3))\le\MuZetaThree$ by
+Theorem~\ref{thm:ends}. Let $b\ne0$. The frame $F^{(3)}_{\gamma_2,\gamma_3}$ with $\gamma_2=-\frac a2$ and
+$\gamma_3=15b$ has $\xi=a\zeta(3)+b\pi^4$, by \S\ref{ssec:frames}. Theorem~\ref{thm:content3} gives the denominators
+with $\Lambda_3$. Proposition~\ref{prop:cert3} with Theorem~\ref{thm:decayframe} gives the decay. The certificate
+contains no weight, so it serves every frame of the third plane. Theorem~\ref{thm:nvframe} with $d=3$ gives
+nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at the even scales gives
 \[
- \mu(\pi^4)\le\frac\rho{D-\Lambda_{\pi^4}}=74.64059\,148\ldots<\MuPiFour .\qedhere
+ \begin{aligned}
+ \mu(\xi)&\le\frac\rho{D-\Lambda_3}=\frac{2931538745550760044000000}{40250946962939009794067}\\
+ &=72.8315472490\ldots<\MuPlaneC .
+ \end{aligned}\qedhere
 \]
 \end{proof}
+
+The thresholds depend on $(a,b)$. No uniformity in $(a,b)$ is claimed.
 
 %% =====================================================================
 \section{The deduction and the remaining proofs}\label{sec:proof}
@@ -3063,7 +3013,7 @@ and all sufficiently large $q$.
 
 Theorem~\ref{thm:points1}(i) is proved in Section~\ref{sec:chi3-quarter}, parts (iii)--(v) and Theorem~\ref{thm:plane1}
 in Section~\ref{sec:plane1}, Theorem~\ref{thm:plane2} and the bound for $\zeta(3)$ in Section~\ref{sec:plane2}, and
-Theorems~\ref{thm:plane3} and~\ref{thm:pi4} in Section~\ref{sec:plane3}. In each case the bound is attained in the same strong form.
+Theorem~\ref{thm:plane3} in Section~\ref{sec:plane3}. In each case the bound is attained in the same strong form.
 
 \begin{table}[ht]
 \centering
@@ -3083,8 +3033,7 @@ plane 2 & $\frac6{41}$ & $\LamPlB$ & $\DPlB$ & $\gPlB$ & $\ExpPlB$ & $\MuPlaneB$
 $\zeta(3)$ & $\frac3{10}$ & $\LamZ$ & $\DHalf$ & $\gHalf$ & $\ExpZ$ & $\MuZetaThree$\\
 $(\frac12,1)$ & $\frac3{10}$ & $\LamHalf$ & $\DHalf$ & $\gHalf$ & $\ExpHalf$ & $\MuHalvesU$\\
 \addlinespace
-plane 3 & $\frac1{10}$ & $\LamPlC$ & $\DPlC$ & $\gPlC$ & $\ExpPlC$ & $\MuPlaneC$\\
-$\pi^4$ & $\frac1{10}$ & $\LamPiFour$ & $\DPlC$ & $\gPlC$ & $\ExpPiFour$ & $\MuPiFour$\\
+plane 3 & $\frac{13}{100}$ & $\LamPlC$ & $\DPlC$ & $\gPlC$ & $\ExpPlC$ & $\MuPlaneC$\\
 \addlinespace
 $(\frac k4,1)$ & $\frac15$ & $\LamFour$ & $\DFour$ & $\gFour$ & $\ExpFour$ & $\MuLamU$\\
 $(\frac k5,1)$ & $\frac29$ & $\LamFive$ & $\DFive$ & $\gFive$ & $\ExpFive$ & $\MuFifthsU$\\
@@ -3096,7 +3045,7 @@ prime to the denominator. For each row the table gives the geometry parameter $c
 decay rate $D$, the neighbourhood exponent $\rho$ and the bound for $\mu$. The constants are rational numbers, rounded outward to
 the digits shown: $\Lambda$ and $\rho$ up, $D$ down. The column $\rho/\eta$, with $\eta=D-\Lambda$, is the exact quotient,
 rounded up. The rows $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ share the decay certificate of plane 1. The row for $\zeta(3)$ shares the
-certificate of the row $(\frac12,1)$, and the row for $\pi^4$ that of plane 3.}\label{tab:data}
+certificate of the row $(\frac12,1)$.}\label{tab:data}
 \end{table}
 
 \begin{remark}[relation to linear independence criteria]
@@ -3121,8 +3070,8 @@ for $q=7$ has $22$ polynomial pieces, and its cells on
 $\Gamma$ at the breakpoints of $\sigma$ use the truncated logarithm of \S\ref{ssec:slope-cert}. For $q=2$ there is one root
 class, $j=1$, with first pole $k_p=\frac{p+1}2$.
 
-On the second plane $D-\Lambda$ is about $0.021$, and on the third plane about $0.059$. This explains the size of their
-exponents. At $\pi^4$ the bound (Q5) raises the gap to about $0.093$. On the first plane the points $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ gain only in $\Lambda$,
+On the second plane $D-\Lambda$ is about $0.021$, and on the third plane about $0.096$. This explains the size of their
+exponents. On the first plane the points $\Lt\pm\frac{2\pi^2}{27}$ and $\Lt\pm\frac{\pi^2}{27}$ gain only in $\Lambda$,
 since they use the certificate of the plane. The points $\Lt\pm\frac{\pi^2}{18}$ use a longer border, with $c=\frac14$,
 and their own certificate.
 %% =====================================================================
@@ -3195,7 +3144,6 @@ denominators implies irrationality. The theorems are the following.
 \item \lean{zeta3_measure} and \lean{pi2_measure}: Theorem~\ref{thm:ends}, with $\mu_0=\MuZetaThree$ and
  $\MuHalvesU$.
 \item \lean{plane3_measure}: Theorem~\ref{thm:plane3}, with $\mu_0=\MuPlaneC$.
-\item \lean{pi4_measure}: Theorem~\ref{thm:pi4}, with $\mu_0=\MuPiFour$.
 \item \lean{lambda_plus_measure} and \lean{lambda_minus_measure}: Theorem~\ref{thm:offplane}(i), with
  $\mu_0=\MuLamU$.
 \item \lean{fifths1_measure}, \dots, \lean{fifths4_measure}: Theorem~\ref{thm:offplane}(ii), with
@@ -3235,10 +3183,8 @@ The shared results are in the namespace \lean{CatalanCore.Uniform}.
 \item \lean{Support.IntegerPoleRows.assignment_bounds} is Proposition~\ref{prop:rows3} for every $h\ge2$, and
  \lean{Support.hpole_catalogue} turns it into the table branches. \lean{Support.HPolePeriodRows.row_refined_first} is
  Proposition~\ref{prop:rows3e}, and \lean{Support.hpole_refined_catalogue} gives its branches on the intervals of
- Theorem~\ref{thm:content4}. In the formal statements the members are indexed by the remaining common nodes
+ Theorem~\ref{thm:content3}. In the formal statements the members are indexed by the remaining common nodes
  $C\setminus I$, and the bounds are stated for the Gauss valuation over the local ring at $p$.
-\item \lean{Bank.Plane3.pi4_content} is Theorem~\ref{thm:content4}, and \lean{Bank.Plane3.pi4_final} is the proof of
- Theorem~\ref{thm:pi4}.
 \item \lean{Support.pole_gram_split_minimal} is the rank-one splitting of \S\ref{ssec:decaydouble} for a pole of any
  order. \lean{Support.pole_altGeom_seqFamily_nv0_even} is Theorem~\ref{thm:nvframe} for such poles.
 \item \lean{Support.support_measureLB} is the general form of Theorem~\ref{thm:deduction}. Every point result is an
