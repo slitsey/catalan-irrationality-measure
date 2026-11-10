@@ -233,7 +233,7 @@ theorem plane3_measure (a b : ℚ) (hab : a≠0 ∨ b≠0) :
   rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h
   exact h
 theorem pi4_measure : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-(118:ℝ))< |Real.pi^4-(p:ℝ)/q| :=
+    (q:ℝ)^(-(75:ℝ))< |Real.pi^4-(p:ℝ)/q| :=
   CatalanCore.Uniform.Bank.Plane3.pi4_final
 #print axioms plane3_measure
 #print axioms pi4_measure

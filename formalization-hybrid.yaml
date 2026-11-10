@@ -15,7 +15,7 @@ project:
     Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 and
     L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2), these are
     mu(a L(2, chi_{-3}) + b pi^2) <= 20.6622 and mu(a zeta(3) + b pi^2) <= 335.20
-    and mu(a zeta(3) + b pi^4) <= 118 for all rationals a,b not both zero; mu(pi^4) <= 118; mu(L(2, chi_{-3})) <= 13.6839;
+    and mu(a zeta(3) + b pi^4) <= 118 for all rationals a,b not both zero; mu(pi^4) <= 75; mu(L(2, chi_{-3})) <= 13.6839;
     mu(L(2, chi_{-3}) +- pi^2/9) <= 9.4913; mu(L(2, chi_{-3}) +- 2 pi^2/27) <= 14;
     mu(L(2, chi_{-3}) +- pi^2/27) <= 15.359; mu(L(2, chi_{-3}) +- pi^2/18) <= 17.492;
     mu(zeta(3)) <= 6.0382; mu(pi^2) <= 6.5214; mu(G +- 5 pi^2/48) <= 31.1973;
@@ -306,7 +306,7 @@ alignment:
       lean: "TrigammaDifferences.pi4_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "pi^4, exponent 118; included to illustrate the construction, no record claim."
+      note: "pi^4, dedicated pure triple-pole frame, exponent 75; illustrates the construction, no record claim. Marcovecchio-Zudilin give the stronger literature bound 12.51."
 
 acknowledgements: >-
   OpenAI's proof of the irrationality of Catalan's constant and its Lean

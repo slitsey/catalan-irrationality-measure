@@ -1,6 +1,7 @@
 module
 
 public import CatalanCore.Uniform.Bank.Plane3.Point
+public import CatalanCore.Uniform.Bank.Plane3.Pi4Point
 public import CatalanCore.Uniform.Bank.Plane2.Measure
 public import CatalanCore.Uniform.Bank.Plane2.Zeta3
 
@@ -41,8 +42,8 @@ theorem plane3_final (a b : ℚ) (hab : a≠0 ∨ b≠0) :
   simpa only [show E+(118-E)=118 by ring] using h
 
 theorem pi4_final : ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,
-    (q:ℝ)^(-(118:ℝ))< |Real.pi^4-(p:ℝ)/q| := by
-  simpa using plane3_final 0 1 (Or.inr one_ne_zero)
+    (q:ℝ)^(-(75:ℝ))< |Real.pi^4-(p:ℝ)/q| :=
+  pi4_dedicated_final
 
 end CatalanCore.Uniform.Bank.Plane3
 #print axioms CatalanCore.Uniform.Bank.Plane3.plane3_final
