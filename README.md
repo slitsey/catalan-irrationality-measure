@@ -15,7 +15,7 @@ large integers `q`.
 > - μ(L₋₃ ± π²/9) ≤ 9.4913, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
 >   μ(L₋₃ ± π²/18) ≤ 17.492, for both signs;
 > - μ(a ζ(3) + b π²) ≤ 335.20 for all rationals a, b, not both zero;
-> - μ(a ζ(3) + b π⁴) ≤ 72.84 for all rationals a, b, not both zero;
+> - μ(a ζ(3) + b π⁴) ≤ 72.726 for all rationals a, b, not both zero;
 > - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5214 (weaker than the known bounds, included for completeness);
 > - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
 > - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
@@ -28,7 +28,7 @@ irrational. One Löwner structure gives all three planes. The irrationality of t
 by other methods: by Calegari, Dimitrov and Tang for the first plane, by Q. Tang for the second and by Lai
 for the third. The bound 20.6622 improves the published bound 24781 of Calegari, Dimitrov and Tang on the first
 plane. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the whole
-plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.84. The third plane is
+plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.726. The third plane is
 included because its function has a pole of order three.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
@@ -202,7 +202,7 @@ Together they give `μ ≤ γ/(D − Λ)`:
 | L₋₃ ± π²/18 | first plane | 1/4 | 3.4140176 | 3.8109776 | 6.9434368 | 17.49153 | 17.492 |
 | a ζ(3) + b π² | second plane | 6/41 | 3.4768376 | 3.4982052 | 7.1600631 | 335.0886 | 335.20 |
 | ζ(3) | ψ′(z + 1) | 3/10 | 2.9128390 | 3.9790633 | 6.4345402 | 6.034884 | 6.0382 |
-| a ζ(3) + b π⁴ | third plane | 13/100 | 3.3497815 | 3.4456170 | 6.9798542 | 72.8316 | 72.84 |
+| a ζ(3) + b π⁴ | third plane | 13/100 | 3.3496421 | 3.4456170 | 6.9798542 | 72.7259 | 72.726 |
 | G ± 5π²/48 | (1/4, 1), (3/4, 1) | 1/5 | 3.5149036 | 3.7453322 | 7.1887383 | 31.19724 | 31.1973 |
 | L₋₃ | (1/3, 2/3) | 1/2 | 4.0959278 | 4.6442402 | 7.5030223 | 13.68385 | 13.6839 |
 | L₋₃ ± π²/9 | (1/3, 1), (2/3, 1) | 3/10 | 3.3104458 | 4.0295805 | 6.8255087 | 9.491278 | 9.4913 |
@@ -256,9 +256,9 @@ two ends `a = 0` and `b = 0` are one-term data on the same cover. The data are i
 
 ### The third plane
 
-The whole rational plane `a ζ(3) + b π⁴` uses `c = 13/100` and a coefficient-independent refined
-content table with 31 pieces. The full-period bound applies without requiring a coefficient numerator to
-be a unit. Together with the checked decay cover it gives the exact quotient `72.8315472490… < 72.84`.
+The whole rational plane `a ζ(3) + b π⁴` uses `c = 13/100` and a coefficient-independent periodic
+content table: 26 base cells on one period of 1/θ, three translated strips of them and 29 head pieces. The full-period bound applies without requiring a coefficient numerator to
+be a unit. Together with the checked decay cover it gives the exact quotient `72.7258056646… < 72.726`.
 The line `b = 0` uses the stronger ζ(3) bound. The content, decay and point proofs are in `Bank/Plane3/`;
 the public theorem is `TrigammaDifferences.plane3_measure`. The plane theorem includes π⁴.
 

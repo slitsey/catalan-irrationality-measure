@@ -53,7 +53,7 @@
 \newcommand{\MuHalvesU}{6.5214}
 \newcommand{\MuPlaneA}{20.6622}
 \newcommand{\MuPlaneB}{335.20}
-\newcommand{\MuPlaneC}{72.84}
+\newcommand{\MuPlaneC}{72.726}
 \newcommand{\MuZetaThree}{6.0382}
 \newcommand{\MuDipA}{14}
 \newcommand{\MuDipB}{15.359}
@@ -69,7 +69,7 @@
 \newcommand{\LamDB}{3.1096062}    \newcommand{\ExpDB}{15.35830}
 \newcommand{\LamDC}{3.4140176}    \newcommand{\DDC}{3.8109776}    \newcommand{\gDC}{6.9434368}   \newcommand{\ExpDC}{17.49153}
 \newcommand{\LamPlB}{3.4768376}   \newcommand{\DPlB}{3.4982052}   \newcommand{\gPlB}{7.1600631}  \newcommand{\ExpPlB}{335.0886}
-\newcommand{\LamPlC}{3.3497815}   \newcommand{\DPlC}{3.4456170}   \newcommand{\gPlC}{6.9798542}  \newcommand{\ExpPlC}{72.8316}
+\newcommand{\LamPlC}{3.3496421}   \newcommand{\DPlC}{3.4456170}   \newcommand{\gPlC}{6.9798542}  \newcommand{\ExpPlC}{72.7259}
 \newcommand{\LamZ}{2.912839}     \newcommand{\ExpZ}{6.034884}
 \newcommand{\MuChiExact}{13.683844}
 
@@ -2922,7 +2922,10 @@ Let $\alpha=\frac{13}{200}$, and let $\gamma_2$ and $\gamma_3\ne0$ be rationals.
 For every sufficiently large even $r$, every member of $F^{(3)}_{\gamma_2,\gamma_3}$ with $|I|\le K$ satisfies
 $\log\den P_{r,I}\le(\Lambda_3+\epsilon)r^2$, where
 \[
- \Lambda_3=\frac{14069082037637989}{4200000000000000}=3.3497814375\ldots
+ \begin{aligned}
+ \Lambda_3&=\frac{2093141963035255548476961845489855904191277848149}{624885257513513299995586450872\cdot10^{18}}\\
+ &=3.3496420948\ldots
+ \end{aligned}
 \]
 \end{theorem}
 \begin{proof}
@@ -2935,8 +2938,18 @@ Its prime-square condition holds for large $r$ on this head. Oddness of $p$ turn
 
 The low part uses (Q1) and Theorem~\ref{thm:periodic}. Translation preserves $\|m\|_p$ and increases $r+m$ by
 $213\nu p$ when $r$ and $m$ increase by $200\nu p$ and $13\nu p$.
-The checked table has two low pieces and twenty-nine head pieces. It includes the constant prefix and the boundary
-corrections for $m=\lceil\alpha r-\frac12\rceil$. Its integral is the rational number $\Lambda_3$ above.
+The checked table has a constant prefix, a low part and a head. Put $\varepsilon=10^{-8}$, $\delta=10^{-9}$ and
+$H=h(1+\alpha)$. The prefix is the constant $426001/100000$ on $(0,\frac\alpha{40}]$. On $(\frac\alpha{n+1},\frac\alpha n]$ we have
+$\lfloor\alpha/\theta\rfloor=n$, and (Q1) is the $n$th tooth $H-\theta\|\alpha/\theta\|$ of the sawtooth. For $n=1,\dots,13$ the base
+cells are the two halves of this tooth, each raised by $\varepsilon$. They cover $1/\theta\in[1/\alpha,14/\alpha]$, an
+interval of length $200$, which is one period of $1/\theta$. With $h=4$ the bound $h(r+m)$ grows by $852\nu p$, so (Q1)
+is closed under translation with $K_0=H$. Theorem~\ref{thm:periodic} with $\nu=0,1,2$ translates the base cells to the
+teeth $n+13\nu$. The translated line is the line of the
+tooth $n+13\nu$ plus $\varepsilon(1-200\nu\theta)$, and the three strips tile $(\frac\alpha{40},\alpha]$. The head is
+(Q1) on $(\alpha,2\alpha]$, then the three forms of (Q5) and a bridge of (Q1) of width $\delta$ in each chamber, then
+(Q3), (Q2) and (Q4), each raised by $\varepsilon$. It ends at $1+2\alpha+\varepsilon/8$ and has twenty-nine pieces.
+The table includes the boundary corrections for $m=\lceil\alpha r-\frac12\rceil$. Its integral is the rational number
+$\Lambda_3$ above.
 
 The local bounds and the table contain no coefficient parameters. Only primes dividing the denominators of
 $\gamma_2$ or $2\gamma_3$ need to be excluded. Their contribution, together with the small primes, is $o(r^2)$
@@ -2969,8 +2982,10 @@ contains no weight, so it serves every frame of the third plane. Theorem~\ref{th
 nonvanishing with one deleted node. Theorem~\ref{thm:deduction} at the even scales gives
 \[
  \begin{aligned}
- \mu(\xi)&\le\frac\rho{D-\Lambda_3}=\frac{2931538745550760044000000}{40250946962939009794067}\\
- &=72.8315472490\ldots<\MuPlaneC .
+ \mu(\xi)&\le\frac\rho{D-\Lambda_3}\\
+ &=\frac{10904019904311478761505737651359889459095634276\cdot10^{6}}
+ {149933298155401763580249247322416495016114028035693}\\
+ &=72.7258056646\ldots<\MuPlaneC .
  \end{aligned}\qedhere
 \]
 \end{proof}

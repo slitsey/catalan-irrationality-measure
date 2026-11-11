@@ -15,7 +15,7 @@ project:
     Catalan's constant G = sum_{j>=0} (-1)^j/(2j+1)^2 and
     L(2, chi_{-3}) = sum_{k>=0} (1/(3k+1)^2 - 1/(3k+2)^2), these are
     mu(a L(2, chi_{-3}) + b pi^2) <= 20.6622 and mu(a zeta(3) + b pi^2) <= 335.20
-    and mu(a zeta(3) + b pi^4) <= 72.84 for all rationals a,b not both zero; mu(L(2, chi_{-3})) <= 13.6839;
+    and mu(a zeta(3) + b pi^4) <= 72.726 for all rationals a,b not both zero; mu(L(2, chi_{-3})) <= 13.6839;
     mu(L(2, chi_{-3}) +- pi^2/9) <= 9.4913; mu(L(2, chi_{-3}) +- 2 pi^2/27) <= 14;
     mu(L(2, chi_{-3}) +- pi^2/27) <= 15.359; mu(L(2, chi_{-3}) +- pi^2/18) <= 17.492;
     mu(zeta(3)) <= 6.0382; mu(pi^2) <= 6.5214; mu(G +- 5 pi^2/48) <= 31.1973;
@@ -158,7 +158,7 @@ fidelity:
     affine map. The three plane theorems take the rational coefficients a, b as
     arguments, with the fraction written p/q. Each bound is stated for all
     integer numerators and all sufficiently large denominators, with the
-    exponents 206622/10000, 33520/100, 1821/25, 136839/10000, 94913/10000, 14,
+    exponents 206622/10000, 33520/100, 36363/500, 136839/10000, 94913/10000, 14,
     15359/1000, 4373/250, 60382/10000, 65214/10000, 311973/10000, 237756/10000
     and 18061719/10000, represented exactly in R.
 
@@ -304,7 +304,7 @@ alignment:
       lean: "TrigammaDifferences.plane3_measure"
       module: "ChallengeHybrid"
       status: proved
-      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 72.84; the line b = 0 uses the zeta(3) bound 6.0382. Leibtag et al. prove the better bound 66.3 on this plane."
+      note: "a zeta(3) + b pi^4 for all rational a,b not both zero, exponent 72.726; the line b = 0 uses the zeta(3) bound 6.0382. Leibtag et al. prove the better bound 66.3 on this plane."
 acknowledgements: >-
   OpenAI's proof of the irrationality of Catalan's constant and its Lean
   formalization; Lean 4, Mathlib and the PNT+ project.
