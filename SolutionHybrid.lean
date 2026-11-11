@@ -227,7 +227,7 @@ theorem zeta3_measure :
 
 
 theorem plane3_measure (a b : ℚ) (hab : a≠0 ∨ b≠0) :
-    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-(72.84:ℝ))<
+    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-(72.726:ℝ))<
       |((a:ℝ)*(∑' n : ℕ,1/((n:ℝ)+1)^3)+(b:ℝ)*Real.pi^4)-(p:ℝ)/q| := by
   have h := CatalanCore.Uniform.Bank.Plane3.plane3_final a b hab
   rw [CatalanCore.Uniform.Bank.Plane2.riemannZeta_three_re] at h

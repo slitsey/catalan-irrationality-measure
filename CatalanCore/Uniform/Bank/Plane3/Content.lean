@@ -75,8 +75,8 @@ private theorem head_depth (depth : ℕ) (P : QPiece) (cert : Cert)
   exact h
 
 private theorem cell_depth (depth : ℕ) (y : QPiece × Cert)
-    (h : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 1 200 232 y = true) :
-    cellOKb (plane3Bank depth) plane3BaseCatalogue 1 1 200 232 y = true := by
+    (h : cellOKb (plane3Bank 0) plane3BaseCatalogue 1 3 200 816 y = true) :
+    cellOKb (plane3Bank depth) plane3BaseCatalogue 1 3 200 816 y = true := by
   unfold cellOKb
   change (pieceOK _ 2 (13/200) (1/2) depth 1 2 y.1 y.2 && _) = true
   rw [pieceOK_zero_debit _ (base_compiled_debit depth 1)]
@@ -98,14 +98,38 @@ theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
     subst x
     exact plane3_heads
   have hcells : ∀ x ∈ Tm, ∀ y ∈ x.2.cells,
-      cellOKb D plane3BaseCatalogue x.1 x.2.N 200 232 y = true := by
+      cellOKb D plane3BaseCatalogue x.1 x.2.N 200 816 y = true := by
     intro x hx y hy
     simp only [Tm, List.mem_singleton] at hx
     subst x
     simp only [plane3PCTemplate, List.mem_cons, List.not_mem_nil, or_false] at hy
-    rcases hy with rfl | rfl
+    rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact cell_depth depth _ plane3_cell0
     · exact cell_depth depth _ plane3_cell1
+    · exact cell_depth depth _ plane3_cell2
+    · exact cell_depth depth _ plane3_cell3
+    · exact cell_depth depth _ plane3_cell4
+    · exact cell_depth depth _ plane3_cell5
+    · exact cell_depth depth _ plane3_cell6
+    · exact cell_depth depth _ plane3_cell7
+    · exact cell_depth depth _ plane3_cell8
+    · exact cell_depth depth _ plane3_cell9
+    · exact cell_depth depth _ plane3_cell10
+    · exact cell_depth depth _ plane3_cell11
+    · exact cell_depth depth _ plane3_cell12
+    · exact cell_depth depth _ plane3_cell13
+    · exact cell_depth depth _ plane3_cell14
+    · exact cell_depth depth _ plane3_cell15
+    · exact cell_depth depth _ plane3_cell16
+    · exact cell_depth depth _ plane3_cell17
+    · exact cell_depth depth _ plane3_cell18
+    · exact cell_depth depth _ plane3_cell19
+    · exact cell_depth depth _ plane3_cell20
+    · exact cell_depth depth _ plane3_cell21
+    · exact cell_depth depth _ plane3_cell22
+    · exact cell_depth depth _ plane3_cell23
+    · exact cell_depth depth _ plane3_cell24
+    · exact cell_depth depth _ plane3_cell25
   have hhead : ∀ x ∈ Tm, ∀ y ∈ x.2.head,
       pieceOK (D.cat x.1) D.Q D.α ((x.1 : ℚ)/D.Q) D.depth D.cF D.Pbad y.1 y.2 = true := by
     intro x hx y hy
@@ -113,35 +137,35 @@ theorem plane3_content_hpole (v u : ℚ) (const : ℝ) (depth : ℕ) :
     subst x
     simp only [plane3PCTemplate, List.mem_cons, List.not_mem_nil, or_false] at hy
     rcases hy with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-    · exact head_depth depth _ _ contentPiece2_check
-    · exact head_depth depth _ _ contentPiece3_check
-    · exact head_depth depth _ _ contentPiece4_check
-    · exact head_depth depth _ _ contentPiece5_check
-    · exact head_depth depth _ _ contentPiece6_check
-    · exact head_depth depth _ _ contentPiece7_check
-    · exact head_depth depth _ _ contentPiece8_check
-    · exact head_depth depth _ _ contentPiece9_check
-    · exact head_depth depth _ _ contentPiece10_check
-    · exact head_depth depth _ _ contentPiece11_check
-    · exact head_depth depth _ _ contentPiece12_check
-    · exact head_depth depth _ _ contentPiece13_check
-    · exact head_depth depth _ _ contentPiece14_check
-    · exact head_depth depth _ _ contentPiece15_check
-    · exact head_depth depth _ _ contentPiece16_check
-    · exact head_depth depth _ _ contentPiece17_check
-    · exact head_depth depth _ _ contentPiece18_check
-    · exact head_depth depth _ _ contentPiece19_check
-    · exact head_depth depth _ _ contentPiece20_check
-    · exact head_depth depth _ _ contentPiece21_check
-    · exact head_depth depth _ _ contentPiece22_check
-    · exact head_depth depth _ _ contentPiece23_check
-    · exact head_depth depth _ _ contentPiece24_check
-    · exact head_depth depth _ _ contentPiece25_check
     · exact head_depth depth _ _ contentPiece26_check
     · exact head_depth depth _ _ contentPiece27_check
     · exact head_depth depth _ _ contentPiece28_check
     · exact head_depth depth _ _ contentPiece29_check
     · exact head_depth depth _ _ contentPiece30_check
+    · exact head_depth depth _ _ contentPiece31_check
+    · exact head_depth depth _ _ contentPiece32_check
+    · exact head_depth depth _ _ contentPiece33_check
+    · exact head_depth depth _ _ contentPiece34_check
+    · exact head_depth depth _ _ contentPiece35_check
+    · exact head_depth depth _ _ contentPiece36_check
+    · exact head_depth depth _ _ contentPiece37_check
+    · exact head_depth depth _ _ contentPiece38_check
+    · exact head_depth depth _ _ contentPiece39_check
+    · exact head_depth depth _ _ contentPiece40_check
+    · exact head_depth depth _ _ contentPiece41_check
+    · exact head_depth depth _ _ contentPiece42_check
+    · exact head_depth depth _ _ contentPiece43_check
+    · exact head_depth depth _ _ contentPiece44_check
+    · exact head_depth depth _ _ contentPiece45_check
+    · exact head_depth depth _ _ contentPiece46_check
+    · exact head_depth depth _ _ contentPiece47_check
+    · exact head_depth depth _ _ contentPiece48_check
+    · exact head_depth depth _ _ contentPiece49_check
+    · exact head_depth depth _ _ contentPiece50_check
+    · exact head_depth depth _ _ contentPiece51_check
+    · exact head_depth depth _ _ contentPiece52_check
+    · exact head_depth depth _ _ contentPiece53_check
+    · exact head_depth depth _ _ contentPiece54_check
   haveI : NeZero D.M := ⟨by change (2 : ℕ) ≠ 0; decide⟩
   exact hasScaledContent_of_periodic_control D hpar plane3_class hheads
     (13/100) (by norm_num) (by norm_num [D, plane3Bank]) const depth _ (by rfl)

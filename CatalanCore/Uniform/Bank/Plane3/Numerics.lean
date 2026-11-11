@@ -81,7 +81,7 @@ theorem p3_node_energy : (p3Cert.spline.Inu:ℝ)≤P3G.nodeEnergy :=
 theorem p3_eta : p3Lam<Cover.Dchi.Dt := by -- kcost: 1 s estimated; fixed scalar/short geometry check.
   decide +kernel
 -- kcost: 1 s estimated, rational difference/division/comparison, fixed scalar count.
-theorem p3_ratio : Cover.Dchi.ccert/(Cover.Dchi.Dt-p3Lam)<72.84 := by -- kcost: 1 s estimated; fixed scalar/short geometry check.
+theorem p3_ratio : Cover.Dchi.ccert/(Cover.Dchi.Dt-p3Lam)<72.726 := by -- kcost: 1 s estimated; fixed scalar/short geometry check.
   decide +kernel
 
 end CatalanCore.Uniform.Bank.Plane3

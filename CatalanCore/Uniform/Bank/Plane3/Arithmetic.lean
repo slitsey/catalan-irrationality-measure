@@ -69,7 +69,7 @@ theorem plane3_catalogue (v u : ℚ) (c : ℚ) (hc : 0 < c) (const : ℝ) (depth
     (by decide) (by decide) (fun p _ hp => coefficients_mem v u hp)
     plane3Chambers (by intro j hj; norm_num [plane3Chambers] at hj; omega)
 
-def plane3Translation : Transl 200 13 852 232 plane3BaseCatalogue where
+def plane3Translation : Transl 200 13 852 816 plane3BaseCatalogue where
   ρ _ br := br
   debit _ _ := rfl
   price := by
