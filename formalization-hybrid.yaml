@@ -99,6 +99,8 @@ related_formalizations:
 
 status:
   scope: >-
+    ChallengeHybrid.lean imports only Mathlib and contains intentional proof
+    placeholders. SolutionHybrid.lean supplies the proofs independently.
     The twenty-six statements of ChallengeHybrid.lean (namespace
     TrigammaDifferences), with every constant written as a series, are fully
     proved in SolutionHybrid.lean from

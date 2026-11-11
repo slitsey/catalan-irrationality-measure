@@ -34,6 +34,9 @@ included because its function has a pole of order three.
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
 `Classical.choice`.
 
+The challenge files contain only statement specifications over Mathlib, with intentional `sorry` placeholders.
+The solution files supply the proofs independently; their axiom checks do not permit `sorryAx`.
+
 ## Papers
 
 - S. Litsey, *An irrationality measure for Catalan's constant* (2026), the proof of μ(G) ≤ 270: LaTeX
