@@ -57,7 +57,8 @@
 equilibrium measures, formal verification, Lean}
 
 \begin{abstract}
-Let $\mu$ denote the irrationality exponent. We prove $\mu(\zeta(5))\le87$. Fauzan proved that $\zeta(5)$ is
+Let $\mu$ denote the irrationality exponent. We prove that $|\zeta(5)-p/q|>q^{-87}$ for all integers $p$ and all
+sufficiently large integers $q$, so $\mu(\zeta(5))\le87$. Fauzan proved that $\zeta(5)$ is
 irrational with rationally normalized Hankel determinants, and his argument gives $\mu(\zeta(5))\le260$.
 Giraudin lowered this to $171$ by a sharper bound for a relative matrix norm. We keep Fauzan's determinants and
 improve the two other constants of the method. On the arithmetic side a reflection symmetry modulo $p$ of the
@@ -79,18 +80,19 @@ the exponent is below $86.54$. The proof is formalized in Lean~4.
 
 \subsection{The result}
 The \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the real numbers $\mu$ such that
-$|\xi-p/q|>q^{-\mu}$ for all integers $p$ and all sufficiently large integers $q$. A finite bound for $\mu(\xi)$ is an
+$|\xi-p/q|>q^{-\mu}$ for all integers $p$ and all sufficiently large integers $q$. It does not change when $\xi$ is
+multiplied by a nonzero rational number or translated by a rational number. A finite bound for $\mu(\xi)$ is an
 irrationality measure for $\xi$, and it shows that $\xi$ is irrational. We write
 \[
  \zeta(5)=\sum_{n\ge1}\frac1{n^5}=1.03692\,77551\ldots
 \]
 
 \begin{theorem}\label{thm:main}
-$\mu(\zeta(5))\le87$. More precisely, for every $\varepsilon>0$ there is $q_0$ such that
+There is an integer $q_0$ such that
 \[
- \Bigl|\zeta(5)-\frac pq\Bigr|>q^{-87-\varepsilon}
+ \Bigl|\zeta(5)-\frac pq\Bigr|>q^{-87}
 \]
-for all integers $p$ and $q\ge q_0$ with $\gcd(p,q)=1$.
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(\zeta(5))\le87$.
 \end{theorem}
 
 The proof gives the exponent $\lambda\rho/(D-\Lambda)<86.535$, with the constants of Table~\ref{tab:constants}.
@@ -128,9 +130,10 @@ unconditional and formally verified.
 systems. OpenAI proved that Catalan's constant $G$ is irrational \cite{OpenAI2026} and that $\mu(\pi)=2$
 \cite{OpenAIPi2026}, both with Lean formalizations. Liu, Jiang and Zhang proved $\mu(\log r)=2$ for rational $r>0$,
 $r\ne1$ \cite{LiuJiangZhang26}. Giraudin improved the bounds for $\mu(\zeta(2))$ and $\mu(\zeta(3))$
-\cite{Giraudin26,Giraudin26z3}. Leibtag, Barkan, Kalisch, Weinbaum, Shalyt and Kaminer obtained further bounds from
-conservative matrix fields \cite{LBKWSK26}. Lai combined Fauzan's determinants with simultaneous approximations to show
-that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent \cite{Lai2026}.
+\cite{Giraudin26,Giraudin26z3}. Lai combined Fauzan's determinants with simultaneous approximations to show that
+$1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent \cite{Lai2026}. Leibtag, Barkan, Kalisch, Weinbaum, Shalyt
+and Kaminer used conservative matrix fields to improve the measures for $\zeta(2)$ and $\zeta(3)$, and they also
+proved this linear independence \cite{LBKWSK26}.
 
 \emph{The method.} Irrationality proofs with determinants of growing size go back to Zudilin's determinantal approach
 \cite{Zudilin}. The measure method we use, a family of integer polynomials whose values near the constant are small
@@ -145,7 +148,7 @@ This paper applies one method to a third constant. The method consists of Hankel
 denominators bounded prime by prime, decay proved through an energy problem, and a formal proof of every step. The
 first companion paper \cite{Litsey2026} refines OpenAI's determinant for $G$ and proves $\mu(G)\le270$. The second
 \cite{Litsey2026b} uses L\"owner determinants of digamma combinations and proves measures on three planes of numbers,
-among them $L(2,\chi_{-3})$, $\zeta(3)$ and $\pi^2$. We use the definitions of $\mu$, the measure criterion and the
+spanned modulo $\Q$ by $L(2,\chi_{-3})$ and $\pi^2$, by $\zeta(3)$ and $\pi^2$, and by $\zeta(3)$ and $\pi^4$. We use the definitions of $\mu$, the measure criterion and the
 potential-theoretic language of these papers. The construction here is Fauzan's, with his notation.
 
 \subsection{What a measure requires}
@@ -171,9 +174,10 @@ Our proof keeps Fauzan's determinants unchanged and rests on the following ideas
 \item \emph{The parity gain.} For a prime $p$ in the inner range, Fauzan bounds the $p$-adic valuation of the
  determinant by row weights attached to the classes of poles modulo $p$. On the rows of integral weight we compute the
  leading term of the Gram form modulo $p$. It is a sum over residue classes of local bilinear forms, and each local form
- is odd under the reflection $z\mapsto-1-z$ of its pole set. In a class where the space of local polynomials has more
- even than odd elements under this reflection, the even part contains a radical vector of the reduced form. Each such
- vector raises the valuation of the determinant by one. For $K/200\le p\le K/3$ this gives $p\,\gref(K/p)+O(M)$ extra
+ is odd under the reflection $z\mapsto-1-z$ of its pole set. The classes whose space of local polynomials has
+ more even than odd elements under this reflection give radical vectors of the reduced form, and a dimension count
+ bounds the loss from the coupling between classes. Each radical vector raises the valuation of the determinant by
+ one. For $K/200\le p\le K/3$ this gives $p\,\gref(K/p)+O(M)$ extra
  units, with an explicit density $0\le\gref\le\frac12$ (Theorem~\ref{thm:parity}).
 \item \emph{A second bound in the outer range.} For $K/3<p\le K$ we also apply Fauzan's class construction of the
  inner range, with weights that may be positive. The polynomial part of the functional is kept, so the bound holds for
@@ -284,17 +288,37 @@ that for every $\varepsilon>0$ and all large $n$ the following hold.
 \item $|P_n(\xi+t)|\le e^{-(D-\varepsilon)K^2}$ for every real $t$ with $|t|\le e^{-(\rho+\varepsilon)K}$.
 \item $P_n(x)\ne0$ for every rational $x$ with $|\xi-x|\le e^{-(\rho+\varepsilon)K}$.
 \end{enumerate}
-Then $\mu(\xi)\le\gamma\rho/(D-\Lambda)$, in the sense of Theorem~\ref{thm:main}.
+Then $\xi$ is irrational. Moreover, for every $\mu_0>\gamma\rho/(D-\Lambda)$ there is an integer $q_0$ such that
+$|\xi-p/q|>q^{-\mu_0}$ for all coprime integers $p$ and $q$ with $q\ge q_0$.
 \end{theorem}
 
 \begin{proof}
-Let $\eta=D-\Lambda$, and let $\mu_0>\mu_1>\gamma\rho/\eta$. Suppose $|\xi-p/q|<q^{-\mu_0}$ with $q$ large. Take the
-least $n$ with $\rho K\ge\mu_1\log q$. Then $\rho K\le\mu_1\log q+40\rho$, so
-$|\xi-p/q|<q^{-\mu_0}\le e^{-(\rho+\varepsilon)K}$ for a small fixed $\varepsilon$ and large $q$. By (c),
-$z=q^{\deg P_n}d_nP_n(p/q)$ is a nonzero integer, so $|z|\ge1$. By (a) and (b),
-$|z|\le q^{\gamma K}e^{(\Lambda+\varepsilon)K^2-(D-\varepsilon)K^2}$. Hence $(\eta-2\varepsilon)K\le\gamma\log q$.
-But $\eta K\ge(\mu_1\eta/\rho)\log q$ and $\mu_1\eta/(\gamma\rho)>1$. This is a contradiction for small
-$\varepsilon$ and large $q$.
+Let $\eta=D-\Lambda$. If $\xi=a/b$ were rational, with $b>0$, then $\xi$ lies in every window of (c). So
+$b^{\deg P_n}d_nP_n(\xi)$ is a nonzero integer. By (a) and (b) with $t=0$ its absolute value is at most
+$b^{\gamma K}e^{-(\eta-2\varepsilon)K^2}$, which is below $1$ for small $\varepsilon$ and large $n$. This is
+impossible, so $\xi$ is irrational.
+
+Now let $\mu_0>\mu_1>\gamma\rho/\eta$, and suppose $|\xi-p/q|\le q^{-\mu_0}$ with $q$ large. Take the least $n$ with
+$\rho K\ge\mu_1\log q$. Then $\rho K\le\mu_1\log q+40\rho$, so $|\xi-p/q|\le q^{-\mu_0}\le e^{-(\rho+\varepsilon)K}$
+for a small fixed $\varepsilon$ and large $q$. By (c), $z=q^{\deg P_n}d_nP_n(p/q)$ is a nonzero integer, so $|z|\ge1$.
+By (a) and (b), $|z|\le q^{\gamma K}e^{(\Lambda+\varepsilon)K^2-(D-\varepsilon)K^2}$. Hence
+$(\eta-2\varepsilon)K\le\gamma\log q$. But $\eta K\ge(\mu_1\eta/\rho)\log q$ and $\mu_1\eta/(\gamma\rho)>1$. This is a
+contradiction for small $\varepsilon$ and large $q$.
+\end{proof}
+
+The second statement concerns fractions in lowest terms. The following step, used also in the companion papers,
+removes this restriction once $\xi$ is known to be irrational.
+
+\begin{lemma}\label{lem:plain}
+Let $\xi$ be irrational and $E\ge0$. Suppose that for every $e>0$ there is $q_0$ with $|\xi-p/q|>q^{-(E+e)}$ for all
+coprime $p$ and $q$ with $q\ge q_0$. Then for every $\mu_0>E$ there is $q_1$ with $|\xi-p/q|>q^{-\mu_0}$ for all
+integers $p$ and all integers $q\ge q_1$.
+\end{lemma}
+
+\begin{proof}
+Take $e=\mu_0-E$ and the corresponding $q_0$. Write $p/q=p'/q'$ in lowest terms, so $q'\le q$. If $q'\ge q_0$, then
+$|\xi-p/q|>q'^{-\mu_0}\ge q^{-\mu_0}$. The fractions with $q'<q_0$ have finitely many denominators. Since $\xi$ is
+irrational, $c=\min_{q'<q_0}\min_{p'}|\xi-p'/q'|$ is positive. For $q>c^{-1/\mu_0}$ we get $|\xi-p/q|\ge c>q^{-\mu_0}$.
 \end{proof}
 
 Fauzan's normalizing factor $m_K$ is a positive rational number with exponents of both signs. A positive exponent
@@ -368,7 +392,8 @@ We list the steps. Write $u_j=j/K$, let $q\in\R[t]$ have degree less than $h$, a
  This is increasing on $(0,\frac3{20}]$ and positive on $[\frac3{20},\infty)$. So $\max_{[a,b]}V=\max(V(a),V(b))$.
 \item \emph{Concavity.} If $ab\le\alpha^4$, then $\Phi_{a,b}'$ is decreasing on $(\alpha,1)$. So
  $\Phi_{a,b}(u)\le\Phi_{a,b}(u_0)+\Phi_{a,b}'(u_0)(u-u_0)$ for every $u_0\in(\alpha,1)$.
-\item \emph{Numbers.} Take $a=10^{-8}$, $b=242976/10^6$ and $u_0=973660012/10^9$. Then $V(a)<V(b)\le30449413/10^7$, $\Phi_{a,b}(u_0)\le60293244/10^7$ and $|\Phi'_{a,b}(u_0)|\le10^{-7}$. Hence
+\item \emph{Numbers.} Take $a=10^{-8}$, $b=242976/10^6$ and $u_0=973660012/10^9$. Then $V(a)$ and $V(b)$ are at most $W=30449413/10^7$, $\Phi_{a,b}(u_0)\le60293244/10^7$ and
+ $|\Phi'_{a,b}(u_0)|\le10^{-7}$. By (7), $\sup_{\alpha<u\le1}\Phi_{a,b}\le60293245/10^7$. Hence
  $W+\sup\Phi_{a,b}\le9.0742658<\rho$, and the margin absorbs the factor $h^3((b-a)c_{a,b})^{-1}$ for large $K$.
 \end{enumerate}
 The numbers in (8) are rational enclosures of finitely many logarithms and arctangents.
@@ -427,24 +452,29 @@ inner function \cite[(5.4)]{Fauzan2026}.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
-The allocation has $2\le T\le6$, $L_a\ge0$ and $L_0+\sum_aL_a=h$. The local estimate at each residue class $c$ is
-Fauzan's \cite[(4.2)]{Fauzan2026}, applied to the whole local rational function, polynomial part included. The degree
-conditions of his Lemma~3.1 hold since $p\ge101$ and $T\le6$. The comparison of the
-assigned weights with every source is the same as in the inner range. The approximation by $p\Gamma(K/p)$ is the count
-of classes by their pole numbers, which are floor functions of $K/p$ and $a/p$.
+Since $p\ge101$ and $p\le K$ we have $n\ge3$. Since $p>2N$, $\ell_N(a)=[a\le N]$ for $a\ne0$, so $b_a=3[a\le N]$.
+Counting rows gives $2\le T\le6$ and $L_0+\sum_aL_a=h$. If $T=2$, every class with $a\le N$ receives an extra row,
+because the key $2\ell_K(a)+[a\le N]$ puts these classes first among those of equal $\ell_K(a)$. Hence $L_a\ge0$ for
+every $a$. We then apply the class bound of the inner range \cite[Proposition~4.1]{Fauzan2026} to the whole local
+rational function, polynomial part included. It needs three conditions. The first is separation and degree,
+$2K<p^2$ and $104n+6<p^2$, which hold because $p>K/3$. The second is that the top weights of two classes $a,c\ne0$
+differ by at most $1$, which holds because $\ell_K$ takes two consecutive values and the extra rows go to the larger
+ones. The third compares the top weight of each class $a\ne0$, minus one, with the zero class. It holds because
+$T\le6$, $\lfloor K/p\rfloor\le2$ and $L_0=8$. The approximation by $p\Gamma(K/p)$ is the count of classes by their
+pole numbers, which are floor functions of $K/p$ and $a/p$.
 \end{proof}
 
 \subsection{The normalizing factor}
 Fauzan's inner profile is $R(x)=-\Gamma(x)-\mathcal N(x)$ \cite[(5.6)]{Fauzan2026}, where
 $\mathcal N(x)=2\lambda x\lfloor x\rfloor-12\lambda x\lfloor\alpha x\rfloor-2J(\lambda x)$ and
 $J(u)=\lfloor2u\rfloor u-\lfloor2u\rfloor(\lfloor2u\rfloor+1)/4$. It has a closed form. Put $\tau=\fr{2Hx}$,
-$s=\fr{2x}$, $\eta=\fr{2\lambda x}$, $t_e=\min(\fr x,1-\fr x)$, $t_n=\min(\fr{\alpha x},1-\fr{\alpha x})$, and let
+$s=\fr{2x}$, $\vartheta=\fr{2\lambda x}$, $t_e=\min(\fr x,1-\fr x)$, $t_n=\min(\fr{\alpha x},1-\fr{\alpha x})$, and let
 $\epsilon_f$ and $\epsilon_g$ be $+1$ or $-1$ according as $\fr x<\frac12$ and $\fr{\alpha x}<\frac12$.
 
 \begin{lemma}[closed profile]\label{lem:profile}
 $R(x)=xF(x)+Q(x)$, where $F(x)=4\lambda+2\lambda\fr x-12\lambda\fr{\alpha x}$ and
 \begin{multline*}
- Q(x)=\tfrac12\bigl[\tau(\tau-s)-(\tau-s)_++\eta(1-\eta)\bigr]\\
+ Q(x)=\tfrac12\bigl[\tau(\tau-s)-(\tau-s)_++\vartheta(1-\vartheta)\bigr]\\
  +9t_n(1-2t_n)-3\epsilon_f\epsilon_g\bigl(\min(t_e,t_n)-2t_et_n\bigr).
 \end{multline*}
 Moreover $-\frac12\le Q\le\frac{13}8$.
@@ -454,10 +484,10 @@ The proof is a direct evaluation of the integral in $\Gamma$, cell by cell in th
 satisfies $0\le v_p(S_K)-p\mathcal N(K/p)\le\lfloor2h/p\rfloor$ whenever $p^2>2K$ (Legendre's formula). Fauzan's inner
 estimate becomes uniform in the cutoff:
 \begin{equation}\label{eq:innerunif}
- \bigl|-v_p(S_K)-\gamma^{\rm in}_p-p\,R(K/p)\bigr|\le7500M^2\qquad(K/M<p\le K/3).
+ \bigl|-v_p(S_K)-\gamma^{\rm in}_p-p\,R(K/p)\bigr|\le7501M^2\qquad(K/M<p\le K/3).
 \end{equation}
 In the outer range $|(-v_p(S_K)-\gamma^{\rm ext}_p)-p\,R(K/p)|\le86$. For $K/3<p\le2h$, Fauzan's outer cost is
-$-v_p(S_K)-\gamma^{\rm out}_p=K\,T_0(p/K)+O(1)$, with error at most $10$, where
+$-v_p(S_K)-[p\le K]\,\gamma^{\rm out}_p=K\,T_0(p/K)+O(1)$, with error at most $10$, where
 \[
  T_0(y)=R_0(y)-d(y)-2\lambda\lfloor1/y\rfloor+\sum_{j=1}^5(2\lambda-jy)_+
 \]
@@ -469,11 +499,12 @@ Let $M\ge40$ and $K\ge200M^2$. For a prime $p\le2h$ put
  L_p=\begin{cases}
  -6h\lfloor\log_p5K\rfloor-hv_p(24), & pM\le K,\\
  v_p(S_K)+\gamma^{\rm in}_p+[K\le200p]\,k_p, & K/M<p\le K/3,\\
- v_p(S_K)+\max(\gamma^{\rm out}_p,\gamma^{\rm ext}_p), & K/3<p\le K,\ p\ge101,\\
+ v_p(S_K)+\max(\gamma^{\rm out}_p,\gamma^{\rm ext}_p), & K/3<p\le K,\\
  v_p(S_K), & K<p\le2h,
  \end{cases}
 \]
-where $k_p$ is the parity gain of Section~\ref{sec:parity}. Put $m_K=\prod_{p\le2h}p^{-L_p}$.
+where $k_p$ is the parity gain of Section~\ref{sec:parity}. Put $m_K=\prod_{p\le2h}p^{-L_p}$. Since
+$K\ge200M^2\ge320000$, every prime in the third case satisfies $p>K/3>101$, so Theorem~\ref{thm:outer} applies.
 \end{definition}
 
 \begin{proposition}\label{prop:normaliser}
@@ -482,7 +513,7 @@ $m_K$ is a positive rational number and $m_KF_K\in\Z[X]$. Also $\log m_K=-\sum_{
 
 \begin{proof}
 At each prime $p\le2h$ the bound $\vG(F_K)\ge L_p$ holds. For the small primes it is Fauzan's \cite[(3.12)]{Fauzan2026}.
-In the inner range it is Theorem~\ref{thm:parity} below. In the outer range it is Fauzan's
+In the inner range it is \cite[Proposition~4.1]{Fauzan2026}, and Theorem~\ref{thm:parity} below when $K\le200p$. In the outer range it is Fauzan's
 \cite[Proposition~4.3]{Fauzan2026} or Theorem~\ref{thm:outer}, whichever is larger. For $p>K$ it is
 \cite[Proposition~4.3]{Fauzan2026}. At $p>2h$ both $S_K$ and $\Delta_K$ are $p$-integral.
 \end{proof}
@@ -491,7 +522,8 @@ In the inner range it is Theorem~\ref{thm:parity} below. In the outer range it i
 \section{The parity gain}\label{sec:parity}
 
 \subsection{Statement}
-Let $p$ be an inner prime, $K/M<p\le K/3$, with the allocation of Section~\ref{sec:local} and $L_0=4M+10$. By
+Let $p$ be an inner prime, $K/M<p\le K/3$, with the allocation of Section~\ref{sec:local} and $L_0=4M+10$. The
+gain is used only when $K\le200p$. By
 \eqref{eq:weights}, $w_{a,i}$ is an integer exactly when $\ell_K(a)$ is even. The counts $\ell_K(a)$ for $a\ne0$ take
 two consecutive values. Let $\mathcal S=\{a\ne0:\ell_K(a)\text{ even}\}$ and let $\mathcal E=\{a:\epsilon_a=1\}$. Let $\mathcal S_0$ and $\mathcal S_1$ be the sets of $a\in\mathcal S$ with
 $\ell_N(a)$ even and odd, respectively. Define
@@ -503,7 +535,7 @@ $\ell_N(a)$ even and odd, respectively. Define
 \]
 
 \begin{theorem}[parity gain]\label{thm:parity}
-For every inner prime $p$, $\vG(\Delta_K)\ge\gamma^{\rm in}_p+k_p$.
+For every inner prime $p$ with $K\le200p$, $\vG(\Delta_K)\ge\gamma^{\rm in}_p+k_p$.
 \end{theorem}
 
 The count $k_p$ has a density. Put $t_e$, $t_n$ as in Lemma~\ref{lem:profile}, $s'=\frac12-t_e$,
@@ -571,20 +603,43 @@ integral weight, Lemma~\ref{lem:taulead} identifies $\tilde G_{st}\bmod p$. The 
 the classes of $\mathcal S$, and for such a class the local pole set has $\ell_K(a)$ elements, an even number, and is
 symmetric. The residues $c$ and $p-c$ give equal contributions. The result is
 \begin{equation}\label{eq:leadform}
- \tilde G_{st}\equiv\lambda_s\lambda_t\sum_{a\in\mathcal S}\delta_a\,C_{I_a}(\Psi_a e_s,\Psi_a e_t)\pmod p .
+ \tilde G_{st}\equiv\kappa_s\kappa_t\sum_{a\in\mathcal S}\delta_a\,C_{I_a}(\Psi_a e_s,\Psi_a e_t)\pmod p .
 \end{equation}
-Here $\lambda_{a,i}=(-2a)^i$ and the $\delta_a$ are units. The local image $\Psi_ae_s$ of the row $s=(a,i)$ is
-$B_az^i$. Here $z$ is the local variable shifted by $\frac12$, so that $J$ acts by $z\mapsto-z$, and $B_a$ is the
-$J$-invariant cube of the local pole polynomial of $D_N$. A row of another class $b$ contributes to class $a$ only through the top row of an extra class.
+Here $\kappa_{a,i}=(-2a)^i$, the $\delta_a$ are units, and $e_s$ is the unit vector of the row $s$. The variable $z$ is
+the local variable shifted by $\frac12$, so that $J$ acts by $z\mapsto-z$. The polynomial $B_a$ is the cube of the
+local pole polynomial of $D_N$, and it is $J$-invariant when $\ell_N(a)$ is even. Call a class $b\in\mathcal E$ with
+$L_b>0$ active, and write $t_b(v)=v_{b,L_b-1}$ for the coordinate of its top row. For a vector $v$ on the rows of the
+classes in $\mathcal S$, the local image at $a$ is
+\[
+ \Psi_av=B_a\Bigl(\sum_{i<L_a}v_{a,i}z^i+[a\notin\mathcal E]\,s_a(v)\,z^{L_a}\Bigr),\qquad
+ s_a(v)=\sum_{b\text{ active}}c_{ab}\,t_b(v),
+\]
+with constants $c_{ab}\in\F_p$. So a row of another class $b$ reaches the class $a$ only through the top row of an
+active class $b$, and only when $a$ is not extra.
 
-Now let $a\in\mathcal S$ with $\ell_N(a)$ even. Then $L_a\equiv T+\epsilon_a\pmod2$. The polynomials $B_az^i$,
-$i<L_a$, split into $J$-invariant ones ($i$ even) and $J$-anti-invariant ones ($i$ odd). When $L_a$ is odd there is one
-more of the first kind. By \eqref{eq:odd} the invariant part is isotropic. A form on a space whose isotropic part
-exceeds its complement by one has a nonzero radical vector in that part. Each class of this kind gives one radical
-vector, and the couplings to the top rows of other classes remove at most one vector each. This gives at least
-$k_p+L_0$ independent vectors in the radical of the reduction of \eqref{eq:leadform}, supported on the rows of
-integral weight. The $L_0$ rows of the zero class impose at most $L_0$ further linear conditions. So at least $k_p$
-independent vectors $u_1,\dots,u_{k_p}$ over $\F_p$ remain, with
+We now count radical vectors. For $a\in\mathcal S_0$ we have $L_a\equiv T+\epsilon_a\pmod2$. Let $V$ be the space of
+vectors supported on the rows $(a,i)$ with $a\in\mathcal S_0$ and $i$ even. Its dimension is the number of rows
+$(a,i)$ with $a\in\mathcal S_0$ and $i$ odd, plus the number of $a\in\mathcal S_0$ with $L_a$ odd. By \eqref{eq:odd},
+the form \eqref{eq:leadform} vanishes between two vectors whose local images are $J$-invariant at every class of
+$\mathcal S_0$ and zero at every class of $\mathcal S_1$.
+
+Let $T$ be odd. Then $L_a$ is odd for $a\in\mathcal S_0\setminus\mathcal E$ and even for $a\in\mathcal S_0\cap\mathcal E$.
+The top row of a class in $\mathcal S_0\cap\mathcal E$ has odd index, so $t_b$ vanishes on $V$ for every active $b$
+in $\mathcal S_0$, and also for every $b\in\mathcal S_1$. Hence $\Psi_av$ is $J$-invariant for $a\in\mathcal S_0$ and
+zero for $a\in\mathcal S_1$, for every $v\in V$. The form between $v\in V$ and $e_r$ can then be nonzero only when $r$
+is a row $(a,i)$ with $a\in\mathcal S_0$ and $i$ odd, or the top row of an active class in $\mathcal S_1$. These are
+the only linear conditions. So the radical contains at least
+$\#(\mathcal S_0\setminus\mathcal E)-\#\{b\in\mathcal S_1\cap\mathcal E:L_b>0\}$ independent vectors of $V$.
+
+Let $T$ be even. Then $L_a$ is odd exactly for $a\in\mathcal S_0\cap\mathcal E$, and for $a\in\mathcal S_0\setminus
+\mathcal E$ the power $z^{L_a}$ is $J$-invariant. So $\Psi_av$ is $J$-invariant for $a\in\mathcal S_0$. For
+$a\in\mathcal S_1\cap\mathcal E$ we have $\Psi_av=0$. For $a\in\mathcal S_1\setminus\mathcal E$ we impose the condition
+$s_a(v)=0$, which makes $\Psi_av=0$. After these conditions the form between $v$ and $e_r$ can be nonzero only when
+$r$ is a row $(a,i)$ with $a\in\mathcal S_0$ and $i$ odd. So the radical contains at least
+$\#(\mathcal S_0\cap\mathcal E)-\#(\mathcal S_1\setminus\mathcal E)$ independent vectors of $V$.
+
+In both cases the vectors are supported on rows of integral weight. The $L_0$ rows of the zero class impose at most
+$L_0$ further linear conditions. So at least $k_p$ independent vectors $u_1,\dots,u_{k_p}$ over $\F_p$ remain, with
 \[
  \sum_s u_{j,s}\tilde G_{st}\equiv0\pmod p\quad\text{for every row $t$ of integral weight.}
 \]
@@ -605,9 +660,8 @@ $w_s+w_t+\frac12$. Hence each retained row has its weight raised by $\frac12$, a
 Theorem~\ref{thm:parity} follows from Lemma~\ref{lem:raise} with the vectors above.
 
 \begin{remark}
-In the inner range $K/p\le200$ the gain is about $p\,\gref(K/p)$ units, against the cost $-pR(K/p)$ of Fauzan's
-bound. We use the gain only for $K/p\le200$,
-where its integral against $x^{-3}$ is computed exactly.
+In the inner range $K/p\le200$ the gain is about $p\,\gref(K/p)$ units, against the cost $pR(K/p)$ of Fauzan's
+bound. We use the gain only for $K/p\le200$, where its integral against $x^{-3}$ is computed exactly.
 \end{remark}
 
 %% =====================================================================
@@ -644,10 +698,24 @@ The theorem rests on the following integrals.
 \begin{proof}
 Part (a) is Fauzan's \cite[(5.10)]{Fauzan2026}. In (a), (b), (c) and (e) the integrands are polynomials in $x$ and
 $x^{-1}$ on finitely many intervals, on which the floor functions are constant and the minima and positive parts do not
-change branch. The breakpoints are rational, so the integrals are rational numbers, computed exactly. For (d) write
-$R=xF+Q$ by Lemma~\ref{lem:profile}. The function $F$ is a sawtooth of period $40/3$ in $\fr{\alpha x}$ and period $1$
-in $\fr x$. Its primitive is bounded, and one integration by parts gives $\int_{200}^\infty xF(x)x^{-3}dx$ in terms of
-the mean of $F$, which is $-\lambda$, and a bounded remainder. The term $Q$ is bounded by Lemma~\ref{lem:profile}.
+change branch. The breakpoints are rational, so the integrals are rational numbers, computed exactly.
+
+For (d) write $R=xF+Q$ by Lemma~\ref{lem:profile}, and put $f=\fr x$, $g=\fr{\alpha x}$, $G_0(v)=v^2/2-v^3/3-v/6$ and
+$B_4(v)=v^2(1-v)^2-1/30$. Let
+\begin{gather*}
+ P=74g(1-g)-\lambda f(1-f),\qquad C=\tfrac{74}{\alpha}G_0(g)-\lambda G_0(f),\\
+ D_3=-\frac{74B_4(g)}{12\alpha^2}+\frac{\lambda B_4(f)}{12}.
+\end{gather*}
+These functions are continuous and periodic in $f$ and $g$. Off $\Z\cup\alpha^{-1}\Z$ they satisfy $P'=F+\lambda$,
+$C'=P-\bar P$ and $D_3'=C$, where $\bar P=2923/240$. Put $\Psi=\lambda/x+(P-\bar P)/x^2+2C/x^3+6D_3/x^4$. Then
+$\Psi'=F/x^2-24D_3/x^5$. Since $D_3\le D_+=74/(360\alpha^2)+7\lambda/2880$ and $Q\le\frac{13}8$, the function
+$\Omega=\Psi-6D_+/x^4-\frac{13}{16}x^{-2}$ satisfies $R(x)x^{-3}\le\Omega'(x)$ off a countable set. It is continuous,
+and $\Omega(x)\to0$ as $x\to\infty$. So $\int_{200}^\infty R(x)x^{-3}dx\le-\Omega(200)$. At $x=200$ both $f$ and $g$
+vanish, so $P=C=0$ and $D_3=74/(360\alpha^2)-\lambda/360$. Hence
+\[
+ \int_{200}^\infty\frac{R(x)}{x^3}\,dx\le-\frac\lambda{200}+\frac{\bar P+13/16}{200^2}+\frac{\lambda}{32\cdot200^4}
+ \le-\frac{103109}{24000000}.
+\]
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:lambda}]
@@ -658,10 +726,11 @@ contribute $O(K^{3/2}\log K)$. For larger $p$ the floor is $1$, and Chebyshev's 
 $7K\log4\cdot K/M$. Since $M(K)\to\infty$, the band contributes $o(K^2)$.
 
 \emph{Inner primes}, $K/M<p\le K/3$. By \eqref{eq:innerunif} and Proposition~\ref{prop:kcount},
-$-L_p\le pR(K/p)-[K\le200p]\,p\,\gref(K/p)+O(M^3)$. The error sums to $O(M^3K)=O(K^{7/4})$. For $K/T<p\le K/3$ with
-$T=10^8$, \eqref{eq:pnt} in the variable $x=K/p$ turns the main terms into
-$K^2\bigl(\int_3^TR(x)x^{-3}dx-\int_3^{200}\gref(x)x^{-3}dx\bigr)+o(K^2)$. For $K/M<p\le K/T$ a linear bound for $|R|$ and
-Chebyshev's inequality give at most $(44\log4/T)K^2$.
+$-L_p\le pR(K/p)-[K\le200p]\,p\,\gref(K/p)+190M^3+30M$. The error sums to $O(M^3K)=O(K^{7/4})$. Put $x_1=10^8$.
+For $K/x_1<p\le K/3$, \eqref{eq:pnt} in the variable $x=K/p$ turns the main terms into
+$K^2\bigl(\int_3^{x_1}R(x)x^{-3}dx-\int_3^{200}\gref(x)x^{-3}dx\bigr)+o(K^2)$. By Lemma~\ref{lem:profile},
+$|F|\le8\lambda$ and $|Q|\le\frac{13}8$, so $|R(x)|\le22x$ for $x\ge1$. So $p|R(K/p)|\le22(K+p)\le44K$ for $K/M<p\le K/x_1$, and Chebyshev's inequality bounds this
+band by $(44\log4/x_1)K^2$.
 
 \emph{Outer primes}, $K/3<p\le2h$. Here $-L_p\le\min\bigl(KT_0(p/K),\,pR(K/p)\bigr)+O(1)$ for $p\le K$, and
 $-L_p=KT_0(p/K)+O(1)$ for $K<p\le2h$. By \eqref{eq:pnt} the sum is at most
@@ -672,15 +741,14 @@ Adding the bands and using Proposition~\ref{prop:integrals}, $\limsup K^{-2}\log
  \frac{127751}{96000}-\frac{3203}{163200}+I_{200}-\frac{103109}{24000000}-\frac{5847}{10^6}\\
  +\frac{44\log4}{10^8}+\int_{10^8}^\infty\frac{|R(x)|}{x^3}\,dx .
 \end{multline*}
-The first five terms add up to a number in $(1.287995331,\,1.287995332)$. By Lemma~\ref{lem:profile},
-$|F|\le8\lambda$ and $|Q|\le2$, so $|R(x)|\le8x$ for $x\ge10^8$. The last two terms are therefore below $10^{-6}$, and the
-sum is below $\Lambda$.
+The first five terms add up to a number in $(1.287995331,\,1.287995332)$. Since $|R(x)|\le22x$, the last two terms
+are at most $44\log4/10^8+22/10^8<10^{-6}$, and the sum is below $\Lambda$.
 \end{proof}
 
 \begin{remark}
 Fauzan's bound at the cutoff $M=100000$ is $A_{100000}=1.31757\ldots$ \cite[(5.20)]{Fauzan2026}. Of the gain of
 $0.0296$, the outer extension gives $3203/163200\approx0.0196$ and the parity gain at least $0.0058$. The remaining
-$0.0042$ comes from the exact integral to $200$, the sharper tail and the growing cutoff, which removes the terms of
+$0.0041$ comes from the exact integral to $200$, the sharper tail and the growing cutoff, which removes the terms of
 order $1/M$. Computations of the exact content of $\Delta_K$ for
 $K\le800$ suggest that the true exponent is near $1.2735$. They are not part of the proof.
 \end{remark}
@@ -795,7 +863,7 @@ Region A is covered by $100$ cells $[\varphi_c-r,\varphi_c+r]$ with centres $\va
 $\cos\varphi_c$ and $\sin\varphi_c$ are rational, and so are all $\cos2k\varphi_c$ and $\sin2k\varphi_c$, by the
 rotation recurrence. On each cell the function is bounded by its Taylor polynomial of order four at the centre and a
 Lagrange remainder of order five. The quadratic part is maximized exactly. The remainder of the trigonometric sum is
-bounded by $\sum_k|c_k|(2k)^5/k$. The remainder of the field is bounded by Fa\`a di Bruno's formula, with the
+bounded by $2\sum_k|c_k|(2k)^5/k$. The remainder of the field is bounded by Fa\`a di Bruno's formula, with the
 derivatives of $y=\sqrt b\cos\varphi$ and the distances to the poles of the field. The values of $V$ and its first
 derivative at the centre need rational enclosures of $\log$ and $\arctan$ at rational points. The overlaps of
 consecutive cells are checked with $\arctan m'-\arctan m\le(m'-m)/(1+mm')$. Region B is covered in the same way by
@@ -836,11 +904,14 @@ Theorems~\ref{thm:lambda} and~\ref{thm:decay},
  |P_n(\xi+t)|\le2e^{\Lambda K^2}e^{-(D-\varepsilon)K^2},
 \]
 so (b) holds with the rate $D-\Lambda$. Corollary~\ref{cor:nearby} and $m_K>0$ give (c). Theorem~\ref{thm:criterion}
-with $\gamma=\lambda$ yields
+applies with $\gamma=\lambda$, and
 \[
- \mu(\zeta(5))\le\frac{\lambda\rho}{D-\Lambda}=\frac{37}{40}\cdot\frac{9.07427}{1.38500086-1.288003}=86.5349\ldots<87 .
+ \frac{\lambda\rho}{D-\Lambda}=\frac{37}{40}\cdot\frac{9.07427}{1.38500086-1.288003}=86.5349\ldots<87 .
 \]
-This is the statement of Theorem~\ref{thm:main}.
+Put $E=\lambda\rho/(D-\Lambda)=839369975/9699786$. Theorem~\ref{thm:criterion} shows that $\zeta(5)$ is irrational and
+that the hypothesis of Lemma~\ref{lem:plain} holds with this $E$. Since $E<87$, Lemma~\ref{lem:plain} with $\mu_0=87$
+gives an integer $q_0$ such that $|\zeta(5)-p/q|>q^{-87}$ for all integers $p$ and all integers $q\ge q_0$. This is
+Theorem~\ref{thm:main}.
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -854,11 +925,15 @@ directory \lean{CatalanCore/Zeta5} of the repository
 \end{center}
 Theorem~\ref{thm:main} is the theorem
 \begin{center}
-{\small\texttt{CatalanCore.Zeta5.Data.zeta5\_mu87 : MeasureLBAt Apery.zeta5 87}}
+{\small\texttt{Zeta5IrrationalityMeasure.zeta5\_irrationalityMeasure\_87}}
 \end{center}
-Here \lean{Apery.zeta5} is the series $\sum_n n^{-5}$, and \lean{riemannZeta_five} identifies it with Mathlib's
-$\zeta(5)$. The predicate \lean{MeasureLBAt x E} says that for every $e>0$ there is $q_0$ with
-$q^{-(E+e)}<|x-p/q|$ for all coprime $p$ and $q\ge q_0$. The modules contain no \lean{sorry} and no
+in \lean{SolutionZeta5.lean}. Its statement uses only Mathlib. The number $\zeta(5)$ is written as the series
+$\sum_{n\ge0}(n+1)^{-5}$, and the conclusion is $q^{-87}<|\zeta(5)-p/q|$ for all integers $p$ and all sufficiently
+large $q$. In the development $\zeta(5)$ is \lean{Apery.zeta5}, and \lean{riemannZeta_five} identifies it with
+Mathlib's $\zeta(5)$. The root is proved in the module \lean{CatalanCore.Zeta5.Data.Public}. There
+\lean{exponentE} is the exponent $E=839369975/9699786<87$, \lean{zeta5_exact} is the second statement of
+Theorem~\ref{thm:criterion} at this exponent, \lean{irrational_of_family_nnv} is its first statement, and
+\lean{TrigammaDifferences.Aux.eventually_of_point} is Lemma~\ref{lem:plain}. The modules contain no \lean{sorry} and no
 \lean{native_decide}. The command \lean{\#print axioms} reports only \lean{propext}, \lean{Classical.choice} and
 \lean{Quot.sound}. The proof is kernel-checked. It has not been run through the independent checker
 \lean{lake comparator} \cite{Comparator}.
@@ -873,9 +948,9 @@ The results of the paper correspond to the following declarations. Their files a
 \lean{CatalanCore/Zeta5}. We give the names with a short prefix only. The full namespaces are
 \lean{CatalanCore.Zeta5} and its subnamespaces, \lean{CatalanCore.Uniform} and \lean{Apery}.
 \begin{itemize}
-\item Theorem~\ref{thm:criterion}: \lean{measure_of_family_nnv_period} (the period $40$ of the scale), applied in
- \lean{zeta5_measure_signed} to the family $m_KF_K$. The composite with the content bound is
- \lean{zeta5_measure_of_parity}, and \lean{zeta5_mu87_of_decay'} leaves only the decay as hypothesis.
+\item Theorem~\ref{thm:criterion}: \lean{measure_of_family_nnv_period} (the period $40$ of the scale) and
+ \lean{Data.Public.irrational_of_family_nnv}, applied in \lean{Data.Public.zeta5_exact} to the family $m_KF_K$.
+ Lemma~\ref{lem:plain}: \lean{TrigammaDifferences.Aux.eventually_of_point}.
 \item Lemma~\ref{lem:relnorm}: \lean{Apery.det_pencil_bounds}. Corollary~\ref{cor:nearby}: \lean{F_pencil_bounds},
  \lean{zeta5_nearbyNV} and \lean{zeta5_hasScaledDecay}.
 \item Proposition~\ref{prop:basic}: \lean{Apery.moment_rep}, \lean{Apery.G_posDef}, \lean{Apery.natDegree_}$\Delta$, and
@@ -897,7 +972,9 @@ The results of the paper correspond to the following declarations. Their files a
 \item Proposition~\ref{prop:integrals}: \lean{Sum.zc34}, \lean{Sum.zc35}, \lean{Sum.zc36}, \lean{Sum.zc37} and
  \lean{Sum.zc38}. Their sum is \lean{Sum.lambdaQ_value}.
 \item Theorem~\ref{thm:lambda}: \lean{Content.zc32_signed}, through \lean{Content.log_mC_le}, \lean{Content.pt_bound}
- and the prime sums \lean{Sum.weighted_prime_sum_tendsto} and \lean{Sum.theta_le_linear}.
+ and the prime sums \lean{Sum.weighted_prime_sum_tendsto} and \lean{Sum.theta_le_linear}. The bound $|R(x)|\le22x$ is
+ \lean{Profile.Rg_bound}, and the band bound $(44\log4/x_1)K^2$ is the second term in the statement of \lean{Content.log_mC_le}. The tail
+ in Proposition~\ref{prop:integrals}(d) is \lean{Sum.TL200}.
 \item Theorem~\ref{thm:energy}: \lean{Energy.real_bound}, with the zero-mass lemma \lean{Energy.energy_log_nonpos},
  the regularization \lean{Energy.integral_regTerm_le}, the configuration inequality \lean{Energy.config_ineq} and the
  tail \lean{Decay.cellHyp_tail}.
