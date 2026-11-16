@@ -64,6 +64,11 @@ roots = ["ChallengeHybrid"]
 name = "SolutionHybrid"
 roots = ["SolutionHybrid"]
 
+# zeta(5) headline: mu(zeta(5)) <= 87.
+[[lean_lib]]
+name = "SolutionZeta5"
+roots = ["SolutionZeta5"]
+
 # Modular architecture (design FU).  None of these is a default target.
 # CatalanCore: frame-generic mathematics; CatalanFrames: per-constant instances;
 # CatalanParity: parity-check templates (the old-vs-new square-frame parity files are archived).
