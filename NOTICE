@@ -43,7 +43,20 @@ It contains third-party material, also licensed under the Apache License, Versio
    namespaces and proofs are unchanged. Source paths and hashes are in PROVENANCE.json and the original notice in
    NOTICE in that directory. The other files of that directory are new work.
 
-Everything else (CatalanMeasure/ apart from item 4, CatalanMeasure.lean, Challenge.lean, Solution.lean,
+5. CatalanCore/Zeta5/Port/
+   From Moritz Firsching's formalization of the irrationality of zeta(5),
+   https://github.com/mo271/Zeta5, commit 7fe736760f4b96bfdb4334b68e3b3124ecbe10b0, directory Apery/,
+   under the Apache License 2.0. Adapted files: Zeta5.lean, Construction.lean, Degree.lean, Weight.lean,
+   Moments.lean, PartialFractions.lean, Hermite.lean, HermiteIntegrals.lean, HermiteIBP.lean,
+   HermiteFormula.lean, Positivity.lean, Andreief.lean, DetIntegral.lean, and the declarations
+   padicValNat_finset_prod and S_eq_div of Legendre.lean. Modifications: conversion to the Lean module
+   system; `import Mathlib` replaced by explicit Mathlib imports and Apery.* renamed to
+   CatalanCore.Zeta5.Port.*; in Positivity.lean the positive-definiteness argument of Δ_pos is separated
+   into the lemmas gram_quadForm and G_posDef; Legendre.lean reduced to the two declarations above.
+   SourceFacts.lean and Source.lean in that directory are new work. Each adapted file carries a header
+   line naming its source file and changes.
+
+Everything else (CatalanMeasure/ apart from item 4, CatalanCore/Zeta5/Port/ apart from item 5, CatalanMeasure.lean, Challenge.lean, Solution.lean,
 comparator.json, formalization.yaml, README.md, PORTING.md, paper/, scripts/certgen/) is new work
 for this project.
 
