@@ -1,0 +1,120 @@
+# Formalization metadata for ChallengeZeta5.lean and SolutionZeta5.lean (the measure for zeta(5));
+# formalization.yaml describes the mu(G) result and formalization-hybrid.yaml the Löwner-determinant measures.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "An irrationality measure for zeta(5)"
+  description: >-
+    We prove mu(zeta(5)) <= 87: |zeta(5) - p/q| > q^(-87) for every integer p
+    and every sufficiently large integer q, where zeta(5) = sum_{n>=1} 1/n^5.
+    The approximations are Fauzan's Hankel determinants of a rational
+    functional with poles at negative integer squares. A measure needs three
+    estimates beyond Fauzan's irrationality proof. The denominators are bounded
+    by a signed primitive-cost bound with a rational normaliser and a parity
+    gain at the inner primes, summed over the primes with the weighted prime
+    number theorem (log m_K <= 1.288003 K^2). The determinant is bounded on a
+    neighbourhood of zeta(5) by Andreief's identity and a lower bound for a
+    logarithmic energy, from an explicit comparison measure verified on a
+    finite cover of 110 cells (decay at least 1.38500086 K^2). Nonvanishing
+    near zeta(5) follows from a bound for the eigenvalues of the matrix pencil
+    (norm exponent 9.07427). The exact exponent is 839369975/9699786 < 86.535.
+    All numerical bounds are ordinary kernel-checked rational proofs.
+  authors:
+    - "Sean Litsey"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Sean Litsey"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11J82", "11J72"]
+
+sources:
+  - title: "An irrationality measure for zeta(5)"
+    type: original-proof
+    relationship: other
+    note: >-
+      The companion paper by S. Litsey (2026), whose arguments the Lean
+      development follows. LaTeX source and PDF are in paper-zeta5/
+      (zeta5-measure-hexagon.tex is the single-file version).
+  - title: "zeta(5) is irrational"
+    authors:
+      - "Aabir Fauzan"
+    id: "doi:10.5281/zenodo.22826419"
+    type: preprint
+    location: "https://doi.org/10.5281/zenodo.22826419"
+    relationship: builds-on
+    note: >-
+      Supplies the Hankel determinant construction and the irrationality proof
+      on which the measure is built.
+    author_endorsement: not-contacted
+
+related_formalizations:
+  - id: "https://github.com/mo271/Zeta5/tree/7fe736760f4b96bfdb4334b68e3b3124ecbe10b0"
+    relationship: builds-on
+    note: >-
+      Moritz Firsching's formalization of Fauzan's construction. Adapted files
+      are in CatalanCore/Zeta5/Port/ (Apache License 2.0; see NOTICE, item 5).
+  - id: "https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/ZetaFive"
+    relationship: builds-on
+    note: >-
+      The weighted prime sums use the prime-sum files of OpenAI's workspace,
+      vendored in OAI/ (see NOTICE), with the prime number theorem from the
+      PNT+ project.
+
+status:
+  scope: >-
+    ChallengeZeta5.lean imports only Mathlib and contains an intentional proof
+    placeholder. SolutionZeta5.lean supplies the proof independently, from
+    CatalanCore.Zeta5.Data.Public.zeta5_irrationalityMeasure_87. Every
+    theorem, proposition and lemma used in the proof of the companion paper's
+    main theorem is formalized; its numerical remarks are not. The solution has
+    no sorry and no native_decide; #print axioms reports only propext,
+    Classical.choice and Quot.sound. comparator-zeta5.json configures lake
+    comparator for this statement; the CI workflow does not run it.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: agent
+      models: ["Claude Opus 5.5", "Claude Sonnet 5.5", "Claude Haiku 5.5"]
+      framework: "Claude Code"
+      tool_setup: >-
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
+    - method: agent
+      models: ["GPT-6.1 Sol (OpenAI)"]
+      framework: "Codex"
+      tool_setup: >-
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
+  spend_usd: "subscription-based"
+  notes: >-
+    Both systems worked at the request of the human author, who posed the
+    problem, directed the work and is responsible for the submission.
+    Certificates use decide +kernel, without native_decide or additional axioms.
+
+fidelity:
+  divergences: >-
+    None known. zeta(5) is written as sum_{n>=0} 1/(n+1)^5. The bound is stated
+    for all integer numerators and all sufficiently large denominators, with
+    the exponent 87 represented exactly in R.
+
+review:
+  status: "self-assessed"
+  reviewers: []
+  notes: >-
+    The statement in ChallengeZeta5.lean was checked against Theorem 1.1 of
+    the companion paper, and the constants stated in the paper were checked
+    against the Lean development. No independent human review has been
+    performed.
+
+alignment:
+  namespace: "Zeta5IrrationalityMeasure"
+  statements:
+    - source: "Litsey, An irrationality measure for zeta(5) (2026), Theorem 1.1"
+      lean: "Zeta5IrrationalityMeasure.zeta5_irrationalityMeasure_87"
+      module: "ChallengeZeta5"
+      status: proved
+      note: "zeta(5), exponent 87."

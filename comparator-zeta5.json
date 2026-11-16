@@ -1,0 +1,14 @@
+{
+  "challenge_module": "ChallengeZeta5",
+  "solution_module": "SolutionZeta5",
+  "theorem_names": [
+    "Zeta5IrrationalityMeasure.zeta5_irrationalityMeasure_87"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

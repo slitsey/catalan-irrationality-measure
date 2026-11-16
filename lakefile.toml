@@ -1,6 +1,6 @@
 name = "CatalanIrrationalityMeasure"
 version = "0.1.0"
-defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid"]
+defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid", "ChallengeZeta5", "SolutionZeta5"]
 
 [leanOptions]
 autoImplicit = false
@@ -65,6 +65,10 @@ name = "SolutionHybrid"
 roots = ["SolutionHybrid"]
 
 # zeta(5) headline: mu(zeta(5)) <= 87.
+[[lean_lib]]
+name = "ChallengeZeta5"
+roots = ["ChallengeZeta5"]
+
 [[lean_lib]]
 name = "SolutionZeta5"
 roots = ["SolutionZeta5"]

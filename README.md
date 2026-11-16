@@ -1,7 +1,8 @@
-# Irrationality measures for Catalan's constant and related constants
+# Irrationality measures for Catalan's constant, ζ(5) and related constants
 
 A Lean 4 formalization of irrationality measures for Catalan's constant and, by a construction with Löwner
-determinants, for three planes of constants and further related constants. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
+determinants, for three planes of constants and further related constants, and, by Fauzan's Hankel
+determinants, for `ζ(5)`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
 `L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant, and
 `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
 `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all sufficiently
@@ -19,7 +20,8 @@ large integers `q`.
 > - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5214 (weaker than the known bounds, included for completeness);
 > - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
 > - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
-> - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6.
+> - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6;
+> - μ(ζ(5)) ≤ 87.
 
 Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
 for every integer `a` and every sufficiently large integer `b`. The three plane theorems take the rational
@@ -45,8 +47,10 @@ The solution files supply the proofs independently; their axiom checks do not pe
 - S. Litsey, *Irrationality measures from Löwner determinants* (2026), the other
   measures: LaTeX source and PDF in [`paper-trigamma/`](paper-trigamma/) (`trigamma-irrationality-hexagon.tex`
   is the single-file version), Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
+- S. Litsey, *An irrationality measure for ζ(5)* (2026), the proof of μ(ζ(5)) ≤ 87: LaTeX source and PDF in
+  [`paper-zeta5/`](paper-zeta5/) (`zeta5-measure-hexagon.tex` is the single-file version).
 
-Both papers build on OpenAI's proof that `G` is irrational ([openai/math](https://github.com/openai/math);
+The first two papers build on OpenAI's proof that `G` is irrational ([openai/math](https://github.com/openai/math);
 preprint dated September 24, 2026, released October 6, 2026), and the proof of μ(G) ≤ 270 also builds on
 its Lean formalization. Other bounds in the literature:
 - For `G`, R. K. Jha proved μ(G) ≤ 10^8 ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
@@ -67,17 +71,23 @@ its Lean formalization. Other bounds in the literature:
 - For `L₋₃` and its rational linear combinations with `π²`, Calegari, Dimitrov and Tang give
   24781 (arXiv:2510.04156, Theorem 5.1 and the remark after it).
 - We know of no earlier irrationality result for `G ± 5π²/48`, `ψ′(a/5) − ζ(2)` or `ψ′(a/7) − ζ(2)`.
+- For `ζ(5)`, A. Fauzan proved irrationality and μ(ζ(5)) ≤ 260
+  ([doi:10.5281/zenodo.22826419](https://doi.org/10.5281/zenodo.22826419)), and D. N. Giraudin obtained
+  μ(ζ(5)) ≤ 171 under the hypotheses of Fauzan's paper (arXiv:2611.01708). Fauzan's irrationality proof was
+  formalized in Lean by M. Firsching ([mo271/Zeta5](https://github.com/mo271/Zeta5)) and by A. Fasten
+  ([realazthat/zeta5-lean2](https://github.com/realazthat/zeta5-lean2)).
 
 ## What to read
 
 | File | Content |
 |---|---|
-| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean) | the twenty-seven statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`) and the other twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`). This is the whole trusted statement surface |
-| [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean) | their proofs, each file ending with `#print axioms` for its theorems |
-| [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json` is not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
+| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean), [`ChallengeZeta5.lean`](ChallengeZeta5.lean) | the twenty-eight statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`), twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`) and μ(ζ(5)) ≤ 87 in `ChallengeZeta5.lean` (namespace `Zeta5IrrationalityMeasure`). This is the whole trusted statement surface |
+| [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean), [`SolutionZeta5.lean`](SolutionZeta5.lean) | their proofs, each file ending with `#print axioms` for its theorems |
+| [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json), [`comparator-zeta5.json`](comparator-zeta5.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json` and `comparator-zeta5.json` are not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
 | [`CatalanMeasure/GenD/`](CatalanMeasure/GenD/) | the proof of μ(G) ≤ 270 |
 | [`CatalanCore/Uniform/`](CatalanCore/Uniform/) | the proofs of the plane theorems and the other measures |
-| [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml) | provenance, authorship, automation and scope |
+| [`CatalanCore/Zeta5/`](CatalanCore/Zeta5/) | the proof of μ(ζ(5)) ≤ 87 |
+| [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml), [`formalization-zeta5.yaml`](formalization-zeta5.yaml) | provenance, authorship, automation and scope |
 
 ## Catalan's constant: μ(G) ≤ 270
 
@@ -320,12 +330,35 @@ The shift `1/2`, with `Ψ(1/2, 1) = π²/3`. The data are in `Bank/Halves/` and 
 theorem is `CatalanCore.Uniform.Bank.HalvesContent.Bound.pi2_measure`, and the public theorem is
 `TrigammaDifferences.pi2_measure`. The bound `6.5214` is weaker than the known bounds for `μ(π²)`.
 
+## ζ(5): μ(ζ(5)) ≤ 87
+
+Fauzan's determinants are Hankel determinants of a rational functional with poles at the negative integer
+squares, of size `37n` at scale `K = 40n`, and affine in the constant. A measure needs three estimates
+beyond his irrationality proof.
+
+- **Denominators.** A signed primitive-cost bound at every prime, with a rational normaliser, and a
+  parity gain at the inner primes, where the reduction of the leading forms modulo `p` has a radical of
+  computable dimension. Summed with the weighted prime number theorem, the content is at most
+  `1.288003 K²`.
+- **Decay near ζ(5).** Andreief's identity and a lower bound for a logarithmic energy, from an explicit
+  comparison measure whose potential has a closed form, give decay at least `1.38500086 K²` on a
+  neighbourhood of `ζ(5)`. The inequality on the support is checked on a cover of 110 cells.
+- **Nonvanishing near ζ(5).** A bound for the eigenvalues of the matrix pencil gives the norm exponent
+  `9.07427`.
+
+The exponent is `(37/40)·9.07427/(1.38500086 − 1.288003) = 839369975/9699786 < 86.535`. The proof is in
+[`CatalanCore/Zeta5/`](CatalanCore/Zeta5/); the theorem is
+`CatalanCore.Zeta5.Data.Public.zeta5_irrationalityMeasure_87`, and the public theorem is
+`Zeta5IrrationalityMeasure.zeta5_irrationalityMeasure_87`. Fauzan's construction is adapted from
+M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), commit `7fe7367`, Apache License
+2.0) in [`CatalanCore/Zeta5/Port/`](CatalanCore/Zeta5/Port/); see [`NOTICE`](NOTICE), item 5.
+
 ## Kernel-checked certificates
 
 All numerical bounds are ordinary kernel-checked rational and integer computations (`decide +kernel`;
 no `native_decide`): for `G`, the inverses of the base matrices modulo 1009, the trial sequences, the
 reference measures and their bounds, and the rank data; for the trigamma differences, the content tables and the cell
-covers of the decay certificates. The certificate data were computed with floating-point optimisation and
+covers of the decay certificates; for `ζ(5)`, the 110 decay cells and the energy constant. The certificate data were computed with floating-point optimisation and
 interval arithmetic (Arb), which are not trusted: Lean rechecks every inequality.
 Large certificates are split into many small declarations with explicit intermediate values, chained by
 general lemmas, and integer recurrences whose values are divisible by large powers of 2, such as the
@@ -360,16 +393,17 @@ python3 scripts/check-lean-sources.py
 lake build
 ruby scripts/validate-formalization.rb
 ruby scripts/validate-formalization.rb formalization-hybrid.yaml
+ruby scripts/validate-formalization.rb formalization-zeta5.yaml
 ./scripts/verify-comparator.sh
 ```
 
-`lake build` builds both solution files. The numerical checks can use several GiB per Lean process; use
+`lake build` builds the three solution files. The numerical checks can use several GiB per Lean process; use
 a small worker count (for example `LEAN_NUM_THREADS=2`) on memory-constrained machines. The comparator
 script checks `comparator.json`; it needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 
-The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above.
+The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's.
 
 ## Submission
 
