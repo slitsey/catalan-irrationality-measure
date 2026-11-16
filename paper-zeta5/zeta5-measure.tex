@@ -237,15 +237,16 @@ We recall the construction of \cite[\S2]{Fauzan2026}. Throughout,
  K=40n,\quad N=3n,\quad h=37n,\quad \alpha=\tfrac3{40},\quad\lambda=\tfrac{37}{40},\quad H=1+2\alpha=\tfrac{23}{20}.
 \end{equation}
 Put $D_m(t)=\prod_{j=1}^m(t+j^2)$ and $H^{(5)}_j=\sum_{v=1}^jv^{-5}$. With $B_1=-\frac12$, the $\Q$-linear functional
-$\mu_X$ with values in $\Q[X]$ is defined by
+$\mathcal F_X$ with values in $\Q[X]$ is defined by (Fauzan writes $\mu_X$; we keep $\mu$ for the irrationality
+exponent)
 \begin{gather}
- \mu_X(t^e)=\frac{(-1)^eB_{2e+2}(2e+3)(2e+4)(2e+5)}{24}\qquad(e\ge0),\label{eq:functional}\\
- \mu_X\Bigl(\frac1{t+j^2}\Bigr)=j^4\bigl(X-H^{(5)}_j\bigr)-\frac14+\frac1{2j}\qquad(j\ge1),\notag
+ \mathcal F_X(t^e)=\frac{(-1)^eB_{2e+2}(2e+3)(2e+4)(2e+5)}{24}\qquad(e\ge0),\label{eq:functional}\\
+ \mathcal F_X\Bigl(\frac1{t+j^2}\Bigr)=j^4\bigl(X-H^{(5)}_j\bigr)-\frac14+\frac1{2j}\qquad(j\ge1),\notag
 \end{gather}
 and extended to rational functions with simple poles at negative integer squares by polynomial division and partial
 fractions. Then
 \begin{equation}\label{eq:matrix}
- G_K(X)=\Bigl[\mu_X\Bigl(\frac{D_N(t)^6t^{i+j}}{D_K(t)}\Bigr)\Bigr]_{0\le i,j<h},\qquad \Delta_K=\det G_K,
+ G_K(X)=\Bigl[\mathcal F_X\Bigl(\frac{D_N(t)^6t^{i+j}}{D_K(t)}\Bigr)\Bigr]_{0\le i,j<h},\qquad \Delta_K=\det G_K,
 \end{equation}
 \[
  S_K=\frac{(K!)^{2h}4^{h-1}}{(N!)^{12h}\prod_{i=1}^{h-1}((2i)!)^2},\qquad F_K=S_K\Delta_K\in\Q[X].
@@ -255,9 +256,9 @@ $G=G_K(\xi)$.
 
 \begin{proposition}[Fauzan]\label{prop:basic}
 \begin{enumerate}[label=(\alph*)]
-\item For every rational function $R$ in the domain of $\mu_X$,
+\item For every rational function $R$ in the domain of $\mathcal F_X$,
 \[
- \mu_\xi(R)=\int_0^\infty R(y^2)\,w(y)\,dy,\qquad w(y)=\frac{(2\pi)^4y^5}{12}\sum_{\ell\ge1}\ell^4e^{-2\pi\ell y}.
+ \mathcal F_\xi(R)=\int_0^\infty R(y^2)\,w(y)\,dy,\qquad w(y)=\frac{(2\pi)^4y^5}{12}\sum_{\ell\ge1}\ell^4e^{-2\pi\ell y}.
 \]
 \item $G$ is positive definite. In particular $F_K(\xi)>0$.
 \item $\deg\Delta_K=h$.
@@ -556,8 +557,8 @@ $O(1)$ points. The reserve $L_0$ and the boundary effects cost at most $30M$.
 
 \subsection{The leading term modulo $p$}
 We now describe the proof of Theorem~\ref{thm:parity}. Following Fauzan \cite[\S3]{Fauzan2026}, the substitution
-$t=-x^2$ turns $\mu_X$ into a functional $\tau_X$ on rational functions of $x$ with simple integer poles,
-$\mu_X(R)=\tau_X(x^5R(-x^2))$. On polynomials $\tau(P)=\mathcal L(P''')/24$, where $\mathcal L(x^k)=B_k$, and
+$t=-x^2$ turns $\mathcal F_X$ into a functional $\tau_X$ on rational functions of $x$ with simple integer poles,
+$\mathcal F_X(R)=\tau_X(x^5R(-x^2))$. On polynomials $\tau(P)=\mathcal L(P''')/24$, where $\mathcal L(x^k)=B_k$, and
 $\tau_X(1/(x-r))=H^{(5)}_{d(r)}-X$ with $d(r)=r$ for $r\ge0$ and $d(r)=-r-1$ for $r<0$.
 
 We first replace the factors $t+c^2$ of \eqref{eq:basis} by the centred factors $t+c^2-cp$. Under $x=c+pz$ the centred
@@ -942,7 +943,8 @@ Fauzan's construction, the integral representation, positivity, the degree, Andr
 energy argument are ported from Firsching's formalization \cite{Firsching26}, under the Apache License~2.0, at commit
 \texttt{7fe7367}. The ported files are in \lean{CatalanCore/Zeta5/Port} and are listed in the repository's
 \texttt{NOTICE}. The prime number theorem is taken from the PNT+ project \cite{PNTPlus}, through OpenAI's workspace
-\cite{OpenAI2026}. The proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib.
+\cite{OpenAI2026}. The weighted prime sums of Section~\ref{sec:sum} use the prime-sum files of the same workspace
+(\lean{OAI/NumberTheory/ZetaFive}). The proofs were checked with Lean \texttt{v4.35.0-rc2} and the matching Mathlib.
 
 The results of the paper correspond to the following declarations. Their files are under
 \lean{CatalanCore/Zeta5}. We give the names with a short prefix only. The full namespaces are
@@ -958,20 +960,20 @@ The results of the paper correspond to the following declarations. Their files a
 \item Proposition~\ref{prop:rho}: \lean{Rho.zeta5_rho_bound}, from \lean{Rho.residue_identity},
  \lean{Rho.rj_abs_le}, \lean{Rho.gram_lower}, \lean{Rho.node_bound}, \lean{Rho.Vf_le_max},
  \lean{Rho.Phi_tangent} and \lean{Rho.rho_numerics}.
-\item Theorem~\ref{thm:outer}: \lean{zc18_ext} and \lean{zc19_gamma}. The cost estimates are \lean{zc17_gammaIn},
- \lean{zc19_cost} and \lean{zc20_outer}. Lemma~\ref{lem:profile} is \lean{neg_Gam_sub_N0} with
+\item Theorem~\ref{thm:outer}: \lean{outer_extension} and \lean{outer_ext_gamma}. The cost estimates are \lean{inner_cost_gamma},
+ \lean{outer_ext_cost} and \lean{outer_cost}. Lemma~\ref{lem:profile} is \lean{neg_Gam_sub_N0} with
  \lean{Profile.Qc_ge} and \lean{Profile.Qc_le}.
 \item Definition~\ref{def:LpC} and Proposition~\ref{prop:normaliser}: \lean{Content.LpC}, \lean{Content.mC},
- \lean{Content.log_mC}, \lean{Content.GV_F_LpC} and \lean{Content.zc32_normaliser}.
+ \lean{Content.log_mC}, \lean{Content.GV_F_LpC} and \lean{Content.normaliser_bound}.
 \item Theorem~\ref{thm:parity}: \lean{Apery.parity_gain}, a proof of the statement \lean{Apery.ParityGain}. Its parts
  are \lean{tauX_lead} (Lemma~\ref{lem:taulead}), \lean{fullSym_odd} and \lean{locSymb_pc} (the reflection),
  \lean{lead_entry} (the identification \eqref{eq:leadform}), \lean{radical_T_odd} and \lean{radical_T_even} (the
  radical vectors), \lean{cclass_unimodular} and \lean{centred_entry} (the centred basis), and
  \lean{parity_gain_delta} (Lemma~\ref{lem:raise}). Proposition~\ref{prop:kcount} is \lean{Apery.kpar_ge}, with
  $0\le\gref\le\frac12$ in \lean{Profile.gref_nonneg} and \lean{Profile.gref_le_half}.
-\item Proposition~\ref{prop:integrals}: \lean{Sum.zc34}, \lean{Sum.zc35}, \lean{Sum.zc36}, \lean{Sum.zc37} and
- \lean{Sum.zc38}. Their sum is \lean{Sum.lambdaQ_value}.
-\item Theorem~\ref{thm:lambda}: \lean{Content.zc32_signed}, through \lean{Content.log_mC_le}, \lean{Content.pt_bound}
+\item Proposition~\ref{prop:integrals}: \lean{Sum.integral_T0}, \lean{Sum.integral_head}, \lean{Sum.integral_R_mid}, \lean{Sum.integral_R_tail} and
+ \lean{Sum.integral_gref}. Their sum is \lean{Sum.lambdaQ_value}.
+\item Theorem~\ref{thm:lambda}: \lean{Content.content_bound_signed}, through \lean{Content.log_mC_le}, \lean{Content.pt_bound}
  and the prime sums \lean{Sum.weighted_prime_sum_tendsto} and \lean{Sum.theta_le_linear}. The bound $|R(x)|\le22x$ is
  \lean{Profile.Rg_bound}, and the band bound $(44\log4/x_1)K^2$ is the second term in the statement of \lean{Content.log_mC_le}. The tail
  in Proposition~\ref{prop:integrals}(d) is \lean{Sum.TL200}.
@@ -982,7 +984,7 @@ The results of the paper correspond to the following declarations. Their files a
  \lean{Potential.energy_nu}, \lean{Potential.chebF_sos} and \lean{Potential.sup_le_sumAbs}.
 \item Proposition~\ref{prop:cells}: \lean{Cells.cellA_sound}, \lean{Cells.cellB_sound} and \lean{Cells.hcell_of_cells},
  applied to the $100$ and $10$ cells of \lean{Data/CheckA1.lean}--\lean{CheckA4.lean} and \lean{Data/CheckB.lean}.
-\item Theorem~\ref{thm:decay}: \lean{Decay.zeta5_decay}, with the constant inequality \lean{Cells.zd22_sound}.
+\item Theorem~\ref{thm:decay}: \lean{Decay.zeta5_decay}, with the constant inequality \lean{Cells.energy_const_sound}.
 \end{itemize}
 The certificate data are the $61$ integers $h_j$, the cells, and the rational breakpoints of the integrals of
 Proposition~\ref{prop:integrals}. They were computed with floating-point optimization and the interval arithmetic of

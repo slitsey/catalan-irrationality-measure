@@ -4,7 +4,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Topology.Algebra.InfiniteSum.Real
 public import Mathlib.Order.Filter.AtTopBot.Basic
 
-import CatalanCore.Zeta5.Data.Public
+import CatalanCore.Zeta5.Data.Names
 
 public section
 
