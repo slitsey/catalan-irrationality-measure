@@ -7,42 +7,65 @@ sufficiently large integers `q`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be 
 
 ## The four papers
 
-### 1. Catalan's constant
+Each table lists the theorems of one paper. The column *New* says what the theorem adds: an **improved measure**
+for a number already known to be irrational and to have a measure, a **first measure** for a number known to be
+irrational, or a **first proof of irrationality**. The last column gives the best bound from other work that we
+know.
 
-> **Theorem.** μ(G) ≤ 270.
+### 1. Catalan's constant
 
 S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX source and PDF in [`paper/`](paper/)
 (`catalan-measure-hexagon.tex` is the single-file version), Hexagon preprint
 [`hexagon:2610.00187`](https://hexagonmath.org/2610.00187). The proof refines OpenAI's proof that `G` is irrational.
 
-### 2. Löwner determinants
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `G` | 270 | improved measure | 528.2315 (MultiAgency) |
 
-> **Theorem.** μ(a L₋₃ + b π²) ≤ 20.6622 and μ(a ζ(3) + b π²) ≤ 335.20, for all rationals a, b, not both zero.
+### 2. Löwner determinants
 
 S. Litsey, *Irrationality measures from Löwner determinants* (2026): LaTeX source and PDF in
 [`paper-trigamma/`](paper-trigamma/) (`trigamma-irrationality-hexagon.tex` is the single-file version), Hexagon
-preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401). The first bound improves the bound 24781 of
-Calegari, Dimitrov and Tang. As far as we know, the second is the first irrationality measure valid on the whole
-plane. The same method gives sharper bounds at special points of the first plane, among them `L₋₃` and
-`G ± 5π²/48`, and at further differences of trigamma values. They are listed in
-[the section on this paper](#the-löwner-determinant-measures).
+preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401). In the plane rows `a` and `b` are rationals,
+not both zero, and `k` is prime to the denominator.
+
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `a L₋₃ + b π²` | 20.6622 | improved measure | 24781 (Calegari–Dimitrov–Tang) |
+| `L₋₃` | 13.6839 | improved measure | 24781 |
+| `L₋₃ ± π²/9` | 9.4913 | improved measure | 24781 |
+| `L₋₃ ± 2π²/27` | 14 | improved measure | 24781 |
+| `L₋₃ ± π²/27` | 15.359 | improved measure | 24781 |
+| `L₋₃ ± π²/18` | 17.492 | improved measure | 24781 |
+| `a ζ(3) + b π²` | 335.20 | first measure | none (irrational by Q. Tang) |
+| `G ± 5π²/48` | 31.1973 | first proof of irrationality | none |
+| `ψ′(k/5) − π²/6` | 23.7756 | first proof of irrationality | none |
+| `ψ′(k/7) − π²/6` | 1806.1719 | first proof of irrationality | none |
+
+Here `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` is the trigamma function. For completeness the paper also proves
+μ(ζ(3)) ≤ 6.0382, μ(π²) ≤ 6.5214 and μ(a ζ(3) + b π⁴) ≤ 72.726. These are weaker than known bounds: for `ζ(3)`
+and `π²` those of Leibtag et al., and on the plane of `ζ(3)` and `π⁴` the bound of paper 4.
 
 ### 3. ζ(5)
-
-> **Theorem.** μ(ζ(5)) ≤ 87.
 
 S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in [`paper-zeta5/`](paper-zeta5/)
 (`zeta5-measure-hexagon.tex` is the single-file version). The proof uses Fauzan's Hankel determinants.
 
-### 4. The plane of ζ(3) and ζ(4)
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `ζ(5)` | 87 | improved measure | 260 (Fauzan) |
 
-> **Theorem.** μ(a ζ(3) + b ζ(4)) ≤ 34.14 for all integers a, b with b ≠ 0, and μ(ζ(3)/π⁴) ≤ 55.50.
+### 4. The plane of ζ(3) and ζ(4)
 
 S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026): LaTeX source and PDF in
 [`paper-lai/`](paper-lai/) (`lai-measure-hexagon.tex` is the single-file version). The proof uses Lai's Hankel
-determinants. The best bound previously published on this plane is 66.3, by Leibtag et al. As far as we know,
-the bound for `ζ(3)/π⁴` is the first. On the line `b = 0` the number is a rational multiple of `ζ(3)`, whose
-known measures are much smaller.
+determinants. Since `ζ(4) = π⁴/90`, this is the plane of `ζ(3)` and `π⁴` of paper 2. On the line `b = 0` the
+number is a rational multiple of `ζ(3)`, whose known measures are much smaller.
+
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `a ζ(3) + b ζ(4)`, integers `a, b`, `b ≠ 0` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
+| `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
 
 ## The statements
 
