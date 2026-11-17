@@ -73,6 +73,15 @@ roots = ["ChallengeZeta5"]
 name = "SolutionZeta5"
 roots = ["SolutionZeta5"]
 
+# Lai headlines: mu(a zeta(3) + b zeta(4)) <= 34.14 (b != 0), mu(zeta(3)/pi^4) <= 55.50.
+[[lean_lib]]
+name = "ChallengeLai"
+roots = ["ChallengeLai"]
+
+[[lean_lib]]
+name = "SolutionLai"
+roots = ["SolutionLai"]
+
 # Modular architecture (design FU).  None of these is a default target.
 # CatalanCore: frame-generic mathematics; CatalanFrames: per-constant instances;
 # CatalanParity: parity-check templates (the old-vs-new square-frame parity files are archived).

@@ -117,8 +117,8 @@ theorem tied_mass (e : ℕ) (a b : ℝ) :
   norm_num
   ring
 
-/-- `η = D - Λ` of the Lai roots: `D = 33.44019129`, `Λ = 28.68723663`. -/
-noncomputable def laiEta : ℝ := 3344019129 / 10 ^ 8 - 2868723663 / 10 ^ 8
+/-- `η = D - Λ` of the Lai roots: `D = 33.4401`, `Λ = 28.68723663`. -/
+noncomputable def laiEta : ℝ := 3344010000 / 10 ^ 8 - 2868723663 / 10 ^ 8
 
 theorem laiEta_pos : 0 < laiEta := by unfold laiEta; norm_num
 

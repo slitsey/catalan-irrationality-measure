@@ -163,12 +163,12 @@ theorem lai_plane_of (h : LaiInputs) (a b : ℤ) (hb : b ≠ 0) :
   have hD := lai_plane_decay d a b hb
   have hDS := lai_plane_decay_scaled_cert hB7 Shat hS hR a b hD
   have hC := lai_plane_hasScaledContent_cert hB7 a b
-  have hη : (3344019129 / 10 ^ 8 - 2868723663 / 10 ^ 8 - 0 : ℝ) = laiEta := by
+  have hη : (3344010000 / 10 ^ 8 - 2868723663 / 10 ^ 8 - 0 : ℝ) = laiEta := by
     unfold laiEta; ring
   have hmass := windowOK_of_fields (planeTiedS a b hb) (fun i => by fin_cases i <;> rfl)
     (fun i => by fin_cases i <;> rfl) (fun i => by fin_cases i <;> rfl) plane_unionWindowOK
   have key := measure_of_family_tiedNV_index (planeTiedS a b hb) (Λ := 0)
-    (D := 3344019129 / 10 ^ 8 - 2868723663 / 10 ^ 8) (ρ := 4294856306 / 10 ^ 8) (κ := 3)
+    (D := 3344010000 / 10 ^ 8 - 2868723663 / 10 ^ 8) (ρ := 4294856306 / 10 ^ 8) (κ := 3)
     (β := 1637 / 10000) (Kh := 1) (μ := 34.14) hC hDS (by norm_num) (by norm_num) (by norm_num)
     (by norm_num) (by norm_num) (fun n _ => by
       have hn : ∀ m : ℕ, ((3 * m : ℕ) : ℝ) ≤ 3 * ((id m : ℕ) : ℝ) := fun m => by simp
@@ -187,13 +187,13 @@ theorem lai_ratio_family_of (h : LaiInputs) :
   have hD := lai_ratio_decay d
   have hDS := lai_ratio_decay_scaled_cert hB7 Shat hS hR hD
   have hC := lai_ratio_hasScaledContent_cert hB7
-  have hη : (3344019129 / 10 ^ 8 - 2868723663 / 10 ^ 8 - 0 : ℝ) = laiEta := by
+  have hη : (3344010000 / 10 ^ 8 - 2868723663 / 10 ^ 8 - 0 : ℝ) = laiEta := by
     unfold laiEta; ring
   have hmass := windowOK_of_fields ratioTiedS (fun i => by fin_cases i <;> rfl)
     (fun i => by fin_cases i <;> rfl) (fun i => by fin_cases i <;> rfl) ratio_unionWindowOK
   have hys := ystar_bounds
   have key := measure_of_family_tiedNV_index ratioTiedS (Λ := 0)
-    (D := 3344019129 / 10 ^ 8 - 2868723663 / 10 ^ 8) (ρ := 4294856306 / 10 ^ 8) (κ := 3)
+    (D := 3344010000 / 10 ^ 8 - 2868723663 / 10 ^ 8) (ρ := 4294856306 / 10 ^ 8) (κ := 3)
     (β := 661 / 1000) (Kh := 3) (μ := 55.499) hC hDS (by norm_num) (by norm_num) (by norm_num)
     (by norm_num) (by norm_num) (fun n _ => by
       have hn : ∀ m : ℕ, ((3 * m : ℕ) : ℝ) ≤ 3 * ((id m : ℕ) : ℝ) := fun m => by simp
