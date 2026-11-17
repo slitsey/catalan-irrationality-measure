@@ -20,7 +20,7 @@ S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX sourc
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `G` | 270 | improved measure | 528.2315 (MultiAgency) |
+| `G` | 270 | improved measure | — |
 
 ### 2. Löwner determinants
 
@@ -53,7 +53,7 @@ S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in 
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `ζ(5)` | 87 | improved measure | 260 (Fauzan) |
+| `ζ(5)` | 87 | improved measure | 171 (Giraudin) |
 
 ### 4. The plane of ζ(3) and ζ(4)
 
@@ -82,19 +82,9 @@ The first two papers build on OpenAI's proof that `G` is irrational ([openai/mat
 preprint dated September 24, 2026, released October 6, 2026), and the proof of μ(G) ≤ 270 also builds on
 its Lean formalization.
 
-- For `G`, R. K. Jha proved μ(G) ≤ 10^8 ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
-  M. C. S. Carreira treated the five parameters of OpenAI's construction as free and obtained μ(G) < 2294
-  ([doi:10.5281/zenodo.23532239](https://doi.org/10.5281/zenodo.23532239)); H. S. Bojnal instantiated his
-  general theorem at the design (36, 6, 2, 3, 2) to obtain μ(G) < 2401.74
-  ([proof-factory/catalan-exponent](https://github.com/proof-factory/catalan-exponent)). R. Xu reported
-  μ(G) ≤ 727.03 for the design (20, 3, 1, 2, 1), with a numerical certificate in ball arithmetic that is
-  not formalized ([issue #5](https://github.com/slitsey/catalan-irrationality-measure/issues/5)).
-  C. Davis obtained μ(G) ≤ 528.23288 with the design and arithmetic of this repository and new quadrature
-  nodes, formalized in Lean ([1337isnot1337/catalan-constant](https://github.com/1337isnot1337/catalan-constant));
-  the MultiAgency agent swarm regenerated Davis's polynomial and reached μ(G) ≤ 528.2315, also formalized in Lean
-  ([darkhipo/catalan-constant-gen5](https://github.com/darkhipo/catalan-constant-gen5)). The proof of
-  μ(G) ≤ 270 uses its own quadrature nodes and two of Davis's Lean files (commit `3c45153`, Apache License 2.0),
-  `GeneralNodalWeights` and `NodalRootDeletion`, which bound the weights of nodal polynomials. They are ported
+- For `G`, the proof of μ(G) ≤ 270 uses two Lean files of C. Davis
+  ([1337isnot1337/catalan-constant](https://github.com/1337isnot1337/catalan-constant), commit `3c45153`,
+  Apache License 2.0), `GeneralNodalWeights` and `NodalRootDeletion`, which bound the weights of nodal polynomials. They are ported
   unchanged into [`CatalanMeasure/GenD/Signed/Davis/`](CatalanMeasure/GenD/Signed/Davis/); the other 31 ported
   files are in `archive/` and are not part of the build. See [`NOTICE`](NOTICE) and `PROVENANCE.json` there.
 - For `L₋₃` and its rational linear combinations with `π²`, Calegari, Dimitrov and Tang give
