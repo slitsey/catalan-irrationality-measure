@@ -15,7 +15,7 @@ public import CatalanCore.Decay.Reflect
   `(1/M!) ∫ ∏ ‖w(xₗ)‖ ‖Δ(z(x))‖² dm^M` (Andréief, `norm_det_le_andreief` as is).
 * `heine_complex_bound` (LD04 + LD09): combined with `complex_bound`.
 * `lineDens` / `ballMaj_lineDens` / `BallMaj.add` (LD07): a finite sum of bounded densities on
-  curves bounded below in chord by `λ|s-t|` (segments) satisfies `BallMaj`.
+  curves bounded below in chord by `λ|s-t|` (segments) satisfies `BallMajA`.
 -/
 
 open MeasureTheory Set Real Filter Topology CatalanCore.Decay.ComplexEnergy
@@ -51,27 +51,28 @@ theorem heine_bound {X : Type*} [MeasurableSpace X] (m : Measure X) [SigmaFinite
 
 /-- **LD04 + LD09**: the Heine bound with the energy bound of `ComplexEnergy`. -/
 theorem heine_complex_bound {X : Type*} [MeasurableSpace X] (m : Measure X) [SigmaFinite m]
-    {σ : Measure ℂ} [IsFiniteMeasure σ] {b A : ℝ} (hσ : BallMaj σ b A)
+    {σ : Measure ℂ} [IsFiniteMeasure σ] {b A α : ℝ} (hσ : BallMajA σ b A α)
     (w z : X → ℂ) {n : ℝ} (hn : 0 < n) {M : ℕ} (hM : (M : ℝ) = n * σ.real univ) {ε : ℝ} (hε : 0 < ε)
     (hint : ∀ i j : Fin M, Integrable (fun x => w x * z x ^ (i : ℕ) * z x ^ (j : ℕ)) m)
     (hG : Integrable (fun x => ‖w x‖ * Real.exp (2 * n * potC σ (z x / n))) m) :
     ‖(Matrix.of fun i j : Fin M => ∫ x, w x * z x ^ ((i : ℕ) + (j : ℕ)) ∂m).det‖ ≤
-      (1 / (M.factorial : ℝ)) * (Real.exp (boundConst σ A n M ε) *
+      (1 / (M.factorial : ℝ)) * (Real.exp (boundConst σ A α n M ε) *
         (∫ x, ‖w x‖ * Real.exp (2 * n * potC σ (z x / n)) ∂m) ^ M) := by
   refine (heine_bound m w z M hint).trans ?_
   refine mul_le_mul_of_nonneg_left ?_ (by positivity)
   exact complex_bound m z (fun x => ‖w x‖) (fun x => norm_nonneg _) hσ hn hM hε hG
 
-/-! ### LD07: bounded line densities satisfy `BallMaj` -/
+/-! ### LD07: bounded line densities satisfy `BallMajA` -/
 
 /-- A bounded density `ρ` on `[a, b]` pushed along the curve `γ`. -/
 noncomputable def lineDens (γ : ℝ → ℂ) (ρ : ℝ → ℝ) (a b : ℝ) : Measure ℂ :=
   ((volume.restrict (Icc a b)).withDensity fun t => ENNReal.ofReal (ρ t)).map γ
 
-lemma BallMaj.add {σ₁ σ₂ : Measure ℂ} {b₁ b₂ A₁ A₂ : ℝ} (h₁ : BallMaj σ₁ b₁ A₁)
-    (h₂ : BallMaj σ₂ b₂ A₂) : BallMaj (σ₁ + σ₂) (max b₁ b₂) (A₁ + A₂) where
+lemma BallMajA.add {σ₁ σ₂ : Measure ℂ} {b₁ b₂ A₁ A₂ α : ℝ} (h₁ : BallMajA σ₁ b₁ A₁ α)
+    (h₂ : BallMajA σ₂ b₂ A₂ α) : BallMajA (σ₁ + σ₂) (max b₁ b₂) (A₁ + A₂) α where
   b_pos := lt_max_of_lt_left h₁.b_pos
   A_nonneg := add_nonneg h₁.A_nonneg h₂.A_nonneg
+  α_pos := h₁.α_pos
   supp := by
     have e1 : σ₁ (Metric.closedBall (0 : ℂ) (max b₁ b₂))ᶜ = 0 :=
       measure_mono_null (compl_subset_compl.mpr (Metric.closedBall_subset_closedBall
@@ -80,35 +81,35 @@ lemma BallMaj.add {σ₁ σ₂ : Measure ℂ} {b₁ b₂ A₁ A₂ : ℝ} (h₁ 
       measure_mono_null (compl_subset_compl.mpr (Metric.closedBall_subset_closedBall
         (le_max_right _ _))) h₂.supp
     rw [Measure.add_apply, e1, e2, add_zero]
-  maj := fun c r => by
+  maj := fun c r hr => by
     rw [Measure.add_apply]
-    refine (add_le_add (h₁.maj c r) (h₂.maj c r)).trans ?_
-    rcases le_total 0 r with hr | hr
-    · rw [← ENNReal.ofReal_add (mul_nonneg h₁.A_nonneg hr) (mul_nonneg h₂.A_nonneg hr)]
-      exact (ENNReal.ofReal_le_ofReal (le_of_eq (by ring)))
-    · rw [ENNReal.ofReal_of_nonpos (mul_nonpos_of_nonneg_of_nonpos h₁.A_nonneg hr),
-        ENNReal.ofReal_of_nonpos (mul_nonpos_of_nonneg_of_nonpos h₂.A_nonneg hr)]
-      simp
+    refine (add_le_add (h₁.maj c r hr) (h₂.maj c r hr)).trans ?_
+    rw [← ENNReal.ofReal_add (mul_nonneg h₁.A_nonneg (Real.rpow_nonneg hr _))
+      (mul_nonneg h₂.A_nonneg (Real.rpow_nonneg hr _))]
+    exact ENNReal.ofReal_le_ofReal (le_of_eq (by ring))
 
-lemma BallMaj.zero {b A : ℝ} (hb : 0 < b) (hA : 0 ≤ A) : BallMaj (0 : Measure ℂ) b A where
+lemma BallMajA.zero {b A α : ℝ} (hb : 0 < b) (hA : 0 ≤ A) (hα : 0 < α) :
+    BallMajA (0 : Measure ℂ) b A α where
   b_pos := hb
   A_nonneg := hA
+  α_pos := hα
   supp := by simp
-  maj := fun c r => by simp
+  maj := fun c r _ => by simp
 
-/-- A finite sum of `BallMaj` measures is `BallMaj`. -/
-lemma BallMaj.finsum {ι : Type*} (s : Finset ι) (σ : ι → Measure ℂ) (b A : ι → ℝ)
-    (h : ∀ i ∈ s, BallMaj (σ i) (b i) (A i)) {b₀ : ℝ} (hb₀ : 0 < b₀) (hb : ∀ i ∈ s, b i ≤ b₀) :
-    BallMaj (∑ i ∈ s, σ i) b₀ (∑ i ∈ s, A i) := by
+/-- A finite sum of `BallMajA` measures is `BallMajA`. -/
+lemma BallMajA.finsum {ι : Type*} (s : Finset ι) (σ : ι → Measure ℂ) (b A : ι → ℝ) {α : ℝ}
+    (hα : 0 < α) (h : ∀ i ∈ s, BallMajA (σ i) (b i) (A i) α) {b₀ : ℝ} (hb₀ : 0 < b₀)
+    (hb : ∀ i ∈ s, b i ≤ b₀) :
+    BallMajA (∑ i ∈ s, σ i) b₀ (∑ i ∈ s, A i) α := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using BallMaj.zero hb₀ le_rfl
+  | empty => simpa using BallMajA.zero hb₀ le_rfl hα
   | insert i s hi ih =>
     rw [Finset.sum_insert hi, Finset.sum_insert hi]
     have h1 := ih (fun j hj => h j (Finset.mem_insert_of_mem hj))
       (fun j hj => hb j (Finset.mem_insert_of_mem hj))
-    have h2 := BallMaj.add (h i (Finset.mem_insert_self _ _)) h1
-    refine ⟨hb₀, h2.A_nonneg, ?_, h2.maj⟩
+    have h2 := BallMajA.add (h i (Finset.mem_insert_self _ _)) h1
+    refine ⟨hb₀, h2.A_nonneg, hα, ?_, h2.maj⟩
     have hsub : Metric.closedBall (0 : ℂ) (max (b i) b₀) = Metric.closedBall (0 : ℂ) b₀ := by
       rw [max_eq_right (hb i (Finset.mem_insert_self _ _))]
     have := h2.supp
@@ -126,7 +127,7 @@ lemma lineDens_apply_le {γ : ℝ → ℂ} (hγc : Continuous γ) {a b : ℝ} {�
     _ = _ := by rw [Measure.restrict_apply (hγc.measurable hS)]
 
 /-- **LD07**: a density bounded by `F` on `[a, b]`, pushed along a curve `γ` with chords
-`λ|s - t| ≤ ‖γ s - γ t‖`, satisfies `BallMaj` with `A = 4F/λ` (every segment `γ t = M + h t` has
+`λ|s - t| ≤ ‖γ s - γ t‖`, satisfies `BallMajA` with `A = 4F/λ` (every segment `γ t = M + h t` has
 `λ = ‖h‖`). -/
 theorem ballMaj_lineDens {γ : ℝ → ℂ} (hγc : Continuous γ) {a b : ℝ} {ρ : ℝ → ℝ}
     {F : ℝ} (hF : 0 ≤ F) (hρF : ∀ t, ρ t ≤ F)
@@ -134,7 +135,7 @@ theorem ballMaj_lineDens {γ : ℝ → ℂ} (hγc : Continuous γ) {a b : ℝ} {
     {b₀ : ℝ} (hb₀ : 0 < b₀) (hbd : ∀ t ∈ Icc a b, ‖γ t‖ ≤ b₀) :
     BallMaj (lineDens γ ρ a b) b₀ (4 * F / lam) := by
   have hA : 0 ≤ 4 * F / lam := by positivity
-  refine ⟨hb₀, hA, ?_, ?_⟩
+  refine ⟨hb₀, hA, one_pos, ?_, ?_⟩
   · refine le_antisymm ?_ bot_le
     refine (lineDens_apply_le hγc hρF measurableSet_closedBall.compl).trans ?_
     have : γ ⁻¹' (Metric.closedBall (0 : ℂ) b₀)ᶜ ∩ Icc a b = ∅ := by
@@ -144,7 +145,8 @@ theorem ballMaj_lineDens {γ : ℝ → ℂ} (hγc : Continuous γ) {a b : ℝ} {
       intro h1 h2
       exact absurd (hbd t h2) (not_le.mpr (not_le.mp h1))
     rw [this]; simp
-  · intro c r
+  · intro c r hr0
+    rw [Real.rpow_one]
     refine (lineDens_apply_le hγc hρF measurableSet_closedBall).trans ?_
     rcases lt_or_ge r 0 with hr | hr
     · have : γ ⁻¹' Metric.closedBall c r ∩ Icc a b = ∅ := by

@@ -143,45 +143,40 @@ lemma integral_abs_log_circZ_le (c : ℂ) {ε : ℝ} (hε : 0 < ε) {A : ℝ} (a
 /-! ### The dual measure: `BallMaj` and the regularisation estimate (LD07) -/
 
 /-- Hypotheses on a measure `σ` on `ℂ` used by the circle regularisation: support in the closed
-ball of radius `b` about 0, and linear growth of ball masses. -/
-structure BallMaj (σ : Measure ℂ) (b A : ℝ) : Prop where
+ball of radius `b` about 0, and Hölder growth `σ(B(c, r)) ≤ A r^α` of ball masses (`α > 0`). -/
+structure BallMajA (σ : Measure ℂ) (b A α : ℝ) : Prop where
   b_pos : 0 < b
   A_nonneg : 0 ≤ A
+  α_pos : 0 < α
   supp : σ (Metric.closedBall (0 : ℂ) b)ᶜ = 0
-  maj : ∀ (c : ℂ) (r : ℝ), σ (Metric.closedBall c r) ≤ ENNReal.ofReal (A * r)
+  maj : ∀ (c : ℂ) (r : ℝ), 0 ≤ r → σ (Metric.closedBall c r) ≤ ENNReal.ofReal (A * r ^ α)
 
-variable {σ : Measure ℂ} {b A : ℝ}
+/-- The linear case `α = 1`: `σ(B(c, r)) ≤ A r`. -/
+abbrev BallMaj (σ : Measure ℂ) (b A : ℝ) : Prop := BallMajA σ b A 1
 
-namespace BallMaj
+variable {σ : Measure ℂ} {b A α : ℝ}
 
-lemma ae_mem (h : BallMaj σ b A) : ∀ᵐ u ∂σ, ‖u‖ ≤ b := by
+namespace BallMajA
+
+lemma ae_mem (h : BallMajA σ b A α) : ∀ᵐ u ∂σ, ‖u‖ ≤ b := by
   have := measure_eq_zero_iff_ae_notMem.mp h.supp
   filter_upwards [this] with u hu
   simpa using hu
 
 /-- `σ` has no atoms. -/
-lemma singleton_zero (h : BallMaj σ b A) (x : ℂ) : σ {x} = 0 := by
+lemma singleton_zero (h : BallMajA σ b A α) (x : ℂ) : σ {x} = 0 := by
   refine le_antisymm ?_ bot_le
-  refine ENNReal.le_of_forall_pos_le_add fun ε hε _ => ?_
-  rw [zero_add]
-  have hA1 : 0 < A + 1 := by linarith [h.A_nonneg]
-  set r : ℝ := (ε : ℝ) / (A + 1) with hr
-  have hr0 : 0 ≤ r := by positivity
-  have h1 : σ {x} ≤ σ (Metric.closedBall x r) := by
+  have h1 : σ {x} ≤ σ (Metric.closedBall x 0) := by
     apply measure_mono
     intro y hy
     rw [mem_singleton_iff] at hy
     subst hy
-    simp [hr0]
-  refine h1.trans ((h.maj x r).trans ?_)
-  have : A * r ≤ ε := by
-    rw [hr, mul_div_assoc', div_le_iff₀ hA1]
-    have hε0 : (0 : ℝ) ≤ ε := ε.coe_nonneg
-    nlinarith [hε0, h.A_nonneg]
-  calc ENNReal.ofReal (A * r) ≤ ENNReal.ofReal ε := ENNReal.ofReal_le_ofReal this
-    _ = ε := ENNReal.ofReal_coe_nnreal
+    simp
+  refine h1.trans ((h.maj x 0 le_rfl).trans ?_)
+  rw [Real.zero_rpow h.α_pos.ne', mul_zero]
+  simp
 
-end BallMaj
+end BallMajA
 
 /-- The regularisation integrand `log⁺(ε/‖t - u‖)`. -/
 noncomputable def regC (t : ℂ) (ε : ℝ) (u : ℂ) : ℝ := Real.posLog (ε / ‖t - u‖)
@@ -221,46 +216,50 @@ lemma regC_level {t : ℂ} {ε : ℝ} (hε : 0 < ε) {s : ℝ} (hs : 0 < s) {u :
   rw [Metric.mem_closedBall, dist_eq_norm, norm_sub_rev]
   exact h3.le
 
-/-- **LD07** in `lintegral` form: `∫ log⁺(ε/‖t - u‖) dσ ≤ A ε`. -/
-lemma lintegral_regC_le (hσ : BallMaj σ b A) {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
-    ∫⁻ u, ENNReal.ofReal (regC t ε u) ∂σ ≤ ENNReal.ofReal (A * ε) := by
+/-- **LD07** in `lintegral` form: `∫ log⁺(ε/‖t - u‖) dσ ≤ A ε^α / α`. -/
+lemma lintegral_regC_le (hσ : BallMajA σ b A α) {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
+    ∫⁻ u, ENNReal.ofReal (regC t ε u) ∂σ ≤ ENNReal.ofReal (A * ε ^ α / α) := by
   rw [lintegral_eq_lintegral_meas_lt σ (ae_of_all _ fun u => regC_nonneg t ε u)
     (measurable_regC t ε).aemeasurable]
-  set C : ℝ := A * ε with hC
-  have hC0 : 0 ≤ C := mul_nonneg hσ.A_nonneg hε.le
+  set C : ℝ := A * ε ^ α with hC
+  have hC0 : 0 ≤ C := mul_nonneg hσ.A_nonneg (Real.rpow_nonneg hε.le _)
   have hpt : ∀ s ∈ Ioi (0 : ℝ), σ {a | s < regC t ε a} ≤
-      ENNReal.ofReal (C * Real.exp (-1 * s)) := by
+      ENNReal.ofReal (C * Real.exp (-α * s)) := by
     intro s hs
     have hs : 0 < s := hs
     refine (measure_mono fun u hu => regC_level hε hs hu).trans ?_
-    refine (hσ.maj t (ε * Real.exp (-s))).trans (ENNReal.ofReal_le_ofReal ?_)
-    rw [neg_one_mul, hC]; ring_nf; exact le_rfl
-  have hint : IntegrableOn (fun s : ℝ => C * Real.exp (-1 * s)) (Ioi 0) :=
-    (integrableOn_exp_mul_Ioi (by norm_num) 0).const_mul C
+    refine (hσ.maj t (ε * Real.exp (-s)) (by positivity)).trans (ENNReal.ofReal_le_ofReal ?_)
+    rw [Real.mul_rpow hε.le (Real.exp_pos _).le, ← Real.exp_mul, hC]
+    refine le_of_eq ?_
+    rw [← mul_assoc]; ring_nf
+  have hint : IntegrableOn (fun s : ℝ => C * Real.exp (-α * s)) (Ioi 0) :=
+    (integrableOn_exp_mul_Ioi (by linarith [hσ.α_pos]) 0).const_mul C
   calc ∫⁻ s in Ioi 0, σ {a | s < regC t ε a}
-      ≤ ∫⁻ s in Ioi 0, ENNReal.ofReal (C * Real.exp (-1 * s)) :=
+      ≤ ∫⁻ s in Ioi 0, ENNReal.ofReal (C * Real.exp (-α * s)) :=
         setLIntegral_mono' measurableSet_Ioi hpt
-    _ = ENNReal.ofReal (∫ s in Ioi 0, C * Real.exp (-1 * s)) :=
+    _ = ENNReal.ofReal (∫ s in Ioi 0, C * Real.exp (-α * s)) :=
         (ofReal_integral_eq_lintegral_ofReal hint
           (ae_of_all _ fun s => by positivity)).symm
-    _ = ENNReal.ofReal C := by
+    _ = ENNReal.ofReal (A * ε ^ α / α) := by
         congr 1
-        rw [integral_const_mul, integral_exp_mul_Ioi (by norm_num)]
-        norm_num
+        rw [integral_const_mul, integral_exp_mul_Ioi (by linarith [hσ.α_pos])]
+        simp only [mul_zero, Real.exp_zero]
+        rw [hC]
+        field_simp [hσ.α_pos.ne']
 
-lemma integrable_regC (hσ : BallMaj σ b A) [IsFiniteMeasure σ] {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
+lemma integrable_regC (hσ : BallMajA σ b A α) [IsFiniteMeasure σ] {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
     Integrable (regC t ε) σ := by
   refine ⟨(measurable_regC t ε).aestronglyMeasurable, ?_⟩
   rw [hasFiniteIntegral_iff_ofReal (ae_of_all _ fun u => regC_nonneg t ε u)]
   exact (lintegral_regC_le hσ hε t).trans_lt ENNReal.ofReal_lt_top
 
-/-- **LD07**: `∫ log⁺(ε/‖t - u‖) dσ(u) ≤ A ε` for every `t ∈ ℂ`. -/
-theorem integral_regC_le (hσ : BallMaj σ b A) [IsFiniteMeasure σ] {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
-    ∫ u, regC t ε u ∂σ ≤ A * ε := by
+/-- **LD07**: `∫ log⁺(ε/‖t - u‖) dσ(u) ≤ A ε^α / α` for every `t ∈ ℂ`. -/
+theorem integral_regC_le (hσ : BallMajA σ b A α) [IsFiniteMeasure σ] {ε : ℝ} (hε : 0 < ε) (t : ℂ) :
+    ∫ u, regC t ε u ∂σ ≤ A * ε ^ α / α := by
   have h := lintegral_regC_le hσ hε t
   rw [← ofReal_integral_eq_lintegral_ofReal (integrable_regC hσ hε t)
     (ae_of_all _ fun u => regC_nonneg t ε u)] at h
-  exact (ENNReal.ofReal_le_ofReal_iff (mul_nonneg hσ.A_nonneg hε.le)).mp h
+  exact (ENNReal.ofReal_le_ofReal_iff (by have := hσ.A_nonneg; have := hσ.α_pos; positivity)).mp h
 
 /-- The part `log⁺‖t - u‖`. -/
 noncomputable def posC (t u : ℂ) : ℝ := Real.posLog ‖t - u‖
@@ -270,7 +269,7 @@ lemma measurable_posC (t : ℂ) : Measurable (posC t) := by
   show Measurable fun u => max 0 (Real.log ‖t - u‖)
   exact measurable_const.max (Real.measurable_log.comp this)
 
-lemma posC_le (hσ : BallMaj σ b A) (t : ℂ) :
+lemma posC_le (hσ : BallMajA σ b A α) (t : ℂ) :
     ∀ᵐ u ∂σ, posC t u ≤ Real.log (1 + ‖t‖ + b) := by
   filter_upwards [hσ.ae_mem] with u hu
   have h1 : ‖t - u‖ ≤ ‖t‖ + b := (norm_sub_le _ _).trans (by linarith)
@@ -282,7 +281,7 @@ lemma posC_le (hσ : BallMaj σ b A) (t : ℂ) :
   calc _ ≤ _ := h2.trans h3
     _ = _ := by ring_nf
 
-lemma integrable_posC (hσ : BallMaj σ b A) [IsFiniteMeasure σ] (t : ℂ) :
+lemma integrable_posC (hσ : BallMajA σ b A α) [IsFiniteMeasure σ] (t : ℂ) :
     Integrable (posC t) σ := by
   refine Integrable.mono' (integrable_const (Real.log (1 + ‖t‖ + b)))
     (measurable_posC t).aestronglyMeasurable ?_
@@ -299,17 +298,17 @@ lemma abs_log_norm_eq (t u : ℂ) : |Real.log ‖t - u‖| = posC t u + regC t 1
   rw [div_eq_mul_inv, one_mul, Real.abs_log_eq_posLog_add_posLog_inv]
 
 /-- `log ‖t - u‖` is `σ`-integrable for every `t`. -/
-lemma integrable_log_norm_sub (hσ : BallMaj σ b A) [IsFiniteMeasure σ] (t : ℂ) :
+lemma integrable_log_norm_sub (hσ : BallMajA σ b A α) [IsFiniteMeasure σ] (t : ℂ) :
     Integrable (fun u => Real.log ‖t - u‖) σ := by
   have := (integrable_posC hσ t).sub (integrable_regC hσ one_pos t)
   exact this.congr (ae_of_all _ fun u => (log_norm_eq t u).symm)
 
 /-- A uniform bound for the absolute logarithmic potential. -/
-lemma integral_abs_log_le (hσ : BallMaj σ b A) [IsFiniteMeasure σ] (t : ℂ) :
-    ∫ u, |Real.log ‖t - u‖| ∂σ ≤ σ.real univ * Real.log (1 + ‖t‖ + b) + A * 1 := by
+lemma integral_abs_log_le (hσ : BallMajA σ b A α) [IsFiniteMeasure σ] (t : ℂ) :
+    ∫ u, |Real.log ‖t - u‖| ∂σ ≤ σ.real univ * Real.log (1 + ‖t‖ + b) + A / α := by
   simp_rw [abs_log_norm_eq]
   rw [integral_add (integrable_posC hσ t) (integrable_regC hσ one_pos t)]
-  refine add_le_add ?_ (integral_regC_le hσ one_pos t)
+  refine add_le_add ?_ ((integral_regC_le hσ one_pos t).trans (le_of_eq (by rw [Real.one_rpow, mul_one])))
   have := integral_mono_ae (μ := σ) (f := posC t) (g := fun _ => Real.log (1 + ‖t‖ + b))
     (integrable_posC hσ t) (integrable_const _) (posC_le hσ t)
   rw [integral_const, smul_eq_mul] at this
@@ -393,21 +392,21 @@ lemma integrable_circZ_circZ (c c' : ℂ) {ε : ℝ} (hε : 0 < ε) :
   · filter_upwards [ae_norm_circZ c' ε] with w hw
     exact integral_abs_log_circZ_le c hε w hw
 
-lemma integrable_circZ_sigma (hσ : BallMaj σ b A) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
+lemma integrable_circZ_sigma (hσ : BallMajA σ b A α) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
     Integrable (fun p : ℂ × ℂ => Real.log ‖p.1 - p.2‖) ((circZ c ε).prod σ) := by
   refine integrable_log_prod (C := 2 * Real.log (1 + ‖c‖ + ε + b) + |Real.log ε|) ?_ ?_
   · exact ae_of_all _ fun w => integrable_log_circZ c hε w
   · filter_upwards [hσ.ae_mem] with w hw
     exact integral_abs_log_circZ_le c hε w hw
 
-lemma integrable_sigma_circZ (hσ : BallMaj σ b A) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
+lemma integrable_sigma_circZ (hσ : BallMajA σ b A α) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
     Integrable (fun p : ℂ × ℂ => Real.log ‖p.1 - p.2‖) (σ.prod (circZ c ε)) :=
   integrable_log_swap (integrable_circZ_sigma hσ c hε)
 
-lemma integrable_sigma_sigma (hσ : BallMaj σ b A) :
+lemma integrable_sigma_sigma (hσ : BallMajA σ b A α) :
     Integrable (fun p : ℂ × ℂ => Real.log ‖p.1 - p.2‖) (σ.prod σ) := by
   refine integrable_log_prod
-    (C := σ.real univ * Real.log (1 + b + b) + A * 1) ?_ ?_
+    (C := σ.real univ * Real.log (1 + b + b) + A / α) ?_ ?_
   · exact ae_of_all _ fun t => by
       refine (integrable_log_norm_sub hσ t).congr (ae_of_all _ fun u => ?_)
       simp only [norm_sub_rev]
@@ -423,7 +422,7 @@ lemma integrable_sigma_sigma (hσ : BallMaj σ b A) :
 /-! ### Blocks (C), (D) -/
 
 /-- Block (C), exact form: `∫ U dω_{c,ε} = potC σ c + ∫ log⁺(ε/‖c - u‖) dσ`. -/
-lemma pair_circZ_sigma_eq (hσ : BallMaj σ b A) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
+lemma pair_circZ_sigma_eq (hσ : BallMajA σ b A α) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
     ∫ p : ℂ × ℂ, Real.log ‖p.1 - p.2‖ ∂((circZ c ε).prod σ) =
       potC σ c + ∫ u, regC c ε u ∂σ := by
   rw [integral_prod_symm _ (integrable_circZ_sigma hσ c hε)]
@@ -437,13 +436,13 @@ lemma pair_circZ_sigma_eq (hσ : BallMaj σ b A) (c : ℂ) {ε : ℝ} (hε : 0 <
   rfl
 
 /-- Block (C): circle-to-`σ` energy is at most `potC σ c + A ε` (LD07). -/
-lemma pair_circZ_sigma_le (hσ : BallMaj σ b A) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
-    ∫ p : ℂ × ℂ, Real.log ‖p.1 - p.2‖ ∂((circZ c ε).prod σ) ≤ potC σ c + A * ε := by
+lemma pair_circZ_sigma_le (hσ : BallMajA σ b A α) (c : ℂ) {ε : ℝ} (hε : 0 < ε) :
+    ∫ p : ℂ × ℂ, Real.log ‖p.1 - p.2‖ ∂((circZ c ε).prod σ) ≤ potC σ c + A * ε ^ α / α := by
   rw [pair_circZ_sigma_eq hσ c hε]
   exact add_le_add le_rfl (integral_regC_le hσ hε c)
 
 /-- Block (D): the energy of `σ`. -/
-lemma pair_sigma_sigma (hσ : BallMaj σ b A) :
+lemma pair_sigma_sigma (hσ : BallMajA σ b A α) :
     ∫ p : ℂ × ℂ, Real.log ‖p.1 - p.2‖ ∂(σ.prod σ) = energyC σ := by
   rw [integral_prod _ (integrable_sigma_sigma hσ)]
   rfl
@@ -459,10 +458,10 @@ variable [IsFiniteMeasure σ] {h : ℕ}
 /-- **The configuration inequality at complex points** (LD06 + LD07): for every `ε > 0` and
 pairwise distinct `t_i ∈ ℂ` (`i < h`), with `h = K σ(ℂ)`,
 `h log ε + ∑ᵢ ∑ᵢ' log ‖tᵢ - tᵢ'‖ ≤ 2K ∑ᵢ (potC σ tᵢ + A ε) - K² energyC σ`. -/
-theorem energy_rawC (hσ : BallMaj σ b A) {K : ℝ} (hK : 0 < K) (hh : (h : ℝ) = K * σ.real univ)
+theorem energy_rawC (hσ : BallMajA σ b A α) {K : ℝ} (hK : 0 < K) (hh : (h : ℝ) = K * σ.real univ)
     (t : Fin h → ℂ) (ht : Function.Injective t) {ε : ℝ} (hε : 0 < ε) :
     (h : ℝ) * Real.log ε + ∑ i, ∑ i', Real.log ‖t i - t i'‖ ≤
-      2 * K * ∑ i, (potC σ (t i) + A * ε) - K ^ 2 * energyC σ := by
+      2 * K * ∑ i, (potC σ (t i) + A * ε ^ α / α) - K ^ 2 * energyC σ := by
   set m : Option (Fin h) → Measure ℂ := cfgZ σ t ε with hm
   set s : Option (Fin h) → ℝ := fun o => o.elim (-1) (fun _ => 1 / K) with hs
   have hR : ∀ k, ∀ᵐ z ∂(m k), ‖z‖ ≤ b + ε + ∑ i, ‖t i‖ := by
@@ -504,7 +503,7 @@ theorem energy_rawC (hσ : BallMaj σ b A) {K : ℝ} (hK : 0 < K) (hh : (h : ℝ
   obtain ⟨Q, hQ⟩ : ∃ Q : Fin h → ℝ, ∀ i,
       Q i = pairInt m (fun z w => Real.log ‖z - w‖) (some i) none :=
     ⟨fun i => pairInt m (fun z w => Real.log ‖z - w‖) (some i) none, fun _ => rfl⟩
-  have hQle : ∀ i, Q i ≤ potC σ (t i) + A * ε := fun i => by
+  have hQle : ∀ i, Q i ≤ potC σ (t i) + A * ε ^ α / α := fun i => by
     rw [hQ]; exact pair_circZ_sigma_le hσ (t i) hε
   have hnn : pairInt m (fun z w => Real.log ‖z - w‖) none none = energyC σ :=
     pair_sigma_sigma hσ
@@ -544,7 +543,7 @@ theorem energy_rawC (hσ : BallMaj σ b A) {K : ℝ} (hK : 0 < K) (hh : (h : ℝ
           simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
             Fintype.card_fin, nsmul_eq_mul]
       _ ≤ _ := Finset.sum_le_sum fun i _ => hi i
-  have hQsum : ∑ i, Q i ≤ ∑ i, (potC σ (t i) + A * ε) :=
+  have hQsum : ∑ i, Q i ≤ ∑ i, (potC σ (t i) + A * ε ^ α / α) :=
     Finset.sum_le_sum fun i _ => hQle i
   have hK2 : 0 < K ^ 2 := by positivity
   have h1 : K ^ 2 * (energyC σ - 2 * (1 / K) * ∑ i, Q i + (1 / K) ^ 2 * ∑ i, ∑ i', L i i') ≤ 0 :=
@@ -552,7 +551,7 @@ theorem energy_rawC (hσ : BallMaj σ b A) {K : ℝ} (hK : 0 < K) (hh : (h : ℝ
   have h2 : K ^ 2 * (energyC σ - 2 * (1 / K) * ∑ i, Q i + (1 / K) ^ 2 * ∑ i, ∑ i', L i i') =
       K ^ 2 * energyC σ - 2 * K * ∑ i, Q i + ∑ i, ∑ i', L i i' := by
     field_simp
-  have h3 : 2 * K * ∑ i, Q i ≤ 2 * K * ∑ i, (potC σ (t i) + A * ε) :=
+  have h3 : 2 * K * ∑ i, Q i ≤ 2 * K * ∑ i, (potC σ (t i) + A * ε ^ α / α) :=
     mul_le_mul_of_nonneg_left hQsum (by positivity)
   linarith [h1, h2, h3, hAB]
 
@@ -652,18 +651,18 @@ lemma log_vand_sq {h : ℕ} (v : Fin h → ℂ) (hinj : Function.Injective v) {n
   ring
 
 /-- The constant of the integral bound. -/
-noncomputable def boundConst (σ : Measure ℂ) (A n : ℝ) (h : ℕ) (ε : ℝ) : ℝ :=
-  (h : ℝ) * ((h : ℝ) - 1) * Real.log n - (h : ℝ) * Real.log ε + 2 * n * h * (A * ε) -
+noncomputable def boundConst (σ : Measure ℂ) (A α n : ℝ) (h : ℕ) (ε : ℝ) : ℝ :=
+  (h : ℝ) * ((h : ℝ) - 1) * Real.log n - (h : ℝ) * Real.log ε + 2 * n * h * (A * ε ^ α / α) -
     n ^ 2 * energyC σ
 
 variable [IsFiniteMeasure σ]
 
 /-- **Pointwise bound** (LD09, Step 4 of Theorem A): for `h = n σ(ℂ)` points `v i` in `ℂ`,
 `‖Δ(v)‖² ≤ exp(B) ∏ᵢ exp(2n · potC σ (vᵢ/n))`. -/
-theorem vand_sq_le (hσ : BallMaj σ b A) {n : ℝ} (hn : 0 < n) {h : ℕ}
+theorem vand_sq_le (hσ : BallMajA σ b A α) {n : ℝ} (hn : 0 < n) {h : ℕ}
     (hh : (h : ℝ) = n * σ.real univ) {ε : ℝ} (hε : 0 < ε) (v : Fin h → ℂ) :
     ‖(Matrix.vandermonde v).det‖ ^ 2 ≤
-      Real.exp (boundConst σ A n h ε) * ∏ i, Real.exp (2 * n * potC σ (v i / n)) := by
+      Real.exp (boundConst σ A α n h ε) * ∏ i, Real.exp (2 * n * potC σ (v i / n)) := by
   by_cases hinj : Function.Injective v
   · have hpos : 0 < ‖(Matrix.vandermonde v).det‖ ^ 2 := by
       have : (Matrix.vandermonde v).det ≠ 0 := by
@@ -680,8 +679,8 @@ theorem vand_sq_le (hσ : BallMaj σ b A) {n : ℝ} (hn : 0 < n) {h : ℕ}
       exact hinj ((div_left_inj' hn').mp e)
     have hE := energy_rawC hσ hn hh (fun i => v i / (n : ℂ)) hs hε
     simp only [boundConst]
-    have hsum : ∑ i, (potC σ (v i / n) + A * ε) =
-        ∑ i, potC σ (v i / n) + h * (A * ε) := by
+    have hsum : ∑ i, (potC σ (v i / n) + A * ε ^ α / α) =
+        ∑ i, potC σ (v i / n) + h * (A * ε ^ α / α) := by
       rw [Finset.sum_add_distrib]; simp
     rw [hsum] at hE
     have hmul : ∑ x, 2 * n * potC σ (v x / n) = 2 * n * ∑ x, potC σ (v x / n) :=
@@ -698,28 +697,28 @@ theorem vand_sq_le (hσ : BallMaj σ b A) {n : ℝ} (hn : 0 < n) {h : ℕ}
     rw [h0]; positivity
 
 /-- **LD09, `complex_bound`**: for a σ-finite weight space `(X, m)`, a point map `z : X → ℂ`, a
-nonnegative weight `g`, and the dual measure `σ` with `BallMaj`, `h = n σ(ℂ)` and `ε > 0`:
+nonnegative weight `g`, and the dual measure `σ` with `BallMajA`, `h = n σ(ℂ)` and `ε > 0`:
 `∫_{X^h} ∏ g(xₗ) ‖Δ(z(x))‖² dm^h ≤ exp(B) (∫ g · exp(2n · potC σ (z/n)) dm)^h`. -/
 theorem complex_bound {X : Type*} [MeasurableSpace X] (m : Measure X) [SigmaFinite m]
-    (z : X → ℂ) (g : X → ℝ) (hg0 : ∀ x, 0 ≤ g x) (hσ : BallMaj σ b A) {n : ℝ} (hn : 0 < n)
+    (z : X → ℂ) (g : X → ℝ) (hg0 : ∀ x, 0 ≤ g x) (hσ : BallMajA σ b A α) {n : ℝ} (hn : 0 < n)
     {h : ℕ} (hh : (h : ℝ) = n * σ.real univ) {ε : ℝ} (hε : 0 < ε)
     (hG : Integrable (fun x => g x * Real.exp (2 * n * potC σ (z x / n))) m) :
     ∫ x : Fin h → X, (∏ l, g (x l)) * ‖(Matrix.vandermonde fun l => z (x l)).det‖ ^ 2
         ∂(Measure.pi fun _ => m) ≤
-      Real.exp (boundConst σ A n h ε) *
+      Real.exp (boundConst σ A α n h ε) *
         (∫ x, g x * Real.exp (2 * n * potC σ (z x / n)) ∂m) ^ h := by
   have hle : ∀ x : Fin h → X, (∏ l, g (x l)) * ‖(Matrix.vandermonde fun l => z (x l)).det‖ ^ 2 ≤
-      Real.exp (boundConst σ A n h ε) *
+      Real.exp (boundConst σ A α n h ε) *
         ∏ l, (g (x l) * Real.exp (2 * n * potC σ (z (x l) / n))) := by
     intro x
     have h1 := vand_sq_le hσ hn hh hε (fun l => z (x l))
     have h2 : 0 ≤ ∏ l, g (x l) := Finset.prod_nonneg fun l _ => hg0 _
     calc (∏ l, g (x l)) * ‖(Matrix.vandermonde fun l => z (x l)).det‖ ^ 2
-        ≤ (∏ l, g (x l)) * (Real.exp (boundConst σ A n h ε) *
+        ≤ (∏ l, g (x l)) * (Real.exp (boundConst σ A α n h ε) *
             ∏ l, Real.exp (2 * n * potC σ (z (x l) / n))) :=
           mul_le_mul_of_nonneg_left h1 h2
       _ = _ := by rw [Finset.prod_mul_distrib]; ring
-  calc _ ≤ ∫ x : Fin h → X, Real.exp (boundConst σ A n h ε) *
+  calc _ ≤ ∫ x : Fin h → X, Real.exp (boundConst σ A α n h ε) *
         ∏ l, (g (x l) * Real.exp (2 * n * potC σ (z (x l) / n))) ∂(Measure.pi fun _ => m) := by
         refine integral_mono_of_nonneg (Filter.Eventually.of_forall fun x => ?_)
           ((Integrable.fintype_prod (f := fun _ (x : X) =>

@@ -120,7 +120,7 @@ theorem sum_log_factorial_ge {M : ℕ} (hM : 2 ≤ M) :
 
 /-- **Theorem A, abstract assembly** (LD09).  See the module docstring. -/
 theorem theoremA_abstract {X : Type*} [MeasurableSpace X] (m : Measure X) [SigmaFinite m]
-    {σ : Measure ℂ} [IsFiniteMeasure σ] {b A : ℝ} (hσ : BallMaj σ b A)
+    {σ : Measure ℂ} [IsFiniteMeasure σ] {b A α : ℝ} (hσ : BallMajA σ b A α)
     (w z : X → ℂ) {Cm : ℝ} (hCm : σ.real univ = Cm) (hCm0 : 0 < Cm)
     {n : ℕ} (hn : 2 ≤ n) {M : ℕ} (hM : (M : ℝ) = n * Cm) (hM2 : 2 ≤ M)
     (hint : ∀ i j : Fin M, Integrable (fun x => w x * z x ^ (i : ℕ) * z x ^ (j : ℕ)) m)
@@ -131,11 +131,11 @@ theorem theoremA_abstract {X : Type*} [MeasurableSpace X] (m : Measure X) [Sigma
     ‖(Matrix.of fun i j : Fin M => ∫ x, w x * z x ^ ((i : ℕ) + (j : ℕ)) ∂m).det‖ /
         ∏ i ∈ range M, ((i.factorial : ℝ)) ^ 2 ≤
       Real.exp ((n : ℝ) ^ 2 * (Cm ^ 2 * (3 / 2 - Real.log Cm) - energyC σ + Cm * ℓ) +
-        (Cm * (3 + L) * n * Real.log n + (2 * Cm * Real.log Cm + Cm * c₀) * n + 2 * Cm * A)) := by
+        (Cm * (1 + 2 / α + L) * n * Real.log n + (2 * Cm * Real.log Cm + Cm * c₀) * n + 2 * Cm * A / α)) := by
   have hn0 : (0 : ℝ) < n := by exact_mod_cast (by omega : 0 < n)
   have hn2 : (2 : ℝ) ≤ n := by exact_mod_cast hn
   have hMs : (M : ℝ) = n * σ.real univ := by rw [hCm]; exact hM
-  have hε : (0 : ℝ) < ((n : ℝ) ^ 2)⁻¹ := by positivity
+  have hε : (0 : ℝ) < ((n : ℝ) ^ (2 / α))⁻¹ := by positivity
   have hheine := heine_complex_bound m hσ w z hn0 hMs hε hint hG
   set Gint : ℝ := ∫ x, ‖w x‖ * Real.exp (2 * n * potC σ (z x / n)) ∂m with hGint
   have hG0 : 0 ≤ Gint := integral_nonneg fun x => mul_nonneg (norm_nonneg _) (Real.exp_pos _).le
@@ -154,11 +154,11 @@ theorem theoremA_abstract {X : Type*} [MeasurableSpace X] (m : Measure X) [Sigma
     norm_num
   have hlb := sum_log_factorial_ge hM2
   have hbound : ‖(Matrix.of fun i j : Fin M => ∫ x, w x * z x ^ ((i : ℕ) + (j : ℕ)) ∂m).det‖ ≤
-      Real.exp (boundConst σ A n M ((n : ℝ) ^ 2)⁻¹ + M * (n * ℓ + L * Real.log n + c₀)) := by
+      Real.exp (boundConst σ A α n M ((n : ℝ) ^ (2 / α))⁻¹ + M * (n * ℓ + L * Real.log n + c₀)) := by
     refine hheine.trans ?_
     rw [Real.exp_add]
-    calc 1 / (M.factorial : ℝ) * (Real.exp (boundConst σ A n M ((n : ℝ) ^ 2)⁻¹) * Gint ^ M)
-        ≤ 1 * (Real.exp (boundConst σ A n M ((n : ℝ) ^ 2)⁻¹) * Real.exp (M * (n * ℓ + L * Real.log n + c₀))) := by
+    calc 1 / (M.factorial : ℝ) * (Real.exp (boundConst σ A α n M ((n : ℝ) ^ (2 / α))⁻¹) * Gint ^ M)
+        ≤ 1 * (Real.exp (boundConst σ A α n M ((n : ℝ) ^ (2 / α))⁻¹) * Real.exp (M * (n * ℓ + L * Real.log n + c₀))) := by
           refine mul_le_mul hfac (mul_le_mul_of_nonneg_left hGM (Real.exp_pos _).le) ?_ (by norm_num)
           positivity
       _ = _ := by ring
@@ -167,21 +167,25 @@ theorem theoremA_abstract {X : Type*} [MeasurableSpace X] (m : Measure X) [Sigma
   -- the exponent
   have hlogM : Real.log M = Real.log n + Real.log Cm := by
     rw [hM, Real.log_mul hn0.ne' hCm0.ne']
-  have hlogε : Real.log (((n : ℝ) ^ 2)⁻¹) = -2 * Real.log n := by
-    rw [Real.log_inv, Real.log_pow]; push_cast; ring
+  have hlogε : Real.log (((n : ℝ) ^ (2 / α))⁻¹) = -(2 / α) * Real.log n := by
+    rw [Real.log_inv, Real.log_rpow hn0]; ring
   unfold boundConst
   rw [hlogε]
-  have hcancel : 2 * (n : ℝ) * M * (A * ((n : ℝ) ^ 2)⁻¹) = 2 * Cm * A := by
-    rw [hM]; field_simp
+  have hεα : (((n : ℝ) ^ (2 / α))⁻¹) ^ α = ((n : ℝ) ^ 2)⁻¹ := by
+    rw [Real.inv_rpow (by positivity), ← Real.rpow_mul hn0.le,
+      show 2 / α * α = 2 by field_simp [hσ.α_pos.ne']]
+    rw [Real.rpow_two]
+  have hcancel : 2 * (n : ℝ) * M * (A * (((n : ℝ) ^ (2 / α))⁻¹) ^ α / α) = 2 * Cm * A / α := by
+    rw [hεα, hM]; field_simp
   rw [hcancel]
   have hS : 2 * ((M : ℝ) ^ 2 / 2 * Real.log M - 3 / 4 * (M : ℝ) ^ 2 - M * Real.log M) ≤
       2 * ∑ i ∈ range M, Real.log (i.factorial) := by linarith
   have hM' : (M : ℝ) = n * Cm := hM
-  have key : (M : ℝ) * ((M : ℝ) - 1) * Real.log n - M * (-2 * Real.log n) + 2 * Cm * A -
+  have key : (M : ℝ) * ((M : ℝ) - 1) * Real.log n - M * (-(2 / α) * Real.log n) + 2 * Cm * A / α -
       (n : ℝ) ^ 2 * energyC σ + M * (n * ℓ + L * Real.log n + c₀) -
       2 * ((M : ℝ) ^ 2 / 2 * Real.log M - 3 / 4 * (M : ℝ) ^ 2 - M * Real.log M) =
       (n : ℝ) ^ 2 * (Cm ^ 2 * (3 / 2 - Real.log Cm) - energyC σ + Cm * ℓ) +
-        (Cm * (3 + L) * n * Real.log n + (2 * Cm * Real.log Cm + Cm * c₀) * n + 2 * Cm * A) := by
+        (Cm * (1 + 2 / α + L) * n * Real.log n + (2 * Cm * Real.log Cm + Cm * c₀) * n + 2 * Cm * A / α) := by
     rw [hlogM, hM']
     ring
   linarith [key, hS]
@@ -235,7 +239,7 @@ universe u
 /-- **Theorem A, `ε`-form** (LD09, generic): with `D = -(κ(Cm) - energyC σ + Cm ℓ)`, for every `ε > 0`
 there is `R₀` (depending only on `Cm, A, ℓ, L, c₀, ε`) such that for all weight spaces, all
 `n ≥ R₀` and `M = n Cm` satisfying the hypotheses, `‖det‖ / ∏ (i!)² ≤ exp (-(D - ε) n²)`. -/
-theorem theoremA_eventually {σ : Measure ℂ} [IsFiniteMeasure σ] {b A : ℝ} (hσ : BallMaj σ b A)
+theorem theoremA_eventually {σ : Measure ℂ} [IsFiniteMeasure σ] {b A α : ℝ} (hσ : BallMajA σ b A α)
     {Cm : ℝ} (hCm : σ.real univ = Cm) (hCm0 : 0 < Cm) (ℓ L c₀ : ℝ) {ε : ℝ} (hε : 0 < ε) :
     ∃ R₀ : ℕ, ∀ {X : Type u} [MeasurableSpace X] (m : Measure X) [SigmaFinite m] (w z : X → ℂ)
       {n M : ℕ}, R₀ ≤ n → (M : ℝ) = n * Cm →
@@ -247,7 +251,7 @@ theorem theoremA_eventually {σ : Measure ℂ} [IsFiniteMeasure σ] {b A : ℝ} 
           ∏ i ∈ range M, ((i.factorial : ℝ)) ^ 2 ≤
         Real.exp (-(-(Cm ^ 2 * (3 / 2 - Real.log Cm) - energyC σ + Cm * ℓ) - ε) * (n : ℝ) ^ 2) := by
   obtain ⟨R₁, hR₁⟩ := Filter.eventually_atTop.mp
-    (eventually_remainder_le (Cm * (3 + L)) (2 * Cm * Real.log Cm + Cm * c₀) (2 * Cm * A) hε)
+    (eventually_remainder_le (Cm * (1 + 2 / α + L)) (2 * Cm * Real.log Cm + Cm * c₀) (2 * Cm * A / α) hε)
   refine ⟨max R₁ (max 2 ⌈2 / Cm⌉₊), ?_⟩
   intro X _ m _ w z n M hn hM hint hG hW
   have hn1 : R₁ ≤ n := (le_max_left _ _).trans hn
