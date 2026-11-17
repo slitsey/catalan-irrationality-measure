@@ -59,12 +59,13 @@ S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in 
 
 S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026): LaTeX source and PDF in
 [`paper-lai/`](paper-lai/) (`lai-measure-hexagon.tex` is the single-file version). The proof uses Lai's Hankel
-determinants. Since `ζ(4) = π⁴/90`, this is the plane of `ζ(3)` and `π⁴` of paper 2. On the line `b = 0` the
-number is a rational multiple of `ζ(3)`, whose known measures are much smaller.
+determinants. Since `ζ(4) = π⁴/90`, this is the plane of `ζ(3)` and `π⁴` of paper 2. On its two axes the
+numbers are rational multiples of `ζ(3)` or of `ζ(4)`, whose known measures are smaller: 5.4197 (Leibtag et
+al.) and 12.5109 (Marcovecchio and Zudilin). The new bound is for the points off the axes.
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `a ζ(3) + b ζ(4)`, integers `a, b`, `b ≠ 0` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
+| `a ζ(3) + b ζ(4)`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
 | `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
 
 ## The statements
@@ -197,7 +198,7 @@ the rational span of `L₋₃` and `π²`, the second that of `ζ(3)` and `π²`
 The irrationality of the numbers on them was proved by other methods: by Calegari, Dimitrov and Tang for the
 first plane, by Q. Tang for the second and by Lai for the third. On the third plane the paper proves 72.726 for
 all rationals `a, b`, not both zero. This is weaker than the bound 66.3 of Leibtag et al. and than the fourth
-paper's 34.14 for `b ≠ 0`. The third plane is included because its function has a pole of order three. Every
+paper's 34.14 off the axes. The third plane is included because its function has a pole of order three. Every
 bound of the paper is in the table below.
 
 Let `ψ` be the digamma function and `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that
@@ -397,7 +398,7 @@ M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), com
 
 ## The plane of ζ(3) and ζ(4): μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
 
-Since `ζ(4) = π⁴/90`, this is the third plane of the second paper. Off the line `b = 0`, the bound 34.14
+Since `ζ(4) = π⁴/90`, this is the third plane of the second paper. Off the two axes, the bound 34.14
 replaces that paper's 72.726.
 
 Lai's determinants `J_n(a, b, X)` are Hankel determinants of a functional built from the simultaneous
@@ -424,8 +425,8 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
   of primes turn nonvanishing at prime-tied sizes into a measure. The exponent is `ρ(3/(D − Λ) + β)`, with
   `β = 1637/10000` for the plane and `β = 661/1000` for the ratio.
 
-On the line `b = 0` the number is a rational multiple of `ζ(3)`, whose measure is much smaller; the plane
-theorem takes `b ≠ 0`. The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
+The Lean plane theorem takes integers `a, b` with `b ≠ 0`. Scaling by a nonzero rational does not change μ, so
+it covers every rational point off the axes. The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 `CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean` and
 `CatalanCore/Tools/Joukowski.lean`. The theorem is `CatalanCore.Lai.lai_roots_of`, and the public theorems are
 `LaiIrrationalityMeasure.lai_plane_measure_34_14` and `LaiIrrationalityMeasure.lai_ratio_measure_55_50`.
