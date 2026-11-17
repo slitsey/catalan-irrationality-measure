@@ -27,4 +27,13 @@ theorem lai_ratio_measure_55_50 :
         |(∑' k : ℕ, 1 / ((k : ℝ) + 1) ^ 3) / Real.pi ^ 4 - (p : ℝ) / q| := by
   sorry
 
+/-- Ratios: for integers `a, b, c, d` with `a d - b c ≠ 0`,
+`μ((a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)) ≤ 55.50`. -/
+theorem lai_ratio_mobius_measure_55_50 (a b c d : ℤ) (hdet : a * d - b * c ≠ 0) :
+    ∀ᶠ q : ℕ in Filter.atTop, ∀ p : ℤ,
+      (q : ℝ) ^ (-(55.50 : ℝ)) <
+        |((a : ℝ) * (∑' k : ℕ, 1 / ((k : ℝ) + 1) ^ 3) + (b : ℝ) * Real.pi ^ 4) /
+            ((c : ℝ) * (∑' k : ℕ, 1 / ((k : ℝ) + 1) ^ 3) + (d : ℝ) * Real.pi ^ 4) - (p : ℝ) / q| := by
+  sorry
+
 end LaiIrrationalityMeasure

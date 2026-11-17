@@ -9,7 +9,9 @@ project:
   description: >-
     We prove mu(a zeta(3) + b pi^4) <= 34.14 for all integers a, b with
     b != 0, and mu(zeta(3)/pi^4) <= 55.50: |x - p/q| > q^(-mu) for every
-    integer p and every sufficiently large integer q. The approximations are
+    integer p and every sufficiently large integer q. The bound 55.50 holds
+    for every ratio (a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) with integers
+    a, b, c, d and ad - bc != 0. The approximations are
     Lai's Hankel determinants J_n(a, b, X), used unchanged. A measure needs
     three estimates beyond Lai's linear independence proof. Decay on a
     neighbourhood of the constant, uniform in the direction (a, b), comes from
@@ -111,3 +113,8 @@ alignment:
       module: "ChallengeLai"
       status: proved
       note: "zeta(3)/pi^4, exponent 55.50."
+    - source: "Litsey, Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4 (2026), Corollary 1.2"
+      lean: "LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50"
+      module: "ChallengeLai"
+      status: proved
+      note: "(a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) for integers a, b, c, d with ad - bc != 0, exponent 55.50."

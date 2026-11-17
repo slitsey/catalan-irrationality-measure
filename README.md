@@ -66,6 +66,7 @@ or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.
 |---|---|---|---|
 | `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
 | `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
+| `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`, rationals with `ad − bc ≠ 0` | 55.50 | first measure | none (irrational by Lai) |
 
 ## The statements
 
@@ -105,7 +106,7 @@ its Lean formalization.
 
 | File | Content |
 |---|---|
-| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean), [`ChallengeZeta5.lean`](ChallengeZeta5.lean), [`ChallengeLai.lean`](ChallengeLai.lean) | the thirty statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`), twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`), μ(ζ(5)) ≤ 87 in `ChallengeZeta5.lean` (namespace `Zeta5IrrationalityMeasure`) and the two Lai measures in `ChallengeLai.lean` (namespace `LaiIrrationalityMeasure`). This is the whole trusted statement surface |
+| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean), [`ChallengeZeta5.lean`](ChallengeZeta5.lean), [`ChallengeLai.lean`](ChallengeLai.lean) | the thirty-one statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`), twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`), μ(ζ(5)) ≤ 87 in `ChallengeZeta5.lean` (namespace `Zeta5IrrationalityMeasure`) and the three Lai measures in `ChallengeLai.lean` (namespace `LaiIrrationalityMeasure`). This is the whole trusted statement surface |
 | [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean), [`SolutionZeta5.lean`](SolutionZeta5.lean), [`SolutionLai.lean`](SolutionLai.lean) | their proofs, each file ending with `#print axioms` for its theorems |
 | [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json), [`comparator-zeta5.json`](comparator-zeta5.json), [`comparator-lai.json`](comparator-lai.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json`, `comparator-zeta5.json` and `comparator-lai.json` are not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
 | [`CatalanMeasure/GenD/`](CatalanMeasure/GenD/) | the proof of μ(G) ≤ 270 |
@@ -418,10 +419,14 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
 
 The Lean plane theorem writes the number as `a ζ(3) + b ζ(4)`, with `ζ(4) = π⁴/90` and integers `a, b`,
 `b ≠ 0`. Scaling by a nonzero rational does not change μ, so
-it covers every rational point off the axes. The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
-`CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean` and
-`CatalanCore/Tools/Joukowski.lean`. The theorem is `CatalanCore.Lai.lai_roots_of`, and the public theorems are
-`LaiIrrationalityMeasure.lai_plane_measure_34_14` and `LaiIrrationalityMeasure.lai_ratio_measure_55_50`.
+it covers every rational point off the axes. An integer Möbius map `x ↦ (ax + b)/(cx + d)` with
+`ad − bc ≠ 0` changes no irrationality exponent, so the bound 55.50 holds for every ratio
+`(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`. The Lean lemma is `CatalanCore.Measure.plain_measure_mobius`.
+The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
+`CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean`,
+`CatalanCore/Measure/Mobius.lean` and `CatalanCore/Tools/Joukowski.lean`. The theorem is
+`CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_34_14`,
+`LaiIrrationalityMeasure.lai_ratio_measure_55_50` and `LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50`.
 
 ## Kernel-checked certificates
 
