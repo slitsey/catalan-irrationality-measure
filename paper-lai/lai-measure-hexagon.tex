@@ -10,7 +10,7 @@
 \DeclareMathSizes{9}{9}{6}{6}
 \DeclareMathSizes{8}{8}{6}{6}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
-\hypersetup{pdftitle={Irrationality measures for a zeta(3) + b zeta(4) and zeta(3)/pi^4},pdfauthor={Sean Litsey}}
+\hypersetup{pdftitle={Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4},pdfauthor={Sean Litsey}}
 
 % ---------------------------------------------------------------------------
 % Location of the Lean formalization.
@@ -45,7 +45,7 @@
 
 \begin{document}
 
-\title[Measures for $a\zeta(3)+b\zeta(4)$ and $\zeta(3)/\pi^4$]{Irrationality measures for $a\zeta(3)+b\zeta(4)$
+\title[Measures for $a\zeta(3)+b\pi^4$ and $\zeta(3)/\pi^4$]{Irrationality measures for $a\zeta(3)+b\pi^4$
 and $\zeta(3)/\pi^4$}
 
 \author{Sean Litsey}
@@ -55,14 +55,14 @@ and $\zeta(3)/\pi^4$}
 
 \subjclass[2020]{Primary 11J82; Secondary 11J72, 11M06, 15A15, 31A15, 68V20}
 
-\keywords{Irrationality exponent, $\zeta(3)$, $\zeta(4)$, Hankel determinants, $p$-adic valuations, logarithmic
+\keywords{Irrationality exponent, $\zeta(3)$, $\pi^4$, Hankel determinants, $p$-adic valuations, logarithmic
 energy, formal verification, Lean}
 
 \begin{abstract}
 Let $\mu$ denote the irrationality exponent. For all integers $a$ and $b$ with $b\ne0$ we prove that
-$|a\zeta(3)+b\zeta(4)-p/q|>q^{-34.14}$, and we prove that $|\zeta(3)/\pi^4-p/q|>q^{-55.50}$, in both cases for all
-integers $p$ and all sufficiently large integers $q$. So $\mu(a\zeta(3)+b\zeta(4))\le34.14$ and
-$\mu(\zeta(3)/\pi^4)\le55.50$. Lai proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent over $\Q$
+$|a\zeta(3)+b\pi^4-p/q|>q^{-34.14}$, and we prove that $|\zeta(3)/\pi^4-p/q|>q^{-55.50}$, in both cases for all
+integers $p$ and all sufficiently large integers $q$. So $\mu(a\zeta(3)+b\pi^4)\le34.14$ and
+$\mu(\zeta(3)/\pi^4)\le55.50$. Lai proved that $1$, $\zeta(3)$ and $\pi^4$ are linearly independent over $\Q$
 with Hankel determinants $J_n(a,b,X)$ of a functional built from simultaneous approximations. We keep his determinants
 and supply the three estimates that a measure needs. The determinants are small on a neighbourhood of the
 constant, uniformly in the direction $(a,b)$. We prove this with a positive measure on a complex contour whose
@@ -93,9 +93,9 @@ is an irrationality measure for $\xi$, and it shows that $\xi$ is irrational. We
 \begin{enumerate}[label=(\alph*)]
 \item Let $a$ and $b$ be integers with $b\ne0$. There is an integer $q_0$ such that
 \[
- \Bigl|a\zeta(3)+b\zeta(4)-\frac pq\Bigr|>q^{-34.14}
+ \Bigl|a\zeta(3)+b\pi^4-\frac pq\Bigr|>q^{-34.14}
 \]
-for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(a\zeta(3)+b\zeta(4))\le34.14$.
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(a\zeta(3)+b\pi^4)\le34.14$.
 \item There is an integer $q_0$ such that
 \[
  \Bigl|\frac{\zeta(3)}{\pi^4}-\frac pq\Bigr|>q^{-55.50}
@@ -113,26 +113,26 @@ Section~\ref{sec:lean} describes it. The remarks are not part of the formal proo
 \FormalizationLink. The use of AI in this work is disclosed at the end of the paper.
 
 \subsection{Background}\label{ssec:background}
-\emph{The numbers $\zeta(3)$ and $\zeta(4)$.} Euler showed that $\zeta(4)=\pi^4/90$, so $\zeta(4)$ is
+\emph{The numbers $\zeta(3)$ and $\pi^4$.} Euler showed that $\zeta(4)=\pi^4/90$, and $\pi^4$ is
 transcendental. Ap\'ery proved that $\zeta(3)$ is irrational \cite{Apery79}, and Beukers gave his integral proof
 \cite{Beukers79}. Measures for $\zeta(3)$ were obtained by Hata \cite{Hata93} and by Rhin and Viola, whose method of
-transformation groups gave $\mu(\zeta(3))\le5.513891$ \cite{RhinViola96,RhinViola01}. For the even value $\zeta(4)$
-the best bound is due to Marcovecchio and Zudilin, $\mu(\zeta(4))\le12.51085940\ldots$ \cite{MarcovecchioZudilin20}.
+transformation groups gave $\mu(\zeta(3))\le5.513891$ \cite{RhinViola96,RhinViola01}. For $\pi^4$
+the best bound is due to Marcovecchio and Zudilin, $\mu(\pi^4)=\mu(\zeta(4))\le12.51085940\ldots$ \cite{MarcovecchioZudilin20}.
 For the other odd values the classical results concern families. Rivoal \cite{Rivoal00} and Ball and Rivoal
 \cite{BallRivoal01} proved that infinitely many of the numbers $\zeta(2k+1)$ are irrational. Zudilin proved that
 one of $\zeta(5)$, $\zeta(7)$, $\zeta(9)$ and $\zeta(11)$ is irrational \cite{Zudilin01,Zudilin04}. Fischler, Sprang
 and Zudilin \cite{FSZ19} and Fischler \cite{Fischler26} raised the number of irrational values among
 $\zeta(3),\dots,\zeta(s)$.
 
-\emph{The plane spanned by $\zeta(3)$ and $\zeta(4)$.} Whether $1$, $\zeta(3)$ and $\zeta(4)$ are linearly
+\emph{The plane spanned by $\zeta(3)$ and $\pi^4$.} Whether $1$, $\zeta(3)$ and $\pi^4$ are linearly
 independent over $\Q$ was a classical open question. Dauguet and Zudilin studied simultaneous rational
 approximations to $\zeta(2)$ and $\zeta(3)$ of the hypergeometric type, and they noted that the independence of $1$,
 $\zeta(2)$ and $\zeta(3)$ remained open \cite{DauguetZudilin14}. Fauzan proved that $\zeta(5)$ is irrational with
 rationally normalized Hankel determinants \cite{Fauzan2026}. Lai combined Fauzan's determinant method with the
-simultaneous approximations of Zudilin and of Dauguet and Zudilin, and proved that $1$, $\zeta(3)$ and $\zeta(4)$ are
+simultaneous approximations of Zudilin and of Dauguet and Zudilin, and proved that $1$, $\zeta(3)$ and $\pi^4$ are
 linearly independent \cite{Lai2026}. As a corollary $\zeta(3)/\pi^4$ is irrational. Leibtag, Barkan, Kalisch,
 Weinbaum, Shalyt and Kaminer connected the classical constructions through conservative matrix fields
-\cite{LBKWSK26}. They gave another proof of this independence and proved $\mu(A\zeta(3)+B\zeta(4))<66.3$ for every
+\cite{LBKWSK26}. They gave another proof of this independence and proved $\mu(A\zeta(3)+B\pi^4)<66.3$ for every
 $(A,B)\in\Q^2\setminus\{(0,0)\}$. They also proved $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Fischler, Lai,
 Sprang and Zudilin proved that many more odd zeta values are irrational \cite{FLSZ26}. The companion paper
 \cite{Litsey2026b} proves $\mu(a\zeta(3)+b\pi^4)\le72.726$ for all rationals $a$ and $b$, not both zero, with
@@ -165,9 +165,11 @@ Its third plane is the plane of this paper, since $\pi^4=90\zeta(4)$, and there 
 Theorem~\ref{thm:main}(a) replaces this bound by $34.14$ when $b\ne0$. The third \cite{Litsey2026c} proves a measure
 for $\zeta(5)$ with Fauzan's determinants. Its decay argument, a comparison measure with closed-form potentials checked
 on cells, is the closest relative of Section~\ref{sec:decay}. We use the definitions of $\mu$, the measure criterion
-and the potential-theoretic language of these papers. The construction here is Lai's, with his notation.
+and the potential-theoretic language of these papers. The construction here is Lai's, with his notation. In particular, from Section~\ref{ssec:require} on we write the
+points of the plane as $a\zeta(3)+b\zeta(4)$, as Lai does. Since $\pi^4=90\zeta(4)$, the number $a\zeta(3)+b\pi^4$ of
+Theorem~\ref{thm:main}(a) is $a\zeta(3)+90b\zeta(4)$.
 
-\subsection{What a measure requires}
+\subsection{What a measure requires}\label{ssec:require}
 Lai's proof uses three facts about his determinants $J_n=J_n(a,b,a\zeta(3)+b\zeta(4))$. A rational normalizing factor
 $m_n$ with $\log m_n\le(30.83+o(1))n^2$ makes $m_nJ_n(a,b,X)$ a polynomial with integer coefficients. The decay
 $|J_n|\le e^{-31.61n^2}$ holds at the constant. And $J_n\ne0$ for $n=2(\ell-1)/9$ at a prime $\ell\equiv1\pmod9$ with
@@ -1616,7 +1618,8 @@ $M=126$, and there are three tied families:
 Each set $S$ has $6$ of the $36$ unit classes, Lai's set meets each of the other two in one class, and the two lines
 are disjoint. The finite exceptional set $E$ consists of the primes below $100$ and the primes $73$ and $1039$.
 
-\emph{Part (a).} Let $a,b\in\Z$ with $b\ne0$, $\xi=a\zeta(3)+b\zeta(4)$ and $P_n=Q_n$. By \eqref{eq:scaled} and
+\emph{Part (a).} Since $a\zeta(3)+b\pi^4=a\zeta(3)+90b\zeta(4)$, it suffices to prove the bound of part (a) for
+$a\zeta(3)+b\zeta(4)$ with $a,b\in\Z$ and $b\ne0$. Let $\xi=a\zeta(3)+b\zeta(4)$ and $P_n=Q_n$. By \eqref{eq:scaled} and
 Theorem~\ref{thm:content}, $q^{3n}m_nQ_n(p/q)=m_nJ_n(qa,qb,p)\in\Z$, so (a) of Theorem~\ref{thm:criterion} holds with
 $d_n=m_n$. Corollary~\ref{cor:families} gives (b). Take $W(p,q)=q$ and $K=1$. For each family add the prime divisors of
 $b$ to the exceptional set, and let $\mathrm{Bad}(\ell,p,q)$ be $\ell^4\mid q$, with $e=4$. Corollaries~\ref{cor:NV}
@@ -1661,9 +1664,9 @@ Theorem~\ref{thm:NV7} is singular, so other sizes would need a new argument. The
 that of part (a) because the coefficient $b=-p$ of the ratio family grows with $q$, so that only one power of each tied
 prime is available.
 
-\emph{The lines $a=0$ and $b=0$.} For $b=0$ the number is $a\zeta(3)$. Theorem~\ref{thm:main} does not apply, and the
-known measures for $\zeta(3)$ are much smaller. For $a=0$ the bound $12.51$ of Marcovecchio and Zudilin for $\zeta(4)$
-is better than ours.
+\emph{The axes $a=0$ and $b=0$.} For $b=0$ the number is $a\zeta(3)$. Theorem~\ref{thm:main} does not apply, and the
+known measures for $\zeta(3)$ are much smaller. For $a=0$ the number is a rational multiple of $\pi^4$, and the bound
+$12.51$ of Marcovecchio and Zudilin is better than ours.
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -1684,7 +1687,8 @@ Theorem~\ref{thm:main} consists of the theorems
 in \lean{SolutionLai.lean}. Their statements use only Mathlib. The numbers $\zeta(3)$ and $\zeta(4)$ are written as the
 series $\sum_{k\ge0}(k+1)^{-3}$ and $\sum_{k\ge0}(k+1)^{-4}$, and $\pi$ is Mathlib's \lean{Real.pi}. The first theorem
 states, for integers $a$ and $b\ne0$, that $q^{-34.14}<|a\zeta(3)+b\zeta(4)-p/q|$ for all integers $p$ and all
-sufficiently large $q$. The second states $q^{-55.50}<|\zeta(3)/\pi^4-p/q|$ in the same form. The modules contain no
+sufficiently large $q$. Applied to $(a,90b)$ it gives part (a), since $\pi^4=90\zeta(4)$. This is the only place
+where the formal statement differs in form from Theorem~\ref{thm:main}. The second states $q^{-55.50}<|\zeta(3)/\pi^4-p/q|$ in the same form. The modules contain no
 \lean{sorry} and no \lean{native_decide}. The command \lean{\#print axioms} reports only \lean{propext},
 \lean{Classical.choice} and \lean{Quot.sound}. The proof is kernel-checked. It has not been run through the
 independent checker \lean{lake comparator} \cite{Comparator}.
@@ -1729,7 +1733,7 @@ The mathematics, the Lean formalization, the certificate generators and the text
 systems at the request of the author. The author posed the problems, directed the work and is responsible for the
 paper. The systems were Claude Opus~5.5, Claude Sonnet~5.5 and Claude Haiku~5.5 (Anthropic), running in Claude Code,
 and GPT-6.1 Sol (OpenAI), running in Codex. The construction of the determinants and the linear independence of $1$,
-$\zeta(3)$ and $\zeta(4)$ are due to Lai \cite{Lai2026}.
+$\zeta(3)$ and $\pi^4$ are due to Lai \cite{Lai2026}.
 
 \subsection*{Acknowledgements}
 We thank the authors of Mathlib and of the PNT+ project.

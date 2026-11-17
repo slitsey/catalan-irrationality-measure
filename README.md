@@ -20,7 +20,7 @@ S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX sourc
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `G` | 270 | improved measure | — |
+| `G` | 270 | improved measure | 280.59 (Carreira, not formalized) |
 
 ### 2. Löwner determinants
 
@@ -57,7 +57,7 @@ S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in 
 
 ### 4. The plane of ζ(3) and π⁴
 
-S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026): LaTeX source and PDF in
+S. Litsey, *Irrationality measures for aζ(3) + bπ⁴ and ζ(3)/π⁴* (2026): LaTeX source and PDF in
 [`paper-lai/`](paper-lai/) (`lai-measure-hexagon.tex` is the single-file version). The proof uses Lai's Hankel
 determinants. It is the third plane of paper 2. On its two axes the numbers are rational multiples of `ζ(3)`
 or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.5109 (Marcovecchio and Zudilin). The new bound is for the points off the axes.
@@ -81,7 +81,9 @@ The first two papers build on OpenAI's proof that `G` is irrational ([openai/mat
 preprint dated September 24, 2026, released October 6, 2026), and the proof of μ(G) ≤ 270 also builds on
 its Lean formalization.
 
-- For `G`, the proof of μ(G) ≤ 270 uses two Lean files of C. Davis
+- For `G`, M. C. S. Carreira obtained μ(G) ≤ 280.59 with a computer-assisted certificate that is not formalized
+  ([doi:10.5281/zenodo.24042950](https://doi.org/10.5281/zenodo.24042950), Section 7).
+- The proof of μ(G) ≤ 270 uses two Lean files of C. Davis
   ([1337isnot1337/catalan-constant](https://github.com/1337isnot1337/catalan-constant), commit `3c45153`,
   Apache License 2.0), `GeneralNodalWeights` and `NodalRootDeletion`, which bound the weights of nodal polynomials. They are ported
   unchanged into [`CatalanMeasure/GenD/Signed/Davis/`](CatalanMeasure/GenD/Signed/Davis/); the other 31 ported
