@@ -1,0 +1,1891 @@
+\documentclass[11pt]{amsart}
+\IfFileExists{lmodern.sty}%
+  {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
+  {\usepackage[expansion=false]{microtype}}
+\usepackage{amssymb,mathtools}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\emergencystretch=2.5em
+\DeclareMathSizes{10}{10}{7}{6}
+\DeclareMathSizes{9}{9}{6}{6}
+\DeclareMathSizes{8}{8}{6}{6}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Irrationality measures for a zeta(3) + b zeta(4) and zeta(3)/pi^4},pdfauthor={Sean Litsey}}
+
+% ---------------------------------------------------------------------------
+% Location of the Lean formalization.
+\newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
+\newcommand{\FormalizationLink}{\url{\FormalizationURL}}
+% ---------------------------------------------------------------------------
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathbb F}
+\newcommand{\N}{\mathbb N}
+\newcommand{\lean}[1]{\nolinkurl{#1}}
+\newcommand{\vG}{v_p}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cM}{\mathcal M}
+\newcommand{\fr}[1]{\{#1\}}
+\newcommand{\Lex}{\operatorname{E}}
+
+\begin{document}
+
+\title[Measures for $a\zeta(3)+b\zeta(4)$ and $\zeta(3)/\pi^4$]{Irrationality measures for $a\zeta(3)+b\zeta(4)$
+and $\zeta(3)/\pi^4$}
+
+\author{Sean Litsey}
+\email{sean.litsey.math@gmail.com}
+
+\date{November 17, 2026}
+
+\subjclass[2020]{Primary 11J82; Secondary 11J72, 11M06, 15A15, 31A15, 68V20}
+
+\keywords{Irrationality exponent, $\zeta(3)$, $\zeta(4)$, Hankel determinants, $p$-adic valuations, logarithmic
+energy, formal verification, Lean}
+
+\begin{abstract}
+Let $\mu$ denote the irrationality exponent. For all integers $a$ and $b$ with $b\ne0$ we prove
+$|a\zeta(3)+b\zeta(4)-p/q|>q^{-34.14}$ for all integers $p$ and all sufficiently large $q$, and we prove
+$\mu(\zeta(3)/\pi^4)\le55.50$. Lai proved that $1$, $\zeta(3)$ and $\zeta(4)$ are linearly independent over $\Q$
+with Hankel determinants $J_n(a,b,X)$ of a functional built from simultaneous approximations. We keep his determinants
+and supply the three estimates that a measure needs. The determinants are small on a neighbourhood of the
+constant, uniformly in the direction $(a,b)$. We prove this with a positive measure on a complex contour whose
+potential has a closed form, checked on $40$ cells. The denominators are bounded prime by prime by an exact law
+for the $p$-adic valuation, whose integral over the primes has a closed form. Nonvanishing is proved at the
+sizes tied to Lai's auxiliary primes and to two new families of primes, on the lines $3\ell=7n+1$ and $3\ell=7n+2$.
+A counting argument with the prime number theorem in progressions turns this sparse nonvanishing into a
+measure. The previous best bound on the plane was $66.3$, and no measure was known for $\zeta(3)/\pi^4$. The
+proofs are formalized in Lean~4.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+%% =====================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The result}
+The \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the real numbers $\mu$ such
+that $|\xi-p/q|>q^{-\mu}$ for all integers $p$ and all sufficiently large integers $q$. It does not change when
+$\xi$ is multiplied by a nonzero rational number or translated by a rational number. A finite bound for $\mu(\xi)$
+is an irrationality measure for $\xi$, and it shows that $\xi$ is irrational. We write
+\[
+ \zeta(3)=\sum_{k\ge1}\frac1{k^3}=1.20205\,69031\ldots,\qquad \zeta(4)=\sum_{k\ge1}\frac1{k^4}=\frac{\pi^4}{90}.
+\]
+
+\begin{theorem}\label{thm:main}
+\begin{enumerate}[label=(\alph*)]
+\item Let $a$ and $b$ be integers with $b\ne0$. There is an integer $q_0$ such that
+\[
+ \Bigl|a\zeta(3)+b\zeta(4)-\frac pq\Bigr|>q^{-34.14}
+\]
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(a\zeta(3)+b\zeta(4))\le34.14$.
+\item There is an integer $q_0$ such that
+\[
+ \Bigl|\frac{\zeta(3)}{\pi^4}-\frac pq\Bigr|>q^{-55.50}
+\]
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(\zeta(3)/\pi^4)\le55.50$.
+\end{enumerate}
+\end{theorem}
+
+Since $\mu$ is invariant under multiplication by nonzero rationals, part (a) bounds the exponent of every number
+$r\zeta(3)+r'\pi^4$ with $r,r'\in\Q$ and $r'\ne0$. The integer $q_0$ of part (a) depends on $a$ and $b$. The
+proof gives the exponents $34.1398$ and $55.4981$, with the constants of Table~\ref{tab:constants}.
+Theorem~\ref{thm:main} has been verified in the Lean~4 proof assistant, together with every theorem, proposition and
+lemma used in its proof. The formal proof has no unproved steps and uses only the standard axioms.
+Section~\ref{sec:lean} describes it. The remarks are not part of the formal proof. The formalization is available at
+\FormalizationLink. The use of AI in this work is disclosed at the end of the paper.
+
+\subsection{Background}\label{ssec:background}
+\emph{The numbers $\zeta(3)$ and $\zeta(4)$.} Euler showed that $\zeta(4)=\pi^4/90$, so $\zeta(4)$ is
+transcendental. Ap\'ery proved that $\zeta(3)$ is irrational \cite{Apery79}, and Beukers gave his integral proof
+\cite{Beukers79}. Measures for $\zeta(3)$ were obtained by Hata \cite{Hata93} and by Rhin and Viola, whose method of
+transformation groups gave $\mu(\zeta(3))\le5.513891$ \cite{RhinViola96,RhinViola01}. For the even value $\zeta(4)$
+the best bound is due to Marcovecchio and Zudilin, $\mu(\zeta(4))\le12.51085940\ldots$ \cite{MarcovecchioZudilin20}.
+For the other odd values the classical results concern families. Rivoal \cite{Rivoal00} and Ball and Rivoal
+\cite{BallRivoal01} proved that infinitely many of the numbers $\zeta(2k+1)$ are irrational. Zudilin proved that
+one of $\zeta(5)$, $\zeta(7)$, $\zeta(9)$ and $\zeta(11)$ is irrational \cite{Zudilin01,Zudilin04}. Fischler, Sprang
+and Zudilin \cite{FSZ19} and Fischler \cite{Fischler26} raised the number of irrational values among
+$\zeta(3),\dots,\zeta(s)$.
+
+\emph{The plane spanned by $\zeta(3)$ and $\zeta(4)$.} Whether $1$, $\zeta(3)$ and $\zeta(4)$ are linearly
+independent over $\Q$ was a classical open question. Dauguet and Zudilin studied simultaneous rational
+approximations to $\zeta(2)$ and $\zeta(3)$ of the hypergeometric type, and they noted that the independence of $1$,
+$\zeta(2)$ and $\zeta(3)$ remained open \cite{DauguetZudilin14}. Fauzan proved that $\zeta(5)$ is irrational with
+rationally normalized Hankel determinants \cite{Fauzan2026}. Lai combined Fauzan's determinant method with the
+simultaneous approximations of Zudilin and of Dauguet and Zudilin, and proved that $1$, $\zeta(3)$ and $\zeta(4)$ are
+linearly independent \cite{Lai2026}. As a corollary $\zeta(3)/\pi^4$ is irrational. Leibtag, Barkan, Kalisch,
+Weinbaum, Shalyt and Kaminer connected the classical constructions through conservative matrix fields
+\cite{LBKWSK26}. They gave another proof of this independence and proved $\mu(A\zeta(3)+B\zeta(4))<66.3$ for every
+$(A,B)\in\Q^2\setminus\{(0,0)\}$. They also proved $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Fischler, Lai,
+Sprang and Zudilin proved that many more odd zeta values are irrational \cite{FLSZ26}. As far as we know, $66.3$ is the best published measure on the plane, and no irrationality measure
+for $\zeta(3)/\pi^4$ was known. Part (a) improves the bound to $34.14$ for $b\ne0$. Part (b) is, as far as we know,
+the first measure for $\zeta(3)/\pi^4$. On the line $b=0$ the number is a rational multiple of $\zeta(3)$, whose
+measure is much smaller. On the line $a=0$ the bound of Marcovecchio and Zudilin is smaller than ours.
+
+\emph{Recent results.} Since September 2026 several new results have appeared in this area, some obtained with AI
+systems. In October 2026 OpenAI proved that Catalan's constant is irrational \cite{OpenAI2026} and that $\mu(\pi)=2$
+\cite{OpenAIPi2026}, both with Lean formalizations. Liu, Jiang and Zhang proved $\mu(\log r)=2$ for rational $r>0$,
+$r\ne1$ \cite{LiuJiangZhang26}. Giraudin improved the bounds for $\mu(\zeta(2))$ and $\mu(\zeta(3))$, and he gave
+a bound for $\mu(\zeta(5))$ \cite{Giraudin26,Giraudin26z3,Giraudin26z5}. Q.~Tang proved the linear independence of $1$,
+$\zeta(2)$ and $\zeta(3)$ in Lean \cite{Tang26}.
+
+\emph{The method.} The measure method we use, a family of integer polynomials whose values near the constant are
+small and nonzero, is a one-variable form of the criteria of Nesterenko \cite{Nesterenko85} used by Ball and Rivoal
+\cite{BallRivoal01}. The arithmetic of the coefficients is handled prime by prime, as in the work of Hata
+\cite{Hata93}, Rhin and Viola \cite{RhinViola96,RhinViola01} and Zudilin \cite{Zudilin04}. Determinants of growing
+size go back to Zudilin's determinantal approach \cite{Zudilin}. Their size is controlled by Andr\'eief's identity
+\cite{Forrester2018Andreief} and a logarithmic energy problem with an external field \cite{SaffTotik}.
+
+\subsection{The companion papers}
+This paper applies one method to a fourth set of constants. The method consists of Hankel or L\"owner determinants,
+denominators bounded prime by prime, decay proved through an energy problem, and a formal proof of every step. The
+first companion paper \cite{Litsey2026} refines OpenAI's determinant for Catalan's constant. The second
+\cite{Litsey2026b} uses L\"owner determinants of digamma combinations and proves measures on three planes of numbers.
+Its third plane is the plane of this paper, since $\pi^4=90\zeta(4)$. The third \cite{Litsey2026c} proves a measure
+for $\zeta(5)$ with Fauzan's determinants. Its decay argument, a comparison measure with closed-form potentials checked
+on cells, is the closest relative of Section~\ref{sec:decay}. We use the definitions of $\mu$, the measure criterion
+and the potential-theoretic language of these papers. The construction here is Lai's, with his notation.
+
+\subsection{What a measure requires}
+Lai's proof uses three facts about his determinants $J_n=J_n(a,b,a\zeta(3)+b\zeta(4))$. A rational normalizing factor
+$m_n$ with $\log m_n\le(30.83+o(1))n^2$ makes $m_nJ_n(a,b,X)$ a polynomial with integer coefficients. The decay
+$|J_n|\le e^{-31.61n^2}$ holds at the constant. And $J_n\ne0$ for $n=2(\ell-1)/9$ at a prime $\ell\equiv1\pmod9$ with
+$\ell>|b|$. If $a\zeta(3)+b\zeta(4)$ were rational, a nonzero integer would be smaller than $1$.
+
+A measure needs more. Let $p/q$ be a rational close to the constant. Then $q^{3n}m_nJ_n(a,b,p/q)$ is an integer, and
+three estimates are needed at sizes $n$ of order $\log q$.
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Denominators.} The bound $\log m_n\le(\Lambda+o(1))n^2$.
+\item \emph{Decay on a neighbourhood.} $|J_n(a,b,X)|\le e^{-(D-o(1))n^2}$ for every real $X$ within
+ $e^{-(\rho+o(1))n}$ of the constant, not only at the constant.
+\item \emph{Nonvanishing near the point.} $J_n(a,b,p/q)\ne0$ for one size $n$ in a range of length
+ $O(\log q)$ above the size where (i) and (ii) beat $q^{3n}$.
+\end{enumerate}
+Lai's nonvanishing holds only at sizes $n\gg|b|$. For the ratio $\zeta(3)/\pi^4$ the rational $p/q$ enters through
+the direction: $q^{3n}J_n(1,-p/q,0)=J_n(q,-p,0)$, so the coefficient $b=-p$ grows with $q$. So the decay must be
+uniform in the direction $(a,b)$, and nonvanishing must hold at sizes of order $\log q$ for coefficients of size $q$.
+The exponent that results is $\rho(3/(D-\Lambda)+\beta)$, where $\beta$ measures the sparsity of the sizes at which
+nonvanishing is proved.
+
+\subsection{New ideas}
+We keep Lai's determinants unchanged. The proof rests on the following ideas.
+\begin{enumerate}[leftmargin=*]
+\item \emph{Decay on a complex contour by a dual certificate.} Lai writes the functional as an integral over a vertical
+ line and bounds $J_n$ by Heine's formula with the modulus of a complex weight. We prove a general upper bound of
+ energy type for this situation. A positive measure $\sigma$ of mass $3$ in the complex plane and an upper bound
+ $\ell$ for $V-2U^\sigma$ on an admissible contour give $|J_n|\le e^{-(D-o(1))n^2}$ with $D=-\kappa-I(\sigma)-3\ell$.
+ The perturbation of $X$ adds atoms at the negative integers. They are controlled by the potential of $\sigma$ on
+ the negative axis, and this gives the neighbourhood exponent $\rho$. The bound is uniform in the direction $(a,b)$
+ (Theorem~\ref{thm:dual}). We apply it to a contour with two straight arms and a measure on two segments whose
+ density against the arcsine law is an explicit square. Its potentials have closed forms in real arithmetic, and the
+ inequality is checked on $40$ cells (Theorem~\ref{thm:decay}).
+\item \emph{An exact law for the denominators.} For every prime $\sqrt{8n}<p<3n$ we improve Lai's bound for
+ $v_p(J_n)$ by two explicit integers $x_1$ and $x_2$, determined by the ties among Lai's increments
+ (Theorems~\ref{thm:L1} and~\ref{thm:L2}). The first gain is a rank bound for a reduced Gram form modulo $p$. Its weights
+ are values of one polynomial on residue classes, so a power sum over $\F_p$ forces a kernel. The second gain comes
+ from a basis whose roots are shifted by multiples of $p$, so that the leading local forms are orthogonal. The
+ remaining terms cancel modulo $p^2$, because a Faulhaber sum and the harmonic weights of the unit parts have
+ opposite totals. For $3n<p\le6n$ similar bases give Lai's case bounds for the polynomial in three variables and an
+ extra $7n-2p$ in the range $3n<p\le7n/2$ (Theorems~\ref{thm:O} and~\ref{thm:B7}).
+\item \emph{The integral of the law in closed form.} On $p\le3n$ the law is piecewise affine in $n/p$ on $22$
+ pieces. Its integral against the prime distribution telescopes to a sum over $23$ nodes, and Gauss's digamma
+ theorem gives a closed form in logarithms (Theorem~\ref{thm:C01}).
+\item \emph{Nonvanishing at prime-tied sizes.} We extend Lai's auxiliary-prime argument to every rational $X$ whose
+ denominator is not divisible by $\ell^4$, and to the ratio direction (Theorem~\ref{thm:NV}). We find a second family
+ of primes with exact nonvanishing, $3\ell=7n+1$ and $3\ell=7n+2$ (Theorem~\ref{thm:NV7}). There the reduction
+ modulo $\ell$ leads to a Hankel determinant of a weight on an interval of residues. By duality for complementary
+ subsets its value is a determinant of size $1$ or $2$ of power sums of a polynomial over $\F_\ell$, equal to
+ $-1/49$ or $-1$.
+\item \emph{A criterion with prime-tied nonvanishing.} If nonvanishing is proved at the sizes tied to several
+ families of primes in residue classes, the prime number theorem in progressions and an inclusion--exclusion count
+ over the classes turn it into a measure (Theorem~\ref{thm:criterion}). A prime in two families is counted once.
+\end{enumerate}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & $\Lambda$ & $D$ & $\rho$ & nonvanishing\\
+\midrule
+Lai \cite{Lai2026} & $30.83$ & $31.61$ & -- & $n=2(\ell-1)/9$, $\ell>|b|$\\
+This paper & $28.68723663$ & $33.4401$ & $42.94856306$ & $\ell\equiv1\ (18)$, $\ell\equiv3,5\ (7)$\\
+\bottomrule
+\end{tabular}
+\caption{The constants per $n^2$ (and per $n$ for $\rho$). Lai's decay holds at the constant only. The exponent is
+$\rho(3/(D-\Lambda)+\beta)$ with $\beta=1637/10000$ for the plane and $\beta=661/1000$ for the ratio.}\label{tab:constants}
+\end{table}
+
+\subsection{Organization}
+Section~\ref{sec:construction} recalls Lai's construction. Section~\ref{sec:criterion} proves the measure criterion.
+Section~\ref{sec:decay} proves the decay. Sections~\ref{sec:local}, \ref{sec:second} and~\ref{sec:sum} bound the
+normalizing factor: the local bounds, the second level of the law, and the prime sum. Section~\ref{sec:nv} proves the
+nonvanishing. Section~\ref{sec:proof} completes the proof, and Section~\ref{sec:remarks} compares the constants with
+numerical values. Section~\ref{sec:lean} describes the formalization. The disclosure of AI use follows it.
+
+\subsection{Notation}
+For a prime $p$ we write $v_p$ for the Gauss valuation on $\Q(a,b,X)$: the $p$-adic valuation extended to
+polynomials by the minimum over the coefficients, with $v_p(a)=v_p(b)=v_p(X)=0$. We write $\Z_{(p)}$ for the
+rationals with $v_p\ge0$, $H_m=\sum_{i\le m}1/i$ and $H_m(j)=\sum_{i\le m}i^{-j}$. We write $\fr y=y-\lfloor y\rfloor$
+and $y_+=\max(y,0)$. Chebyshev's function in a progression is $\theta(x;M,r)=\sum_{\ell\le x,\ \ell\equiv r\ (M)}\log\ell$,
+summed over primes $\ell$. The logarithmic potential and energy of a positive measure $\sigma$ on $\C$ are
+\[
+ U^\sigma(s)=\int\log\frac1{|s-u|}\,d\sigma(u),\qquad I(\sigma)=\iint\log\frac1{|s-u|}\,d\sigma(s)\,d\sigma(u).
+\]
+
+%% =====================================================================
+\section{Lai's construction}\label{sec:construction}
+
+We recall the construction of \cite[\S2]{Lai2026}, with the variable $X$ in place of the constant. Throughout $n\ge1$.
+Write $(x)_m=x(x+1)\cdots(x+m-1)$ and put
+\[
+ R_n(t)=\frac{(6n)!^2}{(2n)!^3}\cdot\frac{(t-2n)_{2n}^3}{(t)_{6n+1}^2}.
+\]
+It has zeros of order $3$ at $t=1,\dots,2n$, double poles at $t=0,-1,\dots,-6n$, and $R_n(t)=O(t^{-6n-2})$. For
+polynomials $P$ of degree less than $6n$ Lai defines
+\begin{equation}\label{eq:Lseries}
+ L_n(P)=-3a\sum_{m\ge1}(R_nP)'(m)+b\sum_{m\ge1}(R_nP)''(m),
+\end{equation}
+and
+\[
+ J_n=\frac{\det\bigl[L_n(t^{i+j})\bigr]_{0\le i,j<3n}}{\prod_{i<3n}i!^2}.
+\]
+Put
+\[
+ c_k=\binom{6n}k^2\binom{2n+k}k^3,\qquad d_k=5H_k-3H_{2n+k}-2H_{6n-k}\qquad(0\le k\le6n).
+\]
+
+\begin{proposition}[Lai]\label{prop:finite}
+For $P$ of degree less than $6n$,
+\begin{equation}\label{eq:finite}
+ L_n(P)=\sum_{k=0}^{6n}c_k\bigl(U_kP'(-k)+V_kP(-k)\bigr),
+\end{equation}
+where $U_k=-3aH_k(2)-2bH_k(3)$ and $V_k=U_kd_k+6\bigl(X-aH_k(3)-bH_k(4)\bigr)$ at $X=a\zeta(3)+b\zeta(4)$.
+\end{proposition}
+
+\begin{proof}
+The partial fraction expansion of $R_nP$ has the form
+$\sum_k\bigl(A_{2,k}(t+k)^{-2}+A_{1,k}(t+k)^{-1}\bigr)$, since $\deg(R_nP)\le-2$. Here
+$A_{2,k}=c_kP(-k)$, because $(t+k)^2R_n$ takes the value $c_k$ at $t=-k$. The logarithmic derivative of
+$(t+k)^2R_n$ at $-k$ is $-3(H_{2n+k}-H_k)-2(H_{6n-k}-H_k)=d_k$, so $A_{1,k}=c_k(P'(-k)+d_kP(-k))$. Also
+$\sum_kA_{1,k}=0$. Now $\sum_{m\ge1}(m+k)^{-s}=\zeta(s)-H_k(s)$. Differentiating the expansion once and twice and
+summing over $m$, the terms in $\zeta(2)$ cancel because $\sum_kA_{1,k}=0$. The term $2b\zeta(3)\sum_kA_{1,k}$
+cancels for the same reason. What remains is $6(a\zeta(3)+b\zeta(4))\sum_kA_{2,k}$ plus the stated rational part.
+\end{proof}
+
+We take \eqref{eq:finite} with $X$ an indeterminate as the definition of a $\Q[a,b,X]$-valued functional, and we write
+$J_n(a,b,X)$ for the determinant above with this functional. The entries are linear forms in $(a,b,X)$, so
+$J_n(a,b,X)\in\Q[a,b,X]$ is homogeneous of degree $3n$:
+\begin{equation}\label{eq:homog}
+ J_n(\lambda a,\lambda b,\lambda X)=\lambda^{3n}J_n(a,b,X).
+\end{equation}
+At $X=a\zeta(3)+b\zeta(4)$ it is Lai's $J_n$. The two families of this paper are
+\[
+ Q_n(X)=J_n(a,b,X)\quad\text{for fixed }a,b\in\Z,\qquad f_n(y)=J_n(1,-y,0).
+\]
+Both have degree at most $3n$. By \eqref{eq:homog},
+\begin{equation}\label{eq:scaled}
+ q^{3n}Q_n(p/q)=J_n(qa,qb,p),\qquad q^{3n}f_n(p/q)=J_n(q,-p,0).
+\end{equation}
+The constant of $Q_n$ is $a\zeta(3)+b\zeta(4)$. The constant of $f_n$ is $y^*=\zeta(3)/\zeta(4)=1.11062\ldots$, and
+$\zeta(3)/\pi^4=y^*/90$. Indeed $f_n(y)=J_n(1,-y,X_y+t)$ with $X_y=\zeta(3)-y\zeta(4)$ and $t=-X_y=\zeta(4)(y-y^*)$.
+So $f_n$ is small near $y^*$ when $J_n$ is small near the constant, uniformly in the direction.
+
+%% =====================================================================
+\section{The measure criterion}\label{sec:criterion}
+
+The criterion of the companion papers \cite{Litsey2026,Litsey2026c} assumes nonvanishing at every large size. Here
+nonvanishing is known only at the sizes $n$ tied to primes $\ell$ in some residue classes. The sizes tied to the
+primes of a class have density zero, but the primes carry enough logarithmic mass. If $P_n(p/q)=0$ at every tied
+size in a window, then a power of every tied prime divides $q$, and the product of these powers exceeds $q$. The
+criterion makes this precise.
+
+Fix a modulus $M$. A \emph{tied family} consists of a set $S$ of unit classes modulo $M$, a slope $c>0$, an offset
+$d$, an exponent $e\ge1$, a finite set $E$ of primes, and for every prime $\ell\notin E$ with $\ell\bmod M\in S$ an
+integer $n(\ell)\ge1$ with $\ell=c\,n(\ell)+d$. For a list of tied families $i=1,\dots,r$ and a nonempty subset $T$ of
+indices put
+\[
+ \delta_T=\frac{\#\{s\in(\Z/M)^\times:s\in S_i\text{ for all }i\in T\}}{\varphi(M)},
+\]
+\[
+ \lambda_T(u,w)=\Bigl(w\min_{i\in T}c_i-u\max_{i\in T}c_i\Bigr)_+,
+\]
+and
+\[
+ \cM(u,w)=\sum_{\emptyset\ne T\subseteq\{1,\dots,r\}}(-1)^{|T|+1}\Bigl(\min_{i\in T}e_i\Bigr)\delta_T\,\lambda_T(u,w).
+\]
+
+\begin{theorem}[measure criterion]\label{thm:criterion}
+Let $\xi$ be real, $\kappa\ge1$ an integer, and $\Lambda<D$, $\rho>0$, $\beta>0$, $K>0$ real numbers. Let $(P_n)_{n\ge1}$
+be polynomials with rational coefficients and $\deg P_n\le\kappa n$. Suppose that for every $\varepsilon>0$ and all
+large $n$ the following hold.
+\begin{enumerate}[label=(\alph*)]
+\item There is a positive rational number $d_n$ with $\log d_n\le(\Lambda+\varepsilon)n^2$ and $q^{\kappa n}d_nP_n(p/q)\in\Z$
+ for all integers $p$ and $q>0$.
+\item $|P_n(\xi+t)|\le e^{-(D-\varepsilon)n^2}$ for every real $t$ with $|t|\le e^{-(\rho+\varepsilon)n}$.
+\end{enumerate}
+Let $W(p,q)$ be positive integers with $W(p,q)\le Kq$ whenever $|\xi-p/q|<1$. Let tied families $i=1,\dots,r$ be
+given, each with a relation $\mathrm{Bad}_i(\ell,p,q)$ such that:
+\begin{enumerate}[label=(\alph*),resume]
+\item for every prime $\ell\notin E_i$ with $\ell\bmod M\in S_i$, and all $p$ and $q>0$, either
+ $P_{n_i(\ell)}(p/q)\ne0$ or $\mathrm{Bad}_i(\ell,p,q)$ holds, and $\mathrm{Bad}_i(\ell,p,q)$ implies
+ $\ell^{e_i}\mid W(p,q)$;
+\item $\cM(u_0,u_0+\beta)>1$, where $u_0=\kappa/(D-\Lambda)$.
+\end{enumerate}
+Then for every $\mu>\rho(\kappa/(D-\Lambda)+\beta)$ there is $q_0$ such that $|\xi-p/q|>q^{-\mu}$ for all integers $p$
+and all integers $q\ge q_0$.
+\end{theorem}
+
+The fraction $p/q$ need not be in lowest terms, and no irrationality of $\xi$ is assumed. Condition (a) holds for
+every representation of the fraction, and so does (c).
+
+\begin{proof}
+Put $\eta=D-\Lambda$ and fix $\mu>\rho(\kappa/\eta+\beta)$. Choose $\varepsilon>0$ so small that
+$\cM(u_\varepsilon,w_\varepsilon)>1+\varepsilon$ and $\rho_\varepsilon(u_\varepsilon+\beta+\varepsilon)<\mu$, where
+$u_\varepsilon=(\kappa+\varepsilon)/(\eta-2\varepsilon)+\varepsilon$, $w_\varepsilon=u_0+\beta-\varepsilon$ and
+$\rho_\varepsilon=\rho+\varepsilon$. This is possible because $\cM$ is continuous: it is a finite sum of functions
+$(w\gamma-u\gamma')_+$.
+
+Let $q$ be large and suppose $|\xi-p/q|\le q^{-\mu}$. Put $L=\log q$,
+\[
+ n_0=\frac{(\kappa+\varepsilon)L+C}{\eta-2\varepsilon},\qquad N=n_0+(\beta+\varepsilon)L,
+\]
+with a constant $C$ chosen below. Then $\rho_\varepsilon N\le\mu L$ for large $q$, so $|\xi-p/q|\le
+e^{-\rho_\varepsilon n}$ for every $n\le N$.
+
+\emph{Step 1: no tied size in the window is nonzero.} Let $n\in[n_0,N]$ be large and suppose $P_n(p/q)\ne0$. By (a)
+the number $z=q^{\kappa n}d_nP_n(p/q)$ is a nonzero integer, so $|z|\ge1$. By (b) with $t=p/q-\xi$,
+$|z|\le q^{\kappa n}e^{(\Lambda+\varepsilon)n^2-(D-\varepsilon)n^2}$. Hence $(\eta-2\varepsilon)n\le\kappa L$. This
+contradicts $n\ge n_0$ when $C>0$.
+
+\emph{Step 2: one divisibility.} Let $U_i$ be the set of primes $\ell\notin E_i$ with $\ell\bmod M\in S_i$ and
+$n_i(\ell)\in[n_0,N]$, and $U=\bigcup_iU_i$. For $\ell\in U$ let $e(\ell)$ be the largest $e_i$ with $\ell\in U_i$. By
+Step 1 and (c), $\ell^{e_i}\mid W(p,q)$ for every $i$ with $\ell\in U_i$, so $\ell^{e(\ell)}\mid W(p,q)$. The primes are
+distinct, so
+\begin{equation}\label{eq:budget}
+ \sum_{\ell\in U}e(\ell)\log\ell\le\log W(p,q)\le L+\log K.
+\end{equation}
+
+\emph{Step 3: the prime count.} The prime $\ell$ lies in $U_i$ when $\ell\bmod M\in S_i$, $\ell\notin E_i$ and
+$c_in_0+d_i\le\ell\le c_iN+d_i$. For large $q$ this contains the primes of the class with $\ell/L$ in the interval
+$J_i=(c_iu_\varepsilon,c_iw_\varepsilon]$. For a fixed class $s$ the finitely many endpoints of the $J_i$ with
+$s\in S_i$ cut $(0,\infty)$ into intervals. On each the set of $i$ with $J_i$ containing it is constant, and so is the
+largest $e_i$. The prime number theorem in arithmetic progressions,
+$\theta(x;M,s)=x/\varphi(M)+o(x)$ for every unit class $s$, counts the primes of each class in each interval. Removing
+the finite sets $E_i$ costs $O(1)$. Summing,
+\[
+ \sum_{\ell\in U}e(\ell)\log\ell\ge\Bigl(\frac1{\varphi(M)}\sum_s\int_0^\infty\max_{i:\,s\in S_i}e_i\mathbf 1_{J_i}(x)\,dx
+ -\varepsilon\Bigr)L
+\]
+for large $q$. For nonnegative numbers $x_i$, $\max_ix_i=\sum_{T\ne\emptyset}(-1)^{|T|+1}\min_{i\in T}x_i$. With
+$x_i=e_i\mathbf 1_{J_i}(x)$, the minimum over $T$ is $(\min_Te_i)\mathbf 1_{\bigcap_TJ_i}(x)$, and
+$\bigcap_TJ_i$ has length $\lambda_T(u_\varepsilon,w_\varepsilon)$. Averaging over $s$ gives the integral
+$\cM(u_\varepsilon,w_\varepsilon)>1+\varepsilon$. So the left side of \eqref{eq:budget} is at least
+$(1+\varepsilon/2)L$ for large $q$, which contradicts \eqref{eq:budget}.
+
+Hence $|\xi-p/q|>q^{-\mu}$ for all large $q$. The constant $C$ absorbs $\log K$ and the finitely many small $n$.
+\end{proof}
+
+When the windows of different families do not overlap, $\cM(u,u+\beta)=\beta\sum_ie_ic_i\delta_i$. The inequality
+(d) then says that the tied primes in a window of length $\beta L$ carry more than $L$ of logarithmic mass.
+
+The second part of Theorem~\ref{thm:main} is stated for $\zeta(3)/\pi^4$. We apply the criterion to $y^*$ and use the
+following step.
+
+\begin{lemma}\label{lem:scale}
+Let $x$ be real, $r\ne0$ rational and $\mu'<\mu$. Suppose that $|x-p/q|>q^{-\mu'}$ for all integers $p$ and all large
+$q$. Then $|rx-p/q|>q^{-\mu}$ for all integers $p$ and all large $q$.
+\end{lemma}
+
+\begin{proof}
+Write $r=u/v$ with integers $u\ne0$ and $v>0$. Then $|rx-p/q|=(|u|/v)\,|x-vp/(uq)|$, and $vp/(uq)$ is a fraction
+with denominator $|u|q$. For large $q$ this is at least $(|u|/v)(|u|q)^{-\mu'}$, which exceeds $q^{-\mu}$ for large
+$q$.
+\end{proof}
+
+%% =====================================================================
+\section{Decay on a neighbourhood}\label{sec:decay}
+
+This section proves condition (b) of Theorem~\ref{thm:criterion} for both families, uniformly in the direction. The
+method is the one of the $\zeta(5)$ paper \cite{Litsey2026c}: the determinant is an average over configurations of
+points, the average is bounded by an energy problem with an external field, and a single positive measure $\sigma$
+gives an upper bound by weak duality. Two features are new. The functional is an integral over a complex contour
+rather than a real interval, and the perturbation of $X$ adds point masses at the negative integers. We first prove a
+general bound (Theorem~\ref{thm:dual}) and then check its hypotheses for an explicit contour and measure
+(Theorem~\ref{thm:decay}).
+
+\subsection{The field}
+Put $(K,B,e,r)=(6,2,3,2)$. These are the scaled numbers of poles and zeros of $R_n$ and their orders. For $s\in\C$ put
+\begin{multline*}
+ \Phi(s)=r(K\log K-K)-e(B\log B-B)\\
+ +e\int_0^B\log|s-x|\,dx-r\int_0^K\log|s+x|\,dx,
+\end{multline*}
+\[
+ V(s)=\Phi(s)-2\pi|\operatorname{Im}s|,\qquad W_\sigma(s)=V(s)-2U^\sigma(s).
+\]
+By Stirling's formula $\log|R_n(ns)|=n\Phi(s)+O(\log n)$ away from the poles and zeros. The term $-2\pi|\operatorname{Im}s|$
+is the decay of $\pi\cot\pi s$ and of its derivatives off the real axis. For $x\in[0,K]$ put
+\begin{multline*}
+ \omega(x)=r\bigl(K\log K-x\log x-(K-x)\log(K-x)\bigr)\\
+ +e\bigl((B+x)\log(B+x)-x\log x-B\log B\bigr).
+\end{multline*}
+Then $\log c_k\le n\,\omega(k/n)$ for $0\le k\le6n$, by the entropy bound for binomial coefficients. Finally put
+$\kappa=27/2-9\log3$ and $c(a,b)=3|a|+|b|$.
+
+A \emph{contour} is a polyline $\Gamma$ in the half-plane $\operatorname{Re}s>0$, symmetric under conjugation. It runs from
+$-i\infty$ to $+i\infty$, its two unbounded edges are vertical rays, and it meets $\R$ at one point $x_0\in(0,B)$.
+
+\begin{theorem}\label{thm:dual}
+Let $\Gamma$ be a contour. Let $\sigma$ be a positive measure on $\C$ of mass $3$, invariant under conjugation, with
+$\sigma(D(s,r))\le A\sqrt r$ for every disc of radius $r\le r_0$, for some $A,r_0>0$. Let $\ell$, $a^*$ and $\rho$ be
+real numbers with
+\[
+ W_\sigma(s)\le\ell\quad(s\in\Gamma),\qquad \omega(x)-2U^\sigma(-x)\le a^*\quad(0\le x\le6),\qquad a^*\le\ell+\rho .
+\]
+Put $D=-\kappa-I(\sigma)-3\ell$. Then for every $\varepsilon>0$ there is $n_0$ such that
+\[
+ |J_n(a,b,a\zeta(3)+b\zeta(4)+t)|\le c(a,b)^{3n}e^{-(D-\varepsilon)n^2}
+\]
+for all $n\ge n_0$, all real $a,b$ with $c(a,b)>0$, and all real $t$ with $|t|\le c(a,b)e^{-\rho n}$.
+\end{theorem}
+
+The bound is uniform in $(a,b)$ and $t$. This is what the ratio family needs.
+
+\begin{proof}
+Fix $n$ and write $c=c(a,b)$. We take $X=a\zeta(3)+b\zeta(4)+t$, and we write $L_X$ for the functional at $X$.
+
+\emph{Step 1: the contour representation.} Put $\cot_\pi(z)=\pi\cot\pi z$ and $K_{a,b}(z)=3a\cot_\pi'(z)+b\cot_\pi''(z)$. Let
+$F=R_nP$ with $\deg P<6n$. Since $F=O(z^{-2})$, the sums in \eqref{eq:Lseries} converge. The residue of
+$F^{(j)}\cot_\pi$ at an integer $m$ is $F^{(j)}(m)$, and on a closed contour
+$\oint F^{(j)}\cot_\pi=(-1)^j\oint F\cot_\pi^{(j)}$. Let $\Gamma_n$ be the contour $n\Gamma$, moved by at most
+$1$ near the crossing so that it meets $\R$ at a point $v\notin\Z$ with $0<v<2n+1$. The integers $m$ with $1\le m<v$
+are zeros of $R_n$ of order $3$, so their residues vanish. Integrating over a large rectangle and letting it grow,
+\[
+ L_{X_0}(P)=\frac1{2\pi i}\int_{\Gamma_n}R_n(z)P(z)K_{a,b}(z)\,dz,\qquad X_0=a\zeta(3)+b\zeta(4),
+\]
+with $\Gamma_n$ oriented downward. By \eqref{eq:finite} the dependence on $X$ is $L_X(P)=L_{X_0}(P)+6t\sum_kc_kP(-k)$. So
+$L_X$ is integration against the complex measure $\nu=\nu_\Gamma+\nu_{\rm at}$, where $\nu_\Gamma$ is the weight on
+$\Gamma_n$ and $\nu_{\rm at}=6t\sum_kc_k\delta_{-k}$.
+
+\emph{Step 2: Heine's formula.} For a complex measure $\nu$ with finite moments, Andr\'eief's identity
+\cite{Forrester2018Andreief} gives
+\[
+ \det\Bigl[\int z^{i+j}d\nu\Bigr]_{i,j<M}=\frac1{M!}\int\!\cdots\!\int\prod_{i<j}(z_i-z_j)^2\,d\nu(z_1)\cdots d\nu(z_M).
+\]
+With $M=3n$ we obtain $|J_n|\le\bigl(M!\prod_{i<M}i!^2\bigr)^{-1}\int\prod_{i<j}|z_i-z_j|^2\,d|\nu|^{M}$.
+
+\emph{Step 3: the weights.} On $\Gamma_n$ we have $|K_{a,b}(z)|\le c\,C(1+|z|)^Ce^{-2\pi|\operatorname{Im}z|}$, uniformly in
+$(a,b)$. Together with Stirling's formula this gives, for $z=ns$ with $s\in\Gamma$,
+\[
+ d|\nu_\Gamma|(z)\le c\,Cn^C(1+|s|)^Ce^{nV(s)}\,|dz|.
+\]
+The atoms satisfy $6|t|c_k\le6c\,e^{-\rho n+n\omega(k/n)}$. In the scaled variable $s=z/n$, a point at an atom $-k$ has
+weight at most $c\,e^{n(\omega(k/n)-\rho)}$. Two points at the same atom contribute nothing, because the Vandermonde
+factor vanishes.
+
+\emph{Step 4: the energy bound.} Let $\mu$ be the measure $n^{-1}\sum_i\delta_{z_i/n}$ of mass $3$. Every configuration
+with $k$ points on the contour and $3n-k$ points at the atoms has integrand at most
+\[
+ c^{3n}n^{9n^2}\exp\Bigl(n^2\Bigl[\int\widetilde W\,d\mu+\iint_{s\ne u}\log|s-u|\,d\mu(s)\,d\mu(u)\Bigr]+O(n\log n)\Bigr),
+\]
+where $\widetilde W=V$ on $\Gamma$ and $\widetilde W(-x)=\omega(x)-\rho$ at the atoms. Now
+$\int\widetilde W\,d\mu-I(\mu)=\int(\widetilde W-2U^\sigma)\,d\mu-I(\mu-\sigma)+I(\sigma)$, and
+$\widetilde W-2U^\sigma\le\ell$ on the support of $\mu$, by the two hypotheses and $a^*-\rho\le\ell$. The measure
+$\mu-\sigma$ has total mass $0$. After replacing each point mass by the uniform measure on a circle of radius $n^{-2}$,
+its energy is nonnegative \cite[Lemma~I.1.8]{SaffTotik}. The bound $\sigma(D(s,r))\le A\sqrt r$ shows that this smoothing
+changes $\int U^\sigma d\mu$ by $O(n^{-1})$, and the self-energy of the circles is $O(n^{-1}\log n)$ per $n^2$. Hence the
+bracket is at most $3\ell+I(\sigma)+o(1)$.
+
+\emph{Step 5: the normalization and the tail.} The integral over the unbounded edges converges, because $W_\sigma$
+tends to $-\infty$ linearly in $|\operatorname{Im}s|$ there and the factors $(1+|s|)^C$ are polynomial. The number of
+choices of atoms is at most $(6n+1)^{3n}=e^{O(n\log n)}$. Finally
+$2\sum_{i<3n}\log i!=9n^2\log(3n)-\tfrac{27}2n^2+O(n\log n)$. So
+\begin{align*}
+ \log|J_n|&\le3n\log c+n^2\bigl(3\ell+I(\sigma)+9\log n-9\log(3n)+\tfrac{27}2\bigr)+o(n^2)\\
+ &=3n\log c-(D-o(1))n^2.
+\end{align*}
+All the error terms are uniform in $(a,b)$ and $t$.
+\end{proof}
+
+\begin{remark}
+In the formal proof the contour hypothesis is stated for each large $n$ separately: the contour $\Gamma_n$ may depend on
+$n$, with a bounded number of vertices, and $W_\sigma\le\ell+\eta$ is required on its pieces for every $\eta>0$. The
+statement above, with one fixed contour, is the case we use.
+\end{remark}
+
+\subsection{The wedge certificate}
+We now choose $\Gamma$ and $\sigma$. The line $\operatorname{Re}s=x_0$ used by Lai gives a value of $D$ below the value
+we need. A contour that bends to the right in the upper half-plane lowers the field $V$ along it, and a measure on a
+segment of this contour can follow the bend.
+
+\emph{The contour.} The upper half of $\Gamma$ is the segment from $x_0=8/5$ to $P=21/10+\frac{11}5i$, followed by the
+vertical ray $x_1+iy$, $y\ge11/5$, with $x_1=21/10$. The lower half is its conjugate.
+
+\emph{The measure.} Let $S_+=[A_0,A_1]$ with
+\[
+ A_0=\tfrac{161}{100}+\tfrac{11}{250}i,\qquad A_1=\tfrac{83}{40}+\tfrac{209}{100}i,
+\]
+a segment of the first edge of $\Gamma$. Write $M=(A_0+A_1)/2$ and $h=(A_1-A_0)/2$, and let $\omega_0$ be the arcsine
+probability measure on $[-1,1]$. Put
+\begin{multline*}
+ H(z)=2^{-24}\bigl(107224+76785z+240184z^2+539459z^3-565327z^4\\
+ +3717555z^5-9212693z^6-6236781z^7+16850383z^8\bigr),
+\end{multline*}
+and $f(\cos\varphi)=s_0|H(e^{i\varphi})|^2$, where $s_0>0$ is chosen so that the constant term is $c_0=3/2$. Thus
+$f=\sum_{k\le8}c_kT_k$ with rational coefficients, and $f\ge0$ on $[-1,1]$. Let $s_+$ be the image of $f\,d\omega_0$
+under $x\mapsto M+hx$, let $s_-$ be its conjugate, and put $\sigma=s_++s_-$. Then $\sigma$ has mass $2c_0=3$.
+
+\emph{The constants.} $\ell=-130471/10000$, $\rho=42.94856306$.
+
+\begin{theorem}\label{thm:decay}
+For $\Gamma$, $\sigma$, $\ell$ and $\rho$ as above, the hypotheses of Theorem~\ref{thm:dual} hold, and
+$I(\sigma)\le208871/10^5$. Hence $D\ge33.4401$, and for every $\varepsilon>0$ and all large $n$,
+\[
+ |J_n(a,b,a\zeta(3)+b\zeta(4)+t)|\le c(a,b)^{3n}e^{-(33.4401-\varepsilon)n^2}
+\]
+for all real $a,b$ with $c(a,b)>0$ and all $|t|\le c(a,b)e^{-42.94856306\,n}$.
+\end{theorem}
+
+The constant follows from $D=-\kappa-I(\sigma)-3\ell\ge-\tfrac{27}2+9\log3-2.08871+39.1413>33.4401$. The proof
+occupies the rest of this subsection. It combines closed forms for the potentials (Lemmas~\ref{lem:V}
+and~\ref{lem:joukowski}), a cover of the compact part of $\Gamma$ by $40$ cells (Proposition~\ref{prop:cells}), the energy
+(Lemma~\ref{lem:energy}), the atoms (Lemma~\ref{lem:atoms}) and the tail (Lemma~\ref{lem:tail}). By symmetry under
+conjugation, $W_\sigma(\bar s)=W_\sigma(s)$, so it suffices to treat the upper half of $\Gamma$. The mass bound
+$\sigma(D(s,r))\le A\sqrt r$ holds because a disc of radius $r$ meets each segment in an interval of length at most $2r$,
+whose arcsine mass is $O(\sqrt r)$, and $f$ is bounded.
+
+\begin{remark}\label{rem:Dsharper}
+The certificate gives $D\ge33.44019$ and $I(\sigma)\le2.0886595$. The formal proof records the rounded value $D\ge33.4401$,
+which is all the proof of Theorem~\ref{thm:main} uses. The paper uses the same value.
+\end{remark}
+
+\begin{lemma}[the field]\label{lem:V}
+Put $\kappa_V=12\log3+6\log2-6$ and, with principal logarithms,
+\begin{multline*}
+ \widetilde\Psi(s)=e\bigl[s\log s-s-(s-B)(\log(B-s)+i\pi)+(s-B)\bigr]\\
+ -r\bigl[(s+K)\log(s+K)-(s+K)-s\log s+s\bigr]+2\pi is.
+\end{multline*}
+\begin{enumerate}[label=(\roman*)]
+\item $V(s)=\kappa_V+\operatorname{Re}\widetilde\Psi(s)$ for $\operatorname{Im}s\ge0$.
+\item $\widetilde\Psi$ is analytic off $(-\infty,0]\cup[B,\infty)$, and
+ $\widetilde\Psi''(s)=5/s+3/(B-s)-2/(s+K)$.
+\item For $m\ge2$, $|\widetilde\Psi^{(m)}(s)|\le(m-2)!\bigl(5|s|^{1-m}+3|s-B|^{1-m}+2|s+K|^{1-m}\bigr)$, and
+ $|\widetilde\Psi'(s)|\le5|\log|s||+3|\log|B-s||+2|\log|s+K||+11\pi$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For $\operatorname{Im}s>0$, $\int_0^B\log(s-x)\,dx=s\log s-s-(s-B)\log(s-B)+(s-B)$ with $\log(s-B)=\log(B-s)+i\pi$, and
+$\int_0^K\log(s+x)\,dx=(s+K)\log(s+K)-(s+K)-s\log s+s$. Also $-2\pi\operatorname{Im}s=\operatorname{Re}(2\pi is)$. The real
+parts give (i), and by continuity (i) holds on $(0,B)$. Differentiating gives
+$\widetilde\Psi'=5\log s-3\log(B-s)-2\log(s+K)-\pi i$ and (ii). The bounds (iii) follow from
+$|d^{j}(s-p)^{-1}/ds^j|=j!/|s-p|^{j+1}$ and $|\arg|\le\pi$.
+\end{proof}
+
+The potential of a measure $g\,d\omega_0$ on $[-1,1]$, transported to a segment, has a closed form in the Joukowski
+variable. For $\zeta\notin[-1,1]$ let $\phi=\phi(\zeta)$ be the root of $\phi^2-2\zeta\phi+1=0$ with $|\phi|>1$.
+
+\begin{lemma}[segment potentials]\label{lem:joukowski}
+Let $\nu$ be the image of $g\,d\omega_0$ under $x\mapsto M_c+h_cx$, with $g=g_0+\sum_{k\ge1}g_kT_k\ge0$ a polynomial. For
+$s\notin\operatorname{supp}\nu$ put $\zeta=(s-M_c)/h_c$ and
+\[
+ G(s)=-g_0\log h_c-g_0\log(\phi/2)+\sum_kg_k\phi^{-k}/k .
+\]
+\begin{enumerate}[label=(\alph*)]
+\item $U^\nu=\operatorname{Re}G$, and $G$ is analytic off the segment. On the segment, at $\zeta=\cos\varphi$,
+ $U^\nu=-g_0\log(|h_c|/2)+\sum_k(g_k/k)\cos k\varphi$.
+\item Put $c=(|\zeta-1|+|\zeta+1|)/2$ and $d=(|\zeta+1|-|\zeta-1|)/2$. Then $|\phi|=c+\sqrt{c^2-1}$ and
+ $\operatorname{Re}\phi^{-k}=|\phi|^{-k}T_k(d)$.
+\item With $q=(\phi-\phi^{-1})/2$ one has $d\phi/d\zeta=\phi/q$, $dq/d\zeta=\zeta/q$ and
+ $G'(s)=-\bigl(g_0+\sum_kg_k\phi^{-k}\bigr)/(h_cq)$.
+\item $|G^{(m)}(s)|\le g_0(m-1)!/\operatorname{dist}(s,\operatorname{supp}\nu)^m$ for $m\ge1$, and
+ $\operatorname{dist}(s,\operatorname{supp}\nu)\ge|h_c|(c-1)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) For $x\in[-1,1]$ the classical expansion $\log|\zeta-x|=\log(|\phi|/2)-\sum_k(2/k)T_k(x)\operatorname{Re}\phi^{-k}$
+holds, and $\int T_kT_j\,d\omega_0=\delta_{jk}/2$ for $k\ge1$. Integrating against $g\,d\omega_0$ and adding
+$\log|h_c|$ gives $U^\nu=\operatorname{Re}G$. On the segment, $\phi=e^{i\varphi}$ by continuity. (b) Write
+$\zeta=\cosh(\alpha+i\beta)$ with $\alpha>0$. Then $|\zeta\pm1|=\cosh\alpha\pm\cos\beta$, so $c=\cosh\alpha$,
+$d=\cos\beta$ and $\phi=e^{\alpha+i\beta}$. (c) Differentiate $\phi=\zeta+q$ and $q^2=\zeta^2-1$. (d) Off the support,
+$G^{(m)}(s)=(-1)^m(m-1)!\int(s-u)^{-m}d\nu(u)$, and $\nu$ is positive of mass $g_0$. For the distance,
+$|\zeta-1|+|\zeta+1|\le2|\zeta-x|+2$ for $|x|\le1$.
+\end{proof}
+
+Lemma~\ref{lem:joukowski}(b) evaluates the potential with square roots, one logarithm and the Chebyshev recurrence.
+Part (c) gives all derivatives of $G$ at a point as rational functions of $\phi$, $q$ and $h_c$. Part (d) bounds the
+remainder of a Taylor expansion.
+
+\begin{proposition}[the cells]\label{prop:cells}
+$W_\sigma\le\ell$ on the segment $[x_0,P]$ and on the ray segment $\{x_1+iy:11/5\le y\le33/10\}$.
+\end{proposition}
+
+\begin{proof}
+Parametrize the compact part of the upper half of $\Gamma$ by four arcs: $s=M-h\cosh w$ with
+$0\le w\le146127/500000$, from $A_0$ towards the vertex; $s=M+h\cos\varphi$ with $\varphi=\pi\theta$, $0\le\theta\le1$, the
+support; $s=M+h\cosh w$ with $0\le w\le459681/1000000$, from $A_1$ to $P$; and $s=x_1+iy$ with $11/5\le y\le33/10$. These
+arcs cover $[x_0,P]$ and the ray segment. We cut them into $9$, $26$, $1$ and $4$ cells, with endpoints dyadic in
+$\theta$, on a grid of step $2^{-12}$ in $e^{-w}$, and rational in $y$.
+
+On each cell $t\mapsto W_\sigma(s(t))$ is real analytic, by Lemmas~\ref{lem:V} and~\ref{lem:joukowski}. We bound it by its
+Taylor polynomial of order $4$ at the centre $t_c$ plus a bound for the fifth derivative. The Taylor coefficients of
+$V\circ s$ come from Lemma~\ref{lem:V}(ii) and Fa\`a di Bruno's formula. Those of $U^{s_\pm}\circ s$ come from
+Lemma~\ref{lem:joukowski}(c), and on the support the own potential is the trigonometric polynomial of
+Lemma~\ref{lem:joukowski}(a). The fifth derivative is bounded by Lemma~\ref{lem:V}(iii) and Lemma~\ref{lem:joukowski}(d),
+since the Bell polynomials have nonnegative coefficients and $|s^{(k)}|$ is bounded on each arc by $|h|$,
+$|h|\cosh w$ or $1$.
+
+All values are taken at points where every quantity is rational. On the support the centre is
+$\varphi_c=2\arctan\tau$ with $\tau$ rational, so $\cos\varphi_c$ and $\sin\varphi_c$ are rational. On the other two
+segment arcs the centre is $w_c=-\log\varrho$ with $\varrho$ rational, so $\cosh w_c$ and $\sinh w_c$ are rational. The
+value $\phi(\zeta_c)$ is then rational in the given data, up to the square roots of Lemma~\ref{lem:joukowski}(b), which
+are bounded on both sides by rationals. For the cross potential we choose a rational point $\tilde\phi$ near $\phi_c$ and
+use the exact point $\tilde s=M_c+h_c(\tilde\phi+\tilde\phi^{-1})/2$. The derivatives at $s_c$ differ from those at
+$\tilde s$ by at most $|s_c-\tilde s|\,k!\,g_0/d^{k+1}$, by Lemma~\ref{lem:joukowski}(d), where $d$ is a lower bound for
+the distance to the support. On each of the $40$ cells the resulting upper bound for $W_\sigma$ is below $\ell$. The
+logarithms and $\pi$ enter only through rational enclosures.
+\end{proof}
+
+\begin{lemma}[the tail]\label{lem:tail}
+Let $R_0=2091/1000$, $y_1=33/10$ and $s=x_1+iy$ with $y\ge y_1$. Then $W_\sigma(s)\le g(y):=V(s)+6\log(y+R_0)$ and
+$g'(y)\le5x_1/y-2\pi+6/(y+R_0)$. In particular $W_\sigma\le g(y_1)<\ell$ for $y\ge y_1$.
+\end{lemma}
+
+\begin{proof}
+For $u$ in the support, $|s-u|\le y+|x_1-u|\le y+R_0$, so $-2U^\sigma(s)\le6\log(y+R_0)$. By Lemma~\ref{lem:V},
+$\partial_yV=5\arctan(x_1/y)-3\arctan((x_1-B)/y)-2\arctan((x_1+K)/y)-2\pi$. Since $x_1>B$ the last two terms are
+negative, and $\arctan z\le z$. The bound for $g'$ decreases in $y$ and is $-1.988\ldots$ at $y_1$, so $g$ decreases on
+$[y_1,\infty)$. Finally $g(y_1)=-13.2158\ldots<\ell$.
+\end{proof}
+
+\begin{lemma}[the energy]\label{lem:energy}
+$I(\sigma)=2I(s_+)+2I(s_+,s_-)$, with $I(s_+)=-c_0^2\log(|h|/2)+\sum_kc_k^2/(2k)$, and $I(\sigma)\le208871/10^5$.
+\end{lemma}
+
+\begin{proof}
+The first identity is bilinearity and $I(s_-)=I(s_+)$. By Lemma~\ref{lem:joukowski}(a),
+$I(s_+)=\int U^{s_+}ds_+$ and $\int T_kf\,d\omega_0=c_k/2$. The cross term is
+$I(s_+,s_-)=\pi^{-1}\int_0^\pi g(\varphi)f(\cos\varphi)\,d\varphi$ with $g=U^{s_-}(M+h\cos\varphi)$. We integrate over the
+$26$ support cells. On each, the Taylor polynomial of order $4$ of $gf$ is integrated exactly. The odd terms vanish,
+and the remainder is bounded by the fifth-derivative bounds of the proof of Proposition~\ref{prop:cells}, with
+$|d^j\cos k\varphi/d\varphi^j|\le k^j$.
+\end{proof}
+
+\begin{lemma}[the atoms]\label{lem:atoms}
+Let $\alpha(x)=\omega(x)-2U^\sigma(-x)$ on $[0,6]$. Then $\alpha''\le-49/100$, and with $x^*=2211/500$,
+\[
+ \sup_{[0,6]}\alpha\le\alpha(x^*)+\frac{\alpha'(x^*)^2}{2\cdot49/100}\le\ell+42.94856306 .
+\]
+\end{lemma}
+
+\begin{proof}
+One computes $\omega''(x)=-r/x-r/(K-x)+e/(B+x)-e/x\le-11/24-1/3$ on $(0,6)$. Next
+$-2U^\sigma(-x)=\int\log\bigl((x+\operatorname{Re}u)^2+(\operatorname{Im}u)^2\bigr)d\sigma(u)$, and the second $x$-derivative
+of $\log(v^2+w^2)$ is at most $1/(4v^2)$. Here $v\ge\operatorname{Re}A_0>8/5$, so this term contributes at most
+$3/(4\cdot(8/5)^2)=75/256$. Hence $\alpha''<-0.4987$. A concave function with $\alpha''\le-m$ satisfies
+$\alpha(x)\le\alpha(x^*)+\alpha'(x^*)(x-x^*)-m(x-x^*)^2/2\le\alpha(x^*)+\alpha'(x^*)^2/(2m)$. The values
+$\alpha(x^*)=29.90146\ldots$ and $|\alpha'(x^*)|<10^{-3}$ are computed from Lemma~\ref{lem:joukowski}(a),(b) at the
+rational point $-x^*$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\textup{\ref{thm:decay}}]
+The contour satisfies the definition. The measure $\sigma$ is positive of mass $3$, conjugation-invariant, and satisfies
+the mass bound. By symmetry, Proposition~\ref{prop:cells} and Lemma~\ref{lem:tail}, $W_\sigma\le\ell$ on $\Gamma$. By
+Lemma~\ref{lem:atoms} the second and third hypotheses hold with $a^*=\ell+\rho$. Lemma~\ref{lem:energy} bounds
+$I(\sigma)$, and Theorem~\ref{thm:dual} gives the result.
+\end{proof}
+
+\begin{corollary}\label{cor:families}
+For fixed integers $a,b$ with $b\ne0$, the family $Q_n(X)=J_n(a,b,X)$ satisfies condition (b) of
+Theorem~\ref{thm:criterion} at $\xi=a\zeta(3)+b\zeta(4)$ with $D=33.4401$ and $\rho=42.94856306$. The family
+$f_n(y)=J_n(1,-y,0)$ satisfies it at $\xi=y^*$ with the same constants.
+\end{corollary}
+
+\begin{proof}
+For $Q_n$, $c(a,b)\ge1$ is fixed, and the factor $c^{3n}$ is absorbed into $\varepsilon n^2$. For $f_n$, put
+$y=y^*+t$ with $|t|\le e^{-(\rho+\varepsilon)n}$. Then $f_n(y)=J_n(1,-y,\zeta(3)-y\zeta(4)+t\zeta(4))$, by
+$J_n(1,-y,0)=J_n(1,-y,X_y+t\zeta(4))$ with $X_y=\zeta(3)-y\zeta(4)$. Here $c(1,-y)=3+|y|\le6$, and
+$|t\zeta(4)|\le c(1,-y)e^{-\rho n}$. Theorem~\ref{thm:decay} applies with $c\le6$.
+\end{proof}
+
+%% =====================================================================
+\section{Local bounds for the denominators}\label{sec:local}
+
+The polynomial $J_n(a,b,X)$ has rational coefficients. We bound $v_p(J_n)$ from below for every prime $p$, as a
+Gauss valuation in $(a,b,X)$, and put $m_n=\prod_{p\le6n}p^{-w(n,p)}$ for the resulting lower bounds $w(n,p)$.
+Then $m_nJ_n(a,b,X)$ has integer coefficients. The bounds are of three kinds. For $p>3n$ we use bases of
+$\Z_{(p)}[t]_{<3n}$ adapted to the residues of the nodes (Theorems~\ref{thm:O} and~\ref{thm:B7}). For
+$\sqrt{8n}<p<3n$ we prove an exact law in the first and second order (Theorems~\ref{thm:L1} and~\ref{thm:L2}). For the
+remaining small primes we use Lai's bound.
+
+\subsection{Bases and weighted determinants}
+Write $B(F,G)=L_n(FG)$ for the bilinear form on $\Q[t]_{<3n}$. Its Gram matrix in the monomials has determinant
+$\prod_{i<3n}i!^2\,J_n$, and the monomials form a basis of $\Z_{(p)}[t]_{<3n}$ over $\Z_{(p)}$.
+
+\begin{lemma}\label{lem:gram}
+Let $(f_x)$ be a basis of $\Z_{(p)}[t]_{<3n}$ over $\Z_{(p)}$. Then
+$v_p(J_n)=v_p\det[B(f_x,f_y)]-\nu_p$, where $\nu_p=2\sum_{i<3n}v_p(i!)$. In particular this holds for
+the family
+\[
+ e_{r,i}=(t-\rho_r)^i\prod_{r'\ne r}(t-\rho_{r'})^{\mu_{r'}}\quad(i<\mu_r),\qquad g_j=t^j\prod_{r}(t-\rho_r)^{\mu_r}\quad(j<d),
+\]
+whenever the $\rho_r\in\Z$ are pairwise incongruent modulo $p$ and $\sum_r\mu_r+d=3n$.
+\end{lemma}
+
+\begin{proof}
+A change of basis of determinant $\delta$ multiplies the Gram determinant by $\delta^2$, and $\delta$ is a unit when
+both bases span $\Z_{(p)}[t]_{<3n}$. The family above spans $\Z_{(p)}[t]_{<3n}$ by the Chinese remainder theorem in
+$\F_p[t]$, since the factors $t-\rho_r$ are pairwise coprime modulo $p$. So its change of basis is unimodular.
+\end{proof}
+
+We bound the determinant through the entries. Give each basis element a \emph{potential} $\pi_x\in\frac12\Z$.
+
+\begin{lemma}\label{lem:halfint}
+Let $\cO$ be a discrete valuation ring with $v(p)=1$ and $M$ a symmetric matrix over its fraction field. Suppose the
+indices split into $A$, where $\pi_x\in\Z$, and $B$, where $\pi_x\in\Z+\frac12$, with $v(M_{xy})\ge\pi_x+\pi_y$ on
+$A\times A$ and $B\times B$ and $v(M_{xy})\ge\pi_x+\pi_y+\frac12$ on $A\times B$. Then
+\[
+ v(\det M)\ge2\sum_x\pi_x+\operatorname{corank}\overline N_{BB},
+\]
+where $\overline N_{BB}$ is the reduction modulo $p$ of $(p^{-\pi_x-\pi_y}M_{xy})_{x,y\in B}$. The same holds with
+the roles of $A$ and $B$ exchanged.
+\end{lemma}
+
+\begin{proof}
+Over $\cO[\varpi]$ with $\varpi^2=p$, put $N=D^{-1}MD^{-1}$ with $D=\operatorname{diag}(\varpi^{2\pi_x})$. The
+$A\times B$ entries of $N$ lie in $\varpi\cO[\varpi]$. Multiplying the $B$ rows by $\varpi$ and the $B$ columns by
+$\varpi^{-1}$ gives a matrix $Z$ over $\cO$ with $\det Z=\det N$, whose reduction is block triangular with diagonal
+blocks $\overline N_{AA}$ and $\overline N_{BB}$. So the reduction has rank at most $|A|+\operatorname{rank}\overline N_{BB}$,
+and the Smith form gives $v(\det Z)\ge\operatorname{corank}\overline N_{BB}$.
+\end{proof}
+
+We also use the elementary fact that $\sum_{s\in\F_p}H(s)=0$ for every $H\in\F_p[s]$ of degree at most $p-2$.
+
+\subsection{The nodes}
+For a node $k=s+\ell p$ with $0\le s<p$, write $L_n(F)=\sum_kN_k(F)$ with $N_k(F)=c_k\bigl(U_kF'(-k)+V_kF(-k)\bigr)$.
+Write $6n=q_6p+r_6$ and $2n=q_2p+r_2$ with $0\le r_6,r_2<p$. The residues $s\in[0,p)$ fall into four classes, each an
+interval:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+class & residues & $\sigma(s)$ & $L_s$\\
+\midrule
+$A$ & $s\le r_6$, $s<p-r_2$ & $0$ & $q_6$\\
+$B$ & $s\le r_6$, $s\ge p-r_2$ & $3$ & $q_6$\\
+$C$ & $s>r_6$, $s<p-r_2$ & $2$ & $q_6-1$\\
+$D$ & $s>r_6$, $s\ge p-r_2$ & $5$ & $q_6-1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The nodes of residue $s$ are $k=s+\ell p$ with $0\le\ell\le L_s$.
+
+\begin{lemma}[node valuations]\label{lem:N}
+Let $8n<p^2$ and $k=s+\ell p\le6n$.
+\begin{enumerate}[label=(\roman*)]
+\item $v_p(c_k)=\sigma(s)$.
+\item If $\ell\ge1$, then $U_k=p^{-3}u_\ell b+O(p^{-2})$ and $V_k=p^{-4}v_{s,\ell}b+O(p^{-3})$, with $u_\ell=-2H_\ell(3)$,
+ $v_{s,\ell}=-2(H_\ell(3)\delta_{s,\ell}+3H_\ell(4))$ and $\delta_{s,\ell}=5H_\ell-3H_{\ell'}-2H_{\ell''}$, where
+ $\ell'=\lfloor(2n+k)/p\rfloor$ and $\ell''=\lfloor(6n-k)/p\rfloor$. The terms in $a$ are smaller by one power of $p$,
+ and the term in $X$ is $p$-integral.
+\item If $\ell=0$, then $v(U_k)\ge0$ and $v(V_k)\ge-1$.
+\end{enumerate}
+Consequently, if $F=(t+s)^mR$ with $R\in\Z_{(p)}[a,b,X][t]$, then $v(N_k(F))\ge\sigma(s)-4+m$ for $\ell\ge1$, and
+$v(N_k(F))\ge\sigma(s)-1+\min(m,1)$ for $\ell=0$, with $N_k(F)=0$ if $\ell=0$ and $m\ge2$.
+\end{lemma}
+
+\begin{proof}
+Since $6n<p^2$, all numbers involved have at most two digits in base $p$. By Kummer's theorem $v_p\binom{6n}k$ is the
+number of carries in $k+(6n-k)$, which is $[s>r_6]$, and $v_p\binom{2n+k}k=[s\ge p-r_2]$. This gives (i). The
+multiples of $p$ up to $k$, $2n+k$ and $6n-k$ are $ip$ with $i\le\ell$, $\ell'$, $\ell''$, so
+$H_k(j)=p^{-j}H_\ell(j)+O(1)$ and $d_k=p^{-1}\delta_{s,\ell}+O(1)$. This gives (ii) and (iii). Finally
+$F(-k)=(-\ell p)^mR(-k)$ and $F'(-k)=O(p^{m-1})$.
+\end{proof}
+
+\subsection{Lai's bound and the large primes}
+The following bounds are Lai's \cite[Lemma~4.1]{Lai2026}, read for the Gauss valuation.
+
+\begin{proposition}\label{prop:crude}
+For every prime $p$, $v_p(J_n)\ge-12n\lfloor\log_p(8n)\rfloor$. If $p>6n$, then $v_p(J_n)\ge0$.
+\end{proposition}
+
+\begin{proof}
+Take the binomial basis $\binom ti$, $i<3n$. Its change of basis from the monomials has determinant
+$\prod_{i<3n}i!^{-1}$, so $J_n=\det\bigl[B(\binom ti,\binom tj)\bigr]$. The values of $\binom ti$ and its derivative at
+the integers $-k$ have $v_p\ge-\lfloor\log_pi\rfloor$. The numbers $H_k(j)$ with $k\le8n$ have $v_p\ge-j\lfloor\log_p(8n)\rfloor$.
+Each entry therefore has $v_p\ge-4\lfloor\log_p(8n)\rfloor$, and the determinant has $3n$ rows. For $p>6n$ all
+quantities are $p$-integral.
+\end{proof}
+
+\begin{theorem}\label{thm:O}
+Let $3n<p\le7n/2$. Then $v_p(J_n)\ge-6(p-2n)$.
+\end{theorem}
+
+\begin{proof}
+Here $q_6=1$, $r_6=6n-p$, $q_2=0$ and $r_2=2n$. Put $\alpha=p-2n$. The residues $s<\alpha$ form the class $A$, those in
+$[\alpha,6n-p]$ the class $B$, and the rest the class $D$. Take $\rho_r=-r$ and $\mu_r=2$ for $r<\alpha$, the other
+$\mu_r=0$, and $d=7n-2p$. The potentials are $-2,-1$ for $e_{r,0},e_{r,1}$ and $0$ for the $g_j$. Then
+$2\sum\pi=-6\alpha$ and $\nu_p=0$. By Lemma~\ref{lem:N} every entry has $v\ge\pi_x+\pi_y$, except the entries
+$B(g_i,g_j)$ at the nodes $s+p$ with $s\in B$, which have $v\ge-1$. Their coefficient of $p^{-1}$ is a constant times
+\[
+ \sum_{s\in B}\hat c_s\,\Pi(-s)^2(-s)^{i+j},\qquad \Pi=\prod_{r<\alpha}(t+r)^2,
+\]
+where $\hat c_s$ is the unit part of $c_{s+p}$. By the theorem of Anton and Granville on binomial coefficients modulo
+$p$, $\hat c_s\Pi(-s)^2$ is a constant multiple of $\prod_{i<\alpha}(s-i)\prod_{j=1}^{2p-6n-1}(s+j)^2$ on $B$. This
+polynomial vanishes on $A$ and $D$ and its product with $s^{i+j}$ has degree at most $p-4$. So the sum over $B$ equals
+the sum over $\F_p$, which is $0$. Lemmas~\ref{lem:gram} and~\ref{lem:halfint} give the bound.
+\end{proof}
+
+Lai's bound in this range is $5n-4p$, so Theorem~\ref{thm:O} gains $7n-2p$.
+
+\begin{theorem}\label{thm:B7}
+Let $n\ge10$, $7n<2p$ and $p\le6n$. Then $v_p(J_n)\ge w_7(n,p)$, where
+\[
+ w_7(n,p)=\begin{cases}-2n-2p,&p\le4n,\\-18n+2p-2,&4n<p,\ 2p\le9n,\\-54n+10p-10,&2p>9n.\end{cases}
+\]
+\end{theorem}
+
+These are Lai's bounds \cite[Lemma~5.4]{Lai2026}. We give a short proof by a basis with shifted roots, which works
+for the polynomial in $(a,b,X)$.
+
+\begin{proof}
+Put $\alpha=p-2n$ and $A_6=6n-p$. Every node is $k=s+\ell p$ with $\ell\in\{0,1\}$, and $\ell=1$ only for $s\le A_6$.
+Choose integers $D_0,t_0,N_0\ge0$ with $D_0=\min(\alpha,A_6+1)$, $t_0\le D_0$, $t_0+D_0+N_0=3n$, $t_0=D_0$ if $N_0>0$,
+and $D_0+N_0\le\alpha$. Put $\rho_r=-(r+p)$ for $r<D_0$ and $\rho_r=-r$ otherwise, and let $\mu_r=2$ for $r<t_0$,
+$\mu_r=1$ for $t_0\le r<D_0+N_0$, and $\mu_r=0$ otherwise. Give $e_{r,i}$ the potential $i-2$ for $r<D_0$, and
+potential $1$ for $D_0\le r<D_0+N_0$.
+
+The root $-(r+p)$ sits on the node $k=r+p$ itself. If $F$ has a zero of order at least $2$ there, then
+$F(-k)=F'(-k)=0$ and $N_k(F)=0$. This replaces Lai's rank condition at these nodes. At the node $k=r$ the factor
+$(t+r+p)^m$ has value $p^m$, so $v(N_r(F))\ge\sigma(r)+m-1$. For $A_6<s<\alpha$ all harmonic numbers in $V_s$ have
+indices below $p$, so $v(V_s)\ge0$ and $v(N_s(F))\ge\sigma(s)=2$. With Lemma~\ref{lem:N} for the other nodes, every
+entry satisfies $v\ge\pi_x+\pi_y$. Lemmas~\ref{lem:gram} and~\ref{lem:halfint} give
+$v_p(J_n)\ge2\sum\pi=2(N_0-t_0-2D_0)$, since $\nu_p=0$. The choices
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+range & $D_0$ & $t_0$ & $N_0$\\
+\midrule
+$p\le4n$ & $\alpha$ & $5n-p$ & $0$\\
+$4n<p$, $2p\le9n+1$ & $A_6+1$ & $p-3n-1$ & $0$\\
+$2p\ge9n+2$ & $A_6+1$ & $D_0$ & $2p-9n-2$\\
+\bottomrule
+\end{tabular}
+\end{center}
+give $2(N_0-t_0-2D_0)=w_7(n,p)$ in the three ranges. For $2p=9n+1$ the bound obtained is larger than $w_7$.
+\end{proof}
+
+\subsection{The law in the range \texorpdfstring{$\sqrt{8n}<p<3n$}{sqrt(8n) < p < 3n}}
+Lai's bound in this range \cite[Lemma~4.4]{Lai2026} is a greedy count. The $j$-th index of the residue $s$ costs the
+\emph{increment} $2j-6+\sigma(s)$, plus $3$ if $j>2L_s$, and Lai's bound is the sum of the $3n$ smallest increments
+minus $\nu_p$. We call this sum $\Lex(n,p)$. Let $\lambda$ be the largest increment taken and $d$ the number of
+increments taken that equal $\lambda$. Let $\mu_s$ be the number of indices of $s$ with increment below $\lambda$, so
+that $d=3n-\sum_s\mu_s$. The two classes with $\sigma\equiv\lambda\pmod2$ are the \emph{tie classes}: $(A,C)$ if $\lambda$
+is even and $(B,D)$ if $\lambda$ is odd. Let $Z$ be the smaller tie class, $W$ the larger, and $\mathcal N$ the union
+of the other two classes. Put
+\[
+ x_1=\max\bigl(0,\min(d-|Z|,|W|-d)\bigr),\qquad x_2=\max(0,x_1-|\mathcal N|).
+\]
+
+\begin{lemma}[shape of the greedy]\label{lem:S}
+Let $\sqrt{8n}<p<3n$. Then $\lambda\ge0$, every residue $r$ satisfies $2\mu_r+\sigma(r)=\lambda+4+[r\in\mathcal N]$, and
+every tie residue satisfies $\mu_r+1\le2L_r$. Moreover
+\begin{equation}\label{eq:lemT}
+ 2d+|\mathcal N|+2=p(2q_6-3q_2-2-\lambda).
+\end{equation}
+If $x_2>0$, then $\lambda=2q_6-3q_2-3$, $2d+2=|Z|+|W|$, $x_1=d-|Z|$ and $x_2=x_1-|\mathcal N|$.
+\end{lemma}
+
+\begin{proof}
+The indices with negative increment are $j\le2$ on $A$ and $j=1$ on $B$ and $C$. There are $r_6+1+p-r_2<3n$ of
+them, as one checks in the three ranges $p\le3n/2$, $3n/2<p\le2n$ and $2n<p<3n$. So $\lambda\ge0$. The increment of the
+index $2L_c$ of a class $c$ is $T_c=4L_c-6+\sigma_c$, and the smallest is $T_C=4q_6-8$. At least
+$12n-2p-r_6-r_2+1\ge3n$ indices have increment at most $4q_6-7$, so $\lambda\le T_c+1$ for every class. On a tie class
+the parity then gives $\lambda\le T_c$. Hence the cap $j>2L$ is never reached, and the classes are filled up to
+$\lambda$, which is the formula for $\mu_r$. Summing it over $r$, with
+$\sum_r\sigma(r)=2(p-1-r_6)+3r_2$ and $3r_2-r_6=p(q_6-3q_2)$, gives \eqref{eq:lemT}. Write
+$k=2q_6-3q_2-2-\lambda\ge1$. If $x_2>0$ and $k\ge2$, then $2|Z|+3|\mathcal N|<2$, so all residues lie in one class.
+That class contains $0$, hence is $A$, and then $r_6=p-1$ and $r_2=0$, which contradicts $r_6\equiv3r_2\pmod p$. So $k=1$
+and the remaining identities follow.
+\end{proof}
+
+The unit parts of the weights are controlled by a product formula. By Anton and Granville's theorem
+\cite[Lemma~2.3]{Lai2026} the unit part of $c_{s+\ell p}$ is $\kappa_c(\ell)\hat c_s$ modulo $p$, where $\kappa_c(\ell)$
+depends only on the class $c$ and on $\ell$, and $\hat c_s$ is a product of factorials of the low digits.
+
+\begin{lemma}\label{lem:U}
+Put $w_s=\hat c_s\prod_{r\ne s}(r-s)^{2\mu_r}$ and $Q(s)=\prod_{\beta\in\mathcal N}(s-\beta)$. On each tie class $c$
+there is $K_c\in\F_p^\times$ with $w_s\equiv K_cQ(s)$.
+\end{lemma}
+
+\begin{proof}
+Inside a class, $\hat c_{s+1}/\hat c_s\equiv(s-r_6)^2(s-b_\varepsilon)^3(s-p+1)^{-5}$ with $b_\varepsilon=p-r_2-1$. The ratio of
+the products is $\prod_{r\ne s}(r-s)^{2(\mu_{r+1}-\mu_r)}$, and the exponent is nonzero only at the class boundaries
+$r_6$, $b_\varepsilon$ and $p-1$. By Lemma~\ref{lem:S}, $2(\mu_{b+1}-\mu_b)=-(\sigma_{b+1}-\sigma_b)+([b+1\in\mathcal N]-[b\in\mathcal N])$.
+The jumps of $\sigma$ cancel the exponents from $\hat c$, and what remains is
+$\prod_b(s-b)^{[b+1\in\mathcal N]-[b\in\mathcal N]}=Q(s+1)/Q(s)$.
+\end{proof}
+
+\begin{theorem}\label{thm:L1}
+For every prime $\sqrt{8n}<p<3n$, $v_p(J_n)\ge\Lex(n,p)+x_1$.
+\end{theorem}
+
+\begin{proof}
+Take the family of Lemma~\ref{lem:gram} with $\rho_r=-r$, the multiplicities $\mu_r$ and $d$ as above. Give $e_{r,i}$
+the potential $i-2+\sigma(r)/2$ and each $g_j$ the potential $\lambda/2$. Then $2\sum\pi$ is the sum of the $3n$ smallest
+increments, by Lemma~\ref{lem:S}.
+
+\emph{Entries.} By Lemmas~\ref{lem:N} and~\ref{lem:S}, every entry has $v\ge\pi_x+\pi_y$, and equality can occur only
+for two elements of one residue, or for a pair involving the $g_j$ at a tie residue. The elements of tie classes and
+the $g_j$ have potentials of the same parity, and Lemma~\ref{lem:halfint} applies with this group in the role of $B$.
+
+\emph{The reduced form.} By Lemma~\ref{lem:N}, the reduction of the tie part is
+$\overline N_T=\sum_{s\in Z\cup W}w_sE_s^{\top}H_{c(s)}E_s$. Here $E_s$ maps a coefficient vector $(x,h)$ to
+$(x_{s,0},\dots,x_{s,\mu_s-1},h(s))$, with $h(s)=\sum_jh_j(-s)^j$, and $H_c$ is a Hankel matrix
+$(\Phi_c(i+i'))_{i,i'\le\mu_c}$ of class constants. We replace the numbers $\Phi_c(m)$ of each tie class by independent
+indeterminates. The actual matrix is a specialization of this generic matrix, and the rank does not increase under
+specialization. So it suffices to find $x_1$ independent kernel vectors of the generic matrix.
+
+\emph{Kernel vectors.} Let $h\in\F[s]$ vanish on $Z$, with $\deg h\le\min(d-1,|Z|+|W|-d-1)$. For $s\in W$ put
+$x_s=-H_\mu^{-1}\varphi\,h(s)$, where $H_\mu$ is the leading $\mu\times\mu$ block of $H_W$ and $\varphi=(\Phi_W(i+\mu))_{i<\mu}$,
+and put $x=0$ elsewhere. Then $H_WE_s(x,h)=(0,\kappa_Wh(s))$ with $\kappa_W=\Phi_W(2\mu)-\varphi^{\top}H_\mu^{-1}\varphi$. The
+pairing of $(x,h)$ with any $(x',h')$ is
+\[
+ \kappa_W\sum_{s\in W}w_sh(s)h'(s)=\kappa_WK_W\sum_{s\in\F_p}Q(s)h(s)h'(s),
+\]
+by Lemma~\ref{lem:U}, because $h=0$ on $Z$ and $Q=0$ on $\mathcal N$. The polynomial $Qhh'$ has degree at most
+$|\mathcal N|+(|Z|+|W|-d-1)+(d-1)=p-2$, so the sum vanishes. The admissible $h$ form a space of dimension $x_1$.
+
+Lemmas~\ref{lem:gram} and~\ref{lem:halfint} now give $v_p(J_n)\ge2\sum\pi+x_1-\nu_p$.
+\end{proof}
+
+%% =====================================================================
+\section{The second level of the law}\label{sec:second}
+
+\begin{theorem}\label{thm:L2}
+For every prime $\sqrt{8n}<p<3n$, $v_p(J_n)\ge\Lex(n,p)+x_1+x_2$.
+\end{theorem}
+
+If $x_2=0$ this is Theorem~\ref{thm:L1}, so we assume $x_2>0$. By Lemma~\ref{lem:S},
+\begin{equation}\label{eq:deg}
+ \lambda=2q_6-3q_2-3,\qquad 3|\mathcal N|+2|Z|+2x_2-2=p-4 .
+\end{equation}
+The idea is as follows. In Theorem~\ref{thm:L1} the gain came from a kernel of the reduced form. Here we need one more
+unit of valuation for $x_2$ elements. We raise their potentials, and we show that the entries still meet the
+required bounds. Most pairs meet them by the node valuations, if the basis elements at a residue of $W$ are built
+from local orthogonal polynomials. The remaining pairs need a sum over $W$ to vanish modulo $p$ or modulo $p^2$. The
+second of these sums is a Faulhaber sum plus a sum of harmonic numbers. The two have opposite totals by
+\eqref{eq:deg}, and they cancel.
+
+Let $W$ have the digit flags $\beta_W=[W\subseteq C\cup D]$ and $\varepsilon_W=[W\subseteq B\cup D]$, and write
+$\sigma=\sigma_W$, $L=L_W$, $\mu=\mu_W$ and $w=|W|$. Put $\mu'_r=\mu_r+1$ for $r\notin W$ and $\mu'_r=\mu$ on $W$.
+
+\subsection{Generic node constants}
+By Lemma~\ref{lem:N}, the nodes $k=s+\ell p$ with $s\in W$ and $1\le\ell\le L$ have leading constants
+$\tau_\ell=(\kappa_\ell u_\ell,\kappa_\ell v_\ell)$, independent of $s\in W$. We replace them by indeterminates. Let
+$T=(T^u_\ell,T^v_\ell)_{1\le\ell\le L}$ and define $L_T$ by adding
+$b\,p^{\sigma-4}\mathrm{cl}_k\bigl[(T^u_\ell-\kappa_\ell u_\ell)\,pF'(-k)+(T^v_\ell-\kappa_\ell v_\ell)F(-k)\bigr]$ to $N_k(F)$
+at these nodes, where $\mathrm{cl}_k$ is a fixed integer lift of the unit part of $c_k/\kappa_\ell$. Let $J_n(T)$ be the
+determinant for $L_T$. At $T=\tau$ it is $J_n$, and $\tau$ is $p$-integral, so $v_p(J_n)\ge v_p(J_n(T))$ for the Gauss
+valuation in $(a,b,X,T)$. From now on $\cO$ is the valuation ring of this Gauss valuation on $\Q_p(a,b,X,T)$.
+
+\begin{lemma}\label{lem:H}
+Let $1\le L<p$ and $0\le\mu\le2L$, and let $\cL_T(\Phi)=\sum_{\ell=1}^L\bigl(T^v_\ell\Phi(-\ell)+T^u_\ell\Phi'(-\ell)\bigr)$.
+Then $\det(\cL_T(y^{i+j}))_{i,j<\mu}$ is a nonzero element of $\F_p[T]$.
+\end{lemma}
+
+\begin{proof}
+Specialize. If $\mu\le L$, put $T^v_\ell=1$ for $\ell\le\mu$ and all other $T=0$. If $\mu>L$, put $T^u_\ell=1$ for
+$\ell\le\mu-L$, $T^v_\ell=1$ for $\mu-L<\ell\le L$, and all other $T=0$. In both cases the form
+$(\phi,\psi)\mapsto\cL(\phi\psi)$ on $\F_p[y]_{<\mu}$ is, by the Chinese remainder theorem, an orthogonal sum of the
+nondegenerate local forms $\phi\psi(-\ell)$ and $(\phi\psi)'(-\ell)$, since the nodes $-\ell$ are distinct modulo $p$.
+\end{proof}
+
+So there is a polynomial $A(y)=\sum_{j\le\mu}A_jy^j$ over $\cO$, with leading coefficient $A_\mu=\Delta$ a unit of $\cO$
+(the Hankel determinant of Lemma~\ref{lem:H}), such that $\cL_T(y^iA)=0$ for $i<\mu$. For $s\in W$ put
+\[
+ P_s(t)=\sum_{j\le\mu}A_jp^{\mu-j}(t+s)^j .
+\]
+Then $P_s(-s-\ell p)=p^\mu A(-\ell)$ and $pP_s'(-s-\ell p)=p^\mu A'(-\ell)$. The polynomial $P_s$ is a root-shifted
+form of $\Delta(t+s)^\mu$: it is congruent to it modulo $p$.
+
+\subsection{The basis}
+Put $\Pi=\prod_{s\in W}P_s\prod_{r\notin W}(t+r)^{\mu'_r}$ and take
+\[
+ e_{r,i}=\frac{(t+r)^i\Pi}{(t+r)^{\mu'_r}}\ (r\notin W,\ i<\mu'_r),\qquad e_{s,i}=\frac{(t+s)^i\Pi}{P_s}\ (s\in W,\ i<\mu),
+\]
+and $g_j=t^j\Pi$ for $j<x_2$.
+The count is $\sum_r\mu_r+|Z|+|\mathcal N|+x_2=3n$, by Lemma~\ref{lem:S}. Since $P_s\equiv\Delta(t+s)^\mu$ modulo $p$,
+this is a basis of $\cO[t]_{<3n}$ with unimodular change of basis, as in Lemma~\ref{lem:gram}. The potentials are
+$\pi(e_{r,i})=i-2+\sigma(r)/2$ and $\pi(g_j)=\lambda/2+1$. By Lemma~\ref{lem:S} and \eqref{eq:deg},
+\begin{align*}
+ 2\sum\pi&=\sum_{\text{$3n$ smallest}}(\text{increments})+|Z|\lambda+|\mathcal N|(\lambda+1)+x_2(\lambda+2)-d\lambda\\
+ &=\Lex(n,p)+\nu_p+x_1+x_2,
+\end{align*}
+using $d=|Z|+|\mathcal N|+x_2$. So it suffices to show $v(L_T(f_xf_y))\ge\pi_x+\pi_y$ for every pair, with the
+half-integral refinement of Lemma~\ref{lem:halfint} between the two parity groups, and corank $0$.
+
+\subsection{Node jets}
+For $F\in\cO[t]$ and a node $k$ put
+\[
+ \nu_k(F)=\min\bigl(v F(-k),\,v(pF'(-k))\bigr).
+\]
+The map
+$F\mapsto(F(-k),pF'(-k))$ is multiplicative for the product
+\[
+ (f_0,f_1)(g_0,g_1)=(f_0g_0,\,f_0g_1+f_1g_0),
+\]
+so
+$\nu_k(FG)\ge\nu_k(F)+\nu_k(G)$. Also $\nu_k(t+r)\ge[r\equiv k]$, and $\nu_k(P_s)\ge\mu[s\equiv k]$.
+
+\begin{lemma}[harmonic digits]\label{lem:Hdig}
+Let $m=cp+e$ with $0\le e<p$ and $c<p$. Then $H_m-p^{-1}H_c-H_e\in p\Z_{(p)}$. For $k=\ell p+s\le6n$,
+\[
+ d_k+p^{-1}\delta_{s,\ell}+\lambda_0(s)\in p\Z_{(p)},\qquad
+ \lambda_0(s)=3H_{r_2+s-\varepsilon p}+2H_{r_6-s+\beta p}-5H_s,
+\]
+with $(\beta,\varepsilon)=([s>r_6],[s\ge p-r_2])$.
+\end{lemma}
+
+\begin{proof}
+The terms $i=jp$ of $H_m$ give $p^{-1}H_c$. Every other term satisfies $1/(jp+i)-1/i\in p\Z_{(p)}$, which leaves
+$cH_{p-1}+H_e$, and $H_{p-1}\in p\Z_{(p)}$. Apply this to $k$, $2n+k$ and $6n-k$, whose digits are $(\ell,s)$,
+$(q_2+\ell+\varepsilon,r_2+s-\varepsilon p)$ and $(q_6-\ell-\beta,r_6-s+\beta p)$.
+\end{proof}
+
+By the same digit expansion of the factorials, $c_k=p^\sigma\kappa_\ell\mathrm{cl}_k$ modulo $p^{\sigma+2}$ with
+$\mathrm{cl}_k\equiv\bar c_s(1+p\ell\lambda_0(s))$ modulo $p^2$, where $\bar c_s$ is an integer lift of
+$\hat c_s(1+pe_0(s))$ and $e_0(s)=-2(q_6-\beta)H_{r_6-s+\beta p}+3(q_2+\varepsilon)H_{r_2+s-\varepsilon p}$.
+
+\begin{lemma}[node jets]\label{lem:J}
+Let $k=\ell p+s$ with $\ell\ge1$, $s\in W$, and $F\in\cO[t]$ with $\nu_k(F)\ge e$. Put $f_0=F(-k)$ and $f_1=pF'(-k)$.
+Then the node term of $L_T$ at $k$ satisfies
+\begin{multline*}
+ N^T_k(F)\equiv b\,p^{\sigma-4}\mathrm{cl}_k\bigl[T^u_\ell f_1+T^v_\ell f_0\bigr]-b\,p^{\sigma-3}\kappa_\ell\mathrm{cl}_k\lambda_0(s)u_\ell f_0\\
+ +a\,p^{\sigma-3}\kappa_\ell\mathrm{cl}_k\bigl[u^a_\ell f_1+v^a_\ell f_0\bigr]
+\end{multline*}
+modulo $p^{\sigma-2+e}$, with $u^a_\ell=-3H_\ell(2)$ and $v^a_\ell=-3(\delta_{s,\ell}H_\ell(2)+2H_\ell(3))$. At the other
+nodes with $\ell\ge1$, $v(N_k(F))\ge\sigma(s)-4+\nu_k(F)$. At the nodes $k=s<p$, $v(N_s(F))\ge\sigma(s)-1+\nu_s(F)$.
+\end{lemma}
+
+\begin{proof}
+$N_k(F)=c_k(U_kp^{-1}f_1+V_kf_0)$. By Lemma~\ref{lem:Hdig},
+$U_k=p^{-3}(bu_\ell+pau^a_\ell)+O(1)$ and $V_k=p^{-4}(bv_\ell+pav^a_\ell)-p^{-3}b\lambda_0u_\ell+O(p^{-2})$. Add the
+modification of $L_T$. The $b$-terms then carry the factor $c_k/p^\sigma-\kappa_\ell\mathrm{cl}_k\equiv0$ modulo $p^2$.
+For $\ell=0$, $v(U_s)\ge0$ and $v(V_s)\ge-1$.
+\end{proof}
+
+\subsection{Pairs at the residues of \texorpdfstring{$W$}{W}}
+For an element $X$ of the basis and a residue $s$ let $\operatorname{ord}_s(X)$ be $i$ if $X=e_{s,i}$ and $\mu'_s$
+otherwise, and put $\delta_X(s)=\pi_X-\operatorname{ord}_s(X)-(\sigma(s)-4)/2$. By Lemma~\ref{lem:J} a pair $(X,Y)$ meets
+its bound at all nodes of residue $s$ if $\delta_X(s)+\delta_Y(s)\le0$ (same parity group) or $\le-\frac12$ (different
+groups). By Lemma~\ref{lem:S}, $\delta_X(s)$ is $\pi_X-\lambda/2-1$ at $s\in Z$, $\pi_X-\lambda/2-\frac32$ at
+$s\in\mathcal N$, and $\pi_X-\lambda/2$ at $s\in W$ when $X$ is not an element of $s$. The largest potentials are
+$\lambda/2+1$ for the $g_j$, $\lambda/2+\frac12$ for the top elements of $\mathcal N$, $\lambda/2$ for the top elements of
+$Z$, and $\lambda/2-\frac12$ for the second elements of $\mathcal N$. All others are at most $\lambda/2-1$. A direct
+check gives:
+\begin{itemize}
+\item at the residues of $Z$ and $\mathcal N$ every pair meets its bound;
+\item at the residues of $W$ the only pairs that do not are (a) an element of $s$ with $g_j$ or with a top element of
+ $\mathcal N$, with deficit $1$; (b) $g_j$ with a top element of $Z$ or a second element of $\mathcal N$, and two top
+ elements of $Z$ and $\mathcal N$ or of $\mathcal N$, with deficit $1$; (c) $g_j$ with $g_{j'}$ or with a top element of
+ $\mathcal N$, with deficit $2$.
+\end{itemize}
+The nodes $k=s<p$ have room $3$, so only the nodes with $\ell\ge1$ matter.
+
+\begin{lemma}[own pairs]\label{lem:own}
+Let $s\in W$, $i<\mu$, and let $Y$ be a basis element with the factor $P_s$. Then
+$\sum_{\ell}N^T_{s+\ell p}(e_{s,i}Y)\equiv0$ modulo $p^{\sigma-3+\mu+i}$.
+\end{lemma}
+
+\begin{proof}
+Write $e_{s,i}Y=(t+s)^iP_sR$. The jet at the node $\ell$ is
+\[
+ p^{\mu+i}\bigl((y^iA)(-\ell),\,(y^iA)'(-\ell)\bigr)R(-s)
+\]
+plus higher terms. By Lemma~\ref{lem:J} the sum is $b\,p^{\sigma-4+\mu+i}\bar c_sR(-s)\cL_T(y^iA)$ modulo
+$p^{\sigma-3+\mu+i}$, and $\cL_T(y^iA)=0$.
+\end{proof}
+
+For the pairs (b) and (c), write $XY=P_s^2R_s$ for $s\in W$. Then $XY=\Pi^2\phi$ for a rational function $\phi$, and we
+put $\psi(x)=\phi(-x)$ and $G=\hat Q\psi$, with $\hat Q(x)=\prod_{r\notin W}(x-r)^{m_r}$, where $m_r=3$ on $\mathcal N$ and
+$2$ on $Z$. Then $G$ is a polynomial, of degree at most $3|\mathcal N|+2|Z|+2x_2-2=p-4$ by \eqref{eq:deg}. It vanishes
+at every residue outside $W$, to order at least $2$ for the pairs (c).
+
+\begin{lemma}[unit parts on $W$]\label{lem:R}
+For $s\in W$ put $f(s)=\hat c_s\prod_{r\ne s}(r-s)^{2\mu'_r}$. There is a unit $K$ with
+$f(s)\equiv K\hat Q(s)\bigl(1+p\,\Xi(s)\bigr)$ modulo $p^2$, where
+$\Xi(s)=(\lambda-1)H_s-2\beta_WH_{r_6+p-s}+3(1-\varepsilon_W)H_{r_2+s}$.
+\end{lemma}
+
+\begin{proof}
+Write the products over class intervals as factorials of numbers in $[0,p)$. Reflect the factorials whose argument
+decreases with $s$ by $m!(p-1-m)!\equiv(-1)^m(p-1)!(1+pH_m)$ modulo $p^2$. This produces the harmonic factor and leaves
+a rational function $\prod_i(s+\alpha_i)!^{e_i}$ with $\sum_ie_i=0$. Its ratio at $s+1$ and $s$ agrees with
+$\hat Q(s+1)/\hat Q(s)$ modulo $p$, by the argument of Lemma~\ref{lem:U}. So the quotient by $\hat Q$ is invariant under
+translation, with divisor supported on $\F_p$. It is a unit at the points of $W$, so it is constant.
+\end{proof}
+
+We need two facts about sums over a complete residue system. First, for $G\in\Z_{(p)}[x]$ of degree at most $p-4$,
+\begin{equation}\label{eq:faulhaber}
+ \sum_{s<p}G(s)\equiv p\int G\pmod{p^2},\qquad \int G:=\sum_eg_eB_e,
+\end{equation}
+where $G=\sum_eg_ex^e$ and $B_e$ are the Bernoulli numbers with $B_1=-\frac12$. This is Faulhaber's formula. Second,
+$\sum_{m<p}m^eH_m\equiv B_e\pmod p$ for $e\le p-4$. Hence, if $G$ vanishes to order $2$ at every residue outside $W$ and
+$x(s)$ is $s+\alpha$ or $c-s$ with $x(W)\subseteq[0,p)$, then
+\begin{equation}\label{eq:shift}
+ \sum_{s\in W}G(s)H_{x(s)}\equiv\int G\pmod p .
+\end{equation}
+For $x=c-s$ this follows from $H_{p-1-m}\equiv H_m$. For $x=s+\alpha$, the residues $s+\alpha$ run over a complete
+system as $s$ runs over $W$ and its complement, the terms off $W$ vanish, and the shift
+$\int G(x+1)=\int G+G'(0)$ changes $\int G$ only by values of $G'$ at residues outside $W$, which vanish.
+
+\begin{lemma}[window sums]\label{lem:W}
+Let $(X,Y)$ be a pair of type (b) or (c) at the residues of $W$. Then
+$v\bigl(\sum_{s\in W}\sum_\ell N^T_{s+\ell p}(XY)\bigr)\ge\sigma+2\mu-4+\theta$, where $\theta=1$ for type (b) and
+$\theta=2$ for type (c).
+\end{lemma}
+
+\begin{proof}
+For $\ell\ge1$ the jets of $F=P_s^2R_s$ are $f_0=p^{2\mu}A(-\ell)^2R_s(-k)$ and
+$f_1=p^{2\mu}\bigl(2AA'(-\ell)R_s(-k)+pA(-\ell)^2R_s'(-k)\bigr)$. Insert these into Lemma~\ref{lem:J}, together with
+$R_s(-k)\equiv R_s(-s)-\ell pR_s'(-s)$ and $\mathrm{cl}_k\equiv\bar c_s(1+p\ell\lambda_0)$. Summing over $\ell$, with
+$(yA^2)'=A^2+2yAA'$, gives modulo $p^{\sigma+2\mu-2}$
+\begin{multline*}
+ p^{\sigma+2\mu-4}\bar c_s\Bigl\{b\bigl[R_s(-s)\cL_T(A^2)+p(R_s'(-s)-\lambda_0R_s(-s))\cL_T(yA^2)\\
+ +p\lambda_0R_s(-s)\cL^u_{T-\tau}(A^2)\bigr]+paR_s(-s)\cL^a(A^2)\Bigr\},
+\end{multline*}
+with three local functionals independent of $s$. By Lemma~\ref{lem:R} and $P_r(-s)\equiv\Delta(r-s)^\mu$,
+\begin{multline*}
+ \bar c_sR_s(-s)\equiv KG(s)\bigl\{\Delta^{2w-2}(1+p(\Xi+e_0)(s))\\
+ +2p\Delta^{2w-3}A_{\mu-1}\sigma_W(s)\bigr\}\pmod{p^2},
+\end{multline*}
+with $\sigma_W(s)=\sum_{r\in W,r\ne s}1/(r-s)=H_{w_1-s}-H_{s-w_0}$ for $W=[w_0,w_1]$, and $\bar c_sR_s'(-s)$ is $K\Delta^{2w-2}$
+times a polynomial that vanishes off $W$, modulo $p$.
+
+For type (b) it suffices to work modulo $p^{\sigma+2\mu-3}$, where the sum is a unit times $\sum_{s\in W}G(s)$. Since
+$G$ vanishes at the residues outside $W$, this is $\sum_{s\in\F_p}G(s)=0$ in $\F_p$.
+
+For type (c) the sums $\sum_WG$, $\sum_WG\sigma_W$, $\sum_WG\lambda_0$ and the sum of the derivative terms must be
+divisible by $p$, and $\sum_WG(1+p(\Xi+e_0))$ by $p^2$. The first and the derivative sum vanish as before. By
+\eqref{eq:shift}, $\sum_WG\sigma_W\equiv(1-1)\int G$ and $\sum_WG\lambda_0\equiv(3+2-5)\int G$, both $0$. By
+\eqref{eq:faulhaber} and \eqref{eq:shift},
+\[
+ \sum_{s\in W}G(s)\bigl(1+p(\Xi+e_0)(s)\bigr)\equiv p\bigl(1+\omega\bigr)\int G\pmod{p^2},
+\]
+where $\omega$ is the total weight of the harmonic numbers in $\Xi+e_0$:
+$\omega=(\lambda-1)-2\beta_W+3(1-\varepsilon_W)-2(q_6-\beta_W)+3(q_2+\varepsilon_W)=\lambda+2-2q_6+3q_2$. By \eqref{eq:deg},
+$1+\omega=0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\textup{\ref{thm:L2}}]
+Every entry $L_T(XY)$ is a sum of node terms. By Lemma~\ref{lem:J} and the check above, every node term meets
+$\pi_X+\pi_Y$, except the nodes of $W$ for the pairs (a), (b) and (c), whose sums over $W$ meet it by
+Lemmas~\ref{lem:own} and~\ref{lem:W}. Lemma~\ref{lem:halfint}, applied with corank $0$, gives
+$v(\det)\ge2\sum\pi$, and Lemma~\ref{lem:gram} gives $v_p(J_n(T))\ge\Lex(n,p)+x_1+x_2$.
+\end{proof}
+
+%% =====================================================================
+\section{The prime sum}\label{sec:sum}
+
+We now sum the local bounds. For $n\ge10$ and a prime $p$ put
+\[
+ w(n,p)=\begin{cases}0,&p>6n,\\ w_7(n,p),&7n<2p\le12n,\\ -6(p-2n),&3n<p,\ 2p\le7n,\\
+ \max\bigl(\Lex(n,p)+x_1+x_2,\,-12n\lfloor\log_p8n\rfloor\bigr),&\sqrt{8n}<p<3n,\\ -12n\lfloor\log_p8n\rfloor,&\text{otherwise,}\end{cases}
+\]
+and $m_n=\prod_{p\le6n}p^{-w(n,p)}$. By Proposition~\ref{prop:crude} and Theorems~\ref{thm:O}, \ref{thm:B7}
+and~\ref{thm:L2}, $v_p(m_nJ_n)\ge0$ for every prime $p$. So $m_nJ_n(a,b,X)$ has integer coefficients.
+
+\subsection{The law on 22 pieces}
+For $\sqrt{8n}<p<3n$ write $q=q_6=\lfloor6n/p\rfloor\ge2$ and $t=\fr{6n/p}$. The class sizes are affine in $p$ and
+$n$ with bounded error, and so are $d$, $x_1$ and $x_2$. The next proposition is the result of this bookkeeping.
+
+\begin{proposition}\label{prop:bridge}
+Let $n\ge10$ and $\sqrt{8n}<p<3n$. Let $(r,[t_0,t_1])$ be the row of Table~\ref{tab:pieces} with $r=q\bmod6$ and
+$t\in[t_0,t_1)$. Then
+\[
+ \Lex(n,p)+x_1+x_2\ge p\,c_0(q)+n\,c_1(q)-1000(q^2+1).
+\]
+\end{proposition}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}ccll@{}}
+\toprule
+$r$ & $t$ & $c_0(q)$ & $c_1(q)$\\
+\midrule
+0&$[0,\frac34]$&$2q+\frac{q^2}2$&$-18-3q$\\
+0&$[\frac34,\frac67]$&$-2-\frac23q+\frac{q^2}2$&$-2-3q$\\
+0&$[\frac67,1]$&$-4-3q+\frac{q^2}2$&$12-3q$\\
+1&$[0,\frac12]$&$-\frac12+2q+\frac{q^2}2$&$-15-3q$\\
+1&$[\frac12,\frac57]$&$-\frac{11}6-\frac23q+\frac{q^2}2$&$1-3q$\\
+1&$[\frac57,1]$&$-\frac72-3q+\frac{q^2}2$&$15-3q$\\
+2&$[0,\frac14]$&$\frac52q+\frac{q^2}2$&$-15-3q$\\
+2&$[\frac14,\frac25]$&$-\frac13+\frac76q+\frac{q^2}2$&$-7-3q$\\
+2&$[\frac25,\frac47]$&$-\frac23+\frac13q+\frac{q^2}2$&$-2-3q$\\
+2&$[\frac47,\frac23]$&$-2-2q+\frac{q^2}2$&$12-3q$\\
+2&$[\frac23,1]$&$-3-\frac72q+\frac{q^2}2$&$21-3q$\\
+3&$[0,\frac13]$&$1+\frac92q+\frac{q^2}2$&$-33-3q$\\
+3&$[\frac13,\frac37]$&$\frac12+3q+\frac{q^2}2$&$-24-3q$\\
+3&$[\frac37,\frac35]$&$-\frac12+\frac23q+\frac{q^2}2$&$-10-3q$\\
+3&$[\frac35,\frac34]$&$-1-\frac16q+\frac{q^2}2$&$-5-3q$\\
+3&$[\frac34,1]$&$-2-\frac32q+\frac{q^2}2$&$3-3q$\\
+4&$[0,\frac27]$&$4q+\frac{q^2}2$&$-27-3q$\\
+4&$[\frac27,\frac12]$&$-\frac23+\frac53q+\frac{q^2}2$&$-13-3q$\\
+4&$[\frac12,1]$&$-2-q+\frac{q^2}2$&$3-3q$\\
+5&$[0,\frac17]$&$-\frac12+4q+\frac{q^2}2$&$-24-3q$\\
+5&$[\frac17,\frac14]$&$-\frac56+\frac53q+\frac{q^2}2$&$-10-3q$\\
+5&$[\frac14,1]$&$-\frac32-q+\frac{q^2}2$&$6-3q$\\
+\bottomrule
+\end{tabular}
+\caption{The law on $22$ pieces: $r=q\bmod6$, the range of $t=\fr{6n/p}$, and the coefficients of
+$p\,c_0(q)+n\,c_1(q)$.}\label{tab:pieces}
+\end{table}
+
+\begin{proof}
+Write $\rho=q\bmod3$, so that $\fr{2n/p}=(\rho+t)/3$, and $\theta=\fr{3n/p}=((q\bmod2)+t)/2$. Up to an error of at most
+$2$ each, the class sizes are $p$ times the masses
+\[
+ m_A=t,\ m_B=0,\ m_C=1-\tfrac{\rho+t}3-t,\ m_D=\tfrac{\rho+t}3\quad\text{if }t<\tfrac{3-\rho}4,
+\]
+\[
+ m_A=1-\tfrac{\rho+t}3,\ m_B=t-m_A,\ m_C=0,\ m_D=1-t\quad\text{otherwise.}
+\]
+By Lemma~\ref{lem:S}, each class takes $\mu_c=(\lambda+4+[c\subseteq\mathcal N]-\sigma_c)/2$ indices below $\lambda$, and
+\eqref{eq:lemT} gives $\lambda=q+\rho-3$ or $\lambda=q+\rho-4$, the second only when $|\mathcal N|\le2$. The tie classes
+are $(A,C)$ if $\lfloor q/3\rfloor$ is odd and $(B,D)$ if it is even. Then $x_1=|m_Wp-m_Zp|/2+O(1)$ and
+$x_2=(x_1-m_{\mathcal N}p)_++O(1)$, and the sum of the $3n$ smallest increments is
+$p\sum_cm_c(\mu_c^2+(\sigma_c-5)\mu_c)+d\lambda+O(q^2)$. Also $\nu_p=2\sum_{i<3n}\lfloor i/p\rfloor$ since $p^2>3n$, which is
+$p(9x^2-3x+\theta(1-\theta))+O(q)$ with $x=n/p$. On each piece the result is $p\,c_0(q)+n\,c_1(q)$: the terms in $t^2$
+cancel between $\nu_p$ and the increments, and with $t=6x-q$ the rest is affine in $x$. The errors are $O(q^2)$, with
+constant at most $1000$.
+\end{proof}
+
+\begin{remark}
+The formal proof carries out the case analysis of Proposition~\ref{prop:bridge} piece by piece. The constant $1000$
+is generous and plays no role, because $\sum_{p>n/M}q^2\log p=O(M^2n)$.
+\end{remark}
+
+\subsection{The integrals}
+Put $y=p/n$. On a piece, $p\,c_0(q)+n\,c_1(q)=n\bigl(c_0(q)y+c_1(q)\bigr)$, and the piece is the interval
+$6/(q+t_1)<y\le6/(q+t_0)$. The weighted prime number theorem $\sum_{\alpha n<p\le\beta n}\log p=(\beta-\alpha+o(1))n$
+gives, for each piece $\kappa$ with $q\ge2$ fixed,
+\[
+ \sum_{p\in\kappa}\bigl(-w(n,p)\bigr)\log p\le\bigl(I_\kappa+o(1)\bigr)n^2,\qquad
+ I_\kappa=-\int_\kappa\bigl(c_0(q)y+c_1(q)\bigr)\,dy .
+\]
+
+\begin{lemma}\label{lem:bands}
+\begin{enumerate}[label=(\roman*)]
+\item The pieces with $2\le q\le5$, which cover $n<p<3n$, have $\sum I_\kappa=2263/280$.
+\item For $3n<p\le7n/2$ the bound of Theorem~\ref{thm:O} contributes $15/4$ per $n^2$, and for $7n/2<p\le6n$ the bound of
+ Theorem~\ref{thm:B7} contributes $47/4$.
+\item For $m\ge1$, the pieces with $6m\le q<6m+6$, which cover $n/(m+1)<p\le n/m$, have
+ $\sum I_\kappa=f(m):=-\sum_ed_e/(m+e)$, with the $23$ nodes $e$ and weights $d_e$ of Table~\ref{tab:nodes}.
+\end{enumerate}
+\end{lemma}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}c|cccccccccccc@{}}
+\toprule
+$e$ & $0$ & $\frac18$ & $\frac17$ & $\frac16$ & $\frac14$ & $\frac27$ & $\frac13$ & $\frac38$ & $\frac25$ & $\frac37$ & $\frac49$ & $\frac12$\\
+$d_e$ & $-12$ & $8$ & $7$ & $-12$ & $8$ & $7$ & $-\frac{27}2$ & $4$ & $\frac52$ & $7$ & $\frac92$ & $-30$\\
+\midrule
+$e$ & $\frac59$ & $\frac47$ & $\frac35$ & $\frac58$ & $\frac23$ & $\frac57$ & $\frac34$ & $\frac56$ & $\frac67$ & $\frac78$ & $1$ &\\
+$d_e$ & $\frac92$ & $7$ & $\frac52$ & $4$ & $-\frac{27}2$ & $7$ & $8$ & $-12$ & $7$ & $8$ & $-3$ &\\
+\bottomrule
+\end{tabular}
+\caption{The nodes $e$ and weights $d_e$. One has $\sum_ed_e=0$ and $\sum_ed_ee=9/2$.}\label{tab:nodes}
+\end{table}
+
+\begin{proof}
+(i) and (iii) are exact integrations of linear functions over the pieces. In (iii), on the piece with endpoints
+$x_e=m+e$ in the variable $x=1/y$, the substitution $q=6x_e-t_e$ turns the endpoint terms of
+$\int(c_0/x^3+c_1/x^2)\,dx$ into a constant, which cancels inside the piece, plus $d/x_e+f/x_e^2$. Summing over the six
+residues $r$, the coefficients of $1/x_e^2$ cancel and those of $1/x_e$ are the $d_e$. (ii) is the integral of
+$6(y-2)$ over $(3,7/2]$ and of $2+2y$, $18-2y$ and $54-10y$ over $(7/2,4]$, $(4,9/2]$ and $(9/2,6]$.
+\end{proof}
+
+Thus the exact part of the content is $2263/280+15/4+47/4=6603/280$. It remains to bound the partial sums of $f$.
+
+\begin{lemma}\label{lem:SM}
+Put $S_M=\sum_{1\le m<M}f(m)$ and $R_C=3573565641/700000000$. Then $S_M\le R_C$ for every $M\ge1$.
+\end{lemma}
+
+\begin{proof}
+\emph{Positivity.} From $e/(m+e)=e/m-e^2/(m(m+e))$ and $\sum d_e=0$, $\sum d_ee=9/2$,
+\[
+ f(m)=\frac{9/2}{m^2}-\frac1{m^2}\sum_e\frac{d_ee^2}{m+e}\ge\frac9{2m^2}-\frac B{m^3},\qquad B=\sum_e|d_e|e^2=\frac{20383}{360}.
+\]
+So $f(m)>0$ for $m\ge13$, and an exact computation gives $f(m)>0$ for $m\le12$. Hence $S_M$ increases with $M$.
+
+\emph{The tail.} For $K=6$, $1/(m+e)=\sum_{j<K}(-e)^j/m^{j+1}+(-e)^K/(m^K(m+e))$, so
+$f(m)=\sum_{k=2}^6a_km^{-k}+r(m)$ with $a_k=(-1)^k\sum_ed_ee^{k-1}$ and $|r(m)|\le Am^{-7}$, $A=\sum_e|d_e|e^6$. Here
+$a_2,a_4,a_6>0$ and $a_3,a_5<0$. For $k\ge2$ and $M\ge1$, convexity gives
+\[
+ \frac1{(k-1)M^{k-1}}+\frac1{2M^k}\le\sum_{m\ge M}m^{-k}\le\frac1{(k-1)(M-\frac12)^{k-1}} .
+\]
+Using the upper bound for positive coefficients and for $A$, and the lower bound for negative coefficients, we get
+$\sum_{m\ge1000}f(m)\le T$ for an explicit rational $T=0.0045006\ldots$.
+
+\emph{The partial sum.} $S_{1000}$ is a sum of $22977$ rationals. Rounding each term $1/(m+e)$ outward to a multiple
+of $2^{-80}$ gives an upper bound $\hat S$ with $\hat S-S_{1000}<2\cdot10^{-19}$, and $\hat S+T\le R_C$ with a margin of
+$5.76\cdot10^{-9}$. Since $f>0$, $S_M\le S_{1000}+T\le R_C$ for every $M$.
+\end{proof}
+
+\begin{theorem}\label{thm:content}
+For every $\varepsilon>0$ and all large $n$, $m_n$ is a positive rational number, $m_nJ_n(a,b,X)\in\Z[a,b,X]$, and
+\[
+ \log m_n\le(\Lambda+\varepsilon)n^2,\qquad\Lambda=\frac{2868723663}{10^8}=28.68723663 .
+\]
+\end{theorem}
+
+\begin{proof}
+Fix $M\ge48/\varepsilon$. Split the primes $p\le6n$ into $p\le n/M$, $n/M<p<3n$ and $3n<p\le6n$. For $p\le n/M$,
+Proposition~\ref{prop:crude} gives $\sum_{p\le n/M}12n\lfloor\log_p8n\rfloor\log p\le(12/M+o(1))n^2$. For
+$n/M<p<3n$ we use Proposition~\ref{prop:bridge} on each piece. The pieces with $q<6M$ are finite in number, and the error
+terms $1000(q^2+1)$ contribute $O(M^2n\log n)$. On $\sqrt{8n}<p\le n/M$ the crude bound is used, so the pieces with
+$q\ge6M$ are not needed. Lemma~\ref{lem:bands} gives
+\[
+ \log m_n=\sum_{p\le6n}(-w(n,p))\log p\le\Bigl(\frac{6603}{280}+S_M+\frac{12}M+\frac\varepsilon2\Bigr)n^2
+\]
+for large $n$. By Lemma~\ref{lem:SM}, $6603/280+S_M\le6603/280+R_C=2868723663/10^8$.
+\end{proof}
+
+The rational bound of Theorem~\ref{thm:content} rounds up an exact constant.
+
+\begin{theorem}\label{thm:C01}
+The law on $(0,1]$ has the integral $\sum_{m\ge1}f(m)=\sum_ed_e\psi(1+e)=5.10509376672\ldots$, and
+\begin{multline*}
+ \frac{6603}{280}+\sum_ed_e\psi(1+e)=95-36\log2+\tfrac{153}2\log3-\tfrac{25}4\log5-49\log7\\
+ -8\sqrt2\log(1+\sqrt2)+\tfrac{5\sqrt5}2\log\phi+\tfrac92\Xi,
+\end{multline*}
+where $\phi=(1+\sqrt5)/2$ and $\Xi=\psi(4/9)+\psi(5/9)+2\gamma$. The value is $28.6872366238631\ldots$.
+\end{theorem}
+
+\begin{proof}
+Since $\sum_ed_e=0$, $\sum_{m\ge1}f(m)=\sum_ed_e\sum_{m\ge1}\bigl(1/m-1/(m+e)\bigr)=\sum_ed_e(\psi(1+e)+\gamma)=\sum_ed_e\psi(1+e)$.
+With $\psi(1+e)=\psi(e)+1/e$ the rational part is $\sum_{e>0}d_e/e=19997/280$. Gauss's digamma theorem evaluates the
+symmetric pairs: $\psi(\frac12)=-\gamma-2\log2$, $\psi(\frac13)+\psi(\frac23)=-2\gamma-3\log3$,
+$\psi(\frac14)+\psi(\frac34)=-2\gamma-6\log2$, $\psi(\frac16)+\psi(\frac56)=-2\gamma-4\log2-3\log3$,
+$\sum_{k=1}^6\psi(\frac k7)=-6\gamma-7\log7$, $\psi(\frac18)+\psi(\frac78)=-2\gamma-8\log2-2\sqrt2\log(1+\sqrt2)$,
+$\psi(\frac38)+\psi(\frac58)=-2\gamma-8\log2+2\sqrt2\log(1+\sqrt2)$ and
+$\psi(\frac25)+\psi(\frac35)=-2\gamma-\frac52\log5+\sqrt5\log\phi$. The constant $\gamma$ cancels because $\sum d_e=0$.
+\end{proof}
+
+\begin{remark}\label{rem:C01}
+Theorem~\ref{thm:content} is the form proved in Lean. Its constant $28.68723663$ is the closed form of
+Theorem~\ref{thm:C01} rounded up by less than $10^{-8}$. The formal proof checks only the rational partial sums of
+Lemma~\ref{lem:SM}, and it does not use Theorem~\ref{thm:C01}. The paper states the closed form because it shows
+where the constant comes from. Theorem~\ref{thm:C01} is not part of the formal proof.
+\end{remark}
+
+%% =====================================================================
+\section{Nonvanishing at prime-tied sizes}\label{sec:nv}
+
+Let $\ell$ be a prime. We show that $J_n(a,b,X)\ne0$ for two kinds of sizes $n$ tied to $\ell$, at all points with
+$\ell$-adically bounded coordinates. In both cases the $\ell$-adic valuation of a Gram determinant is computed exactly
+by Lemma~\ref{lem:halfint} and its equality case. We write $v$ for $v_\ell$ and $\Z_{(\ell)}$ for the rationals with
+$v\ge0$.
+
+\subsection{Lai's primes}
+\begin{theorem}\label{thm:NV}
+Let $m\ge1$, $n=2m$, and let $\ell=9m+1$ be prime. Let $a',b,X'\in\Z_{(\ell)}$ with $3a'+2b\not\equiv0\pmod\ell$. Then
+$J_n(a'/\ell,b,X'/\ell^3)\ne0$.
+\end{theorem}
+
+For $a'=\ell a$ with $a\in\Z$ and $X'=0$ this is Lai's Proposition~3.1 \cite{Lai2026}, where $b$ is an $\ell$-adic unit.
+The new points are the coefficient $a'/\ell$ and the tolerance $v(X)\ge-3$.
+
+\begin{proof}
+Write $a=a'/\ell$, $X=X'/\ell^3$ and $\epsilon=3a'+2b$. Put $s=3m=6n-\ell+1$, so that the nodes $k\in[\ell,6n]$ are
+$k=\ell+j$ with $0\le j<s$. Every index in the harmonic sums is at most $8n<2\ell$, and $3n<\ell$.
+
+\emph{Step 1: local sizes.} For $k<\ell$, $H_k(i)\in\Z_{(\ell)}$, and for $\ell\le k<2\ell$, $H_k(i)-\ell^{-i}\in\Z_{(\ell)}$. So
+$d_k\in\ell^{-1}\Z_{(\ell)}$ for every $k$. For $k<\ell$, $U_k\in\ell^{-1}\Z_{(\ell)}$ and $V_k\in\ell^{-3}\Z_{(\ell)}$. For
+$k=\ell+j$, $U_k\equiv-\ell^{-3}\epsilon\pmod{\ell^{-1}}$ and $V_k\in\ell^{-4}\Z_{(\ell)}$. By Kummer's theorem $c_k$ is a unit
+for $\ell\le k\le6n$, $\ell^2\mid c_k$ for $s\le k<\ell$, and $c_k\in\Z_{(\ell)}$ for $k<s$.
+
+\emph{Step 2: Lai's lattice.} For $i<s$ let $F_i(t)=\prod_{j<s,j\ne i}(t+j)/(j-i)$ and $\gamma_i=F_i'(-i)$, and put
+\[
+ P_i=\ell^2\bigl(1-2\gamma_i(t+i)\bigr)F_i^2,\qquad Q_i=\ell(t+i)F_i^2 .
+\]
+They have degree at most $2s-1=3n-1$, and at $-j$ ($j<s$) one has $P_i(-j)=\ell^2\delta_{ij}$, $P_i'(-j)=0$,
+$Q_i(-j)=0$ and $Q_i'(-j)=\ell\delta_{ij}$. The Hermite map $f\mapsto(f(-j),f'(-j))_{j<s}$ is an isomorphism of
+$\Z_{(\ell)}[t]_{<2s}$ onto $\Z_{(\ell)}^{2s}$, since its determinant is a power of a Vandermonde determinant in
+$0,\dots,s-1$. So the $P_i,Q_i$ span a lattice of index $\ell^{3s}=\ell^{9n/2}$, and
+$v\det[B(t^i,t^j)]=v\det G-9n$, where $G$ is the Gram matrix of the $P_i,Q_i$.
+
+\emph{Step 3: the Gram matrix modulo $\ell$.} At the nodes $k<s$, $Q_j(-k)=0$, so every contribution lies in
+$\ell\Z_{(\ell)}$. This exact vanishing is what allows $v(X)\ge-3$. At the nodes $s\le k<\ell$, $\ell^2\mid c_k$ and every
+contribution lies in $\ell\Z_{(\ell)}$. At $k=\ell+j$, Taylor expansion from $-j$ gives $P_i(-k)\equiv\ell^2\delta_{ij}$,
+$Q_i(-k)\equiv-\ell^2\delta_{ij}$ and $Q_i'(-k)\equiv\ell\delta_{ij}$ to the relevant order. With $A_j=c_k\ell^4V_k$ and
+$\bar c_j$ the residue of $c_k$, the node contributes, modulo $\ell$,
+\[
+ \begin{pmatrix}A_j&-\bar c_j\epsilon-A_j\\-\bar c_j\epsilon-A_j&2\bar c_j\epsilon+A_j\end{pmatrix}
+\]
+to the block of $(P_j,Q_j)$, and nothing else. Its determinant is $-\bar c_j^2\epsilon^2$, whatever $A_j$ is. So
+$\det G\equiv\prod_{j<s}(-\bar c_j^2\epsilon^2)\not\equiv0$. Hence $v(\prod i!^2J_n)=-9n$, and $\prod_{i<3n}i!^2$ is a unit.
+\end{proof}
+
+The proof gives $v_\ell(J_n(a'/\ell,b,X'/\ell^3))=-9n$.
+
+\begin{corollary}\label{cor:NV}
+Let $m\ge1$, $n=2m$, and let $\ell=9m+1$ be prime.
+\begin{enumerate}[label=(\alph*)]
+\item Let $a,b\in\Z$ with $\ell\nmid b$. Then $J_n(a,b,p/q)\ne0$ for all integers $p$ and $q>0$ with $\ell^4\nmid q$.
+\item Let $p,q$ be integers with $q\ne0$ and $\ell\nmid p$. Then $f_n(p/q)\ne0$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) Take $a'=\ell a$ and $X'=\ell^3p/q$. Then $v(X')\ge0$ and $3a'+2b\equiv2b\not\equiv0$. (b) By \eqref{eq:scaled},
+$q^{3n}f_n(p/q)=J_n(q,-p,0)$. Take $a'=\ell q$, $b=-p$ and $X'=0$, so that $3a'+2b\equiv-2p\not\equiv0$.
+\end{proof}
+
+\subsection{The lines \texorpdfstring{$3\ell=7n+1$}{3l = 7n+1} and \texorpdfstring{$3\ell=7n+2$}{3l = 7n+2}}
+Lai's primes have density $1/6$ among the primes, in the sense of Theorem~\ref{thm:criterion}, and the sizes tied to
+them grow with slope $9/2$. A second family of exact nonvanishing comes from primes $\ell$ with $2n<\ell<8n/3$.
+
+\begin{theorem}\label{thm:NV7}
+Let $n\ge7$ and let $\ell$ be a prime with $3\ell\in\{7n+1,7n+2\}$ and $\ell\notin\{73,1039\}$. Let $a\in\Z_{(\ell)}$,
+$b\in\Z_{(\ell)}^\times$ and $X'\in\Z_{(\ell)}$. Then $J_n(a,b,X'/\ell^3)\ne0$.
+\end{theorem}
+
+\begin{proof}
+Put $\alpha_0=\ell-2n$ and $A_2=6n-2\ell$, and write $k=s+j\ell$ with $0\le s<\ell$. Since $6n<3\ell$, $j\le2$. In the
+notation of Section~\ref{sec:local} the residues fall into the classes $T_1=[0,\alpha_0)$ with $\sigma=0$ and $j\le2$,
+$T_2=[\alpha_0,A_2]$ with $\sigma=3$ and $j\le2$, and $T_4=(A_2,\ell)$ with $\sigma=5$ and $j\le1$. Put $\varkappa=3\ell-7n$.
+Then $|T_2|=n+1-\varkappa$ and $|T_4|=n-1+\varkappa$.
+
+\emph{Step 1: node sizes.} For $j\ge1$, Lemma~\ref{lem:N} gives $U_k=\ell^{-3}u_jb+O(\ell^{-2})$ and
+$V_k=\ell^{-4}E_jb+O(\ell^{-3})$, with $u_1=-2$, $u_2=-9/4$, and $E_j=-6,-105/8$ on $T_1$, $E_j=-3,-87/8$ on $T_2$ and
+$E_1=-7$ on $T_4$. The terms in $a$ and $X$ are one order smaller. For $j=0$, $v(U_k)\ge0$ and $v(V_k)\ge-3$. The unit parts
+of $c_{s+j\ell}$ are $(1,4,1)\hat c_s$ on $T_1$ and $(1,32,27)\hat c_s$ on $T_2$.
+
+\emph{Step 2: the basis.} Put $\Pi=\prod_{r\in T_1}(t+r)^3\prod_{r\in T_2}(t+r)$, of degree $2n+1$, and
+$\Psi_r=\Pi/(t+r)^3$. The basis consists of $e_{r,i}=(t+r)^i\Psi_r$ for $r\in T_1$, $i<3$, with potential $i-2$; of
+$e_r=\Pi/(t+r)$ for $r\in T_2$, with potential $-\frac12$; and of $g_m=t^m\Pi$ for $m<n-1$, with potential $\frac12$. It
+has $3n$ elements and $2\sum\pi=5n-3\ell-2$. By Lemma~\ref{lem:N} and Step 1 every entry has $v\ge\pi_x+\pi_y$, with
+$+\frac12$ between the two groups. At the nodes with $j=0$ every term lies strictly above its threshold: on $T_1$ only
+$e_{s,0}$ and $e_{s,1}$ do not vanish to order $3$, on $T_2$ only $e_s$ does not vanish, and on $T_4$ the weight has
+$v=5$. So $X$ never enters the reductions. In the proof of Lemma~\ref{lem:halfint} the reduction is block triangular, so
+\[
+ v(\det G)=2\sum\pi\iff\det\overline N_{AA}\cdot\det\overline N_{BB}\ne0\ \text{in }\F_\ell .
+\]
+The reductions use only the leading terms, so they are $\bar b$ times their values at $(a,b,X)=(0,1,0)$.
+
+\emph{Step 3: $\overline N_{AA}$.} The elements of different residues of $T_1$ meet only above the threshold. At the
+nodes $-r-j\ell$, $e_{r,i}=(-j\ell)^i\Psi_r(-r)+O(\ell^{i+1})$. Hence $\overline N_{AA}$ is block diagonal with blocks
+$\hat c_r\Psi_r(-r)^2M_0$, where $M_0=[h_{i+i'}]_{i,i'<3}$ and $h_m=\sum_{j=1,2}\binom2j^2(-j)^{m-1}(mu_j-jE_j)$. One finds
+$h=(-\frac{297}8,40,-\frac{103}2,78,-130)$ and $\det M_0=1095/2=3\cdot5\cdot73/2$.
+
+\emph{Step 4: $\overline N_{BB}$.} The element $e_r$ meets $e_{r'}$ only for $r=r'$, at the nodes of $T_2$, with value
+$-\frac{3117}8\hat c_r\Pi'(-r)^2$. The pairing of $e_r$ with $g_m$ is $\frac{1117}2\hat c_r\Pi'(-r)^2(-r)^m$. The pairing of
+$g_m$ with $g_{m'}$ is $-\frac{1799}2\hat c_r\Pi'(-r)^2(-r)^{m+m'}$ at each residue of $T_2$ plus
+$-7\hat c_{s,1}\Pi(-s)^2(-s)^{m+m'}$ at each residue of $T_4$. By Anton and Granville's theorem,
+$\hat c_s\Pi'(-s)^2=-KD(s)$ on $T_2$ and $\hat c_{s,1}\Pi(-s)^2=-32KD(s)$ on $T_4$, with $D(s)=\prod_{i<\alpha_0}(s-i)$ and a unit
+$K$. The diagonal block is invertible since $3117=3\cdot1039$, and its Schur complement is
+\[
+ S_{mm'}=-K\Bigl[c_2\sum_{T_2}D(r)(-r)^{m+m'}-224\sum_{T_4}D(s)(-s)^{m+m'}\Bigr],
+\]
+where
+\[
+ c_2=-\frac{1799}2+\Bigl(\frac{1117}2\Bigr)^2\frac8{3117}=-\frac{616727}{6234}.
+\]
+The polynomial $D(s)s^{m+m'}$ vanishes on $T_1$ and has degree at most $\ell-4$, so its sums over $T_2$ and $T_4$ are
+opposite. Hence $S=K\frac{779689}{6234}[\sum_{s\in T_4}D(s)(-s)^{m+m'}]$, with $779689=883^2$, and it remains to show
+\[
+ \mathcal H=\det\Bigl[\sum_{s\in T_4}D(s)s^{m+m'}\Bigr]_{m,m'<n-1}\ne0 .
+\]
+
+\emph{Step 5: duality.} For points $x_s$ with weights $\omega_s$ ($s=1,\dots,N$) and $\nu<N$, write
+$H_{\nu}(\omega)=\det[\sum_s\omega_sx_s^{i+j}]_{i,j<\nu}$. The Cauchy--Binet formula expresses it as a
+sum over subsets of size $\nu$ of $\prod\omega$ times a squared Vandermonde determinant. Passing to the
+complements gives
+\[
+ H_{\nu}(\omega)=\prod_s\omega_s\cdot V^2\cdot H_{N-\nu}(\omega^*),\qquad
+ \omega^*_s=\frac1{\omega_s\prod_{t\ne s}(x_s-x_t)^2},
+\]
+with $V$ the Vandermonde determinant of all the points. We apply this to $T_4$ with $\omega=D$, $\nu=n-1$ and
+$N-\nu=\varkappa$. By Wilson's theorem, $s!(\ell-1-s)!\equiv(-1)^{s+1}$, so
+$\prod_{t\in T_4,t\ne s}(s-t)^2\equiv\bigl((s-A_2-1)!/s!\bigr)^2$. Since $\alpha_0\le A_2+1$, the dual weight is the
+polynomial
+\[
+ \omega^*_s\equiv\Phi(s)=\prod_{i\le A_2}(s-i)\cdot\prod_{i=\alpha_0}^{A_2}(s-i),
+\]
+which is monic of degree $\ell+2-2\varkappa$ and vanishes off $T_4$. So the dual entries are full power sums
+$\tau_m=\sum_{s\in\F_\ell}\Phi(s)s^m$, and $\sum_{s\in\F_\ell}s^j=-1$ if $(\ell-1)\mid j>0$ and $0$ otherwise. For
+$\varkappa=1$, $H_1=\tau_0=-[s^{\ell-1}]\Phi$ is the sum of the roots of $\Phi$, which is $(31n^2-7n-2)/18\equiv-1/49$,
+since $n\equiv-1/7$. For $\varkappa=2$, $\tau_0=0$, $\tau_1=-1$, and $H_2=\tau_0\tau_2-\tau_1^2=-1$.
+
+\emph{Step 6.} On both lines $\det\overline N_{AA}\det\overline N_{BB}\ne0$ unless $\ell$ divides
+$2\cdot3\cdot5\cdot7\cdot73\cdot883\cdot1039$. Since $n\ge7$ gives $\ell\ge17$, and $3\cdot883$ lies on neither line, this
+excludes only $\ell=73$ (with $n=31$) and $\ell=1039$ (with $n=445$).
+\end{proof}
+
+The proof gives $v_\ell(J_n(a,b,X'/\ell^3))=5n-3\ell-2-2(3n-\ell)=-n-\ell-2$.
+
+\begin{corollary}\label{cor:NV7}
+Let $n$ and $\ell$ be as in Theorem~\textup{\ref{thm:NV7}}. If $a,b\in\Z$ with $\ell\nmid b$, then $J_n(a,b,p/q)\ne0$
+whenever $\ell^4\nmid q$. If $\ell\nmid p$ and $q\ne0$, then $f_n(p/q)\ne0$.
+\end{corollary}
+
+\begin{proof}
+As for Corollary~\ref{cor:NV}, with $(a,b,X')=(a,b,\ell^3p/q)$ and $(q,-p,0)$.
+\end{proof}
+
+%% =====================================================================
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+Put $D=33.4401$, $\Lambda=28.68723663$, $\eta=D-\Lambda=4.75286337$, $\rho=42.94856306$ and $\kappa=3$. The modulus is
+$M=126$, and there are three tied families:
+\begin{itemize}
+\item Lai's primes: $S=\{s:s\equiv1\pmod{18}\}$, $\ell=\frac92n+1$;
+\item the first line: $S=\{s:s\equiv5\pmod7\}$, $\ell=\frac73n+\frac13$;
+\item the second line: $S=\{s:s\equiv3\pmod7\}$, $\ell=\frac73n+\frac23$.
+\end{itemize}
+Each set $S$ has $6$ of the $36$ unit classes, Lai's set meets each of the other two in one class, and the two lines
+are disjoint. The finite exceptional set $E$ consists of the primes below $100$ and the primes $73$ and $1039$.
+
+\emph{Part (a).} Let $a,b\in\Z$ with $b\ne0$, $\xi=a\zeta(3)+b\zeta(4)$ and $P_n=Q_n$. By \eqref{eq:scaled} and
+Theorem~\ref{thm:content}, $q^{3n}m_nQ_n(p/q)=m_nJ_n(qa,qb,p)\in\Z$, so (a) of Theorem~\ref{thm:criterion} holds with
+$d_n=m_n$. Corollary~\ref{cor:families} gives (b). Take $W(p,q)=q$ and $K=1$. For each family add the prime divisors of
+$b$ to the exceptional set, and let $\mathrm{Bad}(\ell,p,q)$ be $\ell^4\mid q$, with $e=4$. Corollaries~\ref{cor:NV}
+and~\ref{cor:NV7} give (c). Put $u_0=3/\eta$ and $\beta=1637/10000$. Since $\frac73(u_0+\beta)<\frac92u_0$, the windows of
+Lai's family and of the lines do not overlap, and
+\[
+ \cM(u_0,u_0+\beta)=4\beta\Bigl(\frac92\cdot\frac16+2\cdot\frac73\cdot\frac16\Bigr)=\frac{18007}{18000}>1 .
+\]
+Theorem~\ref{thm:criterion} applies, and $\rho(3/\eta+\beta)=34.13974\ldots<34.14$.
+
+\emph{Part (b).} Let $\xi=y^*=\zeta(3)/\zeta(4)$ and $P_n=f_n$. As above,
+$q^{3n}m_nf_n(p/q)=m_nJ_n(q,-p,0)\in\Z$, and Corollary~\ref{cor:families} gives (b). Since $1<y^*<2$, every $p/q$
+with $|y^*-p/q|<1$ has $0<p<3q$, and we take $W(p,q)=|p|$ and $K=3$. Let $\mathrm{Bad}(\ell,p,q)$ be $\ell\mid p$, with
+$e=1$. Corollaries~\ref{cor:NV} and~\ref{cor:NV7} give (c). With $\beta=661/1000$ the windows overlap, and
+\[
+ \cM(u_0,u_0+\beta)=\beta\Bigl(\frac92\cdot\frac16+2\cdot\frac73\cdot\frac16\Bigr)
+ -2\cdot\frac1{36}\Bigl(\frac73(u_0+\beta)-\frac92u_0\Bigr)=1.00015\ldots>1 .
+\]
+Theorem~\ref{thm:criterion} gives $|y^*-p/q|>q^{-55.499}$ for large $q$, since $\rho(3/\eta+\beta)=55.4980\ldots$.
+Finally $\zeta(3)/\pi^4=y^*/90$, because $\zeta(4)=\pi^4/90$, and Lemma~\ref{lem:scale} with $r=1/90$ gives part (b) of
+Theorem~\ref{thm:main}. \qed
+
+%% =====================================================================
+\section{Remarks}\label{sec:remarks}
+
+The numbers in this section are numerical evidence. They are not part of the formal proof.
+
+\emph{The decay.} The certificate of Theorem~\ref{thm:decay} gives $D\ge33.44019$. Optimizing the measure on wedge
+contours suggests that the best value of this method for Lai's determinants is close to $33.46$. On a vertical line,
+weak duality caps the method at about $33.25$. Bending the contour is therefore necessary for the constant of
+Theorem~\ref{thm:decay}. Lai's exponent $31.61$ holds at the constant only, and Theorem~\ref{thm:decay} improves it
+on a neighbourhood.
+
+\emph{The denominators.} At more than $3000$ pairs $(n,p)$ with $n\le200$ we computed $v_p(J_n)$ exactly. It never lies
+below the bounds of Section~\ref{sec:local}, and in the range $\sqrt{8n}<p<3n$ it equals $\Lex(n,p)+x_1+x_2$ except at a
+few primes where a class constant of the proofs vanishes modulo $p$. This suggests that $\Lambda=28.6872366\ldots$ is
+the true exponential rate of the denominators of $J_n(a,b,X)$ as a polynomial in three variables.
+
+\emph{Nonvanishing.} The tolerance $\ell^4\nmid q$ is best possible for both families: at the tested pairs, the roots of
+$J_n(1,1,X)$ have $v_\ell(X)=-4$. For primes $2n<\ell<8n/3$ off the two lines, the reduction used in
+Theorem~\ref{thm:NV7} is singular, so other sizes would need a new argument. The exponent of part (b) is larger than
+that of part (a) because the coefficient $b=-p$ of the ratio family grows with $q$, so that only one power of each tied
+prime is available.
+
+\emph{The lines $a=0$ and $b=0$.} For $b=0$ the number is $a\zeta(3)$. Theorem~\ref{thm:main} does not apply, and the
+known measures for $\zeta(3)$ are much smaller. For $a=0$ the bound $12.51$ of Marcovecchio and Zudilin for $\zeta(4)$
+is better than ours.
+
+%% =====================================================================
+\section{Formalization}\label{sec:lean}
+\raggedbottom
+
+Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every theorem,
+proposition and lemma its proof uses. The remarks, Theorem~\ref{thm:C01} and the exact valuations stated after
+Theorems~\ref{thm:NV} and~\ref{thm:NV7} are not part of the formalization. The development is in the directories
+\lean{CatalanCore/Lai} and \lean{CatalanCore/Measure} of the repository
+\begin{center}
+\FormalizationLink
+\end{center}
+Theorem~\ref{thm:main} consists of the theorems
+\begin{center}
+{\small\texttt{LaiIrrationalityMeasure.lai\_plane\_measure\_34\_14}}\\
+{\small\texttt{LaiIrrationalityMeasure.lai\_ratio\_measure\_55\_50}}
+\end{center}
+in \lean{SolutionLai.lean}. Their statements use only Mathlib. The numbers $\zeta(3)$ and $\zeta(4)$ are written as the
+series $\sum_{k\ge0}(k+1)^{-3}$ and $\sum_{k\ge0}(k+1)^{-4}$, and $\pi$ is Mathlib's \lean{Real.pi}. The first theorem
+states, for integers $a$ and $b\ne0$, that $q^{-34.14}<|a\zeta(3)+b\zeta(4)-p/q|$ for all integers $p$ and all
+sufficiently large $q$. The second states $q^{-55.50}<|\zeta(3)/\pi^4-p/q|$ in the same form. The modules contain no
+\lean{sorry} and no \lean{native_decide}. The command \lean{\#print axioms} reports only \lean{propext},
+\lean{Classical.choice} and \lean{Quot.sound}. The proof is kernel-checked. It has not been run through the
+independent checker \lean{lake comparator} \cite{Comparator}.
+
+The prime number theorem in arithmetic progressions is derived from the Wiener--Ikehara theorem of the PNT+ project
+\cite{PNTPlus} and Mathlib's results on primes in progressions. The proofs were checked with Lean
+\texttt{v4.35.0-rc2} and the matching Mathlib.
+
+The formal proof differs from the text in one point of organization. It applies the criterion to the families
+$m_nQ_n$ and $m_nf_n$, which have integer values at $p/q$ after multiplication by $q^{3n}$, with content exponent $0$
+and decay exponent $D-\Lambda$. This is equivalent to the form of Theorem~\ref{thm:criterion} used in
+Section~\ref{sec:proof}.
+
+The results of the paper correspond to the following declarations. Their files are under \lean{CatalanCore}. We give
+the names with a short prefix only. The full namespaces are \lean{CatalanCore.Lai}, \lean{CatalanCore.Measure},
+\lean{CatalanCore.Content} and \lean{CatalanCore.NT}.
+\begin{itemize}
+\item Proposition~\ref{prop:finite} and \eqref{eq:homog}: \lean{laiR_partial_fractions}, \lean{laiL_eval_moment} and
+ \lean{isHomogeneous_laiJ}. The identity $\zeta(4)=\pi^4/90$ is \lean{zeta4_eq_pi}.
+\item Theorem~\ref{thm:criterion}: \lean{measure_of_family_tiedNV_index}, with the structure \lean{TiedNV}, the mass
+ condition \lean{NT.UnionWindowOK} and the prime number theorem in progressions \lean{NT.pnt_class} and
+ \lean{NT.theta_interval_asymp}. Lemma~\ref{lem:scale}: \lean{plain_measure_smul}.
+\item Theorem~\ref{thm:dual}: \lean{lai_decay_dual}. Theorem~\ref{thm:decay} and Corollary~\ref{cor:families}:
+ \lean{lai_wedge_D}, \lean{lai_plane_decay} and \lean{lai_ratio_decay}, applied to the certificate \lean{laiDecayData}.
+\item Proposition~\ref{prop:crude}: \lean{lai_vp_lower}, \lean{lai_vp_nonneg} and \lean{lai_small_primes}.
+ Theorem~\ref{thm:O}: \lean{thmO}. Theorem~\ref{thm:B7}: \lean{band7_proof}.
+\item Lemma~\ref{lem:S}: \lean{lemmaS} and \lean{lemmaT}. Theorem~\ref{thm:L1}: \lean{lai_L1}.
+ Theorem~\ref{thm:L2}: \lean{lai_L2}.
+\item Proposition~\ref{prop:bridge}: \lean{bridge_proof}. Lemma~\ref{lem:SM}: \lean{c01_partial_le}.
+ Lemma~\ref{lem:bands} and Theorem~\ref{thm:content}: \lean{sum_signed_le} and \lean{lai_content}.
+\item Theorem~\ref{thm:NV} and Corollary~\ref{cor:NV}: \lean{lai_nv_core}, \lean{lai_nv_plane} and \lean{lai_nv_ratio}.
+ Theorem~\ref{thm:NV7} and Corollary~\ref{cor:NV7}: \lean{nv7_core}, \lean{nv7_plane} and \lean{nv7_ratio}.
+\item Section~\ref{sec:proof}: \lean{lai_roots_of}.
+\end{itemize}
+The certificate data are the coefficients of $H$, the $40$ cells, the trigonometric values at the cell centres, and
+the $22977$ terms of the partial sum in Lemma~\ref{lem:SM}. They were computed with floating-point optimization and
+the interval arithmetic of Arb \cite{Arb}, and Lean re-checks them with rational arithmetic. They play no role in the
+proof beyond satisfying the checks.
+
+\section*{Disclosure of AI use}
+The mathematics, the Lean formalization, the certificate generators and the text of this paper were produced by AI
+systems at the request of the author. The author posed the problems, directed the work and is responsible for the
+paper. The systems were Claude Opus~5.5, Claude Sonnet~5.5 and Claude Haiku~5.5 (Anthropic), running in Claude Code,
+and GPT-6.1 Sol (OpenAI), running in Codex. The construction of the determinants and the linear independence of $1$,
+$\zeta(3)$ and $\zeta(4)$ are due to Lai \cite{Lai2026}.
+
+\subsection*{Acknowledgements}
+We thank the authors of Mathlib and of the PNT+ project.
+
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{10}
+
+\bibitem{Apery79}
+Roger Ap\'ery, \emph{Irrationalit\'e de {$\zeta(2)$} et {$\zeta(3)$}},
+  Ast\'erisque \textbf{61} (1979), 11--13.
+
+\bibitem{BallRivoal01}
+Keith Ball and Tanguy Rivoal, \emph{Irrationalit\'e d'une infinit\'e de valeurs
+  de la fonction z\^eta aux entiers impairs}, Invent. Math. \textbf{146}
+  (2001), no.~1, 193--207.
+
+\bibitem{Beukers79}
+Frits Beukers, \emph{A note on the irrationality of {$\zeta(2)$} and
+  {$\zeta(3)$}}, Bull. London Math. Soc. \textbf{11} (1979), no.~3, 268--272.
+
+\bibitem{DauguetZudilin14}
+Simon Dauguet and Wadim Zudilin, \emph{On simultaneous diophantine
+  approximations to {$\zeta(2)$} and {$\zeta(3)$}}, J. Number Theory
+  \textbf{145} (2014), 362--387,
+  \href{https://arxiv.org/abs/1401.5322}{arXiv:1401.5322}.
+
+\bibitem{Lean4}
+Leonardo de~Moura and Sebastian Ullrich, \emph{The {L}ean 4 theorem prover and
+  programming language}, Automated Deduction -- CADE 28, Lecture Notes in
+  Computer Science, vol. 12699, Springer, 2021, pp.~625--635.
+
+\bibitem{Fauzan2026}
+Aabir Fauzan, \emph{{$\zeta(5)$} is irrational}, Preprint v1, September 17,
+  2026, Zenodo,
+  \href{https://doi.org/10.5281/zenodo.22826419}{doi:10.5281/zenodo.22826419},
+  2026.
+
+\bibitem{Fischler26}
+St\'ephane Fischler, \emph{Linear independence of odd zeta values using
+  {S}iegel's lemma}, J. Lond. Math. Soc. (2) \textbf{113} (2026), no.~4,
+  e70535, \href{https://arxiv.org/abs/2109.10136}{arXiv:2109.10136}.
+
+\bibitem{FLSZ26}
+St\'ephane Fischler, Li~Lai, Johannes Sprang, and Wadim Zudilin, \emph{Many
+  more odd zeta values are irrational}, 2026, Preprint, 12 November 2026,
+  \href{https://arxiv.org/abs/2611.16156}{arXiv:2611.16156}.
+
+\bibitem{FSZ19}
+St\'ephane Fischler, Johannes Sprang, and Wadim Zudilin, \emph{Many odd zeta
+  values are irrational}, Compos. Math. \textbf{155} (2019), no.~5, 938--952,
+  \href{https://arxiv.org/abs/1803.08905}{arXiv:1803.08905}.
+
+\bibitem{Forrester2018Andreief}
+Peter~J. Forrester, \emph{Meet {A}ndr\'eief, {B}ordeaux 1886, and {A}ndreev,
+  {K}harkov 1882--83}, 2018,
+  \href{https://arxiv.org/abs/1806.10411}{arXiv:1806.10411}.
+
+\bibitem{Giraudin26}
+David~Niedbala Giraudin, \emph{A new upper bound for the irrationality exponent
+  of {$\zeta(2)$}}, 2026, Preprint, 2 October 2026,
+  \href{https://arxiv.org/abs/2610.02912}{arXiv:2610.02912}.
+
+\bibitem{Giraudin26z3}
+\bysame, \emph{A new upper bound for the irrationality exponent of
+  {$\zeta(3)$}}, 2026, Preprint, 22 September 2026,
+  \href{https://arxiv.org/abs/2609.26980}{arXiv:2609.26980}.
+
+\bibitem{Giraudin26z5}
+\bysame, \emph{A new upper bound for the irrationality exponent of
+  {$\zeta(5)$}}, 2026, Preprint, 1 November 2026,
+  \href{https://arxiv.org/abs/2611.01708}{arXiv:2611.01708}.
+
+\bibitem{Hata93}
+Masayoshi Hata, \emph{Rational approximations to {$\pi$} and some other
+  numbers}, Acta Arith. \textbf{63} (1993), no.~4, 335--349.
+
+\bibitem{Arb}
+Fredrik Johansson, \emph{Arb: efficient arbitrary-precision midpoint-radius
+  interval arithmetic}, IEEE Trans. Comput. \textbf{66} (2017), no.~8,
+  1281--1292, \href{https://arxiv.org/abs/1611.02831}{arXiv:1611.02831}.
+
+\bibitem{Lai2026}
+Li~Lai, \emph{The linear independence of {$1$}, {$\zeta(3)$}, and
+  {$\zeta(4)$}}, 2026, Preprint, 5 October 2026 (v2: 15 October 2026),
+  \href{https://arxiv.org/abs/2610.06838}{arXiv:2610.06838}.
+
+\bibitem{Comparator}
+{Lean FRO}, \emph{Comparator: checking a {L}ean proof against a trusted
+  statement}, \url{https://github.com/leanprover/comparator}, 2026, Software;
+  accessed October 2026.
+
+\bibitem{LBKWSK26}
+Elyasheev Leibtag, Hila Barkan, Rotem Kalisch, Shachar Weinbaum, Michael
+  Shalyt, and Ido Kaminer, \emph{New directions in irrationality}, 2026,
+  Preprint, 20 October 2026,
+  \href{https://arxiv.org/abs/2610.27799}{arXiv:2610.27799}; supplement and
+  code at
+  \url{https://github.com/RamanujanMachine/new-directions-in-irrationality}.
+
+\bibitem{Litsey2026}
+Sean Litsey, \emph{An irrationality measure for {C}atalan's constant}, Hexagon
+  preprint hexagon:2610.00187, \url{https://hexagonmath.org/2610.00187}, 2026.
+
+\bibitem{Litsey2026c}
+\bysame, \emph{An irrationality measure for {$\zeta(5)$}}, Manuscript, 2026.
+
+\bibitem{Litsey2026b}
+\bysame, \emph{Irrationality measures from {L\"owner} determinants}, Hexagon
+  preprint hexagon:2610.00401, \url{https://hexagonmath.org/2610.00401}, 2026.
+
+\bibitem{LiuJiangZhang26}
+Jingwen Liu, Kai Jiang, and Pingwen Zhang, \emph{Irrationality exponents of
+  logarithms of positive rational numbers}, 2026, Preprint, 7 October 2026,
+  revised 5 November 2026 (v3),
+  \href{https://arxiv.org/abs/2610.10192}{arXiv:2610.10192}.
+
+\bibitem{MarcovecchioZudilin20}
+Raffaele Marcovecchio and Wadim Zudilin, \emph{Hypergeometric rational
+  approximations to {$\zeta(4)$}}, Proc. Edinb. Math. Soc. (2) \textbf{63}
+  (2020), no.~2, 374--397.
+
+\bibitem{Nesterenko85}
+Yu.~V. Nesterenko, \emph{On the linear independence of numbers}, Vestnik
+  Moskov. Univ. Ser. I Mat. Mekh. (1985), no.~1, 46--49, In Russian; English
+  translation: Moscow Univ. Math. Bull. 40 (1985), no. 1, 69--74.
+
+\bibitem{OpenAI2026}
+{OpenAI}, \emph{Catalan's constant is irrational}, Preprint dated September 24,
+  2026, released October 6, 2026, with a Lean formalization, available at
+  \href{https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Catalans-constant-is-irrational-September-24-2026/paper.pdf}{the
+  original paper PDF} and
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan}{the
+  Lean formalization} (repository commit \texttt{fd4aeeb}, October 7, 2026),
+  2026.
+
+\bibitem{OpenAIPi2026}
+\bysame, \emph{The irrationality exponent of {$\pi$} is 2}, Preprint dated
+  September 24, 2026, released October 6, 2026, with a Lean formalization,
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}{paper}
+  and
+  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/PiExponent}{Lean
+  formalization} (repository commit \texttt{fd4aeeb}), 2026.
+
+\bibitem{RhinViola96}
+Georges Rhin and Carlo Viola, \emph{On a permutation group related to
+  {$\zeta(2)$}}, Acta Arith. \textbf{77} (1996), no.~1, 23--56.
+
+\bibitem{RhinViola01}
+\bysame, \emph{The group structure for {$\zeta(3)$}}, Acta Arith. \textbf{97}
+  (2001), no.~3, 269--293.
+
+\bibitem{Rivoal00}
+Tanguy Rivoal, \emph{La fonction z\^eta de {R}iemann prend une infinit\'e de
+  valeurs irrationnelles aux entiers impairs}, C. R. Acad. Sci. Paris S\'er. I
+  Math. \textbf{331} (2000), no.~4, 267--270.
+
+\bibitem{SaffTotik}
+Edward~B. Saff and Vilmos Totik, \emph{Logarithmic potentials with external
+  fields}, Grundlehren der mathematischen Wissenschaften, vol. 316, Springer,
+  Berlin, 1997.
+
+\bibitem{Tang26}
+Q.~Tang, \emph{zeta2-zeta3-linear-independence: a {L}ean 4 formalization of the
+  linear independence of {$1$}, {$\zeta(2)$} and {$\zeta(3)$} over
+  {$\mathbb{Q}$}}, GitHub repository dtq1997/zeta2-zeta3-linear-independence,
+  version of 30 September 2026,
+  \href{https://github.com/dtq1997/zeta2-zeta3-linear-independence}{github.com/dtq1997/zeta2-zeta3-linear-independence},
+  2026.
+
+\bibitem{Mathlib}
+{The mathlib Community}, \emph{The {L}ean mathematical library}, Proceedings of
+  the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs
+  (CPP 2020), 2020, pp.~367--381.
+
+\bibitem{PNTPlus}
+{The PrimeNumberTheoremAnd contributors}, \emph{The {PNT+} project: a {L}ean
+  formalization of the prime number theorem and related results},
+  \url{https://github.com/AlexKontorovich/PrimeNumberTheoremAnd}, The vendored
+  compatibility additions used here are recorded in the repository's
+  \texttt{NOTICE} and \texttt{PORTING.md}.
+
+\bibitem{Zudilin01}
+Wadim Zudilin, \emph{One of the numbers {$\zeta(5)$}, {$\zeta(7)$},
+  {$\zeta(9)$}, {$\zeta(11)$} is irrational}, Russian Math. Surveys \textbf{56}
+  (2001), no.~4, 774--776.
+
+\bibitem{Zudilin04}
+\bysame, \emph{Arithmetic of linear forms involving odd zeta values}, J.
+  Th\'eor. Nombres Bordeaux \textbf{16} (2004), no.~1, 251--291,
+  \href{https://arxiv.org/abs/math/0206176}{arXiv:math/0206176}.
+
+\bibitem{Zudilin}
+\bysame, \emph{A determinantal approach to irrationality}, Constr. Approx.
+  \textbf{45} (2017), no.~2, 301--310,
+  \href{https://arxiv.org/abs/1507.05697}{arXiv:1507.05697}.
+
+\end{thebibliography}
+
+\end{document}
