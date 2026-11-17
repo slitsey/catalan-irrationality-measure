@@ -1,0 +1,73 @@
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:117:30: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:166:16: warning: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  e̵v̵a̵l̵_̵f̵i̵n̵s̵e̵t̵_̵s̵u̵m̵e̲v̲a̲l̲_̲f̲i̲n̲s̲e̲t̲S̲u̲m̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:178:19: warning: `Polynomial.finset_sum_coeff` has been deprecated: Use `Polynomial.finsetSum_coeff` instead
+
+Hint: Replace the deprecated name:
+  finset_̵s̵S̲um_coeff
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:217:22: warning: This simp argument is unused:
+  eval_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [derivative_sub, derivative_X_pow, derivative_X, eval_sub, eval_mul, eval_pow, eval_X, eval_C,
+    eval_one, ZMod.natCast_self, zero_mul, zero_sub] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:287:2: warning: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:286:28: warning: Variable name `hA` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hA
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:349:77: warning: This simp argument is unused:
+  true_and
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [mem_erase, mem_map, mem_univ, Function.Embedding.coe_subtype]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:386:34: warning: Variable name `hα` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hα
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:436:19: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:425:17: warning: This simp argument is unused:
+  this
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hNl, h1N]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:434:16: warning: This simp argument is unused:
+  h1
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [this, h1.symm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NV7Dual.lean:573:2: warning: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`

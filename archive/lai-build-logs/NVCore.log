@@ -1,0 +1,246 @@
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:137:42: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:168:8: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:175:8: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:183:6: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:209:8: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:214:30: warning: This simp argument is unused:
+  eval_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [derivative_sub, derivative_one, derivative_mul, derivative_C, derivative_add, derivative_X,
+    eval_sub, eval_one, eval_add, eval_mul, eval_C, eval_X, eval_zero, zero_mul, zero_add, eval_pow, h1,
+    derivative_X_pow, eval_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:214:44: warning: This simp argument is unused:
+  derivative_X_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [derivative_sub, derivative_one, derivative_mul, derivative_C, derivative_add, derivative_X,
+    eval_sub, eval_one, eval_add, eval_mul, eval_C, eval_X, eval_zero, zero_mul, zero_add, eval_pow, h1, eval_natCast,
+    eval_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:214:62: warning: This simp argument is unused:
+  eval_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [derivative_sub, derivative_one, derivative_mul, derivative_C, derivative_add, derivative_X,
+    eval_sub, eval_one, eval_add, eval_mul, eval_C, eval_X, eval_zero, zero_mul, zero_add, eval_pow, h1, eval_natCast,
+    derivative_X_pow]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:227:8: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:229:68: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:233:72: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:583:17: warning: This simp argument is unused:
+  redQ_natCast_self
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hE0]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:618:12: warning: This simp argument is unused:
+  redQ_natCast_self
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:631:52: warning: This simp argument is unused:
+  map_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, map_pow, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk,
+    Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, zero_mul, add_zero, zero_add, zero_pow (two_ne_zero)]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:653:12: warning: This simp argument is unused:
+  redQ_natCast_self
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hE0]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:664:44: warning: This simp argument is unused:
+  map_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk, Matrix.cons_val_one,
+    Matrix.cons_val_zero, mul_zero, zero_mul, add_zero, zero_add, zero_pow (two_ne_zero), map_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:665:74: warning: This simp argument is unused:
+  mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, map_pow, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk,
+    Matrix.cons_val_one, Matrix.cons_val_zero, zero_mul, add_zero, zero_add, zero_pow (two_ne_zero), map_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:666:18: warning: This simp argument is unused:
+  zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, map_pow, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk,
+    Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, zero_mul, add_zero, zero_pow (two_ne_zero), map_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:666:28: warning: This simp argument is unused:
+  zero_pow (two_ne_zero)
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, map_pow, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk,
+    Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, zero_mul, add_zero, zero_add, map_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:666:52: warning: This simp argument is unused:
+  map_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_mul, map_add, map_neg, map_pow, redQ_natCast_self, redQ_ite, redQ_U_high D hμ, blk,
+    Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, zero_mul, add_zero, zero_add, zero_pow (two_ne_zero)]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:703:8: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:708:8: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:749:50: warning: Variable name `hs` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hs
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:839:52: warning: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:849:49: warning: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:877:19: warning: `Polynomial.finset_sum_coeff` has been deprecated: Use `Polynomial.finsetSum_coeff` instead
+
+Hint: Replace the deprecated name:
+  finset_̵s̵S̲um_coeff
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:890:17: warning: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  e̵v̵a̵l̵_̵f̵i̵n̵s̵e̵t̵_̵s̵u̵m̵e̲v̲a̲l̲_̲f̲i̲n̲s̲e̲t̲S̲u̲m̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:894:61: warning: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:895:81: warning: `if_false` has been deprecated: Use `ite_false` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵f̵a̵l̵s̵e̵i̲t̲e̲_̲f̲a̲l̲s̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:898:60: warning: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:894:47: warning: This simp argument is unused:
+  Fin.zero_eta
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, if_true, mul_zero, sum_dl, Finset.sum_const_zero, add_zero,
+    Fin.one_eq_zero_iff, OfNat.ofNat_ne_zero, if_false] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:894:70: warning: This simp argument is unused:
+  mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, Fin.zero_eta, if_true, sum_dl, Finset.sum_const_zero, add_zero,
+    Fin.one_eq_zero_iff, OfNat.ofNat_ne_zero, if_false] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:895:6: warning: This simp argument is unused:
+  Finset.sum_const_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, Fin.zero_eta, if_true, mul_zero, sum_dl, add_zero,
+    Fin.one_eq_zero_iff, OfNat.ofNat_ne_zero, if_false] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:895:29: warning: This simp argument is unused:
+  add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, Fin.zero_eta, if_true, mul_zero, sum_dl, Finset.sum_const_zero,
+    Fin.one_eq_zero_iff, OfNat.ofNat_ne_zero, if_false] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:895:60: warning: This simp argument is unused:
+  OfNat.ofNat_ne_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, Fin.zero_eta, if_true, mul_zero, sum_dl, Finset.sum_const_zero,
+    add_zero, Fin.one_eq_zero_iff, if_false] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:895:81: warning: This simp argument is unused:
+  if_false
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_eval hsℓ, Fin.isValue, Fin.zero_eta, if_true, mul_zero, sum_dl, Finset.sum_const_zero,
+    add_zero, Fin.one_eq_zero_iff, OfNat.ofNat_ne_zero] at hev
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:898:48: warning: This simp argument is unused:
+  Fin.mk_one
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_deriv hsℓ, Fin.isValue, if_true, mul_zero, Finset.sum_const_zero, zero_add] at hdv
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:898:69: warning: This simp argument is unused:
+  mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_deriv hsℓ, Fin.isValue, Fin.mk_one, if_true, Finset.sum_const_zero, zero_add] at hdv
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:899:6: warning: This simp argument is unused:
+  Finset.sum_const_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_deriv hsℓ, Fin.isValue, Fin.mk_one, if_true, mul_zero, zero_add] at hdv
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\NVCore.lean:899:29: warning: This simp argument is unused:
+  zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bas_node_deriv hsℓ, Fin.isValue, Fin.mk_one, if_true, mul_zero, Finset.sum_const_zero] at hdv
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

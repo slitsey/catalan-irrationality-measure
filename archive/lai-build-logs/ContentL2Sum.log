@@ -1,0 +1,221 @@
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:50:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.window_Icc`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:217:50: warning: Variable name `hs` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hs
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:236:85: warning: This simp argument is unused:
+  zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.cast_zero, Nat.cast_one, zero_mul, one_mul, add_zero, Nat.sub_zero, sub_zero, mul_zero,
+    sub_self, Nat.cast_add, hq1, mul_one, one_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:247:16: warning: Variable name `h` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:254:40: warning: This simp argument is unused:
+  map_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_add, map_sub, map_mul, map_ofNat, map_one, map_neg]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:254:64: warning: This simp argument is unused:
+  map_one
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_add, map_sub, map_mul, map_natCast, map_ofNat, map_neg]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:254:73: warning: This simp argument is unused:
+  map_neg
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [map_add, map_sub, map_mul, map_natCast, map_ofNat, map_one]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:300:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.lz_eq`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:403:6: warning: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  P̵o̵l̵y̵n̵o̵m̵i̵a̵l̵.̵e̵v̵a̵l̵_̵f̵i̵n̵s̵e̵t̵_̵s̵u̵m̵e̲v̲a̲l̲_̲f̲i̲n̲s̲e̲t̲S̲u̲m̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:399:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.evk_shiftP_sum`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:411:15: warning: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  P̵o̵l̵y̵n̵o̵m̵i̵a̵l̵.̵e̵v̵a̵l̵_̵f̵i̵n̵s̵e̵t̵_̵s̵u̵m̵e̲v̲a̲l̲_̲f̲i̲n̲s̲e̲t̲S̲u̲m̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:407:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.devk_shiftP_sum`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:415:74: warning: This simp argument is unused:
+  Polynomial.eval_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, sX_eval_res]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:443:45: warning: `if_false` has been deprecated: Use `ite_false` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵f̵a̵l̵s̵e̵i̲t̲e̲_̲f̲a̲l̲s̲e̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:616:25: warning: This simp argument is unused:
+  mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [add_zero] at s1 s2
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:659:41: warning: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  P̵o̵l̵y̵n̵o̵m̵i̵a̵l̵.̵e̵v̵a̵l̵_̵f̵i̵n̵s̵e̵t̵_̵s̵u̵m̵e̲v̲a̲l̲_̲f̲i̲n̲s̲e̲t̲S̲u̲m̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:771:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.Epoly_eval`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:784:8: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:789:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.Vneg_eval`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:822:12: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:822:24: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:822:46: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:827:12: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:827:24: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:827:37: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:831:19: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:832:42: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:860:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.Dz_cast`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:890:73: warning: This simp argument is unused:
+  zphi_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:897:73: warning: This simp argument is unused:
+  zphi_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:924:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.lz_zero`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:980:32: warning: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:988:4: warning: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:992:2: warning: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:999:4: warning: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:1018:27: warning: Variable name `h8` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h8
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:1163:0: warning: automatically included section variable(s) unused in theorem `CatalanCore.Lai.Rres_eq`:
+  hp
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hp in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:1413:72: warning: Variable name `hAd` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hAd
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+C:\Users\seanl\Documents\Codex\2026-10-11\plea\work\catalan-uniform\CatalanCore\Lai\ContentL2Sum.lean:1470:10: warning: Unused tactic linter: `push_cast at this` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+'CatalanCore.Lai.harm_refl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CatalanCore.Lai.scalar_second' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CatalanCore.Lai.resprod_p2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CatalanCore.Lai.resderiv_p' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CatalanCore.Lai.wsum_first' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CatalanCore.Lai.wsum_second' depends on axioms: [propext, Classical.choice, Quot.sound]
