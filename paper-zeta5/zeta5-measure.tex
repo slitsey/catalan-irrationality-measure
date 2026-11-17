@@ -754,6 +754,21 @@ order $1/M$. Computations of the exact content of $\Delta_K$ for
 $K\le800$ suggest that the true exponent is near $1.2735$. They are not part of the proof.
 \end{remark}
 
+\begin{remark}[the exact constant]\label{rem:exact}
+The cutoffs at $200$ in Proposition~\ref{prop:integrals} are not needed. The same argument gives
+$\limsup K^{-2}\log m_K\le\Lambda^*$, with
+\[
+ \Lambda^*=\frac{127751}{96000}-\frac{3203}{163200}+\int_3^\infty R(x)\frac{dx}{x^3}-\int_3^\infty\gref(x)\frac{dx}{x^3}
+ =1.2879797838\ldots
+\]
+Both integrands are periodic of period $40$ up to terms that are polynomial in the period index. Summing over periods
+gives a finite linear combination of digamma values $\psi(u/40)$ at rational $u$. The coefficients sum to zero, and
+the trigamma terms cancel identically. By Gauss's digamma theorem, $\Lambda^*$ is therefore an explicit rational
+combination of $1$, of $\pi\cot(\pi r)$ and of $\log\sin(\pi r)$ at rationals $r$, with denominators dividing one of
+$80$, $92$, $74$, $43$, $49$, $9$ and $12$. The formal proof uses the rational bound $\Lambda$ of Theorem~\ref{thm:lambda} instead. With
+$\Lambda^*$ and the same decay certificate the method gives $\mu(\zeta(5))\le86.52$. This value is not formalized.
+\end{remark}
+
 %% =====================================================================
 \section{Decay}\label{sec:decay}
 
