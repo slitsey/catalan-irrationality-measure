@@ -55,17 +55,16 @@ S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in 
 |---|---|---|---|
 | `ζ(5)` | 87 | improved measure | 171 (Giraudin) |
 
-### 4. The plane of ζ(3) and ζ(4)
+### 4. The plane of ζ(3) and π⁴
 
 S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026): LaTeX source and PDF in
 [`paper-lai/`](paper-lai/) (`lai-measure-hexagon.tex` is the single-file version). The proof uses Lai's Hankel
-determinants. Since `ζ(4) = π⁴/90`, this is the plane of `ζ(3)` and `π⁴` of paper 2. On its two axes the
-numbers are rational multiples of `ζ(3)` or of `ζ(4)`, whose known measures are smaller: 5.4197 (Leibtag et
-al.) and 12.5109 (Marcovecchio and Zudilin). The new bound is for the points off the axes.
+determinants. It is the third plane of paper 2. On its two axes the numbers are rational multiples of `ζ(3)`
+or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.5109 (Marcovecchio and Zudilin). The new bound is for the points off the axes.
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `a ζ(3) + b ζ(4)`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
+| `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
 | `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
 
 ## The statements
@@ -95,9 +94,9 @@ its Lean formalization.
   μ(ζ(5)) ≤ 171 under the hypotheses of Fauzan's paper (arXiv:2611.01708). Fauzan's irrationality proof was
   formalized in Lean by M. Firsching ([mo271/Zeta5](https://github.com/mo271/Zeta5)) and by A. Fasten
   ([realazthat/zeta5-lean2](https://github.com/realazthat/zeta5-lean2)).
-- For `a ζ(3) + b ζ(4)`, L. Lai proved that `1`, `ζ(3)` and `ζ(4)` are linearly independent over the rationals
+- For `a ζ(3) + b π⁴`, L. Lai proved that `1`, `ζ(3)` and `π⁴` are linearly independent over the rationals
   (arXiv:2610.06838), so `ζ(3)/π⁴` is irrational. E. Leibtag, H. Barkan, R. Kalisch, S. Weinbaum, M. Shalyt and
-  I. Kaminer gave another proof and proved μ(a ζ(3) + b ζ(4)) < 66.3 for all rationals a, b, not both zero
+  I. Kaminer gave another proof and proved μ(a ζ(3) + b π⁴) < 66.3 for all rationals a, b, not both zero
   (arXiv:2610.27799).
 
 ## What to read
@@ -386,14 +385,14 @@ The exponent is `(37/40)·9.07427/(1.38500086 − 1.288003) = 839369975/9699786 
 M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), commit `7fe7367`, Apache License
 2.0) in [`CatalanCore/Zeta5/Port/`](CatalanCore/Zeta5/Port/); see [`NOTICE`](NOTICE), item 5.
 
-## The plane of ζ(3) and ζ(4): μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
+## The plane of ζ(3) and π⁴: μ(a ζ(3) + b π⁴) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
 
-Since `ζ(4) = π⁴/90`, this is the third plane of the second paper. Off the two axes, the bound 34.14
+This is the third plane of the second paper. Off the two axes, the bound 34.14
 replaces that paper's 72.726.
 
 Lai's determinants `J_n(a, b, X)` are Hankel determinants of a functional built from the simultaneous
 approximations of Zudilin and of Dauguet and Zudilin. After a rational normalisation they are polynomials in
-`X` with integer coefficients, of degree at most `3n`, and they are small at `X = a ζ(3) + b ζ(4)`. They are
+`X` with integer coefficients, of degree at most `3n`, and they are small at `X = a ζ(3) + b π⁴/90`. They are
 used unchanged. For the ratio, `q³ⁿ J_n(1, −p/q, 0) = J_n(q, −p, 0)`, so the
 coefficient grows with `q`, and every estimate must be uniform in the direction `(a, b)`.
 
@@ -415,7 +414,8 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
   of primes turn nonvanishing at prime-tied sizes into a measure. The exponent is `ρ(3/(D − Λ) + β)`, with
   `β = 1637/10000` for the plane and `β = 661/1000` for the ratio.
 
-The Lean plane theorem takes integers `a, b` with `b ≠ 0`. Scaling by a nonzero rational does not change μ, so
+The Lean plane theorem writes the number as `a ζ(3) + b ζ(4)`, with `ζ(4) = π⁴/90` and integers `a, b`,
+`b ≠ 0`. Scaling by a nonzero rational does not change μ, so
 it covers every rational point off the axes. The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 `CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean` and
 `CatalanCore/Tools/Joukowski.lean`. The theorem is `CatalanCore.Lai.lai_roots_of`, and the public theorems are
@@ -473,7 +473,7 @@ script checks `comparator.json`; it needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 
-The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's. The determinants and the independence proof for `a ζ(3) + b ζ(4)` are Lai's.
+The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's. The determinants and the independence proof for `a ζ(3) + b π⁴` are Lai's.
 
 ## Submission
 
