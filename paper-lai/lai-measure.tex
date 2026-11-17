@@ -133,8 +133,11 @@ linearly independent \cite{Lai2026}. As a corollary $\zeta(3)/\pi^4$ is irration
 Weinbaum, Shalyt and Kaminer connected the classical constructions through conservative matrix fields
 \cite{LBKWSK26}. They gave another proof of this independence and proved $\mu(A\zeta(3)+B\zeta(4))<66.3$ for every
 $(A,B)\in\Q^2\setminus\{(0,0)\}$. They also proved $\mu(\zeta(2))<4.62675$ and $\mu(\zeta(3))<5.4197$. Fischler, Lai,
-Sprang and Zudilin proved that many more odd zeta values are irrational \cite{FLSZ26}. As far as we know, $66.3$ is the best published measure on the plane, and no irrationality measure
-for $\zeta(3)/\pi^4$ was known. Part (a) improves the bound to $34.14$ for $b\ne0$. Part (b) is, as far as we know,
+Sprang and Zudilin proved that many more odd zeta values are irrational \cite{FLSZ26}. The companion paper
+\cite{Litsey2026b} proves $\mu(a\zeta(3)+b\pi^4)\le72.726$ for all rationals $a$ and $b$, not both zero, with
+L\"owner determinants. This is weaker than the bound $66.3$ of Leibtag et al. As far as we know, $66.3$ is the best
+published measure on the plane, and no irrationality measure for $\zeta(3)/\pi^4$ was known. Part (a) improves the
+bound to $34.14$ for $b\ne0$. Part (b) is, as far as we know,
 the first measure for $\zeta(3)/\pi^4$. On the line $b=0$ the number is a rational multiple of $\zeta(3)$, whose
 measure is much smaller. On the line $a=0$ the bound of Marcovecchio and Zudilin is smaller than ours.
 
@@ -157,7 +160,8 @@ This paper applies one method to a fourth set of constants. The method consists 
 denominators bounded prime by prime, decay proved through an energy problem, and a formal proof of every step. The
 first companion paper \cite{Litsey2026} refines OpenAI's determinant for Catalan's constant. The second
 \cite{Litsey2026b} uses L\"owner determinants of digamma combinations and proves measures on three planes of numbers.
-Its third plane is the plane of this paper, since $\pi^4=90\zeta(4)$. The third \cite{Litsey2026c} proves a measure
+Its third plane is the plane of this paper, since $\pi^4=90\zeta(4)$, and there it proves the measure $72.726$.
+Theorem~\ref{thm:main}(a) replaces this bound by $34.14$ when $b\ne0$. The third \cite{Litsey2026c} proves a measure
 for $\zeta(5)$ with Fauzan's determinants. Its decay argument, a comparison measure with closed-form potentials checked
 on cells, is the closest relative of Section~\ref{sec:decay}. We use the definitions of $\mu$, the measure criterion
 and the potential-theoretic language of these papers. The construction here is Lai's, with his notation.
@@ -391,7 +395,7 @@ $\theta(x;M,s)=x/\varphi(M)+o(x)$ for every unit class $s$, counts the primes of
 the finite sets $E_i$ costs $O(1)$. Summing,
 \[
  \sum_{\ell\in U}e(\ell)\log\ell\ge\Bigl(\frac1{\varphi(M)}\sum_s\int_0^\infty\max_{i:\,s\in S_i}e_i\mathbf 1_{J_i}(x)\,dx
- -\varepsilon\Bigr)L
+ -\frac\varepsilon2\Bigr)L
 \]
 for large $q$. For nonnegative numbers $x_i$, $\max_ix_i=\sum_{T\ne\emptyset}(-1)^{|T|+1}\min_{i\in T}x_i$. With
 $x_i=e_i\mathbf 1_{J_i}(x)$, the minimum over $T$ is $(\min_Te_i)\mathbf 1_{\bigcap_TJ_i}(x)$, and
@@ -452,7 +456,8 @@ A \emph{contour} is a polyline $\Gamma$ in the half-plane $\operatorname{Re}s>0$
 $-i\infty$ to $+i\infty$, its two unbounded edges are vertical rays, and it meets $\R$ at one point $x_0\in(0,B)$.
 
 \begin{theorem}\label{thm:dual}
-Let $\Gamma$ be a contour. Let $\sigma$ be a positive measure on $\C$ of mass $3$, invariant under conjugation, with
+Let $\Gamma$ be a contour. Let $\sigma$ be a positive measure on $\C$ of mass $3$ with compact support, invariant
+under conjugation, with
 $\sigma(D(s,r))\le A\sqrt r$ for every disc of radius $r\le r_0$, for some $A,r_0>0$. Let $\ell$, $a^*$ and $\rho$ be
 real numbers with
 \[
@@ -508,9 +513,13 @@ where $\widetilde W=V$ on $\Gamma$ and $\widetilde W(-x)=\omega(x)-\rho$ at the 
 $\int\widetilde W\,d\mu-I(\mu)=\int(\widetilde W-2U^\sigma)\,d\mu-I(\mu-\sigma)+I(\sigma)$, and
 $\widetilde W-2U^\sigma\le\ell$ on the support of $\mu$, by the two hypotheses and $a^*-\rho\le\ell$. The measure
 $\mu-\sigma$ has total mass $0$. After replacing each point mass by the uniform measure on a circle of radius $n^{-2}$,
-its energy is nonnegative \cite[Lemma~I.1.8]{SaffTotik}. The bound $\sigma(D(s,r))\le A\sqrt r$ shows that this smoothing
-changes $\int U^\sigma d\mu$ by $O(n^{-1})$, and the self-energy of the circles is $O(n^{-1}\log n)$ per $n^2$. Hence the
-bracket is at most $3\ell+I(\sigma)+o(1)$.
+its energy is nonnegative \cite[Lemma~I.1.8]{SaffTotik}. Let $\tilde\mu$ be the smoothed measure and
+$\delta=n^{-2}$. The mean of $\log|z-u|$ over the circle of radius $\delta$ about $u$ is $\log\max(|z-u|,\delta)$.
+Hence the energy of $\tilde\mu$ is at most the energy of $\mu$ off the diagonal plus the self-energy of the circles,
+which is $3n\cdot n^{-2}\log(1/\delta)=O(n^{-1}\log n)$. For the potential,
+$0\le U^\sigma(s)-\int U^\sigma d(\text{circle})=\int_{|u-s|<\delta}\log(\delta/|u-s|)\,d\sigma(u)$, and by
+$\sigma(D(s,r))\le A\sqrt r$ this is at most $\int_0^\infty\sigma(D(s,\delta e^{-\tau}))\,d\tau\le2A\sqrt\delta=2A/n$. So
+$\int U^\sigma d\tilde\mu\ge\int U^\sigma d\mu-6A/n$, and the bracket is at most $3\ell+I(\sigma)+o(1)$.
 
 \emph{Step 5: the normalization and the tail.} The integral over the unbounded edges converges, because $W_\sigma$
 tends to $-\infty$ linearly in $|\operatorname{Im}s|$ there and the factors $(1+|s|)^C$ are polynomial. The number of
@@ -525,8 +534,9 @@ All the error terms are uniform in $(a,b)$ and $t$.
 
 \begin{remark}
 In the formal proof the contour hypothesis is stated for each large $n$ separately: the contour $\Gamma_n$ may depend on
-$n$, with a bounded number of vertices, and $W_\sigma\le\ell+\eta$ is required on its pieces for every $\eta>0$. The
-statement above, with one fixed contour, is the case we use.
+$n$, with a bounded number of vertices, and $W_\sigma\le\ell+\eta$ is required on its pieces for every $\eta>0$. On the
+two vertical rays it also requires a linear decrease of $W_\sigma$ in $|\operatorname{Im}s|$, which for a measure of
+compact support is the fact used in Step~5. The statement above, with one fixed contour, is the case we use.
 \end{remark}
 
 \subsection{The wedge certificate}
@@ -847,8 +857,8 @@ $B(g_i,g_j)$ at the nodes $s+p$ with $s\in B$, which have $v\ge-1$. Their coeffi
 \[
  \sum_{s\in B}\hat c_s\,\Pi(-s)^2(-s)^{i+j},\qquad \Pi=\prod_{r<\alpha}(t+r)^2,
 \]
-where $\hat c_s$ is the unit part of $c_{s+p}$. By the theorem of Anton and Granville on binomial coefficients modulo
-$p$, $\hat c_s\Pi(-s)^2$ is a constant multiple of $\prod_{i<\alpha}(s-i)\prod_{j=1}^{2p-6n-1}(s+j)^2$ on $B$. This
+where $\hat c_s$ is the unit part of $c_{s+p}$. By Anton's congruence for binomial coefficients modulo $p$
+\cite[Theorem~1]{Granville97} and Wilson's reflection $m!(p-1-m)!\equiv(-1)^{m+1}$, $\hat c_s\Pi(-s)^2$ is a constant multiple of $\prod_{i<\alpha}(s-i)\prod_{j=1}^{2p-6n-1}(s+j)^2$ on $B$. This
 polynomial vanishes on $A$ and $D$ and its product with $s^{i+j}$ has degree at most $p-4$. So the sum over $B$ equals
 the sum over $\F_p$, which is $0$. Lemmas~\ref{lem:gram} and~\ref{lem:halfint} give the bound.
 \end{proof}
@@ -927,8 +937,8 @@ That class contains $0$, hence is $A$, and then $r_6=p-1$ and $r_2=0$, which con
 and the remaining identities follow.
 \end{proof}
 
-The unit parts of the weights are controlled by a product formula. By Anton and Granville's theorem
-\cite[Lemma~2.3]{Lai2026} the unit part of $c_{s+\ell p}$ is $\kappa_c(\ell)\hat c_s$ modulo $p$, where $\kappa_c(\ell)$
+The unit parts of the weights are controlled by a product formula. By Anton's congruence
+\cite[Theorem~1]{Granville97} the unit part of $c_{s+\ell p}$ is $\kappa_c(\ell)\hat c_s$ modulo $p$, where $\kappa_c(\ell)$
 depends only on the class $c$ and on $\ell$, and $\hat c_s$ is a product of factorials of the low digits.
 
 \begin{lemma}\label{lem:U}
@@ -1137,11 +1147,34 @@ $\Xi(s)=(\lambda-1)H_s-2\beta_WH_{r_6+p-s}+3(1-\varepsilon_W)H_{r_2+s}$.
 \end{lemma}
 
 \begin{proof}
-Write the products over class intervals as factorials of numbers in $[0,p)$. Reflect the factorials whose argument
-decreases with $s$ by $m!(p-1-m)!\equiv(-1)^m(p-1)!(1+pH_m)$ modulo $p^2$. This produces the harmonic factor and leaves
-a rational function $\prod_i(s+\alpha_i)!^{e_i}$ with $\sum_ie_i=0$. Its ratio at $s+1$ and $s$ agrees with
-$\hat Q(s+1)/\hat Q(s)$ modulo $p$, by the argument of Lemma~\ref{lem:U}. So the quotient by $\hat Q$ is invariant under
-translation, with divisor supported on $\F_p$. It is a unit at the points of $W$, so it is constant.
+Put $\beta=\beta_W$, $\varepsilon=\varepsilon_W$ and $P_c(s)=\prod_{c\le r<p,\,r\ne s}(s-r)$. By Lemma~\ref{lem:S},
+$2\mu'_r+\sigma(r)=\lambda+4+m_r$ for every residue $r$, with $m_r=0$ on $W$. Since
+$\sigma(r)=2[r>r_6]+3[r\ge p-r_2]$, this gives the exact identity
+\[
+ f(s)\,P_{r_6+1}(s)^2P_{p-r_2}(s)^3=\hat c_s\,\hat Q(s)\,P_0(s)^{\lambda+4}\qquad(s\in W).
+\]
+Every factor is now a product of factorials of numbers in $[0,p)$. We use
+$m!(p-1-m)!\equiv(-1)^m(p-1)!(1+pH_m)$ modulo $p^2$, which follows from
+$\prod_{i=1}^{p-1-m}(p-i)\equiv(-1)^{p-1-m}(p-1-m)!(1-pH_{p-1-m})$ and $H_{p-1-m}\equiv H_m$. Write $u=(p-1)!$ and
+$\hat c_s=\bigl(r_6!/(s!\,(r_6+\beta p-s)!)\bigr)^2\bigl((r_2+s-\varepsilon p)!/(s!\,r_2!)\bigr)^3$.
+
+First, $P_0(s)=(-1)^{p-1-s}s!(p-1-s)!\equiv u(1+pH_s)$. Next, if $\beta=0$ then
+$P_{r_6+1}(s)=\pm(p-1-s)!/(r_6-s)!$ with a sign independent of $s$. If $\beta=1$ then
+$P_{r_6+1}(s)=\pm(s-r_6-1)!\,(p-1-s)!$, and the reflection with $m=r_6+p-s$ gives
+$(r_6+p-s)!\,(s-r_6-1)!\equiv\pm u(1+pH_{r_6+p-s})$. In both cases
+\begin{multline*}
+ \Bigl(\frac{r_6!}{s!\,(r_6+\beta p-s)!}\Bigr)^2P_{r_6+1}(s)^{-2}\\
+ \equiv\mathrm{const}\cdot\bigl(1-2\beta pH_{r_6+p-s}\bigr)\,\bigl(s!(p-1-s)!\bigr)^{-2}.
+\end{multline*}
+In the same way, if $\varepsilon=1$ then $P_{p-r_2}(s)=(s-p+r_2)!\,(-1)^{s}(p-1-s)!$, and if $\varepsilon=0$ the
+reflection with $m=r_2+s$ applies, so that
+\begin{multline*}
+ \Bigl(\frac{(r_2+s-\varepsilon p)!}{s!\,r_2!}\Bigr)^3P_{p-r_2}(s)^{-3}\\
+ \equiv\mathrm{const}\cdot(-1)^s\bigl(1+3(1-\varepsilon)pH_{r_2+s}\bigr)\,\bigl(s!(p-1-s)!\bigr)^{-3}.
+\end{multline*}
+Finally $(s!(p-1-s)!)^{-5}\equiv(-1)^su^{-5}(1-5pH_s)$, and the two signs $(-1)^s$ cancel. Multiplying,
+$f(s)/\hat Q(s)\equiv K\bigl(1+p\,\Xi(s)\bigr)$ with $\Xi=(\lambda+4-5)H_s-2\beta H_{r_6+p-s}+3(1-\varepsilon)H_{r_2+s}$
+and $K$ a unit independent of $s$.
 \end{proof}
 
 We need two facts about sums over a complete residue system. First, for $G\in\Z_{(p)}[x]$ of degree at most $p-4$,
@@ -1270,12 +1303,23 @@ $2$ each, the class sizes are $p$ times the masses
 \[
  m_A=1-\tfrac{\rho+t}3,\ m_B=t-m_A,\ m_C=0,\ m_D=1-t\quad\text{otherwise.}
 \]
-By Lemma~\ref{lem:S}, each class takes $\mu_c=(\lambda+4+[c\subseteq\mathcal N]-\sigma_c)/2$ indices below $\lambda$, and
-\eqref{eq:lemT} gives $\lambda=q+\rho-3$ or $\lambda=q+\rho-4$, the second only when $|\mathcal N|\le2$. The tie classes
-are $(A,C)$ if $\lfloor q/3\rfloor$ is odd and $(B,D)$ if it is even. Then $x_1=|m_Wp-m_Zp|/2+O(1)$ and
-$x_2=(x_1-m_{\mathcal N}p)_++O(1)$, and the sum of the $3n$ smallest increments is
-$p\sum_cm_c(\mu_c^2+(\sigma_c-5)\mu_c)+d\lambda+O(q^2)$. Also $\nu_p=2\sum_{i<3n}\lfloor i/p\rfloor$ since $p^2>3n$, which is
-$p(9x^2-3x+\theta(1-\theta))+O(q)$ with $x=n/p$. On each piece the result is $p\,c_0(q)+n\,c_1(q)$: the terms in $t^2$
+Put $\lambda_c=q+\rho-3$. Since $q_2=(q-\rho)/3$, \eqref{eq:lemT} reads $2d+|\mathcal N|+2=kp$ with
+$k=\lambda_c+1-\lambda\ge1$, and $k\le2$ because $d\le|Z|+|W|$. So $\lambda=\lambda_c$, or $\lambda=\lambda_c-1$ and then
+$|\mathcal N|\le2$. Let $h(\lambda',\sigma)=\mu^2+(\sigma-5)\mu$ with $\mu=\lceil(\lambda'+4-\sigma)/2\rceil$. This is the
+sum of the increments below $\lambda'$ at a residue of class $\sigma$. Let $N_c$ be the number of residues in the two
+classes with $\sigma\not\equiv\lambda_c\pmod2$. If $\lambda=\lambda_c$, the sum of the $3n$ smallest increments is
+$\sum_c|c|\,h(\lambda_c,\sigma_c)+d\lambda_c$ with $2d=p-N_c-2$. If $\lambda=\lambda_c-1$, then
+$h(\lambda_c-1,\sigma)=h(\lambda_c,\sigma)-(\lambda_c-1)[\sigma\not\equiv\lambda_c]$ and $N_c=p-|\mathcal N|$, and the sum
+is $\sum_c|c|\,h(\lambda_c,\sigma_c)+\frac12(p-N_c-2)(\lambda_c-1)$. In both cases it equals
+$\sum_c|c|\,h(\lambda_c,\sigma_c)+\frac12(p-N_c-2)\lambda_c+O(q)$, and $|h|\le12q^2$. The tie classes for $\lambda_c$ are
+$(A,C)$ if $\lfloor q/3\rfloor$ is odd and $(B,D)$ if it is even. Write $m_Z\le m_W$ for their masses and $m_{\mathcal N}$
+for the mass of the other two. If $\lambda=\lambda_c$, then $2d+2=|Z|+|W|$, so $x_1=(|W|-|Z|)/2-1$ and
+$x_2=(x_1-|\mathcal N|)_+$. If $\lambda=\lambda_c-1$, the classes of the parity of $\lambda_c$ have at most two residues,
+so $m_Z$ and $m_W$ are $O(1/p)$. In both cases
+\[
+ x_1+x_2\ge p\Bigl(\frac{m_W-m_Z}2+\Bigl(\frac{m_W-m_Z}2-m_{\mathcal N}\Bigr)_+\Bigr)-5 .
+\]
+Also $\nu_p=2\sum_{i<3n}\lfloor i/p\rfloor$ since $p^2>3n$, and this is exactly $p(9x^2-3x+\theta(1-\theta))$ with $x=n/p$. On each piece the result is $p\,c_0(q)+n\,c_1(q)$: the terms in $t^2$
 cancel between $\nu_p$ and the increments, and with $t=6x-q$ the rest is affine in $x$. The errors are $O(q^2)$, with
 constant at most $1000$.
 \end{proof}
@@ -1416,7 +1460,8 @@ Let $m\ge1$, $n=2m$, and let $\ell=9m+1$ be prime. Let $a',b,X'\in\Z_{(\ell)}$ w
 $J_n(a'/\ell,b,X'/\ell^3)\ne0$.
 \end{theorem}
 
-For $a'=\ell a$ with $a\in\Z$ and $X'=0$ this is Lai's Proposition~3.1 \cite{Lai2026}, where $b$ is an $\ell$-adic unit.
+For $a'=\ell a$ and $X'=\ell^3c$ with integers $a$, $b$ and $c$ this is Lai's Proposition~3.1 \cite{Lai2026}, where
+$b$ is an $\ell$-adic unit.
 The new points are the coefficient $a'/\ell$ and the tolerance $v(X)\ge-3$.
 
 \begin{proof}
@@ -1505,7 +1550,7 @@ $h=(-\frac{297}8,40,-\frac{103}2,78,-130)$ and $\det M_0=1095/2=3\cdot5\cdot73/2
 \emph{Step 4: $\overline N_{BB}$.} The element $e_r$ meets $e_{r'}$ only for $r=r'$, at the nodes of $T_2$, with value
 $-\frac{3117}8\hat c_r\Pi'(-r)^2$. The pairing of $e_r$ with $g_m$ is $\frac{1117}2\hat c_r\Pi'(-r)^2(-r)^m$. The pairing of
 $g_m$ with $g_{m'}$ is $-\frac{1799}2\hat c_r\Pi'(-r)^2(-r)^{m+m'}$ at each residue of $T_2$ plus
-$-7\hat c_{s,1}\Pi(-s)^2(-s)^{m+m'}$ at each residue of $T_4$. By Anton and Granville's theorem,
+$-7\hat c_{s,1}\Pi(-s)^2(-s)^{m+m'}$ at each residue of $T_4$. By Anton's congruence \cite[Theorem~1]{Granville97} and Wilson's theorem,
 $\hat c_s\Pi'(-s)^2=-KD(s)$ on $T_2$ and $\hat c_{s,1}\Pi(-s)^2=-32KD(s)$ on $T_4$, with $D(s)=\prod_{i<\alpha_0}(s-i)$ and a unit
 $K$. The diagonal block is invertible since $3117=3\cdot1039$, and its Schur complement is
 \[
