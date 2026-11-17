@@ -1,8 +1,8 @@
 # Irrationality measures for Catalan's constant, ζ(5) and related constants
 
 A Lean 4 formalization of irrationality measures for Catalan's constant and, by a construction with Löwner
-determinants, for three planes of constants and further related constants, and, by Fauzan's Hankel
-determinants, for `ζ(5)`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
+determinants, for three planes of constants and further related constants, by Fauzan's Hankel
+determinants, for `ζ(5)`, and, by Lai's Hankel determinants, for `a ζ(3) + b ζ(4)` and `ζ(3)/π⁴`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
 `L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant, and
 `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
 `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all sufficiently
@@ -21,17 +21,22 @@ large integers `q`.
 > - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
 > - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
 > - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6;
-> - μ(ζ(5)) ≤ 87.
+> - μ(ζ(5)) ≤ 87;
+> - μ(a ζ(3) + b ζ(4)) ≤ 34.14 for all integers a, b with b ≠ 0;
+> - μ(ζ(3)/π⁴) ≤ 55.50.
 
 Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
 for every integer `a` and every sufficiently large integer `b`. The three plane theorems take the rational
-coefficients as arguments and write the fraction as `p/q`. Each statement implies that the number is
+coefficients as arguments and write the fraction as `p/q`. The two Lai theorems also write it as `p/q`, and the
+Lai plane theorem takes integer coefficients. Each statement implies that the number is
 irrational. One Löwner structure gives all three planes. The irrationality of the numbers on them was proved
 by other methods: by Calegari, Dimitrov and Tang for the first plane, by Q. Tang for the second and by Lai
 for the third. The bound 20.6622 improves the published bound 24781 of Calegari, Dimitrov and Tang on the first
 plane. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the whole
 plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.726. The third plane is
-included because its function has a pole of order three.
+included because its function has a pole of order three. Since `ζ(4) = π⁴/90`, the third plane is also the
+plane of `a ζ(3) + b ζ(4)`. Lai's determinants give μ ≤ 34.14 on it for `b ≠ 0`, and μ(ζ(3)/π⁴) ≤ 55.50. As
+far as we know, this is the first irrationality measure for `ζ(3)/π⁴`.
 
 All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
 `Classical.choice`.
@@ -49,6 +54,9 @@ The solution files supply the proofs independently; their axiom checks do not pe
   is the single-file version), Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
 - S. Litsey, *An irrationality measure for ζ(5)* (2026), the proof of μ(ζ(5)) ≤ 87: LaTeX source and PDF in
   [`paper-zeta5/`](paper-zeta5/) (`zeta5-measure-hexagon.tex` is the single-file version).
+- S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026), the proofs of
+  μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50: LaTeX source and PDF in [`paper-lai/`](paper-lai/)
+  (`lai-measure-hexagon.tex` is the single-file version).
 
 The first two papers build on OpenAI's proof that `G` is irrational ([openai/math](https://github.com/openai/math);
 preprint dated September 24, 2026, released October 6, 2026), and the proof of μ(G) ≤ 270 also builds on
@@ -76,18 +84,23 @@ its Lean formalization. Other bounds in the literature:
   μ(ζ(5)) ≤ 171 under the hypotheses of Fauzan's paper (arXiv:2611.01708). Fauzan's irrationality proof was
   formalized in Lean by M. Firsching ([mo271/Zeta5](https://github.com/mo271/Zeta5)) and by A. Fasten
   ([realazthat/zeta5-lean2](https://github.com/realazthat/zeta5-lean2)).
+- For `a ζ(3) + b ζ(4)`, L. Lai proved that `1`, `ζ(3)` and `ζ(4)` are linearly independent over the rationals
+  (arXiv:2610.06838), so `ζ(3)/π⁴` is irrational. E. Leibtag, H. Barkan, R. Kalisch, S. Weinbaum, M. Shalyt and
+  I. Kaminer gave another proof and proved μ(a ζ(3) + b ζ(4)) < 66.3 for all rationals a, b, not both zero
+  (arXiv:2610.27799).
 
 ## What to read
 
 | File | Content |
 |---|---|
-| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean), [`ChallengeZeta5.lean`](ChallengeZeta5.lean) | the twenty-eight statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`), twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`) and μ(ζ(5)) ≤ 87 in `ChallengeZeta5.lean` (namespace `Zeta5IrrationalityMeasure`). This is the whole trusted statement surface |
-| [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean), [`SolutionZeta5.lean`](SolutionZeta5.lean) | their proofs, each file ending with `#print axioms` for its theorems |
-| [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json), [`comparator-zeta5.json`](comparator-zeta5.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json` and `comparator-zeta5.json` are not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
+| [`Challenge.lean`](Challenge.lean), [`ChallengeHybrid.lean`](ChallengeHybrid.lean), [`ChallengeZeta5.lean`](ChallengeZeta5.lean), [`ChallengeLai.lean`](ChallengeLai.lean) | the thirty statements, using Mathlib only, with the constants written as series: μ(G) ≤ 270 in `Challenge.lean` (namespace `CatalanIrrationalityMeasure`), twenty-six in `ChallengeHybrid.lean` (namespace `TrigammaDifferences`), μ(ζ(5)) ≤ 87 in `ChallengeZeta5.lean` (namespace `Zeta5IrrationalityMeasure`) and the two Lai measures in `ChallengeLai.lean` (namespace `LaiIrrationalityMeasure`). This is the whole trusted statement surface |
+| [`Solution.lean`](Solution.lean), [`SolutionHybrid.lean`](SolutionHybrid.lean), [`SolutionZeta5.lean`](SolutionZeta5.lean), [`SolutionLai.lean`](SolutionLai.lean) | their proofs, each file ending with `#print axioms` for its theorems |
+| [`comparator.json`](comparator.json), [`comparator-hybrid.json`](comparator-hybrid.json), [`comparator-zeta5.json`](comparator-zeta5.json), [`comparator-lai.json`](comparator-lai.json) | configurations for `lake comparator`, stating that each `Solution` file proves exactly the statements of its `Challenge` file with the three permitted axioms. The `comparator` job of the CI workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs [`scripts/verify-comparator.sh`](scripts/verify-comparator.sh) on `comparator.json`, with Lean's kernel and the NanoDa kernel bundled with the toolchain, the two kernels Palomar requires; the manually dispatched workflow [`comparator-timing.yml`](.github/workflows/comparator-timing.yml) times the same check with each external kernel separately. `comparator-hybrid.json`, `comparator-zeta5.json` and `comparator-lai.json` are not run in CI. The proofs are kernel-checked; μ(G) ≤ 270 has not been run through `lake comparator` |
 | [`CatalanMeasure/GenD/`](CatalanMeasure/GenD/) | the proof of μ(G) ≤ 270 |
 | [`CatalanCore/Uniform/`](CatalanCore/Uniform/) | the proofs of the plane theorems and the other measures |
 | [`CatalanCore/Zeta5/`](CatalanCore/Zeta5/) | the proof of μ(ζ(5)) ≤ 87 |
-| [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml), [`formalization-zeta5.yaml`](formalization-zeta5.yaml) | provenance, authorship, automation and scope |
+| [`CatalanCore/Lai/`](CatalanCore/Lai/) | the proofs of the two Lai measures |
+| [`formalization.yaml`](formalization.yaml), [`formalization-hybrid.yaml`](formalization-hybrid.yaml), [`formalization-zeta5.yaml`](formalization-zeta5.yaml), [`formalization-lai.yaml`](formalization-lai.yaml) | provenance, authorship, automation and scope |
 
 ## Catalan's constant: μ(G) ≤ 270
 
@@ -353,12 +366,45 @@ The exponent is `(37/40)·9.07427/(1.38500086 − 1.288003) = 839369975/9699786 
 M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), commit `7fe7367`, Apache License
 2.0) in [`CatalanCore/Zeta5/Port/`](CatalanCore/Zeta5/Port/); see [`NOTICE`](NOTICE), item 5.
 
+## Lai's plane: μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
+
+Lai's determinants `J_n(a, b, X)` are Hankel determinants of a functional built from the simultaneous
+approximations of Zudilin and of Dauguet and Zudilin. After a rational normalisation they are polynomials in
+`X` with integer coefficients, of degree at most `3n`, and they are small at `X = a ζ(3) + b ζ(4)`. They are
+used unchanged. For the ratio, `q³ⁿ J_n(1, −p/q, 0) = J_n(q, −p, 0)`, so the
+coefficient grows with `q`, and every estimate must be uniform in the direction `(a, b)`.
+
+- **Decay on a neighbourhood.** Lai writes the functional as an integral over a vertical line. A positive
+  measure of mass 3 in the complex plane and an upper bound for its field on an admissible contour bound
+  `|J_n|` by an energy, uniformly in `(a, b)`. Moving `X` adds atoms at the negative integers, controlled by
+  the potential on the negative axis. The measure lives on two segments, with density against the arcsine
+  law an explicit square, so its potentials have closed forms through the Joukowski map. The inequality is
+  checked on 40 cells. This gives `D = 33.4401` and the neighbourhood exponent `ρ = 42.94856306`.
+- **Denominators.** At every prime `√(8n) < p < 3n` an exact law improves Lai's bound for the `p`-adic
+  valuation by two integers. They come from a rank bound for a reduced Gram form modulo `p` and from a basis
+  whose roots are shifted by multiples of `p`, with a cancellation modulo `p²`. Similar bases treat
+  `3n < p ≤ 6n`. The law is piecewise affine in `n/p`, and its integral against the primes has a closed form
+  in logarithms by Gauss's digamma theorem. This gives `Λ = 28.68723663`.
+- **Nonvanishing.** Lai's auxiliary-prime argument is extended to every rational `X` whose denominator is not
+  divisible by `ℓ⁴`, and to the ratio direction. A second family of primes, `3ℓ = 7n + 1` and `3ℓ = 7n + 2`,
+  gives exact nonvanishing: the reduction modulo `ℓ` is a determinant of size 1 or 2 of power sums over `𝔽_ℓ`.
+- **Criterion.** The prime number theorem in progressions and an inclusion–exclusion count over the classes
+  of primes turn nonvanishing at prime-tied sizes into a measure. The exponent is `ρ(3/(D − Λ) + β)`, with
+  `β = 1637/10000` for the plane and `β = 661/1000` for the ratio.
+
+On the line `b = 0` the number is a rational multiple of `ζ(3)`, whose measure is much smaller; the plane
+theorem takes `b ≠ 0`. The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
+`CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean` and
+`CatalanCore/Tools/Joukowski.lean`. The theorem is `CatalanCore.Lai.lai_roots_of`, and the public theorems are
+`LaiIrrationalityMeasure.lai_plane_measure_34_14` and `LaiIrrationalityMeasure.lai_ratio_measure_55_50`.
+
 ## Kernel-checked certificates
 
 All numerical bounds are ordinary kernel-checked rational and integer computations (`decide +kernel`;
 no `native_decide`): for `G`, the inverses of the base matrices modulo 1009, the trial sequences, the
 reference measures and their bounds, and the rank data; for the trigamma differences, the content tables and the cell
-covers of the decay certificates; for `ζ(5)`, the 110 decay cells and the energy constant. The certificate data were computed with floating-point optimisation and
+covers of the decay certificates; for `ζ(5)`, the 110 decay cells and the energy constant; for Lai's plane, the
+40 decay cells, the energy and the content tables. The certificate data were computed with floating-point optimisation and
 interval arithmetic (Arb), which are not trusted: Lean rechecks every inequality.
 Large certificates are split into many small declarations with explicit intermediate values, chained by
 general lemmas, and integer recurrences whose values are divisible by large powers of 2, such as the
@@ -394,16 +440,17 @@ lake build
 ruby scripts/validate-formalization.rb
 ruby scripts/validate-formalization.rb formalization-hybrid.yaml
 ruby scripts/validate-formalization.rb formalization-zeta5.yaml
+ruby scripts/validate-formalization.rb formalization-lai.yaml
 ./scripts/verify-comparator.sh
 ```
 
-`lake build` builds the three solution files. The numerical checks can use several GiB per Lean process; use
+`lake build` builds the four solution files. The numerical checks can use several GiB per Lean process; use
 a small worker count (for example `LEAN_NUM_THREADS=2`) on memory-constrained machines. The comparator
 script checks `comparator.json`; it needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 
-The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's.
+The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's. The determinants and the independence proof for `a ζ(3) + b ζ(4)` are Lai's.
 
 ## Submission
 

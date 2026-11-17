@@ -1,0 +1,15 @@
+{
+  "challenge_module": "ChallengeLai",
+  "solution_module": "SolutionLai",
+  "theorem_names": [
+    "LaiIrrationalityMeasure.lai_plane_measure_34_14",
+    "LaiIrrationalityMeasure.lai_ratio_measure_55_50"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

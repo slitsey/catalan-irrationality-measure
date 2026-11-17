@@ -57,8 +57,9 @@ It contains third-party material, also licensed under the Apache License, Versio
    line naming its source file and changes.
 
 Everything else (CatalanMeasure/ apart from item 4, CatalanCore/Zeta5/ apart from item 5, CatalanMeasure.lean, Challenge.lean, Solution.lean,
-ChallengeZeta5.lean, SolutionZeta5.lean, comparator.json, comparator-zeta5.json, formalization.yaml,
-formalization-zeta5.yaml, README.md, PORTING.md, paper/, paper-zeta5/, scripts/certgen/) is new work
+ChallengeZeta5.lean, SolutionZeta5.lean, ChallengeLai.lean, SolutionLai.lean, CatalanCore/Lai/,
+comparator.json, comparator-zeta5.json, comparator-lai.json, formalization.yaml, formalization-zeta5.yaml,
+formalization-lai.yaml, README.md, PORTING.md, paper/, paper-zeta5/, paper-lai/, scripts/certgen/) is new work
 for this project.
 
 The general determinant lemmas and first-case dual bound were later moved, with unchanged

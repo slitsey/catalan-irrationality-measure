@@ -1,6 +1,6 @@
 name = "CatalanIrrationalityMeasure"
 version = "0.1.0"
-defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid", "ChallengeZeta5", "SolutionZeta5"]
+defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid", "ChallengeZeta5", "SolutionZeta5", "ChallengeLai", "SolutionLai"]
 
 [leanOptions]
 autoImplicit = false
