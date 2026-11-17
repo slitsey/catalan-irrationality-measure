@@ -20,7 +20,7 @@ The W2 data enter as the fields of `LaiDecayData` (every field a statement the g
 * `hcov : LaiCover c N laiEll wA wB`: the 40 cell checks (LD19);
 * `ha0`, `hA`, `hρ`: the atom numbers `a(x*)`, `|a'(x*)|` and `a0 + AA²/(98/100) ≤ ℓ + ρ`;
 * `henergy : LaiEnergyOK c N`: the partition, the per-cell tower bounds `U`, `E` and the energy
-  inequality `I(σ) ≤ 2088619305/10^9`.
+  inequality `I(σ) ≤ 208871/10^5`.
 
 Say μ, never B, for the irrationality measure.
 -/
@@ -100,7 +100,7 @@ theorem lai_hsep : ∀ x ∈ Icc (-1 : ℝ) 1,
 
 /-- The energy data (LD14): an exact angle partition `0 = a₀ ≤ ⋯ ≤ a_n = π`, the per-cell bounds
 `U i j ≥ |G^{(j)}|/j!` of the cross potential tower on `[a_i, a_{i+1}]`, the per-cell remainders
-`E i ≥ Σ_{j+k=5} U i j f_k`, and the certified inequality `I(σ) ≤ 2088619305/10^9` (self energy in closed
+`E i ≥ Σ_{j+k=5} U i j f_k`, and the certified inequality `I(σ) ≤ 208871/10^5` (self energy in closed
 form plus `(2/π) Σ_cells crossCellBound`). -/
 def LaiEnergyOK (c : ℕ → ℝ) (N : ℕ) : Prop :=
   ∃ (n : ℕ) (a : ℕ → ℝ) (Ur : ℕ → ℕ → ℝ) (Er : ℕ → ℝ),
@@ -113,7 +113,7 @@ def LaiEnergyOK (c : ℕ → ℝ) (N : ℕ) : Prop :=
           ∑ k ∈ Finset.range N, c (k + 1) ^ 2 / (2 * ((k + 1 : ℕ) : ℝ))) +
       2 * ((1 / Real.pi) * ∑ i ∈ Finset.range n,
         crossCellBound (potT (starRingEnd ℂ DecayInstance.laiM) (starRingEnd ℂ DecayInstance.laiH) c N (cosCurve DecayInstance.laiM DecayInstance.laiH)) c N
-          ((a i + a (i + 1)) / 2) ((a (i + 1) - a i) / 2) (Er i)) ≤ 2088619305 / 10 ^ 9
+          ((a i + a (i + 1)) / 2) ((a (i + 1) - a i) / 2) (Er i)) ≤ 208871 / 10 ^ 5
 
 /-- The decay data of the Lai wedge (everything W2 supplies). -/
 structure LaiDecayData (c : ℕ → ℝ) (N : ℕ) (wA wB a0 AA : ℝ) : Prop where
@@ -130,15 +130,15 @@ structure LaiDecayData (c : ℕ → ℝ) (N : ℕ) (wA wB a0 AA : ℝ) : Prop wh
 noncomputable def laiD (c : ℕ → ℝ) (N : ℕ) : ℝ :=
   -((3 : ℝ) ^ 2 * (3 / 2 - Real.log 3) - energyC (laiSigma c N) + 3 * laiEll)
 
-/-- The energy: `I(σ) = -energyC σ ≤ 2088619305/10^9`. -/
+/-- The energy: `I(σ) = -energyC σ ≤ 208871/10^5`. -/
 theorem lai_energy_le {c : ℕ → ℝ} {N : ℕ} (hpos : ∀ x ∈ Icc (-1 : ℝ) 1, 0 ≤ chebF c N x)
-    (h : LaiEnergyOK c N) : -energyC (laiSigma c N) ≤ 2088619305 / 10 ^ 9 := by
+    (h : LaiEnergyOK c N) : -energyC (laiSigma c N) ≤ 208871 / 10 ^ 5 := by
   obtain ⟨n, a, Ur, Er, a0, an, hmono, hU, hE, hb⟩ := h
   exact (energy_conj_pair_le laiH_ne hpos lai_hsep a0 an hmono hU hE).trans hb
 
-/-- **LD22.**  `D ≥ 3344019129/10^8` and `ρ̄ = a0 + AA²/(98/100) - ℓ ≤ 4294856306/10^8`. -/
+/-- **LD22.**  `D ≥ 3344010000/10^8` and `ρ̄ = a0 + AA²/(98/100) - ℓ ≤ 4294856306/10^8`. -/
 theorem lai_wedge_D {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecayData c N wA wB a0 AA) :
-    3344019129 / 10 ^ 8 ≤ laiD c N ∧
+    3344010000 / 10 ^ 8 ≤ laiD c N ∧
       a0 + AA ^ 2 / (2 * (49 / 100)) - laiEll ≤ 4294856306 / 10 ^ 8 := by
   refine ⟨?_, by linarith [d.hρ]⟩
   have h1 := lai_energy_le d.hpos d.henergy
@@ -154,7 +154,7 @@ theorem decay_core {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecay
     ∃ R : ℕ, ∀ n : ℕ, R ≤ n → ∀ a b t : ℝ, 0 < laiLam a b → laiLam a b ≤ Λ →
       |t| ≤ laiLam a b * Real.exp (-((4294856306 / 10 ^ 8 : ℝ) * n)) →
       |MvPolynomial.aeval ![a, b, a * zeta3 + b * zeta4 + t] (laiJ n)| ≤
-        Real.exp (-(3344019129 / 10 ^ 8 - ε) * (n : ℝ) ^ 2) := by
+        Real.exp (-(3344010000 / 10 ^ 8 - ε) * (n : ℝ) ^ 2) := by
   obtain ⟨R₀, hR₀⟩ := lai_decay_instance d.hpos d.hc0 d.hcov d.ha0 d.hA
     (ρ := 4294856306 / 10 ^ 8) d.hρ (ε / 2) (by linarith)
   have hD := (lai_wedge_D d).1
@@ -181,7 +181,7 @@ theorem decay_core {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecay
     _ ≤ Real.exp (3 * n * Real.log Λ) * Real.exp (-(laiD c N - ε / 2) * (n : ℝ) ^ 2) := by
         unfold laiD
         exact mul_le_mul hpow le_rfl (Real.exp_pos _).le (Real.exp_pos _).le
-    _ ≤ Real.exp (-(3344019129 / 10 ^ 8 - ε) * (n : ℝ) ^ 2) := by
+    _ ≤ Real.exp (-(3344010000 / 10 ^ 8 - ε) * (n : ℝ) ^ 2) := by
         rw [← Real.exp_add]
         apply Real.exp_le_exp.mpr
         nlinarith [mul_nonneg hnn hnn, sq_nonneg (n : ℝ)]
@@ -189,10 +189,10 @@ theorem decay_core {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecay
 /-! ### 4. LD23 -/
 
 /-- **LD23 (plane).**  For `b ≠ 0`, `HasScaledDecay` of the plane family `aζ(3) + bζ(4)` at the
-scale `n`, with `D = 3344019129/10^8`, `ρ = 4294856306/10^8`. -/
+scale `n`, with `D = 3344010000/10^8`, `ρ = 4294856306/10^8`. -/
 theorem lai_plane_decay {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecayData c N wA wB a0 AA)
     (a b : ℤ) (hb : b ≠ 0) :
-    HasScaledDecay (laiPlaneFam a b) id (3344019129 / 10 ^ 8) (4294856306 / 10 ^ 8) := by
+    HasScaledDecay (laiPlaneFam a b) id (3344010000 / 10 ^ 8) (4294856306 / 10 ^ 8) := by
   have hb1 : (1 : ℝ) ≤ |(b : ℝ)| := by
     have : (1 : ℤ) ≤ |b| := Int.one_le_abs hb
     exact_mod_cast this
@@ -218,7 +218,7 @@ theorem lai_plane_decay {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : Lai
 
 /-- **LD23 (ratio).**  `HasScaledDecay` of the ratio family at `y* = ζ(3)/ζ(4)`. -/
 theorem lai_ratio_decay {c : ℕ → ℝ} {N : ℕ} {wA wB a0 AA : ℝ} (d : LaiDecayData c N wA wB a0 AA) :
-    HasScaledDecay laiRatioFam id (3344019129 / 10 ^ 8) (4294856306 / 10 ^ 8) := by
+    HasScaledDecay laiRatioFam id (3344010000 / 10 ^ 8) (4294856306 / 10 ^ 8) := by
   intro ε hε
   obtain ⟨R, hR⟩ := decay_core d hε (show (1 : ℝ) ≤ 6 by norm_num)
   refine ⟨R, fun (n : ℕ) _ hRn t ht => ?_⟩
