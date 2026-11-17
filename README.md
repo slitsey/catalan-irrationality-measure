@@ -1,66 +1,63 @@
 # Irrationality measures for Catalan's constant, ζ(5) and related constants
 
-A Lean 4 formalization of irrationality measures for Catalan's constant and, by a construction with Löwner
-determinants, for three planes of constants and further related constants, by Fauzan's Hankel
-determinants, for `ζ(5)`, and, by Lai's Hankel determinants, for `a ζ(3) + b ζ(4)` and `ζ(3)/π⁴`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant,
-`L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant, and
-`ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that `ψ′(1) = ζ(2) = π²/6`. The irrationality exponent `μ(ξ)` of a real number
-`ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all sufficiently
-large integers `q`.
+A Lean 4 formalization of the irrationality measures proved in four papers. The irrationality exponent `μ(ξ)` of
+a real number `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all
+sufficiently large integers `q`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant and
+`L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant.
 
-> **Theorem.**
->
-> - μ(G) ≤ 270;
-> - μ(a L₋₃ + b π²) ≤ 20.6622 for all rationals a, b, not both zero;
-> - μ(L₋₃) ≤ 13.6839;
-> - μ(L₋₃ ± π²/9) ≤ 9.4913, μ(L₋₃ ± 2π²/27) ≤ 14, μ(L₋₃ ± π²/27) ≤ 15.359 and
->   μ(L₋₃ ± π²/18) ≤ 17.492, for both signs;
-> - μ(a ζ(3) + b π²) ≤ 335.20 for all rationals a, b, not both zero;
-> - μ(a ζ(3) + b π⁴) ≤ 72.726 for all rationals a, b, not both zero;
-> - μ(ζ(3)) ≤ 6.0382 and μ(π²) ≤ 6.5214 (weaker than the known bounds, included for completeness);
-> - μ(G ± 5π²/48) ≤ 31.1973, for both signs;
-> - μ(ψ′(a/5) − π²/6) ≤ 23.7756 for a = 1, 2, 3, 4;
-> - μ(ψ′(a/7) − π²/6) ≤ 1806.1719 for a = 1, …, 6;
-> - μ(ζ(5)) ≤ 87;
-> - μ(a ζ(3) + b ζ(4)) ≤ 34.14 for all integers a, b with b ≠ 0;
-> - μ(ζ(3)/π⁴) ≤ 55.50.
+## The four papers
 
-Each Lean statement has the same form. For a number `x` with exponent `μ` above, it is `|x − a/b| > b^(−μ)`
-for every integer `a` and every sufficiently large integer `b`. The three plane theorems take the rational
-coefficients as arguments and write the fraction as `p/q`. The two Lai theorems also write it as `p/q`, and the
-Lai plane theorem takes integer coefficients. Each statement implies that the number is
-irrational. One Löwner structure gives all three planes. The irrationality of the numbers on them was proved
-by other methods: by Calegari, Dimitrov and Tang for the first plane, by Q. Tang for the second and by Lai
-for the third. The bound 20.6622 improves the published bound 24781 of Calegari, Dimitrov and Tang on the first
-plane. As far as we know, the bound for `a ζ(3) + b π²` is the first irrationality measure valid on the whole
-plane. On the third plane Leibtag et al. prove μ < 66.3, which is better than 72.726. The third plane is
-included because its function has a pole of order three. Since `ζ(4) = π⁴/90`, the third plane is also the
-plane of `a ζ(3) + b ζ(4)`. Lai's determinants give μ ≤ 34.14 on it for `b ≠ 0`, and μ(ζ(3)/π⁴) ≤ 55.50. As
-far as we know, this is the first irrationality measure for `ζ(3)/π⁴`.
+### 1. Catalan's constant
 
-All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and
-`Classical.choice`.
+> **Theorem.** μ(G) ≤ 270.
 
+S. Litsey, *An irrationality measure for Catalan's constant* (2026): LaTeX source and PDF in [`paper/`](paper/)
+(`catalan-measure-hexagon.tex` is the single-file version), Hexagon preprint
+[`hexagon:2610.00187`](https://hexagonmath.org/2610.00187). The proof refines OpenAI's proof that `G` is irrational.
+
+### 2. Löwner determinants
+
+> **Theorem.** μ(a L₋₃ + b π²) ≤ 20.6622 and μ(a ζ(3) + b π²) ≤ 335.20, for all rationals a, b, not both zero.
+
+S. Litsey, *Irrationality measures from Löwner determinants* (2026): LaTeX source and PDF in
+[`paper-trigamma/`](paper-trigamma/) (`trigamma-irrationality-hexagon.tex` is the single-file version), Hexagon
+preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401). The first bound improves the bound 24781 of
+Calegari, Dimitrov and Tang. As far as we know, the second is the first irrationality measure valid on the whole
+plane. The same method gives sharper bounds at special points of the first plane, among them `L₋₃` and
+`G ± 5π²/48`, and at further differences of trigamma values. They are listed in
+[the section on this paper](#the-löwner-determinant-measures).
+
+### 3. ζ(5)
+
+> **Theorem.** μ(ζ(5)) ≤ 87.
+
+S. Litsey, *An irrationality measure for ζ(5)* (2026): LaTeX source and PDF in [`paper-zeta5/`](paper-zeta5/)
+(`zeta5-measure-hexagon.tex` is the single-file version). The proof uses Fauzan's Hankel determinants.
+
+### 4. The plane of ζ(3) and ζ(4)
+
+> **Theorem.** μ(a ζ(3) + b ζ(4)) ≤ 34.14 for all integers a, b with b ≠ 0, and μ(ζ(3)/π⁴) ≤ 55.50.
+
+S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026): LaTeX source and PDF in
+[`paper-lai/`](paper-lai/) (`lai-measure-hexagon.tex` is the single-file version). The proof uses Lai's Hankel
+determinants. The best bound previously published on this plane is 66.3, by Leibtag et al. As far as we know,
+the bound for `ζ(3)/π⁴` is the first. On the line `b = 0` the number is a rational multiple of `ζ(3)`, whose
+known measures are much smaller.
+
+## The statements
+
+Each Lean statement has the form `|x − p/q| > q^(−μ)` for every integer `p` and every sufficiently large
+integer `q`, and so implies that `x` is irrational. The plane theorems take the coefficients as arguments.
+All proofs are kernel-checked in Lean and use only the axioms `propext`, `Quot.sound` and `Classical.choice`.
 The challenge files contain only statement specifications over Mathlib, with intentional `sorry` placeholders.
 The solution files supply the proofs independently; their axiom checks do not permit `sorryAx`.
 
-## Papers
-
-- S. Litsey, *An irrationality measure for Catalan's constant* (2026), the proof of μ(G) ≤ 270: LaTeX
-  source and PDF in [`paper/`](paper/) (`catalan-measure-hexagon.tex` is the single-file version),
-  Hexagon preprint [`hexagon:2610.00187`](https://hexagonmath.org/2610.00187).
-- S. Litsey, *Irrationality measures from Löwner determinants* (2026), the other
-  measures: LaTeX source and PDF in [`paper-trigamma/`](paper-trigamma/) (`trigamma-irrationality-hexagon.tex`
-  is the single-file version), Hexagon preprint [`hexagon:2610.00401`](https://hexagonmath.org/2610.00401).
-- S. Litsey, *An irrationality measure for ζ(5)* (2026), the proof of μ(ζ(5)) ≤ 87: LaTeX source and PDF in
-  [`paper-zeta5/`](paper-zeta5/) (`zeta5-measure-hexagon.tex` is the single-file version).
-- S. Litsey, *Irrationality measures for aζ(3) + bζ(4) and ζ(3)/π⁴* (2026), the proofs of
-  μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50: LaTeX source and PDF in [`paper-lai/`](paper-lai/)
-  (`lai-measure-hexagon.tex` is the single-file version).
+## Other results in the literature
 
 The first two papers build on OpenAI's proof that `G` is irrational ([openai/math](https://github.com/openai/math);
 preprint dated September 24, 2026, released October 6, 2026), and the proof of μ(G) ≤ 270 also builds on
-its Lean formalization. Other bounds in the literature:
+its Lean formalization.
+
 - For `G`, R. K. Jha proved μ(G) ≤ 10^8 ([doi:10.5281/zenodo.23237269](https://doi.org/10.5281/zenodo.23237269)).
   M. C. S. Carreira treated the five parameters of OpenAI's construction as free and obtained μ(G) < 2294
   ([doi:10.5281/zenodo.23532239](https://doi.org/10.5281/zenodo.23532239)); H. S. Bojnal instantiated his
@@ -172,14 +169,23 @@ assembly (`T4Instance`, `T4Leaf*`, `TerminalC`). The generic valuation theorems 
 
 ## The Löwner-determinant measures
 
-The approximations are determinants of rectangular Löwner matrices, the matrices of divided differences, of
+The second paper proves measures on three planes of constants and at special points of them. The first plane is
+the rational span of `L₋₃` and `π²`, the second that of `ζ(3)` and `π²`, and the third that of `ζ(3)` and `π⁴`.
+The irrationality of the numbers on them was proved by other methods: by Calegari, Dimitrov and Tang for the
+first plane, by Q. Tang for the second and by Lai for the third. On the third plane the paper proves 72.726 for
+all rationals `a, b`, not both zero. This is weaker than the bound 66.3 of Leibtag et al. and than the fourth
+paper's 34.14 for `b ≠ 0`. The third plane is included because its function has a pole of order three. Every
+bound of the paper is in the table below.
+
+Let `ψ` be the digamma function and `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that
+`ψ′(1) = ζ(2) = π²/6`. The approximations are determinants of rectangular Löwner matrices, the matrices of divided differences, of
 a rational combination of digamma functions `ψ(z + s)` and their derivatives at integer nodes: a common
 block of `r` nodes, which carries the variable, and an interleaved border of about `cr/2` row nodes and
 `cr/2` column nodes, where `c` is the only parameter of the geometry.
 
 When the combination is a difference of two digamma functions, the constant is a difference of trigamma
-values. For `0 < s < t ≤ 1` put `Ψ(s, t) = ψ′(s) − ψ′(t)`. Many of the numbers above are, up to rational
-factors, values of `Ψ`:
+values. For `0 < s < t ≤ 1` put `Ψ(s, t) = ψ′(s) − ψ′(t)`. Many of the numbers in the table below are, up to
+rational factors, values of `Ψ`:
 
 ```text
 Ψ(1/4, 1) = 8 (G + 5π²/48),          Ψ(3/4, 1) = −8 (G − 5π²/48),
@@ -366,7 +372,10 @@ The exponent is `(37/40)·9.07427/(1.38500086 − 1.288003) = 839369975/9699786 
 M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), commit `7fe7367`, Apache License
 2.0) in [`CatalanCore/Zeta5/Port/`](CatalanCore/Zeta5/Port/); see [`NOTICE`](NOTICE), item 5.
 
-## Lai's plane: μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
+## The plane of ζ(3) and ζ(4): μ(a ζ(3) + b ζ(4)) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
+
+Since `ζ(4) = π⁴/90`, this is the third plane of the second paper. Off the line `b = 0`, the bound 34.14
+replaces that paper's 72.726.
 
 Lai's determinants `J_n(a, b, X)` are Hankel determinants of a functional built from the simultaneous
 approximations of Zudilin and of Dauguet and Zudilin. After a rational normalisation they are polynomials in
