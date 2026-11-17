@@ -56,8 +56,19 @@ It contains third-party material, also licensed under the Apache License, Versio
    SourceFacts.lean and Source.lean in that directory are new work. Each adapted file carries a header
    line naming its source file and changes.
 
+6. CatalanCore/Li2/Port/
+   From the formalization of the irrationality of Li₂(1/2) by Tang,
+   https://github.com/dtq1997/li2-half-irrationality, commit 950ee9d53914e1afb89c8f835a8bca6ccfaa0108,
+   under the Apache License 2.0: the import closure of Li2Unified/Modular/Positive/Packed/P050.lean,
+   without its prime number theorem files. Modifications: module paths and namespace prefixes renamed
+   to CatalanCore.Li2.Port.*; the valuation and prime number theorem interfaces re-export
+   CatalanCore.Zeta5.Local.Val and PrimeNumberTheoremAnd/Catalan/Consequences. The upstream NOTICE,
+   which credits further Apache-2.0 sources, is reproduced unchanged in CatalanCore/Li2/Port/NOTICE,
+   with provenance in PROVENANCE.json.
+
 Everything else (CatalanMeasure/ apart from item 4, CatalanCore/Zeta5/ apart from item 5, CatalanMeasure.lean, Challenge.lean, Solution.lean,
 ChallengeZeta5.lean, SolutionZeta5.lean, ChallengeLai.lean, SolutionLai.lean, CatalanCore/Lai/,
+CatalanCore/Li2/ apart from item 6,
 comparator.json, comparator-zeta5.json, comparator-lai.json, formalization.yaml, formalization-zeta5.yaml,
 formalization-lai.yaml, README.md, PORTING.md, paper/, paper-zeta5/, paper-lai/, scripts/certgen/) is new work
 for this project.

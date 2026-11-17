@@ -1,0 +1,1933 @@
+{
+  "revision": "950ee9d53914e1afb89c8f835a8bca6ccfaa0108",
+  "root": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P050",
+  "modules": [
+    {
+      "source": "Li2Unified.Modular.Base.Definition",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.Definition",
+      "source_sha256": "44f7c09055aacdc031db03c3245f981b5c7febf43a104212ba65d143bcf772bf",
+      "ported_sha256": "e604c248298273fc949106a239bdbe62258c1adc24577f3f710b9d82f92acd38",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P000",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P000",
+      "source_sha256": "4c9c78e29becc567b75accc81e6fb305447d9eea7d201023a3c06186da79e5ae",
+      "ported_sha256": "4f07a1c35e15325a121f692eaf3f827efcd17a0b81b4200cf8981873649b43b5",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Definition"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.Valuation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation",
+      "source_sha256": "00cb1e725b769d3eb33551df05425eac9d6270cd131ec9756d10b7d1e8b56f74",
+      "ported_sha256": "96d26c73cfca80a57546d6fe54ca6273e7f5e31d72f3c9f3712642dc01184485",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterMoments",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterMoments",
+      "source_sha256": "12812010fc60f0e4d6ec68a6f0245166b89a86442d686b4f3bfe6c8ada99e2bc",
+      "ported_sha256": "2b4f56444fbfcc5f176256f233eb75759e0d19a080744ebcd001a39f587d06d5",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.Family",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.Family",
+      "source_sha256": "6670b9d6062309e12a4574726c24d63541975c583b527c3342c56ca9daec131c",
+      "ported_sha256": "54af8ecf571555660e198c48e49edddaf55c0613c7ad25379c7554b0a0c606b0",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Definition"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterSeries",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterSeries",
+      "source_sha256": "dc6bd4fd2c38fb5bc18b61aa45e2c2b15dedaa779a70ba91ccd5d795a2aabe61",
+      "ported_sha256": "fb72d509f94ef93a972aed6ce470e3fb0f36e9ce1b52b28dcd124e48927cd969",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterMoments",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterShift",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift",
+      "source_sha256": "43fbe0559130195295b734416fd8c674232e23766fd2f7d58bb63590f6e59211",
+      "ported_sha256": "8c470ae3a2f9fe6a73b86ee7fa66284be43dfc02805c9137d910ffb0dfc1f541",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterMoments"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterPolynomialSeries",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPolynomialSeries",
+      "source_sha256": "c4a0a91c908e2343838fa130c2ab9cb59c0f693c759fdabf9d5cab058a809362",
+      "ported_sha256": "1fa7b8f0c5af9c1d97721edc15cdb0a746bb251898f81497f0932f166cce565b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterSeries",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterDissection",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDissection",
+      "source_sha256": "e3043c72e53c411318d981085a37d34eb1a179c91b3f4a44e97312ceca44545b",
+      "ported_sha256": "c6226607c2388f44235178cb8d7e09c08845be1b207a2395d9b3a99586e53e30",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPolynomialSeries"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.SimplePoles",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.SimplePoles",
+      "source_sha256": "a51e2f5b17d89cee41c1718e783e5e1ca711030b513cf111c8eaebe8f87f5611",
+      "ported_sha256": "96351712919f89a5d72485a368e24b3e9842babe3b24d61d8945cb56f1dd558d",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PoleFamily",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PoleFamily",
+      "source_sha256": "15c57269726ff9463f2aee6baa91559f74f160402e35f608e078cd1cef012455",
+      "ported_sha256": "fae7e1b5b420ecee2af32f9e5ecaefde5fa141b950a5d848f204b51a1078e049",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.SimplePoles"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.NumeratorFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.NumeratorFunctional",
+      "source_sha256": "9832261fd3d43468c727e1d7acb5aadcf943b005d971ed27829fd8b56619c878",
+      "ported_sha256": "a8e49f2cf1a7a9020418817e91e11ef65b949f6351ce700eb7f8d5ebb9fce510",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleFamily"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterDifferentialDissection",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDifferentialDissection",
+      "source_sha256": "5badf9b819edba7cf522ae55650b1f18032aee08b7f57768b93787bd16b09349",
+      "ported_sha256": "9d3217dd6db6e03352d718d7bfaca80caa361c1ce232e34a2f9a2cf3e9215f3d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDissection",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.NumeratorFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional",
+      "source_sha256": "d34f81759ba0afa14eda3ed6a67d4f2a02f90365af0565c048f18252523dca83",
+      "ported_sha256": "8b114996639f3f6da67cb82dfaed66648ad3d7bbfd7557eb19493726c003ab7a",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PadicParameterFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PadicParameterFunctional",
+      "source_sha256": "fc3668fe39be9da68a328747f565a7ed60503823df749dbc0608391da260da5c",
+      "ported_sha256": "8d4c79eb9d4b6a2672050e5f91b4a0aee82776a049fbc08a884afda01c1fe9d3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterMoments",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimitiveReduction",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveReduction",
+      "source_sha256": "0a331c466c1b5996a59ced690b81692e483cdb37180dd528bb2ef91fc817e3c1",
+      "ported_sha256": "188bdad653019ffdef5203043ea90b9e941a018757edaec4ec7ac0769d6c5718",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeParameter",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeParameter",
+      "source_sha256": "9485090c958f3e8778ba5c32d0937f8bcd4587c054d66bc1b47adfef40d61133",
+      "ported_sha256": "da7556d0037293b6397f2fd3b72979adaddcd61e7219c1219e72277d973a7468",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterMoments",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveReduction"
+      ],
+      "pre_C7_sha256": "81528f48f680e78205edb02b92bb9483f4b45b16c7eef18dfc91d0126bc8845c",
+      "adaptation": "C7 canonical Apery head extension/export; reuse existing IntPoly where identical"
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ParameterPoleValues",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues",
+      "source_sha256": "88cede8cfc2079089231070554d85ac233ee81c0527a93a1a50707a97e7a2a0c",
+      "ported_sha256": "39c8e5ffb3b8763a764c0675a1b7e3e207789d774a54bb837803162ca0ad1340",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicParameterFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeParameter",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.Gram",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.Gram",
+      "source_sha256": "f09af635843e81db2e3a4a4579b57e19d99547bb39fbccfac62e9862ec8f5faf",
+      "ported_sha256": "7198a12f0b6fccb02d7d42ab03b4f38c10dc46e73d47b86e9843797662beca2d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.NumeratorFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayNormalization",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayNormalization",
+      "source_sha256": "a324b0a7eba9b67ed4483bcc80cda2fabb6fa2da37a6599cfdae0f02a3116071",
+      "ported_sha256": "8f8899dbaa86f47a612fb5822a24f1c85e6c2f6b3b077ebe4956b006990ce750",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Gram"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P001",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001",
+      "source_sha256": "d80ab711feceb4d5f7c20f450a11e8518f4dd28188b263ffaa34f887b0136fe1",
+      "ported_sha256": "fcc92aea2f136c28c25c1604913bdf78f5190217a6ea6f95bab2a9cc013ee8d4",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P000",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDifferentialDissection",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayNormalization"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayBinomial",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayBinomial",
+      "source_sha256": "2d316ebbea20fc9560675817c87be6feb830d561875bb6cf83251fe9f8f3c58e",
+      "ported_sha256": "bf94ba5661ab33d3073962982e19431689c936717883e3ab82138d2f6ce60e33",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayNormalization",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayMu",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMu",
+      "source_sha256": "cd2004cfc6b041b667972be57f65d0ecd0ebac8be0b05a5902609b60d6b35d3f",
+      "ported_sha256": "df61ddba6fd390c405361bb84f8ce7b7b8c6d2a778c7d6295e1dde824b6c9570",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayBinomial",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterSeries"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayQuotient",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayQuotient",
+      "source_sha256": "62b2d877a38f660c8934058ec00a394770beb8b51938edad3c53ddea8f07552c",
+      "ported_sha256": "7eef6cdcc086317bcbc00e3ccabf9fbf5bfeb0723c7cf78d85d6267e37f2a68d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMu",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleFamily"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayResidue",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayResidue",
+      "source_sha256": "23341336dd20f10cbea9b0b220953a84f95010d00d602559798a38dde3711e8a",
+      "ported_sha256": "16f14d38812f0c2043b752b679ba2bd39187fd7356608fbd348819c6fb84a51d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayQuotient"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayThreeAdic",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayThreeAdic",
+      "source_sha256": "8d7e664ca7a52bb637c6bb7b7e4fd942afe9e4304e1a79166c325e259ded7eda",
+      "ported_sha256": "55d785926f891c818081e7903c61756d1205889ec11478576e2b249f08b9c3ef",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayResidue"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayMediumNodes",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumNodes",
+      "source_sha256": "552480ef2b87a77b0676e47de81263d098dc28e43e8a954dab33774c6bc265ef",
+      "ported_sha256": "07a536d418759b37d95e0ffd23115c66172080b350e6cddbf06ac03db0e139fa",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayResidue",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayThreeAdic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayExpand",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayExpand",
+      "source_sha256": "cce33c327308a44fdb9cd75edc48144d5c038ee032f9dafb1d275940df14760b",
+      "ported_sha256": "4f4e17fe1211c6727b7e8c710a35cb6d95863d4e3e1567af95e49103e9b4b0b7",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.IntegralPolynomials",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomials",
+      "source_sha256": "4b7c8527574dd4e96eb5eaa2bef3c8d6da0098b242054c460d340f4722d257d2",
+      "ported_sha256": "07e56a4aa49feed4f4aeb897b78381fe95396602f8b343e4d94e0642812e495c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ],
+      "pre_C7_sha256": "e6805b381dcb02532d3047b71fb26fa1a2f6f73b089d4484b10e0b5aa01e9bef",
+      "adaptation": "C7 canonical Apery head extension/export; reuse existing IntPoly where identical"
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayRankOne",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayRankOne",
+      "source_sha256": "fecb32c12aabae10f7d53803330568ceb6ad6cdfb96016c28d3722c2755ebf8c",
+      "ported_sha256": "acf00b19e4d2bf13703775611b7dbaa938040890cc6b0217d081f19f74a088bc",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayExpand",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomials"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.MomentArithmetic",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.MomentArithmetic",
+      "source_sha256": "db8718b6c1b492018adff320e6ba197ee581b89aac7f0760068d361370d2a1da",
+      "ported_sha256": "fa9fb316337630fc442705693a3529c57dad97990375e051c4323b860024c2b9",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.IntegerFamily",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.IntegerFamily",
+      "source_sha256": "04b489eddc2a5341430d7ef97d820c8f1acd9bd6187e747c5f60d30781109e5a",
+      "ported_sha256": "867d9ca36d586d33649cd8b20fd2db3ffcba82c0d0c69c4820b99f994906e1c5",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MomentArithmetic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayMediumAssembly",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumAssembly",
+      "source_sha256": "1a7e2bcb6d53ad23714134a024248bb71b839abe645e781f271f72289a70eb6d",
+      "ported_sha256": "c61ce442fea8fc504ade6f1b42ce9f7870510f269bd5d9d64902ad2e062456b6",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumNodes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayRankOne",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegerFamily"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayMediumClosed",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumClosed",
+      "source_sha256": "1bf97d57af40a54804ae8f15640fcd9dbe3492f144d3f5b4131fe3fc5bc7db2e",
+      "ported_sha256": "283ef3e3a37261b572a130572aef3e8217c56d41a694cc5e447649775ed31503",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumAssembly"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.MediumClassCounts",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.MediumClassCounts",
+      "source_sha256": "8ce6f4a5f07b06275f8e1317c4333e61cc873b8828e9572f08776428d4e0c071",
+      "ported_sha256": "334b220e03ac3f18ed5a34428c45f178fba62af00861a60beba894bab5f2db60",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumClosed"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.MediumClassIndicators",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.MediumClassIndicators",
+      "source_sha256": "fb345204e32a606ceacead9e7970d9924215a5105a9d336a6a06f7db58c40ff3",
+      "ported_sha256": "d2690083ec4b6257a74716eb8d3acc9051a3cede1e79a78e0e6fa350c175588c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumClassCounts"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.MediumFloorSum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.MediumFloorSum",
+      "source_sha256": "71fc15d055a4920ed7ace641dac9339ef6e79a4c50d85ae1f7ea8224182c8bee",
+      "ported_sha256": "87bd604855ca153947354ae6fca0f815464f2313027ad58ca92a8629e7046634",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumClosed"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P002",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+      "source_sha256": "a687acc2627345365ce30e14c60e67e6c510eb740084123a91027950a427ce37",
+      "ported_sha256": "2a849c3929f6a73520391553d51e481e0a6e8e180febe08415485c7cd2b7e4c3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumClassIndicators",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumFloorSum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P003",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P003",
+      "source_sha256": "0fc2ca748255634cea53ec49e5c675608abca59bcecbb349b3f9a09adb397c84",
+      "ported_sha256": "aa59900807690f50a1849f054f2020a2a12a1e5f82ce6b323711a51df40a920b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ClassBasis",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasis",
+      "source_sha256": "41e4f547bf57d2ebe2aa523bc7ef24a60594508e9bb58108e8e805f43737ca41",
+      "ported_sha256": "634a29dfb36bd5e7ebd4cee5d3b747f33a2e020839d34c34d5cfb21080885dbf",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Gram",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ClassBasisAppend",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisAppend",
+      "source_sha256": "b1b4d4380426dc8176a8e7002cb7a3d189059f41f90f7c5ddb54b2fca607bab8",
+      "ported_sha256": "c35f03ec219d1c37c67020bd1cd488de8213b79954cee1784d4bbf348c781496",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ClassBasisDegree",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisDegree",
+      "source_sha256": "25d3f4e9e18c9fdd065f1a6a476479ddbb5aa391fda4b79e72b90637ef7b3435",
+      "ported_sha256": "74466901e65e503456825d2ea027aa01ca56a482e8142a36d71398c42a4e784a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeBasis",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasis",
+      "source_sha256": "197010680c16969f2724b4643b7934eb750330cf8358e2d3e30d545f02752b9e",
+      "ported_sha256": "18ac3d8d5ba8f37a33fc6141026b481f851bd8e82fcad0cbcb6542d54e86468a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisAppend",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisDegree"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeBasisChange",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasisChange",
+      "source_sha256": "a507849025c5eac05ae50ba8e05944d0eab1be4856bb7b231fdb0676a81227bf",
+      "ported_sha256": "db34e208ecf433bcd639b384610ac2c7976b174997c8f215a2c2c5c22c644f20",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P004",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P004",
+      "source_sha256": "3ce5d2ea8207d27a8e45706de022f86353e652fe4abe4707f3e645f70fcde164",
+      "ported_sha256": "c842c88613e6bbf791385fd354e24eac66fa83f7e00597521983920072a599c7",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P003",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasisChange",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisDegree"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeOriginalBasis",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalBasis",
+      "source_sha256": "a4d9acdf6d86551a5e435cdf4877248d197bb6e7799f9dac95917b095083d12d",
+      "ported_sha256": "8cd3ec3ab922a079e4b9d7ea131995631ea054ae3cc3cd33046d0d5e3e288536",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasisChange"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P005",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P005",
+      "source_sha256": "9fa57e916ccd58fd2a8002d6ca06dd27e7496ea43b72e091eba1885ee6c610cd",
+      "ported_sha256": "4cfd412831f77bbb21d9991435d4908f9c1316e770ff79842ae33c1f27505b1e",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P004",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ClassBasisJets",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisJets",
+      "source_sha256": "f0c59f0a22ae325058f7b6f9be72c24d433fdcd3df6b2d2ebbd4870781ad7a71",
+      "ported_sha256": "c6bdda48fe37550c3c85f28a933110acb6cfcf1919b457dbeb23226a108d9871",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisDegree"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeJets",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeJets",
+      "source_sha256": "de0edbeaa4622f5ce9f635f475ecf515fd0b24bb2f64c9ab3fef24b318ea75b0",
+      "ported_sha256": "db3319e6c0ac704bfb9fbb5dcb80af09ac91529ef7f9ab0e438a672d38b2644a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBasis",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ClassBasisJets",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomials"
+      ],
+      "pre_C7_sha256": "139e88ebae5f49fb0b285106b436db1c348a443dfa74a10898ebba37885b3f7c",
+      "adaptation": "C7 canonical Apery head extension/export; reuse existing IntPoly where identical"
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P006",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P006",
+      "source_sha256": "48df197ad0638a3d77e160b705e8570c797cab668974ce822acdc9c447f83dc1",
+      "ported_sha256": "62d12622ad66abe2b66ef78d3c2df97260dfde4401b309ca390067adf0b55d7b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P004",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeJets"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeProductJets",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeProductJets",
+      "source_sha256": "0b2785bf0d3cf8e13e37b9d268917f4b9680f39b26d461aafc3275bda7635d56",
+      "ported_sha256": "c3f61a3137320c482652da7e4bab623c31d8cf35b4b00f80650faa94208a2e90",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeJets",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P007",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P007",
+      "source_sha256": "b9531f0553106472ab2bfd63203bcfbf437eaa8fa42e3d2e133dd0c71ae8bf61",
+      "ported_sha256": "9b13f9e9c7e6819144d0a2e820490ff05acf0d5744d5910257034dafedd1f560",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P005",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P006",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeProductJets",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P008",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P008",
+      "source_sha256": "f9df6d61502096ec757935f9ac01f4565ec1bb5b41a3845fd532d085be97ab08",
+      "ported_sha256": "93c85a813d2fe422793a2231669388cbcdb7a7843964e029fd7147c90393fdf4",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P007"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P009",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P009",
+      "source_sha256": "399e55634c9248e66d61b19c021e2dccd7eab3c1e10fc04d7bd2f955e39fcf03",
+      "ported_sha256": "6fd9c595f79b6c83d626d3f476aa78530ee62c72bcb2f01ff666ecb84fbcd976",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P008",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PadicValuationBridge",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PadicValuationBridge",
+      "source_sha256": "db3f73e0123a96d4d9b9cc658378a38d3ec9fcb82bac15725a4f4cfd5920fdec",
+      "ported_sha256": "4738086880728ff53a8001279880eb0d9a1b4092d97b60646f6056794932c0f3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicParameterFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedSeriesCompat",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+      "source_sha256": "39011fc67a8ff217d2f32596e22edbc7f78cd908df7aca31bf5a39bff1e87df6",
+      "ported_sha256": "c32310b81068de49e21ca01eb50c66b6f2610d80661cb9cfae52f56f10e4d032",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedTranslation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedTranslation",
+      "source_sha256": "b08a12c54e12d1e3ffa6a46cf6ce8195b6d2ed06da7944af3acae5be210a98f4",
+      "ported_sha256": "e9c05ff4a3fc39e0102613867a057685b65ed780f127d152981b55315206e499",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedApproximation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedApproximation",
+      "source_sha256": "d8fa7c617f99ee19225fccb00730d5a5d2d78f89d4a2281b6f41dd36fe1777ec",
+      "ported_sha256": "4f621b1086469efcb4242f50387905341d2d1b9fb24a802256ac5aa71d8271be",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedTranslation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.MomentSequenceShift",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.MomentSequenceShift",
+      "source_sha256": "ac4306e869837ad0f14ae3f4b43ac98168ebf88eac27e52759a295458c7292b7",
+      "ported_sha256": "92a97307fe306e92c13ca00e13b40e6ded481f2941c60bfaaaf310ab56325266",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedShift",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedShift",
+      "source_sha256": "1bb671e21006035fe1da5a51897d92cb53952dafc3c741fb6a79a3ecb708804b",
+      "ported_sha256": "5c5f8813e102c4591e4045aae37a89f562d2a508e891b5f26c13dad9cf985a9c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedApproximation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MomentSequenceShift"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedRationalUnits",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedRationalUnits",
+      "source_sha256": "52bc0fe3e461fa5136b3d272b5bf7422c83259285d6030f21ae86519efceb8f3",
+      "ported_sha256": "898bd7ae921fa65b9a8d7e795554352783158494cfb326378b67d4604db39e1f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedEvaluation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedEvaluation",
+      "source_sha256": "5d1e4980e2194a955865a354bac30a1ee868cc5f612641c167c9a8f2211d7bf2",
+      "ported_sha256": "3d5fde6e28d32644e0aabf955975a932425cd68a3a8fcd73eff7d37e28208043",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedShift",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedRationalUnits"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedDividedDifference",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedDividedDifference",
+      "source_sha256": "d3ca4c9de2f6a259eb122c1ffa1127e8f2c4b85d1e5e72197ab47eea5767f57e",
+      "ported_sha256": "e8462f8c87e95ec9cf01248d39db0b393a906b2c0270d661df9356e350e8896a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedShift"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoles",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoles",
+      "source_sha256": "56bbab67ae1fd0dee5d25879feafcc36026934a0d2c5453567e69a30b2f39db1",
+      "ported_sha256": "e2364e069a2cad89c9b04f6ef48e352a14375f8ff4a5d0de9c279f04fd70425d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedEvaluation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedDividedDifference"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoleMultiplication",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplication",
+      "source_sha256": "48168c50abdf0e86c546c97515e68203858a7dfe4b19a264c2df8ce6eacad9c6",
+      "ported_sha256": "91d56c50d7c6cbe89dbc9c44628834868681813ea0522ecedb997fcd861040b8",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoles"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedDifferential",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedDifferential",
+      "source_sha256": "f667c8be14a5b061aa1eee1fbf9dda688b3217d1e3e3b550954898620e70b295",
+      "ported_sha256": "63e16c04ed7b89b0cc4aad22991721264483c3dd71c5ba68b323ecbb367ee961",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoleBounds",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds",
+      "source_sha256": "a7d3597f9324be6902febdac2f8e87a9da1aade62755b29bb216f52376b5c945",
+      "ported_sha256": "415e729531e7f8d1334acad4df30389e787e4e82d1db8b78c933ac8f37b8a294",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplication",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedDifferential"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimePoleExtension",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension",
+      "source_sha256": "275107db03914b48daf27e2b690fd4a5ef24b5dd84c65665ace97aca6c7766c5",
+      "ported_sha256": "5d35e1302e610051c04139439bb66a02889af15c9e4db7c8d573371aa0254b4f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P010",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P010",
+      "source_sha256": "fd45a5ae8b2e8fb5c5d5e21c901f700bccc17e4a6c1fa125c758bad5f5504dac",
+      "ported_sha256": "3bbad2ae91e952064fd18e623123d309ae124be3bd93108f90d6cb6f45d53e1f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P009"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeFactorClasses",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFactorClasses",
+      "source_sha256": "22837fce78b16df0ecf31274f6a31e0dc4024ce223d69b73f61f6ed69f70ad80",
+      "ported_sha256": "4703db4f267b3e5fcf7908e581669c5845b63478071481323c7cf3da372ca959",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeMatchingProducts",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMatchingProducts",
+      "source_sha256": "85f8ed9859b4b15fb5e876b73b6edbc95605a00c4d8d7c3122f9d877ec946ec3",
+      "ported_sha256": "dc037800d868c0604874eb122523d66e5e99bcb75f89c643420d65593a9b6dc4",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFactorClasses"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPolynomialTranslation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPolynomialTranslation",
+      "source_sha256": "427f3db89f7c9b77a1b84a2f3f061a934076bc7daa2d89fbdf9576129626f0a1",
+      "ported_sha256": "fbd0a07d89de46d79ef4f6f8eee6d91c34079a9138e91f8a11ccc40d110b799c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedInverseDerivative",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedInverseDerivative",
+      "source_sha256": "808396baa6e7cc81b044f62a305ab46c3bdb6b95a72d0f0537156d3cc77b4370",
+      "ported_sha256": "fbd5bb9e56122dbbd54cc62032b2df6f76af2591dce5f8f8ffd0f74a5b1ea889",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedEvaluation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedDifferential"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedAffineInverse",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedAffineInverse",
+      "source_sha256": "bc1f6135edab5d86932039c0132d9cfe750123a99ba8db18d1932141a0ae6ddf",
+      "ported_sha256": "48d0bbcdff7321329836a1f2542d17350062753c6334d4ee0b602f90969f2474",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPolynomialTranslation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedInverseDerivative"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PadicReciprocalSeries",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PadicReciprocalSeries",
+      "source_sha256": "f6a6a66b48e81ea6725cd2072e8d28556e32eb5b6b9749c1c1bc07518112da70",
+      "ported_sha256": "a6ff538f0c60428babb507cee5bd8e6c40b6929531c9fcc1113b7628522a1158",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedAffineInverse",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedUnitProducts",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedUnitProducts",
+      "source_sha256": "abefbd4c6c65b75d4f97d10cf367f3188ce98a087650a57c29ccf942ef9e3177",
+      "ported_sha256": "9d4e62c56ffe41836abf42b43c00d6462f4d4e7a009258dcc766f11fc643e988",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedAffineInverse",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeNonmatchingInverses",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeNonmatchingInverses",
+      "source_sha256": "4744dee0a1aff06ce6fd1329ca49338e980e4b10a3e9fc241afedfe5f7f7cdc4",
+      "ported_sha256": "ca4ee3b151a3f738eb0fa34e0d99de181cf6c4f91aa3328c4bed8a4e110d30be",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMatchingProducts",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicReciprocalSeries",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedUnitProducts"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeDiscUnits",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscUnits",
+      "source_sha256": "afe6fa54530b604ec93426d7db1f3eda7153c2104ce368e35edaa5edf1a284b9",
+      "ported_sha256": "8194f689b6c4af1f2f10e5742e1c04a66446160ace1f92b496094393fb506fb1",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeNonmatchingInverses"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P011",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P011",
+      "source_sha256": "baffdc98ab29168ffd931f6b8dd8ee64996a70a8ffff8ffd3a5a7e72265561b0",
+      "ported_sha256": "eb24fe96aefd8d4521091242ada3b85b8002c889dc543ba134ef56d05f036261",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P010",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscUnits",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoles"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeDiscShapes",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscShapes",
+      "source_sha256": "007545a7ded72a95b5609b39a7ffc0d3477c8725c6ab745d3447923f2afc5f51",
+      "ported_sha256": "7fc086c38be51db8168279d9db471a68cda616e75e31099175116e66aca98b68",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscUnits"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P012",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P012",
+      "source_sha256": "ba1e1869bff32f5bc459af24d81b2651b857ed8561b229bf599f21e6ff165809",
+      "ported_sha256": "5d4b2ee869786019bf84b85f0c9fe8e71a9953ed4aa175ed1a113d16e5b25d3b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P011",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscShapes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscUnits"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldRestrictedFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedFunctional",
+      "source_sha256": "a813e04a0e0ae52d3392622b8ca98abe395853acefcb9c125abb465741ad55a1",
+      "ported_sha256": "c4be250a6e35cdd6db8b9904cb1db8be9116d3c615fe5c58e1e3714ce5c8f7f3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedFunctional"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldRestrictedEvaluation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedEvaluation",
+      "source_sha256": "2a6d9341d2c8b1fb07633abc7d1de2fd049a19c5e24f829d474356e27dd3bb31",
+      "ported_sha256": "2443177c34ada2782592b28f4b525cd17ccf03871a3244924fd2d02284d5cb06",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedEvaluation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldRestrictedPoles",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedPoles",
+      "source_sha256": "ba9413b7bbe000f9a26ab497b409145e95099fb7ac6ffcaee3e4d13488a5195a",
+      "ported_sha256": "93e80d4c89416709ee9c39d44714071841424fdb3e130930737f024274d14b1a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedEvaluation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldPoleCompatibility",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleCompatibility",
+      "source_sha256": "f46fbb53983c009d882808e8714f01c6f936772fb810f0c2fa41488119ac2091",
+      "ported_sha256": "c67f293363486096773bcf3c7dd691a7f930eab25731a7ba673a9081e6092ef8",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedPoles",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P013",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P013",
+      "source_sha256": "047f9a08c6928b33a855c82804b8cfeff205dfaf1291069fcd16c225edebbf84",
+      "ported_sha256": "e1fea9348daef1cf2a577a4472b59e473ba56856681781293adcc9b9edae64f7",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P012",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleCompatibility",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P010",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PadicPolynomialCompatibility",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PadicPolynomialCompatibility",
+      "source_sha256": "c039b52d5bc2f87278f58c8c4124354e9b986b1f45e297c35e90dd5011047886",
+      "ported_sha256": "9fa68da985518981283c533679a3fa49baf7a3bab3f084d6f415cc1cd66d48af",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDifferentialDissection",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldParameterFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldParameterFunctional",
+      "source_sha256": "a5769ac6768d477dfd119ed2c565b645cc7f9ea9ed3d59c6c7603367b3cb2941",
+      "ported_sha256": "071660612ca4078b3f682f746b8115823fd27cdbe4b66015d9462c98b84401c4",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldRestrictedEvaluation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicPolynomialCompatibility"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimePoleFieldValues",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleFieldValues",
+      "source_sha256": "74d07f1c7a8f38c865047a103ddcafabaef5dbdb650dc2228209c67f4c89e5a1",
+      "ported_sha256": "9208337023a8c872c9ea94fcd246a12d60da355b0dacd781d9f817d52a658b91",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeFieldPoleExtension",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFieldPoleExtension",
+      "source_sha256": "8ab2846e8a7211d525212a88e5c132c21bbaec840958a1d80699701e7f16d152",
+      "ported_sha256": "710e8c0ecf7e52baa0169b17836efd82fd6830ec6529d52141c3599754cb4a8b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleCompatibility",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldParameterFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleFieldValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeBaseShapes",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBaseShapes",
+      "source_sha256": "48bb96c055d41e3fc57db102a7a7234934fde2fb8e190bc440a701551d9c0ca7",
+      "ported_sha256": "22836abb676650637d58e369c1ac5ec1d56f1856231a03e2608879633ba0ec3d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleExtension",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeNonmatchingInverses"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FiniteCertificates",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FiniteCertificates",
+      "source_sha256": "95bc6b7dd5684152e1cfe4bc2515cf97dd8ea5e504315c2843123c9f3d196e3e",
+      "ported_sha256": "759f96176d355a8cdd2d1f5e421a0c8473f349de88dcd0a1bccfb79f17d93d0d",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RationalBaseEvaluation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RationalBaseEvaluation",
+      "source_sha256": "7d3cbda99e30537658aba7cff5139df35fe5d7a9e298c8726a522aa19a9751f1",
+      "ported_sha256": "b702abeee43b99d42e8bc75fe05c0bbb1383dfa5045e0647de3a6fc076a2c3a6",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBaseShapes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDifferentialDissection",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FiniteCertificates"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P014",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P014",
+      "source_sha256": "1849ad36dd6bc80ee94e29d6abc5083f124741d77df913e8a5360d9af8e7c19f",
+      "ported_sha256": "97012d3195496712d2b78b8c23786a693d30bbbf76d72f59f76257957dd2811f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P013",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFieldPoleExtension",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalBaseEvaluation",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P010"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeRestrictedShift",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeRestrictedShift",
+      "source_sha256": "1d7897f187bc5a631f2a7cede09185f1dce8211789ae94f89d78da785f1cc227",
+      "ported_sha256": "2da6178045f97e7af4c2b3e99d5491b0569a3621ccb673d9194dcae5e4146c3d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedShift",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicParameterFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeParameter"
+      ],
+      "pre_cast_fix_sha256": "23ea8441bae84f2c1b056c80db5090e79a3cbc05c464fe349fe5501a8d61a690",
+      "adaptation": "cast/pow simplification before integralRational subtype unfolding; unchanged statement"
+    },
+    {
+      "source": "Li2Unified.Modular.Base.AffineInverseDifferential",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.AffineInverseDifferential",
+      "source_sha256": "424778455caac267cee897ffa46bd39f50d509a4850a1af0247c9998fb201dae",
+      "ported_sha256": "9e4264c3fc046a4b81e77ecaead8e99790d6c3e030ec91202190d61e58b9e5b5",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedAffineInverse"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.ReciprocalFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.ReciprocalFunctional",
+      "source_sha256": "453ccd07f1364795601d5b72ad3874f72b1dda69bd731cbd90cb3f6e15c1cef5",
+      "ported_sha256": "5b12cdd1806197d6436f37687b57338dd83eac302e138de7260ecceb412524dc",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicReciprocalSeries",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeRestrictedShift",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.AffineInverseDifferential"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PoleDissectionWindow",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PoleDissectionWindow",
+      "source_sha256": "cbc94a1d9d119bf8aceef8309be4fb0fa4400ed8259f5b7de31a7a46ab3adcab",
+      "ported_sha256": "9133a59f57bc8f616696f539001694c2cb34c23efbca03f800acb71676b5be7d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DissectedSquare",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquare",
+      "source_sha256": "734912b1ef0d6ee25e521c900c2dfbc850a7150cd197e59571b601a1b0d0e1c3",
+      "ported_sha256": "9fd1b9482c1c0ab7c2b1fa554f42986efb76c3b64f1f8c528ff6b2399b52eebe",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ReciprocalFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleDissectionWindow"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PulledPoleValues",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PulledPoleValues",
+      "source_sha256": "9749c2252718ca420188359886bf20b0c31bbff1dc02ebcc3edd8710b6070804",
+      "ported_sha256": "24946cfeb40cda980ab9fa5ef70256a3162cc7359ad1e48ed7d08ac37456bbcf",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquare"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeFourPolePullback",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFourPolePullback",
+      "source_sha256": "ad4c7adb07c8f7cfb02460bcd889905e67306e3c2136cbe8b5c0f86473f9c025",
+      "ported_sha256": "8131790663f45a3ba764dd6066945d19bd4db9e27251997e82048b11ce7d04a5",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PulledPoleValues",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleFieldValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DissectedSquareRecurrence",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquareRecurrence",
+      "source_sha256": "4db49b1205a93b2fd85dabcd3efc916fb40a4ac2e3ff523a9eba805ce9e72d66",
+      "ported_sha256": "99d48ab1197e4700d471fd3b4b112ee55e9276cb69e734413ea8f6840e415c66",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquare"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PoleWindowReversal",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PoleWindowReversal",
+      "source_sha256": "300657b0fc827f563c606e175549635a2c4847e120c2b32a296d2b53d03e647f",
+      "ported_sha256": "4fede05c029b25a37ae1c72d883d00cb1619a3c6b6c90cb78896784a59b26610",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleDissectionWindow"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeEta",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeEta",
+      "source_sha256": "30fc05db2fa66e3047d801f9e66419bcf78e3d554f52146f000dc5f9d2acd8e4",
+      "ported_sha256": "abcb031edebf2effe0a27467c4f0a65832d0053363aca96588995fff5a366626",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquare",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleWindowReversal"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimePoleDissection",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleDissection",
+      "source_sha256": "224788faaf6e9ddf900e2ba48b943b6675b52fcdf33c332d58cf018d46ce3c99",
+      "ported_sha256": "870defb5163b931b3c0d5c6e8ac0e8c78ac7528c9762852bef54764aaf554bb1",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquareRecurrence",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeEta",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PulledPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.NumeratorDissection",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.NumeratorDissection",
+      "source_sha256": "0d0eba40f909cc78c18706a6b2d544eafd6fb5e9889e446a2579e1bb396392f9",
+      "ported_sha256": "2d459d0d236c7a60a5e0b66d900952cb860830d3d779d3a5b2cb7ec37e521765",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePoleDissection",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterDifferentialDissection"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalPulledRepresentation",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledRepresentation",
+      "source_sha256": "0fd5d2465f49c1fc5aca1a34d4513a6c3d8f28671f8160dd85259971b6220ed4",
+      "ported_sha256": "752ae76de193becb80ef6d7a33eef0988619cd9513d67d13711eeb6ca4a945b2",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleCompatibility",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldParameterFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFourPolePullback",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscShapes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.NumeratorDissection"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P015",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P015",
+      "source_sha256": "bf289d5dbdb7a70cd1092dff445e3bc6fbe8c813fd125afcc1d0be5045d4c5e7",
+      "ported_sha256": "b6d28c927e80fb260d402dffa2deb01e5ce5fdc642f17a98130ab09811a0bf00",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P013",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P014",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledRepresentation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalPulledFunctional",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledFunctional",
+      "source_sha256": "1f5d4430121657bc25a0e14c02e362015ec4c0436dc1f2033314ed80929df971",
+      "ported_sha256": "fb5e7e395eb8d0e91444f96a79cc44d661aa0335dff5477854a712c7013c971e",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledRepresentation",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeFieldPoleExtension"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.FieldPoleSums",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleSums",
+      "source_sha256": "818ac589784be465971f822c6de2008fb9b0eb236c8006ac7722acace4cb70c3",
+      "ported_sha256": "0b3064a6f0b883a48b40848616535474ec4f6d6864433cef43c0e6203a18a38c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleCompatibility"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalFunctionalAssembly",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalFunctionalAssembly",
+      "source_sha256": "ce991e0ab102b59bd5f9bdeafdccdf62565112e9cf53440d4d194465b421567f",
+      "ported_sha256": "74cb9ba3911cc236b98b9f16f34387456d0e2fb804c5f7556cc6ef6afb39221f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleSums"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalPartialFractions",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPartialFractions",
+      "source_sha256": "fd9e498d1f5541a8506ed0129ba0378a99de99d0ed773ab556a074cb36b6c098",
+      "ported_sha256": "c374126250d78525cac4a7e67e795401a8051cc6e9fc05d425dfb68b0cb82826",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPulledRepresentation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalPoleClearing",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPoleClearing",
+      "source_sha256": "1c5a1935b647c555f3539f8a935c4ae4a493f28624e5030978a3ad027a9a5119",
+      "ported_sha256": "0a80dbbf18ae66cc493daae28b93fe66bb9c01a3cb1bcd61b2d4f8b546844102",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPartialFractions",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleSums"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalNumeratorClearing",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalNumeratorClearing",
+      "source_sha256": "6f963ec390a9d849dddddd8559a9a45194df9d471442681e3882d75c646e6912",
+      "ported_sha256": "4c9841e3620f264e4141919837ad631e2e4e727dedc96645e232b410671e786b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalFunctionalAssembly",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalPoleClearing"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P016",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P016",
+      "source_sha256": "4da7653840d41b447acbd4a3df84be3b9ac99dadc02a39b763711215ab400bb9",
+      "ported_sha256": "7f1c94f6b31c8f1c0ba0b4e27a391f8ee0a9364c59dfb0b3405d59b64fe62936",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P015",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalFunctionalAssembly",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.FieldPoleSums",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ReciprocalFunctional",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DissectedSquareRecurrence",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PulledPoleValues",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P017",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P017",
+      "source_sha256": "e7cd8abfcdba6f2fd223f2f98aaca8740ef82c9954a03bb12e4ec7d133128eae",
+      "ported_sha256": "7301246d5de8d86626c4d161c38b4f6e152b87ae1ea71e7da0e1a5c541e9f7d6",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P016",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleWindowReversal",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P014",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalFunctionalAssembly",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P015"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P018",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P018",
+      "source_sha256": "559eed5b175ff745a559ee3ebaebfe8eefebdbfb211a481a5c0339e62862986e",
+      "ported_sha256": "1828af79166d2207fae8db89bac87617fd45d9612858225700a49b6afe8c4c70",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P015",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalNumeratorClearing",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P017"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalIntegralComparison",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegralComparison",
+      "source_sha256": "cdbe15ea1601da553fb941dbc6b5da10dd04a2b95f106157e1b0c81878df7882",
+      "ported_sha256": "f970c4c4779add2c1d2e6814d3633c0cb7f7e9eb554b58b51ee037257e64b85b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalNumeratorClearing"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoleMultiplierBounds",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplierBounds",
+      "source_sha256": "b31cf568ac843f3593047e3541a1a73fc8926beabbde330b71dc434eb8dd6295",
+      "ported_sha256": "2a91d353711e3bfdacafbc5cbd53a2d2ad37333cfc52e235b75c9ff7788bc437",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoleMultiplierError",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplierError",
+      "source_sha256": "06867c507698e9aa0319df3ad2add851b1fe971cac0beef8350e3f03f3f29a79",
+      "ported_sha256": "af66ab9094f785af35f25b4510514ad79cd16d207ecbb67193af2ddb7605c2a2",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplierBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RestrictedPoleFunctionalError",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleFunctionalError",
+      "source_sha256": "9401c70824995ad30b692e6af00ae2dde2daa09a809069c82353459947f20677",
+      "ported_sha256": "3558a27b0e8b21bc2f80b9df381e27dd9e7b584b332bfcab2c082df1e86af1d3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedSeriesCompat",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplierError"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeDiscPoleBounds",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscPoleBounds",
+      "source_sha256": "91bff32c940fcf422bf206c84f286a3ec93dc2ec68090879f2767ae72d0eff05",
+      "ported_sha256": "62628c7906a37be39ed3ea09b93d71e33e957727a4d4372aa0887942f3335b48",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscUnits",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeBaseShapes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleFunctionalError"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalLocalShapes",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalLocalShapes",
+      "source_sha256": "8744eef5bde3525f5a4e0f828a236c56fe0cf8fe6e2e1629a3239fd5c08bf3ee",
+      "ported_sha256": "8567e12b90fed9ad465d2ec3164f454f0e6265dd3b9519159e766d7b8a47da7a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegralComparison",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OriginalIntegerTests",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegerTests",
+      "source_sha256": "e96750f507f64d98cdd3521e5b7b1a02e36ae62d61cd581a41f9ef3b29c6ec60",
+      "ported_sha256": "4842c0b0ff648f055beefed22d0fc803a5d670e0dd9b3d386453a169a884a810",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalLocalShapes",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalBasis"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P019",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P019",
+      "source_sha256": "c95e2a3eaefd7f923362a17ed55498a39880ce3500b1a14504774b92a11cd831",
+      "ported_sha256": "cf263e4fcd9ad26d14affa15f2811af343cffd8be58b1862e966baa3f81e7fcf",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P018",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegerTests",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RationalPoleCongruence",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPoleCongruence",
+      "source_sha256": "27156666797e55210a65cb03ab6e1bb606aab3676033a7f7c0a1e024786e7ade",
+      "ported_sha256": "f97f730db6c80357e7740c5ce76757f801bf2215a90aeb95dc05ea08c287633b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalBaseEvaluation"
+      ],
+      "pre_C7_sha256": "b585105717c90d74bdb1e09cabb70622dfa117fd52ac89f7b68e170c15f446b9",
+      "adaptation": "C7 canonical Apery head extension/export; reuse existing IntPoly where identical"
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P020",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P020",
+      "source_sha256": "d45798707fdf8b459e18e1281885a3ed409026d2f45854a3186a2ee9c6463cd6",
+      "ported_sha256": "1508b29ee78060dd9545b6a4631ac3ed5adc622232aace8123607ba1bc6ff6cb",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P019",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPoleCongruence"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P021",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P021",
+      "source_sha256": "86a13f898a867be4ad5f0f130ebd025105e71efd640501b3e6d8f33ccc472656",
+      "ported_sha256": "7e004d2a3dd20707f9aeee31300242caafb0957a086d3add0a11b18d771bf5f1",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P020",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P016",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P013",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P019",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P010",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegerTests",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RestrictedPoleMultiplierBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.IntegralPolynomialSubstitution",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomialSubstitution",
+      "source_sha256": "956ee757d048fe8d546ecbee8f6ace2f6999872361a592b0fa3cd9715160bb65",
+      "ported_sha256": "d18d85ce979af200bf69af6d0c865104805b7969a38dd91dab92e14481e4b0ad",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeDiscPoleBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P022",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P022",
+      "source_sha256": "b66aba793d2e68ebd68d5376751fa9c258b681bf024914984344af52d115678b",
+      "ported_sha256": "55c96b2dceac9f754ed4ecaab9a29d39fa1b34f8a4c32a81220dbb07e421d877",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P021",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomialSubstitution",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P016",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterPoleValues"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeOriginalLocalBasis",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalLocalBasis",
+      "source_sha256": "34c20acaa546f0a4a8034579b9051fd63492ad3851f5699927e136239ce283b5",
+      "ported_sha256": "485c4972cddfd50ef6c155fee4e8c53eb35acc8dc9b37c87f5fcaf014aef02f8",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OriginalIntegerTests"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeIntegralJetBounds",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeIntegralJetBounds",
+      "source_sha256": "036ee9215fedf49f4aac96c0bb1dbff75c87e5a535379345d7d58cc6f292cebe",
+      "ported_sha256": "34b38bc299204dd6cff44a1e14e42cb259f4b3b09767fe5d826e2822341458a3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeProductJets",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOriginalLocalBasis",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomialSubstitution"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P023",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P023",
+      "source_sha256": "4a8bb2a05ad32003312fb3eaff1a0eaa8e225c784f9f467768291d71ff60a89c",
+      "ported_sha256": "0f6c939432f7b6aaec392e5cb201ed9237edeec902a42947000e6e2141ec8323",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P007",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P022",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeIntegralJetBounds"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P024",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P024",
+      "source_sha256": "4dbb0328fcfabca7d554b774c8963c6bd3f29d2bdaf7f82e5c7cfa786bebebf0",
+      "ported_sha256": "dde5485cca1fe1718a5783aaf71d98fe28865255906b7f770b8004dc46643333",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PadicValuationBridge",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P023",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P007",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumFloorSum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P025",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025",
+      "source_sha256": "238ede4fe6596217eb03384a5092386736e291ec8842e5a1db1d555d7de2986d",
+      "ported_sha256": "32bd02d28c3196ee3002785434d33f61238bd989daa9c747506494b26efb700d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P009",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P024",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Valuation"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P026",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P026",
+      "source_sha256": "d15a8d219bea43b41988ebf61b7d22c8ea85b4776f59816504c008b34de0f782",
+      "ported_sha256": "9ed9c4aa9ebb2b353e4e3eda2844fc9b1fe292bd734d06a45e953b15c6fe103f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P027",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P027",
+      "source_sha256": "2c8ade9ce935ef5325015fe8c5067543bee1b6d787ceec4de48f675f3b960e1c",
+      "ported_sha256": "45c6bb5ccf4ad33a7463f864c24f008edae131169877bd1cf449d175c1b68ac9",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayPNTInterface",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayPNTInterface",
+      "source_sha256": "2587677811da0d58254c2f474ef5e1ff0c5675e7ade30ec18d66a1614dfda08f",
+      "ported_sha256": "a13ad062ecea670345305fc49c0776ed0505f2cbc04249912b0a8997bea43a83",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeThetaInterval",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeThetaInterval",
+      "source_sha256": "9efc3ba42b05e8648690d3dfb03e584d628cee87e28bc0248df76f0043c8a10b",
+      "ported_sha256": "3d7814c94015d3692834ca55d7548c5ca76d91e0dca25bca74cfd650f55ff4e1",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayPNTInterface"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeWeightedAbel",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeWeightedAbel",
+      "source_sha256": "13f91e5b58ea9cbf96d5c2d9824bc7113e0376017cda8abb17a02d9685af6720",
+      "ported_sha256": "df81cf8c0755af8e0cc9d7412022cfca61dfeb678e3d048608fd3ff1ecc7e159",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeThetaInterval"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeAffineInterval",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeAffineInterval",
+      "source_sha256": "3247307669879b9ffc635cb6a0a5b539bfb93ab8089deb6598a308e96c7c7d52",
+      "ported_sha256": "a260db456d96feb22e298639e7a489bab99cd1c16c3af9b1c974e83bab8c210a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeWeightedAbel"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeEndpointTerms",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeEndpointTerms",
+      "source_sha256": "1147240633d34c0e5e06332462d11249faeab0a65317b03c88eabee8a61e207e",
+      "ported_sha256": "61d07a08e9923195950bfc8de070569779fb889acdb9ad70eb461437fc8b58a9",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeAffineInterval"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeStrictInterval",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeStrictInterval",
+      "source_sha256": "c484d41d3d3f3f0b29e0aaef8efbfb39a5000eb97989094de64a2dc9db1f9332",
+      "ported_sha256": "61e23189707ea995322d02797dfbba55b9441304bd0287bdb7c8be6dfb2f2912",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeEndpointTerms"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeMixedWindows",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMixedWindows",
+      "source_sha256": "798a74ee000dafddc28452e04709a756f95c15be4987ec1d1883505f00c94911",
+      "ported_sha256": "e3db9c86176e56f3be6ed6bc12d5be8fd8ecc35c68e62a7c07bfca5341858d35",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeStrictInterval"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P028",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P028",
+      "source_sha256": "375ed753e6e9b77a460089ff9828c2d4cabe333c61e9ad0b580acbdc97403af6",
+      "ported_sha256": "70574d295eb1ab5d44748603492ac6ad5469c1a76101367e02dde46d41113524",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P026",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P027",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMixedWindows"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P029",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P029",
+      "source_sha256": "7cf5d274f90e25eb9e2b63a1307b47507e30b392c513330d5e83e82e01d5a2d5",
+      "ported_sha256": "c49025557bc0901bdeb8d8de4b1c9a722b6f222014fe98f4ea130c122f39946a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P028"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P031",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P031",
+      "source_sha256": "811b0e17f5ca7a3ca3dd373a1f288d8ed6659d443147609400f12edeeed35ab7",
+      "ported_sha256": "fb4bfee7b1bd509b5f741da890d14222ecaf47cf3c3099b618c056988d959da8",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P029",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P032",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P032",
+      "source_sha256": "4a9c49b18209fd3b649717a4c8775fe16fb7854ea3a9af2a271cc73c0538c8b7",
+      "ported_sha256": "ea5154ab4a3657b4d4375e9ef16d721d51dae77c899e791f3cb12b38f91bae1b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P031"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P033",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P033",
+      "source_sha256": "dbfe0fb8faa17375addc65ecf31a41d2cafc893ef1e88c8fb2d79fde5ed5914d",
+      "ported_sha256": "4b9e9a236b8db9a6c8d9e608dc34a2976f5c2b296fbc58048eb39d40385204b2",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P028",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P032"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P034",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P034",
+      "source_sha256": "bf6ec7b351c9b6d4016c181c64e22e4e7e57e12e1eae684e0f58743ae25dcac8",
+      "ported_sha256": "2f7002c7154f5c4e4b48655a88adf03181eb3969e302e8878549ca05043ff9f4",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P029",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P033"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P030",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P030",
+      "source_sha256": "40111b32d85abb29eb1eb4da5983a9f28fb2c676fd4292fb28e57b89b6db8339",
+      "ported_sha256": "2717bc28d719429fbe11c33e333db6d0657d6059e0b065faa8e8b89661c45f03",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P029"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P035",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P035",
+      "source_sha256": "6402036dc26f8832e79812951623be7f4d854b6f6a15b252e7e79b4faf5fe6cc",
+      "ported_sha256": "40ff1ada94481636a9760be80ca49ac485fe927e0c64b482e06df52f4482e3b9",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P031",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P034",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P030",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.Normalization",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.Normalization",
+      "source_sha256": "c973fb28779d103d4070639dc1cfdc47b2eea8474d36da426a2a2e687edb786f",
+      "ported_sha256": "b88b26fa8e160b123c3ee8ba54740c98dd56dfc0099fe3231bb6078af5dff0ce",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Family"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PositiveNormalization",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PositiveNormalization",
+      "source_sha256": "9574c7567aa5b554cdc4636e1b10d4a75425796871da33e641f8d46b1cdcb01d",
+      "ported_sha256": "ee67a7de6e6154881fb8bcaeb34d43180d0be0c3ad978e9a92ceba56aac70201",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.Normalization"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimitiveBinomialNormalization",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveBinomialNormalization",
+      "source_sha256": "eba8ac414e302c2389cf164743d309e7e572da721666ee20d8d5eabed585ba90",
+      "ported_sha256": "d7ae906ce6f7bf5a51d6b229c432b1bf9178e6a2e06f4ed72348342a419c67b2",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PositiveNormalization",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayNormalization",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveReduction"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimitiveCoefficientMinimum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveCoefficientMinimum",
+      "source_sha256": "aea8a92e2750c0961a4a4779a1091a51cd0b0fd9f2c09898a132b81ceb60cef6",
+      "ported_sha256": "00531ae489e517666cfc28e46cbcb1747ac4decebdfc48130271c153e6966196",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveBinomialNormalization"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P036",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+      "source_sha256": "2580b52f4a433d6f9226d3e226284a01c471999a4a2deaf4259a8da250486b33",
+      "ported_sha256": "a7cf3f3f80d493848a51e3f116aa637172c100c7ecc78b71f294c9dd8b6fce38",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P035",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimitiveCoefficientMinimum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RationalPrimeSupport",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeSupport",
+      "source_sha256": "d18c0da18c2118b01bc616027441679322668e5ac1cb3c220445784217f29108",
+      "ported_sha256": "ef68b808aa025f9a66b6a7b2e57b54ba89c1d72738a6723f83fdfc4a6c631ed4",
+      "imports": []
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RationalPrimeLog",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeLog",
+      "source_sha256": "46d934025e6c79bd339a73fdc6af2a20e82cf23992a1e4a3b4c8792239111076",
+      "ported_sha256": "e92376849252fdc9897595eedba10a2fb59d0b392771579fb802206ca5dac341",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeSupport"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.RationalPolynomialPrimeSupport",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPolynomialPrimeSupport",
+      "source_sha256": "290387484db3d3d231c0fe73e5e1ef82a66e651361c8b7a9a9fa6e0bb9c51c67",
+      "ported_sha256": "24e7c5116535dac71d8075809cdd3fec05a1cbde2d44986481eab13daa4a9a4a",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeSupport"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P037",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P037",
+      "source_sha256": "a244dc55991635db2dcf626f2eca81cb047bbb4cfcfeea062430e709ede6d34a",
+      "ported_sha256": "44d157f6e26dc8231a8dac0dee0b171b895ba6d14073ddad9902ed78ca2b6f77",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeLog"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeMediumTableSum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMediumTableSum",
+      "source_sha256": "5313498cf577a9ac86ebcc52eac204f0076591df8a3ebd01111b806b2228eb5b",
+      "ported_sha256": "9fa9062cdca6a09f32a1527b5d6aacbf93185be26d306916417b23c29c07b5d7",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeStrictInterval"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeOuterTableSum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOuterTableSum",
+      "source_sha256": "7ebbf54267c752f385e41df1ec9b69e7b54902abe7ff354733f54f46a10ae825",
+      "ported_sha256": "9f5e53692c005d085be71496e8c3f7a0ea2b6f7e918c6ed0e51859adb2e0af27",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeMediumTableSum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayMediumRefined",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumRefined",
+      "source_sha256": "d6fee7f23343b67677047f2297167a293ca01dbb2ed1d056d4d0f6ef0cdf0942",
+      "ported_sha256": "f920a77ef9817cc30d381ca65ab79e3df5926869ff116d46f219c600570b5e1d",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumClosed"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayLargePrimes",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayLargePrimes",
+      "source_sha256": "4b6b8878c9c7cd846f6a419db8135d05f2773c613151f8b19b2e3da9fc028907",
+      "ported_sha256": "3638b004609986bfa3fde9e17562798d272ba5dfdeecd404cde763f649af37ef",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumRefined"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OuterClassCosts",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OuterClassCosts",
+      "source_sha256": "18ea080202fd975eeda6ee1c7021265e1da9c1caa6520e9b7c71df4c1677e083",
+      "ported_sha256": "a088345368c05cc29b515c4781690d00a72b65f3b6870a6d4ae3b2c137964cb3",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayLargePrimes"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OuterClassAffine",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OuterClassAffine",
+      "source_sha256": "9cd8682d1112dcb74089aadac65180527a05dd6760c4d31ee71e4016c7372684",
+      "ported_sha256": "5c34aec353e6f9beff49a503b59f30f0f3c0b2cd78fd0f2a42c56d3793481046",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OuterClassCosts"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.OuterPrimeWindows",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.OuterPrimeWindows",
+      "source_sha256": "0b5f1a52d874b2da3a09a958cfc6c07af035237f0ef77538e2046556c82d6287",
+      "ported_sha256": "2f23f0248ba17e3ff7cfe81d418770284a5025adfa79a23f72ace8e66f60fa8b",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OuterClassAffine",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumClassCounts",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MediumFloorSum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeOuterTableIdentity",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOuterTableIdentity",
+      "source_sha256": "feb0b001412d62f0b86962f4eccf939cb0ca3e1c471fae82f10bb16be7ede3ea",
+      "ported_sha256": "cc485811223389c64cc2503d24de0b8c5c59766419a2f172ef2625cc7727dcac",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOuterTableSum",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OuterPrimeWindows"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P041",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P041",
+      "source_sha256": "03a1ba430f5c9ddd5323974afabeb716619cd97e13a597299016e6149d91a6c7",
+      "ported_sha256": "f8614c5cf829d030cbc5b117479c1584693f1b639f9aeab059f0246b262ba08c",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P037",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeOuterTableIdentity",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayBinomial",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayTaylor",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayTaylor",
+      "source_sha256": "6030caaaad8901327edf946c96da8f2182c19848efd3d2e12f15c6e3af95748f",
+      "ported_sha256": "b3549f5071454a1dbbe154df0f1c3ffb91fe06d169c119c4910bb65f2fe851f2",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMu"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayReflect",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayReflect",
+      "source_sha256": "4c94bb764695f144003b4645dba549354654ea9b718f6e16b77c2b294df41502",
+      "ported_sha256": "995613d4e8b542ba1ceaed5a8499dff31442b076af1cb4cf9127e276477abd83",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayTaylor",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.MomentArithmetic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayFallback",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayFallback",
+      "source_sha256": "790904174892d7acceeb3b2989177b1079f3dcea8822a6612fcb13960e0c6265",
+      "ported_sha256": "13306f873ee89f19392002b5ff6ba41f8b791d7fee59875f3616ed8904562ae9",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayReflect",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayThreeAdic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimePowerTail",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePowerTail",
+      "source_sha256": "5b7e9973e9aa92e49b6fc1e51d1e01425a8d7f9ee7eb7b4b9eeeba7218a586ef",
+      "ported_sha256": "7dac41275b58de5d4e79cce2f2db7484d5afc5a89a8e2312c4fbfae829423131",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeThetaInterval"
+      ],
+      "pre_PNT_helper_sha256": "ea18ad965cd4da4c0a03678bd20bb305fccb0e19938ff303dc0428841e4458e3",
+      "adaptation": "reuse CatalanPNT.isLittleO_sqrt_mul_log; same statement, no proof change"
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeSmallTableSum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeSmallTableSum",
+      "source_sha256": "ce5e1ae335313a59262272d488bbcf89a54cba62e713cef92249ad2ca4c03076",
+      "ported_sha256": "4171d450fc0c851dc337030bafaf6f6c33a2206eee191e0d0e5929bdeb00a593",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimePowerTail"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P040",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P040",
+      "source_sha256": "70d9b6a5e3b79a6519b4f8e853e7c7270f96c633f66729d22949816dcb57d708",
+      "ported_sha256": "d9898573aca519653cba80bd03b1709b19f41000121c5d5fb0ab3002e239c773",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeSmallTableSum"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P042",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042",
+      "source_sha256": "7cce36c94456c8f8c72cd3850fdb91a6c3782661e0a3891628080dc808b05c19",
+      "ported_sha256": "ff3970ea70506f874d815521c78732d6b0960030cfec285d77558acd7b90c903",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P041",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayFallback",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P019",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P040"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P046",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P046",
+      "source_sha256": "3a2d43bb2480c206814e816bf25191bb116217928af52f2839156cb28b120ee8",
+      "ported_sha256": "858c95ba06ffb3a9bdbf81d8c38bec0076b7a0b092fe9b4e2b18aae6f8a23497",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayPoleSplit",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayPoleSplit",
+      "source_sha256": "e722ac4e114b6b46c7373d2d1ae7cd376c07fef2fd46881017ef47b7d4d7ab83",
+      "ported_sha256": "22143c63bacf23555fea40d6f419ee8c204bb448eb2ab7d180a5e66dd5d3c161",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayResidue"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayLocal",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayLocal",
+      "source_sha256": "1859e14bffa812303450918db04c2b02c8f7db2ba2b9a13acebad01d3373b069",
+      "ported_sha256": "46f0e3fcbd9ec6d5388502f3b9d537012dbb202214b9f7ef229d004dd1e5b206",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayReflect",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayPoleSplit",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PoleFamily"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayJetBounds",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayJetBounds",
+      "source_sha256": "b2c1b7eb445050f1ba9155f25df43589beb1e22395eb07acacc157d5f1ced77d",
+      "ported_sha256": "230cee69a54a07cb490cf8580d36ad86b332f10780862befc984e770db43e87f",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayLocal"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.DecayTwoAdic",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.DecayTwoAdic",
+      "source_sha256": "789144ae7157460887e283b3ce2cb97e7a498f3d31d0f461c36df0ddeafaa23e",
+      "ported_sha256": "5746e64eca63f803dc0f725c326e6d02a7e167ad5d1ac8a224b77bc44241e0e6",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayJetBounds",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayExpand",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayThreeAdic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Base.PrimeTwoThreeSum",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeTwoThreeSum",
+      "source_sha256": "0227eb68aa4302ff83550df433f1354a24f0f07a6b42b553ff60c97a171838f9",
+      "ported_sha256": "a653f9e1b7226cc5e4180c5dbb75c6604f025853e0a1d769b7842cb4064a1b45",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayTwoAdic",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeEndpointTerms"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P047",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P047",
+      "source_sha256": "27337f0662c3de0249e0cb872d4420116491a272edd160ee64c213e0f43a6a49",
+      "ported_sha256": "048a8e748ef7c8c5fa0761fef1d00a736514d8ba65a932092daa5968ccb51609",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P046",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeTwoThreeSum",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P001",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.ParameterShift",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayLocal",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P002",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayTwoAdic"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P048",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P048",
+      "source_sha256": "83293839cbaaaada8e446ec8e9732b67786fd2b0a5ae7cc52c20def67208d683",
+      "ported_sha256": "c85506456e5016ea4cb80587ad7dd022a95fdba3f7dc17957884eb77b2b87915",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P047",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P041",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.PrimeTwoThreeSum",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomials"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P049",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P049",
+      "source_sha256": "b11d586977441a7e8600776ac74d3de1d913afc4e26ef54cdddf4ca5f0f83a31",
+      "ported_sha256": "1550f826ec7582237d73d1249aec7b7a19dac6093fbdd512eb3c77f62d5b6f53",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P048",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeLog"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P038",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P038",
+      "source_sha256": "8dab6324f35abed4ed3796ff3616003c439fe8a3c81a9c144cf5a31c7e650336",
+      "ported_sha256": "bb46989f9ad8b9b7504a108e04ac69407415e04c998186f80a386e5ea9e68cdb",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P037",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P035",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P039",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P039",
+      "source_sha256": "ac971e7f110756e7d27c94da0a0782deb47fbf767ca5be9299c4ff8e137add34",
+      "ported_sha256": "6caebd07fa7b257c7f95fe15e102e27f07c1ce505398ccd3193f0b29d32bc4cb",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P030",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P038"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P043",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P043",
+      "source_sha256": "60a217b2e36e1384ae651a1314c4316330600fdab9f7b60d8ce39db2f5b5a775",
+      "ported_sha256": "0313ed74169efe10c8e312dea8a257edf2c85527754097831383dbdba04c7627",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P040",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P039",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P044",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P044",
+      "source_sha256": "c84daed7989c05ea90bec1121575fc50f828246b2c154835a79d2722d1efa182",
+      "ported_sha256": "8e437e368f1305ce1e53d898483ea136f9bebf33159941c30cf547f94a8bb1a1",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P043"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P045",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P045",
+      "source_sha256": "7a687dbceec6edb7d5bbfe84844253a491e962e4aeb3ceb89b9de752a1eb0de0",
+      "ported_sha256": "12873f49799bd551ed8b63e77108c0dccc073d0fad0ee68c6356c200c18de701",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.DecayMediumAssembly",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P041",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegerFamily",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.IntegralPolynomials",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.OuterPrimeWindows"
+      ]
+    },
+    {
+      "source": "Li2Unified.Modular.Positive.Packed.P050",
+      "module": "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P050",
+      "source_sha256": "ff814ee2c7a8338ee58088ee767dbd42eb10b9ed1d3f0b41630afa90ebf810f9",
+      "ported_sha256": "1a72c74db7ed1bc3e12db56c938294e8630136f010e00495004a3d04c4e83846",
+      "imports": [
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPrimeLog",
+        "CatalanCore.Li2.Port.Unified.Modular.Base.RationalPolynomialPrimeSupport",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P049",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P044",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P045",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P047",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P048",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P043",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P025",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P046",
+        "CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P042"
+      ]
+    }
+  ]
+}
