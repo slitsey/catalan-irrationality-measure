@@ -1883,15 +1883,46 @@ theorem floor_scale_le (x : ℚ) (S : ℤ) (hS : 0 < S) : ((x.num*S/(x.den:ℤ):
 
 def cbL1I (b : CB) : ℤ := cbMag b+b.2
 
-def asmErrI (S : ℤ) (cs : List CB) (H δI rtI RI MI : ℤ) (J : ℕ) : ℤ :=
-  let ρI := divUp S (rtI+δI) RI
-  divUp S (mulUp S (powUp S ρI (J+1)) MI) (S-ρI) +
-  mulUp S δI (((List.range J).map (fun k : ℕ =>
-    ((k:ℤ)+1)*mulUp S (cbL1I (cbGet cs k)) (powUp S (rtI+δI) k))).sum) +
-  ((List.range J).map (fun k : ℕ => mulUp S (cbGet cs k).2 (powUp S rtI (k+1)))).sum + H
+/-- `Σ_{j<n} g(k+j) x^j` by Horner, rounding up at scale `S`: each step adds at most one unit,
+so the rounding error does not grow with the size of the coefficients. -/
+def hornerUpR (S x : ℤ) (g : ℕ → ℤ) : ℕ → ℕ → ℤ
+  | 0, _ => 0
+  | n+1, k => g k + mulUp S x (hornerUpR S x g n (k+1))
+
+theorem hornerUpR_spec (S x : ℤ) (hS : 0 < S) (hx : 0 ≤ x) (g : ℕ → ℤ) (y : ℚ) (hy0 : 0 ≤ y)
+    (hy : y ≤ (x:ℚ)/S) : ∀ n k : ℕ, (∀ j, j < k+n → 0 ≤ g j) →
+    0 ≤ hornerUpR S x g n k ∧ ∑ j ∈ Finset.range n, (g (k+j):ℚ)/S*y^j ≤ (hornerUpR S x g n k:ℚ)/S
+  | 0, k, _ => by simp [hornerUpR]
+  | n+1, k, hg => by
+    have hSq : (0:ℚ) < S := by exact_mod_cast hS
+    obtain ⟨h0,h1⟩ := hornerUpR_spec S x hS hx g y hy0 hy n (k+1) (fun j hj => hg j (by omega))
+    have hgk : 0 ≤ g k := hg k (by omega)
+    obtain ⟨m0,m1⟩ := mulUp_spec S x _ hS hx h0
+    refine ⟨by simp only [hornerUpR]; linarith,?_⟩
+    rw [Finset.sum_range_succ']
+    have hshift : ∑ j ∈ Finset.range n, (g (k+(j+1)):ℚ)/S*y^(j+1) =
+        y*∑ j ∈ Finset.range n, (g (k+1+j):ℚ)/S*y^j := by
+      rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro j _
+      rw [show k+(j+1)=k+1+j by omega,pow_succ]; ring
+    rw [hshift]
+    have hs0 : 0 ≤ ∑ j ∈ Finset.range n, (g (k+1+j):ℚ)/S*y^j := by
+      apply Finset.sum_nonneg; intro j hj
+      have h := hg (k+1+j) (by simp only [Finset.mem_range] at hj; omega)
+      have : (0:ℚ) ≤ g (k+1+j) := by exact_mod_cast h
+      positivity
+    have hm := mul_le_mul hy h1 hs0 (hy0.trans hy)
+    simp only [hornerUpR,add_zero,pow_zero,mul_one]
+    push_cast; rw [add_div]
+    linarith
 
 theorem cbMag_nonneg (b : CB) : 0 ≤ cbMag b := by
   unfold cbMag; rw [iabs_eq,iabs_eq]; positivity
+
+def asmErrI (S : ℤ) (cs : List CB) (H δI rtI RI MI : ℤ) (J : ℕ) : ℤ :=
+  let ρI := divUp S (rtI+δI) RI
+  divUp S (mulUp S (powUp S ρI (J+1)) MI) (S-ρI) +
+  mulUp S δI (hornerUpR S (rtI+δI) (fun k => ((k:ℤ)+1)*cbL1I (cbGet cs k)) J 0) +
+  mulUp S rtI (hornerUpR S rtI (fun k => (cbGet cs k).2) J 0) + H
 
 theorem asmErr_le (S : ℤ) (hS : 0 < S) (cs : List CB) (lo hi δ rt : ℚ) (wd : SegDiscWitness) (mcHi : ℚ)
     (H δI rtI RI MI : ℤ)
@@ -1907,8 +1938,7 @@ theorem asmErr_le (S : ℤ) (hS : 0 < S) (cs : List CB) (lo hi δ rt : ℚ) (wd 
   set J := wd.order
   have hrtI : 0 ≤ rtI := by
     have : (0:ℚ) ≤ (rtI:ℚ)/S := hrt0.trans hrt
-    have := (div_nonneg_iff.mp this)
-    rcases this with h | h
+    rcases div_nonneg_iff.mp this with h | h
     · exact_mod_cast h.1
     · exact absurd h.2 (not_le.mpr hSq)
   have hδI : 0 ≤ δI := by
@@ -1920,7 +1950,6 @@ theorem asmErr_le (S : ℤ) (hS : 0 < S) (cs : List CB) (lo hi δ rt : ℚ) (wd 
   have hRpos : 0 < wd.radius := hRIq.trans_le hR
   set ρI := divUp S (rtI+δI) RI
   obtain ⟨hρI0,hρI⟩ := divUp_spec S (rtI+δI) RI hS (by linarith) hRI
-  -- ρ ≤ ρI/S < 1
   set ρ := (rt+δ)/wd.radius
   have hρ0 : 0 ≤ ρ := div_nonneg (by linarith) hRpos.le
   have hρle : ρ ≤ (ρI:ℚ)/S := by
@@ -1955,72 +1984,51 @@ theorem asmErr_le (S : ℤ) (hS : 0 < S) (cs : List CB) (lo hi δ rt : ℚ) (wd 
             div_le_div_of_nonneg_right hm1 hSρq.le
       _ = ((mulUp S (powUp S ρI (J+1)) MI:ℤ):ℚ)/((S-ρI:ℤ):ℚ) := by field_simp
       _ ≤ _ := hd1
-  -- displacement term
+  -- displacement term, by Horner
   have hx0 : 0 ≤ rtI+δI := by linarith
-  have hk : ∀ k ∈ Finset.range J,(k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k ≤
-      (((k:ℤ)+1)*mulUp S (cbL1I (cbGet cs k)) (powUp S (rtI+δI) k):ℤ)/S := by
-    intro k hkJ
-    have hL0 : 0 ≤ cbL1I (cbGet cs k) := add_nonneg (cbMag_nonneg _) (hcs k (Finset.mem_range.mp hkJ))
-    obtain ⟨hq0,hq1⟩ := powUp_spec S (rtI+δI) hS hx0 k
-    obtain ⟨-,hu1⟩ := mulUp_spec S _ _ hS hL0 hq0
-    have hxk : (rt+δ)^k ≤ (powUp S (rtI+δI) k:ℚ)/S := by
-      refine (pow_le_pow_left₀ (by linarith) ?_ k).trans hq1
-      push_cast; rw [add_div]; linarith
-    have hLq : (0:ℚ) ≤ cbL1Hi S (cbGet cs k) := by
-      unfold cbL1Hi; have : (0:ℚ) ≤ ((cbMag (cbGet cs k)+(cbGet cs k).2:ℤ):ℚ) := by exact_mod_cast hL0
-      positivity
-    have hk1 : (0:ℚ) ≤ (k+1:ℚ) := by positivity
-    calc (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k
-        ≤ (k+1:ℚ)*(cbL1Hi S (cbGet cs k)*((powUp S (rtI+δI) k:ℚ)/S)) := by
-          rw [mul_assoc]; exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hxk hLq) hk1
-      _ ≤ (k+1:ℚ)*((mulUp S (cbL1I (cbGet cs k)) (powUp S (rtI+δI) k):ℚ)/S) := by
-          apply mul_le_mul_of_nonneg_left _ hk1
-          simpa only [cbL1Hi,cbL1I] using hu1
-      _ = _ := by push_cast; ring
-  have hsd0 : 0 ≤ ((List.range J).map (fun k : ℕ =>
-      ((k:ℤ)+1)*mulUp S (cbL1I (cbGet cs k)) (powUp S (rtI+δI) k))).sum := by
+  have hy : rt+δ ≤ ((rtI+δI:ℤ):ℚ)/S := by push_cast; rw [add_div]; linarith
+  obtain ⟨hd0,hdd⟩ := hornerUpR_spec S (rtI+δI) hS hx0 (fun k => ((k:ℤ)+1)*cbL1I (cbGet cs k))
+    (rt+δ) (by linarith) hy J 0
+    (fun j hj => mul_nonneg (by positivity) (add_nonneg (cbMag_nonneg _) (hcs j (by omega))))
+  set sd := hornerUpR S (rtI+δI) (fun k => ((k:ℤ)+1)*cbL1I (cbGet cs k)) J 0
+  have hDsum : ((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum ≤ (sd:ℚ)/S := by
+    rw [list_sum_map_range]; refine le_trans (le_of_eq ?_) hdd
+    apply Finset.sum_congr rfl; intro k _
+    simp only [zero_add,cbL1Hi,cbL1I]; push_cast; ring
+  have hs0 : 0 ≤ ((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum := by
     rw [list_sum_map_range]; apply Finset.sum_nonneg; intro k hkJ
     have hL0 : 0 ≤ cbL1I (cbGet cs k) := add_nonneg (cbMag_nonneg _) (hcs k (Finset.mem_range.mp hkJ))
-    have := (mulUp_spec S _ _ hS hL0 (powUp_spec S (rtI+δI) hS hx0 k).1).1
-    positivity
-  set sd := ((List.range J).map (fun k : ℕ =>
-    ((k:ℤ)+1)*mulUp S (cbL1I (cbGet cs k)) (powUp S (rtI+δI) k))).sum
-  have hDsum : ((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum ≤ (sd:ℚ)/S := by
-    rw [list_sum_map_range]
-    simp only [sd]; rw [list_sum_map_range]; push_cast; rw [Finset.sum_div]
-    apply Finset.sum_le_sum; intro k hkJ; have := hk k hkJ; push_cast at this; exact this
-  obtain ⟨-,hδm⟩ := mulUp_spec S δI sd hS hδI hsd0
-  have hD : δ*((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum ≤
-      (mulUp S δI sd:ℚ)/S := by
-    have hs0 : 0 ≤ ((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum := by
-      rw [list_sum_map_range]; apply Finset.sum_nonneg; intro k hkJ
-      have hL0 : 0 ≤ cbL1I (cbGet cs k) := add_nonneg (cbMag_nonneg _) (hcs k (Finset.mem_range.mp hkJ))
-      have : (0:ℚ) ≤ cbL1Hi S (cbGet cs k) := by
-        unfold cbL1Hi; have : (0:ℚ) ≤ ((cbMag (cbGet cs k)+(cbGet cs k).2:ℤ):ℚ) := by exact_mod_cast hL0
-        positivity
-      have : (0:ℚ) ≤ rt+δ := by linarith
+    have : (0:ℚ) ≤ cbL1Hi S (cbGet cs k) := by
+      unfold cbL1Hi; have : (0:ℚ) ≤ ((cbMag (cbGet cs k)+(cbGet cs k).2:ℤ):ℚ) := by exact_mod_cast hL0
       positivity
-    have hsq2 : (0:ℚ) ≤ (sd:ℚ)/S := div_nonneg (by exact_mod_cast hsd0) hSq.le
-    calc _ ≤ ((δI:ℚ)/S)*((sd:ℚ)/S) := mul_le_mul hδ hDsum hs0 (hδ0.trans hδ)
-      _ ≤ _ := hδm
-  -- ball term
-  have hB : ((List.range J).map (fun k : ℕ => ((cbGet cs k).2:ℚ)/S*rt^(k+1))).sum ≤
-      ((((List.range J).map (fun k : ℕ => mulUp S (cbGet cs k).2 (powUp S rtI (k+1)))).sum:ℤ):ℚ)/S := by
-    rw [list_sum_map_range,list_sum_map_range]; push_cast; rw [Finset.sum_div]
-    apply Finset.sum_le_sum; intro k hkJ
-    have hr0 := hcs k (Finset.mem_range.mp hkJ)
-    obtain ⟨hq0,hq1⟩ := powUp_spec S rtI hS hrtI (k+1)
-    obtain ⟨-,hu1⟩ := mulUp_spec S _ _ hS hr0 hq0
-    have hrq : (0:ℚ) ≤ ((cbGet cs k).2:ℚ)/S := div_nonneg (by exact_mod_cast hr0) hSq.le
-    calc ((cbGet cs k).2:ℚ)/S*rt^(k+1) ≤ ((cbGet cs k).2:ℚ)/S*((powUp S rtI (k+1):ℚ)/S) :=
-          mul_le_mul_of_nonneg_left ((pow_le_pow_left₀ hrt0 hrt _).trans hq1) hrq
-      _ ≤ _ := hu1
+    have : (0:ℚ) ≤ rt+δ := by linarith
+    positivity
+  obtain ⟨-,hδm⟩ := mulUp_spec S δI sd hS hδI hd0
+  have hD : δ*((List.range J).map (fun k : ℕ => (k+1:ℚ)*cbL1Hi S (cbGet cs k)*(rt+δ)^k)).sum ≤
+      (mulUp S δI sd:ℚ)/S :=
+    (mul_le_mul hδ hDsum hs0 (hδ0.trans hδ)).trans hδm
+  -- ball term, by Horner
+  obtain ⟨hb0,hbb⟩ := hornerUpR_spec S rtI hS hrtI (fun k => (cbGet cs k).2) rt hrt0 hrt J 0
+    (fun j hj => hcs j (by omega))
+  set sb := hornerUpR S rtI (fun k => (cbGet cs k).2) J 0
+  obtain ⟨-,hbm⟩ := mulUp_spec S rtI sb hS hrtI hb0
+  have hB : ((List.range J).map (fun k : ℕ => ((cbGet cs k).2:ℚ)/S*rt^(k+1))).sum ≤ (mulUp S rtI sb:ℚ)/S := by
+    rw [list_sum_map_range]
+    have e : ∑ k ∈ Finset.range J, ((cbGet cs k).2:ℚ)/S*rt^(k+1) =
+        rt*∑ k ∈ Finset.range J, ((cbGet cs (0+k)).2:ℚ)/S*rt^k := by
+      rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro k _; rw [zero_add,pow_succ]; ring
+    have hs : 0 ≤ ∑ k ∈ Finset.range J, ((cbGet cs (0+k)).2:ℚ)/S*rt^k := by
+      apply Finset.sum_nonneg; intro k hk
+      have h := hcs (0+k) (by simp only [Finset.mem_range] at hk; omega)
+      have : (0:ℚ) ≤ ((cbGet cs (0+k)).2:ℚ) := by exact_mod_cast h
+      positivity
+    rw [e]; exact (mul_le_mul hrt hbb hs (hrt0.trans hrt)).trans hbm
   unfold asmErrI
   simp only []
   push_cast
   rw [add_div,add_div,add_div]
-  push_cast at hT hD hB
   linarith
+
 
 /-! ### One copy with integer output -/
 

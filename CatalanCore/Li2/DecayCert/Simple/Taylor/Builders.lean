@@ -1,9 +1,12 @@
 module
 public import CatalanCore.Li2.DecayCert.Simple.Taylor.Range
 public import CatalanCore.Li2.DecayCert.Simple.Taylor.Analytic
+public import CatalanCore.Li2.DecayCert.Lattice.FarMacro
 /-! Soundness of the lattice Taylor-box builders (`ModelsF`): `xlogBoxF` encloses `sg·xlog(x+dir·u)`,
 `logAffineBoxF` encloses `M·log(x+u)`, and `midPolyBoxF` encloses the Taylor shift `u ↦ q(c+e·u)` of any
-polynomial whose coefficients lie within `width` of the integer midpoints. -/
+polynomial whose coefficients lie within `width` of the integer midpoints, `polyExactF` encloses a Horner
+value at `|x| ≤ 1`, and `mpBoxF`/`mpBoxKF` enclose the multipole sum `-2 Σ_k w_k (x+u)^-(k+1)` with the
+binomial-majorant remainder. -/
 @[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 1000000
@@ -593,5 +596,438 @@ theorem midPolyBoxF_sound (ds : List ℤ) (width : ℤ) (c e r : ℚ) (J : ℕ) 
     linarith [hTB,hWB]
 
 #print axioms midPolyBoxF_sound
+/-- Horner perturbation at `|t| ≤ 1` with per-coefficient widths. -/
+theorem horner_perturb_unit (t : ℝ) (ht : |t| ≤ 1) (p : List FBox) (vals : List ℝ)
+    (h : List.Forall₂ Contains p vals) :
+    ∀ acc1 acc2 : ℝ, |vals.foldl (fun acc b => t*acc+b) acc1-(p.map midF).foldl (fun acc (a:ℤ) => t*acc+dec S a) acc2| ≤
+      |acc1-acc2|+dec S (p.map widthF).sum := by
+  induction h with
+  | nil => intro acc1 acc2; simp [dec]
+  | @cons a x p vals hax _ ih =>
+    intro acc1 acc2
+    simp only [List.map_cons,List.foldl_cons,List.sum_cons,dec_add]
+    refine (ih _ _).trans ?_
+    have hm := midpoint_error a x hax
+    have h1 : |t*acc1+x-(t*acc2+dec S (midF a))| ≤ |acc1-acc2|+dec S (widthF a) := by
+      have : t*acc1+x-(t*acc2+dec S (midF a))=t*(acc1-acc2)+(x-dec S (midF a)) := by ring
+      rw [this]
+      refine (abs_add_le _ _).trans ?_
+      rw [abs_mul]
+      have := mul_le_of_le_one_left (abs_nonneg (acc1-acc2)) ht
+      linarith
+    linarith
+
+/-- `polyExactF x p` encloses the Horner value of any coefficients in the boxes `p`, at `|x| ≤ 1`. -/
+theorem polyExactF_sound (x : ℚ) (hx : |(x:ℝ)| ≤ 1) (p : List FBox) (vals : List ℝ)
+    (h : List.Forall₂ Contains p vals) :
+    Contains (polyExactF x p) (vals.foldl (fun acc b => (x:ℝ)*acc+b) 0) := by
+  have hSR : (0:ℝ)<(S:ℝ) := S_real_pos
+  have hxd : (0:ℤ)<(x.den:ℤ) := by positivity
+  have hq := evalHomInt_val x.num (x.den:ℤ) hxd.ne' (p.map midF)
+  have hxr : ((x.num:ℝ)/((x.den:ℤ):ℝ))=(x:ℝ) := by rw [Rat.cast_def]; push_cast; rfl
+  rw [hxr] at hq
+  have hq2 : (0:ℤ)<(evalHomInt x.num (x.den:ℤ) (p.map midF)).2 := by
+    unfold evalHomInt; rw [evalHomInt_snd]; simp only [mul_one]; positivity
+  have hq2R : (0:ℝ)<((evalHomInt x.num (x.den:ℤ) (p.map midF)).2:ℝ) := by exact_mod_cast hq2
+  set H := (p.map midF).foldl (fun acc (a:ℤ) => (x:ℝ)*acc+(a:ℝ)) 0 with hH
+  have hdecH : (p.map midF).foldl (fun acc (a:ℤ) => (x:ℝ)*acc+dec S a) 0=H/(S:ℝ) := by
+    have := foldl_dec (x:ℝ) (p.map midF) 0
+    rwa [zero_div] at this
+  have hpert := horner_perturb_unit (x:ℝ) hx p vals h 0 0
+  rw [sub_self,abs_zero,zero_add,hdecH] at hpert
+  have hratio : ((evalHomInt x.num (x.den:ℤ) (p.map midF)).1:ℝ)/
+      ((evalHomInt x.num (x.den:ℤ) (p.map midF)).2:ℝ)=H := by
+    rw [hq]; field_simp
+  have hsum : (p.map widthF).foldl (·+·) 0=(p.map widthF).sum := (List.sum_eq_foldl).symm
+  unfold polyExactF
+  simp only [hsum]
+  rw [abs_le] at hpert
+  constructor
+  · unfold dec
+    have hf := ediv_le_real (evalHomInt x.num (x.den:ℤ) (p.map midF)).1 _ hq2
+    rw [hratio] at hf
+    have hf' := div_le_div_of_nonneg_right hf hSR.le
+    rw [Int.cast_sub,sub_div]
+    unfold dec at hpert
+    linarith [hpert.1]
+  · unfold dec
+    have hc := ceilDiv_ge (evalHomInt x.num (x.den:ℤ) (p.map midF)).1 _ hq2.ne'
+    rw [hratio] at hc
+    have hc' := div_le_div_of_nonneg_right hc hSR.le
+    rw [Int.cast_add,add_div]
+    unfold dec at hpert
+    linarith [hpert.2]
+
+#print axioms polyExactF_sound
+
+/-- One Taylor order of the multipole majorant: with `|w k| ≤ M h^(k+1)/(k+1)`,
+`Σ_k |w k| x^-(k+1) C(N+k,k) (r/x)^N ≤ M (r/(x-h))^N / N`. -/
+theorem mp_majorant_term (x h r M : ℝ) (hx : 0 < x) (hh : 0 ≤ h) (hr : 0 ≤ r) (hM : 0 ≤ M)
+    (hsep : h+r < x) (n N1 : ℕ) (w : ℕ → ℝ)
+    (hw : ∀ k < n, |w k| ≤ M*h^(k+1)/((k+1:ℕ):ℝ)) :
+    ∑ k ∈ Finset.range n, |w k| * (x^(-((k+1:ℕ):ℤ))*((((N1+1)+k).choose k:ℝ)*(r/x)^(N1+1))) ≤
+      M*(r/(x-h))^(N1+1)/((N1+1:ℕ):ℝ) := by
+  have ha0 : 0 ≤ h/x := div_nonneg hh hx.le
+  have ha1 : h/x < 1 := (div_lt_one hx).mpr (by linarith)
+  have hs := hasSum_choose_mul_geometric_of_norm_lt_one N1 (r := h/x)
+    (by rw [Real.norm_eq_abs,abs_of_nonneg ha0]; exact ha1)
+  have hpart : ∑ k ∈ Finset.range n, (((k+1)+N1).choose N1:ℝ)*(h/x)^(k+1) ≤ 1/(1-h/x)^(N1+1) := by
+    have h1 : ∑ k ∈ Finset.range n, (((k+1)+N1).choose N1:ℝ)*(h/x)^(k+1) ≤
+        ∑ m ∈ Finset.range (n+1), ((m+N1).choose N1:ℝ)*(h/x)^m := by
+      rw [Finset.sum_range_succ']; simp only [le_add_iff_nonneg_right]; positivity
+    exact h1.trans (sum_le_hasSum _ (fun m _ => by positivity) hs)
+  have hNpos : (0:ℝ) < ((N1+1:ℕ):ℝ) := by positivity
+  have hq0 : 0 ≤ (r/x)^(N1+1) := by positivity
+  have hk : ∀ k ∈ Finset.range n,
+      |w k| * (x^(-((k+1:ℕ):ℤ))*((((N1+1)+k).choose k:ℝ)*(r/x)^(N1+1))) ≤
+        M*(r/x)^(N1+1)/((N1+1:ℕ):ℝ)*((((k+1)+N1).choose N1:ℝ)*(h/x)^(k+1)) := by
+    intro k hkn
+    have hwk := hw k (Finset.mem_range.mp hkn)
+    have e := Nat.choose_succ_right_eq (N1+1+k) k
+    have e2 : (N1+1+k).choose (k+1)=((k+1)+N1).choose N1 := by
+      rw [show N1+1+k=(k+1)+N1 by omega]; exact Nat.choose_symm_add
+    rw [e2,show N1+1+k-k=N1+1 by omega] at e
+    have hC : (((k+1)+N1).choose N1:ℝ)=((N1+1+k).choose k:ℝ)*((N1+1:ℕ):ℝ)/((k+1:ℕ):ℝ) := by
+      have hk1 : ((k+1:ℕ):ℝ) ≠ 0 := by positivity
+      rw [eq_div_iff hk1]; exact_mod_cast e
+    have hxk : x^(-((k+1:ℕ):ℤ))=(x^(k+1))⁻¹ := by rw [zpow_neg,zpow_natCast]
+    rw [hxk,hC]
+    have hxp : 0 < x^(k+1) := pow_pos hx _
+    calc |w k| * ((x^(k+1))⁻¹*((((N1+1)+k).choose k:ℝ)*(r/x)^(N1+1)))
+        ≤ M*h^(k+1)/((k+1:ℕ):ℝ)*((x^(k+1))⁻¹*((((N1+1)+k).choose k:ℝ)*(r/x)^(N1+1))) :=
+          mul_le_mul_of_nonneg_right hwk (by positivity)
+      _ = _ := by
+          have hk1 : ((k+1:ℕ):ℝ) ≠ 0 := by positivity
+          rw [div_pow h x]
+          field_simp
+  have hsum := Finset.sum_le_sum hk
+  rw [← Finset.mul_sum] at hsum
+  refine hsum.trans ?_
+  have hxh : 0 < x-h := by linarith
+  have h1a : 0 < 1-h/x := by linarith
+  calc M*(r/x)^(N1+1)/((N1+1:ℕ):ℝ)*∑ k ∈ Finset.range n, (((k+1)+N1).choose N1:ℝ)*(h/x)^(k+1)
+      ≤ M*(r/x)^(N1+1)/((N1+1:ℕ):ℝ)*(1/(1-h/x)^(N1+1)) :=
+        mul_le_mul_of_nonneg_left hpart (by positivity)
+    _ = _ := by
+        have e : 1-h/x=(x-h)/x := by field_simp
+        rw [e,div_pow,div_pow,div_pow]
+        field_simp
+
+#print axioms mp_majorant_term
+
+/-- Tail of one inverse power as a series: `invPowerTail x r k J = Σ_{j} x^-k C(j+J+1+k-1,…) (r/x)^(j+J+1)`. -/
+theorem invPowerTail_hasSum (x r : ℝ) (hx : 0 < x) (hr : 0 ≤ r) (hrx : r < x) (k J : ℕ) :
+    HasSum (fun j : ℕ => x^(-((k+1:ℕ):ℤ))*((((j+J)+1)+k).choose k:ℝ)*(r/x)^((j+J)+1))
+      (invPowerTail x r (k+1) J) := by
+  have hq0 : 0 ≤ r/x := div_nonneg hr hx.le
+  have hq1 : r/x < 1 := (div_lt_one hx).mpr hrx
+  have hs := hasSum_choose_mul_geometric_of_norm_lt_one k (r := r/x)
+    (by rw [Real.norm_eq_abs,abs_of_nonneg hq0]; exact hq1)
+  have ht := ((hasSum_nat_add_iff' (J+1)).2 hs).mul_left (x^(-((k+1:ℕ):ℤ)))
+  convert ht using 1
+  · funext j; rw [show j+J+1=j+(J+1) by omega]; ring
+  · unfold invPowerTail
+    congr 1
+    rw [zpow_neg,zpow_natCast,one_div]
+    congr 1
+    apply Finset.sum_congr rfl; intro j _
+    rw [show k+1+j-1=j+k by omega,Nat.choose_symm_add]
+
+/-- Multipole majorant: with `|w k| ≤ M h^(k+1)/(k+1)` and `η = r/(x-h)`, the Taylor tails of
+`Σ_k w k (x+u)^-(k+1)` sum to at most `M η^(J+1)/((J+1)(1-η))`. -/
+theorem mp_majorant (x h r M : ℝ) (hx : 0 < x) (hh : 0 ≤ h) (hr : 0 ≤ r) (hM : 0 ≤ M)
+    (hsep : h+r < x) (n J : ℕ) (w : ℕ → ℝ)
+    (hw : ∀ k < n, |w k| ≤ M*h^(k+1)/((k+1:ℕ):ℝ)) :
+    ∑ k ∈ Finset.range n, |w k| * invPowerTail x r (k+1) J ≤
+      M*(r/(x-h))^(J+1)/(((J+1:ℕ):ℝ)*(1-r/(x-h))) := by
+  have hrx : r < x := by linarith
+  have hxh : 0 < x-h := by linarith
+  have he0 : 0 ≤ r/(x-h) := div_nonneg hr hxh.le
+  have he1 : r/(x-h) < 1 := (div_lt_one hxh).mpr (by linarith)
+  have hL := hasSum_sum (s := Finset.range n) (fun k _ =>
+    (invPowerTail_hasSum x r hx hr hrx k J).mul_left (|w k|))
+  have hJ : (0:ℝ) < ((J+1:ℕ):ℝ) := by positivity
+  have hG := (hasSum_geometric_of_lt_one he0 he1).mul_left (M*(r/(x-h))^(J+1)/((J+1:ℕ):ℝ))
+  have hle := hasSum_le (fun j => ?_) hL hG
+  · refine hle.trans_eq ?_
+    field_simp
+  · have ht := mp_majorant_term x h r M hx hh hr hM hsep n (j+J) w hw
+    have hj : ((J+1:ℕ):ℝ) ≤ (((j+J)+1:ℕ):ℝ) := by exact_mod_cast (by omega : J+1 ≤ (j+J)+1)
+    calc ∑ k ∈ Finset.range n, |w k| * (x^(-((k+1:ℕ):ℤ))*((((j+J)+1)+k).choose k:ℝ)*(r/x)^((j+J)+1))
+        = ∑ k ∈ Finset.range n, |w k| * (x^(-((k+1:ℕ):ℤ))*(((((j+J)+1)+k).choose k:ℝ)*(r/x)^((j+J)+1))) := by
+          apply Finset.sum_congr rfl; intro k _; ring
+      _ ≤ M*(r/(x-h))^((j+J)+1)/(((j+J)+1:ℕ):ℝ) := ht
+      _ ≤ M*(r/(x-h))^((j+J)+1)/((J+1:ℕ):ℝ) :=
+          div_le_div_of_nonneg_left (by positivity) hJ hj
+      _ = M*(r/(x-h))^(J+1)/((J+1:ℕ):ℝ)*(r/(x-h))^j := by ring
+
+#print axioms mp_majorant
+
+/-! ### `mpBoxF` -/
+
+theorem foldr_horner_range' (t : ℝ) (g : ℕ → ℝ) : ∀ (n s : ℕ),
+    ((List.range' s n).map g).foldr (fun b a => (a+b)*t) 0 =
+      ∑ k ∈ Finset.range n, g (s+k)*t^(k+1)
+  | 0,s => by simp
+  | n+1,s => by
+    rw [List.range'_succ,List.map_cons,List.foldr_cons,foldr_horner_range' t g n (s+1),
+      Finset.sum_range_succ']
+    simp only [add_zero,zero_add,pow_one]
+    rw [add_mul,Finset.sum_mul]
+    have : ∀ k ∈ Finset.range n, g (s+1+k)*t^(k+1)*t=g (s+(k+1))*t^(k+1+1) := by
+      intro k _; rw [show s+1+k=s+(k+1) by omega]; ring
+    rw [Finset.sum_congr rfl this]
+
+theorem forall₂_zipIdx_scale (c : ℕ → ℤ) (w : ℕ → ℝ) : ∀ (l : List FBox) (s : ℕ),
+    List.Forall₂ Contains l ((List.range' s l.length).map w) →
+    List.Forall₂ Contains ((l.zipIdx s).map (fun a => boxScaleF (c a.2) a.1))
+      ((List.range' s l.length).map (fun k => (c k:ℝ)*w k))
+  | [],s,_ => by simp
+  | b::l,s,h => by
+    simp only [List.zipIdx_cons,List.map_cons,List.length_cons,List.range'_succ] at h ⊢
+    cases h with
+    | cons hb hl => exact .cons (boxScaleF_sound _ _ _ hb) (forall₂_zipIdx_scale c w l (s+1) hl)
+
+/-- `mpBoxF` encloses the Taylor jet of `u ↦ -2 Σ_{k<n} w k (x+u)^-(k+1)` on `|u| ≤ R/S`, given
+`MU[k] ∋ w k`, `|w k| ≤ |M| h^(k+1)/(k+1)` and `x ∈ d`. -/
+theorem mpBoxF_sound (MU : List FBox) (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (J : ℕ) (M x : ℝ)
+    (w : ℕ → ℝ) (hM : Contains mass M) (hx : Contains d x)
+    (hMU : List.Forall₂ Contains MU ((List.range MU.length).map w))
+    (hw : ∀ k < MU.length, |w k| ≤ |M| * (h:ℝ)^(k+1)/((k+1:ℕ):ℝ))
+    (m : IntTaylorModel) (hm : mpBoxF MU mass h d R J=some m) :
+    ModelsF m (dec S R) (fun u => -2*∑ k ∈ Finset.range MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ))) := by
+  unfold mpBoxF at hm
+  split_ifs at hm with hg
+  push_neg at hg
+  obtain ⟨hR,hh,hJ⟩ := hg
+  cases hinv : boxDivF boxOne d with
+  | none => simp [hinv,bind,Option.bind] at hm
+  | some inv =>
+  simp only [hinv,bind,Option.bind] at hm
+  split_ifs at hm with hdist
+  cases heta : boxDivF (R,R) (boxSubF d (boxOfQ h)) with
+  | none => simp [heta] at hm
+  | some eta =>
+  simp only [heta] at hm
+  split_ifs at hm with hS
+  cases herr : boxDivF (boxDivNatF (J+1) (boxMulF (boxScaleF 2 (boxAbsF mass)) (boxPowF eta (J+1))))
+      (boxSubF boxOne eta) with
+  | none => simp [herr] at hm
+  | some err =>
+  simp only [herr,Option.pure_def,Option.some.injEq] at hm
+  subst hm
+  have hSR : (0:ℝ)<(S:ℝ) := S_real_pos
+  set n := MU.length with hn
+  set r : ℝ := dec S R with hr
+  have hr0 : 0 ≤ r := by rw [hr]; unfold dec; exact div_nonneg (by exact_mod_cast hR) hSR.le
+  have hh0 : (0:ℝ) ≤ (h:ℝ) := by exact_mod_cast hh
+  have hdC : Contains (boxSubF d (boxOfQ h)) (x-h) := boxSubF_sound _ _ _ _ hx (boxOfQ_sound h)
+  have hsep : (h:ℝ)+r < x := by
+    have : dec S R < dec S (boxSubF d (boxOfQ h)).1 := by
+      unfold dec; exact (div_lt_div_iff_of_pos_right hSR).2 (by exact_mod_cast (not_le.mp hdist))
+    linarith [hdC.1]
+  have hxpos : 0 < x := by linarith
+  have hxh : 0 < x-h := by linarith
+  have hinvC : Contains inv (1/x) := boxDivF_sound _ _ _ _ _ boxOne_sound hx hinv
+  have hetaC : Contains eta (r/(x-h)) := boxDivF_sound _ _ _ _ _ (contains_pt _) hdC heta
+  -- real coefficients
+  let a : List ℝ := (List.range (J+1)).map (fun j => -2*∑ k ∈ Finset.range n,
+    w k*((-1:ℝ)^j*((k+1+j-1).choose j:ℝ)/x^(k+1+j)))
+  refine ⟨a,?_,?_⟩
+  · simp only [a]
+    rw [List.forall₂_map_left_iff,List.forall₂_map_right_iff]
+    apply List.forall₂_same.mpr
+    intro j _
+    have hW := forall₂_zipIdx_scale (fun k => (mpChoose (k+1) j:ℤ)) w MU 0
+      (by rw [← List.range_eq_range']; exact hMU)
+    have hv := boxHornerMul_sound inv (1/x) hinvC _ _ (List.forall₂_reverse_iff.mpr hW)
+    have hfold : ((List.range' 0 MU.length).map (fun k => ((mpChoose (k+1) j:ℤ):ℝ)*w k)).reverse.foldl
+        (fun a b => (a+b)*(1/x)) 0 = ∑ k ∈ Finset.range n, ((mpChoose (0+k+1) j:ℤ):ℝ)*w (0+k)*(1/x)^(k+1) := by
+      rw [List.foldl_reverse]; exact foldr_horner_range' (1/x) _ n 0
+    rw [hfold] at hv
+    have hc := boxScaleF_sound (-2*(-1:ℤ)^j) _ _ (boxMulF_sound _ _ _ _ hv (boxPowF_sound inv _ hinvC j))
+    convert hc using 1
+    push_cast
+    rw [Finset.mul_sum,Finset.sum_mul,Finset.mul_sum]
+    apply Finset.sum_congr rfl; intro k _
+    simp only [zero_add,mpChoose_eq]
+    have hx0 : x ≠ 0 := hxpos.ne'
+    simp only [one_div,inv_pow]
+    field_simp
+    ring
+  · intro u hu
+    have hmodel (k : ℕ) := inverse_real_taylor_model x r hxpos hr0 (by linarith) (k+1) J (by omega)
+    have hev : evalModel a u = -2*∑ k ∈ Finset.range n, w k*evalModel (invPowerTaylor x (k+1) J) u := by
+      simp only [a,invPowerTaylor,evalModel_range]
+      rw [Finset.mul_sum]
+      simp_rw [Finset.mul_sum,Finset.sum_mul]
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl; intro k _
+      apply Finset.sum_congr rfl; intro j _
+      ring
+    rw [hev]
+    have hsplit : -2*∑ k ∈ Finset.range n, w k*(x+u)^(-((k+1:ℕ):ℤ))-
+        -2*∑ k ∈ Finset.range n, w k*evalModel (invPowerTaylor x (k+1) J) u =
+        -2*∑ k ∈ Finset.range n, w k*((x+u)^(-((k+1:ℕ):ℤ))-evalModel (invPowerTaylor x (k+1) J) u) := by
+      rw [← mul_sub,← Finset.sum_sub_distrib]; congr 1
+      apply Finset.sum_congr rfl; intro k _; ring
+    rw [hsplit,abs_mul]
+    have hsum : |∑ k ∈ Finset.range n, w k*((x+u)^(-((k+1:ℕ):ℤ))-evalModel (invPowerTaylor x (k+1) J) u)| ≤
+        ∑ k ∈ Finset.range n, |w k| * invPowerTail x r (k+1) J := by
+      refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun k _ => ?_)
+      rw [abs_mul]
+      exact mul_le_mul_of_nonneg_left ((hmodel k).2.2 u hu) (abs_nonneg _)
+    have hmaj := mp_majorant x h r |M| hxpos hh0 hr0 (abs_nonneg M) hsep n J w hw
+    -- the box error
+    have hpow := boxPowF_sound eta _ hetaC (J+1)
+    have hnum := boxMulF_sound _ _ _ _ (boxScaleF_sound 2 _ _ (boxAbsF_sound _ _ hM)) hpow
+    have hdiv := boxDivNatF_sound (J+1) (by omega) _ _ hnum
+    have hden := boxSubF_sound boxOne eta 1 _ boxOne_sound hetaC
+    have hE := boxDivF_sound _ _ _ _ _ hdiv hden herr
+    have hEle : 2*(|M| * (r/(x-h))^(J+1)/(((J+1:ℕ):ℝ)*(1-r/(x-h)))) ≤ dec S (max err.2 0) := by
+      refine le_trans (le_of_eq ?_) (hE.2.trans ?_)
+      · push_cast; rw [div_div]; ring
+      · unfold dec
+        exact div_le_div_of_nonneg_right (by exact_mod_cast le_max_left _ _) hSR.le
+    calc |(-2:ℝ)| * |∑ k ∈ Finset.range n, w k*((x+u)^(-((k+1:ℕ):ℤ))-evalModel (invPowerTaylor x (k+1) J) u)|
+        ≤ 2*(|M| * (r/(x-h))^(J+1)/(((J+1:ℕ):ℝ)*(1-r/(x-h)))) := by
+          rw [show |(-2:ℝ)|=2 by norm_num]
+          exact mul_le_mul_of_nonneg_left (hsum.trans hmaj) (by norm_num)
+      _ ≤ _ := hEle
+
+#print axioms mpBoxF_sound
+
+theorem mpBoxF_sep (MU : List FBox) (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (J : ℕ) (x : ℝ)
+    (hx : Contains d x) (m : IntTaylorModel) (hm : mpBoxF MU mass h d R J=some m) :
+    0 ≤ (h:ℝ) ∧ 0 ≤ dec S R ∧ (h:ℝ)+dec S R < x := by
+  unfold mpBoxF at hm
+  split_ifs at hm with hg
+  push_neg at hg
+  obtain ⟨hR,hh,-⟩ := hg
+  cases hinv : boxDivF boxOne d with
+  | none => simp [hinv,bind,Option.bind] at hm
+  | some inv =>
+  simp only [hinv,bind,Option.bind] at hm
+  split_ifs at hm with hdist
+  have hSR : (0:ℝ)<(S:ℝ) := S_real_pos
+  have hdC : Contains (boxSubF d (boxOfQ h)) (x-h) := boxSubF_sound _ _ _ _ hx (boxOfQ_sound h)
+  have : dec S R < dec S (boxSubF d (boxOfQ h)).1 := by
+    unfold dec; exact (div_lt_div_iff_of_pos_right hSR).2 (by exact_mod_cast (not_le.mp hdist))
+  refine ⟨by exact_mod_cast hh,?_,by linarith [hdC.1]⟩
+  unfold dec; exact div_nonneg (by exact_mod_cast hR) hSR.le
+
+/-- `mpBoxKF` encloses the same function: the first `K` moments go through `mpBoxF`, the rest into
+`mpCutTail`'s geometric bound `2|M| q^(K+1)/(1-q)`, `q = h/(x-R/S)`. -/
+theorem mpBoxKF_sound (MU : List FBox) (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (J K : ℕ) (M x : ℝ)
+    (w : ℕ → ℝ) (hM : Contains mass M) (hx : Contains d x)
+    (hMU : List.Forall₂ Contains MU ((List.range MU.length).map w))
+    (hw : ∀ k < MU.length, |w k| ≤ |M| * (h:ℝ)^(k+1)/((k+1:ℕ):ℝ))
+    (m : IntTaylorModel) (hm : mpBoxKF MU mass h d R J K=some m) :
+    ModelsF m (dec S R) (fun u => -2*∑ k ∈ Finset.range MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ))) := by
+  unfold mpBoxKF at hm
+  split_ifs at hm with hlen
+  · exact mpBoxF_sound MU mass h d R J M x w hM hx hMU hw m hm
+  push_neg at hlen
+  cases h0 : mpBoxF (MU.take K) mass h d R J with
+  | none => simp [h0,bind,Option.bind] at hm
+  | some m0 =>
+  cases ht : mpCutTail mass h d R K with
+  | none => simp [h0,ht,bind,Option.bind] at hm
+  | some t =>
+  simp only [h0,ht,bind,Option.bind,Option.pure_def,Option.some.injEq] at hm
+  subst hm
+  have hlenK : (MU.take K).length=K := by simp [List.length_take]; omega
+  have hMU0 : List.Forall₂ Contains (MU.take K) ((List.range (MU.take K).length).map w) := by
+    rw [hlenK]
+    have := List.forall₂_take K hMU
+    rwa [← List.map_take,List.take_range,min_eq_left hlen.le] at this
+  have hw0 : ∀ k < (MU.take K).length, |w k| ≤ |M| * (h:ℝ)^(k+1)/((k+1:ℕ):ℝ) :=
+    fun k hk => hw k (by rw [hlenK] at hk; omega)
+  obtain ⟨a,ha,hae⟩ := mpBoxF_sound _ mass h d R J M x w hM hx hMU0 hw0 m0 h0
+  obtain ⟨hh0,hr0,hsep⟩ := mpBoxF_sep _ mass h d R J x hx m0 h0
+  set r := dec S R
+  have hSR : (0:ℝ)<(S:ℝ) := S_real_pos
+  -- the cut tail box
+  unfold mpCutTail at ht
+  cases hq : boxDivF (boxOfQ h) (boxSubF d (R,R)) with
+  | none => simp [hq,bind,Option.bind] at ht
+  | some q =>
+  simp only [hq,bind,Option.bind] at ht
+  split_ifs at ht with hqS
+  cases htt : boxDivF (boxMulF (boxScaleF 2 (boxAbsF mass)) (boxPowF q (K+1))) (boxSubF boxOne q) with
+  | none => simp [htt] at ht
+  | some tb =>
+  simp only [htt,Option.pure_def,Option.some.injEq] at ht
+  subst ht
+  have hxr : 0 < x-r := by linarith
+  set qv := (h:ℝ)/(x-r)
+  have hq0 : 0 ≤ qv := div_nonneg hh0 hxr.le
+  have hq1 : qv < 1 := (div_lt_one hxr).mpr (by linarith)
+  have hqC : Contains q qv := boxDivF_sound _ _ _ _ _ (boxOfQ_sound h) (boxSubF_sound _ _ _ _ hx (contains_pt R)) hq
+  have hpow := boxPowF_sound q _ hqC (K+1)
+  have hnum := boxMulF_sound _ _ _ _ (boxScaleF_sound 2 _ _ (boxAbsF_sound _ _ hM)) hpow
+  have hden := boxSubF_sound boxOne q 1 _ boxOne_sound hqC
+  have hT := boxDivF_sound _ _ _ _ _ hnum hden htt
+  have hTle : 2*|M| * qv^(K+1)/(1-qv) ≤ dec S (max tb.2 0) := by
+    refine le_trans (le_of_eq (by push_cast; ring)) (hT.2.trans ?_)
+    unfold dec; exact div_le_div_of_nonneg_right (by exact_mod_cast le_max_left _ _) hSR.le
+  refine ⟨a,ha,fun u hu => ?_⟩
+  have h1 := hae u hu
+  rw [hlenK] at h1
+  have hxu : x-r ≤ x+u := by linarith [(abs_le.mp hu).1]
+  have hxu0 : 0 < x+u := hxr.trans_le hxu
+  -- tail terms
+  have htail : |∑ k ∈ Finset.Ico K MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ))| ≤ |M| * qv^(K+1)/(1-qv) := by
+    refine (Finset.abs_sum_le_sum_abs _ _).trans ?_
+    have hterm : ∀ k ∈ Finset.Ico K MU.length, |w k*(x+u)^(-((k+1:ℕ):ℤ))| ≤ |M| * qv^(k+1) := by
+      intro k hk
+      have hk' := Finset.mem_Ico.mp hk
+      rw [abs_mul,zpow_neg,zpow_natCast,abs_inv,abs_of_pos (pow_pos hxu0 _)]
+      have hwk := hw k hk'.2
+      have hk1 : (1:ℝ) ≤ ((k+1:ℕ):ℝ) := by exact_mod_cast (by omega : 1 ≤ k+1)
+      have hp : (x-r)^(k+1) ≤ (x+u)^(k+1) := pow_le_pow_left₀ hxr.le hxu _
+      have hpr : 0 < (x-r)^(k+1) := pow_pos hxr _
+      calc |w k| * ((x+u)^(k+1))⁻¹ ≤ |M| * (h:ℝ)^(k+1)/((k+1:ℕ):ℝ) * ((x-r)^(k+1))⁻¹ :=
+            mul_le_mul hwk (inv_anti₀ hpr hp) (by positivity) (by positivity)
+        _ ≤ |M| * (h:ℝ)^(k+1) * ((x-r)^(k+1))⁻¹ := by
+            apply mul_le_mul_of_nonneg_right _ (by positivity)
+            exact div_le_self (by positivity) hk1
+        _ = |M| * qv^(k+1) := by rw [div_pow]; field_simp
+    refine (Finset.sum_le_sum hterm).trans ?_
+    rw [← Finset.mul_sum]
+    have hg : ∑ k ∈ Finset.Ico K MU.length, qv^(k+1) ≤ qv^(K+1)/(1-qv) := by
+      have e : ∑ k ∈ Finset.Ico K MU.length, qv^(k+1)=qv*∑ k ∈ Finset.Ico K MU.length, qv^k := by
+        rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro k _; ring
+      have hgeo : ∑ k ∈ Finset.Ico K MU.length, qv^k ≤ qv^K/(1-qv) := by
+        rw [Finset.sum_Ico_eq_sum_range]
+        have e2 : ∑ i ∈ Finset.range (MU.length-K), qv^(K+i)=qv^K*∑ i ∈ Finset.range (MU.length-K), qv^i := by
+          rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro i _; rw [pow_add]
+        rw [e2,div_eq_mul_inv]
+        exact mul_le_mul_of_nonneg_left (sum_le_hasSum _ (fun i _ => by positivity)
+          (hasSum_geometric_of_lt_one hq0 hq1)) (by positivity)
+      rw [e]
+      calc qv*∑ k ∈ Finset.Ico K MU.length, qv^k ≤ qv*(qv^K/(1-qv)) :=
+            mul_le_mul_of_nonneg_left hgeo hq0
+        _ = qv^(K+1)/(1-qv) := by ring
+    calc |M| * ∑ k ∈ Finset.Ico K MU.length, qv^(k+1) ≤ |M| * (qv^(K+1)/(1-qv)) :=
+          mul_le_mul_of_nonneg_left hg (abs_nonneg _)
+      _ = _ := by ring
+  have hsplit := Finset.sum_range_add_sum_Ico (fun k => w k*(x+u)^(-((k+1:ℕ):ℤ))) hlen.le
+  show |-2*∑ k ∈ Finset.range MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ))-evalModel a u| ≤ dec S (m0.remainder+max tb.2 0)
+  rw [← hsplit,dec_add]
+  have e : -2*(∑ k ∈ Finset.range K, w k*(x+u)^(-((k+1:ℕ):ℤ))+
+      ∑ k ∈ Finset.Ico K MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ)))-evalModel a u =
+      (-2*∑ k ∈ Finset.range K, w k*(x+u)^(-((k+1:ℕ):ℤ))-evalModel a u)+
+      (-2)*∑ k ∈ Finset.Ico K MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ)) := by ring
+  rw [e]
+  refine (abs_add_le _ _).trans (add_le_add h1 ?_)
+  rw [abs_mul,show |(-2:ℝ)|=2 by norm_num]
+  calc 2*|∑ k ∈ Finset.Ico K MU.length, w k*(x+u)^(-((k+1:ℕ):ℤ))| ≤ 2*(|M| * qv^(K+1)/(1-qv)) :=
+        mul_le_mul_of_nonneg_left htail (by norm_num)
+    _ = 2*|M| * qv^(K+1)/(1-qv) := by ring
+    _ ≤ _ := hTle
+
+#print axioms mpBoxKF_sound
+
 end
 end CatalanCore.Li2.DecayCert.Simple
