@@ -83,10 +83,10 @@ def magnitude24 : ℚ := ((raw_ints% [1]).headD 0:ℚ)/((raw_ints% [2]).headD 0:
 def node24 : Node := ⟨magnitude24,.G2⟩
 theorem node24_checked : 0<node24.magnitude ∧ node24.magnitude<1 ∧ (node24.frame=.lattice ↔ 24<24) := by decide +kernel
 def magnitude25 : ℚ := ((raw_ints% [1]).headD 0:ℚ)/((raw_ints% [3]).headD 0:ℚ)
-def node25 : Node := ⟨magnitude25,.G2⟩
+def node25 : Node := ⟨magnitude25,.G3⟩
 theorem node25_checked : 0<node25.magnitude ∧ node25.magnitude<1 ∧ (node25.frame=.lattice ↔ 25<24) := by decide +kernel
 def magnitude26 : ℚ := ((raw_ints% [1]).headD 0:ℚ)/((raw_ints% [4]).headD 0:ℚ)
-def node26 : Node := ⟨magnitude26,.G2⟩
+def node26 : Node := ⟨magnitude26,.G4⟩
 theorem node26_checked : 0<node26.magnitude ∧ node26.magnitude<1 ∧ (node26.frame=.lattice ↔ 26<24) := by decide +kernel
 def magnitude27 : ℚ := ((raw_ints% [1]).headD 0:ℚ)/((raw_ints% [13]).headD 0:ℚ)
 def node27 : Node := ⟨magnitude27,.G15⟩
