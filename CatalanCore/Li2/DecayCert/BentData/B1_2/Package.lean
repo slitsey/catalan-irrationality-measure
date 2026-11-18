@@ -65,7 +65,7 @@ theorem setup_checked : nodeSegmentCheck z input setup=true :=
 
 noncomputable def package : BentPackage := ⟨z,input,setup,S,G,by decide,by decide,setup_checked,contour_ok,atoms_ok⟩
 
-def lam151 : ℚ := (qLit (raw_ints% [-204451280,32137549]))
+def lam151 : ℚ := (qLit (raw_ints% [-634064622,99668159]))
 
 theorem pair151 : nodePairCheck setup (CatalanCore.Li2.Uniform.FixedData.fixedEntries ⟨151,by decide⟩).rho lam151 (CatalanCore.Li2.Uniform.FixedData.fixedEntries ⟨151,by decide⟩).lower=true := by
   -- kcost: 1 s estimated 18 Nov
