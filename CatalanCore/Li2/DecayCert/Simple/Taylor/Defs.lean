@@ -75,6 +75,19 @@ def mpBoxF (MU : List FBox) (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (J : �
           (boxSubF boxOne eta)
         pure ⟨cs,max err.2 0⟩
 
+/-- Tail of the dropped moments k > K: 2|mass| q^(K+1)/(1-q), q = h/(d-R). -/
+def mpCutTail (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (K : ℕ) : Option ℤ := do
+  let q ← boxDivF (boxOfQ h) (boxSubF d (R,R))
+  if S≤q.2 then none else do
+    let t ← boxDivF (boxMulF (boxScaleF 2 (boxAbsF mass)) (boxPowF q (K+1))) (boxSubF boxOne q)
+    pure (max t.2 0)
+/-- Multipole jets from the first K moments; the moments k > K go into the remainder. -/
+def mpBoxKF (MU : List FBox) (mass : FBox) (h : ℚ) (d : FBox) (R : ℤ) (J K : ℕ) : Option IntTaylorModel :=
+  if MU.length≤K then mpBoxF MU mass h d R J else do
+    let m ← mpBoxF (MU.take K) mass h d R J
+    let t ← mpCutTail mass h d R K
+    pure ⟨m.coeff,m.remainder+t⟩
+
 def upMulF (a b : ℤ) : ℤ := ceilDiv (a*b) S
 def midF (a : FBox) : ℤ := (a.1+a.2)/2
 def widthF (a : FBox) : ℤ := max (midF a-a.1) (a.2-midF a)
@@ -235,6 +248,12 @@ theorem shiftMidK_eq (C E den : ℤ) (ds : List ℤ) : shiftMidK C E den ds = sh
 /-- Homogeneous scalar Horner evaluation; result is numerator/denominator. -/
 def evalHomInt (n den : ℤ) (ds : List ℤ) : ℤ×ℤ :=
   ds.foldl (fun st a=>let d:=den*st.2; (n*st.1+a*d,d)) (0,1)
+
+/-- Exact Horner of the box midpoints at a rational point in [0, 1]; the widths are added once. -/
+def polyExactF (x : ℚ) (p : List FBox) : FBox :=
+  let q:=evalHomInt x.num (x.den:ℤ) (p.map midF)
+  let w:=(p.map widthF).foldl (·+·) 0
+  (q.1/q.2-w,ceilDiv q.1 q.2+w)
 
 /-- Source coefficient uncertainty is bounded once by width. Only J+1 shifted
 coefficients are converted to boxes; the discarded tail and source widths are

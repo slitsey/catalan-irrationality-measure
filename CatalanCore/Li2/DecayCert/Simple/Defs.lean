@@ -43,6 +43,7 @@ structure TCSpec where
   kind : TCKind
   jetOrder : ℕ
   mpJetOrder : ℕ
+  mpCut : ℕ
   logIds : List ℕ
   rightR : ℚ
   deriving DecidableEq
@@ -85,7 +86,7 @@ def buildTCBox (s : SourceF) (logs : List LogEntry) (p : TCSpec) : Option IntTay
     if isW then
       let logd ← lg (c-s.y0)
       let lm ← logAffineBoxF (boxScaleF 2 s.m2) (boxOfQ (c-s.y0)) R logd p.mpJetOrder
-      let mm ← mpBoxF s.MU s.m2 (max |s.y0+4| |-1-s.y0|) (boxOfQ (c-s.y0)) R p.mpJetOrder
+      let mm ← mpBoxKF s.MU s.m2 (max |s.y0+4| |-1-s.y0|) (boxOfQ (c-s.y0)) R p.mpJetOrder p.mpCut
       m := modelAddF (modelAddF m lm) mm
       m := ⟨m.coeff,m.remainder+s.globalW⟩
       cn := boxSubF (boxAddF boxOne (boxMulF s.L (boxOfQ c))) (boxOfQ s.theta)
@@ -94,7 +95,7 @@ def buildTCBox (s : SourceF) (logs : List LogEntry) (p : TCSpec) : Option IntTay
         if p.rightR≤0 ∨ 1≤p.rightR ∨ s.Y*(1+p.rightR)^2/(4*p.rightR)<p.right then none else do
           let lr ← lg p.rightR
           let ly ← lg (4/s.Y)
-          let v:=boxAddF (boxMulF s.m1 (boxAddF ly lr)) (polyEvalF (boxOfQ p.rightR) (s.firstOverK.reverse++[boxZero]))
+          let v:=boxAddF (boxMulF s.m1 (boxAddF ly lr)) (polyExactF p.rightR (s.firstOverK.reverse++[boxZero]))
           cn := boxSubF cn (boxScaleF 2 v)
       else
         let yh:=s.Y/2
