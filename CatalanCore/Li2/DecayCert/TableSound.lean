@@ -37,8 +37,15 @@ theorem entryUse_sound (T : CatalanCore.Li2.Uniform.NodeTable) (c : DecayCertifi
     exact False.elim hu
   | bent b hframe hpool hz hf level sourceIndex hindex hchecked =>
     simp only [EntryUse.datum,EntryUse.level]
-    have hb := bentSegCert_D_ge b.z b.input b.setup b.checked (T.entries i).rho level (T.entries i).lower hchecked
-    have hzvalid := bentCheck_validZ b.z b.input b.setup b.checked
+    have hzvalid := Seg.nodeCheck_validZ b.z b.input b.setup b.checked
+    have hparts := Seg.nodeSegmentCheck_parts b.z b.input b.setup b.checked
+    have hz0 : b.z ≠ 0 := ne_of_lt hparts.1.2.1
+    have hcont := Seg.nodeContourPhysical_of_cells b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
+      hparts.2.1 b.shared b.sharedOK b.setup.contour b.contourOK
+    have hat := Seg.nodeAtomPhysical_of_cells b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
+      hparts.2.1 b.shared b.sharedOK b.setup.atoms b.atomOK
+    have hb := Seg.nodeCert_D_ge b.z b.input b.setup b.checked hcont hat.1 hat.2
+      (T.entries i).rho level (T.entries i).lower hchecked
     have hzR : (b.z:ℝ)<0 := by rw [hz,Rat.cast_neg]; linarith
     have hs : CatalanCore.Li2.Uniform.signOf (b.z:ℝ)= -1 := by
       simp only [CatalanCore.Li2.Uniform.signOf,if_neg (not_lt.mpr hzR.le)]
