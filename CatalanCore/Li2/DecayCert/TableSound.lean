@@ -40,10 +40,10 @@ theorem entryUse_sound (T : CatalanCore.Li2.Uniform.NodeTable) (c : DecayCertifi
     have hzvalid := Seg.nodeCheck_validZ b.z b.input b.setup b.checked
     have hparts := Seg.nodeSegmentCheck_parts b.z b.input b.setup b.checked
     have hz0 : b.z ≠ 0 := ne_of_lt hparts.1.2.1
-    have hcont := Seg.nodeContourPhysical_of_cells b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
-      hparts.2.1 b.shared b.sharedOK b.setup.contour b.contourOK
-    have hat := Seg.nodeAtomPhysical_of_cells b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
-      hparts.2.1 b.shared b.sharedOK b.setup.atoms b.atomOK
+    have hcont := Seg.nodeContourPhysical_of_cellsE b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
+      hparts.2.1 b.setup.contour b.contourOK
+    have hat := Seg.nodeAtomPhysical_of_cellsE b.S b.G b.hS b.hG b.z hz0 b.input b.setup.density
+      hparts.2.1 b.setup.atoms b.atomOK
     have hb := Seg.nodeCert_D_ge b.z b.input b.setup b.checked hcont hat.1 hat.2
       (T.entries i).rho level (T.entries i).lower hchecked
     have hzR : (b.z:ℝ)<0 := by rw [hz,Rat.cast_neg]; linarith

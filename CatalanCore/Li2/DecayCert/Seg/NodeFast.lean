@@ -1,5 +1,6 @@
 module
 public import CatalanCore.Li2.DecayCert.Seg.NodeDefs
+public import CatalanCore.Li2.DecayCert.Seg.NodeCells
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Lists
 /-! Kernel-computable twins of the polynomial checks in the decay data (source densities and atom
 caps), for any frame: each twin works on coefficient lists and is proved to imply (or equal) the
@@ -139,7 +140,112 @@ theorem nodeSegmentCheck_of_fast (z : ℚ) (b : BentInput) (c : NodeCert CC AC)
   simp only [nodeSegmentCheck,Bool.and_eq_true]
   exact ⟨⟨⟨⟨⟨⟨⟨⟨⟨h1,hc'⟩,hd'⟩,h2⟩,h3⟩,h4⟩,h5⟩,h6⟩,h7⟩,h8⟩
 
+/-! ### Several shared tables per segment
+
+A segment's shared table fixes `phiHi`, and a copy is admissible only when `phiHi` covers the
+cell. One table per segment must then cover the farthest cell, and its majorant inflates every
+near cell. So each segment carries a list of tables (checked once), and each cell picks one
+table per segment by index. -/
+
+/-- One table per segment, by index into that segment's list. -/
+def pickT : List (List SegSharedI) → List ℕ → Option (List SegSharedI)
+  | [], [] => some []
+  | t::ts, k::ks => match t[k]?, pickT ts ks with
+    | some s, some r => some (s::r)
+    | _, _ => none
+  | _, _ => none
+
+/-- Every table of every segment is valid for its segment. -/
+def sharedOKM (S : ℤ) : List QSegment → List (List SegSharedI) → Bool
+  | [], [] => true
+  | d::ds, t::ts => t.all (fun s => s.ok S d) && sharedOKM S ds ts
+  | _, _ => false
+
+theorem pickT_ok (S : ℤ) : ∀ (ds : List QSegment) (tss : List (List SegSharedI)) (sel : List ℕ)
+    (ss : List SegSharedI), sharedOKM S ds tss=true → pickT tss sel=some ss → sharedOK S ds ss=true
+  | [], [], [], ss, _, h => by simp [pickT] at h; subst h; rfl
+  | [], [], _::_, _, _, h => by simp [pickT] at h
+  | [], _::_, _, _, h, _ => by simp [sharedOKM] at h
+  | _::_, [], _, _, h, _ => by simp [sharedOKM] at h
+  | d::ds, t::ts, [], _, _, h => by simp [pickT] at h
+  | d::ds, t::ts, k::ks, ss, hm, h => by
+    simp only [sharedOKM,Bool.and_eq_true,List.all_eq_true] at hm
+    unfold pickT at h
+    split at h
+    · rename_i s r hs hr
+      cases h
+      simp only [sharedOK,Bool.and_eq_true]
+      exact ⟨hm.1 s (List.mem_of_getElem? hs),pickT_ok S ds ts ks r hm.2 hr⟩
+    · cases h
+
+/-- A contour cell checked with its own table selection. -/
+noncomputable def contourCellOKM (S G : ℤ) (z : ℚ) (b : BentInput) (tss : List (List SegSharedI))
+    (x : ContourCellN×List ℕ) (B : QBox) : Bool :=
+  match pickT tss x.2 with
+  | some ss => contourCellOK S G z b ss x.1 B
+  | none => false
+
+/-- An atom cell checked with its own table selection. -/
+noncomputable def atomCellNOKM (S G : ℤ) (z : ℚ) (b : BentInput) (tss : List (List SegSharedI))
+    (x : AtomCellN×List ℕ) (o : AtomOut) : Bool :=
+  match pickT tss x.2 with
+  | some ss => atomCellNOK S G z b ss x.1 o
+  | none => false
+
+theorem contourOK_of_M (S G : ℤ) (z : ℚ) (b : BentInput) (tss : List (List SegSharedI))
+    (htss : sharedOKM S b.data.segments tss=true) (cs : List ((ContourCellN×List ℕ)×QBox))
+    (h : ∀ x ∈ cs,contourCellOKM S G z b tss x.1 x.2=true) :
+    ∀ y ∈ cs.map (fun x => (x.1.1,x.2)),∃ ss,sharedOK S b.data.segments ss=true ∧
+      contourCellOK S G z b ss y.1 y.2=true := by
+  intro y hy
+  obtain ⟨x,hx,rfl⟩ := List.mem_map.mp hy
+  have hc := h x hx
+  unfold contourCellOKM at hc
+  split at hc
+  · rename_i ss hp
+    exact ⟨ss,pickT_ok S _ tss x.1.2 ss htss hp,hc⟩
+  · cases hc
+
+theorem atomOK_of_M (S G : ℤ) (z : ℚ) (b : BentInput) (tss : List (List SegSharedI))
+    (htss : sharedOKM S b.data.segments tss=true) (cs : List ((AtomCellN×List ℕ)×AtomOut))
+    (h : ∀ x ∈ cs,atomCellNOKM S G z b tss x.1 x.2=true) :
+    ∀ y ∈ cs.map (fun x => (x.1.1,x.2)),∃ ss,sharedOK S b.data.segments ss=true ∧
+      atomCellNOK S G z b ss y.1 y.2=true := by
+  intro y hy
+  obtain ⟨x,hx,rfl⟩ := List.mem_map.mp hy
+  have hc := h x hx
+  unfold atomCellNOKM at hc
+  split at hc
+  · rename_i ss hp
+    exact ⟨ss,pickT_ok S _ tss x.1.2 ss htss hp,hc⟩
+  · cases hc
+
+theorem nodeContourPhysical_of_cellsE (S G : ℤ) (hS : 0 < S) (hG : 0 < G) (z : ℚ) (hz : z ≠ 0)
+    (b : BentInput) (dw : DensityWitness) (hd : datumCheck b.data dw=true)
+    (cs : List (ContourCellN × QBox))
+    (hcs : ∀ x ∈ cs,∃ ss,sharedOK S b.data.segments ss=true ∧ contourCellOK S G z b ss x.1 x.2=true) :
+    NodeContourPhysical z b cs := by
+  intro x hx
+  obtain ⟨ss,hss,hc⟩ := hcs x hx
+  exact contourCellOK_sound S G hS hG z hz b dw hd ss hss x.1 x.2 hc
+
+theorem nodeAtomPhysical_of_cellsE (S G : ℤ) (hS : 0 < S) (hG : 0 < G) (z : ℚ) (hz : z ≠ 0)
+    (b : BentInput) (dw : DensityWitness) (hd : datumCheck b.data dw=true)
+    (cs : List (AtomCellN × AtomOut))
+    (hcs : ∀ x ∈ cs,∃ ss,sharedOK S b.data.segments ss=true ∧ atomCellNOK S G z b ss x.1 x.2=true) :
+    NodeAtomWPhysical z b cs ∧ NodeAtomLinePhysical z b cs := by
+  constructor
+  · intro x hx
+    obtain ⟨ss,hss,hc⟩ := hcs x hx
+    exact (atomCellNOK_sound S G hS hG z hz b dw hd ss hss x.1 x.2 hc).1
+  · intro x hx
+    obtain ⟨ss,hss,hc⟩ := hcs x hx
+    exact (atomCellNOK_sound S G hS hG z hz b dw hd ss hss x.1 x.2 hc).2
+
 #print axioms nodeSegmentCheck_of_fast
+#print axioms contourOK_of_M
+#print axioms nodeContourPhysical_of_cellsE
+#print axioms nodeAtomPhysical_of_cellsE
 end Seg
 end
 end CatalanCore.Li2.DecayCert

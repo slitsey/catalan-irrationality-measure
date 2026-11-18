@@ -3,6 +3,7 @@ public import CatalanCore.Li2.DecayCert.Bent
 public import CatalanCore.Li2.DecayCert.Lattice
 public import CatalanCore.Li2.DecayCert.Seg.Node
 public import CatalanCore.Li2.DecayCert.Seg.NodeCells
+public import CatalanCore.Li2.DecayCert.Seg.NodeFast
 public import CatalanCore.Li2.Uniform.TableSpec
 @[expose] public section
 set_option Elab.async false
@@ -12,8 +13,8 @@ structure LatticePackage where
   input : LatticeInput
   setup : LatticeSetup
   checked : latticeSetupCheck z input setup=true
-/-- A bent node: its input, the node certificate with stored cell outputs, the shared segment
-tables, and the checks of every cell against its stored output. -/
+/-- A bent node: its input, the node certificate with stored cell outputs, and for every cell
+valid segment tables (`sharedOK`) under which the cell checks against its stored output. -/
 structure BentPackage where
   z : ℚ
   input : BentInput
@@ -22,11 +23,11 @@ structure BentPackage where
   G : ℤ
   hS : 0 < S
   hG : 0 < G
-  shared : List Seg.SegSharedI
-  sharedOK : Seg.sharedOK S input.data.segments shared=true
   checked : Seg.nodeSegmentCheck z input setup=true
-  contourOK : ∀ x ∈ setup.contour,Seg.contourCellOK S G z input shared x.1 x.2=true
-  atomOK : ∀ x ∈ setup.atoms,Seg.atomCellNOK S G z input shared x.1 x.2=true
+  contourOK : ∀ x ∈ setup.contour,∃ ss,Seg.sharedOK S input.data.segments ss=true ∧
+    Seg.contourCellOK S G z input ss x.1 x.2=true
+  atomOK : ∀ x ∈ setup.atoms,∃ ss,Seg.sharedOK S input.data.segments ss=true ∧
+    Seg.atomCellNOK S G z input ss x.1 x.2=true
 
 inductive EntryUse (T : CatalanCore.Li2.Uniform.NodeTable) (frames : CatalanCore.Li2.Uniform.FrameKey → CatalanCore.Li2.Uniform.DualFrame)
     {L : ℕ} (LP : Fin L → LatticePackage)
