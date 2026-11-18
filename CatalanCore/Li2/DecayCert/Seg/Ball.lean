@@ -1324,17 +1324,17 @@ structure IFront where
   k : ℕ
   g1 : ℤ
   g2 : ℤ
-  m : ℕ
+  gd : ℤ
 
 def IFront.phiF (f : IFront) : GF := ((f.a,f.b),pow2 f.k)
-def IFront.gamF (f : IFront) : GF := ((f.g1,f.g2),pow2 f.m)
+def IFront.gamF (f : IFront) : GF := ((f.g1,f.g2),f.gd)
 def IFront.psiF (f : IFront) : GF := gfInv f.phiF
 def IFront.zetaF (f : IFront) : GF := gfHalf (gfAdd f.phiF f.psiF)
 def IFront.qF (f : IFront) : GF := gfHalf (gfSub f.phiF f.psiF)
 
 /-- Positivity of every denominator used, checked per copy. -/
 def IFront.ok (f : IFront) : Bool :=
-  decide (0 < f.psiF.2 ∧ 0 < (gfInv f.qF).2 ∧ 0 < (gfInv (gfMul f.qF f.qF)).2)
+  decide (0 < f.psiF.2 ∧ 0 < (gfInv f.qF).2 ∧ 0 < (gfInv (gfMul f.qF f.qF)).2 ∧ 0 < f.gd)
 
 def ballCopyCoeffsI (S : ℤ) (t : SegTable) (f : IFront) (order L : ℕ) : List CB :=
   let ζ := f.zetaF
@@ -1356,12 +1356,12 @@ theorem encl_ballCopyCoeffsI (S : ℤ) (hS : 0 < S) (t : SegTable) (d : QSegment
   simp only [SegTable.ok,decide_eq_true_eq] at ht
   obtain ⟨hdd,hqd,hdn,hqn⟩ := ht
   simp only [IFront.ok,decide_eq_true_eq] at hf
-  obtain ⟨hψ0,hy0,hiA0⟩ := hf
+  obtain ⟨hψ0,hy0,hiA0,hgd⟩ := hf
   have hk : (0:ℤ) < 2^f.k := by positivity
-  have hm : (0:ℤ) < 2^f.m := by positivity
+  have hm : (0:ℤ) < f.gd := hgd
   have hφ0 : f.phiF.2 ≠ 0 := by simp only [IFront.phiF,pow2_eq]; positivity
   have hψ0' : f.psiF.2 ≠ 0 := hψ0.ne'
-  have hγ0 : 0 < f.gamF.2 := by simp only [IFront.gamF,pow2_eq]; positivity
+  have hγ0 : 0 < f.gamF.2 := hgd
   have hζ0 : 0 < f.zetaF.2 := by
     simp only [IFront.zetaF,gfHalf,gfAdd,IFront.phiF,pow2_eq]; simp only [IFront.psiF] at hψ0; positivity
   have hq0 : 0 < f.qF.2 := by
@@ -1609,7 +1609,7 @@ def gateI (d : QSegment) (p e : CQ) (rt : ℚ) (wd : SegDiscWitness) (f : IFront
   decide (cqSq d.half ≠ 0 ∧ e=cqMul d.half (gfQ f.gamF) ∧ f.g1^2+f.g2^2 ≠ 0 ∧ 0 < ζ.2 ∧ 0 < δ.2 ∧
     pow2 (2*f.k) < f.a^2+f.b^2 ∧
     0 < wd.distanceLo) && geSqI (sdI ζ.1 ζ.2) wd.distanceLo ζ.2 &&
-  decide (0 ≤ wd.gammaHi) && leSqI (f.g1^2+f.g2^2) wd.gammaHi (pow2 f.m) &&
+  decide (0 ≤ wd.gammaHi) && leSqI (f.g1^2+f.g2^2) wd.gammaHi f.gd &&
   decide (0 ≤ wd.zetaHi) && leSqI (ζ.1.1^2+ζ.1.2^2) wd.zetaHi ζ.2 &&
   decide (0 < wd.radius ∧ 0 < wd.fraction ∧ wd.fraction < 1 ∧
     wd.gammaHi*wd.radius ≤ wd.fraction*wd.distanceLo ∧
@@ -1628,9 +1628,9 @@ theorem gateI_spec (d : QSegment) (p e : CQ) (rt : ℚ) (wd : SegDiscWitness) (f
   obtain ⟨⟨⟨⟨⟨⟨⟨hh,he,hg,hζ0,hδ0,hφ,hd0⟩,hdsq⟩,hg0⟩,hgsq⟩,hz0⟩,hzsq⟩,
     hR,hf0,hf1,hgR,hrt,hdr,hH1,hZH,hHsq,hδ⟩ := h
   simp only [IFront.ok,decide_eq_true_eq] at hf
-  obtain ⟨hψ0,-,-⟩ := hf
+  obtain ⟨hψ0,-,-,hgd⟩ := hf
   have hk : (0:ℤ) < 2^f.k := by positivity
-  have hm : (0:ℤ) < 2^f.m := by positivity
+  have hm : (0:ℤ) < f.gd := hgd
   have hφ0 : f.phiF.2 ≠ 0 := by simp only [IFront.phiF,pow2_eq]; positivity
   have hψ : gfQ f.psiF=cqInv (gfQ f.phiF) := gfQ_inv _ hφ0
   have hζ : gfQ f.zetaF=cqScale (1/2) (cqAdd wd.phi (cqInv wd.phi)) := by
@@ -1645,7 +1645,8 @@ theorem gateI_spec (d : QSegment) (p e : CQ) (rt : ℚ) (wd : SegDiscWitness) (f
     have hhz : (gfMul (gfOfCQ d.half) f.zetaF).2 ≠ 0 := by simp only [gfMul]; positivity
     have hc0 : (gfAdd (gfOfCQ d.mid) (gfMul (gfOfCQ d.half) f.zetaF)).2 ≠ 0 := by
       simp only [gfAdd,gfMul]; positivity
-    have he0 : (gfMul (gfOfCQ d.half) f.gamF).2 ≠ 0 := by simp only [gfMul,IFront.gamF,pow2_eq]; positivity
+    have he0 : (gfMul (gfOfCQ d.half) f.gamF).2 ≠ 0 := by
+      simp only [gfMul,IFront.gamF]; exact mul_ne_zero hhalf0.ne' hgd.ne'
     unfold deltaF cqDiv
     rw [gfQ_mul,gfQ_inv _ he0,gfQ_sub _ _ hp0.ne' hc0,gfQ_add _ _ hmid0.ne' hhz,gfQ_mul,gfQ_mul,
       gfQ_ofCQ,gfQ_ofCQ,gfQ_ofCQ,hζ,he]
@@ -1671,9 +1672,9 @@ theorem gateI_spec (d : QSegment) (p e : CQ) (rt : ℚ) (wd : SegDiscWitness) (f
         have h2 : e.2=0 := by nlinarith [sq_nonneg e.1,sq_nonneg e.2]
         simp [h1,h2]
       rwa [hγ] at this
-    rw [cqSq_gf _ (by simp only [IFront.gamF,pow2_eq]; positivity)] at hgq
-    have hm2 : ((2^f.m:ℤ):ℚ) ≠ 0 := by positivity
-    simp only [IFront.gamF,pow2_eq] at hgq
+    rw [cqSq_gf _ (by simp only [IFront.gamF]; exact hgd.ne')] at hgq
+    have hm2 : ((f.gd:ℤ):ℚ) ≠ 0 := by exact_mod_cast hgd.ne'
+    simp only [IFront.gamF] at hgq
     rw [div_eq_zero_iff] at hgq
     rcases hgq with hgq | hgq
     · exact hg (by exact_mod_cast hgq)
@@ -1689,9 +1690,9 @@ theorem gateI_spec (d : QSegment) (p e : CQ) (rt : ℚ) (wd : SegDiscWitness) (f
       _ < _ := this
   refine ⟨hh,he2,hφs,hd0,?_,hg0,?_,hz0,?_,hR,hf0,hf1,hgR,hrt,?_,hH1,hZH,hHsq⟩
   · rw [← hζ,slitDistSq_gf _ hζ0]; exact geSqI_spec _ _ _ hζ0.ne' hdsq
-  · rw [hγ,cqSq_gf _ (by simp only [IFront.gamF,pow2_eq]; positivity)]
-    simp only [IFront.gamF,pow2_eq]
-    exact leSqI_spec _ _ _ (by positivity) hgsq
+  · rw [hγ,cqSq_gf _ (by simp only [IFront.gamF]; exact hgd.ne')]
+    simp only [IFront.gamF]
+    exact leSqI_spec _ _ _ hgd.ne' hgsq
   · rw [← hζ,cqSq_gf _ hζ0.ne']; exact leSqI_spec _ _ _ hζ0.ne' hzsq
   · linarith
 
