@@ -575,5 +575,77 @@ theorem RSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y
     _ = ((c.cap:ℚ):ℝ) := by
         rw [intervalIntegral.integral_const,smul_eq_mul]; unfold RCell.cap; push_cast; ring
 
+
+/-- The identifications an atom cell needs, bundled once per (datum, ρ). -/
+structure ALink (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ) (σ1 σ2 : Measure ℂ)
+    [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ) : Prop where
+  logs : LogsOK logs
+  enc : SourceEnc s r
+  hY : 0 ≤ Y
+  hs1 : σ1 {s | s.im ≠ 0 ∨ s.re<0 ∨ Y<s.re}=0
+  hy : y0<0
+  hsep : rr < -y0
+  hrr : -1-y0 ≤ rr ∧ 4+y0 ≤ rr
+  hL : r.L=Real.log |z|
+  hρθ : ((s.rho+s.theta:ℚ):ℝ)=ρ+θ
+  hU1y0 : r.U1y0=U σ1 (y0:ℂ)
+  hi1 : ∀ x ∈ Icc (1:ℝ) 4, Integrable (fun v => Real.log ‖(-(x:ℂ))-v‖) σ1
+  hi2 : ∀ x ∈ Icc (1:ℝ) 4, Integrable (fun v => Real.log ‖(-(x:ℂ))-v‖) σ2
+  hU2 : ∀ x ∈ Icc (1:ℝ) 4, U σ2 (-(x:ℂ))=r.U2c+f2 x
+  hqA : ∀ x ∈ Icc (1:ℝ) 4, hornerR x r.qA=f2 x+∑ k ∈ Finset.range (K+1),
+    inverseMoment σ1 y0 k*(-x-y0)^k/(k:ℝ)
+  hglob : 2*mpErr (σ1.real univ) (rr/(-y0)) K ≤ dec S s.globalA
+
+def ACell.ok (s : SourceF) (logs : List LogEntry) (c : WCell) : Bool :=
+  (c.spec.kind==.Atom || c.spec.kind==.AtomLeft || c.spec.kind==.AtomRight) &&
+  decide (c.spec.kind=.Atom ∨ c.spec.right-c.spec.left ≤ 1/3) &&
+  tcCheck s logs c.spec c.lower c.upper c.pos
+
+theorem ACell.bound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ)
+    (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (c : WCell) (hc : ACell.ok s logs c=true)
+    (x : ℝ) (hx : (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right) :
+    dec S c.lower ≤ A z ρ (σ1+σ2) x-θ ∧ A z ρ (σ1+σ2) x-θ ≤ dec S c.upper := by
+  simp only [ACell.ok,Bool.and_eq_true,Bool.or_eq_true,beq_iff_eq,decide_eq_true_eq] at hc
+  obtain ⟨⟨hk,hw⟩,ht⟩ := hc
+  have hk' : c.spec.kind=.Atom ∨ c.spec.kind=.AtomLeft ∨ c.spec.kind=.AtomRight := by
+    rcases hk with (h|h)|h
+    · exact Or.inl h
+    · exact Or.inr (Or.inl h)
+    · exact Or.inr (Or.inr h)
+  have hw' : c.spec.kind ≠ .Atom → c.spec.right-c.spec.left ≤ 1/3 := fun h => hw.resolve_left h
+  exact atomCell_bound s logs c.spec c.lower c.upper c.pos ht r lk.logs lk.enc hk' hw' z ρ θ Y lk.hY σ1 σ2
+    lk.hs1 y0 rr lk.hy lk.hsep lk.hrr K f2 lk.hL lk.hρθ lk.hU1y0 lk.hi1 lk.hi2 lk.hU2 lk.hqA lk.hglob x hx
+
+theorem ACell.sign (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ)
+    (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (c : WCell) (hc : ACell.ok s logs c=true)
+    (b : Bool) (hpos : c.pos=some b) (x : ℝ) (hx : (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right) :
+    if b then 0 ≤ A z ρ (σ1+σ2) x-θ else A z ρ (σ1+σ2) x-θ ≤ 0 := by
+  have hbd := ACell.bound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk c hc x hx
+  have hc' := hc
+  simp only [ACell.ok,Bool.and_eq_true] at hc'
+  have hsg := tcCheck_sign s logs c.spec c.lower c.upper c.pos hc'.2
+  cases b
+  · simp only [Bool.false_eq_true,if_false]
+    exact hbd.2.trans (dec_nonpos_of _ (hsg.2 hpos))
+  · simp only [if_true]
+    exact (dec_nonneg_of _ (hsg.1 hpos)).trans hbd.1
+
+/-- The atom part of the penalty, `∫₁⁴ (A − θ)₊`, from passed atom cells, the pattern and the caps. -/
+theorem ASide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ)
+    (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (w : Side) (hw : w.check (ACell.ok s logs) 1 4=true)
+    (hf : ContinuousOn (fun x : ℝ => A z ρ (σ1+σ2) x-θ) (Icc ((1:ℚ):ℝ) ((4:ℚ):ℝ)))
+    (cap : ℕ → ℚ)
+    (hcap : ∀ i, i < w.pat.gaps → w.pat.positive i=true →
+      (∫ x in (w.pat.node i:ℝ)..(w.pat.node (i+1):ℝ), A z ρ (σ1+σ2) x-θ) ≤ (cap i:ℝ))
+    (total : ℚ) (hscalar : decide (w.pat.plusCap cap+w.pat.rootCap w.ep w.em ≤ total)=true) :
+    (∫ x in ((1:ℚ):ℝ)..((4:ℚ):ℝ), pos (A z ρ (σ1+σ2) x-θ)) ≤ (total:ℝ) :=
+  Side.penalty (ACell.ok s logs) 1 4 w hw _ hf
+    (fun c hc x hx => ACell.bound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk c hc x hx)
+    (fun c hc bb hb x hx => ACell.sign s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk c hc bb hb x hx)
+    cap hcap total hscalar
+
 end
 end CatalanCore.Li2.DecayCert.Simple
