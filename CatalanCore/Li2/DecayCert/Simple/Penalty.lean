@@ -6,7 +6,8 @@ public import CatalanCore.Li2.DecayCert.Covers.LinePartition
 identifications of a datum. A `WSide` is a sign pattern on `[0, Y]`, one chain of sign cells per gap away
 from the roots and one root cell per root. `WSide.signAway` gives `W - θ` the pattern's sign away from the
 roots, and `WSide.penalty` bounds `∫₀^Y (W - θ)₊` by the positive-gap integrals plus the root-cell error
-(`signPattern_bound`). -/
+(`signPattern_bound`). `primBoxF` encloses the lattice primitive at a rational point, and
+`gapIntegral_le` bounds the integral of `W - θ` over a gap of `[0, Y]` from two such boxes. -/
 @[expose] public section
 open MeasureTheory Set
 namespace CatalanCore.Li2.DecayCert.Simple
@@ -243,6 +244,173 @@ theorem WSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y
       have : ((-(c.lower:ℚ)/(S:ℚ):ℚ):ℝ) ≤ ((max (-(c.lower:ℚ)/(S:ℚ)) 0 : ℚ):ℝ) := by exact_mod_cast le_max_left _ _
       have he : ((-(c.lower:ℚ)/(S:ℚ):ℚ):ℝ)= -((((c.lower:ℚ)/(S:ℚ):ℚ):ℝ)) := by push_cast; ring
       linarith
+
+
+/-- `G̃(a) = a² log a/2 − a²/4` at a rational `a ≥ 0`. -/
+def gtBoxF (lg : ℚ → Option FBox) (a : ℚ) : Option FBox :=
+  if a=0 then some boxZero else
+    (lg a).map fun la => boxSubF (boxMulF (boxOfQ (a^2/2)) la) (boxOfQ (a^2/4))
+
+theorem gtBoxF_sound (lg : ℚ → Option FBox) (hlg : ∀ a b, lg a=some b → Contains b (Real.log (a:ℝ)))
+    (a : ℚ) (b : FBox) (h : gtBoxF lg a=some b) : Contains b (Gtilde (a:ℝ)) := by
+  unfold gtBoxF at h
+  split_ifs at h with h0
+  · cases h; subst h0; simpa [Gtilde] using boxZero_sound
+  · cases hl : lg a with
+    | none => rw [hl] at h; cases h
+    | some la =>
+      rw [hl] at h; simp only [Option.map_some,Option.some.injEq] at h; subst h
+      have := boxSubF_sound _ _ _ _ (boxMulF_sound _ _ _ _ (boxOfQ_sound (a^2/2)) (hlg a la hl))
+        (boxOfQ_sound (a^2/4))
+      convert this using 1; unfold Gtilde; push_cast; ring
+
+/-- A sum of boxed terms over `range n`. -/
+def sumBoxF (t : ℕ → FBox) (n : ℕ) : FBox := (List.range n).foldl (fun acc j => boxAddF acc (t j)) boxZero
+
+theorem sumBoxF_sound (t : ℕ → FBox) (v : ℕ → ℝ) (n : ℕ) (h : ∀ j < n, Contains (t j) (v j)) :
+    Contains (sumBoxF t n) (∑ j ∈ Finset.range n, v j) := by
+  induction n with
+  | zero => simpa [sumBoxF] using boxZero_sound
+  | succ n ih =>
+    have ih' := ih (fun j hj => h j (by omega))
+    unfold sumBoxF at ih' ⊢
+    rw [List.range_succ,List.foldl_append,List.foldl_cons,List.foldl_nil,Finset.sum_range_succ]
+    exact boxAddF_sound _ _ _ _ ih' (h n (by omega))
+
+/-- The second-segment multipole primitive at `dx = x − y₀`, from the moment boxes `MU`. -/
+def mpPrimF (MU : List FBox) (m2 : FBox) (dx : ℚ) (ld : FBox) : FBox :=
+  boxAddF (boxAddF (boxNegF (boxMulF m2 (boxSubF (boxMulF (boxOfQ dx) ld) (boxOfQ dx))))
+    (boxMulF (MU.getD 0 boxZero) ld))
+    (sumBoxF (fun j => boxMulF (MU.getD (j+1) boxZero) (boxOfQ (-((dx^(j+1))⁻¹)/((j:ℚ)+1)))) (MU.length-1))
+
+theorem forall2_getD (MU : List FBox) (w : ℕ → ℝ) (h : List.Forall₂ Contains MU ((List.range MU.length).map w))
+    (j : ℕ) (hj : j < MU.length) : Contains (MU.getD j boxZero) (w j) := by
+  have hl := h.length_eq
+  have := List.forall₂_iff_get.mp h
+  have hj' : j < ((List.range MU.length).map w).length := by simp; exact hj
+  have hg := this.2 j hj hj'
+  simpa [List.getD_eq_getElem?_getD,List.getElem?_eq_getElem hj] using hg
+
+theorem mpPrimF_sound (MU : List FBox) (m2 : FBox) (dx : ℚ) (ld : FBox) (hdx : 0 < dx)
+    (σ2 : Measure ℂ) (y0 : ℝ) (hdxR : (dx:ℝ)=0+((dx:ℝ))) (M2 : ℝ) (hM2 : Contains m2 M2)
+    (hld : Contains ld (Real.log (dx:ℝ))) (w : ℕ → ℝ)
+    (hMU : List.Forall₂ Contains MU ((List.range MU.length).map w)) (hK : 0 < MU.length)
+    (hw : ∀ k, w k=(moment σ2 (y0:ℂ) (k+1)).re/((k+1:ℕ):ℝ)) (hm2 : M2=σ2.real univ) (s : ℝ)
+    (hs : s-y0=(dx:ℝ)) :
+    Contains (mpPrimF MU m2 dx ld) (multipolePrimitive σ2 y0 s MU.length) := by
+  have hdx0 : (0:ℝ) < (dx:ℝ) := by exact_mod_cast hdx
+  have h1 := boxNegF_sound _ _ (boxMulF_sound _ _ _ _ hM2
+    (boxSubF_sound _ _ _ _ (boxMulF_sound _ _ _ _ (boxOfQ_sound dx) hld) (boxOfQ_sound dx)))
+  have h2 := boxMulF_sound _ _ _ _ (forall2_getD MU w hMU 0 hK) hld
+  have h3 := sumBoxF_sound (fun j => boxMulF (MU.getD (j+1) boxZero) (boxOfQ (-((dx^(j+1))⁻¹)/((j:ℚ)+1))))
+    (fun j => w (j+1)*(((-((dx^(j+1))⁻¹)/((j:ℚ)+1)):ℚ):ℝ)) (MU.length-1)
+    (fun j hj => boxMulF_sound _ _ _ _ (forall2_getD MU w hMU (j+1) (by omega)) (boxOfQ_sound _))
+  have h := boxAddF_sound _ _ _ _ (boxAddF_sound _ _ _ _ h1 h2) h3
+  unfold mpPrimF
+  convert h using 1
+  unfold multipolePrimitive
+  rw [if_pos hK,hs,hm2]
+  have hsum : ∑ k ∈ Finset.Icc 2 MU.length,(moment σ2 (y0:ℂ) k).re*(dx:ℝ)^((1:ℤ)-k)/((k:ℝ)*(1-k))=
+      ∑ j ∈ Finset.range (MU.length-1),w (j+1)*(((-((dx^(j+1))⁻¹)/((j:ℚ)+1)):ℚ):ℝ) := by
+    have he : Finset.Icc 2 MU.length=Finset.Ico 2 (MU.length+1) := rfl
+    rw [he,Finset.sum_Ico_eq_sum_range,show MU.length+1-2=MU.length-1 by omega]
+    apply Finset.sum_congr rfl
+    intro j _
+    rw [hw (j+1)]
+    have hz : ((1:ℤ)-((2+j:ℕ):ℤ))= -((j+1:ℕ):ℤ) := by push_cast; ring
+    rw [hz,zpow_neg,zpow_natCast]
+    have hj1 : ((j:ℝ)+1) ≠ 0 := by positivity
+    have hj2 : ((j:ℝ)+2) ≠ 0 := by positivity
+    have hd : (dx:ℝ)^(j+1) ≠ 0 := pow_ne_zero _ hdx0.ne'
+    have hj0 : (0:ℝ) ≤ j := by positivity
+    have hj3 : (1:ℝ)-(2+(j:ℝ)) ≠ 0 := by intro h; linarith
+    have hj4 : (-1:ℝ)-(j:ℝ) ≠ 0 := by intro h; linarith
+    push_cast
+    field_simp
+    ring
+  rw [hsum,hw 0]
+  push_cast
+  ring
+
+/-- The lattice primitive `P` of `W − θ` at a rational point `x ≥ 0` of `[0, Y]`. -/
+def primBoxF (s : SourceF) (lg : ℚ → Option FBox) (qI : List FBox) (x : ℚ) : Option FBox :=
+  (gtBoxF lg (x+1)).bind fun g1 => (gtBoxF lg (x+4)).bind fun g4 => (gtBoxF lg x).bind fun g0 =>
+  (lg (x-s.y0)).bind fun ld =>
+  some (boxSubF (boxSubF (boxAddF (boxAddF (boxSubF (boxSubF (boxScaleF 3 g1) g4) (boxScaleF 2 g0))
+      (boxMulF (boxSubF (boxSubF boxOne (boxScaleF 2 s.U1c)) (boxOfQ s.theta)) (boxOfQ x)))
+      (boxMulF s.L (boxOfQ (x^2/2))))
+    (boxScaleF 2 (polyEvalF (boxOfQ x) qI))) (boxScaleF 2 (mpPrimF s.MU s.m2 (x-s.y0) ld)))
+
+theorem polyEvalF_sound (xb : FBox) (x : ℝ) (hx : Contains xb x) :
+    ∀ (p : List FBox) (vals : List ℝ), List.Forall₂ Contains p vals →
+      ∀ (acc : FBox) (a : ℝ), Contains acc a →
+        Contains (p.foldl (fun v c => boxAddF c (boxMulF xb v)) acc) (vals.foldl (fun t b => x*t+b) a)
+  | [],[],_,acc,a,h => by simpa using h
+  | c::cs,v::vs,h,acc,a,ha => by
+    have hh := List.forall₂_cons.mp h
+    simp only [List.foldl_cons]
+    have := polyEvalF_sound xb x hx cs vs hh.2 _ _ (boxAddF_sound _ _ _ _ hh.1 (boxMulF_sound _ _ _ _ hx ha))
+    convert this using 2; ring
+
+
+theorem primBoxF_sound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (lk : WLink s logs r z θ Y σ1 σ2 d K) (ids : List ℕ) (qI : List FBox) (qIv : List ℝ)
+    (hqI : List.Forall₂ Contains qI qIv)
+    (hqIe : ∀ x : ℝ, qIv.foldl (fun t b => x*t+b) 0=(ownUPoly d).integral.eval x)
+    (hK0 : 0 < s.MU.length) (x : ℚ) (hx : 0 ≤ x) (b : FBox)
+    (h : primBoxF s (fun a => lookupLogF logs a ids) qI x=some b) :
+    Contains b (latticePrimitive z θ d K (x:ℝ)) := by
+  have hlg : ∀ a c, (fun a => lookupLogF logs a ids) a=some c → Contains c (Real.log (a:ℝ)) :=
+    fun a c hc => lookupLogF_sound logs lk.logs a ids c hc
+  obtain ⟨-,hm2,hL,hU1c,-,-,-,-,hMU,-,-⟩ := lk.enc
+  simp only [primBoxF,Option.bind_eq_some_iff,Option.some.injEq] at h
+  obtain ⟨g1,hg1,g4,hg4,g0,hg0,ld,hld,rfl⟩ := h
+  have G1 := gtBoxF_sound _ hlg _ _ hg1
+  have G4 := gtBoxF_sound _ hlg _ _ hg4
+  have G0 := gtBoxF_sound _ hlg _ _ hg0
+  have LD := hlg _ _ hld
+  have hy : (s.y0:ℝ) < 0 := by rw [lk.hy0]; exact d.y0_neg
+  have hy' : s.y0 < 0 := by exact_mod_cast hy
+  have hxR : (0:ℝ) ≤ (x:ℝ) := by exact_mod_cast hx
+  have MP := mpPrimF_sound s.MU s.m2 (x-s.y0) ld (by linarith) σ2 d.y0 (by ring) r.M2 hm2 LD r.w hMU hK0
+    lk.hw lk.hM2 (x:ℝ) (by push_cast; rw [lk.hy0])
+  have LIN := boxMulF_sound _ _ _ _ (boxSubF_sound _ _ _ _ (boxSubF_sound _ _ _ _ boxOne_sound
+    (boxScaleF_sound 2 _ _ hU1c)) (boxOfQ_sound s.theta)) (boxOfQ_sound x)
+  have QUAD := boxMulF_sound _ _ _ _ hL (boxOfQ_sound (x^2/2))
+  have POLY := polyEvalF_sound (boxOfQ x) (x:ℝ) (boxOfQ_sound x) qI qIv hqI boxZero 0 boxZero_sound
+  have ALL := boxSubF_sound _ _ _ _ (boxSubF_sound _ _ _ _ (boxAddF_sound _ _ _ _ (boxAddF_sound _ _ _ _
+    (boxSubF_sound _ _ _ _ (boxSubF_sound _ _ _ _ (boxScaleF_sound 3 _ _ G1) G4) (boxScaleF_sound 2 _ _ G0))
+    LIN) QUAD) (boxScaleF_sound 2 _ _ POLY)) (boxScaleF_sound 2 _ _ MP)
+  unfold polyEvalF
+  convert ALL using 1
+  unfold latticePrimitive
+  rw [← lk.hK,hqIe,lk.hU1c,lk.hL,lk.hθ]
+  push_cast
+  ring
+
+/-- The closed-form bound on the integral of `W − θ` over a gap `[p, q] ⊆ [0, Y]`. -/
+theorem gapIntegral_le (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (lk : WLink s logs r z θ Y σ1 σ2 d K) (ids : List ℕ) (qI : List FBox) (qIv : List ℝ)
+    (hqI : List.Forall₂ Contains qI qIv)
+    (hqIe : ∀ x : ℝ, qIv.foldl (fun t b => x*t+b) 0=(ownUPoly d).integral.eval x)
+    (hK0 : 0 < s.MU.length) (p q : ℚ) (hp : 0 ≤ p) (hpq : p ≤ q) (hqY : q ≤ s.Y) (bp bq : FBox)
+    (hbp : primBoxF s (fun a => lookupLogF logs a ids) qI p=some bp)
+    (hbq : primBoxF s (fun a => lookupLogF logs a ids) qI q=some bq) :
+    (∫ x in (p:ℝ)..(q:ℝ), W z (σ1+σ2) (x:ℂ)-θ) ≤ dec S bq.2-dec S bp.1+dec S s.globalW*((q:ℝ)-(p:ℝ)) := by
+  have hP := primBoxF_sound s logs r z θ Y σ1 σ2 d K lk ids qI qIv hqI hqIe hK0 p hp bp hbp
+  have hQ := primBoxF_sound s logs r z θ Y σ1 σ2 d K lk ids qI qIv hqI hqIe hK0 q (hp.trans hpq) bq hbq
+  have hpR : (0:ℝ) ≤ (p:ℝ) := by exact_mod_cast hp
+  have hpqR : (p:ℝ) ≤ (q:ℝ) := by exact_mod_cast hpq
+  have hqYR : (q:ℝ) ≤ Y := by rw [← lk.hYs]; exact_mod_cast hqY
+  have hI := integral_W_closed z θ Y p q lk.hY ⟨hpR,hpqR,hqYR⟩ σ1 σ2 d K
+    (mpErr (σ2.real univ) (d.supportRadius/(-d.y0)) K)
+    (fun x hx => second_mp_err Y σ1 σ2 d K x (hpR.trans hx.1))
+  have hg : 2*mpErr (σ2.real univ) (d.supportRadius/(-d.y0)) K*((q:ℝ)-(p:ℝ)) ≤
+      dec S s.globalW*((q:ℝ)-(p:ℝ)) := mul_le_mul_of_nonneg_right lk.hglob (by linarith)
+  have := (abs_le.mp hI).2
+  linarith [hP.1,hQ.2]
 
 end
 end CatalanCore.Li2.DecayCert.Simple
