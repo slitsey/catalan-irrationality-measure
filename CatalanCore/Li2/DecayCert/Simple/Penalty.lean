@@ -31,6 +31,105 @@ structure WLink (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ
   hw : ∀ k, r.w k=(moment σ2 (d.y0:ℂ) (k+1)).re/((k+1:ℕ):ℝ)
   hglob : 2*mpErr (σ2.real univ) (d.supportRadius/(-d.y0)) K ≤ dec S s.globalW
 
+
+/-- On a WOrigin cell the TC target leaves out `−2 x log x`, which the hull bounds. -/
+theorem approxFieldO_eq_target (s : SourceF) (r : SourceR) (p : TCSpec) (hk : p.kind=.WOrigin)
+    (z θ Y : ℝ) (σ1 σ2 : Measure ℂ) (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (hL : r.L=Real.log |z|) (hθ : (s.theta:ℝ)=θ) (hy0 : (s.y0:ℝ)=d.y0) (hYs : (s.Y:ℝ)=Y)
+    (hM2 : r.M2=σ2.real univ) (hU1c : r.U1c=d.c 0*Real.log (4/Y))
+    (hq1 : ∀ x : ℝ, hornerR (2*x/Y-1) r.q1=(ownUPoly d).eval x) (hK : s.MU.length=K)
+    (hw : ∀ k, r.w k=(moment σ2 (d.y0:ℂ) (k+1)).re/((k+1:ℕ):ℝ))
+    (hY : 0 < Y) (u : ℝ) (hpos : 0 ≤ (p.center:ℝ)+u) :
+    latticeApproxField z θ d K ((p.center:ℝ)+u)=tcTargetR s r p u+(-2*xlog ((p.center:ℝ)+u)) := by
+  have hy := d.y0_neg
+  have hd : 0 < (p.center:ℝ)+u-d.y0 := by linarith
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  have hR : p.kind ≠ .Right := by rw [hk]; decide
+  simp only [tcTargetR,hW,if_true,wModelR,wConstR,hR,if_false,tcArgs,hk,xlogSumR]
+  simp only [show (TCKind.WOrigin==TCKind.WOrigin)=true by decide,if_true,
+    List.nil_append,List.cons_append,List.append_nil,List.map_cons,List.map_nil,List.sum_cons,List.sum_nil]
+  rw [latticeApproxField,V_real_value,phi0_real_closed,LatticeMomentData.mpValue,mp_real,← hq1]
+  have ht : (((p.center/(s.Y/2)-1:ℚ):ℝ)+((1/(s.Y/2):ℚ):ℝ)*u)=2*((p.center:ℝ)+u)/Y-1 := by
+    have hY0 : Y ≠ 0 := hY.ne'
+    push_cast; rw [hYs]; field_simp; ring
+  rw [ht,abs_of_pos hd]
+  have hcy : (((p.center-s.y0:ℚ):ℝ)+u)=(p.center:ℝ)+u-d.y0 := by push_cast; rw [hy0]; ring
+  rw [hcy,hL,hθ,hM2,hU1c,hK]
+  have hsum : ∑ k ∈ Finset.range K,r.w k*((p.center:ℝ)+u-d.y0)^(-((k+1:ℕ):ℤ))=
+      ∑ k ∈ Finset.range K,(moment σ2 (d.y0:ℂ) (k+1)).re/(((k+1:ℕ):ℝ)*((p.center:ℝ)+u-d.y0)^(k+1)) := by
+    apply Finset.sum_congr rfl; intro k _
+    rw [hw,zpow_neg,zpow_natCast]; field_simp
+  rw [hsum]
+  simp only [xlog]; push_cast; ring
+
+theorem tcCheck_origin_params (s : SourceF) (logs : List LogEntry) (p : TCSpec) (lower upper : ℤ)
+    (pos : Option Bool) (hc : tcCheck s logs p lower upper pos=true) (hk : p.kind=.WOrigin) :
+    p.left=0 ∧ 0 < p.right ∧ p.right ≤ 1/3 := by
+  by_contra hcon
+  have hcond : p.left≠0 ∨ p.right≤0 ∨ 1/3<p.right := by
+    by_contra h2; push_neg at h2; exact hcon ⟨h2.1,h2.2.1,h2.2.2⟩
+  have hO : ∀ lg c, originF lg p c=none := by
+    intro lg c
+    simp only [originF,hk,show (TCKind.WOrigin==TCKind.WOrigin)=true by decide,if_true]
+    rw [if_pos hcond]
+  have hP : ∀ lg R, wPartF s lg p R=none := by intro lg R; simp [wPartF,hO]
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  unfold tcCheck at hc
+  simp [buildTCBox,hW,hP] at hc
+
+/-- A passed WOrigin cell encloses `W − θ` on its interval `[0, right]`. -/
+theorem wOriginCell_bound (s : SourceF) (logs : List LogEntry) (p : TCSpec) (lower upper : ℤ)
+    (pos : Option Bool) (hc : tcCheck s logs p lower upper pos=true) (r : SourceR) (z θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (lk : WLink s logs r z θ Y σ1 σ2 d K) (hk : p.kind=.WOrigin)
+    (x : ℝ) (hx : (p.left:ℝ) ≤ x ∧ x ≤ p.right) :
+    dec S lower ≤ W z (σ1+σ2) (x:ℂ)-θ ∧ W z (σ1+σ2) (x:ℂ)-θ ≤ dec S upper := by
+  have hg := tcCheck_geom s logs p lower upper pos hc
+  have hpr := tcCheck_origin_params s logs p lower upper pos hc hk
+  simp only [tcGeometryCheck,Bool.and_eq_true] at hg
+  obtain ⟨⟨⟨⟨⟨h0,hYb⟩,-⟩,-⟩,-⟩,-⟩ := hg
+  obtain ⟨hr0,hlr,hcl,hrc,-⟩ := of_decide_eq_true h0
+  have hwb : (p.kind==.W || p.kind==.WOrigin)=true := by simp [hk]
+  rw [hwb,Bool.not_true,Bool.false_or] at hYb
+  have hrY := (of_decide_eq_true hYb).2
+  have hl0 : (p.left:ℝ)=0 := by exact_mod_cast hpr.1
+  have hr13 : (p.right:ℝ) ≤ 1/3 := by
+    rw [show (1/3:ℝ)=((1/3:ℚ):ℝ) by norm_num]; exact_mod_cast hpr.2.2
+  have hcl' : (p.center:ℝ)-p.radius ≤ p.left := by exact_mod_cast hcl
+  have hrc' : (p.right:ℝ) ≤ p.center+p.radius := by exact_mod_cast hrc
+  have hrY' : (p.right:ℝ) ≤ Y := by rw [← lk.hYs]; exact_mod_cast hrY
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  have hx0 : 0 ≤ x := by rw [← hl0]; exact hx.1
+  set u := x-(p.center:ℝ) with hu_def
+  have hxu : x=(p.center:ℝ)+u := by rw [hu_def]; ring
+  have hu : |u| ≤ (p.radius:ℝ) := abs_le.mpr ⟨by linarith,by linarith⟩
+  let e : ℝ → ℝ := fun v => if 0 ≤ (p.center:ℝ)+v then
+    -2*(U σ2 ((((p.center:ℝ)+v:ℝ)):ℂ)-d.mpValue K ((p.center:ℝ)+v)) else 0
+  have he : ∀ v, |v| ≤ (p.radius:ℝ) → |e v| ≤ dec S (if tcIsW p then s.globalW else s.globalA) := by
+    intro v _
+    rw [if_pos hW]
+    by_cases h0 : 0 ≤ (p.center:ℝ)+v
+    · simp only [e,if_pos h0,abs_mul,abs_neg,abs_two]
+      exact (mul_le_mul_of_nonneg_left (second_mp_err Y σ1 σ2 d K _ h0) (by norm_num)).trans lk.hglob
+    · simp only [e,if_neg h0,abs_zero]
+      exact (mul_nonneg (by norm_num)
+        ((abs_nonneg _).trans (second_mp_err Y σ1 σ2 d K 0 le_rfl))).trans lk.hglob
+  have hm := xlog_ge_end x (p.right:ℝ) hx0 hx.2 hr13
+  have hn : xlog x ≤ 0 := Real.mul_log_nonpos hx0 (by linarith [hx.2])
+  have hH : (0:ℝ) ≤ -2*xlog x ∧ -2*xlog x ≤ hullBoundR p := by
+    simp only [hullBoundR,hW,if_true,originBoundR,hk,if_true]
+    unfold xlog at hm hn ⊢
+    constructor <;> linarith
+  have key := tcCheck_sound s logs p lower upper pos hc r lk.logs lk.enc (-2*xlog x) hH e he u hu
+  have hx0' : 0 ≤ (p.center:ℝ)+u := by rw [← hxu]; exact hx0
+  have ht := approxFieldO_eq_target s r p hk z θ Y σ1 σ2 d K lk.hL lk.hθ lk.hy0 lk.hYs lk.hM2 lk.hU1c
+    lk.hq1 lk.hK lk.hw lk.hY u hx0'
+  have hf := W_field_eq z θ Y lk.hY σ1 σ2 d K x ⟨hx0,hx.2.trans hrY'⟩
+  have heq : tcTargetR s r p u+(-2*xlog x)+e u=W z (σ1+σ2) (x:ℂ)-θ := by
+    rw [hf,hxu,ht]; simp only [e,if_pos hx0']; ring
+  rw [heq] at key
+  exact ⟨key.1,key.2.1⟩
+
 /-- A stored W cell: its spec, its claimed integer range and its sign claim. -/
 structure WCell where
   spec : TCSpec
@@ -39,7 +138,7 @@ structure WCell where
   pos : Option Bool
 
 def WCell.ok (s : SourceF) (logs : List LogEntry) (c : WCell) : Bool :=
-  (c.spec.kind==.W) && tcCheck s logs c.spec c.lower c.upper c.pos
+  (c.spec.kind==.W || c.spec.kind==.WOrigin) && tcCheck s logs c.spec c.lower c.upper c.pos
 
 def WCell.iv (c : WCell) : QInterval := ⟨c.spec.left,c.spec.right⟩
 
@@ -62,9 +161,11 @@ theorem WCell.bound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y :
     (lk : WLink s logs r z θ Y σ1 σ2 d K) (c : WCell) (hc : c.ok s logs=true)
     (x : ℝ) (hx : (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right) :
     dec S c.lower ≤ W z (σ1+σ2) (x:ℂ)-θ ∧ W z (σ1+σ2) (x:ℂ)-θ ≤ dec S c.upper := by
-  simp only [WCell.ok,Bool.and_eq_true,beq_iff_eq] at hc
-  exact wCell_bound s logs c.spec c.lower c.upper c.pos hc.2 r lk.logs lk.enc hc.1 z θ Y lk.hY σ1 σ2 d K
-    lk.hL lk.hθ lk.hy0 lk.hYs lk.hM2 lk.hU1c lk.hq1 lk.hK lk.hw lk.hglob x hx
+  simp only [WCell.ok,Bool.and_eq_true,Bool.or_eq_true,beq_iff_eq] at hc
+  rcases hc.1 with hk|hk
+  · exact wCell_bound s logs c.spec c.lower c.upper c.pos hc.2 r lk.logs lk.enc hk z θ Y lk.hY σ1 σ2 d K
+      lk.hL lk.hθ lk.hy0 lk.hYs lk.hM2 lk.hU1c lk.hq1 lk.hK lk.hw lk.hglob x hx
+  · exact wOriginCell_bound s logs c.spec c.lower c.upper c.pos hc.2 r z θ Y σ1 σ2 d K lk hk x hx
 
 theorem dec_nonneg_of (a : ℤ) (h : 0 ≤ a) : 0 ≤ dec S a := by
   unfold dec; exact div_nonneg (by exact_mod_cast h) (by unfold S; positivity)
