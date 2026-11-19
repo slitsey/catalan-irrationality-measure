@@ -57,9 +57,10 @@ status:
     from CatalanCore.Li2.li2_measure_general. The decay table and the
     nonvanishing certificates are proved, not assumed. The theorem has no sorry
     and no native_decide; #print axioms reports only propext,
-    Classical.choice and Quot.sound. A Mathlib-only challenge file with the
-    node table written as literals is not yet provided, so lake comparator is
-    not configured for this statement.
+    Classical.choice and Quot.sound. ChallengeLi2.lean uses only Mathlib
+    imports and spells out the 37 nodes and 419 decay entries as exact
+    literals. Run lake comparator --config comparator-li2.json to check
+    the statement and replay the proof with Lean and NanoDa. Put the pinned toolchain bin directory on PATH.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []

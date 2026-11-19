@@ -1,0 +1,28 @@
+module
+public import CatalanCore.Li2.NVMod.PolynomialCompute
+public import CatalanMeasure.CellCert.RawInts
+@[expose] public section
+set_option Elab.async false
+set_option maxHeartbeats 0
+set_option maxRecDepth 100000
+namespace CatalanCore.Li2.NVMod.PolynomialData.V1C5S3
+open CatalanCore.Li2.NVMod.PolynomialCompute
+def m0 : List ℤ := raw_ints% [0x0,0x7,0x0,0x1,0x3,0x0]
+def m1 : List ℤ := raw_ints% [0x0,0x5,0x4,0x5,0x2,0x6]
+def m2 : List ℤ := raw_ints% [0x0,0x2,0x5,0x2,0x6,0x7]
+def m3 : List ℤ := raw_ints% [0x0,0x3,0x5,0x4,0x5,0x5]
+def m4 : List ℤ := raw_ints% [0x0,0xa,0x4,0x1,0x8,0x2]
+def moments : List (List ℤ) := [m0,m1,m2,m3,m4]
+def u : List ℤ := raw_ints% [0x3,0x7,0x3,0x4,0x4,0x9,0x6,0x8]
+def v : List ℤ := raw_ints% [0x1,0xa,0x0,0x0,0x0,0x0,0x7,0x4,0x3,0xa,0x1,0x7,0x7,0x4]
+def k : List ℤ := raw_ints% [0x0,0x1,0x1,-0x20,-0x5e,-0xb9,-0x150,-0xcb,-0x154,-0x199,-0x11f,-0x9d,-0x156,-0x30,0x53,-0x16,0x99,0x78,-0xce,-0xbe,-0x81,-0xed,0x4]
+def data : Data := ⟨moments,u,v,k,5,31,0x199⟩
+set_option trace.profiler true
+set_option trace.profiler.threshold 0
+-- kcost: 2 s estimated from measured largest-key whole bound check; checked coefficient/radix bindings
+theorem bounds_ok : boundsCheckNat 3 11 data=true := by decide +kernel
+-- kcost: 12 s measured largest-key reference; same structural DJ/Horner/Bezout evaluator
+theorem arithmetic_ok : arithmeticCheck 3 11 data=true := by decide +kernel
+#print axioms bounds_ok
+#print axioms arithmetic_ok
+end CatalanCore.Li2.NVMod.PolynomialData.V1C5S3

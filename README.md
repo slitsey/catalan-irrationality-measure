@@ -84,7 +84,19 @@ Examples:
 | `Li₂(1/20)` | 9.36 | improved measure | 11.94 (Rhin–Viola) |
 | `Li₂(−1/5)` | 10.38 | improved measure | 62.69 (Rhin–Viola) |
 
-The paper gives the full comparison for `±1/k`, `k ≤ 20`, against Hata and Rhin–Viola.
+The theorem also gives finite measures for every reduced `2/b` with odd `b ≥ 13` and every reduced `−2/b`
+with odd `b ≥ 11`. In the domain `0 < |a/b| ≤ 1/2`, this leaves four positive and three negative
+arguments with reduced absolute numerator 2 outside these ranges.
+
+| Number | μ ≤ | Prior irrationality coverage |
+|---|---:|---|
+| `Li₂(2/13)` | 2,974.00 | Liu |
+| `Li₂(−2/11)`, `Li₂(−2/13)`, `Li₂(−2/15)` | 111.27, 65.33, 49.22 | First proofs to our knowledge |
+| `Li₂(−3/50)`, `Li₂(4/167)`, `Li₂(−4/177)` | 73,784.43, 70,747.01, 13,998.32 | Below Tan–Zhang's uniform thresholds |
+
+The paper gives the witness entries for these bounds and the full comparison for `±1/k`, `k ≤ 20`, against
+Hata and Rhin–Viola. The earlier ranges are in [Liu's formalization](https://github.com/siqiliu-tsinghua/Li2Rational)
+and [Tan–Zhang, Table 1](https://arxiv.org/html/2611.01066v1).
 
 ## The statements
 
@@ -463,8 +475,10 @@ certified node table at `(ρ, sign a, t)` and `η = D + c(a, b) > 0`, then `μ(L
 
 The proof is in [`CatalanCore/Li2/`](CatalanCore/Li2/), with the ported files of Tang's formalization in
 `CatalanCore/Li2/Port/`. The theorem is `CatalanCore.Li2.li2_measure_general`, and the public theorem is
-`Li2IrrationalityMeasure.li2_measure_general` in `SolutionLi2.lean`. A Mathlib-only challenge file for it is
-not yet provided.
+`Li2IrrationalityMeasure.li2_measure_general` in `SolutionLi2.lean`. The Mathlib-only [`ChallengeLi2.lean`](ChallengeLi2.lean) spells out the
+37 nodes and 419 decay entries as exact literals. On Linux with bubblewrap, run
+`PATH="$(lean --print-prefix)/bin:$PATH" lake comparator --config comparator-li2.json` to compare the statement and replay the proof
+with Lean and NanoDa.
 
 ## Kernel-checked certificates
 

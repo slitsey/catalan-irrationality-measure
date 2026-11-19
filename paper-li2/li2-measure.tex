@@ -60,8 +60,9 @@ Let $\mu$ denote the irrationality exponent. For coprime integers $a$ and $b$ wi
 explicit upper bound for $\mu(\Li_2(a/b))$ whenever an explicit margin $\eta(a,b)$ is positive. The margin is the sum of
 a closed-form arithmetic rate in $\log b$, $\log|a|$ and $\log|b-a|$ and a piecewise affine decay rate in
 $\log(b/|a|)$. For example $\mu(\Li_2(1/2))\le234.57$, $\mu(\Li_2(1/3))\le21.57$, $\mu(\Li_2(1/4))\le15.19$,
-$\mu(\Li_2(1/5))\le12.92$, $\mu(\Li_2(-1/2))\le13.94$ and $\mu(\Li_2(-1/3))\le11.91$. As far as we know these
-are the first irrationality measures for these numbers. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
+$\mu(\Li_2(1/5))\le12.92$, $\mu(\Li_2(-1/2))\le13.94$ and $\mu(\Li_2(-1/3))\le11.91$. These are, to our knowledge, the first irrationality measures for those six numbers.
+For reduced numerator $2$ we obtain finite measures at $2/b$ for odd $b\ge13$ and at $-2/b$ for odd $b\ge11$.
+The values at $-2/11$, $-2/13$ and $-2/15$ appear to give new irrationality results. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
 from $783.29$ to $11.73$ at $b=6$ and from $11.94$ to $9.36$ at $b=20$. For $\Li_2(-1/b)$
 with $5\le b\le20$ they improve the bounds that follow from Rhin and Viola's linear independence measures. The approximations are Tang's normalized Hankel determinants. Liu and Tan and Zhang
 used them, with the same arithmetic rate, to prove irrationality of $\Li_2(\pm1/k)$ and of $\Li_2(p/q)$ in explicit
@@ -121,8 +122,9 @@ The numbers in the following corollary are evaluations of the formula of Theorem
 $\rho$. They are rounded up in the last digit.
 
 \begin{corollary}\label{cor:table}
-For the numbers $x$ in Table~\ref{tab:values} and $x=\Li_2(\pm2/39)$ the bound $\mu(x)\le\mu_0$ holds with the
-stated $\mu_0$, in the plain form of Theorem~\ref{thm:main}.
+For the numbers $x$ in Tables~\ref{tab:values} and~\ref{tab:larger-numerators}, and for $x=\Li_2(\pm2/39)$,
+the stated bound $\mu(x)\le\mu_0$ holds in the plain form of Theorem~\ref{thm:main}. In particular, $\Li_2(2/b)$
+has a finite irrationality measure for every odd $b\ge13$, and $\Li_2(-2/b)$ for every odd $b\ge11$.
 \end{corollary}
 
 \begin{table}[ht]
@@ -161,6 +163,36 @@ linear independence measure of $1$, $\Li_1(-1/k)$, $\Li_2(-1/k)$ \cite[Table~1]{
 \cite[Tables~1 and~2, p.~386]{Hata93dilog}. Published values are rounded to two decimals. Theorem~\ref{thm:main}
 also gives $\mu(\Li_2(2/39))\le23.11$ and $\mu(\Li_2(-2/39))\le22.31$.}\label{tab:values}
 \end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}r r l@{}}
+\toprule
+$\lambda$ & $\mu_0$ for $\Li_2(\lambda)$ & Certified entries used\\
+\midrule
+$2/13$   & $2\,974.00$  & $31$\\
+$-2/11$  & $111.27$      & $308$\\
+$-2/13$  & $65.33$       & $308,328$\\
+$-2/15$  & $49.22$       & $328$\\
+$-3/50$  & $73\,784.43$ & $349,370$\\
+$4/167$  & $70\,747.01$ & $137,147$\\
+$-4/177$ & $13\,998.32$ & $137,147$\\
+\bottomrule
+\end{tabular}
+\caption{Examples with larger reduced numerators. The last column gives zero-based entry indices in the Lean node
+table. A single entry is evaluated at its node. Two entries are interpolated.}\label{tab:larger-numerators}
+\end{table}
+
+\begin{samepage}
+For reduced numerator $2$ and $0<|\lambda|\le1/2$, the ranges in Corollary~\ref{cor:table} leave $2/b$ with
+$b\in\{5,7,9,11\}$ and $-2/b$ with $b\in\{5,7,9\}$ outside the stated coverage. Tan and Zhang
+\cite[Table~1 and \S5]{TanZhang26} give irrationality for $2/b$ from $b=13$ and for $-2/b$ from $b=17$ when
+restricted to odd denominators. Liu's ranges \cite{LiuLi2Rational} give the same odd thresholds for numerator $2$.
+To our knowledge the measures at $-2/11$, $-2/13$ and $-2/15$ give the first irrationality proofs for these values.
+The examples $-3/50$, $4/167$ and $-4/177$ also lie below the corresponding uniform sufficient thresholds in
+\cite[Table~1]{TanZhang26}.
+
+\end{samepage}
 
 \begin{remark}[large denominators]\label{rem:large}
 For fixed $a$ the margin $\eta$ tends to infinity with $b$. Let $(\rho_k,D_k)$ be an entry of the lattice node
@@ -1037,15 +1069,21 @@ $\rho=18$, $D=0.336425\ldots$, and $c(-1,3)=2.687851\ldots$, which gives $11.903
 $\rho=\frac{31}2$, $D=-4.593612\ldots$ and $c(1,2)=4.725773\ldots$ give $\eta=0.132160\ldots$ and $234.5629\ldots$. At
 $\lambda=-\frac2{39}$ the best candidate interpolates between the nodes $-\frac2{25}$ and $-\frac2{41}$ on $\Gamma_{15}$.
 The other entries of Table~\ref{tab:values} are computed in the same way.
+
+For Table~\ref{tab:larger-numerators}, let $u_i$ and $u_j$ be the magnitudes of the indicated nodes. For two
+entries take $\theta=\log(|\lambda|/u_j)/\log(u_i/u_j)$ and interpolate both $D$ and $\rho$ with this weight.
+The strict measure bounds follow by rational interval evaluation. Reduce each logarithm's argument to $[1,2]$ by
+powers of two and use $\log x=2\sum_{k=0}^{31}v^{2k+1}/(2k+1)+R$, where $v=(x-1)/(x+1)$ and
+$0\le R\le 2v^{65}/(65(1-v^2))$. For example entry $308$ has $\rho=91/4$ and
+$D=5335835236283847/5000000000000000$ at $-2/11$. It gives $\eta>0.40891625$ and $\rho\max(2/\eta,39/98)<111.27$.
+
+For the positive numerator $2$, transport entry $31$ from $2/13$ with slope $m=1$. The margin starts positive
+at $b=13$, and its derivative in $b$ is $(17b-88)/(12b(b-2))>0$ for $b\ge13$. For numerator $-2$,
+transport entry $308$ from $-2/11$ with slope $m=0$. The derivative of the margin is
+$(5b+64)/(12b(b+2))>0$ for $b\ge11$. Thus the margins stay positive throughout the claimed ranges.
 \end{proof}
 
-\begin{remark}[ranges without a measure]
-The margin $\eta$ is at most $0$ for every $\rho$ when $|a|\ge2$ and $b$ is small. Numerically the first denominators
-with $\eta>0$ are about $b=13$ for $a=2$, $b=11$ for $a=-2$, $b=55$ for $a=3$ and $b=50$ for $a=-3$. Near these
-thresholds the margin is small and the measure is large. Tan and Zhang \cite{TanZhang26} and Liu
-\cite{LiuLi2Rational} prove irrationality, without a measure, in comparable ranges. This remark is not part of the formal
-proof.
-\end{remark}
+
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -1053,14 +1091,14 @@ proof.
 
 Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every theorem,
 proposition and lemma its proof uses. The remarks are not part of the formalization. The public statement is the
-theorem \lean{CatalanCore.Li2.li2_measure_general} in the statement file \lean{ChallengeLi2.lean} of the repository
+theorem \lean{Li2IrrationalityMeasure.li2_measure_general} in the statement file \lean{ChallengeLi2.lean} of the repository
 \begin{center}
 \FormalizationLink
 \end{center}
 Its statement uses only Mathlib. The number $\Li_2(a/b)$ is written as the series
 $\sum_{k\ge0}(a/b)^{k+1}/(k+1)^2$, the rate $c(a,b)$ is written out, and the table of
 Definition~\ref{def:Dlow} is given as rational literals. The conclusion is $q^{-\mu}<|\Li_2(a/b)-p/q|$ for all
-integers $p$ and all sufficiently large $q$. The modules contain no \lean{sorry} and no \lean{native_decide}, and
+integers $p$ and all sufficiently large $q$. The solution uses no \lean{sorry} and no \lean{native_decide}, and
 \lean{\#print axioms} reports only \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
 
 Tang's construction, his local bounds at the primes prime to $ab(b-a)$ and Proposition~\ref{prop:tang} are ported

@@ -1,0 +1,14 @@
+{
+  "challenge_module": "ChallengeLi2",
+  "solution_module": "SolutionLi2",
+  "theorem_names": [
+    "Li2IrrationalityMeasure.li2_measure_general"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

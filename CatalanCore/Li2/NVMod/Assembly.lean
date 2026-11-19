@@ -1,5 +1,5 @@
 module
-public import CatalanCore.Li2.NVMod.Interior
+public import CatalanCore.Li2.NVMod.PolynomialChecker
 public import CatalanCore.Li2.NVMod.RationalRoot
 public import CatalanCore.Li2.NVMod.PointValue
 public import CatalanCore.Li2.NVMod.SpecialNonzero
@@ -17,9 +17,7 @@ structure AllConstantsChecked (q0 : ℕ) where
   endpoint0 : ∀ A hA hS,chk0 (input A hA hS)=true
   endpoint1 : ∀ A hA hS,chk1 (input A hA hS)=true
   endpointInf : ∀ A hA hS,chkInf (input A hA hS)=true
-  interiorData : ∀ A hA hS,ScalarTable
-  interiorChecked : ∀ A hA hS,
-    @ScalarTableChecked (input A hA hS) ⟨prime A hA hS⟩ (interiorData A hA hS)
+  interiorChecked : ∀ A hA hS,PolynomialCert.InteriorChecked (input A hA hS)
 
 theorem constants_nonzero_of_checked (q0 : ℕ) (cert : AllConstantsChecked q0)
     (z : ℚ) (hz : Allowed z) : AllConstantsNonzero z q0 := by
@@ -31,7 +29,7 @@ theorem constants_nonzero_of_checked (q0 : ℕ) (cert : AllConstantsChecked q0)
     letI : Fact I.p.Prime := ⟨hp⟩
     have he := endpoint_check_sound I (cert.endpoint0 A hA hS) (cert.endpoint1 A hA hS)
       (cert.endpointInf A hA hS)
-    have hi := scalar_table_sound I (cert.interiorData A hA hS) (cert.interiorChecked A hA hS)
+    have hi := PolynomialCert.interior_sound I (cert.interiorChecked A hA hS)
     have hF := no_rational_root_of_residues I.F I.p I.v0 I.v1 he.1 he.2.1
       he.2.2.1 he.2.2.2.1 he.2.2.2.2 hi z hz.1 hz.2.1
     have hkey : I.key=A := cert.key_eq A hA hS
