@@ -1,0 +1,389 @@
+% refs.bib for the Li2 paper. Entries marked "copied" come with their verification comments from the
+% verified bibliographies of the companion papers (work/catalan-uniform/paper-trigamma/refs.bib,
+% paper-zeta5/refs.bib, paper-lai/refs.bib). Entries marked "new" were checked on 18 Nov 2026 as stated.
+
+% ---------------- the dilogarithm ----------------
+% new: Crossref record api.crossref.org/works/10.1090/S0002-9947-1993-1147401-5 read 18 Nov 2026
+% (title, author, Trans. Amer. Math. Soc. 336, no. 1, 1993, 363-387). Also reference [5] of Tan--Zhang,
+% arXiv:2611.01066 (local text read 18 Nov 2026), and RV2005 p. 390 (Table 1 on p. 386).
+% Checked against the PDF supplied by Sean (work/literature/hata-1993/hata-1993.pdf, text by pdftotext) on
+% 18 Nov 2026: first page "Transactions of the American Mathematical Society, Volume 336, Number 1, March 1993",
+% title and author as below, first page 363. Tables 1 and 2 on p. 386: irrationality measures of L2(1/k) for
+% k = 7..18 (95.0605 .. 12.7562) and k = -5..-16 (228.612 .. 13.1953).
+@article{Hata93dilog,
+  author  = {Hata, Masayoshi},
+  title   = {Rational approximations to the dilogarithm},
+  journal = {Trans. Amer. Math. Soc.},
+  volume  = {336},
+  number  = {1},
+  year    = {1993},
+  pages   = {363--387},
+  doi     = {10.1090/S0002-9947-1993-1147401-5}
+}
+
+% new: Crossref record api.crossref.org/works/10.2422/2036-2145.2005.3.02 read 18 Nov 2026 (title, authors,
+% pages 389-437); volume and year from the first page of the paper (local text
+% work/literature/li2-t2/rhin-viola-2005.txt, "Ann. Scuola Norm. Sup. Pisa Cl. Sci. (5) Vol. IV (2005), 389-437")
+% and from reference [6] of Tan--Zhang. The table of mu(Li2(1/s)) for 6 <= s <= 20 was read on pp. 434-435.
+@article{RhinViola05,
+  author  = {Rhin, Georges and Viola, Carlo},
+  title   = {The permutation group method for the dilogarithm},
+  journal = {Ann. Sc. Norm. Super. Pisa Cl. Sci. (5)},
+  volume  = {4},
+  number  = {3},
+  year    = {2005},
+  pages   = {389--437},
+  doi     = {10.2422/2036-2145.2005.3.02}
+}
+
+% new: Crossref record api.crossref.org/works/10.2140/moscow.2019.8.81 read 18 Nov 2026
+% (Mosc. J. Comb. Number Theory 8, no. 1, 2019, 81-96). Full text read 18 Nov 2026 from the MSP PDF
+% https://msp.org/moscow/2019/8-1/moscow-v8-n1-p08-s.pdf (copy in work/literature/rhin-viola-2019/, text extracted by
+% pdftotext -raw). Table 1, p. 95: linear independence measures (c2+c3)/(c-c3) of 1, Li1(1/z), Li2(1/z) for
+% z = -5..-20: 61.68698, 43.51295, 32.76353, 25.05713, 20.87789, 18.24158, 16.41900, 15.08001, 14.04958,
+% 13.22908, 12.58420, 12.05561, 11.61188, 11.23276, 10.90426, 10.61629. Same page: these improve
+% [Hata 1993, Table 2 p. 386] and [Marcovecchio 2016].
+@article{RhinViola19,
+  author  = {Rhin, Georges and Viola, Carlo},
+  title   = {Linear independence of {$1$}, {${\rm Li}_1$} and {${\rm Li}_2$}},
+  journal = {Mosc. J. Comb. Number Theory},
+  volume  = {8},
+  number  = {1},
+  year    = {2019},
+  pages   = {81--96},
+  doi     = {10.2140/moscow.2019.8.81}
+}
+
+% new: web page https://ryzfsu.github.io/html/li2-half-irrationality/ read 18 Nov 2026: title "Irrationality of the
+% dilogarithm at 1/2", author Ruiyi Zhang (Independent Researcher, Columbia, Maryland); no publication date on the
+% page, only the LaTeXML stamp "Tue Nov 3 11:39:38 2026". Theorem 1: Li2(1/2) irrational. Method: determinants of
+% moments of 1/(xy-2) with parameter derivatives, logarithmic energy on an ellipse certified by directed interval
+% arithmetic, binomial valuations for denominators, Lucas congruence mod 83 along m = 32*83^k. No measure stated.
+@misc{ZhangLi2Half,
+  author       = {Zhang, Ruiyi},
+  title        = {Irrationality of the dilogarithm at {$1/2$}},
+  year         = {2026},
+  howpublished = {Web preprint, \url{https://ryzfsu.github.io/html/li2-half-irrationality/}, page generated November 3, 2026}
+}
+
+% copied from paper-trigamma/refs.bib; abstract re-read 18 Nov 2026 in the local arXiv text
+% work/literature/search-2026-10-23/2609.06895.txt (irrationality of Li2(-1/4), Li2(1/5), Li2(-1/3)).
+@misc{Prellberg26,
+  author        = {Prellberg, Thomas},
+  title         = {Three irrationality results for the dilogarithm: {R}hin--{V}iola and {V}iola--{Z}udilin constructions at {$-1/4$}, {$1/5$}, and {$-1/3$}},
+  year          = {2026},
+  note          = {Preprint, 7 September 2026, \href{https://arxiv.org/abs/2609.06895}{arXiv:2609.06895}},
+  eprint        = {2609.06895},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+% new: arXiv abstract page arxiv.org/abs/2611.01066 read 18 Nov 2026 (title, authors, v1 31 Oct 2026);
+% local text work/literature/search-2026-11-16/2611.01066.txt read 18 Nov 2026: Theorems 1.1-1.3,
+% Table 1 (Q+ = 1, 12, 54, 168, 418, 1038, 2233; Q- = 1, 16, 60, 178, 434, 1058, 2256 for p = 1..7),
+% and (2.2), the arithmetic rate taken from Li2Rational.
+@misc{TanZhang26,
+  author        = {Tan, Hu and Zhang, Ying},
+  title         = {Uniform cubic bounds for irrational values of the dilogarithm},
+  year          = {2026},
+  note          = {Preprint, 31 October 2026, \href{https://arxiv.org/abs/2611.01066}{arXiv:2611.01066}},
+  eprint        = {2611.01066},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+% new: repository page github.com/dtq1997/li2-half-irrationality read 18 Nov 2026 (README "Irrationality of
+% Li2(1/2)", theorem li2_one_half_irrational, Apache-2.0). Author name "Qian Tang" from the repository's
+% formalization.yaml and from reference [10] of Tan--Zhang; local copy work/ext/li2-half-irrationality.
+@misc{TangLi2,
+  author       = {Tang, Qian},
+  title        = {Irrationality of {${\rm Li}_2(1/2)$}},
+  year         = {2026},
+  howpublished = {Lean formalization, \url{https://github.com/dtq1997/li2-half-irrationality}}
+}
+
+% new: repository read at the source on 18 Nov 2026 at commit b2a61c46c157 (full hash
+% b2a61c46c157860b57faa163341fda725c629139), the commit pinned by Tan--Zhang ref. [11]. README states irrationality of
+% Li2(1/k), k >= 2, and Li2(-1/k), k >= 1; of Li2(+-2/k), Li2(+-3/k), Li2(+-4/k) beyond explicit thresholds
+% (2/k: k >= 13, -2/k: k >= 16; 3/k: 56, 62; 4/k: 183, 194); of Li2(+-p/q) for p >= 5 and q >= 0.1851 p^(84/17)
+% (shifted for the negative sign); a threshold table for p = 5..20, 25, 50, 100, 1000. No irrationality measure is
+% stated. Main theorem Li2RationalAcceptance.originalStatement (lean/RationalCheck.lean); Apache-2.0. Author name
+% from Tan--Zhang ref. [11]. Arithmetic rate (8/3)log q - (9/4)log(q - eps p) - 6 log p + 72/25 as quoted in
+% Tan--Zhang (2.2), local text line 157 (constant 72/25 confirmed from the PDF).
+@misc{LiuLi2Rational,
+  author       = {Liu, Si-Qi},
+  title        = {{Li2Rational}},
+  year         = {2026},
+  howpublished = {Lean formalization, \url{https://github.com/siqiliu-tsinghua/Li2Rational}, commit \texttt{b2a61c4}}
+}
+
+% copied from paper-trigamma/refs.bib (unchanged). Cited for Remark 2.8.2 / Section 15.2, as in Tang's
+% formalization.yaml and Prellberg, arXiv:2609.06895, lines 40-42 of the local text.
+@misc{CDT2024,
+  author        = {Calegari, Frank and Dimitrov, Vesselin and Tang, Yunqing},
+  title         = {The linear independence of {$1$}, {$\zeta(2)$}, and {$L(2,\chi_{-3})$}},
+  year          = {2024},
+  eprint        = {2408.15403},
+  note          = {\href{https://arxiv.org/abs/2408.15403}{arXiv:2408.15403}},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+% ---------------- context (copied) ----------------
+% Apery79: numdam.org/item/AST_1979__61__11_0 (Asterisque 61, 11-13).
+@article{Apery79,
+  author  = {Ap\'ery, Roger},
+  title   = {Irrationalit\'e de {$\zeta(2)$} et {$\zeta(3)$}},
+  journal = {Ast\'erisque},
+  volume  = {61},
+  year    = {1979},
+  pages   = {11--13}
+}
+
+@article{Beukers79,
+  author  = {Beukers, Frits},
+  title   = {A note on the irrationality of {$\zeta(2)$} and {$\zeta(3)$}},
+  journal = {Bull. London Math. Soc.},
+  volume  = {11},
+  number  = {3},
+  year    = {1979},
+  pages   = {268--272},
+  doi     = {10.1112/blms/11.3.268}
+}
+
+@article{RhinViola96,
+  author  = {Rhin, Georges and Viola, Carlo},
+  title   = {On a permutation group related to {$\zeta(2)$}},
+  journal = {Acta Arith.},
+  volume  = {77},
+  number  = {1},
+  year    = {1996},
+  pages   = {23--56}
+}
+
+% Zudilin14: checked at arxiv.org/abs/1310.1526 on 29 Oct 2026 (title, author, journal reference
+% Ann. Math. Quebec 38 (2014), 101-117; the abstract gives mu(zeta(2)) <= 5.095412) and at Crossref for
+% DOI 10.1007/s40316-014-0016-0.
+@article{Zudilin14,
+  author        = {Zudilin, Wadim},
+  title         = {Two hypergeometric tales and a new irrationality measure of {$\zeta(2)$}},
+  journal       = {Ann. Math. Qu\'ebec},
+  volume        = {38},
+  number        = {1},
+  year          = {2014},
+  pages         = {101--117},
+  doi           = {10.1007/s40316-014-0016-0},
+  eprint        = {1310.1526},
+  note          = {\href{https://arxiv.org/abs/1310.1526}{arXiv:1310.1526}},
+  archivePrefix = {arXiv}
+}
+
+% Giraudin26: checked at the arXiv abstract page on 29 Oct 2026; mu(zeta(2)) < 5.0193784.
+@misc{Giraudin26,
+  author        = {Giraudin, David Niedbala},
+  title         = {A new upper bound for the irrationality exponent of {$\zeta(2)$}},
+  year          = {2026},
+  note          = {Preprint, 2 October 2026, \href{https://arxiv.org/abs/2610.02912}{arXiv:2610.02912}},
+  eprint        = {2610.02912},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+@article{Zudilin,
+  author        = {Zudilin, Wadim},
+  title         = {A determinantal approach to irrationality},
+  journal       = {Constr. Approx.},
+  volume        = {45},
+  number        = {2},
+  year          = {2017},
+  pages         = {301--310},
+  doi           = {10.1007/s00365-016-9333-7},
+  eprint        = {1507.05697},
+  note          = {\href{https://arxiv.org/abs/1507.05697}{arXiv:1507.05697}},
+  archivePrefix = {arXiv}
+}
+
+@misc{OpenAI2026,
+  author       = {{OpenAI}},
+  title        = {Catalan's constant is irrational},
+  year         = {2026},
+  howpublished = {Preprint dated September 24, 2026, released October 6, 2026, with a Lean formalization, available at
+                  \href{https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/Catalans-constant-is-irrational-September-24-2026/paper.pdf}{the original paper PDF}
+                  and \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Catalan}{the Lean formalization}
+                  (repository commit \texttt{fd4aeeb}, October 7, 2026)}
+}
+
+@misc{OpenAIPi2026,
+  author       = {{OpenAI}},
+  title        = {The irrationality exponent of {$\pi$} is 2},
+  year         = {2026},
+  howpublished = {Preprint dated September 24, 2026, released October 6, 2026, with a Lean formalization,
+                  \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-irrationality-exponent-of-pi-is-2-September-24-2026}{paper}
+                  and \href{https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/PiExponent}{Lean formalization}
+                  (repository commit \texttt{fd4aeeb})}
+}
+
+% v3 (5 Nov 2026) read 6 Nov 2026: Theorem 1 unchanged. Abstract: mu(log r) = 2 for rational r > 0, r != 1.
+@misc{LiuJiangZhang26,
+  author        = {Liu, Jingwen and Jiang, Kai and Zhang, Pingwen},
+  title         = {Irrationality exponents of logarithms of positive rational numbers},
+  year          = {2026},
+  note          = {Preprint, 7 October 2026, revised 5 November 2026 (v3), \href{https://arxiv.org/abs/2610.10192}{arXiv:2610.10192}},
+  eprint        = {2610.10192},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+@misc{Fauzan2026,
+  author       = {Fauzan, Aabir},
+  title        = {{$\zeta(5)$} is irrational},
+  year         = {2026},
+  howpublished = {Preprint v1, September 17, 2026, Zenodo, \href{https://doi.org/10.5281/zenodo.22826419}{doi:10.5281/zenodo.22826419}}
+}
+
+@misc{Lai2026,
+  author        = {Lai, Li},
+  title         = {The linear independence of {$1$}, {$\zeta(3)$}, and {$\zeta(4)$}},
+  year          = {2026},
+  note          = {Preprint, 5 October 2026 (v2: 15 October 2026), \href{https://arxiv.org/abs/2610.06838}{arXiv:2610.06838}},
+  eprint        = {2610.06838},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.NT}
+}
+
+% GitHub API + README read 10 Nov 2026: Apache-2.0, head 7fe7367 (27 Sep 2026); owner name from GitHub profile.
+@misc{Firsching26,
+  author       = {Firsching, Moritz},
+  title        = {Zeta5},
+  year         = {2026},
+  howpublished = {Lean formalization, \url{https://github.com/mo271/Zeta5}, commit \texttt{7fe7367}}
+}
+
+% ---------------- companions (copied from paper-lai/refs.bib) ----------------
+% Litsey2026: Hexagon listing hexagon:2610.00187 read 10 Nov 2026; v7 of 15 Nov 2026 read 16 Nov 2026, abstract mu(G) <= 270.
+@misc{Litsey2026,
+  author       = {Litsey, Sean},
+  title        = {An irrationality measure for {C}atalan's constant},
+  year         = {2026},
+  howpublished = {Hexagon preprint hexagon:2610.00187, \url{https://hexagonmath.org/2610.00187}}
+}
+
+% Litsey2026b: Hexagon 2610.00401 v3 (15 Nov 2026) read 16 Nov 2026.
+@misc{Litsey2026b,
+  author       = {Litsey, Sean},
+  title        = {Irrationality measures from {L\"owner} determinants},
+  year         = {2026},
+  howpublished = {Hexagon preprint hexagon:2610.00401, \url{https://hexagonmath.org/2610.00401}}
+}
+
+% Litsey2026c: the zeta(5) companion, title as in paper-zeta5/zeta5-measure.tex. No preprint identifier yet.
+@misc{Litsey2026c,
+  author       = {Litsey, Sean},
+  title        = {An irrationality measure for {$\zeta(5)$}},
+  year         = {2026},
+  howpublished = {Manuscript}
+}
+
+% Litsey2026d: the Lai-determinant companion; title as in paper-lai/lai-measure.tex (17 Nov 2026).
+@misc{Litsey2026d,
+  author       = {Litsey, Sean},
+  title        = {Irrationality measures for {$a\zeta(3)+b\pi^4$} and {$\zeta(3)/\pi^4$}},
+  year         = {2026},
+  howpublished = {Manuscript}
+}
+
+% ---------------- method (copied) ----------------
+@article{Nesterenko85,
+  author  = {Nesterenko, Yu. V.},
+  title   = {On the linear independence of numbers},
+  journal = {Vestnik Moskov. Univ. Ser. I Mat. Mekh.},
+  number  = {1},
+  year    = {1985},
+  pages   = {46--49},
+  note    = {In Russian; English translation: Moscow Univ. Math. Bull. 40 (1985), no. 1, 69--74}
+}
+
+@article{BallRivoal01,
+  author  = {Ball, Keith and Rivoal, Tanguy},
+  title   = {Irrationalit\'e d'une infinit\'e de valeurs de la fonction z\^eta aux entiers impairs},
+  journal = {Invent. Math.},
+  volume  = {146},
+  number  = {1},
+  year    = {2001},
+  pages   = {193--207}
+}
+
+@misc{Forrester2018Andreief,
+  author        = {Forrester, Peter J.},
+  title         = {Meet {A}ndr\'eief, {B}ordeaux 1886, and {A}ndreev, {K}harkov 1882--83},
+  year          = {2018},
+  eprint        = {1806.10411},
+  note          = {\href{https://arxiv.org/abs/1806.10411}{arXiv:1806.10411}},
+  archivePrefix = {arXiv}
+}
+
+@book{SaffTotik,
+  author    = {Saff, Edward B. and Totik, Vilmos},
+  title     = {Logarithmic Potentials with External Fields},
+  series    = {Grundlehren der mathematischen Wissenschaften},
+  volume    = {316},
+  publisher = {Springer},
+  address   = {Berlin},
+  year      = {1997},
+  doi       = {10.1007/978-3-662-03329-6}
+}
+
+@book{Davenport,
+  author    = {Davenport, Harold},
+  title     = {Multiplicative Number Theory},
+  edition   = {Third},
+  note      = {Revised and with a preface by H.~L.~Montgomery},
+  series    = {Graduate Texts in Mathematics},
+  volume    = {74},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2000}
+}
+
+% ---------------- software and formalization (copied) ----------------
+@inproceedings{Mathlib,
+  author    = {{The mathlib Community}},
+  title     = {The {L}ean mathematical library},
+  booktitle = {Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020)},
+  year      = {2020},
+  pages     = {367--381},
+  doi       = {10.1145/3372885.3373824}
+}
+
+@inproceedings{Lean4,
+  author    = {de Moura, Leonardo and Ullrich, Sebastian},
+  title     = {The {L}ean 4 theorem prover and programming language},
+  booktitle = {Automated Deduction -- CADE 28},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {12699},
+  publisher = {Springer},
+  year      = {2021},
+  pages     = {625--635},
+  doi       = {10.1007/978-3-030-79876-5_37}
+}
+
+% Arb: IEEE Trans. Comput. 66 (2017), no. 8, 1281-1292 confirmed via Crossref (DOI 10.1109/TC.2017.2690633).
+@article{Arb,
+  author        = {Johansson, Fredrik},
+  title         = {Arb: efficient arbitrary-precision midpoint-radius interval arithmetic},
+  journal       = {IEEE Trans. Comput.},
+  volume        = {66},
+  number        = {8},
+  year          = {2017},
+  pages         = {1281--1292},
+  eprint        = {1611.02831},
+  note          = {\href{https://arxiv.org/abs/1611.02831}{arXiv:1611.02831}},
+  archivePrefix = {arXiv}
+}
+
+@misc{PNTPlus,
+  author       = {{The PrimeNumberTheoremAnd contributors}},
+  title        = {The {PNT+} project: a {L}ean formalization of the prime number theorem and related results},
+  howpublished = {\url{https://github.com/AlexKontorovich/PrimeNumberTheoremAnd}},
+  note         = {The vendored compatibility additions used here are recorded in the repository's \texttt{NOTICE} and \texttt{PORTING.md}}
+}

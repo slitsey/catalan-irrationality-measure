@@ -1,0 +1,1148 @@
+\documentclass[11pt]{amsart}
+\IfFileExists{lmodern.sty}%
+  {\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{microtype}}%
+  {\usepackage[expansion=false]{microtype}}
+\usepackage{amssymb,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\emergencystretch=2.5em
+\DeclareMathSizes{10}{10}{7}{6}
+\DeclareMathSizes{9}{9}{6}{6}
+\DeclareMathSizes{8}{8}{6}{6}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Irrationality measures for dilogarithms of rational numbers},pdfauthor={Sean Litsey}}
+
+% ---------------------------------------------------------------------------
+% Location of the Lean formalization.
+\newcommand{\FormalizationURL}{https://github.com/slitsey/catalan-irrationality-measure}
+\newcommand{\FormalizationLink}{\url{\FormalizationURL}}
+% ---------------------------------------------------------------------------
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathbb F}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Li}{\operatorname{Li}}
+\newcommand{\lean}[1]{\nolinkurl{#1}}
+\newcommand{\vG}{v_p^{\mathrm G}}
+\newcommand{\Dlow}{\underline{D}}
+\newcommand{\cont}{\operatorname{cont}}
+
+\begin{document}
+
+\title[Irrationality measures for $\Li_2(a/b)$]{Irrationality measures for dilogarithms of rational numbers}
+
+\author{Sean Litsey}
+\email{sean.litsey.math@gmail.com}
+
+\date{November 18, 2026}
+
+\subjclass[2020]{Primary 11J82; Secondary 11J72, 33B30, 15A15, 31A15, 68V20}
+
+\keywords{Irrationality exponent, dilogarithm, Hankel determinants, $p$-adic valuations, logarithmic energy,
+equilibrium measures, formal verification, Lean}
+
+\begin{abstract}
+Let $\mu$ denote the irrationality exponent. For coprime integers $a$ and $b$ with $0<2|a|\le b$ we prove an
+explicit upper bound for $\mu(\Li_2(a/b))$ whenever an explicit margin $\eta(a,b)$ is positive. The margin is the sum of
+a closed-form arithmetic rate in $\log b$, $\log|a|$ and $\log|b-a|$ and a piecewise affine decay rate in
+$\log(b/|a|)$. For example $\mu(\Li_2(1/2))\le234.57$, $\mu(\Li_2(1/3))\le21.57$, $\mu(\Li_2(1/4))\le15.19$,
+$\mu(\Li_2(1/5))\le12.92$, $\mu(\Li_2(-1/2))\le13.94$ and $\mu(\Li_2(-1/3))\le11.91$. As far as we know these
+are the first irrationality measures for these numbers. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
+from $783.29$ to $11.73$ at $b=6$ and from $11.94$ to $9.36$ at $b=20$. For $\Li_2(-1/b)$
+with $5\le b\le20$ they improve the bounds that follow from Rhin and Viola's linear independence measures. The approximations are Tang's normalized Hankel determinants. Liu and Tan and Zhang
+used them, with the same arithmetic rate, to prove irrationality of $\Li_2(\pm1/k)$ and of $\Li_2(p/q)$ in explicit
+ranges. A measure needs more. We prove that the determinants do not vanish at rational points for a band of primes
+of positive density, and we prove decay on an exponentially small neighbourhood of $\Li_2(a/b)$ by a dual
+certificate for a logarithmic energy problem with capped lattice charges. Concavity of the dual and a transport in
+$\log(b/|a|)$ make the decay bound uniform from finitely many certificates. The proof is formalized in Lean~4.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+%% =====================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The result}
+The \emph{irrationality exponent} $\mu(\xi)$ of a real number $\xi$ is the infimum of the real numbers $\mu$ such that
+$|\xi-p/q|>q^{-\mu}$ for all integers $p$ and all sufficiently large integers $q$. It does not change when $\xi$ is
+multiplied by a nonzero rational number or translated by a rational number. A finite bound for $\mu(\xi)$ is an
+irrationality measure for $\xi$, and it shows that $\xi$ is irrational. The dilogarithm is
+\[
+ \Li_2(x)=\sum_{k\ge1}\frac{x^k}{k^2}\qquad(|x|\le1).
+\]
+
+Let $a$ and $b$ be coprime integers with $b>0$ and $0<2|a|\le b$. Put
+\[
+ \lambda=\frac ab,\qquad t=\log\frac b{|a|},\qquad s=\operatorname{sign}a,
+\]
+and define the \emph{arithmetic rate}
+\begin{equation}\label{eq:crate}
+ c(a,b)=\frac72-\frac{523}{840}+\frac83\log b-6\log|a|-\frac94\log|b-a| .
+\end{equation}
+Let $M=98/39$. In Section~\ref{sec:uniform} we define, from a finite table of certified data, an explicit function
+$\Dlow_s(t,\rho)$ of the sign $s$, of $t\ge\log2$ and of $\rho>0$. It is the largest of finitely many numbers, each
+of which is affine in $t$ on an interval. The table has $37$ nodes and $419$ entries. A summary is in
+Appendix~\ref{app:table}, and the full table is part of the formal statement.
+
+\begin{theorem}\label{thm:main}
+Let $a,b$ be coprime integers with $b>0$ and $0<2|a|\le b$, and let $\rho>0$. Suppose that
+$\eta=\Dlow_s(t,\rho)+c(a,b)>0$. Then for every
+\[
+ \mu>\rho\cdot\max\Bigl(\frac2\eta,\frac1M\Bigr)
+\]
+there is an integer $q_0$ such that
+\[
+ \Bigl|\Li_2\Bigl(\frac ab\Bigr)-\frac pq\Bigr|>q^{-\mu}
+\]
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(\Li_2(a/b))\le\rho\max(2/\eta,1/M)$.
+\end{theorem}
+
+Theorem~\ref{thm:main} has been verified in the Lean~4 proof assistant, together with every theorem, proposition and
+lemma used in its proof. The formal proof has no unproved steps and uses only the standard axioms.
+Section~\ref{sec:lean} describes it. The remarks are not part of the formal proof. The use of AI in this work is
+disclosed at the end of the paper.
+
+The numbers in the following corollary are evaluations of the formula of Theorem~\ref{thm:main} at one admissible
+$\rho$. They are rounded up in the last digit.
+
+\begin{corollary}\label{cor:table}
+For the numbers $x$ in Table~\ref{tab:values} and $x=\Li_2(\pm2/39)$ the bound $\mu(x)\le\mu_0$ holds with the
+stated $\mu_0$, in the plain form of Theorem~\ref{thm:main}.
+\end{corollary}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}r|rrr|rrr@{}}
+\toprule
+ & \multicolumn{3}{c|}{$x=\Li_2(1/k)$} & \multicolumn{3}{c}{$x=\Li_2(-1/k)$}\\
+$k$ & $\mu_0$ & RV & Hata & $\mu_0$ & RV & Hata\\
+\midrule
+$2$ & $234.57$ & -- & -- & $13.94$ & -- & --\\
+$3$ & $21.57$ & -- & -- & $11.91$ & -- & --\\
+$4$ & $15.19$ & -- & -- & $10.99$ & -- & --\\
+$5$ & $12.92$ & -- & -- & $10.38$ & $62.69$ & $228.61$\\
+$6$ & $11.73$ & $783.29$ & -- & $10.02$ & $44.51$ & $55.94$\\
+$7$ & $11.03$ & $69.69$ & $95.06$ & $9.76$ & $33.76$ & $35.84$\\
+$8$ & $10.50$ & $47.43$ & $51.08$ & $9.58$ & $26.06$ & $27.39$\\
+$9$ & $10.15$ & $30.44$ & $33.13$ & $9.43$ & $21.88$ & $22.66$\\
+$10$ & $9.86$ & $24.04$ & $25.24$ & $9.31$ & $19.24$ & $19.75$\\
+$11$ & $9.67$ & $19.80$ & $21.19$ & $9.21$ & $17.42$ & $17.77$\\
+$12$ & $9.54$ & $17.60$ & $18.54$ & $9.12$ & $16.08$ & $16.33$\\
+$13$ & $9.41$ & $16.29$ & $16.65$ & $9.16$ & $15.05$ & $15.24$\\
+$14$ & $9.32$ & $15.13$ & $15.27$ & $9.14$ & $14.23$ & $14.42$\\
+$15$ & $9.32$ & $14.40$ & $14.48$ & $9.16$ & $13.58$ & $13.75$\\
+$16$ & $9.33$ & $13.71$ & $13.81$ & $9.17$ & $13.06$ & $13.20$\\
+$17$ & $9.34$ & $13.18$ & $13.24$ & $9.21$ & $12.61$ & --\\
+$18$ & $9.32$ & $12.71$ & $12.76$ & $9.23$ & $12.23$ & --\\
+$19$ & $9.34$ & $12.30$ & -- & $9.27$ & $11.90$ & --\\
+$20$ & $9.36$ & $11.94$ & -- & $9.30$ & $11.62$ & --\\
+\bottomrule
+\end{tabular}
+\caption{Bounds $\mu(x)\le\mu_0$ from Theorem~\ref{thm:main}, with the published bounds. For $\Li_2(1/k)$ the
+column RV is Rhin and Viola \cite[pp.~434--435]{RhinViola05}. For $\Li_2(-1/k)$ it is $\nu+1$, where $\nu$ is their
+linear independence measure of $1$, $\Li_1(-1/k)$, $\Li_2(-1/k)$ \cite[Table~1]{RhinViola19}. The columns Hata are
+\cite[Tables~1 and~2, p.~386]{Hata93dilog}. Published values are rounded to two decimals. Theorem~\ref{thm:main}
+also gives $\mu(\Li_2(2/39))\le23.11$ and $\mu(\Li_2(-2/39))\le22.31$.}\label{tab:values}
+\end{table}
+
+\begin{remark}[large denominators]\label{rem:large}
+For fixed $a$ the margin $\eta$ tends to infinity with $b$. Let $(\rho_k,D_k)$ be an entry of the lattice node
+$\frac1{403}$. For $b\ge403|a|$ the transport with slope $m=1$ from this entry is a candidate with
+$D=D_k+t-\log403$, and $c(a,b)=\frac5{12}\log b+O_a(1)$. So $\eta\ge\frac{17}{12}\log b+O_a(1)$, and
+Theorem~\ref{thm:main} gives a finite measure for every large $b$ coprime to $a$. For $a=\pm1$ a numerical evaluation
+of the margin for $2\le b\le403$ finds it positive, with minimum $0.1326\ldots$ at $b=2$. This remark is not part of
+the formal proof.
+\end{remark}
+
+\subsection{Background}\label{ssec:background}
+\emph{Classical results.} The values of polylogarithms at algebraic points are values of $G$-functions. Their
+arithmetic was studied by Siegel's method and by Pad\'e approximation, and we refer to the introduction of
+\cite{RhinViola05} for this history. Ap\'ery proved that $\zeta(2)=\Li_2(1)$ is irrational \cite{Apery79}, and Beukers
+gave his integral proof \cite{Beukers79}. Hata constructed rational approximations to $\Li_2(1/s)$ and proved its
+irrationality for every integer $s\ge7$ and $s\le-5$ \cite{Hata93dilog}. He also gave irrationality measures for
+$7\le s\le18$ and $-16\le s\le-5$, from $\mu(\Li_2(1/7))<95.07$ to $\mu(\Li_2(1/18))<12.76$ and from
+$\mu(\Li_2(-1/5))<228.62$ to $\mu(\Li_2(-1/16))<13.20$. Rhin and Viola extended their permutation group method from $\zeta(2)$
+\cite{RhinViola96} to double integrals for the dilogarithm \cite{RhinViola05}. They proved that $\Li_2(1/6)$ is
+irrational with $\mu(\Li_2(1/6))<783.29036$, and they improved Hata's measures for $7\le s\le18$. Their table gives
+$\mu(\Li_2(1/s))<11.94109$ at $s=20$, and their general theorem gives $\mu(\Li_2(1/s))<16.14$ for all $s\ge15$. They
+also proved that $\Li_2(r/s)$ is irrational for every $r\ge1$ and every $s$ larger than an explicit $s_1(r)$, for
+instance for $r=2$ and $s\ge51$. Later they proved the linear independence of $1$, $\Li_1(r/s)$ and $\Li_2(r/s)$ for
+positive and negative arguments \cite{RhinViola19}. For $-20\le s\le-5$ they gave linear independence measures $\nu$
+of $1$, $\Li_1(1/s)$ and $\Li_2(1/s)$. Taking the coefficient of $\Li_1$ to be zero gives
+$\mu(\Li_2(1/s))\le\nu+1$, for instance $62.69$ at $s=-5$ and $11.62$ at $s=-20$. These bounds are below Hata's for
+every $-16\le s\le-5$. For $\zeta(2)$ itself the best measure is now Giraudin's $5.0193784$
+\cite{Giraudin26}, after Zudilin's $5.095412$ \cite{Zudilin14}.
+
+\emph{Small arguments.} The arguments $\pm1/2$, $\pm1/3$, $\pm1/4$ and $1/5$ are out of reach of the
+classical forms. Calegari, Dimitrov and Tang recorded the irrationality of $\Li_2(1/2)$ among the open cases
+\cite[Remark~2.8.2 and \S15.2]{CDT2024}. Prellberg proved that $\Li_2(-1/4)$, $\Li_2(1/5)$ and $\Li_2(-1/3)$ are
+irrational by refinements of the constructions of Rhin and Viola and of Viola and Zudilin \cite{Prellberg26}. Qian Tang
+adapted Fauzan's Hankel determinants for $\zeta(5)$ \cite{Fauzan2026} to the dilogarithm. His Lean formalization proves
+that $\Li_2(1/2)$ is irrational \cite{TangLi2}. Ruiyi Zhang gave an independent proof \cite{ZhangLi2Half}. His
+approximations are determinants of moments of $1/(xy-2)$. He bounds them by a logarithmic energy on an ellipse,
+certified in interval arithmetic, and proves nonvanishing by a Lucas congruence modulo $83$.
+
+\emph{The most recent work.} Si-Qi Liu extended Tang's method in a Lean formalization \cite{LiuLi2Rational}. He
+proves that $\Li_2(1/k)$ is irrational for every $k\ge2$ and $\Li_2(-1/k)$ for every $k\ge1$. He also proves
+irrationality of $\Li_2(\pm p/q)$ for $p\le4$ beyond explicit denominators, and for every $p\ge5$ when
+$q\ge0.1851\,p^{84/17}$. Tan and Zhang proved that $\Li_2(p/q)$ is irrational whenever $q>(4e^4/27)p^3$, by the
+Rhin--Viola integrals \cite{TanZhang26}. With Liu's construction and new comparison measures they lowered the
+thresholds for $p\le7$, for instance to $q\ge418$ for $p=5$. They quote the arithmetic rate of Liu's polynomials as
+$\frac83\log q-\frac94\log(q-\epsilon p)-6\log p+\frac{72}{25}$ for $\Li_2(\epsilon p/q)$ \cite[(2.2)]{TanZhang26}. This
+is the rate \eqref{eq:crate} with a larger constant. These results prove irrationality. Neither states an
+irrationality measure. Theorem~\ref{thm:main} uses the same polynomials and the same denominators, and it gives a
+measure. As far as we know, no irrationality measure for $\Li_2(1/k)$ with $2\le k\le5$, for
+$\Li_2(-1/k)$ with $2\le k\le4$, or for $\Li_2(\pm2/39)$ was published before. Table~\ref{tab:values} compares our bounds with the published ones. At every $k$ where
+a published bound exists, the best published bound is that of Rhin and Viola, and ours is smaller. For $\Li_2(1/k)$
+with $6\le k\le20$ the improvement runs from $783.29$ to $11.73$ at $k=6$ and from $11.94$ to $9.36$ at $k=20$. For
+$\Li_2(-1/k)$ with $5\le k\le20$ it runs from $62.69$ to $10.38$ at $k=5$ and from $11.62$ to $9.30$ at $k=20$.
+
+\emph{Recent results.} Since September 2026 several new results have appeared in this area, some obtained with AI
+systems. In October 2026 OpenAI proved that Catalan's constant is irrational \cite{OpenAI2026} and that $\mu(\pi)=2$
+\cite{OpenAIPi2026}, both with Lean formalizations. Liu, Jiang and Zhang proved $\mu(\log r)=2$ for rational $r>0$,
+$r\ne1$ \cite{LiuJiangZhang26}. Their method needs a number that is a period of a one-dimensional group, and we do
+not know how to apply it to $\Li_2(a/b)$. Fauzan proved that $\zeta(5)$ is irrational \cite{Fauzan2026}, and Lai
+combined Fauzan's determinants with simultaneous approximations to show that $1$, $\zeta(3)$ and $\zeta(4)$ are
+linearly independent \cite{Lai2026}.
+
+\emph{The method.} The measure method we use, a family of integer polynomials whose values near the constant are
+small and nonzero, is a one-variable form of the criteria of Nesterenko \cite{Nesterenko85} used by Ball and Rivoal
+\cite{BallRivoal01}. Determinants of growing size go back to Zudilin's determinantal approach \cite{Zudilin}. The
+arithmetic of the coefficients is handled prime by prime, as in the work of Hata \cite{Hata93dilog} and of Rhin and
+Viola \cite{RhinViola96,RhinViola05}. The size of the determinants is controlled by Andr\'eief's identity
+\cite{Forrester2018Andreief} and a logarithmic energy problem with an external field \cite{SaffTotik}.
+
+\subsection{The companion papers}
+This paper applies one method to a fifth family of constants. The method consists of Hankel or L\"owner
+determinants, denominators bounded prime by prime, decay proved through an energy problem, and a formal proof of every
+step. The first companion paper \cite{Litsey2026} refines OpenAI's determinant for Catalan's constant. The second
+\cite{Litsey2026b} uses L\"owner determinants of digamma combinations. The third \cite{Litsey2026c} proves a measure
+for $\zeta(5)$ with Fauzan's determinants, and the fourth \cite{Litsey2026d} proves measures on the plane spanned by
+$\zeta(3)$ and $\pi^4$ with Lai's determinants. The dual certificate of Section~\ref{sec:decay} extends the one of
+\cite{Litsey2026d}, and the comparison measures are of the arcsine type used in \cite{Litsey2026c}. We use the
+definitions of $\mu$, the measure criterion and the potential-theoretic language of these papers. The construction is
+Tang's, with his notation.
+
+\subsection{What a measure requires}\label{ssec:require}
+Tang's polynomials $Q_n$ have degree at most $2n$, and their values at $\xi=\Li_2(\lambda)$ are Hankel determinants of
+a positive functional. Let $p/q$ be a rational close to $\xi$. Three estimates are needed at sizes $n$ of order
+$\log q$.
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Denominators.} A rational factor $d_n$ with $d_n\tilde Q_n\in\Z[X]$ primitive and $\log d_n\le-(c+o(1))n^2$,
+ where $\tilde Q_n$ is Tang's normalization of $Q_n$.
+ The factor removes a large common divisor of the coefficients.
+\item \emph{Decay on a neighbourhood.} $|\tilde Q_n(x)|\le e^{-(D-o(1))n^2}$ for every real $x$ with
+ $|x-\xi|\le e^{-(\rho+o(1))n}$, not only at $x=\xi$.
+\item \emph{Nonvanishing.} $Q_n(p/q)\ne0$ for some $n$ in a range of length $O(\log q)$ above the size where (i) and
+ (ii) beat $q^{2n}$.
+\end{enumerate}
+Then $\mu(\xi)\le\rho\max(2/(D+c),\beta)$, where $\beta$ measures how sparse the sizes with nonvanishing are. Item
+(i) is known. It is the rate of Liu's construction \cite{LiuLi2Rational,TanZhang26}. The irrationality proofs of
+Tang and Liu need decay at the point $\xi$ only, and nonvanishing on the line $n=\ell-1$ through the primes $\ell$. That
+line has one prime per size, and it would give $\beta=1$. A measure needs the decay on a neighbourhood, for each
+$a/b$, and nonvanishing at sizes of positive density.
+
+\subsection{New ideas}
+We keep Tang's determinants and the known arithmetic rate. The proof rests on the following ideas.
+\begin{enumerate}[leftmargin=*]
+\item \emph{Nonvanishing on a band of primes.} For every prime $\ell$ with $n/13<\ell<4n/3$, outside a finite set
+ and three residues of $n$, one of $Q_n$ and $Q_{n+1}$ is nonzero at every rational whose denominator is not
+ divisible by $\ell^2$ (Theorem~\ref{thm:NV}). The proof reduces the Hankel matrix modulo $\ell$ in a basis adapted to the
+ residue classes of the poles. Its reduction is a product of finitely many Hankel determinants of local weights, the
+ type constants, times a binomial tail in the tied case. The type constants are rational functions of $\lambda$. We
+ prove that each is nonzero at every rational $\lambda$ with $0<|\lambda|\le\frac12$ by its leading terms at $0$, $1$
+ and $\infty$ and one reduction modulo a prime (Theorem~\ref{thm:types}).
+\item \emph{A measure criterion for a band of primes.} The primes of the band have total logarithmic mass
+ $2(\frac43-\frac1{13})n=Mn$ with multiplicity two. An averaging argument over $n$ removes the exceptional residues, and
+ the measure becomes $\rho\max(2/\eta,1/M)$ (Theorem~\ref{thm:criterion}). When $\eta\le2M$, nonvanishing costs nothing.
+\item \emph{Decay on a neighbourhood by a capped dual.} We write the Hankel determinant at $\xi+\varepsilon$ by Heine's
+ formula as a sum over configurations of $2n$ charges. The charges sit on the positive integers, at most two per site,
+ or on a contour, and the perturbation adds charges at the poles $-j$, at most one per site. A positive measure
+ $\sigma$ of mass $2$ and a level $\theta$ give an explicit upper bound for the rate, in which the caps enter as the
+ penalties $2\int(V-2U^\sigma-\theta)_+$ and $\int(A_\rho-\theta)_+$ (Theorem~\ref{thm:LD}). For $\lambda>0$ we use the
+ lattice alone. For $\lambda<0$ a bent contour through $0$ captures a cancellation that the lattice does not see.
+\item \emph{Uniformity in the argument.} The dual value depends on $\lambda$ only through $t=\log(1/|\lambda|)$ and the
+ sign, and it is jointly concave in the datum, $t$ and $\rho$. Lowering the level by $m\Delta$ transports a datum from
+ $t$ to $t+\Delta$ at the cost $(4+m)\Delta$ in $\rho$, with gain $(2m-m^2)\Delta$. So $37$ certified data give a decay
+ bound for every $\lambda$ with $|\lambda|\le\frac12$, of either sign (Theorem~\ref{thm:U}).
+\item \emph{Rigorous certification of the decay bounds.} Each of the $419$ lower bounds for the dual value is proved by
+ finitely many inequalities in rational arithmetic. The potentials and energies of the comparison measures have closed
+ forms, and the penalty integrals are computed from the sign pattern of the field, proved on Taylor cells with explicit
+ remainders (Section~\ref{ssec:cert}).
+\end{enumerate}
+The denominator bound of Section~\ref{sec:content} is the rate of Liu's construction. We derive it from one valuation
+bound valid at every prime (Theorem~\ref{thm:K}) and Tang's estimates for the other primes. Our constant is
+$\frac72-\frac{523}{840}=\frac{2417}{840}$.
+
+\subsection{Organization}
+Section~\ref{sec:construction} recalls Tang's construction. Section~\ref{sec:criterion} proves the measure criterion.
+Section~\ref{sec:content} bounds the denominators, Section~\ref{sec:nv} proves the nonvanishing, Section~\ref{sec:decay}
+proves the decay for one datum, and Section~\ref{sec:uniform} makes it uniform in $t$. Section~\ref{sec:proof} proves
+Theorem~\ref{thm:main} and Corollary~\ref{cor:table}. Section~\ref{sec:lean} describes the formalization. The disclosure of AI
+use follows it.
+
+\subsection{Notation}
+We write $v_p$ for the $p$-adic valuation and $\vG$ for the Gauss valuation of a polynomial, the minimum of the
+valuations of its coefficients. We write $y_+=\max(y,0)$. Throughout, $\lambda=a/b$ is as in Theorem~\ref{thm:main},
+$\xi=\Li_2(\lambda)$, $t=\log(1/|\lambda|)$ and $s=\operatorname{sign}\lambda$. For a positive measure $\sigma$ on $\C$
+with compact support, $U^\sigma(z)=\int\log(1/|z-y|)\,d\sigma(y)$ is its logarithmic potential and
+$I(\sigma)=\int U^\sigma d\sigma$ its energy.
+
+%% =====================================================================
+\section{Tang's construction}\label{sec:construction}
+
+We recall the construction of \cite{TangLi2}, for a rational $\lambda$ with $0<|\lambda|<1$. Put
+$D_m(x)=\prod_{i=1}^m(x+i)$ and
+\[
+ \tau_j=\sum_{c=1}^j\frac{\lambda^c}{c^2},\qquad \Li_{-k}(\lambda)=\sum_{x\ge1}x^k\lambda^x\in\Q .
+\]
+The second sum is a rational function of $\lambda$. For a variable $X$ define a $\Q$-linear functional $\Lambda_X$ on
+the rational functions whose poles are simple and lie at negative integers by
+\begin{equation}\label{eq:functional}
+ \Lambda_X(x^k)=(k+1)\Li_{-k}(\lambda)\ \ (k\ge0),\qquad \Lambda_X\Bigl(\frac1{x+j}\Bigr)=j\lambda^{-j}(X-\tau_j)\ \ (j\ge1),
+\end{equation}
+extended by polynomial division and partial fractions. Its values are affine in $X$. At $X=\xi$ it has the closed
+form
+\begin{equation}\label{eq:sumform}
+ \Lambda_\xi(R)=\sum_{x\ge1}\lambda^x\,(xR(x))' ,
+\end{equation}
+since $(x\cdot x^k)'=(k+1)x^k$ and $\sum_{x\ge1}\lambda^x j(x+j)^{-2}=j\lambda^{-j}(\xi-\tau_j)$. Let
+\[
+ W_n(x)=\frac{D_n(x)^3}{D_{4n}(x)},\qquad Q_n(X)=\det\bigl[\Lambda_X(W_n(x)\,x^{i+j})\bigr]_{0\le i,j<2n}.
+\]
+The entries are affine in $X$, so $\deg Q_n\le2n$. The function $W_n$ has simple poles at $-j$ for $n<j\le4n$, with
+residues
+\begin{equation}\label{eq:residue}
+ r_j=\operatorname{Res}_{x=-j}W_n,\qquad |r_j|=\frac{((j-1)!)^2}{((j-n-1)!)^3(4n-j)!}.
+\end{equation}
+With $S_n=(4n)!/(n!)^3$ and $F_n=\prod_{i<2n}(i!)^2$ Tang normalizes
+\[
+ \tilde Q_n=\frac{S_n^{2n}}{F_n}Q_n\in\Q[X],
+\]
+and he writes $\tilde Q_n=\cont(\tilde Q_n)\,P_n$ with $P_n\in\Z[X]$ primitive and $\cont(\tilde Q_n)$ a positive
+rational, its content. We put $\tilde d_n=1/\cont(\tilde Q_n)$. Then $P_n=\tilde d_n\tilde Q_n$, and for every rational
+$p/q$ the number $q^{2n}P_n(p/q)$ is an integer.
+
+\begin{lemma}[Heine's formula]\label{lem:heine}
+For a linear functional $\Phi$ on polynomials,
+\[
+ \det[\Phi(x^{i+j})]_{0\le i,j<N}=\frac1{N!}\,\Phi^{\otimes N}\Bigl(\prod_{1\le k<l\le N}(x_k-x_l)^2\Bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Expand the square of the Vandermonde determinant $\det[x_k^i]$ and apply $\Phi$ in each variable.
+\end{proof}
+
+By \eqref{eq:sumform} the value $Q_n(\xi)$ is the Hankel determinant of the functional
+$T\mapsto\sum_{x\ge1}\lambda^x(xW_nT)'(x)$. Andr\'eief's identity \cite{Forrester2018Andreief} is the same
+statement for a functional given by a measure.
+
+%% =====================================================================
+\section{The measure criterion}\label{sec:criterion}
+
+The criterion turns decay on a neighbourhood and nonvanishing on a band of primes into a measure. It is the form of
+the criterion of the companion papers \cite{Litsey2026d} in which the sizes with nonvanishing are selected by primes of
+positive density.
+
+\begin{definition}\label{def:band}
+Let $(P_n)_{n\ge1}$ be polynomials with rational coefficients and $0<\alpha<\beta$. A \emph{band nonvanishing datum} for
+$(P_n)$ on $(\alpha,\beta)$ consists of a finite set $B$ of primes, sets $R_\ell$ of at most three residues modulo
+$\ell$, and an integer $n_0$, with the following property. Let $\ell\notin B$ be a prime and $n\ge n_0$ with
+$\alpha(n+1)<\ell<\beta n$ and $n\bmod\ell\notin R_\ell$. Then for all integers $p$ and $q>0$ with $\ell^2\nmid q$,
+\[
+ P_n(p/q)\ne0\quad\text{or}\quad P_{n+1}(p/q)\ne0 .
+\]
+\end{definition}
+
+\begin{theorem}[measure criterion]\label{thm:criterion}
+Let $\xi$ be real, $\kappa>0$, $\rho>0$, $\eta>0$ and $0<\alpha<\beta$. Let $P_n\in\Z[X]$ with $\deg P_n\le\kappa n$.
+Suppose that for every $\varepsilon>0$ and all large $n$
+\[
+ |P_n(\xi+u)|\le e^{-(\eta-\varepsilon)n^2}\qquad\text{whenever } |u|\le e^{-(\rho+\varepsilon)n},
+\]
+and that $(P_n)$ has a band nonvanishing datum on $(\alpha,\beta)$. Put $M=2(\beta-\alpha)$. Then for every
+$\mu>\rho\max(\kappa/\eta,1/M)$ there is $q_0$ with $|\xi-p/q|>q^{-\mu}$ for all integers $p$ and all $q\ge q_0$.
+\end{theorem}
+
+The proof uses three lemmas. The first is the contrapositive of Definition~\ref{def:band}.
+
+\begin{lemma}\label{lem:pairdiv}
+Let $S$ be a finite set of primes $\ell\notin B$ with $\alpha(n+1)<\ell<\beta n$, $n\ge n_0$ and $n\bmod\ell\notin R_\ell$.
+If $P_n(p/q)=P_{n+1}(p/q)=0$ with $q>0$, then $\prod_{\ell\in S}\ell^2$ divides $q$.
+\end{lemma}
+
+\begin{lemma}[averaging]\label{lem:average}
+For integers $N,H\ge1$ there is $n\in[N,N+H)$ with
+\[
+ \sum_{\substack{\ell\le2N+2H\\ n\bmod\ell\in R_\ell}}\log\ell\le3\log(2N+2H)\bigl(1+\log(2N+2H)\bigr)+\frac{6(N+H)\log4}H .
+\]
+\end{lemma}
+
+\begin{proof}
+For a prime $\ell$ the number of $n\in[N,N+H)$ with $n\bmod\ell\in R_\ell$ is at most $3(H/\ell+1)$. Summing
+$\log\ell$ over these pairs gives at most $3H\sum_{\ell\le x}(\log\ell)/\ell+3\sum_{\ell\le x}\log\ell$ with
+$x=2N+2H$. The first sum is at most $\log x\,(1+\log x)$ by the harmonic bound, and the second is at most $x\log4$ by
+Chebyshev's bound. Some $n$ is at or below the average.
+\end{proof}
+
+\begin{lemma}[band mass]\label{lem:mass}
+For every $\varepsilon>0$ and all large $N$ there are $n\in[N,(1+\varepsilon)N]$ and a set $S$ as in
+Lemma~\ref{lem:pairdiv} with $\sum_{\ell\in S}2\log\ell\ge(M-\varepsilon)n$.
+\end{lemma}
+
+\begin{proof}
+By the prime number theorem, $\sum_{\alpha(n+1)<\ell<\beta n}\log\ell\ge(\beta-\alpha-\varepsilon/4)n$ for large $n$
+\cite{Davenport}. Removing the finite set $B$ costs $O(1)$. Lemma~\ref{lem:average} with $H=\lceil\varepsilon N\rceil$
+gives an $n$ for which the primes with $n\bmod\ell\in R_\ell$ have mass $O(\log^2N)+O(1/\varepsilon)=o(N)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:criterion}]
+Put $A=\max(\kappa/\eta,1/M)$ and fix $\mu>\rho A$. Choose $\delta,\varepsilon>0$ with $(M-\varepsilon)(1+\delta)A>1$,
+$(\eta-2\varepsilon)(1+\delta)>\eta$ and $(\rho+\varepsilon)(1+\varepsilon)(1+\delta)A+\varepsilon<\mu$. Let $q$ be large,
+$L=\log q$ and $N=\lceil(1+\delta)AL\rceil$. Take $n$ and $S$ from Lemma~\ref{lem:mass}, and suppose
+$|\xi-p/q|\le q^{-\mu}$.
+
+If $P_n(p/q)=P_{n+1}(p/q)=0$, then Lemma~\ref{lem:pairdiv} gives $L\ge\sum_S2\log\ell\ge(M-\varepsilon)n\ge
+(M-\varepsilon)(1+\delta)AL>L$. So $P_{n'}(p/q)\ne0$ for some $n'\in\{n,n+1\}$. Then $q^{\deg P_{n'}}P_{n'}(p/q)$ is a
+nonzero integer, and $|P_{n'}(p/q)|\ge q^{-\kappa n'}$. On the other hand $\mu L\ge(\rho+\varepsilon)n'$ by the choice
+of $N$, so $|p/q-\xi|\le e^{-(\rho+\varepsilon)n'}$, and $|P_{n'}(p/q)|\le e^{-(\eta-\varepsilon)n'^2}$. Hence
+$(\eta-2\varepsilon)n'\le\kappa L$ for large $q$. But $n'\ge(1+\delta)(\kappa/\eta)L$, so
+$(\eta-2\varepsilon)(1+\delta)\le\eta$. This contradicts the choice of $\varepsilon$.
+\end{proof}
+
+The criterion concludes for all integers $p$, without coprimality, since Lemma~\ref{lem:pairdiv} and the integrality
+of $q^{\deg P}P(p/q)$ hold for every fraction.
+
+%% =====================================================================
+\section{Denominators}\label{sec:content}
+
+In this section we bound the content of $\tilde Q_n$. We have $v_p(\cont\tilde Q_n)=\vG(\tilde Q_n)$ and
+\[
+ \log\tilde d_n=-\sum_pv_p(\cont\tilde Q_n)\log p .
+\]
+So a lower bound for the Gauss valuation at each prime is what is needed.
+
+\subsection{The local bound}
+Fix a prime $p$ and put $\alpha_p=v_p(a)$, $e_p=v_p(b)$ and $f_p=v_p(b-a)$. Since $a$ and $b$ are coprime, at most one
+of them is positive. Put $L_p(n)=\lfloor\log_p(7n-2)\rfloor$ and
+\[
+ A_2(n)=\sum_{k<2n-1}\Bigl(n+1+\Bigl\lfloor\frac k3\Bigr\rfloor\Bigr),\qquad S(n)=\sum_{i<2n}(2i-n+1)_+ .
+\]
+
+\begin{theorem}[local bound]\label{thm:K}
+For every prime $p$ and every $n\ge1$,
+\[
+ \vG(\tilde Q_n)\ge e_pA_2(n)-\alpha_p(6n^2+n)-f_pS(n)-4nL_p(n).
+\]
+\end{theorem}
+
+At a prime that divides none of $a$, $b$ and $b-a$ this is Tang's bound
+$\vG(\tilde Q_n)\ge-4nL_p(n)$ \cite{TangLi2}. We describe the three other cases. Tang writes the Hankel matrix as a Gram
+matrix in the binomial basis. Its entries are
+\begin{equation}\label{eq:entry}
+ E_{ij}=U_{ij}+\sum_{j'=1}^{4n}\rho_{j'}\binom{-j'}i\binom{-j'}j\,j'\lambda^{-j'}(X-\tau_{j'})\qquad(0\le i,j<2n),
+\end{equation}
+where $U_{ij}$ is the value of $\Lambda$ on the polynomial part of $S_nD_n^3\binom xi\binom xj/D_{4n}$, and $\rho_{j'}$
+is the residue of $S_nD_n^3/D_{4n}$ at $-j'$. The residues $\rho_{j'}$ are $p$-integral, and they vanish for
+$j'\le n$. The polynomial part enters only through the moments $\Li_{-k}(\lambda)$. In the binomial basis these are
+$G(k)=r^k/(1-\lambda)$ for $k\ge1$ and $G(0)=r$, with $r=\lambda/(1-\lambda)=a/(b-a)$. So the three kinds of prime affect
+three different parts of \eqref{eq:entry}.
+
+\begin{lemma}\label{lem:V}
+Let $f\ge0$ and $v_p(r)\ge-f$.
+\begin{enumerate}[label=(\alph*)]
+\item $v_p(G(k))\ge-(k+1)f$ for every $k\ge0$.
+\item If $g$ is a polynomial of degree at most $d$ with $v_p(g(i))\ge\gamma$ for $0\le i\le d$, then the value of
+ $\Lambda$ on $g$ has valuation at least $\gamma-\lfloor\log_pd\rfloor-(d+1)f$.
+\item For $0\le i,j<2n$, $v_p(U_{ij})\ge-2L_p(n)-f\,(i+j-n+1)_+$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) The recurrence $G(k+1)=r(G(k)+\binom1{k+1})$ and induction. (b) Expand $g$ in the Newton basis of binomial
+polynomials. The Newton coefficients have valuation at least $\gamma$, the moments lose $(d+1)f$ by (a), and the
+derivative in \eqref{eq:functional} loses $\lfloor\log_pd\rfloor$. (c) If $i+j<n$, the numerator has degree below $4n$
+and the polynomial part is $0$. Otherwise the polynomial part has degree at most $i+j-n$ and integral values up to
+$\lfloor\log_p(3n+i+j)\rfloor\le L_p(n)$, and (b) applies.
+\end{proof}
+
+For $f=0$ these are Tang's lemmas, and the parameter $f$ is the only change.
+
+\begin{proof}[Proof of Theorem~\ref{thm:K}]
+\emph{The case $p\mid b-a$.} Then $\lambda$ and $\lambda^{-1}$ are $p$-units, and the residue part of $E_{ij}$ has Gauss
+valuation at least $-2L_p(n)$ by Tang's bound for $\tau_{j'}$. With Lemma~\ref{lem:V}(c),
+$\vG(E_{ij})\ge-2L_p(n)-f_p\varphi(i+j)$ with $\varphi(m)=(m-n+1)_+$. Since $\varphi$ is convex,
+$\varphi(i+j)\le\frac12(\varphi(2i)+\varphi(2j))$. So $\vG(E_{ij})\ge w_i+w_j$ with $w_i=-L_p(n)-\frac{f_p}2\varphi(2i)$,
+and the determinant has Gauss valuation at least $2\sum_iw_i=-4nL_p(n)-f_pS(n)$.
+
+\emph{The case $p\mid b$.} Then $r$ is a $p$-unit and $v_p(\lambda^{-1})=e_p\ge1$. This is Tang's argument for $p=2$ at
+$\lambda=\frac12$, with $e_p$ in place of $1$ \cite{TangLi2}. The Hankel matrix factors as a product of a matrix of
+values at the poles and a matrix of binomial coefficients. Tang attaches a weight to each of the $2n$ slots of the
+factorization, ranks the slots by their weights, and applies the Cauchy--Binet expansion. The weights of the pole slots
+are $e_p\min(n+1+\lfloor(i-1)/3\rfloor,4n+1)-2L_p(n)$, and their sum over the $2n$ ranks is $e_pA_2(n)-4nL_p(n)$.
+
+\emph{The case $p\mid a$.} Then $r$ and $\lambda$ have nonnegative valuation, and $v_p(\lambda^{-j'})=-\alpha_pj'$. By
+\eqref{eq:entry} the matrix $[E_{ij}]$ is the product $WC$ of a $2n\times6n$ matrix $W$ and a $6n\times2n$ matrix $C$.
+The first $2n$ columns of $W$ are the polynomial parts $U_{i\cdot}$, and the others are
+$\rho_{j'}\binom{-j'}ij'\lambda^{-j'}(X-\tau_{j'})$ for $1\le j'\le4n$. The rows of $C$ are the unit vectors and the
+integers $\binom{-j'}j$. The slots have weights $-2L_p(n)$ and $-2L_p(n)-\alpha_pj'$. Rank the slot $j'$ as $4n-j'$ and
+the polynomial slots above them. By the Cauchy--Binet expansion each minor of $W$ uses $2n$ distinct slots, so its
+weight is at least $\sum_{t<2n}(-2L_p(n)-\alpha_p(4n-t))=-4nL_p(n)-\alpha_p(6n^2+n)$.
+\end{proof}
+
+\subsection{The rate}
+The other primes are handled by Tang's estimates \cite{TangLi2}, which hold for every rational $\lambda$ with
+$|\lambda|<1$ at the primes that divide none of $a$, $b$ and $b-a$. We state them as we use them.
+
+\begin{proposition}[Tang]\label{prop:tang}
+Let $\varepsilon>0$ and $\delta=1/(N+1)$ with $4/(N+1)<\varepsilon/2$. For large $n$, with the sums over primes $p$ not
+dividing $ab(b-a)$:
+\begin{enumerate}[label=(\alph*)]
+\item (small primes) $\sum_{4<p\le\delta n}v_p(\cont\tilde Q_n)\log p\ge(-4\delta-\varepsilon/8)n^2$;
+\item (medium primes) $\sum_{\delta n<p\le n}v_p(\cont\tilde Q_n)\log p\ge(-\frac{523}{840}+\frac23\delta^2-\varepsilon/8)n^2$;
+\item (outer primes) $\sum_{n<p\le4n}v_p(\cont\tilde Q_n)\log p\ge(\frac72-\varepsilon/8)n^2$;
+\item (large primes) $v_p(\cont\tilde Q_n)\ge0$ for $p>4n$.
+\end{enumerate}
+\end{proposition}
+
+Part (a) is the local bound summed with Chebyshev's estimate. In part (b) Tang bounds $v_p$ by a profile
+$n\,\phi(p/n)$, where $\phi(x)$ is an explicit function of $\lfloor1/x\rfloor$, $\lfloor2/x\rfloor$ and $\lfloor4/x\rfloor$.
+The weighted prime number theorem turns the sum into $n^2\int_\delta^1\phi$. On each interval where the floors are
+constant the integral is a rational function of the floor values, and the sum of these is bounded below by
+$-523/840$. Part (c) counts the multiples of $p$ among the factors of $S_n^{2n}/F_n$ and the poles. Part (d) holds
+because every factor is then $p$-integral.
+
+\begin{theorem}[arithmetic rate]\label{thm:content}
+For every $\varepsilon>0$ there is $n_1$ such that $\log\tilde d_n\le-(c(a,b)-\varepsilon)n^2$ for $n\ge n_1$ with
+$\tilde Q_n\ne0$.
+\end{theorem}
+
+\begin{proof}
+Split the primes $p\le4n$ into the set $\mathcal S$ of primes dividing $ab(b-a)$, the primes $p\le4$, and the three
+ranges of Proposition~\ref{prop:tang}. For $n$ large the last two ranges miss $\mathcal S$. By
+Theorem~\ref{thm:K}, $A_2(n)\ge\frac83n^2-O(n)$, $S(n)\le\frac94n^2$ and $L_p(n)=O(\log n)$. So
+\[
+ \sum_{p\in\mathcal S}v_p(\cont\tilde Q_n)\log p\ge\Bigl(\frac83\log b-6\log|a|-\frac94\log|b-a|-\frac\varepsilon8\Bigr)n^2 .
+\]
+The primes $p\le4$ outside $\mathcal S$ cost $O(n\log n)$. Adding Proposition~\ref{prop:tang} and letting $\delta\to0$
+with $\varepsilon$ gives the claim.
+\end{proof}
+
+\begin{remark}
+The rate of Theorem~\ref{thm:content} is the rate of Liu's construction, quoted by Tan and Zhang
+\cite[(2.2)]{TanZhang26}. The logarithmic terms are the same. Liu's constant is $\frac{72}{25}$, and ours is
+$\frac{2417}{840}=\frac{72}{25}-\frac{11}{4200}$. Our constant comes from Tang's estimate for the medium primes in
+Proposition~\ref{prop:tang}(b).
+\end{remark}
+
+%% =====================================================================
+\section{Nonvanishing}\label{sec:nv}
+
+\subsection{Statement}
+Let $\ell\ge13$ be a prime. Write $n=q\ell+r$ with $0\le r<\ell$, $k=\lfloor4r/\ell\rfloor$ and $r'=4r-k\ell$. We call
+$n$ \emph{tied} at $\ell$ if $r'<r$. We assume
+\begin{equation}\label{eq:range}
+ \ell(\ell-1)>4n,\qquad\text{and}\qquad \ell\le n\ \text{or}\ 3\ell<4n<4\ell .
+\end{equation}
+For integers $0\le\alpha'<\gamma'$ and $m\ge0$ define the \emph{local weights}
+\[
+ w_{\alpha',\gamma'}(u)=\frac{\prod_{m'<\alpha'}(u+m')^2}{\prod_{m'=\alpha'}^{\gamma'-1}(u+m')},\qquad
+ w^0_{\alpha',\gamma'}(u)=\frac{\prod_{m'=1}^{\alpha'}(u+m')^2}{\prod_{m'=\alpha'+1}^{\gamma'}(u+m')},
+\]
+and the \emph{type constants}
+\begin{gather*}
+ K_V(\alpha',\gamma';m)=\det\bigl[\mathcal V(u^{i+i'}w_{\alpha',\gamma'})\bigr]_{i,i'<m},\\
+ K_U(\alpha',\gamma';m)=\det\bigl[\mathcal V(u^{i+i'+1}w^0_{\alpha',\gamma'})\bigr]_{i,i'<m},
+\end{gather*}
+where $\mathcal V$ is the functional $f\mapsto\sum_{x\ge1}\lambda^xf'(x)$ with the coefficient of $\Li_2(\lambda)$ set to
+$0$. Concretely $\mathcal V(u^j)=j\Li_{1-j}(\lambda)$ and $\mathcal V(1/(u+m))=\lambda^{-m}\tau_m$. These are
+rational functions of $\lambda$. For $q\le12$ and $k\le3$ let $\mathcal K(q,k)$ be the finite list of constants
+attached to the residue types below, together with $K_V(q+1,4q+k;2q+k-1)$ and $K_U(q,4q+k;2q+k-1)$ when $k\ge1$.
+
+\begin{theorem}[nonvanishing]\label{thm:NV}
+Let $\ell$ and $n$ satisfy \eqref{eq:range} with $q\le12$, and let $\ell$ divide none of the numerators and
+denominators of $\lambda$ and $1-\lambda$. Suppose that every constant of $\mathcal K(q,k)$ is an $\ell$-adic unit and,
+if $n$ is tied, that the number $T'(n,\ell)$ defined in \eqref{eq:Tprime} is not divisible by $\ell$. Then
+$Q_n(x)\ne0$ for every $x\in\Q$ with $v_\ell(x)\ge-1$.
+\end{theorem}
+
+The tolerance $v_\ell(x)\ge-1$ allows a rational $p/q$ whose denominator is divisible by $\ell$ but not by $\ell^2$.
+
+\subsection{Residue classes}
+For $0\le\sigma<\ell$ let $a_\sigma$ be the number of $i\in[1,n]$ and $c_\sigma$ the number of $j\in[1,4n]$ with
+$i\equiv\sigma$, $j\equiv\sigma\pmod\ell$. Put $m_\sigma=c_\sigma-2a_\sigma$, $b_\sigma=c_\sigma-a_\sigma$ and
+$\nu_\sigma=3a_\sigma-c_\sigma-1+[\sigma=0]$. Then $\sum_\sigma m_\sigma=2n$. Under \eqref{eq:range} we have
+$c_\sigma\le\ell-1$ and $m_\sigma\ge0$, and the classes fall into five types.
+
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+type & classes & $(a_\sigma,c_\sigma)$ & $m_\sigma$\\
+\midrule
+A & $1\le\sigma\le\min(r,r')$ & $(q+1,4q+k+1)$ & $2q+k-1$\\
+B & $r<\sigma\le r'$ & $(q,4q+k+1)$ & $2q+k+1$\\
+C & $r'<\sigma\le r$ & $(q+1,4q+k)$ & $2q+k-2$\\
+D & $\sigma>\max(r,r')$ & $(q,4q+k)$ & $2q+k$\\
+zero & $\sigma=0$ & $(q,4q+k)$ & $2q+k$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The types B and C never occur together, and C occurs exactly when $n$ is tied. The type constant of a class of type A,
+B, C or D is $K_V(a_\sigma,c_\sigma;m_\sigma)$, and that of the zero class is $K_U(a_0,c_0;m_0)$.
+
+\subsection{Proof of Theorem~\ref{thm:NV}}
+We follow the reduction of the Hankel matrix modulo $\ell$ in a basis adapted to the classes.
+
+\emph{Step 1: the basis.} Put $\Pi_\sigma=\prod_{\sigma'\ne\sigma}(x+\sigma')^{m_{\sigma'}}$ and
+$e_{\sigma,i}=(x+\sigma)^i\Pi_\sigma$ for $i<m_\sigma$. These are $2n$ polynomials of degree below $2n$. Their
+coefficient matrix $T$ has determinant prime to $\ell$, by the Chinese remainder theorem, since the roots
+$-\sigma$ are distinct modulo $\ell$. The Gram matrix $G(x)=[\Lambda_x(W_ne_\alpha e_\beta)]$ satisfies
+$\det G(x)=(\det T)^2Q_n(x)$. So it suffices to show $\det G(x)\ne0$.
+
+\emph{Step 2: the $\ell$-adic functional.} Put $\lambda_\ell=\lambda^\ell$, so that $\lambda_\ell\equiv\lambda\pmod\ell$,
+and note that $\Li_{-k}(\lambda_\ell)$ is $\ell$-integral since $1-\lambda_\ell$ is a unit. For a power series
+$h=\sum H_jy^j$ in $y=\ell u$ with $\ell$-integral coefficients put $\mathcal S(h)=\sum_jH_j\ell^j\Li_{-j}(\lambda_\ell)$,
+a convergent $\ell$-adic sum. The identity $\lambda\sum_{i\le j}\binom ji\Li_{-i}(\lambda)=\Li_{-j}(\lambda)-\lambda$ gives
+the shift rule $\mathcal S(h(\cdot+1))=\lambda_\ell^{-1}(\mathcal S(h)-\lambda_\ell h(1))$. For $\ell\nmid c$ put
+$E(c)=\mathcal S((c+\ell u)^{-2})$. The shift rule gives $E(c+\ell)=\lambda_\ell^{-1}E(c)-(c+\ell)^{-2}$, and from this
+the sum
+\[
+ T(j)=\sum_{\substack{c\le j\\ \ell\nmid c}}\frac{\lambda^c}{c^2}+\sum_{\substack{0\le\sigma<\ell\\ \sigma\not\equiv j}}\lambda^{j-\sigma}E(j-\sigma)
+\]
+does not depend on $j$. Call its value $L$. It is $\ell$-integral.
+
+\emph{Step 3: decomposition by classes.} For a rational function $F$ with poles at negative integers and a class
+$\sigma$, expand $(xF)'$ at $x=-\sigma+\ell u$, and let $\mathcal W_\sigma(F;x)$ be $\lambda^{-\sigma}$ times the
+corresponding $\ell$-adic sum, with $\ell^2(x-L)$ in place of the value $\Li_2(\lambda_\ell)$. Then
+$\Lambda_x(F)=\sum_{\sigma<\ell}\mathcal W_\sigma(F;x)$. For $F=x^k$ this is the distribution relation
+$\Li_{-k}(\lambda)=\sum_\sigma\lambda^{-\sigma}\sum_i\binom ki(-\sigma)^{k-i}\ell^i\Li_{-i}(\lambda_\ell)$, an identity of
+rational functions. For $F=1/(x+j)$ it follows from the shift rule and the constancy of $T$. Since $v_\ell(L)\ge0$,
+$x-L$ has valuation at least $-1$ when $x$ does.
+
+\emph{Step 4: local expansion.} At $x=-\sigma+\ell u$ a factor $x+i$ with $i\equiv\sigma$ equals $\ell(u+m')$, and the
+other factors are $\ell$-adic units times $1+O(\ell u)$. So $W_n$ is $\ell^{3a_\sigma-c_\sigma}$ times a unit times
+$w_\sigma(u)$ times a power series. It follows that $\mathcal W_\sigma(W_ne_\alpha e_\beta;x)$ has valuation at least
+$\nu_\sigma+d_\sigma(\alpha)+d_\sigma(\beta)$, where $d_\sigma(\alpha)$ is the order of vanishing of $e_\alpha$ at $-\sigma$
+modulo $\ell$. The part proportional to $\ell^2(x-L)$ has one more power of $\ell$. This is where the tolerance enters.
+For two basis vectors of the same class $\sigma$ the leading term is a unit times
+$\mathcal V(u^{i+i'+[\sigma=0]}w_\sigma)$ reduced modulo $\ell$.
+
+\emph{Step 5: thresholds.} Put $\pi_{\sigma,i}=i+\nu_\sigma/2$ and $K_\sigma=m_\sigma+\nu_\sigma/2$. By the table,
+all $K_\sigma$ lie in an interval of length one. A comparison of
+$\nu_{\sigma''}+d_{\sigma''}(\alpha)+d_{\sigma''}(\beta)$ with $\pi_\alpha+\pi_\beta$ shows that the entries of the
+scaled matrix $Z_{\alpha\beta}=\ell^{-\pi_\alpha-\pi_\beta}G_{\alpha\beta}$, with half-integers split between rows and
+columns by the parity of $\nu_\sigma$, are $\ell$-integral. Modulo $\ell$ the cross-class entries vanish, except in
+the tied case, where the classes of type C couple to the top row of the zero class.
+
+\emph{Step 6: the reduction.} If $n$ is not tied, $Z\bmod\ell$ is block diagonal over the classes, and its
+determinant is a product of units times the type constants. If $n$ is tied, the group formed by the classes of type C
+and the zero class has a bordered block structure. Its Schur complement gives
+\begin{equation}\label{eq:Tprime}
+ T'(n,\ell)=c_1-c_2B(r,r'),\qquad B(r,r')=\sum_{i=r'+1}^r\binom ri\lambda^{-i}(1-\lambda^{-1})^{r-i},
+\end{equation}
+times a unit, where $c_1=K_U(q,4q+k;2q+k)K_V(q+1,4q+k;2q+k-2)$ and $c_2=K_U(q,4q+k;2q+k-1)K_V(q+1,4q+k;2q+k-1)$. The
+binomial tail comes from the units of Step~4, which Wilson's theorem evaluates modulo $\ell$, and from the polynomial
+identity
+\[
+ \sum_{i=r'+1}^r\binom riy^i(1-y)^{r-i}=\frac{r!}{r'!\,N!}\sum_{j=0}^N(-1)^j\binom Nj\frac{y^{r'+1+j}}{r'+1+j}\qquad(N=r-r'-1).
+\]
+In both cases $\det Z\not\equiv0\pmod\ell$, so $\det G(x)\ne0$.
+
+\subsection{The pair rule}
+When both $n$ and $n+1$ are tied, a second congruence comes from Pascal's rule. The residue $k$ is the same, and
+$r'(n+1)=r'(n)+4$. If $T'(n,\ell)\equiv T'(n+1,\ell)\equiv0$ and $\ell\nmid c_2$, then $\ell$ divides
+$R_y(r)$, where $y=\lambda^{-1}$ and
+\begin{multline*}
+ R_y(r)=4(1-y)^3y(4r+1)(4r+2)(4r+3)-4(1-y)^3y(r+1)(4r+2)(4r+3)\\
+ +12(1-y)^2y^2r(r+1)(4r+3)-12(1-y)y^3r(r+1)(3r+1)\\
+ +3y^4r(3r+1)(3r+2).
+\end{multline*}
+As a polynomial in $r$, $R_y=r(\rho_1(y)+\rho_2(y)r+\rho_3(y)r^2)$ with
+$\rho_3(y)=-3y(y-4)(27y^2-40y+16)$, and the gcd of $\rho_1,\rho_2,\rho_3$ in $\Z[y]$ is $3y$. So for every rational
+$y\ne0$ the polynomial $R_y$ is nonzero, and it has at most three roots modulo $\ell$ for all $\ell$ outside a finite
+set.
+
+\begin{corollary}\label{cor:band}
+Suppose that every type constant of $\mathcal K(q,k)$, $q\le12$, $k\le3$, is a nonzero rational at $\lambda$. Then the
+family $(P_n)$ has a band nonvanishing datum on $(\frac1{13},\frac43)$.
+\end{corollary}
+
+\begin{proof}
+Let $B$ be the primes below $13$, the primes dividing the numerators and denominators of $6\lambda(1-\lambda)$, of the
+constants of $\mathcal K(q,k)$, of $c_2$ and of a nonzero coefficient of $R_y$. Let $R_\ell$ be the roots of $R_y$
+modulo $\ell$. If $\frac{n+1}{13}<\ell<\frac43n$ and $n$ is large, then $n$ and $n+1$ satisfy \eqref{eq:range} with
+$q\le12$. If $n$ is not tied, or $T'(n,\ell)\not\equiv0$, Theorem~\ref{thm:NV} applies at $n$. Otherwise it applies at
+$n+1$, or both are exceptional and $n\bmod\ell\in R_\ell$. Since $P_n$ is a nonzero rational multiple of $Q_n$, the
+conclusion holds for $P_n$.
+\end{proof}
+
+\subsection{The type constants}
+It remains to show that the constants are nonzero. There are $318$ of them for $q\le12$. Each is a rational function
+of $\lambda$, and $K_V(1,4;2)=-(\lambda+12)(13\lambda-12)/(8\lambda^3(\lambda-1))$ shows that some vanish at rational
+points. Let $Z_0=\{-12,-4,-\frac45,\frac{12}{13}\}$.
+
+\begin{theorem}\label{thm:types}
+Every constant of $\mathcal K(q,k)$ with $q\le12$ and $k\le3$ is nonzero at every rational $\lambda\notin
+Z_0\cup\{0,1\}$. In particular it is nonzero for $0<|\lambda|\le\frac12$.
+\end{theorem}
+
+The proof rests on a principle for rational roots and on the leading terms of the constants at $0$, $1$ and $\infty$.
+
+\begin{lemma}\label{lem:R}
+Let $F\in\Z[z]$ be nonzero and $p$ prime. Let $v_0$ and $v_1$ be the orders of $F$ at $0$ and $1$. Suppose that $p$ does
+not divide the lowest coefficient of $F$ at $0$, the lowest Taylor coefficient of $F$ at $1$, or the leading
+coefficient of $F$, and that $F\bmod p$ has no root in $\F_p\setminus\{0,1\}$. Then $F(z)\ne0$ for every
+$z\in\Q\setminus\{0,1\}$.
+\end{lemma}
+
+\begin{proof}
+Let $z=a'/b'$ in lowest terms and $G=b'^{\deg F}F(a'/b')$. If $p\nmid a'b'(b'-a')$, then $G\not\equiv0$ by the root
+condition. If $p\mid a'$, then $G=a'^{v_0}(f_{v_0}b'^{\deg F-v_0}+a'(\dots))$ and the bracket is prime to $p$. The cases
+$p\mid b'-a'$ and $p\mid b'$ are the same with the Taylor expansion at $1$ and the leading coefficient.
+\end{proof}
+
+\begin{lemma}\label{lem:potentials}
+Let $M$ be an $m\times m$ matrix over the Laurent series in one variable $x$, and let $r_i,c_j$ be integers with
+$\operatorname{ord}M_{ij}\ge r_i+c_j$. Let $\Lambda_{ij}$ be the coefficient of $x^{r_i+c_j}$ in $M_{ij}$. Then
+$\det M=x^{\sum r_i+\sum c_j}(\det\Lambda+O(x))$.
+\end{lemma}
+
+\begin{proof}
+Multiply by $\operatorname{diag}(x^{-r_i})$ and $\operatorname{diag}(x^{-c_j})$ and reduce to the constant term.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:types}]
+Write the weight $w$ of a constant as a polynomial part plus $\sum_m\varrho_m/(u+m)$. Then
+\[
+ \mathcal V(g\,w)=\sum_m\varrho_mg(-m)\lambda^{-m}\tau_m+\sum_{k\ge1}k\,p_k\Li_{1-k}(\lambda),
+\]
+with $p_k$ the coefficients of the polynomial part of $gw$. At each of the points $\lambda=0$, $1$, $\infty$ we choose
+a basis in which the Hankel matrix has an explicit pattern of orders, and Lemma~\ref{lem:potentials} gives the leading
+coefficient.
+\begin{itemize}
+\item At $\lambda=0$ we use the Newton basis on the largest poles $m_1>m_2>\dots$. Since $\lambda^{-m}\tau_m$ has order
+ $1-m$ with leading coefficient $1$, the matrix of leading terms is triangular. The leading coefficient is
+ $\prod_k\varrho_{m_k}\prod_{k<l}(m_k-m_l)^2$.
+\item At $\lambda=1$ the pole part is regular with value $\sum_m\varrho_mg(-m)H^{(2)}_m$, where $H^{(2)}_m=\sum_{c\le m}c^{-2}$,
+ and $\Li_{-j}(\lambda)$ has a pole of order $j+1$ with leading coefficient $j!$. The matrix of leading terms is block
+ triangular. Its determinant is one Hankel determinant of size at most $8$ in the numbers
+ $\sum_m\varrho_m(-m)^iH^{(2)}_m$, times products of factorials. This uses
+ $\det[(i+j+\gamma)!]_{i,j<N}=\prod_{k<N}k!(k+\gamma)!$.
+\item At $\lambda=\infty$ we use $\Li_{-j}(1/w)=(-1)^{j+1}\Li_{-j}(w)$ and the Hermite--Newton basis on the $3$-jets of
+ the poles. The matrix of leading terms is block triangular with anti-triangular blocks, of determinant
+ $\varrho_m^3$ times squares of values of the basis, and one block of size at most $2$.
+\end{itemize}
+For each constant let $F\in\Z[\lambda]$ be the numerator obtained by clearing the denominators of the moments. The
+three leading coefficients of $F$ are the closed forms above, up to a power of a fixed integer. For each of $313$ of the
+$318$ constants we fix a prime $p$ and check in exact arithmetic that $p$ divides none of the three leading coefficients and
+that $F\bmod p$ has no root in $\F_p\setminus\{0,1\}$. Lemma~\ref{lem:R} then gives the claim. The other five constants have
+$q\le1$. For them $F$ has degree at most $10$, and an exact factorization shows that its rational roots lie
+in $Z_0\cup\{0,1\}$.
+\end{proof}
+
+%% =====================================================================
+\section{Decay}\label{sec:decay}
+
+\subsection{The field and the dual value}
+Put
+\[
+ \Phi_0(z)=3\int_0^1\log|z+y|\,dy-\int_0^4\log|z+y|\,dy .
+\]
+This is the limit of $n^{-1}\log|W_n(nz)|+\log n$. For $1\le x\le4$,
+$\Phi_0(-x)=2x\log x-3(x-1)\log(x-1)-(4-x)\log(4-x)+1$. Let $\kappa_s=2\pi$ for $s=+1$ and $\kappa_s=\pi$ for $s=-1$. Define
+on $\{\operatorname{Re}z\ge0\}$ and on $[1,4]$
+\[
+ V(z)=\Phi_0(z)-t\operatorname{Re}z-\kappa_s|\operatorname{Im}z|,\qquad \omega(x)=\Phi_0(-x)+tx .
+\]
+The first is the rate of the weights $\lambda^x$ and of the kernel of a contour. The second is the rate of the
+residues $r_jj\lambda^{-j}$ at $j=xn$, by \eqref{eq:residue} and Stirling's formula.
+
+We use two kinds of frame. The \emph{lattice frame} has no contour, and every integer $x\ge1$ is a site. A \emph{bent
+frame} is used for $\lambda<0$. It is a polyline $\Gamma$ in $\{\operatorname{Re}z\ge0\}$ from $-i\infty$ to $+i\infty$,
+symmetric under conjugation, that meets $\R$ only at $0$, has no horizontal edge through $0$, and ends in vertical
+rays. We use four bent frames $\Gamma_2,\Gamma_3,\Gamma_4,\Gamma_{15}$. Their upper vertices after $0$ are
+\begin{gather*}
+ \Gamma_2:\ \tfrac1{200}+\tfrac18i,\ \tfrac{89}{100}+\tfrac{457}{200}i;\qquad
+ \Gamma_3:\ \tfrac25+\tfrac{18}{25}i,\ \tfrac75+\tfrac{68}{25}i;\\
+ \Gamma_4:\ \tfrac6{25}+\tfrac3{10}i,\ \tfrac{167}{100}+\tfrac{263}{100}i;\qquad
+ \Gamma_{15}:\ \tfrac{13}{50}+\tfrac3{50}i,\ 2+2i ,
+\end{gather*}
+each followed by a vertical ray.
+
+A \emph{dual datum} is a pair $(\sigma,\theta)$ with $\theta\in\R$ and $\sigma$ a positive measure of mass $2$ and
+compact support whose potential is H\"older continuous. Finite sums of measures on segments with bounded density
+against the uniform or the arcsine law have this property. Put
+\[
+ W_\sigma=V-2U^\sigma,\qquad A_\rho(x)=\omega(x)-\rho-2U^\sigma(-x)\quad(1\le x\le4).
+\]
+The datum is \emph{admissible} if $W_\sigma\le\theta$ on $\Gamma$. For the lattice frame there is no condition. The
+\emph{dual value} is
+\begin{multline}\label{eq:dual}
+ D_\rho(\sigma,\theta)=-(12\log2+4)-I(\sigma)-2\theta\\
+ -2\int_0^\infty(W_\sigma(y)-\theta)_+\,dy-\int_1^4(A_\rho(x)-\theta)_+\,dx
+\end{multline}
+for the lattice frame, and the same without the lattice integral for a bent frame.
+
+\begin{theorem}[decay]\label{thm:LD}
+Let $(\sigma,\theta)$ be admissible for the lattice frame, or for a bent frame when $\lambda<0$. Then for every
+$\rho>0$
+\[
+ \limsup_{n\to\infty}\frac1{n^2}\log\sup_{|\varepsilon|\le e^{-\rho n}}|\tilde Q_n(\xi+\varepsilon)|\le-D_\rho(\sigma,\theta).
+\]
+\end{theorem}
+
+The dual value depends on $\lambda$ only through $t$ and $s$. For the lattice frame it does not depend on $s$.
+
+\subsection{Heine's formula with jets}
+By \eqref{eq:functional} and \eqref{eq:sumform},
+$\Lambda_{\xi+\varepsilon}(W_nT)=\Lambda_\xi(W_nT)+\varepsilon\sum_{j=n+1}^{4n}r_jj\lambda^{-j}T(-j)$. For the lattice frame
+$\Lambda_\xi(W_nT)=\sum_{x\ge1}(\alpha_xT(x)+\beta_xT'(x))$ with $\alpha_x=\lambda^x(xW_n)'(x)$ and
+$\beta_x=\lambda^xxW_n(x)$. So the functional is a sum of jets at the sites and point masses at the poles.
+
+\begin{lemma}\label{lem:cap}
+In Heine's formula for this functional, a configuration contributes only if every site carries at most two variables.
+A site with one variable contributes $(\alpha_x+\beta_x\partial)$ applied to the square of the Vandermonde product, and
+a site with two variables $u_k,u_l$ contributes $-2\beta_x^2$ times the product with the factor $(u_k-u_l)^2$ removed.
+\end{lemma}
+
+\begin{proof}
+At a site carrying $m$ variables the operator has order at most $m$. The square of the Vandermonde product vanishes
+to order $m(m-1)$ on the diagonal, which exceeds $m$ for $m\ge3$. For $m=2$ only $\beta_x^2\partial_k\partial_l$ survives,
+and $\partial_k\partial_l(u_k-u_l)^2=-2$.
+\end{proof}
+
+A derivative brings at most a factor $Cn$, since $|\alpha_x/\beta_x|\le5(1+\log n)$ and the other variables are at
+distance at least $\frac12$. So every term is bounded by $e^{O(n\log n)}$ times the product of the weights of its
+charges and the reduced Vandermonde product.
+
+\subsection{The contour}
+For a bent frame the sum over the sites is replaced by a contour integral.
+
+\begin{lemma}\label{lem:contour}
+Let $\lambda<0$, $L=\log|\lambda|$ and $T$ a polynomial. Let $\Gamma_n$ be $n\Gamma$ with its part in
+$|\operatorname{Im}z|\le1$ replaced by the segment $\{\frac12+iy:|y|\le1\}$ and two horizontal joins. Then
+\[
+ \sum_{x\ge1}\lambda^x(xW_nT)'(x)=\frac1{2\pi i}\int_{\Gamma_n}T(z)\,zW_n(z)|\lambda|^z\,\kappa(z)\,dz,
+\]
+where $\kappa=-k'-Lk$ and $k(z)=\pi/\sin\pi z$,
+with $\Gamma_n$ oriented downward, and $|\kappa(z)|\le Ce^{-\pi|\operatorname{Im}z|}$ on $\Gamma_n$.
+\end{lemma}
+
+\begin{proof}
+The kernel $k$ has residue $(-1)^x$ at $x$. The residue theorem on the region to the right of $\Gamma_n$ gives the sum
+with $(H'-LH)k$, $H(z)=zW_n(z)T(z)|\lambda|^z$, since the arcs at infinity contribute $0$. An integration by parts
+moves the derivative to the kernel. On the vertical segment $|\sin\pi z|\ge1$, on the joins $|\sin\pi z|\ge\sinh\pi$,
+and for $|\operatorname{Im}z|\ge1$ the bound follows from $|\sin\pi z|\ge\frac12e^{\pi|\operatorname{Im}z|}(1-e^{-2\pi})$.
+\end{proof}
+
+\subsection{The weights}
+\begin{lemma}\label{lem:weights}
+(a) For $\operatorname{Re}u\ge0$ and $|u|\ge\frac12$,
+$\log|W_n(u)|\le n\Phi_0(u/n)-n\log n+3\log(|u|+n+1)+3\log2$.
+(b) For $n<j\le4n$, $\log|r_jj\lambda^{-j}|=n\,\omega(j/n)-n\log n+O(\log n)$.
+\end{lemma}
+
+\begin{proof}
+(a) The function $y\mapsto\log|u+y|$ is nondecreasing on $y\ge0$. So the sum over $1\le i\le n$ is at most the
+integral over $[1,n+1]$, and the sum over $1\le j\le4n$ is at least the integral over $[0,4n]$. Substitute $y=nx$.
+(b) Stirling's formula in \eqref{eq:residue}.
+\end{proof}
+
+\subsection{The dual inequality}
+Scale every charge by $n$. A configuration then consists of $2n$ points $s_i$: lattice points $x/n$ with at most two
+per site, contour points, and points $-j/n$ with at most one per pole.
+
+\begin{lemma}\label{lem:dual}
+Let $\sigma$ be a positive measure of mass $2$ and compact support with a H\"older continuous potential. For every
+configuration of $2n$ points,
+\[
+ \sum_{i\ne j}\log|s_i-s_j|\le n^2I(\sigma)-2n\sum_iU^\sigma(s_i)+o(n^2),
+\]
+uniformly in the configuration, where a confluent pair counts with $\log2$ in place of $\log0$.
+\end{lemma}
+
+\begin{proof}
+Replace each point by the normalized arc measure on a circle of radius $n^{-2}$ around it, and let $\mu^\epsilon$ be
+$n^{-1}$ times their sum. Subharmonicity bounds $\log|s_i-s_j|$ by the average over the two circles. The energy of
+the neutral measure $\mu^\epsilon-\sigma$ is nonnegative \cite[Lemma~I.1.8]{SaffTotik}, so
+$-I(\mu^\epsilon)\le I(\sigma)-2\int U^\sigma d\mu^\epsilon$. The H\"older continuity of $U^\sigma$ replaces the averages
+over the circles by the values at the points with an error $o(n^2)$ in total.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:LD}]
+By Lemma~\ref{lem:heine} and Lemma~\ref{lem:cap}, $|Q_n(\xi+\varepsilon)|$ is at most $e^{O(n\log n)}$ times a sum over
+configurations of the product of the weights and of the reduced Vandermonde product. By Lemma~\ref{lem:weights} and
+Lemma~\ref{lem:contour}, a lattice or contour charge at $s$ has weight at most $e^{n(V(s)-\log n)+O(\log n)}$, and an
+atom charge at $-x$ has weight at most $|\varepsilon|e^{n(\omega(x)-\log n)+O(\log n)}\le e^{n(\omega(x)-\rho-\log n)+O(\log n)}$.
+Put $f(s)=W_\sigma(s)$ for a lattice or contour charge and $f(-x)=A_\rho(x)$ for an atom charge. The Vandermonde
+product contributes $n^{2n(2n-1)}=e^{4n^2\log n+O(n\log n)}$ from the scaling, and the $2n$ weights contribute
+$e^{-2n^2\log n}$. By Lemma~\ref{lem:dual} the logarithm of a term is at most
+\[
+ n^2I(\sigma)+n\sum_if(s_i)+2n^2\log n+o(n^2).
+\]
+For any $\theta$,
+\[
+ \sum_if(s_i)\le2n\theta+\sum_i(f(s_i)-\theta)_+ .
+\]
+Contour charges have $W_\sigma\le\theta$ by admissibility. Lattice charges occupy each site at most twice, so their
+excess is at most $2n\int_0^\infty(W_\sigma-\theta)_++o(n)$. Atom charges occupy each pole at most once, so theirs is
+at most $n\int_1^4(A_\rho-\theta)_++o(n)$. The number of configurations is $e^{O(n\log n)}$ after the tails are summed,
+since $W_\sigma(z)\le3\log(|z|+R)-t\operatorname{Re}z-\kappa_s|\operatorname{Im}z|+O(1)$ for large $|z|$. Finally
+$\log(S_n^{2n}/F_n)=-2n^2\log n+(12\log2+4)n^2+O(n\log n)$, which cancels the power of $n$ and contributes the
+constant. Adding these bounds gives $\log|\tilde Q_n(\xi+\varepsilon)|\le-D_\rho(\sigma,\theta)n^2+o(n^2)$.
+\end{proof}
+
+\subsection{Certificates}\label{ssec:cert}
+A dual datum gives a lower bound for the decay rate once three quantities are bounded: the energy $I(\sigma)$, the
+admissibility on $\Gamma$, and the two penalty integrals. Our data are of two shapes.
+
+For the lattice frame, $\sigma$ is the sum of a measure on $[0,Y]$ and a measure on $[-4,-1]$, the second carrying the
+share of the poles. Each is the arcsine law of its segment times $|\sum_kh_ke^{ik\phi}|^2$, with $t=\cos\phi$ and
+rational $h_k$. Its potential inside and outside the segment and its energy are explicit Chebyshev series, as in
+\cite{Litsey2026c}. The cross energy of the two segments is a sum of Stieltjes moments. The penalty
+$\int(W_\sigma-\theta)_+$ is computed from the sign pattern of $W_\sigma-\theta$. Between consecutive rational points
+where the sign is constant, the integral of $(W_\sigma-\theta)_+$ is either $0$ or an explicit integral of
+$W_\sigma-\theta$. The signs are proved on cells by Taylor polynomials with explicit remainders. Beyond the support,
+$U^\sigma$ is monotone, and beyond $y=60$ the tail bound $W_\sigma\le3\log(y+1)-4\log y-ty+4\log(y+R)$ applies.
+
+For a bent frame, $\sigma$ is a sum of uniform measures on panels of $\Gamma$ and on $[-4,-1]$. The admissibility
+$W_\sigma\le\theta$ is proved on cells along each edge, the energy is a finite sum of explicit panel integrals, and the
+atom penalty is bounded by a piecewise linear majorant of $\omega-2U^\sigma(-x)$, which covers every $\rho$ at once.
+
+Every such inequality is a finite computation with rational numbers and rational enclosures of logarithms. These were
+designed with the interval arithmetic of Arb \cite{Arb} and are checked in the formal proof by the Lean kernel. The
+data were found by numerical optimization and play no other role in the proof.
+
+%% =====================================================================
+\section{Uniformity in the argument}\label{sec:uniform}
+
+\subsection{Structure of the dual}
+For a frame $F$ write $D^F_\rho(\sigma,\theta;t)$ for the dual value \eqref{eq:dual} with $t$ as a parameter, and call
+the datum admissible at $t$ if $W_\sigma\le\theta$ on the contour.
+
+\begin{lemma}\label{lem:U}
+Fix a sign and a frame.
+\begin{enumerate}[label=(\alph*)]
+\item (concavity) The set of $(\sigma,\theta,t,\rho)$ with $(\sigma,\theta)$ admissible at $t$ is convex, and
+ $D^F_\rho(\sigma,\theta;t)$ is jointly concave on it.
+\item (transport) Let $0\le m\le1$, with $m=0$ for a bent frame. If $(\sigma,\theta)$ is admissible at $t$ and
+ $\Delta\ge0$, then $(\sigma,\theta-m\Delta)$ is admissible at $t+\Delta$, and
+ \[
+  D^F_{\rho+(4+m)\Delta}(\sigma,\theta-m\Delta;t+\Delta)\ge D^F_\rho(\sigma,\theta;t)+(2m-m^2)\Delta .
+ \]
+\item (monotonicity) $D^F_\rho(\sigma,\theta;t)$ is nondecreasing in $\rho$.
+\item (sign) For the lattice frame the dual value and admissibility do not depend on the sign.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) The fields $W_\sigma-\theta$ and $A_\rho-\theta$ are affine in $(\sigma,\theta,t,\rho)$, so the positive parts and their
+integrals are convex, and admissibility is a convex condition. For $\sigma_\lambda=\lambda\sigma_0+(1-\lambda)\sigma_1$,
+\[
+ I(\sigma_\lambda)=\lambda I(\sigma_0)+(1-\lambda)I(\sigma_1)-\lambda(1-\lambda)I(\sigma_0-\sigma_1),
+\]
+and $I(\sigma_0-\sigma_1)\ge0$ for a neutral signed measure of finite energy \cite[Lemma~I.1.8]{SaffTotik}. So $-I$ is
+concave.
+
+(b) At $t+\Delta$ the fields are $W_\sigma-\Delta\operatorname{Re}z$ and $A_\rho+\Delta x$. On a bent frame
+$\operatorname{Re}z\ge0=m$. On the lattice,
+\[
+ \int_0^\infty\bigl(W_\sigma-\Delta y-\theta+m\Delta\bigr)_+dy\le\int_0^\infty(W_\sigma-\theta)_+dy+\Delta\int_0^\infty(m-y)_+dy ,
+\]
+and the last integral is $m^2/2$. With $\rho+(4+m)\Delta$ in place of $\rho$, the atom field changes by
+$\Delta(x-4)\le0$ on $[1,4]$. The level term gains $2m\Delta$.
+
+(c) $A_\rho$ decreases in $\rho$. (d) The lattice frame uses only $|\lambda|$.
+\end{proof}
+
+By Lemma~\ref{lem:U}(b), lowering the level by $\Delta$ gains two units of mass, and the saturated lattice loses at most
+$\Delta\int_0^12(1-y)\,dy=\Delta$. This is the source of the slope $1$ in $t$.
+
+\subsection{The table}
+A \emph{node} is a frame together with a rational number $\lambda_k$ with $0<|\lambda_k|\le\frac12$. Its value
+$t_k=\log(1/|\lambda_k|)$ is the parameter of its entries. An \emph{entry} of a node is a pair of rationals
+$(\rho_k,D_k)$ for which a dual datum admissible at $t_k$ with $D^F_{\rho_k}\ge D_k$ is certified as in
+Section~\ref{ssec:cert}. Our table has $24$ lattice nodes and $13$ bent nodes, with $151$ and $268$ entries. Lattice
+nodes serve both signs, and bent nodes serve $s=-1$. Appendix~\ref{app:table} lists them.
+
+\begin{definition}\label{def:Dlow}
+For a sign $s$, $t>0$ and $\rho>0$, a number $D$ is a \emph{candidate} at $(s,t,\rho)$ if it arises in one of two ways
+from entries of nodes serving the sign $s$.
+\begin{enumerate}[label=(\Roman*)]
+\item (interpolation) Two entries $(\rho_i,D_i)$ and $(\rho_j,D_j)$ of nodes on the same frame with $t_i<t_j$,
+ $t_j-t_i\le\frac45$, $t=\theta t_i+(1-\theta)t_j$ with $\theta\in[0,1]$, and $\theta\rho_i+(1-\theta)\rho_j\le\rho$. Then
+ $D=\theta D_i+(1-\theta)D_j$.
+\item (transport) One entry $(\rho_k,D_k)$ with $t_k\le t$ and a slope $m\in\{0,\frac14,\frac12,\frac34,1\}$ if the node
+ is a lattice node, or $m=0$, with $\rho_k+(4+m)(t-t_k)\le\rho$. Then $D=D_k+(2m-m^2)(t-t_k)$.
+\end{enumerate}
+Let $\Dlow_s(t,\rho)$ be the largest candidate, or $-\infty$ if there is none.
+\end{definition}
+
+\begin{theorem}[uniform decay]\label{thm:U}
+Let $\lambda$ be rational with $0<|\lambda|<1$, $s=\operatorname{sign}\lambda$ and $t=\log(1/|\lambda|)$. If $D$ is a
+candidate at $(s,t,\rho)$ with $\rho>0$, then for every $\varepsilon>0$ and all large $n$,
+$|\tilde Q_n(\xi+u)|\le e^{-(D-\varepsilon)n^2}$ whenever $|u|\le e^{-(\rho+\varepsilon)n}$.
+\end{theorem}
+
+\begin{proof}
+For an interpolation candidate, the mixture of the two certified data with weights $\theta$ and $1-\theta$ is
+admissible at $t$ and has dual value at least $D$ at $\theta\rho_i+(1-\theta)\rho_j$, by Lemma~\ref{lem:U}(a). For a
+transport candidate the transported datum of Lemma~\ref{lem:U}(b) does the same. Lemma~\ref{lem:U}(c) passes to $\rho$,
+and Lemma~\ref{lem:U}(d) allows lattice nodes for $s=-1$. Theorem~\ref{thm:LD} with $\rho+\varepsilon$ in place of $\rho$,
+and the monotonicity in $\rho$, give the claim.
+\end{proof}
+
+%% =====================================================================
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $\lambda=a/b$ and $P_n=\tilde d_n\tilde Q_n\in\Z[X]$, of degree at most $2n$. Since $0<|\lambda|\le\frac12$, Theorem~\ref{thm:types}
+shows that all type constants are nonzero at $\lambda$, and Corollary~\ref{cor:band} gives a band nonvanishing datum on
+$(\frac1{13},\frac43)$ for $(P_n)$. So $M=2(\frac43-\frac1{13})=\frac{98}{39}$.
+
+Let $D=\Dlow_s(t,\rho)$, attained by a candidate. By Theorem~\ref{thm:U}, $|\tilde Q_n(\xi+u)|\le e^{-(D-\varepsilon)n^2}$
+for $|u|\le e^{-(\rho+\varepsilon)n}$ and $n$ large. By Theorem~\ref{thm:content}, $\tilde d_n\le e^{-(c(a,b)-\varepsilon)n^2}$
+whenever $\tilde Q_n\ne0$. When $\tilde Q_n=0$, $P_n=0$. Hence
+\[
+ |P_n(\xi+u)|\le e^{-(\eta-2\varepsilon)n^2}\qquad(|u|\le e^{-(\rho+\varepsilon)n}),
+\]
+with $\eta=D+c(a,b)>0$. Theorem~\ref{thm:criterion} with $\kappa=2$ and $(\alpha,\beta)=(\frac1{13},\frac43)$ gives the
+measure.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:table}]
+Each entry is Theorem~\ref{thm:main} at one candidate. For example, at $\lambda=\frac13$ the lattice node $\frac13$ has
+the entry $\rho=\frac{35}2$, $D=-2.624336\ldots$, and $c(1,3)=4.247432\ldots$. So $\eta=1.623095\ldots$ and
+$\rho\max(2/\eta,39/98)=21.5637\ldots$. At $\lambda=-\frac13$ the bent node $-\frac13$ on $\Gamma_3$ has the entry
+$\rho=18$, $D=0.336425\ldots$, and $c(-1,3)=2.687851\ldots$, which gives $11.9036\ldots$. At $\lambda=\frac12$ the entry
+$\rho=\frac{31}2$, $D=-4.593612\ldots$ and $c(1,2)=4.725773\ldots$ give $\eta=0.132160\ldots$ and $234.5629\ldots$. At
+$\lambda=-\frac2{39}$ the best candidate interpolates between the nodes $-\frac2{25}$ and $-\frac2{41}$ on $\Gamma_{15}$.
+The other entries of Table~\ref{tab:values} are computed in the same way.
+\end{proof}
+
+\begin{remark}[ranges without a measure]
+The margin $\eta$ is at most $0$ for every $\rho$ when $|a|\ge2$ and $b$ is small. Numerically the first denominators
+with $\eta>0$ are about $b=13$ for $a=2$, $b=11$ for $a=-2$, $b=55$ for $a=3$ and $b=50$ for $a=-3$. Near these
+thresholds the margin is small and the measure is large. Tan and Zhang \cite{TanZhang26} and Liu
+\cite{LiuLi2Rational} prove irrationality, without a measure, in comparable ranges. This remark is not part of the formal
+proof.
+\end{remark}
+
+%% =====================================================================
+\section{Formalization}\label{sec:lean}
+\raggedbottom
+
+Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every theorem,
+proposition and lemma its proof uses. The remarks are not part of the formalization. The public statement is the
+theorem \lean{CatalanCore.Li2.li2_measure_general} in the statement file \lean{ChallengeLi2.lean} of the repository
+\begin{center}
+\FormalizationLink
+\end{center}
+Its statement uses only Mathlib. The number $\Li_2(a/b)$ is written as the series
+$\sum_{k\ge0}(a/b)^{k+1}/(k+1)^2$, the rate $c(a,b)$ is written out, and the table of
+Definition~\ref{def:Dlow} is given as rational literals. The conclusion is $q^{-\mu}<|\Li_2(a/b)-p/q|$ for all
+integers $p$ and all sufficiently large $q$. The modules contain no \lean{sorry} and no \lean{native_decide}, and
+\lean{\#print axioms} reports only \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
+
+Tang's construction, his local bounds at the primes prime to $ab(b-a)$ and Proposition~\ref{prop:tang} are ported
+from his formalization \cite{TangLi2} under the Apache License~2.0. The ported files are listed in the repository's
+\texttt{NOTICE}. Tang's own files adapt parts of Firsching's formalization of Fauzan's proof \cite{Firsching26}. The
+prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The finite checks of Theorem~\ref{thm:types} and
+of the certificates of Section~\ref{ssec:cert} are carried out by the Lean kernel in rational arithmetic. Their data
+were computed with floating-point optimization and the interval arithmetic of Arb \cite{Arb}, and they play no role in
+the proof beyond satisfying the checks.
+
+\section*{Disclosure of AI use}
+The mathematics, the Lean formalization, the certificate generators and the text of this paper were produced by AI
+systems at the request of the author. The author posed the problems, directed the work and is responsible for the
+paper. The systems were Claude Opus~5.5, Claude Sonnet~5.5 and Claude Haiku~5.5 (Anthropic), running in Claude Code,
+and GPT-6.1 Sol (OpenAI), running in Codex. The construction and the irrationality proof of $\Li_2(1/2)$ are due to
+Tang \cite{TangLi2}.
+
+\subsection*{Acknowledgements}
+We thank Qian Tang for releasing his formalization, the authors of Mathlib and of the PNT+ project, and Moritz
+Firsching for his formalization of Fauzan's proof.
+
+\appendix
+\section{The table of nodes}\label{app:table}
+
+Table~\ref{tab:nodes} summarizes the $37$ nodes of Definition~\ref{def:Dlow}: the node $\lambda_k$ ($\pm$ for a
+lattice node, which serves both signs), its frame, $t_k$, the number of entries, the range of $\rho_k$ and the largest
+$D_k$. The exact rational entries are part of the formal statement.
+
+\begin{center}
+\begin{longtable}{@{}lcrrcr@{}}
+\caption{The nodes.}\label{tab:nodes}\\
+\toprule
+node & frame & $t_k$ & entries & $\rho_k$ & $\max D_k$\\
+\midrule
+\endfirsthead
+\toprule
+node & frame & $t_k$ & entries & $\rho_k$ & $\max D_k$\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+$\pm1/2$ & lattice & 0.6931 & 6 & 14.5--16 & $-4.5932$ \\
+$\pm1/3$ & lattice & 1.0986 & 1 & 17.5 & $-2.6243$ \\
+$\pm1/4$ & lattice & 1.3863 & 1 & 18.5 & $-1.6650$ \\
+$\pm1/5$ & lattice & 1.6094 & 1 & 20 & $-0.9524$ \\
+$\pm1/6$ & lattice & 1.7918 & 1 & 20.5 & $-0.5379$ \\
+$\pm2/13$ & lattice & 1.8718 & 14 & 22.3--23.55 & $-0.1476$ \\
+$\pm2/15$ & lattice & 2.0149 & 7 & 22.5--24.5 & $0.2020$ \\
+$\pm1/8$ & lattice & 2.0794 & 1 & 22 & $0.1472$ \\
+$\pm2/17$ & lattice & 2.1401 & 6 & 23.5--25 & $0.4905$ \\
+$\pm2/19$ & lattice & 2.2513 & 14 & 23.95--25.2 & $0.7348$ \\
+$\pm1/10$ & lattice & 2.3026 & 1 & 22.9 & $0.5739$ \\
+$\pm2/23$ & lattice & 2.4423 & 14 & 24.8--26.05 & $1.1294$ \\
+$\pm2/25$ & lattice & 2.5257 & 15 & 25.2--26.45 & $1.2933$ \\
+$\pm1/14$ & lattice & 2.6391 & 1 & 23.4 & $0.8978$ \\
+$\pm2/33$ & lattice & 2.8034 & 14 & 26.45--27.7 & $1.8041$ \\
+$\pm2/37$ & lattice & 2.9178 & 16 & 26.95--28.2 & $2.0011$ \\
+$\pm2/39$ & lattice & 2.9704 & 18 & 27.2--28.45 & $2.0904$ \\
+$\pm1/20$ & lattice & 2.9957 & 1 & 23.5 & $0.8591$ \\
+$\pm1/26$ & lattice & 3.2581 & 3 & 24--30 & $2.5675$ \\
+$\pm1/33$ & lattice & 3.4965 & 4 & 24.5--30.5 & $2.8818$ \\
+$\pm1/55$ & lattice & 4.0073 & 3 & 28.5--33.5 & $3.6539$ \\
+$\pm1/90$ & lattice & 4.4998 & 3 & 31--36 & $4.3096$ \\
+$\pm1/148$ & lattice & 4.9972 & 3 & 33.5--38.5 & $4.9298$ \\
+$\pm1/403$ & lattice & 5.9989 & 3 & 38.5--43.5 & $6.0988$ \\
+$-1/2$ & $\Gamma_2$ & 0.6931 & 21 & 13.5--18.5 & $0.1226$ \\
+$-1/3$ & $\Gamma_3$ & 1.0986 & 21 & 15--20 & $0.3465$ \\
+$-1/4$ & $\Gamma_4$ & 1.3863 & 21 & 16--21 & $0.5109$ \\
+$-1/5$ & $\Gamma_4$ & 1.6094 & 20 & 17.25--22 & $0.7657$ \\
+$-2/11$ & $\Gamma_{15}$ & 1.7047 & 20 & 19.75--24.5 & $1.0672$ \\
+$-1/6$ & $\Gamma_{15}$ & 1.7918 & 20 & 18.25--23 & $0.9669$ \\
+$-2/15$ & $\Gamma_{15}$ & 2.0149 & 20 & 21--25.75 & $1.4102$ \\
+$-2/25$ & $\Gamma_{15}$ & 2.5257 & 21 & 23--28 & $1.9449$ \\
+$-1/13$ & $\Gamma_{15}$ & 2.5649 & 20 & 20--24.75 & $1.3212$ \\
+$-1/20$ & $\Gamma_{15}$ & 2.9957 & 21 & 20--25 & $1.0338$ \\
+$-2/41$ & $\Gamma_{15}$ & 3.0204 & 21 & 25--30 & $2.4113$ \\
+$-2/65$ & $\Gamma_{15}$ & 3.4812 & 21 & 27.5--32.5 & $2.8658$ \\
+$-1/33$ & $\Gamma_{15}$ & 3.4965 & 21 & 21.5--26.5 & $1.2118$ \\
+\end{longtable}
+\end{center}
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

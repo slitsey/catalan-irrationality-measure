@@ -1,6 +1,6 @@
 name = "CatalanIrrationalityMeasure"
 version = "0.1.0"
-defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid", "ChallengeZeta5", "SolutionZeta5", "ChallengeLai", "SolutionLai"]
+defaultTargets = ["CatalanMeasure", "Challenge", "Solution", "ChallengeHybrid", "SolutionHybrid", "ChallengeZeta5", "SolutionZeta5", "ChallengeLai", "SolutionLai", "SolutionLi2"]
 
 [leanOptions]
 autoImplicit = false
@@ -99,3 +99,8 @@ globs = ["CatalanFrames.+"]
 name = "CatalanParity"
 roots = ["CatalanParity"]
 globs = ["CatalanParity.+"]
+
+# Li2 headline: the measure of Li2(a/b) from the certified decay table (general theorem).
+[[lean_lib]]
+name = "SolutionLi2"
+roots = ["SolutionLi2"]

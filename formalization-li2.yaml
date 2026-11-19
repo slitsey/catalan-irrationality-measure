@@ -1,0 +1,101 @@
+# Formalization metadata for SolutionLi2.lean (the measure for Li2(a/b)); formalization.yaml describes the
+# mu(G) result, formalization-hybrid.yaml the Löwner-determinant measures, formalization-zeta5.yaml zeta(5)
+# and formalization-lai.yaml the plane of zeta(3) and pi^4.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Irrationality measures for dilogarithms of rational numbers"
+  description: >-
+    For coprime integers a, b with 0 < 2|a| <= b we prove irrationality
+    measures for Li2(a/b) = sum_{k>=1} (a/b)^k/k^2: every certified decay
+    value D of a node table at (rho, sign a, log(b/|a|)) with
+    eta = D + c(a, b) > 0 gives |Li2(a/b) - p/q| > q^(-mu) for every
+    mu > rho max(2/eta, 39/98), every integer p and every sufficiently large
+    integer q. Here c(a, b) = 7/2 - 523/840 + (8/3) log b - 6 log|a|
+    - (9/4) log|b - a| bounds the denominators at every prime. The
+    approximations are Tang's Hankel determinants. Decay on a neighbourhood
+    comes from dual bounds for a logarithmic energy, certified at 419 table
+    entries (151 lattice and 268 bent contours) by interval arithmetic checked
+    in the kernel, and uniform in log(b/|a|) by interpolation and transport.
+    Nonvanishing on a band of primes, with type constants checked modulo 12,
+    gives the measure. Examples: mu(Li2(1/2)) <= 234.57, mu(Li2(1/3)) <= 21.57,
+    mu(Li2(-1/2)) <= 13.94.
+  authors:
+    - "Sean Litsey"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Sean Litsey"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11J82", "11J72"]
+
+sources:
+  - title: "Irrationality measures for dilogarithms of rational numbers"
+    type: original-proof
+    relationship: other
+    note: >-
+      The companion paper by S. Litsey (2026), whose arguments the Lean
+      development follows. LaTeX source and PDF are in paper-li2/.
+  - title: "Irrationality of Li2(1/2) (Lean formalization)"
+    authors:
+      - "Tang"
+    type: formalization
+    location: "https://github.com/dtq1997/li2-half-irrationality"
+    relationship: builds-on
+    note: >-
+      Supplies the Hankel determinant family and the arithmetic lemmas; the
+      ported files are in CatalanCore/Li2/Port (see NOTICE).
+    author_endorsement: not-contacted
+
+related_formalizations: []
+
+status:
+  scope: >-
+    SolutionLi2.lean exports Li2IrrationalityMeasure.li2_measure_general
+    from CatalanCore.Li2.li2_measure_general. The decay table and the
+    nonvanishing certificates are proved, not assumed. The theorem has no sorry
+    and no native_decide; #print axioms reports only propext,
+    Classical.choice and Quot.sound. A Mathlib-only challenge file with the
+    node table written as literals is not yet provided, so lake comparator is
+    not configured for this statement.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: agent
+      models: ["Claude Opus 5.5", "Claude Sonnet 5.5", "Claude Haiku 5.5", "Claude Fable 5.2", "GPT-6.1 Sol"]
+      framework: "Claude Code and Codex"
+      tool_setup: >-
+        AI agents wrote the mathematics, Lean proofs, certificate generators and text, using Python, Lean 4, Lake and Mathlib.
+  spend_usd: "subscription-based"
+  notes: >-
+    The agents worked at the request of the human author, who posed the
+    problem, directed the work and is responsible for the submission.
+    Certificates use decide +kernel, without native_decide or additional axioms.
+
+fidelity:
+  divergences: >-
+    Li2(z) is written as sum_{k>=0} z^(k+1)/(k+1)^2. The decay hypothesis is
+    stated through the Lean node table (CatalanCore.Li2.Uniform.nodeTable);
+    the paper's point values are evaluations of the theorem at candidates of
+    that table.
+
+review:
+  status: "self-assessed"
+  reviewers: []
+  notes: >-
+    The Lean statement was checked against Theorem 1.1 of the companion
+    paper. No independent human review has been performed.
+
+alignment:
+  namespace: "Li2IrrationalityMeasure"
+  statements:
+    - source: "Litsey, Irrationality measures for dilogarithms of rational numbers (2026), Theorem 1.1"
+      lean: "Li2IrrationalityMeasure.li2_measure_general"
+      module: "SolutionLi2"
+      status: proved
+      note: "General measure for Li2(a/b), 0 < 2|a| <= b, a and b coprime."

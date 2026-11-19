@@ -1,11 +1,11 @@
-# Irrationality measures for Catalan's constant, ζ(5) and related constants
+# Irrationality measures for Catalan's constant, ζ(5), dilogarithms and related constants
 
-A Lean 4 formalization of the irrationality measures proved in four papers. The irrationality exponent `μ(ξ)` of
+A Lean 4 formalization of the irrationality measures proved in five papers. The irrationality exponent `μ(ξ)` of
 a real number `ξ` is the infimum of the `μ` such that `|ξ − p/q| > q^(−μ)` for all integers `p` and all
 sufficiently large integers `q`. Let `G = ∑_{j ≥ 0} (−1)^j / (2j+1)^2` be Catalan's constant and
 `L₋₃ = L(2, χ₋₃) = ∑_{k ≥ 0} (1/(3k+1)^2 − 1/(3k+2)^2)` the Calegari–Dimitrov–Tang constant.
 
-## The four papers
+## The five papers
 
 Each table lists the theorems of one paper. The column *New* says what the theorem adds: an **improved measure**
 for a number already known to be irrational and to have a measure, a **first measure** for a number known to be
@@ -67,6 +67,24 @@ or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.
 | `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
 | `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
 | `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`, rationals with `ad − bc ≠ 0` | 55.50 | first measure | none (irrational by Lai) |
+
+### 5. Dilogarithms of rational numbers
+
+S. Litsey, *Irrationality measures for dilogarithms of rational numbers* (2026): LaTeX source and PDF in
+[`paper-li2/`](paper-li2/). The proof uses Tang's Hankel determinants for `Li₂`. One theorem covers every
+`Li₂(a/b)` with coprime `a, b` and `0 < 2|a| ≤ b` at which the certified decay exceeds the denominator rate.
+Examples:
+
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `Li₂(1/2)` | 234.57 | first measure | none (irrational by Tang; Zhang) |
+| `Li₂(1/3)`, `Li₂(1/4)`, `Li₂(1/5)` | 21.57, 15.19, 12.92 | first measures | none (irrational by Liu; Prellberg) |
+| `Li₂(−1/2)`, `Li₂(−1/3)`, `Li₂(−1/4)` | 13.94, 11.91, 10.99 | first measures | none (irrational by Liu; Prellberg) |
+| `Li₂(1/6)` | 11.73 | improved measure | 783.29 (Rhin–Viola) |
+| `Li₂(1/20)` | 9.36 | improved measure | 11.94 (Rhin–Viola) |
+| `Li₂(−1/5)` | 10.38 | improved measure | 62.69 (Rhin–Viola) |
+
+The paper gives the full comparison for `±1/k`, `k ≤ 20`, against Hata and Rhin–Viola.
 
 ## The statements
 
@@ -428,6 +446,26 @@ The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 `CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_34_14`,
 `LaiIrrationalityMeasure.lai_ratio_measure_55_50` and `LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50`.
 
+## Dilogarithms: μ(Li₂(a/b))
+
+For coprime integers `a, b` with `0 < 2|a| ≤ b`, let `t = log(b/|a|)` and
+`c(a, b) = 7/2 − 523/840 + (8/3) log b − 6 log|a| − (9/4) log|b − a|`. If `D` is a decay value of the
+certified node table at `(ρ, sign a, t)` and `η = D + c(a, b) > 0`, then `μ(Li₂(a/b)) ≤ ρ·max(2/η, 39/98)`.
+
+- **Denominators.** A bound for the valuation at every prime of the common denominator of Tang's
+  determinant polynomials gives the rate `c(a, b)`. Liu's construction has the same rate with the constant
+  72/25 in place of 7/2 − 523/840.
+- **Decay on a neighbourhood.** Dual bounds for a logarithmic energy are certified at 419 entries of a node
+  table, on 151 lattice and 268 bent contours, by interval arithmetic checked in the kernel. Interpolation and
+  transport make them uniform in `t`.
+- **Nonvanishing.** Reduction modulo primes in a band, with the type constants checked modulo 12, gives
+  nonvanishing at enough sizes. A counting criterion turns it into the measure.
+
+The proof is in [`CatalanCore/Li2/`](CatalanCore/Li2/), with the ported files of Tang's formalization in
+`CatalanCore/Li2/Port/`. The theorem is `CatalanCore.Li2.li2_measure_general`, and the public theorem is
+`Li2IrrationalityMeasure.li2_measure_general` in `SolutionLi2.lean`. A Mathlib-only challenge file for it is
+not yet provided.
+
 ## Kernel-checked certificates
 
 All numerical bounds are ordinary kernel-checked rational and integer computations (`decide +kernel`;
@@ -471,16 +509,17 @@ ruby scripts/validate-formalization.rb
 ruby scripts/validate-formalization.rb formalization-hybrid.yaml
 ruby scripts/validate-formalization.rb formalization-zeta5.yaml
 ruby scripts/validate-formalization.rb formalization-lai.yaml
+ruby scripts/validate-formalization.rb formalization-li2.yaml
 ./scripts/verify-comparator.sh
 ```
 
-`lake build` builds the four solution files. The numerical checks can use several GiB per Lean process; use
+`lake build` builds the five solution files. The numerical checks can use several GiB per Lean process; use
 a small worker count (for example `LEAN_NUM_THREADS=2`) on memory-constrained machines. The comparator
 script checks `comparator.json`; it needs Linux and `bwrap` (bubblewrap).
 
 ## Authorship and use of AI
 
-The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's. The determinants and the independence proof for `a ζ(3) + b π⁴` are Lai's.
+The mathematics, the Lean formalization, the certificate generators and the text were produced by AI systems at the request of the author, who posed the problems, directed the work and is responsible for it: Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5 (Anthropic), running in Claude Code, and GPT-6.1 Sol (OpenAI), running in Codex. The underlying irrationality proof for G and its Lean formalization are OpenAI's, as is the vendored code described above. The construction and irrationality proof for ζ(5) are Fauzan's, and the ported formalization of his construction is Firsching's. The determinants and the independence proof for `a ζ(3) + b π⁴` are Lai's. The determinant family for `Li₂` and its formalization are Tang's.
 
 ## Submission
 
