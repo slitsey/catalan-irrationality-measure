@@ -195,33 +195,33 @@ theorem WCell.sign (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : 
 def _root_.CatalanCore.Li2.DecayCert.LatticeSimple.Pattern.awayLo (s : Pattern) (i : ℕ) : ℚ := if i=0 then s.node 0 else s.node i+s.delta i
 def _root_.CatalanCore.Li2.DecayCert.LatticeSimple.Pattern.awayHi (s : Pattern) (i : ℕ) : ℚ := if i+1=s.gaps then s.node s.gaps else s.node (i+1)-s.delta (i+1)
 
-/-- The W side on `[0, Y]`: a sign pattern, one chain of sign cells per gap away from the roots, and
-one root cell per root. -/
-structure WSide where
+/-- A side of the penalty on `[a, b]`: a sign pattern, one chain of sign cells per gap away from the
+roots, and one root cell per root. The W side (`[0, Y]`) and the atom side (`[1, 4]`) are instances. -/
+structure Side where
   pat : Pattern
   away : List (List WCell)
   roots : List WCell
 
-def WSide.check (s : SourceF) (logs : List LogEntry) (w : WSide) : Bool :=
-  w.pat.check 0 s.Y && decide (w.away.length=w.pat.gaps ∧ w.roots.length=w.pat.gaps-1) &&
+/-- The structural check of a side, for a cell check `ok`. -/
+def Side.check (ok : WCell → Bool) (a b : ℚ) (w : Side) : Bool :=
+  w.pat.check a b && decide (w.away.length=w.pat.gaps ∧ w.roots.length=w.pat.gaps-1) &&
   (List.range w.pat.gaps).all (fun i => match w.away[i]? with
     | some cs => decide (w.pat.awayLo i < w.pat.awayHi i) && chainCheck (w.pat.awayLo i) (w.pat.awayHi i) (cs.map WCell.iv) &&
-        cs.all (fun c => c.ok s logs && decide (c.pos=some (w.pat.positive i)))
+        cs.all (fun c => ok c && decide (c.pos=some (w.pat.positive i)))
     | none => false) &&
   (List.range (w.pat.gaps-1)).all (fun i => match w.roots[i]? with
-    | some c => c.ok s logs && decide (c.spec.left ≤ w.pat.node (i+1)-w.pat.delta (i+1) ∧
+    | some c => ok c && decide (c.spec.left ≤ w.pat.node (i+1)-w.pat.delta (i+1) ∧
         w.pat.node (i+1)+w.pat.delta (i+1) ≤ c.spec.right)
     | none => false)
 
-
-theorem WSide.check_parts (s : SourceF) (logs : List LogEntry) (w : WSide) (hw : w.check s logs=true) :
-    w.pat.check 0 s.Y=true ∧
+theorem Side.check_parts (ok : WCell → Bool) (a b : ℚ) (w : Side) (hw : w.check ok a b=true) :
+    w.pat.check a b=true ∧
     (∀ i, i < w.pat.gaps → ∃ cs, w.away[i]?=some cs ∧ w.pat.awayLo i < w.pat.awayHi i ∧
       chainCheck (w.pat.awayLo i) (w.pat.awayHi i) (cs.map WCell.iv)=true ∧
-      ∀ c ∈ cs, c.ok s logs=true ∧ c.pos=some (w.pat.positive i)) ∧
-    (∀ i, i < w.pat.gaps-1 → ∃ c, w.roots[i]?=some c ∧ c.ok s logs=true ∧
+      ∀ c ∈ cs, ok c=true ∧ c.pos=some (w.pat.positive i)) ∧
+    (∀ i, i < w.pat.gaps-1 → ∃ c, w.roots[i]?=some c ∧ ok c=true ∧
       c.spec.left ≤ w.pat.node (i+1)-w.pat.delta (i+1) ∧ w.pat.node (i+1)+w.pat.delta (i+1) ≤ c.spec.right) := by
-  simp only [WSide.check,Bool.and_eq_true,List.all_eq_true,List.mem_range] at hw
+  simp only [Side.check,Bool.and_eq_true,List.all_eq_true,List.mem_range] at hw
   obtain ⟨⟨⟨hp,-⟩,ha⟩,hr⟩ := hw
   refine ⟨hp,?_,?_⟩
   · intro i hi
@@ -241,20 +241,17 @@ theorem WSide.check_parts (s : SourceF) (logs : List LogEntry) (w : WSide) (hw :
       simp only [Bool.and_eq_true,decide_eq_true_eq] at h
       exact ⟨c,rfl,h.1,h.2.1,h.2.2⟩
 
-/-- Passed sign cells give `W - θ` its pattern's sign away from the root cells on `[0, Y]`. -/
-theorem WSide.signAway (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
-    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
-    (lk : WLink s logs r z θ Y σ1 σ2 d K) (w : WSide) (hw : w.check s logs=true) :
-    (w.pat.toSignPartition 0 s.Y (w.check_parts s logs hw).1).signAway
-      (fun x => W z (σ1+σ2) (x:ℂ)-θ) := by
-  obtain ⟨hp,ha,-⟩ := w.check_parts s logs hw
-  have hpp := w.pat.check_parts 0 s.Y hp
+/-- Passed sign cells give `f` its pattern's sign away from the root cells. -/
+theorem Side.signAway (ok : WCell → Bool) (a b : ℚ) (w : Side) (hw : w.check ok a b=true) (f : ℝ → ℝ)
+    (hsign : ∀ c, ok c=true → ∀ bb, c.pos=some bb → ∀ x, (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right →
+      if bb then 0 ≤ f x else f x ≤ 0) :
+    (w.pat.toSignPartition a b (w.check_parts ok a b hw).1).signAway f := by
+  obtain ⟨hp,ha,-⟩ := w.check_parts ok a b hw
   intro i hi x hx hnot
   change i < w.pat.gaps at hi
   change x ∈ Icc (w.pat.node i:ℝ) (w.pat.node (i+1):ℝ) at hx
-  change if w.pat.positive i then 0 ≤ W z (σ1+σ2) (x:ℂ)-θ else W z (σ1+σ2) (x:ℂ)-θ ≤ 0
+  change if w.pat.positive i then 0 ≤ f x else f x ≤ 0
   obtain ⟨cs,-,hlt,hch,hcs⟩ := ha i hi
-  -- x lies in the away interval of gap i
   have hlo : (w.pat.awayLo i:ℝ) ≤ x := by
     unfold LatticeSimple.Pattern.awayLo
     split_ifs with h0
@@ -281,51 +278,51 @@ theorem WSide.signAway (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ 
   rw [hcov] at hxm
   simp only [mem_iUnion,List.mem_map] at hxm
   obtain ⟨iv,⟨c,hc,rfl⟩,hxc⟩ := hxm
-  exact c.sign s logs r z θ Y σ1 σ2 d K lk (hcs c hc).1 _ (hcs c hc).2 x hxc
+  exact hsign c (hcs c hc).1 _ (hcs c hc).2 x hxc
 
-
-/-- Root-cell bounds `ep i ≥ sup (W - θ)` and `em i ≥ sup (θ - W)`, as rationals. -/
-def WSide.ep (w : WSide) (i : ℕ) : ℚ := match w.roots[i]? with
+/-- Root-cell bounds `ep i ≥ sup f` and `em i ≥ sup (−f)`, as rationals. -/
+def Side.ep (w : Side) (i : ℕ) : ℚ := match w.roots[i]? with
   | some c => max ((c.upper:ℚ)/(S:ℚ)) 0 | none => 0
-def WSide.em (w : WSide) (i : ℕ) : ℚ := match w.roots[i]? with
+def Side.em (w : Side) (i : ℕ) : ℚ := match w.roots[i]? with
   | some c => max (-(c.lower:ℚ)/(S:ℚ)) 0 | none => 0
 
 theorem dec_eq_ratCast (a : ℤ) : dec S a=(((a:ℚ)/(S:ℚ):ℚ):ℝ) := by
   unfold dec; push_cast; rfl
 
-/-- The `[0, Y]` part of the lattice penalty: passed cells and a pattern bound `∫₀^Y (W - θ)₊` by the
-pattern's positive-gap integrals plus the root-cell error. -/
-theorem WSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
-    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
-    (lk : WLink s logs r z θ Y σ1 σ2 d K) (w : WSide) (hw : w.check s logs=true)
-    (hf : ContinuousOn (fun x : ℝ => W z (σ1+σ2) (x:ℂ)-θ) (Icc ((0:ℚ):ℝ) (s.Y:ℝ)))
+/-- A side's penalty: `∫_a^b f₊` is at most the pattern's positive-gap caps plus the root-cell error. -/
+theorem Side.penalty (ok : WCell → Bool) (a b : ℚ) (w : Side) (hw : w.check ok a b=true) (f : ℝ → ℝ)
+    (hf : ContinuousOn f (Icc (a:ℝ) (b:ℝ)))
+    (hbound : ∀ c, ok c=true → ∀ x, (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right →
+      dec S c.lower ≤ f x ∧ f x ≤ dec S c.upper)
+    (hsign : ∀ c, ok c=true → ∀ bb, c.pos=some bb → ∀ x, (c.spec.left:ℝ) ≤ x ∧ x ≤ c.spec.right →
+      if bb then 0 ≤ f x else f x ≤ 0)
     (cap : ℕ → ℚ)
     (hcap : ∀ i, i < w.pat.gaps → w.pat.positive i=true →
-      (∫ x in (w.pat.node i:ℝ)..(w.pat.node (i+1):ℝ), W z (σ1+σ2) (x:ℂ)-θ) ≤ (cap i:ℝ))
+      (∫ x in (w.pat.node i:ℝ)..(w.pat.node (i+1):ℝ), f x) ≤ (cap i:ℝ))
     (total : ℚ) (hscalar : decide (w.pat.plusCap cap+w.pat.rootCap w.ep w.em ≤ total)=true) :
-    (∫ x in ((0:ℚ):ℝ)..(s.Y:ℝ), pos (W z (σ1+σ2) (x:ℂ)-θ)) ≤ (total:ℝ) := by
-  obtain ⟨hp,-,hr⟩ := w.check_parts s logs hw
-  have hpp := w.pat.check_parts 0 s.Y hp
-  have hab : (0:ℚ) ≤ s.Y := by
+    (∫ x in (a:ℝ)..(b:ℝ), pos (f x)) ≤ (total:ℝ) := by
+  obtain ⟨hp,-,hr⟩ := w.check_parts ok a b hw
+  have hpp := w.pat.check_parts a b hp
+  have hab : a ≤ b := by
     have := hpp.2.1 0 w.pat.gaps hpp.1.1 le_rfl
     rw [hpp.1.2.1,hpp.1.2.2] at this; exact this.le
-  have hroot : ∀ i : Fin (w.pat.gaps-1), ∀ x ∈ (w.pat.toSignPartition 0 s.Y hp).rootCell i,
-      dec S (match w.roots[(i:ℕ)]? with | some c => c.lower | none => 0) ≤ W z (σ1+σ2) (x:ℂ)-θ ∧
-      W z (σ1+σ2) (x:ℂ)-θ ≤ dec S (match w.roots[(i:ℕ)]? with | some c => c.upper | none => 0) := by
+  have hroot : ∀ i : Fin (w.pat.gaps-1), ∀ x ∈ (w.pat.toSignPartition a b hp).rootCell i,
+      dec S (match w.roots[(i:ℕ)]? with | some c => c.lower | none => 0) ≤ f x ∧
+      f x ≤ dec S (match w.roots[(i:ℕ)]? with | some c => c.upper | none => 0) := by
     intro i x hx
     obtain ⟨c,hc,hok,hl,hrr⟩ := hr i i.isLt
     simp only [SignPartition.rootCell,LatticeSimple.Pattern.toSignPartition,mem_Icc] at hx
     rw [hc]
     have hl' : (c.spec.left:ℝ) ≤ (w.pat.node ((i:ℕ)+1):ℝ)-(w.pat.delta ((i:ℕ)+1):ℝ) := by exact_mod_cast hl
     have hr' : (w.pat.node ((i:ℕ)+1):ℝ)+(w.pat.delta ((i:ℕ)+1):ℝ) ≤ (c.spec.right:ℝ) := by exact_mod_cast hrr
-    exact c.bound s logs r z θ Y σ1 σ2 d K lk hok x ⟨by linarith [hx.1],by linarith [hx.2]⟩
-  refine signPattern_bound w.pat 0 s.Y total hp hab _ hf (w.signAway s logs r z θ Y σ1 σ2 d K lk hw)
+    exact hbound c hok x ⟨by linarith [hx.1],by linarith [hx.2]⟩
+  refine signPattern_bound w.pat a b total hp hab f hf (w.signAway ok a b hw f hsign)
     cap w.ep w.em hcap ?_ ?_ ?_ ?_ hscalar
-  · intro i _; unfold WSide.ep; split <;> simp
-  · intro i _; unfold WSide.em; split <;> simp
+  · intro i _; unfold Side.ep; split <;> simp
+  · intro i _; unfold Side.em; split <;> simp
   · intro i x hx
     have h := (hroot i x hx).2
-    unfold WSide.ep
+    unfold Side.ep
     revert h
     cases hc : w.roots[(i:ℕ)]? with
     | none => obtain ⟨c,hc',-⟩ := hr i i.isLt; rw [hc] at hc'; cases hc'
@@ -336,7 +333,7 @@ theorem WSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y
       linarith
   · intro i x hx
     have h := (hroot i x hx).1
-    unfold WSide.em
+    unfold Side.em
     revert h
     cases hc : w.roots[(i:ℕ)]? with
     | none => obtain ⟨c,hc',-⟩ := hr i i.isLt; rw [hc] at hc'; cases hc'
@@ -347,6 +344,19 @@ theorem WSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y
       have he : ((-(c.lower:ℚ)/(S:ℚ):ℚ):ℝ)= -((((c.lower:ℚ)/(S:ℚ):ℚ):ℝ)) := by push_cast; ring
       linarith
 
+/-- `∫₀^Y (W - θ)₊` from passed W cells, the pattern and the positive-gap caps. -/
+theorem WSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (lk : WLink s logs r z θ Y σ1 σ2 d K) (w : Side) (hw : w.check (WCell.ok s logs) 0 s.Y=true)
+    (hf : ContinuousOn (fun x : ℝ => W z (σ1+σ2) (x:ℂ)-θ) (Icc ((0:ℚ):ℝ) (s.Y:ℝ)))
+    (cap : ℕ → ℚ)
+    (hcap : ∀ i, i < w.pat.gaps → w.pat.positive i=true →
+      (∫ x in (w.pat.node i:ℝ)..(w.pat.node (i+1):ℝ), W z (σ1+σ2) (x:ℂ)-θ) ≤ (cap i:ℝ))
+    (total : ℚ) (hscalar : decide (w.pat.plusCap cap+w.pat.rootCap w.ep w.em ≤ total)=true) :
+    (∫ x in ((0:ℚ):ℝ)..(s.Y:ℝ), pos (W z (σ1+σ2) (x:ℂ)-θ)) ≤ (total:ℝ) :=
+  Side.penalty (WCell.ok s logs) 0 s.Y w hw _ hf
+    (fun c hc x hx => c.bound s logs r z θ Y σ1 σ2 d K lk hc x hx)
+    (fun c hc bb hb x hx => c.sign s logs r z θ Y σ1 σ2 d K lk hc bb hb x hx) cap hcap total hscalar
 
 /-- `G̃(a) = a² log a/2 − a²/4` at a rational `a ≥ 0`. -/
 def gtBoxF (lg : ℚ → Option FBox) (a : ℚ) : Option FBox :=
