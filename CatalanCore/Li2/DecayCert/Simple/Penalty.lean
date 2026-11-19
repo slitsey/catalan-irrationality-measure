@@ -2,12 +2,13 @@ module
 public import CatalanCore.Li2.DecayCert.Simple.Bridge
 public import CatalanCore.Li2.DecayCert.Lattice.Simple.Pattern
 public import CatalanCore.Li2.DecayCert.Covers.LinePartition
+public import CatalanCore.Li2.DecayCert.Lattice.Chain
 /-! The `[0, Y]` part of the lattice penalty from passed TC cells. `WLink` bundles the source
 identifications of a datum. A `WSide` is a sign pattern on `[0, Y]`, one chain of sign cells per gap away
 from the roots and one root cell per root. `WSide.signAway` gives `W - θ` the pattern's sign away from the
 roots, and `WSide.penalty` bounds `∫₀^Y (W - θ)₊` by the positive-gap integrals plus the root-cell error
 (`signPattern_bound`). `primBoxF` encloses the lattice primitive at a rational point, and
-`gapIntegral_le` bounds the integral of `W - θ` over a gap of `[0, Y]` from two such boxes. -/
+`gapIntegral_le` bounds the integral of `W - θ` over a gap of `[0, Y]` from two such boxes. `RSide.penalty` bounds `∫_Y^C (W - θ)₊` by a chain of Right cells. -/
 @[expose] public section
 open MeasureTheory Set
 namespace CatalanCore.Li2.DecayCert.Simple
@@ -512,6 +513,57 @@ theorem gapIntegral_le (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ 
       dec S s.globalW*((q:ℝ)-(p:ℝ)) := mul_le_mul_of_nonneg_right lk.hglob (by linarith)
   have := (abs_le.mp hI).2
   linarith [hP.1,hQ.2]
+
+
+/-- A stored Right cell: spec and claimed integer upper bound. -/
+structure RCell where
+  spec : TCSpec
+  lower : ℤ
+  upper : ℤ
+
+def RCell.ok (s : SourceF) (logs : List LogEntry) (c : RCell) : Bool :=
+  (c.spec.kind==.Right) && tcCheck s logs c.spec c.lower c.upper none
+
+def RCell.iv (c : RCell) : QInterval := ⟨c.spec.left,c.spec.right⟩
+
+/-- Its share of the penalty: `max(upper, 0)·width`. -/
+def RCell.cap (c : RCell) : ℚ := max ((c.upper:ℚ)/(S:ℚ)) 0*(c.spec.right-c.spec.left)
+
+/-- Right of the first segment, up to the cutoff `C`: a chain of passed Right cells bounds
+`∫_Y^C (W − θ)₊` by the sum of the cells' caps. -/
+theorem RSide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z θ Y : ℝ)
+    (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2] (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (lk : WLink s logs r z θ Y σ1 σ2 d K) (hM1 : r.M1=d.c 0)
+    (hfk : ∀ t : ℝ, hornerR t (r.fk.reverse++[0])=∑ k ∈ Finset.range d.N,d.c (k+1)*t^(k+1)/((k+1:ℕ):ℝ))
+    (C : ℚ) (cs : List RCell) (hch : chainCheck s.Y C (cs.map RCell.iv)=true)
+    (hok : ∀ c ∈ cs, c.ok s logs=true)
+    (hf : Continuous (fun x : ℝ => pos (W z (σ1+σ2) (x:ℂ)-θ))) :
+    (∫ x in (s.Y:ℝ)..(C:ℝ), pos (W z (σ1+σ2) (x:ℂ)-θ)) ≤ (((cs.map RCell.cap).sum:ℚ):ℝ) := by
+  apply chainCheck_cells_integral_bound s.Y C cs RCell.iv hch _ hf RCell.cap
+  intro c hc
+  have h := hok c hc
+  simp only [RCell.ok,Bool.and_eq_true,beq_iff_eq] at h
+  have hlr : (c.spec.left:ℝ) ≤ c.spec.right := by
+    have hg := tcCheck_geom s logs c.spec c.lower c.upper none h.2
+    simp only [tcGeometryCheck,Bool.and_eq_true] at hg
+    obtain ⟨⟨⟨⟨⟨h0,-⟩,-⟩,-⟩,-⟩,-⟩ := hg
+    exact_mod_cast (of_decide_eq_true h0).2.1
+  have hpt : ∀ x ∈ Icc (c.spec.left:ℝ) (c.spec.right:ℝ),
+      pos (W z (σ1+σ2) (x:ℂ)-θ) ≤ ((max ((c.upper:ℚ)/(S:ℚ)) 0 : ℚ):ℝ) := by
+    intro x hx
+    have hu := rightCell_upper s logs c.spec c.lower c.upper none h.2 r lk.logs lk.enc h.1 z θ Y lk.hY σ1 σ2 d K
+      lk.hL lk.hθ lk.hy0 lk.hYs hM1 lk.hM2 (hfk _) lk.hK lk.hw lk.hglob x hx
+    rw [dec_eq_ratCast] at hu
+    unfold pos
+    apply max_le
+    · exact hu.trans (by exact_mod_cast le_max_left _ _)
+    · exact_mod_cast le_max_right _ _
+  calc (∫ x in (c.iv.left:ℝ)..(c.iv.right:ℝ), pos (W z (σ1+σ2) (x:ℂ)-θ))
+      ≤ ∫ x in (c.spec.left:ℝ)..(c.spec.right:ℝ), (((max ((c.upper:ℚ)/(S:ℚ)) 0 : ℚ)):ℝ) :=
+        intervalIntegral.integral_mono_on hlr (hf.intervalIntegrable _ _)
+          intervalIntegrable_const hpt
+    _ = ((c.cap:ℚ):ℝ) := by
+        rw [intervalIntegral.integral_const,smul_eq_mul]; unfold RCell.cap; push_cast; ring
 
 end
 end CatalanCore.Li2.DecayCert.Simple
