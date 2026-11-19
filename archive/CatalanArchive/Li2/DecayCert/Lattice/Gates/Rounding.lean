@@ -1,5 +1,5 @@
 module
-public import CatalanCore.Li2.DecayCert.Rounded.Arithmetic
+public import CatalanArchive.Li2.DecayCert.Rounded.Arithmetic
 @[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 600000

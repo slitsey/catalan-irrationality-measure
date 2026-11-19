@@ -1,5 +1,5 @@
 module
-public import CatalanCore.Li2.DecayCert.Lattice.MacroDefs
+public import CatalanArchive.Li2.DecayCert.Lattice.MacroDefs
 public import CatalanCore.Li2.DecayCert.Lattice.CellPenalty
 @[expose] public section
 set_option Elab.async false

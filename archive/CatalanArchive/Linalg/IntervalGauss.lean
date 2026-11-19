@@ -1,6 +1,6 @@
 module
 
-public import CatalanCore.Linalg.RoundedInterval
+public import CatalanArchive.Linalg.RoundedInterval
 public import CatalanCore.Linalg.RankDvd
 public import Mathlib.Tactic.FieldSimp
 

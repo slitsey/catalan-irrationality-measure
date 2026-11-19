@@ -1,7 +1,7 @@
 module
-public import CatalanCore.Li2.DecayCert.Seg.Shift
-public import CatalanCore.Li2.DecayCert.Seg.Fused
-public import CatalanCore.Li2.DecayCert.Seg.Assembly
+public import CatalanArchive.Li2.DecayCert.Seg.Shift
+public import CatalanArchive.Li2.DecayCert.Seg.Fused
+public import CatalanArchive.Li2.DecayCert.Seg.Assembly
 public import CatalanCore.Li2.DecayCert.Assembly
 @[expose] public section
 set_option Elab.async false

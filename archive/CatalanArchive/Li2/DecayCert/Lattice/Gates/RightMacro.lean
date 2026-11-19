@@ -1,6 +1,6 @@
 module
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Right
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.Leaves
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.Leaves
 @[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 800000

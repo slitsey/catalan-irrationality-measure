@@ -1,6 +1,6 @@
 module
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Numeric
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.Penalty.Analytic
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.Penalty.Analytic
 @[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 600000

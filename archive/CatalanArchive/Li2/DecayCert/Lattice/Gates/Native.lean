@@ -1,6 +1,6 @@
 module
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Own
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.RightMacro
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.RightMacro
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Lists.Stieltjes
 @[expose] public section
 set_option Elab.async false

@@ -1,6 +1,6 @@
 module
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Compiled
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.Far
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.Far
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Stieltjes
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Transport
 public import CatalanCore.Li2.DecayCert.Lattice.Shape

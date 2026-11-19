@@ -1,7 +1,7 @@
 module
 public import CatalanCore.Li2.Uniform.FixedTable
 public import CatalanCore.Li2.Root
-public import CatalanCore.Li2.DecayCert.FixedTable.Assembly
+public import CatalanArchive.Li2.DecayCert.FixedTable.Assembly
 @[expose] public section
 set_option Elab.async false
 namespace CatalanCore.Li2.DecayCert

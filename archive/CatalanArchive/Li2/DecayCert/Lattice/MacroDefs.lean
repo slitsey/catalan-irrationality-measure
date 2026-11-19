@@ -1,6 +1,6 @@
 module
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.Leaves
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.RightMacro
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.Leaves
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.RightMacro
 public import CatalanCore.Li2.DecayCert.Lattice.Gates.Energy
 public import CatalanCore.Li2.DecayCert.Lattice.Chain
 @[expose] public section

@@ -1,5 +1,5 @@
 module
-public import CatalanCore.Li2.DecayCert.Lattice.Gates.NativeAll
+public import CatalanArchive.Li2.DecayCert.Lattice.Gates.NativeAll
 @[expose] public section
 set_option Elab.async false
 set_option maxHeartbeats 800000

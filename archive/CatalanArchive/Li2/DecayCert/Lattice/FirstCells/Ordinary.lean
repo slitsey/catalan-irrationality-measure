@@ -1,7 +1,7 @@
 module
-public import CatalanCore.Li2.DecayCert.Lattice.FirstCells.Sources
+public import CatalanArchive.Li2.DecayCert.Lattice.FirstCells.Sources
 public import CatalanMeasure.CellCert.RawInts
-public meta import CatalanCore.Li2.DecayCert.Lattice.FirstCells.Sources
+public meta import CatalanArchive.Li2.DecayCert.Lattice.FirstCells.Sources
 public meta import CatalanCore.Li2.DecayCert.Lattice.Gates.Lists.Stieltjes
 public meta import CatalanCore.Li2.DecayCert.PolynomialList
 @[expose] public section
