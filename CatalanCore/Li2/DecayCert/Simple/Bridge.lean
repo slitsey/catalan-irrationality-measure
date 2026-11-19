@@ -4,13 +4,16 @@ public import CatalanCore.Li2.DecayCert.Lattice.Primitive
 public import CatalanCore.Li2.DecayCert.Lattice.MultipoleUniform
 public import CatalanCore.Li2.DecayCert.Simple.Integrals
 public import CatalanCore.Li2.DecayCert.Lattice.Stieltjes.Model
+public import CatalanCore.Lai.DecayEnergy
+public import CatalanCore.Li2.DecayCert.Lattice.Stieltjes.ArcMoments
 /-! Bridge from the fused TC check to the lattice field on the first segment. `W_field_eq` splits
 `W - θ` into `latticeApproxField` and the multipole remainder of the second segment, `second_mp_err`
 bounds that remainder uniformly, `approxField_eq_target` identifies `latticeApproxField` with the
 W-type target `tcTargetR` under the source identifications, and `wCell_bound` turns a passed W cell
 into lower and upper bounds for `W - θ` on its interval. On `[1, 4]`, `atomField_eq_target` and
 `atomCell_bound` do the same for `A - θ`, with the first segment by its Stieltjes expansion about `y0`
-and the second by its own-support formula. -/
+and the second by its own-support formula. Right of the first segment, `rightCell_upper` bounds
+`W - θ` from above, with `U₁` frozen at the cell's Joukowski point (`first_U_joukowski`). -/
 @[expose] public section
 open MeasureTheory Set
 namespace CatalanCore.Li2.DecayCert.Simple
@@ -305,6 +308,251 @@ theorem atomCell_bound (s : SourceF) (logs : List LogEntry) (p : TCSpec) (lower 
     rw [hid]; simp only [e]; rw [← hxu,if_pos hx14]; ring
   rw [heq] at key
   exact ⟨key.1,key.2.1⟩
+
+section RightCells
+open CatalanCore.Zeta5.Potential CatalanCore.Tools.Joukowski CatalanCore.Lai.DecayEnergy
+  CatalanCore.Decay.ComplexEnergy
+
+
+/-- The potential of a segment measure at the Joukowski point `(r + 1/r)/2` beyond its end. -/
+theorem potC_seg_outside {M h : ℂ} (hh : h ≠ 0) {c : ℕ → ℝ} {N : ℕ}
+    (hpos : ∀ x ∈ Icc (-1 : ℝ) 1, 0 ≤ chebF c N x) {r : ℝ} (hr : r ∈ Ioo (0 : ℝ) 1) :
+    Integrable (fun u => Real.log ‖(M+h*((((1+r^2)/(2*r):ℝ)):ℂ))-u‖) (segMeasure M h c N) ∧
+    potC (segMeasure M h c N) (M+h*((((1+r^2)/(2*r):ℝ)):ℂ))=
+      c 0*Real.log ‖h‖-Real.log (2*r)*c 0-∑ k ∈ Finset.range N,
+        r^(k+1)*c (k+1)/((k+1:ℕ):ℝ) := by
+  set x : ℝ := (1+r^2)/(2*r) with hxdef
+  have hx1 : 1 < x := by
+    have hr0 : r ≠ 0 := hr.1.ne'
+    have : x-1=(1-r)^2/(2*r) := by rw [hxdef]; field_simp; ring
+    have : 0 < (1-r)^2/(2*r) := div_pos (by nlinarith [hr.2]) (by linarith [hr.1])
+    linarith
+  have hmeas : Measurable fun u : ℂ => Real.log ‖(M+h*(x:ℂ))-u‖ :=
+    Real.measurable_log.comp (by fun_prop)
+  have hhn : ‖h‖ ≠ 0 := norm_ne_zero_iff.2 hh
+  have hae : ∀ θ : ℝ, chebF c N (Real.cos θ)*Real.log ‖(M+h*(x:ℂ))-(M+h*(Real.cos θ:ℂ))‖=
+      Real.log ‖h‖*chebF c N (Real.cos θ)+chebF c N (Real.cos θ)*Real.log (x-Real.cos θ) := by
+    intro θ
+    have hc : 0 < x-Real.cos θ := by linarith [Real.cos_le_one θ]
+    rw [norm_seg_sub,abs_of_pos hc,Real.log_mul hhn hc.ne']
+    ring
+  have hint := integrable_chebF_log_outside c N hr
+  have hint2 : Integrable (fun θ => chebF c N (Real.cos θ)*Real.log ‖(M+h*(x:ℂ))-
+      (M+h*(Real.cos θ:ℂ))‖) arc := by
+    simp_rw [hae]; exact ((integrable_chebF c N).const_mul _).add hint
+  refine ⟨(integrable_segMeasure_iff hpos hmeas).2 hint2,?_⟩
+  unfold potC
+  rw [integral_segMeasure hpos hmeas]
+  simp_rw [hae]
+  rw [integral_add ((integrable_chebF c N).const_mul _) hint,integral_const_mul,integral_chebF,
+    integral_chebF_log_outside c N hr]
+  ring
+
+/-- A segment measure has no atom at the end `M + h`. -/
+theorem segMeasure_end_null {M h : ℂ} (hh : h ≠ 0) (c : ℕ → ℝ) (N : ℕ) :
+    segMeasure M h c N {M+h}=0 := by
+  unfold segMeasure
+  rw [Measure.map_apply (by fun_prop) (measurableSet_singleton _)]
+  apply withDensity_absolutelyContinuous
+  have h1 := ae_cos_ne 1 ⟨by norm_num,le_rfl⟩
+  rw [ae_iff] at h1
+  refine measure_mono_null (fun θ hθ => ?_) h1
+  simp only [mem_preimage,mem_singleton_iff] at hθ
+  simp only [mem_setOf_eq,not_not]
+  have : h*((Real.cos θ:ℂ)-1)=0 := by linear_combination hθ
+  rcases mul_eq_zero.mp this with h0|h0
+  · exact absurd h0 hh
+  · have := congrArg Complex.re h0
+    rw [Complex.sub_re,Complex.ofReal_re,Complex.one_re,Complex.zero_re,sub_eq_zero] at this
+    exact this
+
+/-- The segment measure on `[0, Y]` lives on the real interval `[0, Y]`. -/
+theorem seg_first_support {Y : ℝ} (hY : 0 ≤ Y) (c : ℕ → ℝ) (N : ℕ) :
+    segMeasure (Y/2:ℂ) (Y/2:ℂ) c N {s | s.im ≠ 0 ∨ s.re<0 ∨ Y<s.re}=0 := by
+  unfold segMeasure
+  rw [Measure.map_apply (by fun_prop) (by measurability)]
+  convert measure_empty (μ := arc.withDensity fun θ => ENNReal.ofReal (chebF c N (Real.cos θ)))
+  ext θ
+  simp only [mem_preimage,mem_setOf_eq,mem_empty_iff_false,iff_false,not_or,not_lt]
+  have h1 := Real.cos_le_one θ
+  have h2 := Real.neg_one_le_cos θ
+  have hre : ((Y/2:ℂ)+(Y/2:ℂ)*(Real.cos θ:ℂ)).re=Y/2+Y/2*Real.cos θ := by
+    simp [Complex.cos_ofReal_re]
+  have him : ((Y/2:ℂ)+(Y/2:ℂ)*(Real.cos θ:ℂ)).im=0 := by
+    simp [Complex.cos_ofReal_im]
+  rw [hre,him]
+  refine ⟨by simp,by nlinarith,by nlinarith⟩
+
+/-- Log integrability of the first segment at a real point at or beyond its right end. -/
+theorem seg_first_integrable_right {Y : ℝ} (hY : 0<Y) {c : ℕ → ℝ} {N : ℕ}
+    (hpos : ∀ x ∈ Icc (-1:ℝ) 1, 0 ≤ chebF c N x) {x : ℝ} (hx : Y ≤ x) :
+    Integrable (fun u => Real.log ‖(x:ℂ)-u‖) (segMeasure (Y/2:ℂ) (Y/2:ℂ) c N) := by
+  have hh : (Y/2:ℂ) ≠ 0 := div_ne_zero (Complex.ofReal_ne_zero.mpr hY.ne') (by norm_num)
+  rcases hx.eq_or_lt with h|h
+  · have hp := (potC_seg_inside (M:=(Y/2:ℂ)) hh hpos (x:=1) ⟨by norm_num,le_rfl⟩).1
+    have he : (Y/2:ℂ)+(Y/2:ℂ)*((1:ℝ):ℂ)=(x:ℂ) := by rw [← h]; push_cast; ring
+    rw [he] at hp; exact hp
+  have hmeas : Measurable fun u : ℂ => Real.log ‖(x:ℂ)-u‖ := Real.measurable_log.comp (by fun_prop)
+  rw [integrable_segMeasure_iff hpos hmeas]
+  apply CatalanCore.Li2.DecayCert.integrable_arc_continuous
+  apply (continuous_chebF_cos c N).mul
+  apply Continuous.log (by fun_prop)
+  intro θ h0
+  rw [norm_eq_zero] at h0
+  have := congrArg Complex.re h0
+  simp [Complex.cos_ofReal_re] at this
+  nlinarith [Real.cos_le_one θ]
+
+/-- The first-segment potential at the Joukowski point `Y(1+r)²/(4r)`. -/
+theorem first_U_joukowski {σ1 σ2 : Measure ℂ} {Y : ℝ} (d : LatticeMomentData σ1 σ2 Y) (hY : 0<Y)
+    {r : ℝ} (hr : r ∈ Ioo (0:ℝ) 1) :
+    U σ1 ((Y*(1+r)^2/(4*r):ℝ):ℂ)=d.c 0*(Real.log (4/Y)+Real.log r)+
+      ∑ k ∈ Finset.range d.N,d.c (k+1)*r^(k+1)/((k+1:ℕ):ℝ) := by
+  have hh : (Y/2:ℂ) ≠ 0 := div_ne_zero (Complex.ofReal_ne_zero.mpr hY.ne') (by norm_num)
+  have hp := (potC_seg_outside (M:=(Y/2:ℂ)) hh d.nonneg hr).2
+  have hr0 : r ≠ 0 := hr.1.ne'
+  have hr0' : (r:ℂ) ≠ 0 := by exact_mod_cast hr0
+  have he : (Y/2:ℂ)+(Y/2:ℂ)*((((1+r^2)/(2*r):ℝ)):ℂ)=((Y*(1+r)^2/(4*r):ℝ):ℂ) := by
+    push_cast; field_simp; ring
+  rw [he] at hp
+  have hn : ‖(Y/2:ℂ)‖=Y/2 := by
+    rw [show (Y/2:ℂ)=((Y/2:ℝ):ℂ) by push_cast; ring,Complex.norm_real,Real.norm_eq_abs,
+      abs_of_pos (by linarith)]
+  rw [hn,← d.first_measure] at hp
+  change -(potC σ1 _)=_
+  rw [hp]
+  have h1 : Real.log (Y/2)=Real.log Y-Real.log 2 := Real.log_div hY.ne' (by norm_num)
+  have h2 : Real.log (2*r)=Real.log 2+Real.log r := Real.log_mul (by norm_num) hr0
+  have h3 : Real.log (4/Y)=2*Real.log 2-Real.log Y := by
+    rw [Real.log_div (by norm_num) hY.ne',show (4:ℝ)=2^2 by norm_num,Real.log_pow]; push_cast; ring
+  rw [h1,h2,h3]
+  have hs : ∑ k ∈ Finset.range d.N,r^(k+1)*d.c (k+1)/((k+1:ℕ):ℝ)=
+      ∑ k ∈ Finset.range d.N,d.c (k+1)*r^(k+1)/((k+1:ℕ):ℝ) := by
+    apply Finset.sum_congr rfl; intro k _; ring
+  rw [hs]; ring
+
+theorem tcCheck_right_params (s : SourceF) (logs : List LogEntry) (p : TCSpec) (lower upper : ℤ)
+    (pos : Option Bool) (hc : tcCheck s logs p lower upper pos=true) (hk : p.kind=.Right) :
+    0<p.rightR ∧ p.rightR<1 ∧ p.right ≤ s.Y*(1+p.rightR)^2/(4*p.rightR) := by
+  by_contra hcon
+  have hcond : p.rightR≤0 ∨ 1≤p.rightR ∨ s.Y*(1+p.rightR)^2/(4*p.rightR)<p.right := by
+    by_contra h2; push_neg at h2; exact hcon ⟨h2.1,h2.2.1,h2.2.2⟩
+  have hT : ∀ lg m c, wTailF s lg p m c=none := by intro lg m c; simp [wTailF,hk,hcond]
+  have hP : ∀ lg R, wPartF s lg p R=none := by intro lg R; simp [wPartF,hT]
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  unfold tcCheck at hc
+  simp [buildTCBox,hW,hP] at hc
+
+/-- The approximate field right of the first segment with `U₁` frozen at the Joukowski point equals the
+Right-type TC target. -/
+theorem rightField_eq_target (s : SourceF) (r : SourceR) (p : TCSpec) (hk : p.kind=.Right)
+    (z θ Y : ℝ) (σ1 σ2 : Measure ℂ) (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (hL : r.L=Real.log |z|) (hθ : (s.theta:ℝ)=θ) (hy0 : (s.y0:ℝ)=d.y0) (hYs : (s.Y:ℝ)=Y)
+    (hM1 : r.M1=d.c 0) (hM2 : r.M2=σ2.real univ)
+    (hfk : hornerR (p.rightR:ℝ) (r.fk.reverse++[0])=∑ k ∈ Finset.range d.N,
+      d.c (k+1)*(p.rightR:ℝ)^(k+1)/((k+1:ℕ):ℝ)) (hK : s.MU.length=K)
+    (hw : ∀ k, r.w k=(moment σ2 (d.y0:ℂ) (k+1)).re/((k+1:ℕ):ℝ))
+    (hr : (p.rightR:ℝ) ∈ Ioo (0:ℝ) 1) (hY : 0<Y) (u : ℝ) (hpos : 0 ≤ (p.center:ℝ)+u) :
+    V z (((p.center:ℝ)+u:ℝ):ℂ)-2*U σ1 ((Y*(1+(p.rightR:ℝ))^2/(4*(p.rightR:ℝ)):ℝ):ℂ)-
+      2*d.mpValue K ((p.center:ℝ)+u)-θ=tcTargetR s r p u := by
+  have hy := d.y0_neg
+  have hd : 0 < (p.center:ℝ)+u-d.y0 := by linarith
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  simp only [tcTargetR,hW,if_true,wModelR,wConstR,tcArgs,hk,xlogSumR,↓reduceIte]
+  simp only [show (TCKind.Right==TCKind.WOrigin)=false by decide,Bool.false_eq_true,if_false,
+    List.nil_append,List.cons_append,List.map_cons,List.map_nil,List.sum_cons,List.sum_nil,add_zero]
+  rw [V_real_value,phi0_real_closed,LatticeMomentData.mpValue,mp_real,first_U_joukowski d hY hr,hfk]
+  rw [abs_of_pos hd]
+  have hcy : (((p.center-s.y0:ℚ):ℝ)+u)=(p.center:ℝ)+u-d.y0 := by push_cast; rw [hy0]; ring
+  have h4Y : (((4/s.Y:ℚ)):ℝ)=4/Y := by push_cast; rw [hYs]
+  rw [hcy,hL,hθ,hM1,hM2,hK,h4Y]
+  generalize (∑ k ∈ Finset.range d.N,d.c (k+1)*(p.rightR:ℝ)^(k+1)/((k+1:ℕ):ℝ))=SN
+  have hsum : ∑ k ∈ Finset.range K,r.w k*((p.center:ℝ)+u-d.y0)^(-((k+1:ℕ):ℤ))=
+      ∑ k ∈ Finset.range K,(moment σ2 (d.y0:ℂ) (k+1)).re/(((k+1:ℕ):ℝ)*((p.center:ℝ)+u-d.y0)^(k+1)) := by
+    apply Finset.sum_congr rfl; intro k _
+    rw [hw,zpow_neg,zpow_natCast]; field_simp
+  rw [hsum]
+  simp only [xlog]; push_cast; ring
+
+/-- A passed Right cell bounds `W - θ` from above on its interval: `U₁` decreases right of `[0, Y]`, so
+it is at least its value at the cell's Joukowski point. -/
+theorem rightCell_upper (s : SourceF) (logs : List LogEntry) (p : TCSpec) (lower upper : ℤ)
+    (pos : Option Bool) (hc : tcCheck s logs p lower upper pos=true) (r : SourceR)
+    (hlogs : LogsOK logs) (henc : SourceEnc s r) (hk : p.kind=.Right)
+    (z θ Y : ℝ) (hY : 0<Y) (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ2]
+    (d : LatticeMomentData σ1 σ2 Y) (K : ℕ)
+    (hL : r.L=Real.log |z|) (hθ : (s.theta:ℝ)=θ) (hy0 : (s.y0:ℝ)=d.y0) (hYs : (s.Y:ℝ)=Y)
+    (hM1 : r.M1=d.c 0) (hM2 : r.M2=σ2.real univ)
+    (hfk : hornerR (p.rightR:ℝ) (r.fk.reverse++[0])=∑ k ∈ Finset.range d.N,
+      d.c (k+1)*(p.rightR:ℝ)^(k+1)/((k+1:ℕ):ℝ)) (hK : s.MU.length=K)
+    (hw : ∀ k, r.w k=(moment σ2 (d.y0:ℂ) (k+1)).re/((k+1:ℕ):ℝ))
+    (hglob : 2*mpErr (σ2.real univ) (d.supportRadius/(-d.y0)) K ≤ dec S s.globalW)
+    (x : ℝ) (hx : (p.left:ℝ) ≤ x ∧ x ≤ p.right) :
+    W z (σ1+σ2) (x:ℂ)-θ ≤ dec S upper := by
+  have hg := tcCheck_geom s logs p lower upper pos hc
+  have hprm := tcCheck_right_params s logs p lower upper pos hc hk
+  simp only [tcGeometryCheck,Bool.and_eq_true] at hg
+  obtain ⟨⟨⟨⟨⟨h0,-⟩,-⟩,-⟩,-⟩,hYl⟩ := hg
+  obtain ⟨hr0,hlr,hcl,hrc,-⟩ := of_decide_eq_true h0
+  rw [hk,show (TCKind.Right != TCKind.Right)=false by decide,Bool.false_or] at hYl
+  have hYl' : Y ≤ (p.left:ℝ) := by rw [← hYs]; exact_mod_cast of_decide_eq_true hYl
+  have hcl' : (p.center:ℝ)-p.radius ≤ p.left := by exact_mod_cast hcl
+  have hrc' : (p.right:ℝ) ≤ p.center+p.radius := by exact_mod_cast hrc
+  have hR0 : (0:ℝ)<p.rightR := by exact_mod_cast hprm.1
+  have hR1 : (p.rightR:ℝ)<1 := by exact_mod_cast hprm.2.1
+  have hsb : (p.right:ℝ) ≤ Y*(1+(p.rightR:ℝ))^2/(4*(p.rightR:ℝ)) := by
+    rw [← hYs]; exact_mod_cast hprm.2.2
+  have hW : tcIsW p=true := by simp [tcIsW,hk]
+  have hxY : Y ≤ x := hYl'.trans hx.1
+  have hx0 : 0 ≤ x := hY.le.trans hxY
+  -- U₁ is antitone on [Y, ∞)
+  have hs1 : σ1 {s | s.im ≠ 0 ∨ s.re<0 ∨ Y<s.re}=0 := by rw [d.first_measure]; exact seg_first_support hY.le _ _
+  haveI : IsFiniteMeasure σ1 := by rw [d.first_measure]; exact isFiniteMeasure_seg d.nonneg
+  have hh : (Y/2:ℂ) ≠ 0 := div_ne_zero (Complex.ofReal_ne_zero.mpr hY.ne') (by norm_num)
+  have hno : σ1 {(Y:ℂ)}=0 := by
+    have h := segMeasure_end_null (M:=(Y/2:ℂ)) hh d.c d.N
+    rw [show (Y/2:ℂ)+(Y/2:ℂ)=(Y:ℂ) by ring] at h
+    rw [d.first_measure]; exact h
+  have hintY : Integrable (fun y => Real.log ‖(Y:ℂ)-y‖) σ1 := by
+    rw [d.first_measure]; exact seg_first_integrable_right hY d.nonneg le_rfl
+  have hanti := logPot_antitone_right_closed σ1 Y hs1 hno hintY
+  have hmono : U σ1 ((Y*(1+(p.rightR:ℝ))^2/(4*(p.rightR:ℝ)):ℝ):ℂ) ≤ U σ1 (x:ℂ) :=
+    hanti (mem_Ici.mpr hxY) (mem_Ici.mpr (hxY.trans (hx.2.trans hsb))) (hx.2.trans hsb)
+  -- split U(σ₁+σ₂)
+  have hi1 : Integrable (fun y => Real.log ‖(x:ℂ)-y‖) σ1 := by
+    rw [d.first_measure]; exact seg_first_integrable_right hY d.nonneg hxY
+  have hi2 := latticeSecond_log_integrable d x hx0
+  have hU := U_add_of_integrable σ1 σ2 (x:ℂ) hi1 hi2
+  -- TC soundness with H = 0 and e = multipole remainder
+  set u := x-(p.center:ℝ) with hu_def
+  have hxu : x=(p.center:ℝ)+u := by rw [hu_def]; ring
+  have hu : |u| ≤ (p.radius:ℝ) := abs_le.mpr ⟨by linarith,by linarith⟩
+  let e : ℝ → ℝ := fun v => if 0 ≤ (p.center:ℝ)+v then
+    -2*(U σ2 ((((p.center:ℝ)+v:ℝ)):ℂ)-d.mpValue K ((p.center:ℝ)+v)) else 0
+  have he : ∀ v, |v| ≤ (p.radius:ℝ) → |e v| ≤ dec S (if tcIsW p then s.globalW else s.globalA) := by
+    intro v _
+    rw [if_pos hW]
+    by_cases h0 : 0 ≤ (p.center:ℝ)+v
+    · simp only [e,if_pos h0,abs_mul,abs_neg,abs_two]
+      exact (mul_le_mul_of_nonneg_left (second_mp_err Y σ1 σ2 d K _ h0) (by norm_num)).trans hglob
+    · simp only [e,if_neg h0,abs_zero]
+      exact (mul_nonneg (by norm_num)
+        ((abs_nonneg _).trans (second_mp_err Y σ1 σ2 d K 0 le_rfl))).trans hglob
+  have hH : (0:ℝ) ≤ 0 ∧ (0:ℝ) ≤ hullBoundR p := by
+    simp [hullBoundR,hW,originBoundR,hk]
+  have key := tcCheck_sound s logs p lower upper pos hc r hlogs henc 0 hH e he u hu
+  have hx0' : 0 ≤ (p.center:ℝ)+u := by rw [← hxu]; exact hx0
+  have ht := rightField_eq_target s r p hk z θ Y σ1 σ2 d K hL hθ hy0 hYs hM1 hM2 hfk hK hw
+    ⟨hR0,hR1⟩ hY u hx0'
+  have hval : tcTargetR s r p u+0+e u=V z (x:ℂ)-2*U σ1 ((Y*(1+(p.rightR:ℝ))^2/(4*(p.rightR:ℝ)):ℝ):ℂ)-
+      2*U σ2 (x:ℂ)-θ := by
+    rw [← ht]; simp only [e,if_pos hx0']; rw [← hxu]; ring
+  have hWx : W z (σ1+σ2) (x:ℂ)-θ=V z (x:ℂ)-2*U σ1 (x:ℂ)-2*U σ2 (x:ℂ)-θ := by
+    rw [W,hU]; ring
+  rw [hWx]
+  linarith [key.2.1,hval]
+
+end RightCells
 
 end
 end CatalanCore.Li2.DecayCert.Simple
