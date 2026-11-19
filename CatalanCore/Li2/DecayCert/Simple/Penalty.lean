@@ -649,23 +649,38 @@ theorem ASide.penalty (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ �
 
 
 /-- The atom primitive `2G̃(x) − 3G̃(x−1) + G̃(4−x) + (1−ρ−θ)x − L x²/2 − 2∫P` at a rational `x ∈ [1, 4]`. -/
+theorem integral_C_add_eval (k : ℝ) (p : Polynomial ℝ) (x : ℝ) :
+    (Polynomial.C k+p).integral.eval x=k*x+p.integral.eval x := by
+  set G : Polynomial ℝ := Polynomial.C k*Polynomial.X+p.integral
+  have hd : Polynomial.derivative ((Polynomial.C k+p).integral-G)=0 := by
+    simp only [G,Polynomial.derivative_sub,Polynomial.derivative_add,Polynomial.derivative_integral,
+      Polynomial.derivative_mul,Polynomial.derivative_C,Polynomial.derivative_X,zero_mul,mul_one,zero_add,sub_self]
+  have hc := Polynomial.eq_C_of_derivative_eq_zero hd
+  have h0 : ((Polynomial.C k+p).integral-G).eval 0=0 := by
+    simp [G,Polynomial.integral_eval_zero]
+  rw [hc,Polynomial.eval_C] at h0
+  rw [h0,map_zero,sub_eq_zero] at hc
+  rw [hc]; simp [G]
+
+/-- The atom primitive `2G̃(x) − 3G̃(x−1) + G̃(4−x) + (1−ρ−θ)x − L x²/2 − 2((U₂c+U₁(y₀))x + ∫P_A)` at a
+rational `x ∈ [1, 4]`; the stored list `qAI` is the antiderivative of the rational part `P_A`. -/
 def atomPrimBoxF (s : SourceF) (lg : ℚ → Option FBox) (qAI : List FBox) (x : ℚ) : Option FBox :=
   (gtBoxF lg x).bind fun g0 => (gtBoxF lg (x-1)).bind fun g1 => (gtBoxF lg (4-x)).bind fun g4 =>
   some (boxSubF (boxSubF (boxAddF (boxAddF (boxSubF (boxScaleF 2 g0) (boxScaleF 3 g1)) g4)
       (boxMulF (boxSubF boxOne (boxOfQ (s.rho+s.theta))) (boxOfQ x)))
       (boxMulF s.L (boxOfQ (x^2/2))))
-    (boxScaleF 2 (polyEvalF (boxOfQ x) qAI)))
+    (boxScaleF 2 (boxAddF (boxMulF (boxAddF s.U2c s.U1y0) (boxOfQ x)) (polyEvalF (boxOfQ x) qAI))))
 
 theorem atomPrimBoxF_sound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ)
     (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ)
-    (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (ids : List ℕ) (polyA : Polynomial ℝ)
+    (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (ids : List ℕ) (qApoly : Polynomial ℝ)
     (qAI : List FBox) (qAIv : List ℝ) (hqAI : List.Forall₂ Contains qAI qAIv)
-    (hqAIe : ∀ x : ℝ, qAIv.foldl (fun t b => x*t+b) 0=polyA.integral.eval x)
+    (hqAIe : ∀ x : ℝ, qAIv.foldl (fun t b => x*t+b) 0=qApoly.integral.eval x)
     (x : ℚ) (b : FBox) (h : atomPrimBoxF s (fun a => lookupLogF logs a ids) qAI x=some b) :
-    Contains b (atomPrimitive z ρ θ polyA (x:ℝ)) := by
+    Contains b (atomPrimitive z ρ θ (Polynomial.C (r.U2c+r.U1y0)+qApoly) (x:ℝ)) := by
   have hlg : ∀ a c, (fun a => lookupLogF logs a ids) a=some c → Contains c (Real.log (a:ℝ)) :=
     fun a c hc => lookupLogF_sound logs lk.logs a ids c hc
-  obtain ⟨-,-,hL,-,-,-,-,-,-,-,-⟩ := lk.enc
+  obtain ⟨-,-,hL,-,hU2c,hU1y0,-,-,-,-,-⟩ := lk.enc
   simp only [atomPrimBoxF,Option.bind_eq_some_iff,Option.some.injEq] at h
   obtain ⟨g0,hg0,g1,hg1,g4,hg4,rfl⟩ := h
   have G0 := gtBoxF_sound _ hlg _ _ hg0
@@ -674,15 +689,16 @@ theorem atomPrimBoxF_sound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z
   have LIN := boxMulF_sound _ _ _ _ (boxSubF_sound _ _ _ _ boxOne_sound (boxOfQ_sound (s.rho+s.theta)))
     (boxOfQ_sound x)
   have QUAD := boxMulF_sound _ _ _ _ hL (boxOfQ_sound (x^2/2))
+  have CST := boxMulF_sound _ _ _ _ (boxAddF_sound _ _ _ _ hU2c hU1y0) (boxOfQ_sound x)
   have POLY := polyEvalF_sound (boxOfQ x) (x:ℝ) (boxOfQ_sound x) qAI qAIv hqAI boxZero 0 boxZero_sound
   have ALL := boxSubF_sound _ _ _ _ (boxSubF_sound _ _ _ _ (boxAddF_sound _ _ _ _ (boxAddF_sound _ _ _ _
     (boxSubF_sound _ _ _ _ (boxScaleF_sound 2 _ _ G0) (boxScaleF_sound 3 _ _ G1)) G4) LIN) QUAD)
-    (boxScaleF_sound 2 _ _ POLY)
+    (boxScaleF_sound 2 _ _ (boxAddF_sound _ _ _ _ CST POLY))
   unfold polyEvalF
   convert ALL using 1
   unfold atomPrimitive
   have hρθ' : ((s.rho:ℚ):ℝ)+((s.theta:ℚ):ℝ)=ρ+θ := by rw [← lk.hρθ]; push_cast; ring
-  rw [hqAIe,lk.hL]
+  rw [integral_C_add_eval,hqAIe,lk.hL]
   push_cast
   linear_combination (x:ℝ)*hρθ'
 
@@ -690,32 +706,33 @@ theorem atomPrimBoxF_sound (s : SourceF) (logs : List LogEntry) (r : SourceR) (z
 theorem atomGapIntegral_le (s : SourceF) (logs : List LogEntry) (r : SourceR) (z ρ θ Y : ℝ)
     (σ1 σ2 : Measure ℂ) [IsFiniteMeasure σ1] (y0 rr : ℝ) (K : ℕ) (f2 : ℝ → ℝ)
     (lk : ALink s logs r z ρ θ Y σ1 σ2 y0 rr K f2) (dd : CatalanCore.Li2.Uniform.DualDatum)
-    (hσ : dd.σ=σ1+σ2) (ids : List ℕ) (polyA : Polynomial ℝ)
-    (hpolyA : ∀ x : ℝ, polyA.eval x=r.U2c+r.U1y0+hornerR x r.qA)
+    (hσ : dd.σ=σ1+σ2) (ids : List ℕ) (qApoly : Polynomial ℝ)
+    (hqA' : ∀ x : ℝ, qApoly.eval x=hornerR x r.qA)
     (qAI : List FBox) (qAIv : List ℝ) (hqAI : List.Forall₂ Contains qAI qAIv)
-    (hqAIe : ∀ x : ℝ, qAIv.foldl (fun t b => x*t+b) 0=polyA.integral.eval x)
+    (hqAIe : ∀ x : ℝ, qAIv.foldl (fun t b => x*t+b) 0=qApoly.integral.eval x)
     (p q : ℚ) (hp : 1 ≤ p) (hpq : p ≤ q) (hq : q ≤ 4) (bp bq : FBox)
     (hbp : atomPrimBoxF s (fun a => lookupLogF logs a ids) qAI p=some bp)
     (hbq : atomPrimBoxF s (fun a => lookupLogF logs a ids) qAI q=some bq) :
     (∫ x in (p:ℝ)..(q:ℝ), A z ρ (σ1+σ2) x-θ) ≤ dec S bq.2-dec S bp.1+dec S s.globalA*((q:ℝ)-(p:ℝ)) := by
-  have hP := atomPrimBoxF_sound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk ids polyA qAI qAIv hqAI hqAIe p bp hbp
-  have hQ := atomPrimBoxF_sound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk ids polyA qAI qAIv hqAI hqAIe q bq hbq
+  have hP := atomPrimBoxF_sound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk ids qApoly qAI qAIv hqAI hqAIe p bp hbp
+  have hQ := atomPrimBoxF_sound s logs r z ρ θ Y σ1 σ2 y0 rr K f2 lk ids qApoly qAI qAIv hqAI hqAIe q bq hbq
   have hpR : (1:ℝ) ≤ (p:ℝ) := by exact_mod_cast hp
   have hpqR : (p:ℝ) ≤ (q:ℝ) := by exact_mod_cast hpq
   have hqR : (q:ℝ) ≤ 4 := by exact_mod_cast hq
   have hmod := logPot_stieltjes_model σ1 y0 rr Y lk.hy (by linarith [lk.hrr.1,lk.hrr.2]) lk.hY lk.hsep lk.hs1 K
-  have hR : ∀ x ∈ Icc (p:ℝ) (q:ℝ), |U dd.σ (-(x:ℂ))-polyA.eval x| ≤ mpErr (σ1.real univ) (rr/(-y0)) K := by
+  have hR : ∀ x ∈ Icc (p:ℝ) (q:ℝ), |U dd.σ (-(x:ℂ))-(Polynomial.C (r.U2c+r.U1y0)+qApoly).eval x| ≤
+      mpErr (σ1.real univ) (rr/(-y0)) K := by
     intro x hx
     have hx14 : x ∈ Icc (1:ℝ) 4 := ⟨hpR.trans hx.1,hx.2.trans hqR⟩
-    rw [hσ,U_add_of_integrable σ1 σ2 _ (lk.hi1 x hx14) (lk.hi2 x hx14),lk.hU2 x hx14,hpolyA,
-      lk.hqA x hx14,lk.hU1y0]
+    rw [hσ,U_add_of_integrable σ1 σ2 _ (lk.hi1 x hx14) (lk.hi2 x hx14),lk.hU2 x hx14,
+      Polynomial.eval_add,Polynomial.eval_C,hqA',lk.hqA x hx14,lk.hU1y0]
     have hb := hmod.2.2 (-x-y0) (abs_le.mpr ⟨by linarith [hx14.2,lk.hrr.2],by linarith [hx14.1,lk.hrr.1]⟩)
     rw [evalModel_stieltjesCoeffs] at hb
     beta_reduce at hb
     have he : (((y0+(-x-y0):ℝ)):ℂ)=-(x:ℂ) := by push_cast; ring
     rw [he] at hb
     convert hb using 2; ring
-  have hI := integral_A_closed z ρ θ p q dd polyA ⟨hpR,hpqR,hqR⟩ _ hR
+  have hI := integral_A_closed z ρ θ p q dd _ ⟨hpR,hpqR,hqR⟩ _ hR
   rw [hσ] at hI
   have hg : 2*mpErr (σ1.real univ) (rr/(-y0)) K*((q:ℝ)-(p:ℝ)) ≤ dec S s.globalA*((q:ℝ)-(p:ℝ)) :=
     mul_le_mul_of_nonneg_right lk.hglob (by linarith)
