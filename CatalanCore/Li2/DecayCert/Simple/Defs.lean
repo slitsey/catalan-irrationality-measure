@@ -74,60 +74,66 @@ def tcGeometryCheck (s : SourceF) (p : TCSpec) : Bool :=
     (p.kind != .AtomLeft || decide (p.left=1)) &&
     (p.kind != .AtomRight || decide (p.right=4)) &&
     (p.kind != .Right || decide (s.Y≤p.left))
-def buildTCBox (s : SourceF) (logs : List LogEntry) (p : TCSpec) : Option IntTaylorModel := do
-  if !tcGeometryCheck s p then none else do
-    let c:=p.center
-    let R:=(boxOfQ p.radius).2
-    let lg := fun arg => lookupLogF logs arg p.logIds
-    let isW := p.kind==.W || p.kind==.WOrigin || p.kind==.Right
-    let mut m : IntTaylorModel := ⟨List.replicate (p.jetOrder+1) boxZero,0⟩
-    let mut cn := boxZero
-    let mut lin := boxZero
-    if isW then
-      let logd ← lg (c-s.y0)
-      let lm ← logAffineBoxF (boxScaleF 2 s.m2) (boxOfQ (c-s.y0)) R logd p.mpJetOrder
-      let mm ← mpBoxKF s.MU s.m2 (max |s.y0+4| |-1-s.y0|) (boxOfQ (c-s.y0)) R p.mpJetOrder p.mpCut
-      m := modelAddF (modelAddF m lm) mm
-      m := ⟨m.coeff,m.remainder+s.globalW⟩
-      cn := boxSubF (boxAddF boxOne (boxMulF s.L (boxOfQ c))) (boxOfQ s.theta)
-      lin := s.L
-      if p.kind==.Right then
-        if p.rightR≤0 ∨ 1≤p.rightR ∨ s.Y*(1+p.rightR)^2/(4*p.rightR)<p.right then none else do
-          let lr ← lg p.rightR
-          let ly ← lg (4/s.Y)
-          let v:=boxAddF (boxMulF s.m1 (boxAddF ly lr)) (polyExactF p.rightR (s.firstOverK.reverse++[boxZero]))
-          cn := boxSubF cn (boxScaleF 2 v)
-      else
-        let yh:=s.Y/2
-        let pm ← midPolyBoxF s.P1mid s.P1width (c/yh-1) (1/yh) p.radius p.jetOrder
-        m := modelAddF m (modelScaleF (-2) pm)
-        cn := boxSubF cn (boxScaleF 2 s.U1c)
-      if p.kind==.WOrigin then
-        if p.left≠0 ∨ p.right≤0 ∨ 1/3<p.right then none else do
-          let lh ← lg p.right
-          let h:=boxScaleF (-2) (boxMulF (boxOfQ p.right) lh)
-          cn := boxAddF cn (0,h.2)
-    else
-      cn := boxSubF (boxSubF (boxSubF boxOne (boxMulF s.L (boxOfQ c))) (boxOfQ (s.rho+s.theta))) (boxScaleF 2 (boxAddF s.U2c s.U1y0))
-      lin := boxNegF s.L
-      let pm ← midPolyBoxF s.PAmid s.PAwidth c 1 p.radius p.jetOrder
-      m := modelAddF m (modelScaleF (-2) pm)
-      m := ⟨m.coeff,m.remainder+s.globalA⟩
-      if p.kind==.AtomLeft || p.kind==.AtomRight then
-        let h:=p.right-p.left
-        if h≤0 ∨ 1/3<h then none else do
-          let lh ← lg h
-          let sg : ℤ := if p.kind==.AtomLeft then -3 else -1
-          let hull:=boxScaleF sg (boxMulF (boxOfQ h) lh)
-          cn := boxAddF cn (0,hull.2)
-    let args : List (ℤ×ℤ×ℚ) :=
-      if isW then [(3,1,c+1),(-1,1,c+4)]++(if p.kind==.WOrigin then [] else [(-2,1,c)])
-      else [(2,1,c)]++(if p.kind==.AtomLeft then [] else [(-3,1,c-1)])++(if p.kind==.AtomRight then [] else [(-1,-1,4-c)])
-    for (sg,di,x) in args do
-      let lx ← lg x
-      let a ← xlogBoxF sg di (boxOfQ x) R lx p.jetOrder
-      m := modelAddF m a
-    pure (addAffineF m cn lin)
+def xlogFoldF (lg : ℚ → Option FBox) (R : ℤ) (J : ℕ) : List (ℤ×ℤ×ℚ) → IntTaylorModel → Option IntTaylorModel
+  | [],m => some m
+  | (sg,di,x)::t,m => (lg x).bind fun lx => (xlogBoxF sg di (boxOfQ x) R lx J).bind fun a =>
+      xlogFoldF lg R J t (modelAddF m a)
+
+def tcIsW (p : TCSpec) : Bool := p.kind==.W || p.kind==.WOrigin || p.kind==.Right
+
+def tcArgs (p : TCSpec) : List (ℤ×ℤ×ℚ) :=
+  if tcIsW p then [(3,1,p.center+1),(-1,1,p.center+4)]++(if p.kind==.WOrigin then [] else [(-2,1,p.center)])
+  else [(2,1,p.center)]++(if p.kind==.AtomLeft then [] else [(-3,1,p.center-1)])++
+    (if p.kind==.AtomRight then [] else [(-1,-1,4-p.center)])
+
+def wTailF (s : SourceF) (lg : ℚ → Option FBox) (p : TCSpec) (m : IntTaylorModel) (cn0 : FBox) :
+    Option (IntTaylorModel×FBox) :=
+  if p.kind==.Right then
+    if p.rightR≤0 ∨ 1≤p.rightR ∨ s.Y*(1+p.rightR)^2/(4*p.rightR)<p.right then none else
+    (lg p.rightR).bind fun lr => (lg (4/s.Y)).bind fun ly =>
+      some (m,boxSubF cn0 (boxScaleF 2 (boxAddF (boxMulF s.m1 (boxAddF ly lr))
+        (polyExactF p.rightR (s.firstOverK.reverse++[boxZero])))))
+  else
+    (midPolyBoxF s.P1mid s.P1width (p.center/(s.Y/2)-1) (1/(s.Y/2)) p.radius p.jetOrder).bind fun pm =>
+      some (modelAddF m (modelScaleF (-2) pm),boxSubF cn0 (boxScaleF 2 s.U1c))
+
+def originF (lg : ℚ → Option FBox) (p : TCSpec) (cn : FBox) : Option FBox :=
+  if p.kind==.WOrigin then
+    if p.left≠0 ∨ p.right≤0 ∨ 1/3<p.right then none else
+    (lg p.right).bind fun lh => some (boxAddF cn (0,(boxScaleF (-2) (boxMulF (boxOfQ p.right) lh)).2))
+  else some cn
+
+def wPartF (s : SourceF) (lg : ℚ → Option FBox) (p : TCSpec) (R : ℤ) : Option (IntTaylorModel×FBox×FBox) :=
+  (lg (p.center-s.y0)).bind fun logd =>
+  (logAffineBoxF (boxScaleF 2 s.m2) (boxOfQ (p.center-s.y0)) R logd p.mpJetOrder).bind fun lm =>
+  (mpBoxKF s.MU s.m2 (max |s.y0+4| |-1-s.y0|) (boxOfQ (p.center-s.y0)) R p.mpJetOrder p.mpCut).bind fun mm =>
+  (wTailF s lg p ⟨(modelAddF (modelAddF ⟨List.replicate (p.jetOrder+1) boxZero,0⟩ lm) mm).coeff,
+      (modelAddF (modelAddF ⟨List.replicate (p.jetOrder+1) boxZero,0⟩ lm) mm).remainder+s.globalW⟩
+    (boxSubF (boxAddF boxOne (boxMulF s.L (boxOfQ p.center))) (boxOfQ s.theta))).bind fun mc =>
+  (originF lg p mc.2).bind fun cn => some (mc.1,cn,s.L)
+
+def hullAF (lg : ℚ → Option FBox) (p : TCSpec) (cn : FBox) : Option FBox :=
+  if p.kind==.AtomLeft || p.kind==.AtomRight then
+    if p.right-p.left≤0 ∨ 1/3<p.right-p.left then none else
+    (lg (p.right-p.left)).bind fun lh => some (boxAddF cn
+      (0,(boxScaleF (if p.kind==.AtomLeft then -3 else -1) (boxMulF (boxOfQ (p.right-p.left)) lh)).2))
+  else some cn
+
+def aPartF (s : SourceF) (lg : ℚ → Option FBox) (p : TCSpec) : Option (IntTaylorModel×FBox×FBox) :=
+  (midPolyBoxF s.PAmid s.PAwidth p.center 1 p.radius p.jetOrder).bind fun pm =>
+  (hullAF lg p (boxSubF (boxSubF (boxSubF boxOne (boxMulF s.L (boxOfQ p.center))) (boxOfQ (s.rho+s.theta)))
+      (boxScaleF 2 (boxAddF s.U2c s.U1y0)))).bind fun cn =>
+  some (⟨(modelAddF ⟨List.replicate (p.jetOrder+1) boxZero,0⟩ (modelScaleF (-2) pm)).coeff,
+    (modelAddF ⟨List.replicate (p.jetOrder+1) boxZero,0⟩ (modelScaleF (-2) pm)).remainder+s.globalA⟩,cn,boxNegF s.L)
+
+/-- The fused TC builder: far-field part (`wPartF` for W/WOrigin/Right, `aPartF` for atoms), then the
+x·log terms (`xlogFoldF`), then the affine part. Structural pieces so each has its own soundness lemma. -/
+def buildTCBox (s : SourceF) (logs : List LogEntry) (p : TCSpec) : Option IntTaylorModel :=
+  if !tcGeometryCheck s p then none else
+  (if tcIsW p then wPartF s (fun a => lookupLogF logs a p.logIds) p (boxOfQ p.radius).2
+    else aPartF s (fun a => lookupLogF logs a p.logIds) p).bind fun t =>
+  (xlogFoldF (fun a => lookupLogF logs a p.logIds) (boxOfQ p.radius).2 p.jetOrder (tcArgs p) t.1).bind fun m =>
+  some (addAffineF m t.2.1 t.2.2)
 def tcBuildCheck (s : SourceF) (logs : List LogEntry) (w : TCWitness) : Bool := decide (buildTCBox s logs w.spec=some w.model)
 def tcRangeCheck (w : TCWitness) : Bool :=
   modelValidF w.spec.radius w.model &&
