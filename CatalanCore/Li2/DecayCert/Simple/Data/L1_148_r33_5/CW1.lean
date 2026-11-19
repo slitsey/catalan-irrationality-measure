@@ -1,0 +1,11 @@
+module
+public import CatalanCore.Li2.DecayCert.Simple.Data.L1_148_r33_5.Defs
+@[expose] public section
+set_option Elab.async false
+set_option maxHeartbeats 0
+set_option maxRecDepth 100000
+open MeasureTheory Set
+namespace CatalanCore.Li2.DecayCert.Simple.Data.L1_148_r33_5
+open CatalanCore.Li2.DecayCert CatalanCore.Li2.DecayCert.Simple CatalanCore.Li2.DecayCert.LatticeSimple CatalanCore.Li2.DecayCert.LatticeGate
+theorem c014_ok : WCell.ok source logs c014=true := by decide +kernel
+end CatalanCore.Li2.DecayCert.Simple.Data.L1_148_r33_5

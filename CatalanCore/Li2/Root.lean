@@ -110,7 +110,20 @@ theorem li2_measure_general_of_certs (T : Uniform.NodeTable)
     (decay_certs_to_scaled T a b hb hab ha h2 ρ D hρ hD decayCerts) hη hμ nvCerts
 
 
+/-- The measure bound from any sound decay table (certified on any mix of routes). -/
+theorem li2_measure_general_of_tableSound (T : Uniform.NodeTable) (H : Uniform.TableSound T)
+    (a b : ℤ) (hb : 0<b) (hab : IsCoprime a b) (ha : a≠0) (h2 : 2*|a|≤b)
+    (ρ D μ : ℝ) (hρ : 0<ρ)
+    (hD : Uniform.Candidate T (Int.sign a) (Real.log ((b:ℝ)/|(a:ℝ)|)) ρ D)
+    (hη : 0<D+cRate a b) (hμ : ρ*max (2/(D+cRate a b)) (39/98)<μ)
+    (nvCerts : NVMod.AllConstantsChecked 12) :
+    ∀ᶠ q : ℕ in Filter.atTop,∀ p : ℤ,(q:ℝ)^(-μ)<
+      |(∑' k : ℕ,((a:ℝ)/b)^(k+1)/((k:ℝ)+1)^2)-(p:ℝ)/q| :=
+  measure_from_scaled a b hb hab ha h2 ρ D μ hρ
+    (decay_from_table_sound T H a b hb ha h2 ρ D hρ hD) hη hμ nvCerts
+
 #print axioms rational_input
+#print axioms li2_measure_general_of_tableSound
 #print axioms decay_certs_to_scaled
 #print axioms li2_measure_general_of_certs
 end

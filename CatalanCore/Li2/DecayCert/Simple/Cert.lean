@@ -1,9 +1,10 @@
 module
 public import CatalanCore.Li2.DecayCert.Simple.Link
 public import CatalanCore.Li2.DecayCert.Lattice.Energy
+public import CatalanCore.Li2.DecayCert.Lattice.Gates.Energy
 public import CatalanCore.Li2.DecayCert.Lattice.Tail
 /-! The SIMPLE lattice certificate. `SimpleSetup` is the certificate of one lattice datum (source and its
-check, W side with caps, Right cells, tail, energy); `SimplePairCert` adds one `ρ` (atom side with caps and
+check, W side with caps, Right cells, tail, energy from exact moment tables); `SimplePairCert` adds one `ρ` (atom side with caps and
 the final scalar). `latticeSimple_D_ge` concludes the dual lower bound in the form of `latticeCert_D_ge`. -/
 @[expose] public section
 open MeasureTheory Set Polynomial
@@ -17,6 +18,8 @@ structure SimpleSetup where
   density : DensityWitness
   energy : LatticeEnergyWitness
   Iup : ℚ
+  emu : List ℚ
+  eup : List ℤ
   cutoff : ℚ
   terms : ℕ
   source : SourceF
@@ -58,7 +61,7 @@ def simpleSetupCheck (z : ℚ) (d : LatticeInput) (c : SimpleSetup) : Bool :=
   decide ((c.rcells.map RCell.cap).sum ≤ c.TR) &&
   scalarUpperCheck (latticeTailExpr z d c.toLS) c.source.theta &&
   scalarUpperCheck (seAdd (seRat (3/(c.cutoff+1))) (.log c.terms |z|)) 0 &&
-  (match latticeEnergyExpr d c.energy with | some e => scalarUpperCheck e c.Iup | none => false)
+  energyTableCheck d c.energy S c.emu c.aux.sm c.eup c.Iup
 
 /-- The SIMPLE certificate of one `(datum, ρ)` pair: the atom side and the final scalar. -/
 structure SimplePairCert where
@@ -146,12 +149,8 @@ theorem latticeSimple_D_ge (z : ℚ) (d : LatticeInput) (c : SimpleSetup) (p : S
   haveI := positive_source_finite d.first hpos1
   haveI := positive_source_finite d.second hpos2
   -- energy
-  have hI : I d.data.dual.σ ≤ (c.Iup:ℝ) := by
-    cases he : latticeEnergyExpr d c.energy with
-    | none => rw [he] at hen; simp at hen
-    | some e =>
-      rw [he] at hen
-      exact (latticeEnergyExpr_upper d c.density hd hsh c.energy e he).trans (scalarUpperCheck_sound _ _ hen)
+  have hI : I d.data.dual.σ ≤ (c.Iup:ℝ) :=
+    energyTableCheck_I_upper d c.density hd hsh c.energy S c.emu c.aux.sm c.eup c.Iup hen
   -- the W side on [0, Y]
   have lkW := simpleWLink z d c.density hd hsh c.source c.logs c.aux hsrc
   have hfW : ContinuousOn (fun x : ℝ => W (z:ℝ) (d.first.measure+d.second.measure) (x:ℂ)-(c.source.theta:ℝ))
