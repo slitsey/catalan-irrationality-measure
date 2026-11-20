@@ -7,9 +7,9 @@ version: "v0.4"
 project:
   name: "Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4"
   description: >-
-    We prove mu(a zeta(3) + b pi^4) <= 34.14 for all integers a, b with
-    b != 0, and mu(zeta(3)/pi^4) <= 55.50: |x - p/q| > q^(-mu) for every
-    integer p and every sufficiently large integer q. The bound 55.50 holds
+    We prove mu(a zeta(3) + b pi^4) <= 27.49 for all integers a, b with
+    b != 0, and mu(zeta(3)/pi^4) <= 35.35: |x - p/q| > q^(-mu) for every
+    integer p and every sufficiently large integer q. The bound 35.35 holds
     for every ratio (a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) with integers
     a, b, c, d and ad - bc != 0. The approximations are
     Lai's Hankel determinants J_n(a, b, X), used unchanged. A measure needs
@@ -20,9 +20,10 @@ project:
     exponent 42.94856306). The denominators are bounded at every prime by an
     exact law for the p-adic valuation, whose integral over the primes has a
     closed form (Lambda = 28.68723663). Nonvanishing is proved at the sizes tied
-    to Lai's auxiliary primes and to two new families of primes, 3l = 7n + 1
-    and 3l = 7n + 2, and a counting criterion with the prime number theorem in
-    progressions turns it into a measure. All numerical bounds are ordinary
+    to a band of primes, 8n/3 < l < 3n - 1 (a p-adic Gram determinant with
+    explicit blocks), to Lai's auxiliary primes and to two families of
+    primes, 3l = 7n + 1 and 3l = 7n + 2, and a counting criterion with the
+    prime number theorem in progressions turns it into a measure. All numerical bounds are ordinary
     kernel-checked rational proofs.
   authors:
     - "Sean Litsey"
@@ -88,7 +89,7 @@ fidelity:
     sum_{k>=0} 1/(k+1)^4, and pi is Mathlib's Real.pi. The plane statement is
     written as a zeta(3) + b zeta(4) with integers a, b, b != 0. Since
     pi^4 = 90 zeta(4), its instance at (a, 90b) is the paper's form
-    a zeta(3) + b pi^4. The exponents 34.14 and 55.50 are
+    a zeta(3) + b pi^4. The exponents 27.49 and 35.35 are
     represented exactly in R.
 
 review:
@@ -104,17 +105,17 @@ alignment:
   namespace: "LaiIrrationalityMeasure"
   statements:
     - source: "Litsey, Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4 (2026), Theorem 1.1(a)"
-      lean: "LaiIrrationalityMeasure.lai_plane_measure_34_14"
+      lean: "LaiIrrationalityMeasure.lai_plane_measure_27_49"
       module: "ChallengeLai"
       status: proved
-      note: "a zeta(3) + b pi^4, b != 0, exponent 34.14; the Lean statement takes a zeta(3) + b zeta(4), which is the same plane."
+      note: "a zeta(3) + b pi^4, b != 0, exponent 27.49; the Lean statement takes a zeta(3) + b zeta(4), which is the same plane."
     - source: "Litsey, Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4 (2026), Theorem 1.1(b)"
-      lean: "LaiIrrationalityMeasure.lai_ratio_measure_55_50"
+      lean: "LaiIrrationalityMeasure.lai_ratio_measure_35_35"
       module: "ChallengeLai"
       status: proved
-      note: "zeta(3)/pi^4, exponent 55.50."
+      note: "zeta(3)/pi^4, exponent 35.35."
     - source: "Litsey, Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4 (2026), Corollary 1.2"
-      lean: "LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50"
+      lean: "LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35"
       module: "ChallengeLai"
       status: proved
-      note: "(a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) for integers a, b, c, d with ad - bc != 0, exponent 55.50."
+      note: "(a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) for integers a, b, c, d with ad - bc != 0, exponent 35.35."

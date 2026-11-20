@@ -14,11 +14,11 @@ public import Mathlib.Tactic.FunProp
 /-!
 # Prime windows tied to several families (ledger LR01, LR02, LR05; Criterion W2U)
 
-A *tied family* `i` is a set `S i` of unit classes modulo a common modulus `M`, a slope `c i > 0`, a
+A *tied family* `i` is a set `S i` of unit classes modulo a common modulus `M`, a slope interval `[c₁ i, c₂ i]` with `0 < c₁ i ≤ c₂ i` (a line is `c₁ = c₂`), a
 tolerance `e i` and a finite exception set `exc i`.  A prime `ℓ` is *tied to `i` at height `L`* when
-`ℓ` is prime, `ℓ mod M ∈ S i`, `ℓ ∉ exc i` and `c i a L < ℓ ≤ c i b L`.  The window mass is the
+`ℓ` is prime, `ℓ mod M ∈ S i`, `ℓ ∉ exc i` and `c₁ i a L < ℓ ≤ c₂ i b L`.  The window mass is the
 inclusion-exclusion sum
-`𝓜(a, b) = ∑_{∅ ≠ T} (-1)^{|T|+1} (min_T e) · (|⋂_T S i| / φ(M)) · |⋂_T (c i a, c i b]|`,
+`𝓜(a, b) = ∑_{∅ ≠ T} (-1)^{|T|+1} (min_T e) · (|⋂_T S i| / φ(M)) · |⋂_T (c₁ i a, c₂ i b]|`,
 which is the Lebesgue integral of `max_i e_i 1[(c_i a, c_i b]]` averaged over the unit classes.
 
 * `tied_weight_lower` (PNT in progressions, `theta_interval_asymp`, plus the max-min identity
@@ -153,31 +153,31 @@ def overlap (S : ι → Finset (ZMod M)) (T : Finset ι) : Finset (ZMod M) :=
   Finset.univ.filter fun r => ∀ i ∈ T, r ∈ S i
 
 /-- Length of `⋂_{i ∈ T} (c_i a, c_i b]`. -/
-noncomputable def winLen (c : ι → ℝ) (a b : ℝ) (T : Finset ι) : ℝ :=
-  if h : T.Nonempty then max 0 (b * T.inf' h c - a * T.sup' h c) else 0
+noncomputable def winLen (c₁ c₂ : ι → ℝ) (a b : ℝ) (T : Finset ι) : ℝ :=
+  if h : T.Nonempty then max 0 (b * T.inf' h c₂ - a * T.sup' h c₁) else 0
 
 /-- The smallest tolerance over `T`. -/
 def minTol (e : ι → ℕ) (T : Finset ι) : ℕ := if h : T.Nonempty then T.inf' h e else 0
 
 /-- The inclusion-exclusion mass of a union of windows. -/
-noncomputable def unionMass (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) (a b : ℝ) : ℝ :=
+noncomputable def unionMass (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) (a b : ℝ) : ℝ :=
   ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
-    (((overlap S T).card : ℝ) / (M.totient : ℝ)) * winLen c a b T
+    (((overlap S T).card : ℝ) / (M.totient : ℝ)) * winLen c₁ c₂ a b T
 
 /-- `ℓ` is tied to family `i` at height `L`. -/
-def Tied (S : ι → Finset (ZMod M)) (c : ι → ℝ) (exc : ι → Finset ℕ) (a b L : ℝ) (i : ι)
+def Tied (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (exc : ι → Finset ℕ) (a b L : ℝ) (i : ι)
     (ℓ : ℕ) : Prop :=
-  ℓ.Prime ∧ (ℓ : ZMod M) ∈ S i ∧ ℓ ∉ exc i ∧ c i * a * L < ℓ ∧ (ℓ : ℝ) ≤ c i * b * L
+  ℓ.Prime ∧ (ℓ : ZMod M) ∈ S i ∧ ℓ ∉ exc i ∧ c₁ i * a * L < ℓ ∧ (ℓ : ℝ) ≤ c₂ i * b * L
 
 open Classical in
-noncomputable def tiedWt (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
+noncomputable def tiedWt (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
     (a b L : ℝ) (ℓ : ℕ) : ℕ :=
-  (Finset.univ.filter fun i => Tied S c exc a b L i ℓ).sup e
+  (Finset.univ.filter fun i => Tied S c₁ c₂ exc a b L i ℓ).sup e
 
 open Classical in
-noncomputable def tiedSum (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
+noncomputable def tiedSum (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
     (a b L : ℝ) (N : ℕ) : ℝ :=
-  ∑ ℓ ∈ Finset.range N, (tiedWt S c e exc a b L ℓ : ℝ) * Real.log ℓ
+  ∑ ℓ ∈ Finset.range N, (tiedWt S c₁ c₂ e exc a b L ℓ : ℝ) * Real.log ℓ
 
 theorem layerCnt_eq {e : ι → ℕ} {T : Finset ι} (hT : T.Nonempty) :
     layerCnt e T = minTol e T := by
@@ -198,21 +198,21 @@ theorem layerCnt_eq {e : ι → ℕ} {T : Finset ι} (hT : T.Nonempty) :
 
 open Classical in
 /-- Window sum over the primes tied simultaneously to every family of `T`. -/
-noncomputable def tiedSg (S : ι → Finset (ZMod M)) (c : ι → ℝ) (exc : ι → Finset ℕ) (a b L : ℝ)
+noncomputable def tiedSg (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (exc : ι → Finset ℕ) (a b L : ℝ)
     (N : ℕ) (T : Finset ι) : ℝ :=
-  ∑ ℓ ∈ Finset.range N, if ∀ i ∈ T, Tied S c exc a b L i ℓ then Real.log ℓ else 0
+  ∑ ℓ ∈ Finset.range N, if ∀ i ∈ T, Tied S c₁ c₂ exc a b L i ℓ then Real.log ℓ else 0
 
 /-- Inclusion-exclusion decomposition of the tied weight sum. -/
-theorem tiedSum_eq (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
+theorem tiedSum_eq (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) (exc : ι → Finset ℕ)
     (a b L : ℝ) (N : ℕ) :
-    tiedSum S c e exc a b L N = ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
-      tiedSg S c exc a b L N T := by
+    tiedSum S c₁ c₂ e exc a b L N = ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
+      tiedSg S c₁ c₂ exc a b L N T := by
   classical
   unfold tiedSum tiedSg
-  have hw : ∀ ℓ : ℕ, (tiedWt S c e exc a b L ℓ : ℝ) = ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) *
-      (if ∀ i ∈ T, Tied S c exc a b L i ℓ then (minTol e T : ℝ) else 0) := by
+  have hw : ∀ ℓ : ℕ, (tiedWt S c₁ c₂ e exc a b L ℓ : ℝ) = ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) *
+      (if ∀ i ∈ T, Tied S c₁ c₂ exc a b L i ℓ then (minTol e T : ℝ) else 0) := by
     intro ℓ
-    have h := sup_eq_alt e (Finset.univ.filter fun i => Tied S c exc a b L i ℓ)
+    have h := sup_eq_alt e (Finset.univ.filter fun i => Tied S c₁ c₂ exc a b L i ℓ)
     have h' := congrArg (fun z : ℤ => (z : ℝ)) h
     simp only [Int.cast_natCast, Int.cast_sum, Int.cast_mul, Int.cast_pow, Int.cast_neg,
       Int.cast_one] at h'
@@ -220,10 +220,10 @@ theorem tiedSum_eq (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ
     rw [h']
     refine Finset.sum_congr rfl fun T hT => ?_
     have hTn : T.Nonempty := mem_NESub.mp hT
-    have hsub : (T ⊆ Finset.univ.filter fun i => Tied S c exc a b L i ℓ) ↔
-        ∀ i ∈ T, Tied S c exc a b L i ℓ := by
+    have hsub : (T ⊆ Finset.univ.filter fun i => Tied S c₁ c₂ exc a b L i ℓ) ↔
+        ∀ i ∈ T, Tied S c₁ c₂ exc a b L i ℓ := by
       simp [Finset.subset_iff]
-    by_cases hc : ∀ i ∈ T, Tied S c exc a b L i ℓ
+    by_cases hc : ∀ i ∈ T, Tied S c₁ c₂ exc a b L i ℓ
     · rw [if_pos (hsub.mpr hc), if_pos hc, layerCnt_eq hTn]; simp
     · rw [if_neg (fun h => hc (hsub.mp h)), if_neg hc]; simp
   simp only [hw, Finset.sum_mul]
@@ -234,14 +234,14 @@ theorem tiedSum_eq (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ
   split_ifs <;> ring
 
 
-theorem tied_iff_closed {S : ι → Finset (ZMod M)} {c : ι → ℝ} {exc : ι → Finset ℕ}
+theorem tied_iff_closed {S : ι → Finset (ZMod M)} {c₁ c₂ : ι → ℝ} {exc : ι → Finset ℕ}
     {a b L : ℝ} {T : Finset ι} (hT : T.Nonempty) (ha : 0 < a) (hb : 0 < b) (hL : 0 < L)
     (ℓ : ℕ) :
-    (∀ i ∈ T, Tied S c exc a b L i ℓ) ↔
+    (∀ i ∈ T, Tied S c₁ c₂ exc a b L i ℓ) ↔
       ℓ.Prime ∧ (ℓ : ZMod M) ∈ overlap S T ∧ ℓ ∉ T.biUnion exc ∧
-        (a * T.sup' hT c) * L < ℓ ∧ (ℓ : ℝ) ≤ (b * T.inf' hT c) * L := by
-  obtain ⟨i1, hi1, h1eq⟩ := Finset.exists_mem_eq_sup' hT c
-  obtain ⟨i2, hi2, h2eq⟩ := Finset.exists_mem_eq_inf' hT c
+        (a * T.sup' hT c₁) * L < ℓ ∧ (ℓ : ℝ) ≤ (b * T.inf' hT c₂) * L := by
+  obtain ⟨i1, hi1, h1eq⟩ := Finset.exists_mem_eq_sup' hT c₁
+  obtain ⟨i2, hi2, h2eq⟩ := Finset.exists_mem_eq_inf' hT c₂
   constructor
   · intro h
     refine ⟨(h _ hi1).1, ?_, ?_, ?_, ?_⟩
@@ -257,21 +257,21 @@ theorem tied_iff_closed {S : ι → Finset (ZMod M)} {c : ι → ℝ} {exc : ι 
     simp only [overlap, Finset.mem_filter, Finset.mem_univ, true_and] at hcl
     simp only [Finset.mem_biUnion, not_exists, not_and] at hexc
     refine ⟨hp, hcl i hi, hexc i hi, ?_, ?_⟩
-    · have h1 : c i ≤ T.sup' hT c := Finset.le_sup' c hi
-      have h2 : c i * (a * L) ≤ T.sup' hT c * (a * L) :=
+    · have h1 : c₁ i ≤ T.sup' hT c₁ := Finset.le_sup' c₁ hi
+      have h2 : c₁ i * (a * L) ≤ T.sup' hT c₁ * (a * L) :=
         mul_le_mul_of_nonneg_right h1 (by positivity)
       nlinarith
-    · have h1 : T.inf' hT c ≤ c i := Finset.inf'_le c hi
-      have h2 : T.inf' hT c * (b * L) ≤ c i * (b * L) :=
+    · have h1 : T.inf' hT c₂ ≤ c₂ i := Finset.inf'_le c₂ hi
+      have h2 : T.inf' hT c₂ * (b * L) ≤ c₂ i * (b * L) :=
         mul_le_mul_of_nonneg_right h1 (by positivity)
       nlinarith
 
 open Classical in
-theorem tiedSg_eq_sum {S : ι → Finset (ZMod M)} {c : ι → ℝ} {exc : ι → Finset ℕ}
-    {a b L B : ℝ} {T : Finset ι} (hT : T.Nonempty) (hc : ∀ i, 0 < c i) (ha : 0 < a) (hb : 0 < b)
-    (hL : 0 < L) (hB : b * T.inf' hT c ≤ B) :
-    tiedSg S c exc a b L (⌊B * L⌋₊ + 1) T =
-      ∑ ℓ ∈ (Finset.Ioc ⌊(a * T.sup' hT c) * L⌋₊ ⌊(b * T.inf' hT c) * L⌋₊).filter
+theorem tiedSg_eq_sum {S : ι → Finset (ZMod M)} {c₁ c₂ : ι → ℝ} {exc : ι → Finset ℕ}
+    {a b L B : ℝ} {T : Finset ι} (hT : T.Nonempty) (hc₁ : ∀ i, 0 < c₁ i) (hc₂ : ∀ i, 0 < c₂ i) (ha : 0 < a) (hb : 0 < b)
+    (hL : 0 < L) (hB : b * T.inf' hT c₂ ≤ B) :
+    tiedSg S c₁ c₂ exc a b L (⌊B * L⌋₊ + 1) T =
+      ∑ ℓ ∈ (Finset.Ioc ⌊(a * T.sup' hT c₁) * L⌋₊ ⌊(b * T.inf' hT c₂) * L⌋₊).filter
         (fun ℓ : ℕ => ℓ.Prime ∧ (ℓ : ZMod M) ∈ overlap S T ∧ ℓ ∉ T.biUnion exc),
         Real.log ℓ := by
   unfold tiedSg
@@ -279,15 +279,15 @@ theorem tiedSg_eq_sum {S : ι → Finset (ZMod M)} {c : ι → ℝ} {exc : ι �
   refine Finset.sum_congr ?_ fun _ _ => rfl
   ext ℓ
   simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ioc, tied_iff_closed hT ha hb hL]
-  have hsup : 0 < T.sup' hT c := by
+  have hsup : 0 < T.sup' hT c₁ := by
     obtain ⟨i, hi⟩ := hT
-    exact (hc i).trans_le (Finset.le_sup' c hi)
-  have hinf : 0 < T.inf' hT c := by
-    obtain ⟨i, _, h⟩ := Finset.exists_mem_eq_inf' hT c
-    rw [h]; exact hc _
-  have hα : 0 ≤ (a * T.sup' hT c) * L := by positivity
-  have hβ : 0 ≤ (b * T.inf' hT c) * L := by positivity
-  have hBL : (b * T.inf' hT c) * L ≤ B * L := mul_le_mul_of_nonneg_right hB hL.le
+    exact (hc₁ i).trans_le (Finset.le_sup' c₁ hi)
+  have hinf : 0 < T.inf' hT c₂ := by
+    obtain ⟨i, _, h⟩ := Finset.exists_mem_eq_inf' hT c₂
+    rw [h]; exact hc₂ _
+  have hα : 0 ≤ (a * T.sup' hT c₁) * L := by positivity
+  have hβ : 0 ≤ (b * T.inf' hT c₂) * L := by positivity
+  have hBL : (b * T.inf' hT c₂) * L ≤ B * L := mul_le_mul_of_nonneg_right hB hL.le
   constructor
   · rintro ⟨_, hp, hcl, hex, h1, h2⟩
     exact ⟨⟨(Nat.floor_lt hα).mpr h1, (Nat.le_floor_iff hβ).mpr h2⟩, hp, hcl, hex⟩
@@ -344,27 +344,27 @@ theorem window_sum_bounds {C : Finset (ZMod M)} {E : Finset ℕ} {lo hi : ℕ} (
 open Classical in
 /-- The window sum over the primes tied to every family of `T`, divided by `L`, converges to
 `|overlap| / φ(M)` times the window length. -/
-theorem tendsto_tiedSg {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S i, IsUnit s) {c : ι → ℝ}
-    (hc : ∀ i, 0 < c i) (exc : ι → Finset ℕ) {a b B : ℝ} (ha : 0 < a) (hb : 0 < b)
-    {T : Finset ι} (hT : T.Nonempty) (hB : b * T.inf' hT c ≤ B) :
-    Tendsto (fun L : ℝ => tiedSg S c exc a b L (⌊B * L⌋₊ + 1) T / L) atTop
-      (𝓝 (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c a b T)) := by
-  have hsup : 0 < T.sup' hT c := by
+theorem tendsto_tiedSg {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S i, IsUnit s) {c₁ c₂ : ι → ℝ}
+    (hc₁ : ∀ i, 0 < c₁ i) (hc₂ : ∀ i, 0 < c₂ i) (exc : ι → Finset ℕ) {a b B : ℝ} (ha : 0 < a) (hb : 0 < b)
+    {T : Finset ι} (hT : T.Nonempty) (hB : b * T.inf' hT c₂ ≤ B) :
+    Tendsto (fun L : ℝ => tiedSg S c₁ c₂ exc a b L (⌊B * L⌋₊ + 1) T / L) atTop
+      (𝓝 (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c₁ c₂ a b T)) := by
+  have hsup : 0 < T.sup' hT c₁ := by
     obtain ⟨i, hi⟩ := hT
-    exact (hc i).trans_le (Finset.le_sup' c hi)
-  have hinf : 0 < T.inf' hT c := by
-    obtain ⟨i, _, h⟩ := Finset.exists_mem_eq_inf' hT c
-    rw [h]; exact hc _
-  set α : ℝ := a * T.sup' hT c with hα
-  set β : ℝ := b * T.inf' hT c with hβ
+    exact (hc₁ i).trans_le (Finset.le_sup' c₁ hi)
+  have hinf : 0 < T.inf' hT c₂ := by
+    obtain ⟨i, _, h⟩ := Finset.exists_mem_eq_inf' hT c₂
+    rw [h]; exact hc₂ _
+  set α : ℝ := a * T.sup' hT c₁ with hα
+  set β : ℝ := b * T.inf' hT c₂ with hβ
   have hα0 : 0 < α := by positivity
   have hβ0 : 0 < β := by positivity
-  have hwin : winLen c a b T = max 0 (β - α) := by
+  have hwin : winLen c₁ c₂ a b T = max 0 (β - α) := by
     unfold winLen; rw [dif_pos hT]
-  have hEq : ∀ L : ℝ, 0 < L → tiedSg S c exc a b L (⌊B * L⌋₊ + 1) T =
+  have hEq : ∀ L : ℝ, 0 < L → tiedSg S c₁ c₂ exc a b L (⌊B * L⌋₊ + 1) T =
       ∑ ℓ ∈ (Finset.Ioc ⌊α * L⌋₊ ⌊β * L⌋₊).filter
         (fun ℓ : ℕ => ℓ.Prime ∧ (ℓ : ZMod M) ∈ overlap S T ∧ ℓ ∉ T.biUnion exc),
-        Real.log ℓ := fun L hL => tiedSg_eq_sum hT hc ha hb hL hB
+        Real.log ℓ := fun L hL => tiedSg_eq_sum hT hc₁ hc₂ ha hb hL hB
   by_cases hab : α ≤ β
   · rw [hwin, max_eq_right (by linarith)]
     set C := overlap S T with hC
@@ -417,8 +417,8 @@ theorem tendsto_tiedSg {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S i, 
 
 
 /-- The union-window condition: the inclusion-exclusion mass of the windows exceeds `1`. -/
-def UnionWindowOK (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) (a b : ℝ) : Prop :=
-  1 < unionMass S c e a b
+def UnionWindowOK (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) (a b : ℝ) : Prop :=
+  1 < unionMass S c₁ c₂ e a b
 
 open Classical in
 /-- **Weighted prime mass in a union of windows** (PNT in progressions, inclusion-exclusion over
@@ -426,25 +426,25 @@ the families).  If the union mass exceeds `1`, then for large `L` the weight sum
 `∑ ℓ e(ℓ) log ℓ`, with `e(ℓ)` the largest tolerance among the families tying `ℓ`, exceeds
 `(1 + ε₀) L`. -/
 theorem tied_weight_lower {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S i, IsUnit s)
-    {c : ι → ℝ} (hc : ∀ i, 0 < c i) (e : ι → ℕ) (exc : ι → Finset ℕ) {a b B : ℝ}
-    (ha : 0 < a) (hb : 0 < b) (hB : ∀ i, b * c i ≤ B) (hmass : UnionWindowOK S c e a b) :
+    {c₁ c₂ : ι → ℝ} (hc₁ : ∀ i, 0 < c₁ i) (hc₂ : ∀ i, 0 < c₂ i) (e : ι → ℕ) (exc : ι → Finset ℕ) {a b B : ℝ}
+    (ha : 0 < a) (hb : 0 < b) (hB : ∀ i, b * c₂ i ≤ B) (hmass : UnionWindowOK S c₁ c₂ e a b) :
     ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∃ L₀ : ℝ, ∀ L : ℝ, L₀ ≤ L →
-      (1 + ε₀) * L ≤ tiedSum S c e exc a b L (⌊B * L⌋₊ + 1) := by
+      (1 + ε₀) * L ≤ tiedSum S c₁ c₂ e exc a b L (⌊B * L⌋₊ + 1) := by
   unfold UnionWindowOK at hmass
-  set m := unionMass S c e a b with hm
-  have hlim : Tendsto (fun L : ℝ => tiedSum S c e exc a b L (⌊B * L⌋₊ + 1) / L) atTop (𝓝 m) := by
+  set m := unionMass S c₁ c₂ e a b with hm
+  have hlim : Tendsto (fun L : ℝ => tiedSum S c₁ c₂ e exc a b L (⌊B * L⌋₊ + 1) / L) atTop (𝓝 m) := by
     have hsum : Tendsto (fun L : ℝ => ∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
-        (tiedSg S c exc a b L (⌊B * L⌋₊ + 1) T / L)) atTop
+        (tiedSg S c₁ c₂ exc a b L (⌊B * L⌋₊ + 1) T / L)) atTop
         (𝓝 (∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
-          (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c a b T))) := by
+          (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c₁ c₂ a b T))) := by
       refine tendsto_finset_sum _ fun T hT => ?_
       have hTn : T.Nonempty := mem_NESub.mp hT
-      have hBT : b * T.inf' hTn c ≤ B := by
+      have hBT : b * T.inf' hTn c₂ ≤ B := by
         obtain ⟨i, hi⟩ := hTn
-        exact (mul_le_mul_of_nonneg_left (Finset.inf'_le c hi) hb.le).trans (hB i)
-      exact (tendsto_tiedSg hS hc exc ha hb hTn hBT).const_mul _
+        exact (mul_le_mul_of_nonneg_left (Finset.inf'_le c₂ hi) hb.le).trans (hB i)
+      exact (tendsto_tiedSg hS hc₁ hc₂ exc ha hb hTn hBT).const_mul _
     have hval : (∑ T ∈ NESub ι, (-1 : ℝ) ^ (T.card + 1) * (minTol e T : ℝ) *
-          (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c a b T)) = m := by
+          (((overlap S T).card : ℝ) / (M.totient : ℝ) * winLen c₁ c₂ a b T)) = m := by
       rw [hm]; unfold unionMass
       exact Finset.sum_congr rfl fun T _ => by ring
     rw [hval] at hsum
@@ -486,40 +486,40 @@ integer `Wt` is divisible by `ℓ ^ e i` for every bad pair `(i, ℓ)` and `log 
 some pair `(i, ℓ)`, with `ℓ` a prime of class `S i` outside `exc i` in the window
 `c i a L < ℓ ≤ c i b L`, is not bad. -/
 theorem exists_tied_prime {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S i, IsUnit s)
-    {c : ι → ℝ} (hc : ∀ i, 0 < c i) (e : ι → ℕ) (exc : ι → Finset ℕ) {a b : ℝ}
-    (ha : 0 < a) (hb : 0 < b) (hmass : UnionWindowOK S c e a b) :
+    {c₁ c₂ : ι → ℝ} (hc₁ : ∀ i, 0 < c₁ i) (hc₂ : ∀ i, 0 < c₂ i) (e : ι → ℕ) (exc : ι → Finset ℕ) {a b : ℝ}
+    (ha : 0 < a) (hb : 0 < b) (hmass : UnionWindowOK S c₁ c₂ e a b) :
     ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∃ L₀ : ℝ, ∀ L : ℝ, L₀ ≤ L → ∀ (Bad : ι → ℕ → Prop) (Wt : ℕ),
       0 < Wt → (∀ i ℓ, Bad i ℓ → ℓ ^ e i ∣ Wt) → Real.log Wt < (1 + ε₀) * L →
-        ∃ i ℓ, Tied S c exc a b L i ℓ ∧ ¬ Bad i ℓ := by
-  have hB : ∀ i, b * c i ≤ b * ∑ j, c j := fun i =>
-    mul_le_mul_of_nonneg_left (Finset.single_le_sum (fun j _ => (hc j).le) (Finset.mem_univ i))
+        ∃ i ℓ, Tied S c₁ c₂ exc a b L i ℓ ∧ ¬ Bad i ℓ := by
+  have hB : ∀ i, b * c₂ i ≤ b * ∑ j, c₂ j := fun i =>
+    mul_le_mul_of_nonneg_left (Finset.single_le_sum (fun j _ => (hc₂ j).le) (Finset.mem_univ i))
       hb.le
-  obtain ⟨ε₀, hε₀, L₀, hL₀⟩ := tied_weight_lower hS hc e exc ha hb hB hmass
+  obtain ⟨ε₀, hε₀, L₀, hL₀⟩ := tied_weight_lower hS hc₁ hc₂ e exc ha hb hB hmass
   refine ⟨ε₀, hε₀, L₀, fun L hL Bad Wt hW hdvd hlog => ?_⟩
   by_contra hcon
   push_neg at hcon
-  set N := ⌊(b * ∑ j, c j) * L⌋₊ + 1 with hN
-  set s := (Finset.range N).filter (fun ℓ => 0 < tiedWt S c e exc a b L ℓ) with hs
-  have hpd : ∀ ℓ ∈ s, ℓ.Prime ∧ ℓ ^ tiedWt S c e exc a b L ℓ ∣ Wt := by
+  set N := ⌊(b * ∑ j, c₂ j) * L⌋₊ + 1 with hN
+  set s := (Finset.range N).filter (fun ℓ => 0 < tiedWt S c₁ c₂ e exc a b L ℓ) with hs
+  have hpd : ∀ ℓ ∈ s, ℓ.Prime ∧ ℓ ^ tiedWt S c₁ c₂ e exc a b L ℓ ∣ Wt := by
     intro ℓ hℓ
-    have hpos : 0 < tiedWt S c e exc a b L ℓ := (Finset.mem_filter.mp hℓ).2
-    set I := Finset.univ.filter fun i => Tied S c exc a b L i ℓ with hI
+    have hpos : 0 < tiedWt S c₁ c₂ e exc a b L ℓ := (Finset.mem_filter.mp hℓ).2
+    set I := Finset.univ.filter fun i => Tied S c₁ c₂ exc a b L i ℓ with hI
     have hne : I.Nonempty := by
       by_contra h
       rw [Finset.not_nonempty_iff_eq_empty] at h
-      have : tiedWt S c e exc a b L ℓ = 0 := by unfold tiedWt; rw [← hI, h]; simp
+      have : tiedWt S c₁ c₂ e exc a b L ℓ = 0 := by unfold tiedWt; rw [← hI, h]; simp
       omega
     obtain ⟨i, hi, heq⟩ := Finset.exists_mem_eq_sup I hne e
-    have hti : Tied S c exc a b L i ℓ := (Finset.mem_filter.mp hi).2
+    have hti : Tied S c₁ c₂ exc a b L i ℓ := (Finset.mem_filter.mp hi).2
     refine ⟨hti.1, ?_⟩
-    have : tiedWt S c e exc a b L ℓ = e i := by unfold tiedWt; rw [← hI]; exact heq
+    have : tiedWt S c₁ c₂ e exc a b L ℓ = e i := by unfold tiedWt; rw [← hI]; exact heq
     rw [this]
     exact hdvd i ℓ (hcon i ℓ hti)
-  have hprod : ∏ ℓ ∈ s, ℓ ^ tiedWt S c e exc a b L ℓ ∣ Wt :=
+  have hprod : ∏ ℓ ∈ s, ℓ ^ tiedWt S c₁ c₂ e exc a b L ℓ ∣ Wt :=
     prod_prime_pow_dvd s _ Wt (fun ℓ hℓ => (hpd ℓ hℓ).1) (fun ℓ hℓ => (hpd ℓ hℓ).2)
-  have hle : ((∏ ℓ ∈ s, ℓ ^ tiedWt S c e exc a b L ℓ : ℕ) : ℝ) ≤ Wt :=
+  have hle : ((∏ ℓ ∈ s, ℓ ^ tiedWt S c₁ c₂ e exc a b L ℓ : ℕ) : ℝ) ≤ Wt :=
     by exact_mod_cast Nat.le_of_dvd hW hprod
-  have hprodpos : (0 : ℝ) < ((∏ ℓ ∈ s, ℓ ^ tiedWt S c e exc a b L ℓ : ℕ) : ℝ) := by
+  have hprodpos : (0 : ℝ) < ((∏ ℓ ∈ s, ℓ ^ tiedWt S c₁ c₂ e exc a b L ℓ : ℕ) : ℝ) := by
     rw [Nat.cast_prod]
     refine Finset.prod_pos fun ℓ hℓ => ?_
     have := (hpd ℓ hℓ).1.pos
@@ -528,16 +528,16 @@ theorem exists_tied_prime {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S 
   rw [Nat.cast_prod, Real.log_prod (fun ℓ hℓ => by
     have := (hpd ℓ hℓ).1.pos
     positivity)] at hlogle
-  have hsum : tiedSum S c e exc a b L N =
-      ∑ ℓ ∈ s, (tiedWt S c e exc a b L ℓ : ℝ) * Real.log ℓ := by
+  have hsum : tiedSum S c₁ c₂ e exc a b L N =
+      ∑ ℓ ∈ s, (tiedWt S c₁ c₂ e exc a b L ℓ : ℝ) * Real.log ℓ := by
     unfold tiedSum
     refine (Finset.sum_subset (Finset.filter_subset _ _) fun ℓ _ hℓs => ?_).symm
-    have : tiedWt S c e exc a b L ℓ = 0 := by
+    have : tiedWt S c₁ c₂ e exc a b L ℓ = 0 := by
       by_contra h
       exact hℓs (Finset.mem_filter.mpr ⟨by assumption, Nat.pos_of_ne_zero h⟩)
     simp [this]
-  have hlow : (1 + ε₀) * L ≤ tiedSum S c e exc a b L N := hL₀ L hL
-  have hterm : ∑ ℓ ∈ s, (tiedWt S c e exc a b L ℓ : ℝ) * Real.log ℓ ≤ Real.log Wt := by
+  have hlow : (1 + ε₀) * L ≤ tiedSum S c₁ c₂ e exc a b L N := hL₀ L hL
+  have hterm : ∑ ℓ ∈ s, (tiedWt S c₁ c₂ e exc a b L ℓ : ℝ) * Real.log ℓ ≤ Real.log Wt := by
     refine le_trans (le_of_eq ?_) hlogle
     refine Finset.sum_congr rfl fun ℓ hℓ => ?_
     push_cast
@@ -547,15 +547,15 @@ theorem exists_tied_prime {S : ι → Finset (ZMod M)} (hS : ∀ i, ∀ s ∈ S 
 
 
 /-- The union mass is jointly continuous in the endpoints `(a, b)`. -/
-theorem continuous_unionMass (S : ι → Finset (ZMod M)) (c : ι → ℝ) (e : ι → ℕ) :
-    Continuous fun p : ℝ × ℝ => unionMass S c e p.1 p.2 := by
+theorem continuous_unionMass (S : ι → Finset (ZMod M)) (c₁ c₂ : ι → ℝ) (e : ι → ℕ) :
+    Continuous fun p : ℝ × ℝ => unionMass S c₁ c₂ e p.1 p.2 := by
   unfold unionMass
   refine continuous_finset_sum _ fun T hT => ?_
   have hTn : T.Nonempty := mem_NESub.mp hT
-  have : (fun p : ℝ × ℝ => winLen c p.1 p.2 T) =
-      fun p => max 0 (p.2 * T.inf' hTn c - p.1 * T.sup' hTn c) := by
+  have : (fun p : ℝ × ℝ => winLen c₁ c₂ p.1 p.2 T) =
+      fun p => max 0 (p.2 * T.inf' hTn c₂ - p.1 * T.sup' hTn c₁) := by
     funext p; unfold winLen; rw [dif_pos hTn]
-  have hc : Continuous fun p : ℝ × ℝ => winLen c p.1 p.2 T := by
+  have hc : Continuous fun p : ℝ × ℝ => winLen c₁ c₂ p.1 p.2 T := by
     rw [this]; fun_prop
   exact continuous_const.mul hc
 

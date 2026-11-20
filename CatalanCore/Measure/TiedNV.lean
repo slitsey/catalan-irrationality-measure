@@ -15,9 +15,12 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 # Prime-tied nonvanishing and the measure criterion (ledger LR03, LR04, LR12)
 
 A `TiedNV` family records, for one arithmetic family of primes `ℓ` (a set `S` of unit classes mod
-`M`, outside a finite exception set), the member `mem ℓ` of the polynomial family tied to `ℓ`
-(`ℓ = c · scale (mem ℓ) + d`), a predicate `Bad ℓ p q` with `ℓ ^ e ∣ W p q` whenever it holds, and
-the nonvanishing statement `Q_{mem ℓ}(p/q) ≠ 0` whenever `Bad ℓ p q` fails.
+`M`, outside a finite exception set), a relation `rel ℓ n` ("the member `n` of the polynomial family is
+tied to `ℓ`") with a slope interval `[c₁, c₂]`: whenever `c₁ x < ℓ ≤ c₂ y` (`x ≤ y`) some member tied to
+`ℓ` has `scale n ∈ [x - D', y + D']` (`exists_mem`); a line family (`ℓ = c · scale n + d`, `c₁ = c₂ = c`,
+`D' = |d| / c`) is built by `CatalanCore.Lai.tiedOfClass`, a band (`c₁ < c₂`, many members per prime)
+directly.  It also records a predicate `Bad ℓ p q` with `ℓ ^ e ∣ W p q` whenever it holds, and
+the nonvanishing statement `Q_n(p/q) ≠ 0` for every tied `n` whenever `Bad ℓ p q` fails.
 
 `measure_of_family_tiedNV` (Criterion W2U): from scaled content `Λ`, scaled decay `(D, ρ)`, a degree
 bound `deg n ≤ κ · scale n` and a list of `TiedNV` families whose union window mass
@@ -39,24 +42,34 @@ structure TiedNV (Fam : PolyFamily) (scale : Fam.ι → ℕ) (M : ℕ) (W : ℤ 
   /-- unit classes mod `M` of the tied primes -/
   S : Finset (ZMod M)
   S_unit : ∀ s ∈ S, IsUnit s
-  /-- slope and offset: `ℓ = c * scale (mem ℓ) + d` -/
-  c : ℝ
-  c_pos : 0 < c
-  d : ℝ
+  /-- slope interval: the prime `ℓ` is tied to the members `n` with `c₁ * scale n ≲ ℓ ≲ c₂ * scale n`
+  (a line family has `c₁ = c₂`) -/
+  c₁ : ℝ
+  c₂ : ℝ
+  c₁_pos : 0 < c₁
+  c₁_le : c₁ ≤ c₂
+  /-- offset tolerance of the member choice -/
+  D' : ℝ
+  D'_nonneg : 0 ≤ D'
   /-- tolerance exponent: `Bad ℓ p q → ℓ ^ e ∣ W p q` -/
   e : ℕ
   /-- finite exception set of primes -/
   exc : Finset ℕ
-  /-- the member tied to the prime `ℓ` -/
-  mem : ℕ → Fam.ι
-  adm : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc → Fam.Adm (mem ℓ)
-  size_eq : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc →
-    (ℓ : ℝ) = c * (scale (mem ℓ) : ℝ) + d
+  /-- `rel ℓ n`: the member `n` is tied to the prime `ℓ` -/
+  rel : ℕ → Fam.ι → Prop
+  /-- a tied member exists in every window: if `c₁ x < ℓ ≤ c₂ y` (`x ≤ y`) then some member `n` tied to
+  `ℓ` has `x - D' ≤ scale n ≤ y + D'` -/
+  exists_mem : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc → ∀ x y : ℝ, x ≤ y → c₁ * x < ℓ →
+    (ℓ : ℝ) ≤ c₂ * y → ∃ n, rel ℓ n ∧ x - D' ≤ (scale n : ℝ) ∧ (scale n : ℝ) ≤ y + D'
+  adm : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc → ∀ n, rel ℓ n → Fam.Adm n
   /-- `Bad ℓ p q`: the prime `ℓ` is unusable for the point `p / q` -/
   Bad : ℕ → ℤ → ℕ → Prop
   bad_dvd : ∀ (ℓ : ℕ) (p : ℤ) (q : ℕ), Bad ℓ p q → ℓ ^ e ∣ W p q
-  nv : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc → ∀ (p : ℤ) (q : ℕ), 0 < q →
-    ¬ Bad ℓ p q → Fam.evalQ (mem ℓ) ((p : ℚ) / (q : ℚ)) ≠ 0
+  nv : ∀ ℓ : ℕ, ℓ.Prime → (ℓ : ZMod M) ∈ S → ℓ ∉ exc → ∀ n, rel ℓ n → ∀ (p : ℤ) (q : ℕ), 0 < q →
+    ¬ Bad ℓ p q → Fam.evalQ n ((p : ℚ) / (q : ℚ)) ≠ 0
+
+theorem TiedNV.c₂_pos {Fam : PolyFamily} {scale : Fam.ι → ℕ} {M : ℕ} {W : ℤ → ℕ → ℕ}
+    (T : TiedNV Fam scale M W) : 0 < T.c₂ := T.c₁_pos.trans_le T.c₁_le
 
 /-- Bad rule of a plane: `ℓ ^ e ∣ q`, carried by `W p q = q`. -/
 def planeBad (e : ℕ) (ℓ : ℕ) (_p : ℤ) (q : ℕ) : Prop := ℓ ^ e ∣ q
@@ -107,8 +120,8 @@ theorem ratioW_hW {x : ℝ} (hx1 : 1 < x) (hx2 : x < 2) :
 /-- Family-indexed union window condition of a list of tied families. -/
 def TiedNV.windowOK {Fam : PolyFamily} {scale : Fam.ι → ℕ} {M : ℕ} [NeZero M]
     {W : ℤ → ℕ → ℕ} (L : List (TiedNV Fam scale M W)) (a b : ℝ) : Prop :=
-  NT.UnionWindowOK (fun i : Fin L.length => (L.get i).S) (fun i => (L.get i).c)
-    (fun i => (L.get i).e) a b
+  NT.UnionWindowOK (fun i : Fin L.length => (L.get i).S) (fun i => (L.get i).c₁)
+    (fun i => (L.get i).c₂) (fun i => (L.get i).e) a b
 
 set_option maxHeartbeats 1600000 in
 /-- **Measure criterion with prime-tied nonvanishing** (Criterion W2U), indexed by a finite type of
@@ -121,7 +134,7 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
     (hdeg : ∀ n, Fam.Adm n → (Fam.deg n : ℝ) ≤ κ * (scale n : ℝ))
     (hW : ∀ (p : ℤ) (q : ℕ), 0 < q → |Fam.const - (p : ℝ) / q| < 1 →
       0 < W p q ∧ (W p q : ℝ) ≤ Kh * q)
-    (hmass : NT.UnionWindowOK (fun i => (F i).S) (fun i => (F i).c) (fun i => (F i).e)
+    (hmass : NT.UnionWindowOK (fun i => (F i).S) (fun i => (F i).c₁) (fun i => (F i).c₂) (fun i => (F i).e)
       (κ / (D - Λ)) (κ / (D - Λ) + β))
     (hμ : ρ * (κ / (D - Λ) + β) < μ) :
     ∀ᶠ q : ℕ in atTop, ∀ p : ℤ, (q : ℝ) ^ (-μ) < |Fam.const - (p : ℝ) / q| := by
@@ -133,12 +146,12 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
   have hb₀ : 0 < b₀ := by rw [hb₀def]; linarith
   have hμ0 : 0 < μ := lt_of_le_of_lt (by positivity) hμ
   -- Step 1: shift the window slightly to the right, keeping the mass above 1
-  have hcont : ContinuousAt (fun s : ℝ => NT.unionMass (fun i => (F i).S) (fun i => (F i).c)
+  have hcont : ContinuousAt (fun s : ℝ => NT.unionMass (fun i => (F i).S) (fun i => (F i).c₁) (fun i => (F i).c₂)
       (fun i => (F i).e) (a₀ + s) (b₀ + s)) 0 := by
-    have hc := (NT.continuous_unionMass (fun i => (F i).S) (fun i => (F i).c)
+    have hc := (NT.continuous_unionMass (fun i => (F i).S) (fun i => (F i).c₁) (fun i => (F i).c₂)
       (fun i => (F i).e)).comp (by fun_prop : Continuous fun s : ℝ => (a₀ + s, b₀ + s))
     exact hc.continuousAt
-  have hm0 : 1 < NT.unionMass (fun i => (F i).S) (fun i => (F i).c) (fun i => (F i).e)
+  have hm0 : 1 < NT.unionMass (fun i => (F i).S) (fun i => (F i).c₁) (fun i => (F i).c₂) (fun i => (F i).e)
       (a₀ + 0) (b₀ + 0) := by
     simpa [NT.UnionWindowOK] using hmass
   obtain ⟨δ, hδ, hδmass⟩ := Metric.eventually_nhds_iff.mp (hcont.eventually (lt_mem_nhds hm0))
@@ -162,7 +175,7 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
   set b : ℝ := b₀ + s with hbdef
   have ha : 0 < a := by rw [hadef]; linarith
   have hb : 0 < b := by rw [hbdef]; linarith
-  have hmassab : NT.UnionWindowOK (fun i => (F i).S) (fun i => (F i).c) (fun i => (F i).e) a b := by
+  have hmassab : NT.UnionWindowOK (fun i => (F i).S) (fun i => (F i).c₁) (fun i => (F i).c₂) (fun i => (F i).e) a b := by
     have := hδmass (y := s) (by rw [Real.dist_eq, sub_zero, abs_of_pos hs0]; exact hsδ)
     exact this
   -- Step 2: parameters of the separation
@@ -199,17 +212,18 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
     linarith
   obtain ⟨R0, hR0⟩ := CatalanCore.Uniform.scaled_sep Fam scale hΛ hD hε0 (θ := θ) (by rw [hθdef]; linarith)
   obtain ⟨ε₀, hε₀, L₀, hL₀⟩ := NT.exists_tied_prime (fun i => (F i).S_unit)
-    (fun i => (F i).c_pos) (fun i => (F i).e) (fun i => (F i).exc) ha hb hmassab
-  -- the offset bound
-  set Dd : ℝ := ∑ j, |(F j).d| / (F j).c with hDddef
-  have hDd0 : 0 ≤ Dd := Finset.sum_nonneg fun j _ => div_nonneg (abs_nonneg _) (F j).c_pos.le
-  have hDd : ∀ i, |(F i).d| ≤ Dd * (F i).c := by
+    (fun i => (F i).c₁_pos) (fun i => (F i).c₂_pos) (fun i => (F i).e) (fun i => (F i).exc) ha hb
+    hmassab
+  -- the offset bound (one unit of slack makes the lower window bound strict)
+  set Dd : ℝ := (∑ j, (F j).D') + 1 with hDddef
+  have hDd0 : 0 ≤ Dd := by
+    have : 0 ≤ ∑ j, (F j).D' := Finset.sum_nonneg fun j _ => (F j).D'_nonneg
+    rw [hDddef]; linarith
+  have hDd : ∀ i, (F i).D' + 1 ≤ Dd := by
     intro i
-    have h1 : |(F i).d| / (F i).c ≤ Dd :=
-      Finset.single_le_sum (f := fun j => |(F j).d| / (F j).c)
-        (fun j _ => div_nonneg (abs_nonneg _) (F j).c_pos.le) (Finset.mem_univ i)
-    have := (div_le_iff₀ (F i).c_pos).mp h1
-    linarith
+    have h1 : (F i).D' ≤ ∑ j, (F j).D' :=
+      Finset.single_le_sum (f := fun j => (F j).D') (fun j _ => (F j).D'_nonneg) (Finset.mem_univ i)
+    rw [hDddef]; linarith
   -- Step 3: the threshold height
   have hev : ∀ᶠ L : ℝ in atTop, L₀ ≤ L ∧ 1 ≤ L ∧ ((R0 : ℝ) + 1 + Dd) / a ≤ L ∧
       θ * Dd / (s * η / 2) ≤ L ∧ (ρ + ε) * Dd / (μ - (ρ + ε) * b) ≤ L ∧
@@ -253,27 +267,19 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
   obtain ⟨i, ℓ, hti, hnb⟩ := hL₀ L hL1 (fun i ℓ => (F i).Bad ℓ p q) (W p q) hWpos
     (fun i ℓ h => (F i).bad_dvd ℓ p q h) hlogW'
   obtain ⟨hlp, hlcl, hlex, hlo, hhi⟩ := hti
-  have hnz := (F i).nv ℓ hlp hlcl hlex p q hq0 hnb
-  have hAdm := (F i).adm ℓ hlp hlcl hlex
-  have hsz := (F i).size_eq ℓ hlp hlcl hlex
-  set n : ℝ := (scale ((F i).mem ℓ) : ℝ) with hn
-  have hci := (F i).c_pos
+  have hnz0 := (F i).nv ℓ hlp hlcl hlex
+  have hAdm0 := (F i).adm ℓ hlp hlcl hlex
+  have hab : a * L ≤ b * L := mul_le_mul_of_nonneg_right (by linarith) hL0.le
+  obtain ⟨m, hrel, hm1, hm2⟩ := (F i).exists_mem ℓ hlp hlcl hlex (a * L) (b * L) hab
+    (by rw [← mul_assoc]; exact hlo) (by rw [← mul_assoc]; exact hhi)
+  have hnz := hnz0 m hrel p q hq0 hnb
+  have hAdm := hAdm0 m hrel
+  set n : ℝ := (scale m : ℝ) with hn
   have hdi := hDd i
-  have hdi' := abs_le.mp hdi
   -- n lies in the window up to the offset
-  have hnlo : a * L - Dd < n := by
-    have h1 : (F i).c * a * L < (F i).c * n + (F i).d := by rw [← hsz]; exact hlo
-    by_contra hle
-    push Not at hle
-    have := mul_le_mul_of_nonneg_left hle hci.le
-    linarith [hdi'.2]
-  have hnhi : n ≤ b * L + Dd := by
-    have h1 : (F i).c * n + (F i).d ≤ (F i).c * b * L := by rw [← hsz]; exact hhi
-    by_contra hle
-    push Not at hle
-    have := mul_lt_mul_of_pos_left hle hci
-    linarith [hdi'.1]
-  have hnR0 : R0 ≤ scale ((F i).mem ℓ) := by
+  have hnlo : a * L - Dd < n := by linarith
+  have hnhi : n ≤ b * L + Dd := by linarith
+  have hnR0 : R0 ≤ scale m := by
     have : (R0 : ℝ) ≤ n := by
       have := (div_le_iff₀ ha).mp hL3
       linarith
@@ -283,7 +289,7 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
     have := (div_le_iff₀ ha).mp hL3
     linarith
   -- closeness of `p/q` to the constant in the window of `n`
-  have hwin : |Fam.const - (p : ℝ) / ((q : ℤ) : ℝ)| ≤ Real.exp (-(ρ + ε) * (scale ((F i).mem ℓ) : ℝ)) := by
+  have hwin : |Fam.const - (p : ℝ) / ((q : ℤ) : ℝ)| ≤ Real.exp (-(ρ + ε) * (scale m : ℝ)) := by
     simp only [Int.cast_natCast]
     refine hcon.trans ?_
     rw [Real.rpow_def_of_pos hqpos, ← hLdef]
@@ -296,7 +302,7 @@ theorem measure_of_family_tiedNV_index {Fam : PolyFamily} {scale : Fam.ι → �
     have e1 : (ρ + ε) * (b * L + Dd) = (ρ + ε) * b * L + (ρ + ε) * Dd := by ring
     have e2 : (μ - (ρ + ε) * b) * L = μ * L - (ρ + ε) * b * L := by ring
     linarith
-  have key := hR0 ((F i).mem ℓ) hAdm hnR0 p (q : ℤ) (by exact_mod_cast hq0)
+  have key := hR0 m hAdm hnR0 p (q : ℤ) (by exact_mod_cast hq0)
     (by simpa using hnz) hwin
   have hdg := hdeg _ hAdm
   have hlogq : (0 : ℝ) ≤ Real.log ((q : ℤ) : ℝ) := by

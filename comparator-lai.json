@@ -2,9 +2,9 @@
   "challenge_module": "ChallengeLai",
   "solution_module": "SolutionLai",
   "theorem_names": [
-    "LaiIrrationalityMeasure.lai_plane_measure_34_14",
-    "LaiIrrationalityMeasure.lai_ratio_measure_55_50",
-    "LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50"
+    "LaiIrrationalityMeasure.lai_plane_measure_27_49",
+    "LaiIrrationalityMeasure.lai_ratio_measure_35_35",
+    "LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35"
   ],
   "definition_names": [],
   "permitted_axioms": [

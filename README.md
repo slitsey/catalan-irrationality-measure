@@ -64,8 +64,8 @@ or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
-| `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`, rationals with `ad − bc ≠ 0` | 55.50 | first measure | none (irrational by Lai) |
+| `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 27.49 | improved measure | 66.3 (Leibtag et al.) |
+| `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`, rationals with `ad − bc ≠ 0` | 35.35 | first measure | none (irrational by Lai) |
 
 ### 5. Dilogarithms of rational numbers
 
@@ -219,7 +219,7 @@ the rational span of `L₋₃` and `π²`, the second that of `ζ(3)` and `π²`
 The irrationality of the numbers on them was proved by other methods: by Calegari, Dimitrov and Tang for the
 first plane, by Q. Tang for the second and by Lai for the third. On the third plane the paper proves 72.726 for
 all rationals `a, b`, not both zero. This is weaker than the bound 66.3 of Leibtag et al. and than the fourth
-paper's 34.14 off the axes. The third plane is included because its function has a pole of order three. Every
+paper's 27.49 off the axes. The third plane is included because its function has a pole of order three. Every
 bound of the paper is in the table below.
 
 Let `ψ` be the digamma function and `ψ′(x) = ∑_{n ≥ 0} 1/(n+x)^2` the trigamma function, so that
@@ -417,9 +417,9 @@ The exponent is `(37/40)·9.07427/(1.38500086 − 1.288003) = 839369975/9699786 
 M. Firsching's formalization ([mo271/Zeta5](https://github.com/mo271/Zeta5), commit `7fe7367`, Apache License
 2.0) in [`CatalanCore/Zeta5/Port/`](CatalanCore/Zeta5/Port/); see [`NOTICE`](NOTICE), item 5.
 
-## The plane of ζ(3) and π⁴: μ(a ζ(3) + b π⁴) ≤ 34.14 and μ(ζ(3)/π⁴) ≤ 55.50
+## The plane of ζ(3) and π⁴: μ(a ζ(3) + b π⁴) ≤ 27.49 and μ(ζ(3)/π⁴) ≤ 35.35
 
-This is the third plane of the second paper. Off the two axes, the bound 34.14
+This is the third plane of the second paper. Off the two axes, the bound 27.49
 replaces that paper's 72.726.
 
 Lai's determinants `J_n(a, b, X)` are Hankel determinants of a functional built from the simultaneous
@@ -439,23 +439,34 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
   whose roots are shifted by multiples of `p`, with a cancellation modulo `p²`. Similar bases treat
   `3n < p ≤ 6n`. The law is piecewise affine in `n/p`, and its integral against the primes has a closed form
   in logarithms by Gauss's digamma theorem. This gives `Λ = 28.68723663`.
-- **Nonvanishing.** Lai's auxiliary-prime argument is extended to every rational `X` whose denominator is not
-  divisible by `ℓ⁴`, and to the ratio direction. A second family of primes, `3ℓ = 7n + 1` and `3ℓ = 7n + 2`,
-  gives exact nonvanishing: the reduction modulo `ℓ` is a determinant of size 1 or 2 of power sums over `𝔽_ℓ`.
+- **Nonvanishing in a band.** For every prime `ℓ` with `8n/3 < ℓ < 3n − 1`, outside the finite set
+  `{2, 3, 5, 13, 24359}`, the `ℓ`-adic valuation of `J_n(a, b, X)` is computed exactly, `−21n + 7ℓ − 7`, at every
+  point with `b` a unit and `v_ℓ(X) ≥ −3`. So the prime is good for every size `n` in an interval and for every
+  direction. The reduced Gram matrix is block triangular. The integral blocks are small matrices of constants,
+  with determinants `−2²·13²·24359` and `2¹⁵`. The half-integral block is, modulo `ℓ`, the Hankel matrix of the
+  functional `xᵉ ↦ e·B_{e−1}` against the cube of a falling factorial. Faulhaber's formula and four sums of
+  harmonic numbers give this reduction. Its determinant is an explicit product of factorial ratios, the norms of
+  Wilson polynomials, with all prime factors below `ℓ`. It is proved by finite algebra: a Pearson equation, a
+  Beta-type evaluation, Gram–Schmidt and the Pfaff–Saalschütz summation.
+- **Nonvanishing at prime-tied sizes.** Lai's auxiliary-prime argument is extended to every rational `X` whose
+  denominator is not divisible by `ℓ⁴`, and to the ratio direction. A second family of primes, `3ℓ = 7n + 1` and
+  `3ℓ = 7n + 2`, gives exact nonvanishing: the reduction modulo `ℓ` is a determinant of size 1 or 2 of power sums
+  over `𝔽_ℓ`.
 - **Criterion.** The prime number theorem in progressions and an inclusion–exclusion count over the classes
-  of primes turn nonvanishing at prime-tied sizes into a measure. The exponent is `ρ(3/(D − Λ) + β)`, with
-  `β = 1637/10000` for the plane and `β = 661/1000` for the ratio.
+  of primes turn nonvanishing into a measure. Each family of primes is good for the sizes in an interval of
+  slopes, a line for Lai's primes and the two lines, and the band `8n/3 < ℓ < 3n` for the new family. The
+  exponent is `ρ(3/(D − Λ) + β)`, with `β = 7/800` for the plane and `β = 9593/50000` for the ratio.
 
 The Lean plane theorem writes the number as `a ζ(3) + b ζ(4)`, with `ζ(4) = π⁴/90` and integers `a, b`,
 `b ≠ 0`. Scaling by a nonzero rational does not change μ, so
 it covers every rational point off the axes. An integer Möbius map `x ↦ (ax + b)/(cx + d)` with
-`ad − bc ≠ 0` changes no irrationality exponent, so the bound 55.50 holds for every ratio
+`ad − bc ≠ 0` changes no irrationality exponent, so the bound 35.35 holds for every ratio
 `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`. The Lean lemma is `CatalanCore.Measure.plain_measure_mobius`.
 The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 `CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean`,
 `CatalanCore/Measure/Mobius.lean` and `CatalanCore/Tools/Joukowski.lean`. The theorem is
-`CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_34_14`,
-`LaiIrrationalityMeasure.lai_ratio_measure_55_50` and `LaiIrrationalityMeasure.lai_ratio_mobius_measure_55_50`.
+`CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_27_49`,
+`LaiIrrationalityMeasure.lai_ratio_measure_35_35` and `LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35`.
 
 ## Dilogarithms: μ(Li₂(a/b))
 

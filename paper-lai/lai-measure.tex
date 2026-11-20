@@ -60,17 +60,20 @@ energy, formal verification, Lean}
 
 \begin{abstract}
 Let $\mu$ denote the irrationality exponent. For all integers $a$ and $b$ with $b\ne0$ we prove that
-$|a\zeta(3)+b\pi^4-p/q|>q^{-34.14}$, and we prove that $|\zeta(3)/\pi^4-p/q|>q^{-55.50}$, in both cases for all
-integers $p$ and all sufficiently large integers $q$. So $\mu(a\zeta(3)+b\pi^4)\le34.14$ and
-$\mu(\zeta(3)/\pi^4)\le55.50$. The bound $55.50$ extends to every quotient
+$|a\zeta(3)+b\pi^4-p/q|>q^{-27.49}$, and we prove that $|\zeta(3)/\pi^4-p/q|>q^{-35.35}$, in both cases for all
+integers $p$ and all sufficiently large integers $q$. So $\mu(a\zeta(3)+b\pi^4)\le27.49$ and
+$\mu(\zeta(3)/\pi^4)\le35.35$. The bound $35.35$ extends to every quotient
 $(a\zeta(3)+b\pi^4)/(c\zeta(3)+d\pi^4)$ with rational $a,b,c,d$ and $ad-bc\ne0$. Lai proved that $1$, $\zeta(3)$ and $\pi^4$ are linearly independent over $\Q$
 with Hankel determinants $J_n(a,b,X)$ of a functional built from simultaneous approximations. We keep his determinants
 and supply the three estimates that a measure needs. The determinants are small on a neighbourhood of the
 constant, uniformly in the direction $(a,b)$. We prove this with a positive measure on a complex contour whose
 potential has a closed form, checked on $40$ cells. The denominators are bounded prime by prime by an exact law
-for the $p$-adic valuation, whose integral over the primes has a closed form. Nonvanishing is proved at the
-sizes tied to Lai's auxiliary primes and to two new families of primes, on the lines $3\ell=7n+1$ and $3\ell=7n+2$.
-A counting argument with the prime number theorem in progressions turns this sparse nonvanishing into a
+for the $p$-adic valuation, whose integral over the primes has a closed form. Nonvanishing is proved for every
+prime $\ell$ with $8n/3<\ell<3n-1$ and every size $n$ in this range, with the exact valuation of $J_n$ at $\ell$.
+The reduced Gram matrix is block triangular. Its half-integral block is a Hankel determinant of Bernoulli-type moments,
+which we evaluate in closed form as a product of factorial ratios, the norms of Wilson polynomials, by finite algebra.
+Nonvanishing also holds at the sizes tied to Lai's auxiliary primes and to two further families of primes.
+A counting argument with the prime number theorem in progressions turns this nonvanishing into a
 measure. The previous best bound on the plane was $66.3$, and no measure was known for $\zeta(3)/\pi^4$. The
 proofs are formalized in Lean~4.
 \end{abstract}
@@ -94,14 +97,14 @@ is an irrationality measure for $\xi$, and it shows that $\xi$ is irrational. We
 \begin{enumerate}[label=(\alph*)]
 \item Let $a$ and $b$ be integers with $b\ne0$. There is an integer $q_0$ such that
 \[
- \Bigl|a\zeta(3)+b\pi^4-\frac pq\Bigr|>q^{-34.14}
+ \Bigl|a\zeta(3)+b\pi^4-\frac pq\Bigr|>q^{-27.49}
 \]
-for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(a\zeta(3)+b\pi^4)\le34.14$.
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(a\zeta(3)+b\pi^4)\le27.49$.
 \item There is an integer $q_0$ such that
 \[
- \Bigl|\frac{\zeta(3)}{\pi^4}-\frac pq\Bigr|>q^{-55.50}
+ \Bigl|\frac{\zeta(3)}{\pi^4}-\frac pq\Bigr|>q^{-35.35}
 \]
-for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(\zeta(3)/\pi^4)\le55.50$.
+for all integers $p$ and all integers $q\ge q_0$. In particular $\mu(\zeta(3)/\pi^4)\le35.35$.
 \end{enumerate}
 \end{theorem}
 
@@ -113,21 +116,21 @@ independent points of the plane.
 \begin{corollary}\label{cor:mobius}
 Let $a$, $b$, $c$ and $d$ be rational numbers with $ad-bc\ne0$. There is an integer $q_0$ such that
 \[
- \Bigl|\frac{a\zeta(3)+b\pi^4}{c\zeta(3)+d\pi^4}-\frac pq\Bigr|>q^{-55.50}
+ \Bigl|\frac{a\zeta(3)+b\pi^4}{c\zeta(3)+d\pi^4}-\frac pq\Bigr|>q^{-35.35}
 \]
 for all integers $p$ and all integers $q\ge q_0$. In particular
-$\mu\bigl((a\zeta(3)+b\pi^4)/(c\zeta(3)+d\pi^4)\bigr)\le55.50$.
+$\mu\bigl((a\zeta(3)+b\pi^4)/(c\zeta(3)+d\pi^4)\bigr)\le35.35$.
 \end{corollary}
 
 \begin{proof}
 Multiplying $a$, $b$, $c$ and $d$ by a common denominator changes neither the number nor the sign of $ad-bc$, so we
 may assume that they are integers. Dividing numerator and denominator by $\pi^4$ shows that the number is
 $(ax+b)/(cx+d)$ with $x=\zeta(3)/\pi^4$. The proof of Theorem~\ref{thm:main}(b) gives
-$|x-p/q|>q^{-55.499}$ for all integers $p$ and all large $q$, and Lemma~\ref{lem:mobius} applies with
-$\mu'=55.499$ and $\mu=55.50$.
+$|x-p/q|>q^{-35.3492}$ for all integers $p$ and all large $q$, and Lemma~\ref{lem:mobius} applies with
+$\mu'=35.3492$ and $\mu=35.35$.
 \end{proof}
  The
-proof gives the exponents $34.1398$ and $55.4981$, with the constants of Table~\ref{tab:constants}.
+proof gives the exponents $27.4849$ and $35.3492$, with the constants of Table~\ref{tab:constants}.
 Theorem~\ref{thm:main} and Corollary~\ref{cor:mobius} have been verified in the Lean~4 proof assistant, together with every theorem, proposition and
 lemma used in its proof. The formal proof has no unproved steps and uses only the standard axioms.
 Section~\ref{sec:lean} describes it. The remarks are not part of the formal proof. The formalization is available at
@@ -159,7 +162,7 @@ Sprang and Zudilin proved that many more odd zeta values are irrational \cite{FL
 \cite{Litsey2026b} proves $\mu(a\zeta(3)+b\pi^4)\le72.726$ for all rationals $a$ and $b$, not both zero, with
 L\"owner determinants. This is weaker than the bound $66.3$ of Leibtag et al. As far as we know, $66.3$ is the best
 published measure on the plane, and no irrationality measure for $\zeta(3)/\pi^4$ was known. Part (a) improves the
-bound to $34.14$ for $b\ne0$. Part (b) is, as far as we know,
+bound to $27.49$ for $b\ne0$. Part (b) is, as far as we know,
 the first measure for $\zeta(3)/\pi^4$. On the line $b=0$ the number is a rational multiple of $\zeta(3)$, whose
 measure is much smaller. On the line $a=0$ the bound of Marcovecchio and Zudilin is smaller than ours.
 
@@ -183,7 +186,7 @@ denominators bounded prime by prime, decay proved through an energy problem, and
 first companion paper \cite{Litsey2026} refines OpenAI's determinant for Catalan's constant. The second
 \cite{Litsey2026b} uses L\"owner determinants of digamma combinations and proves measures on three planes of numbers.
 Its third plane is the plane of this paper, since $\pi^4=90\zeta(4)$, and there it proves the measure $72.726$.
-Theorem~\ref{thm:main}(a) replaces this bound by $34.14$ when $b\ne0$. The third \cite{Litsey2026c} proves a measure
+Theorem~\ref{thm:main}(a) replaces this bound by $27.49$ when $b\ne0$. The third \cite{Litsey2026c} proves a measure
 for $\zeta(5)$ with Fauzan's determinants. Its decay argument, a comparison measure with closed-form potentials checked
 on cells, is the closest relative of Section~\ref{sec:decay}. We use the definitions of $\mu$, the measure criterion
 and the potential-theoretic language of these papers. The construction here is Lai's, with his notation. In particular, from Section~\ref{ssec:require} on we write the
@@ -234,37 +237,51 @@ We keep Lai's determinants unchanged. The proof rests on the following ideas.
 \item \emph{The integral of the law in closed form.} On $p\le3n$ the law is piecewise affine in $n/p$ on $22$
  pieces. Its integral against the prime distribution telescopes to a sum over $23$ nodes, and Gauss's digamma
  theorem gives a closed form in logarithms (Theorem~\ref{thm:C01}).
+\item \emph{Exact nonvanishing in a band of primes.} For every prime $\ell$ with $8n/3<\ell<3n-1$, outside a
+ finite set, we compute the $\ell$-adic valuation of $J_n(a,b,X)$ exactly, at every point with $b$ a unit and
+ $\ell^3X\in\Z_\ell$ (Theorem~\ref{thm:B83}). So a prime is good for every size $n$ in an interval, and not for one
+ size only. The reduced Gram matrix is block triangular. Its integral blocks are small matrices of rational
+ constants with explicit determinants (Lemmas~\ref{lem:U83}, \ref{lem:blockA} and~\ref{lem:blockC}). Its half-integral block
+ is, modulo $\ell$, the Hankel matrix of the functional $x^e\mapsto eB_{e-1}$ against the cube of a falling factorial
+ (Lemma~\ref{lem:G3}). We obtain this by Faulhaber's formula and four sums of harmonic numbers, and not by analysis.
+\item \emph{The Hankel determinant in closed form.} The determinant of the half-integral block is an explicit
+ product of factorial ratios, the norms of two families of Wilson polynomials, and all its prime factors are
+ smaller than $\ell$ (Lemma~\ref{lem:W}). We prove it by finite algebra: a Pearson equation for the functional, a
+ Beta-type evaluation, Gram--Schmidt for the orthogonal polynomials and the Pfaff--Saalschütz summation. No integral
+ is used.
 \item \emph{Nonvanishing at prime-tied sizes.} We extend Lai's auxiliary-prime argument to every rational $X$ whose
  denominator is not divisible by $\ell^4$, and to the ratio direction (Theorem~\ref{thm:NV}). We find a second family
  of primes with exact nonvanishing, $3\ell=7n+1$ and $3\ell=7n+2$ (Theorem~\ref{thm:NV7}). There the reduction
  modulo $\ell$ leads to a Hankel determinant of a weight on an interval of residues. By duality for complementary
  subsets its value is a determinant of size $1$ or $2$ of power sums of a polynomial over $\F_\ell$, equal to
  $-1/49$ or $-1$.
-\item \emph{A criterion with prime-tied nonvanishing.} If nonvanishing is proved at the sizes tied to several
- families of primes in residue classes, the prime number theorem in progressions and an inclusion--exclusion count
- over the classes turn it into a measure (Theorem~\ref{thm:criterion}). A prime in two families is counted once.
+\item \emph{A criterion with bands.} If nonvanishing is proved for families of primes in residue classes, each prime
+ being good for the sizes $n$ in an interval, the prime number theorem in progressions and an inclusion--exclusion count
+ over the classes turn it into a measure (Theorem~\ref{thm:criterion}). A prime in several families is counted once.
+ The band of item~4 covers every prime between $8n_0/3$ and $3N$ for a window of sizes $n_0\le n\le N$.
 \end{enumerate}
 
 \begin{table}[ht]
 \centering
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{@{}lcccc@{}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccc>{\raggedright\arraybackslash}p{4.4cm}@{}}
 \toprule
  & $\Lambda$ & $D$ & $\rho$ & nonvanishing\\
 \midrule
 Lai \cite{Lai2026} & $30.83$ & $31.61$ & -- & $n=2(\ell-1)/9$, $\ell>|b|$\\
-This paper & $28.68723663$ & $33.4401$ & $42.94856306$ & $\ell\equiv1\ (18)$, $\ell\equiv3,5\ (7)$\\
+This paper & $28.68723663$ & $33.4401$ & $42.94856306$ & band $\frac83n<\ell<3n-1$, $\ell\equiv1\ (18)$, $\ell\equiv3,5\ (7)$\\
 \bottomrule
 \end{tabular}
 \caption{The constants per $n^2$ (and per $n$ for $\rho$). Lai's decay holds at the constant only. The exponent is
-$\rho(3/(D-\Lambda)+\beta)$ with $\beta=1637/10000$ for the plane and $\beta=661/1000$ for the ratio.}\label{tab:constants}
+$\rho(3/(D-\Lambda)+\beta)$ with $\beta=7/800$ for the plane and $\beta=9593/50000$ for the ratio.}\label{tab:constants}
 \end{table}
 
 \subsection{Organization}
 Section~\ref{sec:construction} recalls Lai's construction. Section~\ref{sec:criterion} proves the measure criterion.
 Section~\ref{sec:decay} proves the decay. Sections~\ref{sec:local}, \ref{sec:second} and~\ref{sec:sum} bound the
 normalizing factor: the local bounds, the second level of the law, and the prime sum. Section~\ref{sec:nv} proves the
-nonvanishing. Section~\ref{sec:proof} completes the proof, and Section~\ref{sec:remarks} compares the constants with
+nonvanishing, in Lai's sizes, on two lines, and in the band of primes with its Hankel determinant. Section~\ref{sec:proof} completes the proof, and Section~\ref{sec:remarks} compares the constants with
 numerical values. Section~\ref{sec:lean} describes the formalization. The disclosure of AI use follows it.
 
 \subsection{Notation}
@@ -340,19 +357,23 @@ So $f_n$ is small near $y^*$ when $J_n$ is small near the constant, uniformly in
 
 The criterion of the companion papers \cite{Litsey2026,Litsey2026c} assumes nonvanishing at every large size. Here
 nonvanishing is known only at the sizes $n$ tied to primes $\ell$ in some residue classes. The sizes tied to the
-primes of a class have density zero, but the primes carry enough logarithmic mass. If $P_n(p/q)=0$ at every tied
+primes of a class have density zero, or they form an interval whose length is proportional to $\ell$, but in either
+case the primes carry enough logarithmic mass. If $P_n(p/q)=0$ at every tied
 size in a window, then a power of every tied prime divides $q$, and the product of these powers exceeds $q$. The
 criterion makes this precise.
 
-Fix a modulus $M$. A \emph{tied family} consists of a set $S$ of unit classes modulo $M$, a slope $c>0$, an offset
-$d$, an exponent $e\ge1$, a finite set $E$ of primes, and for every prime $\ell\notin E$ with $\ell\bmod M\in S$ an
-integer $n(\ell)\ge1$ with $\ell=c\,n(\ell)+d$. For a list of tied families $i=1,\dots,r$ and a nonempty subset $T$ of
+Fix a modulus $M$. A \emph{tied family} consists of a set $S$ of unit classes modulo $M$, slopes
+$0<c\le c'$, an integer $C\ge0$, an exponent $e\ge1$ and a finite set $E$ of primes. For every prime $\ell\notin E$
+with $\ell\bmod M\in S$ it has a set $R(\ell)$ of sizes $n\ge1$, with the following property. For every real
+$y\ge1$ with $cy\le\ell\le c'y$ the set $R(\ell)$ contains an integer $n$ with $|n-y|\le C$. A \emph{line} has $c=c'$ and
+$R(\ell)=\{n(\ell)\}$ with $\ell=c\,n(\ell)+d$. A \emph{band} has $c<c'$, and $R(\ell)$ is the set of all $n$ with
+$cn<\ell<c'n-d$. For a list of tied families $i=1,\dots,r$ and a nonempty subset $T$ of
 indices put
 \[
  \delta_T=\frac{\#\{s\in(\Z/M)^\times:s\in S_i\text{ for all }i\in T\}}{\varphi(M)},
 \]
 \[
- \lambda_T(u,w)=\Bigl(w\min_{i\in T}c_i-u\max_{i\in T}c_i\Bigr)_+,
+ \lambda_T(u,w)=\Bigl(w\min_{i\in T}c'_i-u\max_{i\in T}c_i\Bigr)_+,
 \]
 and
 \[
@@ -371,8 +392,8 @@ large $n$ the following hold.
 Let $W(p,q)$ be positive integers with $W(p,q)\le Kq$ whenever $|\xi-p/q|<1$. Let tied families $i=1,\dots,r$ be
 given, each with a relation $\mathrm{Bad}_i(\ell,p,q)$ such that:
 \begin{enumerate}[label=(\alph*),resume]
-\item for every prime $\ell\notin E_i$ with $\ell\bmod M\in S_i$, and all $p$ and $q>0$, either
- $P_{n_i(\ell)}(p/q)\ne0$ or $\mathrm{Bad}_i(\ell,p,q)$ holds, and $\mathrm{Bad}_i(\ell,p,q)$ implies
+\item for every prime $\ell\notin E_i$ with $\ell\bmod M\in S_i$, every $n\in R_i(\ell)$, and all $p$ and $q>0$, either
+ $P_n(p/q)\ne0$ or $\mathrm{Bad}_i(\ell,p,q)$ holds, and $\mathrm{Bad}_i(\ell,p,q)$ implies
  $\ell^{e_i}\mid W(p,q)$;
 \item $\cM(u_0,u_0+\beta)>1$, where $u_0=\kappa/(D-\Lambda)$.
 \end{enumerate}
@@ -402,17 +423,19 @@ the number $z=q^{\kappa n}d_nP_n(p/q)$ is a nonzero integer, so $|z|\ge1$. By (b
 $|z|\le q^{\kappa n}e^{(\Lambda+\varepsilon)n^2-(D-\varepsilon)n^2}$. Hence $(\eta-2\varepsilon)n\le\kappa L$. This
 contradicts $n\ge n_0$ when $C>0$.
 
-\emph{Step 2: one divisibility.} Let $U_i$ be the set of primes $\ell\notin E_i$ with $\ell\bmod M\in S_i$ and
-$n_i(\ell)\in[n_0,N]$, and $U=\bigcup_iU_i$. For $\ell\in U$ let $e(\ell)$ be the largest $e_i$ with $\ell\in U_i$. By
+\emph{Step 2: one divisibility.} Let $U_i$ be the set of primes $\ell\notin E_i$ with $\ell\bmod M\in S_i$ for which
+$R_i(\ell)$ meets $[n_0,N]$, and $U=\bigcup_iU_i$. For $\ell\in U$ let $e(\ell)$ be the largest $e_i$ with $\ell\in U_i$. By
 Step 1 and (c), $\ell^{e_i}\mid W(p,q)$ for every $i$ with $\ell\in U_i$, so $\ell^{e(\ell)}\mid W(p,q)$. The primes are
 distinct, so
 \begin{equation}\label{eq:budget}
  \sum_{\ell\in U}e(\ell)\log\ell\le\log W(p,q)\le L+\log K.
 \end{equation}
 
-\emph{Step 3: the prime count.} The prime $\ell$ lies in $U_i$ when $\ell\bmod M\in S_i$, $\ell\notin E_i$ and
-$c_in_0+d_i\le\ell\le c_iN+d_i$. For large $q$ this contains the primes of the class with $\ell/L$ in the interval
-$J_i=(c_iu_\varepsilon,c_iw_\varepsilon]$. For a fixed class $s$ the finitely many endpoints of the $J_i$ with
+\emph{Step 3: the prime count.} Let $\ell\notin E_i$ be a prime with $\ell\bmod M\in S_i$ and
+$c_i(n_0+C_i)<\ell\le c_i'(N-C_i)$. Then the interval $[\ell/c_i',\ell/c_i]\cap[n_0+C_i,N-C_i]$ is not empty. Take
+$y$ in it. By the property of the family, $R_i(\ell)$ contains an integer $n$ with $|n-y|\le C_i$, and this $n$ lies in
+$[n_0,N]$. So $\ell\in U_i$. For large $q$ the set $U_i$ therefore contains the primes of the class with $\ell/L$ in the interval
+$J_i=(c_iu_\varepsilon,c_i'w_\varepsilon]$. For a fixed class $s$ the finitely many endpoints of the $J_i$ with
 $s\in S_i$ cut $(0,\infty)$ into intervals. On each the set of $i$ with $J_i$ containing it is constant, and so is the
 largest $e_i$. The prime number theorem in arithmetic progressions,
 $\theta(x;M,s)=x/\varphi(M)+o(x)$ for every unit class $s$, counts the primes of each class in each interval. Removing
@@ -430,7 +453,7 @@ $(1+\varepsilon/2)L$ for large $q$, which contradicts \eqref{eq:budget}.
 Hence $|\xi-p/q|>q^{-\mu}$ for all large $q$. The constant $C$ absorbs $\log K$ and the finitely many small $n$.
 \end{proof}
 
-When the windows of different families do not overlap, $\cM(u,u+\beta)=\beta\sum_ie_ic_i\delta_i$. The inequality
+When the windows of different families do not overlap, $\cM(u,u+\beta)=\sum_ie_i\delta_i\bigl((c'_i-c_i)u+c'_i\beta\bigr)$. The inequality
 (d) then says that the tied primes in a window of length $\beta L$ carry more than $L$ of logarithmic mass.
 
 The second part of Theorem~\ref{thm:main} is stated for $\zeta(3)/\pi^4$. We apply the criterion to $y^*$ and use the
@@ -1502,9 +1525,9 @@ where the constant comes from. Theorem~\ref{thm:C01} is not part of the formal p
 %% =====================================================================
 \section{Nonvanishing at prime-tied sizes}\label{sec:nv}
 
-Let $\ell$ be a prime. We show that $J_n(a,b,X)\ne0$ for two kinds of sizes $n$ tied to $\ell$, at all points with
-$\ell$-adically bounded coordinates. In both cases the $\ell$-adic valuation of a Gram determinant is computed exactly
-by Lemma~\ref{lem:halfint} and its equality case. We write $v$ for $v_\ell$ and $\Z_{(\ell)}$ for the rationals with
+Let $\ell$ be a prime. We show that $J_n(a,b,X)\ne0$ for three kinds of sizes $n$ tied to $\ell$, at all points with
+$\ell$-adically bounded coordinates. In all cases the $\ell$-adic valuation of a Gram determinant is computed exactly
+by Lemma~\ref{lem:halfint} and its equality case. The first two kinds give one size for each prime, the third gives every size in an interval. We write $v$ for $v_\ell$ and $\Z_{(\ell)}$ for the rationals with
 $v\ge0$.
 
 \subsection{Lai's primes}
@@ -1655,40 +1678,375 @@ whenever $\ell^4\nmid q$. If $\ell\nmid p$ and $q\ne0$, then $f_n(p/q)\ne0$.
 As for Corollary~\ref{cor:NV}, with $(a,b,X')=(a,b,\ell^3p/q)$ and $(q,-p,0)$.
 \end{proof}
 
+\subsection{The band \texorpdfstring{$8n/3<\ell<3n-1$}{8n/3 < l < 3n-1}}\label{ssec:band}
+The two families above give nonvanishing at one size $n$ for each prime. In this subsection a prime $\ell$ is good for
+every size $n$ with $8n/3<\ell<3n-1$, and for every direction. The proof computes the valuation of $J_n$ exactly.
+
+Let $n\ge4$ and let $\ell$ be a prime with $8n<3\ell$ and $\ell+1<3n$. Then $\ell\ge11$. Put
+\[
+ \alpha_0=\ell-2n,\qquad A_2=6n-2\ell,\qquad \gamma=\frac{\alpha_0-1}2,\qquad g=3n-1-\ell .
+\]
+Then $\alpha_0$ is odd, $6n=2\ell+A_2$, $0\le A_2<\alpha_0$, $A_2=2g+2$ and
+\begin{equation}\label{eq:band}
+ \ell=3\alpha_0+A_2=6\gamma+2g+5 .
+\end{equation}
+In the notation of Section~\ref{sec:local} we have $q_6=2$, $r_6=A_2$, $q_2=0$ and $r_2=2n$, so the class $B$ is empty. The
+residues $s\in[0,\ell)$ form three intervals:
+\[
+ \begin{aligned}
+ A&=[0,A_2]&&(\sigma=0,\ k=s+j\ell,\ j\le2),\\
+ C&=(A_2,\alpha_0)&&(\sigma=2,\ j\le1),\\
+ D&=[\alpha_0,\ell)&&(\sigma=5,\ j\le1).
+ \end{aligned}
+\]
+We put $\mathrm{w}_{n,\ell}=-21n+7\ell-7$.
+
+\begin{theorem}\label{thm:B83}
+Let $n\ge4$ and let $\ell$ be a prime with $8n/3<\ell<3n-1$ and $\ell\notin\{2,3,5,13,24359\}$. Let $a\in\Z_\ell$,
+$b\in\Z_\ell^\times$ and $X\in\Q_\ell$ with $v_\ell(X)\ge-3$. Then
+\[
+ v_\ell\bigl(J_n(a,b,X)\bigr)=\mathrm{w}_{n,\ell}.
+\]
+\end{theorem}
+
+The primes $2$, $3$, $5$ and $13$ do not lie in any band, since the band forces $\ell\ge11$ and $13<3n-1$ forces $n\ge5$ while
+$8n<39$ forces $n\le4$. The prime $24359$ lies in the band exactly for $8120<n\le9134$. The value $\mathrm{w}_{n,\ell}$ is the
+bound of Theorem~\ref{thm:L2} in this range, so the theorem says that the law is sharp at every such point.
+
+\begin{corollary}\label{cor:B83}
+Let $n$ and $\ell$ be as in Theorem~\ref{thm:B83}.
+\begin{enumerate}[label=(\alph*)]
+\item Let $a,b\in\Z$ with $\ell\nmid b$. Then $J_n(a,b,p/q)\ne0$ for all integers $p$ and $q>0$ with $\ell^4\nmid q$.
+\item Let $p,q$ be integers with $q\ne0$ and $\ell\nmid p$. Then $f_n(p/q)\ne0$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) Apply Theorem~\ref{thm:B83} with $X=p/q$, so that $v_\ell(X)\ge-3$. (b) By \eqref{eq:scaled}, $q^{3n}f_n(p/q)=J_n(q,-p,0)$, and
+Theorem~\ref{thm:B83} applies with $(a,b,X)=(q,-p,0)$.
+\end{proof}
+
+The proof has four parts: a basis and a reduction to one point, the integral blocks, the half-integral block and its
+Hankel determinant, and the assembly.
+
+\subsubsection{The basis and the reduction to one point}
+Let $\mu_r=4$ for $r\in A$, $\mu_r=3$ for $r\in C$, and $\Pi=\prod_{r<\alpha_0}(t+r)^{\mu_r}$. Put
+\[
+ e_{r,i}=(t+r)^i\,\Pi/(t+r)^{\mu_r}\quad(r<\alpha_0,\ i<\mu_r),\qquad z_j=t^j\Pi\quad(j<g).
+\]
+The roots $-r$ are pairwise incongruent modulo $\ell$, and $\sum_r\mu_r+g=3\alpha_0+A_2+1+g=\ell+1+g=3n$. So this is a
+basis in the sense of Lemma~\ref{lem:gram}. Give $e_{r,i}$ the potential $i-2$ if $r\in A$ and $i-1$ if $r\in C$, and give
+$z_j$ the potential $\frac32$. The elements $e_{r,i}$ form the \emph{integral group} and the $z_j$ the
+\emph{half group}. Put $K_0=32(\ell-1)!^3A_2!^2/(2n)!^3$, a unit. Then $2\sum\pi=-4(A_2+1)+3g=5\ell-15n-7$. Also $\nu_\ell=2(3n-\ell)$, because $\ell^2>3n$. So
+\begin{equation}\label{eq:target}
+ 2\sum\pi-\nu_\ell=\mathrm{w}_{n,\ell}.
+\end{equation}
+
+The entries of the Gram matrix are linear forms in $(a,b,X)$. Write $G_{xy}=aG^a_{xy}+bG^b_{xy}+XG^X_{xy}$, and
+let $\mathrm{thr}(x,y)=\pi_x+\pi_y$ if $x,y$ lie in the same group and $\pi_x+\pi_y+\frac12$ otherwise.
+
+\begin{lemma}[entries]\label{lem:entries}
+For every pair of basis elements, $v(G^b_{xy})\ge\mathrm{thr}$, $v(G^a_{xy})\ge\mathrm{thr}+1$ and $v(G^X_{xy})\ge\mathrm{thr}+4$.
+\end{lemma}
+
+\begin{proof}
+We use the elementary fact that $\sum_{s\in\F_\ell}H(s)=0$ for $H\in\F_\ell[s]$ of degree at most $\ell-2$ (M1), and
+\eqref{eq:faulhaber} and \eqref{eq:shift} (M2).
+
+\emph{The $b$-part.} In the band $\lambda=1$ is odd, so the tie classes are $(B,D)$ with $Z=B=\emptyset$ and $W=D$, and
+$\mu_W=0$. The basis above is the basis of the proof of Theorem~\ref{thm:L2}, which gives $v(G^b)\ge\mathrm{thr}$.
+
+\emph{Own nodes, $j\ge1$.} By Lemma~\ref{lem:N}(ii) the terms in $a$ are smaller than those in $b$ by one power of
+$\ell$, and the term in $X$ is $\ell$-integral, so by four powers. Hence the bounds with $+1$ and $+4$ hold at every node of $A$ and
+$C$ with $j\ge1$.
+
+\emph{Nodes with $j=0$ on $A$ and $C$.} The term in $X$ of the node $k=r$ contains $F(-r)$, which vanishes unless both
+elements are $e_{r,0}$. Then it has $v=\sigma(r)+v(X)$, which is at least $\mathrm{thr}+4$ since $\mathrm{thr}=-4$ on $A$ and $-2$ on $C$.
+
+\emph{The $D$-nodes, $a$-part.} At $k=\ell+s$ with $s\in D$ the leading order of the $a$-part is $\ell^2$, one above the $b$-part. The
+thresholds $1$ and $2$ hold outright, or after (M1) when the polynomial $G=\Omega\psi$ of Lemma~\ref{lem:G3} vanishes at the
+residues outside $D$. For $z_j\times z_{j'}$ and (top element of $A$)$\times z_j$ the threshold is $3$. The node data of
+Lemma~\ref{lem:G3} below give $-\frac{15}2-3\ell\lambda_0$ and $-3$ for the coefficients of
+$F$ and $\ell F'$ in the $a$-part. So $\sum_D(\cdots)/\ell^2\equiv-\frac{15}2\ell\int G+\ell\frac{15}2\int G=0\pmod{\ell^2}$ by (M2), because the total weight of the harmonic numbers in
+$\lambda_0$ is $0$ and in the expansion of $c_{\ell+s}$ it is $-1$.
+
+\emph{The $D$-nodes, $X$-part.} Here $c_k\sim\ell^5$ for $j=0$ and $j=1$, and $c_{\ell+s}/c_s\equiv8(1+\ell(2H_{s_2}-5H_s+3H_{s_1}))$
+with $s_1=s-\alpha_0$ and $s_2=s-A_2-1$. For the pairs of threshold $3$ the sum $\sum_D[c_sF(s)+c_{\ell+s}F(\ell+s)]/(\ell^5K_0/8)$
+is $\equiv9\ell\int G+\ell(-1+8(-1))\int G=0\pmod{\ell^2}$ by (M2). So $v\ge7=\mathrm{thr}+4$. The other pairs need at most $6$ and follow from (M1).
+\end{proof}
+
+The next lemma moves the computation to one point. 
+\begin{lemma}[transfer]\label{lem:PD}
+Let $F\in\Z_\ell[\alpha,Y]$ with $F(0,0)\in\Z_\ell^\times$. Then $F(\alpha,Y)\in\Z_\ell^\times$ for all $\alpha,Y\in\ell\Z_\ell$.
+\end{lemma}
+
+\begin{proof}
+$F(\alpha,Y)\equiv F(0,0)\pmod\ell$.
+\end{proof}
+
+We apply this to $F(\alpha,Y)=\ell^{-\mathrm{w}_{n,\ell}}J_n(\alpha/\ell,1,Y/\ell^4)$. By Lemma~\ref{lem:entries} the matrix
+$N(\alpha,Y)=D^{-1}GD^{-1}$ of Lemma~\ref{lem:halfint}, with $G=G^b+(\alpha/\ell)G^a+(Y/\ell^4)G^X$, has entries in $\Z_\ell[\varpi][\alpha,Y]$, where $\varpi^2=\ell$. So
+$F$ has integral coefficients. For $a\in\Z_\ell$ and $v(X)\ge-3$ the point $\alpha=\ell a$, $Y=\ell^4X$ lies in $\ell\Z_\ell$.
+By the homogeneity \eqref{eq:homog}, $J_n(a,b,X)=b^{3n}J_n(a/b,1,X/b)$ for a unit $b$. Hence
+\begin{quote}
+Theorem~\ref{thm:B83} holds as soon as the reduction of $N(0,0)$ has nonzero determinant.
+\end{quote}
+By the proof of Lemma~\ref{lem:halfint} this reduction is block triangular, with diagonal blocks $\overline N_{\mathrm{int}}$ on the integral group
+and $\overline N_{\mathrm{half}}$ on the half group. We show that both have nonzero determinant for $\ell\notin\{2,13,24359\}$ and $\ell\ne3,5$.
+At $(a,b,X)=(0,1,0)$ we have $U_k=-2H_k(3)$ and $V_k=U_kd_k-6H_k(4)$, and $L(F)=\sum_kc_k(U_kF'(-k)+V_kF(-k))$.
+
+\subsubsection{The integral blocks}
+Put $\Psi_r=\Pi/(t+r)^{\mu_r}$, and let $\hat c_r$ be the unit part of $c_r$,
+so that $c_{r+j\ell}\equiv\kappa_j\hat c_r$ with $\kappa=(1,4,1)$ on $A$ and $(1,1)$ on $C$ (Lucas). Let
+$P_r(s)=D_{\alpha_0}(s)/(s-r)$ with $D_m(s)=\prod_{i<m}(s-i)$.
+
+\begin{lemma}[unit identities]\label{lem:U83}
+For $r\in A$, $K_0P_r(r)^3\equiv32\,\hat c_r\Psi_r(-r)^2\pmod\ell$. For $r\in C$, $K_0P_r(r)^3\equiv8\,\hat c_r\Psi_r(-r)^2$.
+\end{lemma}
+
+\begin{proof}
+By Anton's congruence, $c_{r+\ell}\equiv4\hat c_r$ on $A$, and $c_{r+\ell}/\ell^2\equiv c_r/\ell^2$ on $C$. Write
+$P_r(r)=r!(-1)^{\alpha_0-1-r}(\alpha_0-1-r)!$ and $\Psi_r(-r)^2$ as factorials. The ratio
+$K_0P_r(r)^3/(\hat c_r\Psi_r(-r)^2)$ reduces to $-32(-1)^{\alpha_0-1-r}/[(2n+r)!(\alpha_0-1-r)!]^3$ on $A$, and to
+$-8(-1)^{\alpha_0-1-r}/[\cdots]^3$ on $C$. Since $(2n+r)+(\alpha_0-1-r)=\ell-1$, Wilson's theorem gives
+$(2n+r)!(\alpha_0-1-r)!\equiv(-1)^{r+1}$. With $\alpha_0$ odd, this gives $32$ and $8$.
+\end{proof}
+
+\begin{lemma}[the blocks of $A$]\label{lem:blockA}
+For $r\in A$ the reduced block of $e_{r,0},\dots,e_{r,3}$ is $\hat c_r\Psi_r(-r)^2M_A$, where
+$M_A=[\chi_{i+i'}]_{i,i'<4}$ and $\chi=(-\frac{297}8,40,-\frac{103}2,78,-130,0,0)$. Its determinant is $-16466684=-2^2\cdot13^2\cdot24359$.
+\end{lemma}
+
+\begin{proof}
+\emph{Own nodes.} At $k=r+j\ell$ ($j=1,2$), Lemma~\ref{lem:N} gives $U_k=\ell^{-3}u_j+\cdots$ and $V_k=\ell^{-4}E_j+\cdots$ with
+$u=(-2,-\frac94)$, $E=(-6,-\frac{105}8)$. For the pair $(i,i')$ with $m=i+i'$ the own nodes contribute
+$\Phi_A(m)\hat c_r\Psi_r(-r)^2\ell^{m-4}$ with
+$\Phi_A(m)=\sum_{j=1,2}\kappa_j(-j)^{m-1}(mu_j-jE_j)$. This gives $\Phi_A=(-\frac{297}8,40,-\frac{103}2,78,-130,224,-384)$ for $m=0,\dots,6$.
+
+\emph{The $D$-nodes.} At $k=\ell+s$, $s\in D$, the contribution of the pair is $-7\ell K_0\sum_DG+\ell^2K_0S_1+\cdots$ with
+$G=D_{\alpha_0}^3\psi$ and $\psi(s)=(r-s)^{m-8}$. For $m\le4$ it lies above the threshold. For $m=5$, $G$ is regular at $r$ with $G(r)=-P_r(r)^3$, so
+$\sum_DG\equiv-G(r)$ by (M1), and the entry is $\ell[224-7\cdot32]\hat c_r\Psi_r(-r)^2=0$ by Lemma~\ref{lem:U83}. For $m=6$,
+$G=(s-r)P_r^3$ has a simple zero at $r$. At level $\ell^2$ the $D$-part is
+$K_0[5(\Omega\psi')(r)+10(\Omega\Lambda_1\psi)(r)-18G'(r)]=12K_0P_r(r)^3=384\,\hat c_r\Psi_r(-r)^2$. The terms in $\int G$ cancel,
+and the shift corrections are $G'(r)$ for the shifts $s-\alpha_0$ and $s-A_2-1$. So the entry is $-384+384=0$.
+
+The determinant of $M_A$ is an exact computation with rational numbers.
+\end{proof}
+
+\begin{lemma}[the blocks of $C$]\label{lem:blockC}
+For $r\in C$ the reduced block of $e_{r,0},e_{r,1},e_{r,2}$ is $\hat c_r\Psi_r(-r)^2\bigl[\begin{smallmatrix}-10&8&-6\\8&-6&-52\\-6&-52&-130\end{smallmatrix}\bigr]$,
+and its determinant is $2^{15}$.
+\end{lemma}
+
+\begin{proof}
+The own node $j=1$ gives $\Phi_C(m)=(-1)^{m-1}(10-2m)$. For $m=3$ the $D$-part is $-7\ell K_0P_r(r)^3=-56\,\hat c_r\Psi_r(-r)^2\ell$, so the entry is $4-56=-52$.
+For $m=4$ the $D$-part is $K_0P_r^3[5(-2)+10\cdot3-36]=-16K_0P_r^3=-128\,\hat c_r\Psi_r(-r)^2\ell^2$, since $\mu_r=3$ and only the
+shift $s-\alpha_0$ crosses $r$. The entry is $-2-128=-130$. The determinant is $2t(245t+88)$ at $t=8$, which is $2^{15}$.
+\end{proof}
+
+Entries between elements of different residues $r\ne r'$ vanish in the reduction. At the own nodes they lie strictly above the threshold, since
+an element that is not own at a node vanishes there to order $\mu_r$. At the $D$-nodes the pairs of threshold $2$ have
+$G$ vanishing to order at least $2$ at both residues. Then (M1) and (M2) give $S_1\equiv7\int G$, which cancels $-7\int G$. The pairs of threshold at most $1$ follow from (M1).
+Hence
+\[
+ \det\overline N_{\mathrm{int}}=\prod_{r\in A}(\hat c_r\Psi_r(-r)^2)^4\det M_A\cdot\prod_{r\in C}(\hat c_r\Psi_r(-r)^2)^3\,2^{15},
+\]
+which is nonzero for $\ell\notin\{2,13,24359\}$.
+
+\subsubsection{The half-integral block}
+Let $\mathcal V$ be the linear functional on $\Q[x]$ with $\mathcal V(x^e)=eB_{e-1}$, where $B_1=-\frac12$, and put $\int g=\sum_eg_eB_e$, so
+that $\mathcal V(g)=\int g'$. Let $\Omega=D_{\alpha_0}^3$.
+
+\begin{lemma}\label{lem:G3}
+Let $\varphi\in\Z_{(\ell)}[t]$ with $\deg\varphi\le2g-2$, and put $\psi(x)=\varphi(-x)$ and $G=\Omega\psi$. Then
+\[
+ L(\Pi^2\varphi)\equiv15K_0\,\ell^3\,\mathcal V(G)\pmod{\ell^4}.
+\]
+\end{lemma}
+
+The degree of $G$ is at most $3\alpha_0+2g-2=\ell-4$ by \eqref{eq:band}. The proof has four steps.
+
+\emph{Step 1: summation lemmas.} Let $g_0\in\Z_{(\ell)}[x]$ have degree at most $\ell-3$ and put $\mathcal G(x)=\sum_{u<x}g_0(u)$. This is a
+polynomial divisible by $x$, by Faulhaber's formula. Put $q=\mathcal G/x$ and $\mathcal T(g_0)=\int q$. By the theorem of von Staudt, $\int g_0$, $\mathcal V(g_0)$ and $\mathcal T(g_0)$ lie in $\Z_{(\ell)}$.
+Wolstenholme's theorem gives $H_{\ell-1}\equiv0\pmod{\ell^2}$ and $H_{\ell-1}(2)\equiv0\pmod\ell$. With Faulhaber's formula this gives
+\begin{align*}
+ \sum_{u<\ell}g_0(u)&\equiv\ell\!\int g_0+\tfrac{\ell^2}2\mathcal V(g_0)\ (\ell^3),\\
+ \sum_{u<\ell}g_0(u)H_u&\equiv\int g_0-\ell\,\mathcal T(g_0)\ (\ell^2),\\
+ \sum_{u<\ell}g_0(u)H_u(2)&\equiv\tfrac12\mathcal V(g_0)\ (\ell),\\
+ \sum_{u<\ell}g_0(u)H_u^2&\equiv-2\mathcal T(g_0)-\tfrac12\mathcal V(g_0)\ (\ell).
+\end{align*}
+For the second, $\sum_ug_0(u)H_u=\mathcal G(\ell)H_{\ell-1}-\sum_{i=1}^{\ell-1}q(i)$ by summation by parts, and the first formula applied to $q$ gives the claim, since $q(0)=\int g_0$. The third is the same computation
+with $\mathcal G(i)/i^2$. For the fourth, $H_u^2=H_u(2)+2\sum_{j\le u}H_{j-1}/j$, and the second formula for $q$ finishes. By Lemma~\ref{lem:Wt} below these apply to every
+weight in the proof, and sums over $D$ equal sums over $[0,\ell)$.
+
+\emph{Step 2: the nodes.} Write $k=j\ell+s$. By Lemma~\ref{lem:N}, $v(c_k)=\sigma(s)$. The polynomial $F=\Pi^2\varphi$ vanishes to order $8$ at $-r$ for $r\in A$ and to order $6$ for $r\in C$, and $H_k(3)$, $H_k(4)$, $d_k$ have $v\ge-3,-4,-1$. So the nodes with $s\in A\cup C$ and $j=0$ vanish. The nodes with $s\in A$ and $j\ge1$ have $v\ge0-4+7$, those with $s\in C$ and $j=1$ have $v\ge2-4+5$, and those with $s\in D$ and $j=0$ have $v\ge5-1$. Hence every node other than $k=\ell+s$ with $s\in D$ contributes $0$ modulo $\ell^4$.
+So $L(\Pi^2\varphi)\equiv T=\sum_{s\in D}[c_{\ell+s}V_{\ell+s}F(-\ell-s)+c_{\ell+s}U_{\ell+s}F'(-\ell-s)]\pmod{\ell^4}$.
+
+\emph{Step 3: the node term.} Fix $s\in D$, $k=\ell+s$, $s_1=s-\alpha_0$, $s_2=s-A_2-1$. Write
+$\langle x,y\rangle=1+\ell x+\ell^2(y+x^2/2)$, so that $\langle x,y\rangle\langle x',y'\rangle\equiv\langle x+x',y+y'\rangle\pmod{\ell^3}$ and
+$\prod_{y=1}^{m}(1+j\ell/y)\equiv\langle jH_m,-\frac{j^2}2H_m(2)\rangle$. Digit expansions of the factorials, the reflection
+$(\ell-1)!=(\ell-1-m)!(-1)^mm!\prod_{y\le m}(1-\ell/y)$ and Wolstenholme's theorem give
+\[
+ c_{\ell+s}\equiv\ell^5K_0'\frac{s_1!^3s_2!^2}{s!^5}\bigl\langle\kappa_1+6H_{s_1}-5H_s-2H_{s_2},\ \kappa_2-6H_{s_1}(2)+\tfrac52H_s(2)-H_{s_2}(2)\bigr\rangle
+\]
+modulo a relative error $\ell^3$, with $K_0'=32A_2!^2(\alpha_0-1)!^3$ and constants $\kappa_1,\kappa_2$ independent of $s$. Also
+$\Pi(-s)^2=s!^8s_2!^{-2}s_1!^{-6}$ exactly, so $s_1!^3s_2!^2\,\Pi(-s)^2/s!^5=\Omega(s)$, and
+$\Pi(-k)^2/\Pi(-s)^2\equiv\langle2\Lambda_1(s),-\Lambda_2(s)\rangle$ with $\Lambda_j(s)=\sum_r\mu_r(s-r)^{-j}$. Next, $H_k(3)=\ell^{-3}+(\text{integral})$ and
+$H_k(4)=\ell^{-4}+(\text{integral})$, and
+\[
+ \ell d_k\equiv\tfrac12+\ell\lambda_0+\ell^2\delta_1,\qquad \ell^4V_k\equiv-7-2\ell\lambda_0-2\ell^2\delta_1\pmod{\ell^3},\qquad \ell^3U_k\equiv-2,
+\]
+with $\lambda_0=5H_s-3H_{s_1}-2H_{s_2}$ and $\delta_1=-5H_s(2)+6H_{s_1}(2)-2H_{s_2}(2)$. With $\psi(x)=\varphi(-x)$ we have
+$F(-k)=\Pi(-k)^2\psi(k)$ and $F'(-k)=\Pi(-k)^2(-2\Lambda_1(k)\psi(k)-\psi'(k))$. Taylor expansion gives, modulo $\ell^3$,
+\begin{multline*}
+ \ell^4\bigl(V_kF(-k)+U_kF'(-k)\bigr)/\Pi(-k)^2\equiv2\ell(\psi'+\ell\psi'')\\
+ +(-7-2\ell\lambda_0-2\ell^2\delta_1+4\ell\Lambda_1-4\ell^2\Lambda_2)(\psi+\ell\psi'+\tfrac{\ell^2}2\psi'').
+\end{multline*}
+
+\emph{Step 4: collection.} By the exact identities $H_{s_1}=H_s-\delta_N(s)$, $H_{s_2}=H_s-\delta_A(s)$, and the same for the second order sums, with
+$\delta_N(x)=\sum_{i<\alpha_0}(x-i)^{-1}$ and $\delta_A(x)=\sum_{i\le A_2}(x-i)^{-1}$, all harmonic numbers collapse to $H_s$, $H_s(2)$ and
+rational functions with poles at the zeros of $D_{\alpha_0}$. Since $\Lambda_1=3\delta_N+\delta_A$, we get
+$e_1=-H_s+4\delta_A$, $\varepsilon_2=-\frac92H_s(2)+3\delta_N^{(2)}$, $-2\lambda_0+4\Lambda_1=6\delta_N$ and $-2\delta_1-4\Lambda_2=2H_s(2)-8\delta_A^{(2)}$,
+where $e_1,\varepsilon_2$ are the arguments of $\langle\cdot,\cdot\rangle$ in the expansion of $c_{\ell+s}\Pi(-k)^2$ beyond the constants. With
+$W_1=\Omega\psi'$ and $W_2=\Omega\psi''$, the expansion of $\Omega\langle e_1,\varepsilon_2\rangle\times(\text{bracket})$ is
+\begin{multline*}
+ -7G+\ell\bigl[-5W_1+7GH_s-28G\delta_A+6G\delta_N\bigr]\\
+ +\ell^2\bigl[-\tfrac32W_2-\tfrac72GH_s^2+\tfrac{67}2GH_s(2)+5H_sW_1+28GH_s\delta_A-6GH_s\delta_N+R\bigr],
+\end{multline*}
+where $R$ is a combination, with integral coefficients, of terms without harmonic numbers. The functions $G$, $W_1$, $W_2$, $G\delta_N$, $G\delta_A$, $G\delta_N^{(2)}$,
+$G\delta_A^{(2)}$, $G\delta_A^2$, $G\delta_A\delta_N$, $W_1\delta_A$ and $W_1\delta_N$ are polynomials of degree at most $\ell-4$ that vanish on $[0,\alpha_0)$
+(Lemma~\ref{lem:Wt}). Summing the three brackets over $D$ with Step 1, with the accuracies $\ell^3$, $\ell^2$ and $\ell$:
+\begin{itemize}
+\item bracket $0$: $-7\ell\int G-\frac72\ell^2\mathcal V(G)$;
+\item bracket $1$: $7\int G-7\ell\mathcal T(G)-5\ell\int W_1-28\ell\int G\delta_A+6\ell\int G\delta_N$;
+\item bracket $2$: $7\mathcal T(G)+\frac74\mathcal V(G)+\frac{67}4\mathcal V(G)+5\int W_1+28\int G\delta_A-6\int G\delta_N$, the terms without harmonic numbers being $0$ by the first formula of Step 1.
+\end{itemize}
+In the total of bracket $0$, $\ell$ times bracket $1$ and $\ell^2$ times bracket $2$, the coefficient of $\ell$ is $-7\int G+7\int G=0$. The terms $\mathcal T$, $\int W_1$, $\int G\delta_A$ and $\int G\delta_N$ cancel in the coefficient of $\ell^2$, which is
+$(-\frac72+\frac74+\frac{67}4)\mathcal V(G)=15\mathcal V(G)$. So $\sum_{s\in D}\cdots\equiv15\ell^2\mathcal V(G)\pmod{\ell^3}$. The constant factor $\langle\kappa_1,\kappa_2\rangle\equiv1\pmod\ell$ does not matter, because the sum is $0$ modulo $\ell^2$. Hence
+$T\equiv\ell K_0'\cdot15\ell^2\mathcal V(G)\pmod{\ell^4}$. Finally $K_0\equiv K_0'\pmod\ell$, because Wilson's theorem gives $(2n)!(\alpha_0-1)!\equiv-1$. \qed
+
+\begin{lemma}\label{lem:Wt}
+Let $\delta_N^{(j)}(x)=\sum_{i<\alpha_0}(x-i)^{-j}$ and $\delta_A^{(j)}(x)=\sum_{i\le A_2}(x-i)^{-j}$. The functions listed in Step 4 are polynomials in $\Z_{(\ell)}[x]$ of degree at most
+$\ell-4$ that vanish at every $x\in[0,\alpha_0)$.
+\end{lemma}
+
+\begin{proof}
+$\Omega$ has a zero of order $3$ at each $i<\alpha_0$ and each factor has a pole of order at most $2$ there. The degree of $G$ is at most $\ell-4$ and the others are smaller.
+\end{proof}
+
+Lemma~\ref{lem:G3} makes $\overline N_{\mathrm{half}}$ explicit. For $\varphi=t^{j+j'}$ we have $\psi=(-x)^{j+j'}$, so up to the unit $b$ and the unit scaling of the basis
+\[
+ \det\overline N_{\mathrm{half}}=(15K_0)^g\det\bigl[\mathcal V(\Omega\,x^{j+j'})\bigr]_{j,j'<g},
+\]
+because $\det[(-1)^{j+j'}h_{j+j'}]=\det[h_{j+j'}]$. The following closed form shows that this is a unit.
+
+\begin{lemma}[the Hankel determinant]\label{lem:W}
+Let $\gamma\ge0$, $\alpha_0=2\gamma+1$ and $g\ge1$. Then
+\[
+ \det\bigl[\mathcal V(D_{\alpha_0}(x)^3x^{i+j})\bigr]_{0\le i,j<g}=(-1)^{\gamma g+\lfloor g/2\rfloor}\prod_{k<\lceil g/2\rceil}h^+_k\prod_{k<\lfloor g/2\rfloor}h^-_k,
+\]
+where
+\begin{align*}
+ h^+_k&=\frac{k!\,(\gamma+k)!^3\,(2\gamma+1+k)!^3\,(k+3\gamma+1)!}{(2k+3\gamma+1)!\,(2k+3\gamma+2)!},\\
+ h^-_k&=\frac{k!\,(\gamma+1+k)!^3\,(2\gamma+1+k)!^3\,(k+3\gamma+2)!}{(2k+3\gamma+2)!\,(2k+3\gamma+3)!}.
+\end{align*}
+All factorial arguments are at most $g+3\gamma+1$. So the determinant is nonzero, and no prime $\ell\ge g+3\gamma+2$ divides its numerator or its denominator.
+\end{lemma}
+
+By \eqref{eq:band}, $\ell=6\gamma+2g+5>g+3\gamma+1$, and $\ell\ge11$. So $\ell\nmid\det\overline N_{\mathrm{half}}$ for $\ell\ne3,5$. The numbers $h^\pm_k$ are the
+squared norms of Wilson polynomials with parameters $(0,\gamma+1,\gamma+1,\gamma+1)$ and $(1,\gamma+1,\gamma+1,\gamma+1)$ \cite{Wilson80,KLS}, and
+the identification of the weight is a remark and not a step of the proof. We prove the lemma by finite algebra. Put $\varsigma=\gamma+1$ and $(y)_k=y(y+1)\cdots(y+k-1)$.
+
+\emph{Two facts on $\mathcal V$.} (L0) $\mathcal V(f(x+1)-f(x))=f''(0)$. By linearity take $f=x^m$. Then
+$\mathcal V((x+1)^m-x^m)=\sum_{e<m}\binom me eB_{e-1}=m\sum_{e'<m-1}\binom{m-1}{e'}B_{e'}$, which is $m[m=2]=(x^m)''(0)$ by $\sum_{k<N}\binom NkB_k=[N=1]$.
+(R0) $\mathcal V(g(-x))=-\mathcal V(g)-g''(0)$, since $B_{e-1}=0$ for even $e\ge4$. By induction, $\mathcal V(g(x+m))=\mathcal V(g)+\sum_{j<m}g''(j)$ and
+$\mathcal V(g(m-x))=-\mathcal V(g)-\sum_{j\le m}g''(j)$.
+
+\emph{The centred functional.} Put $\mathcal Z[g]=(-1)^\gamma\mathcal V\bigl(D_{\alpha_0}(x)^3g(x-\gamma)\bigr)$ on $\Q[z]$, so that $\mathcal V(D_{\alpha_0}^3x^e)=(-1)^\gamma\mathcal Z[(z+\gamma)^e]$.
+\begin{itemize}
+\item \emph{Evenness:} $\mathcal Z[g(-z)]=\mathcal Z[g(z)]$. Indeed $D_{\alpha_0}(2\gamma-x)=-D_{\alpha_0}(x)$, and the reflection with $N=2\gamma$ applies, because the second derivatives of $D_{\alpha_0}^3g(x-\gamma)$ vanish at $0,\dots,2\gamma$.
+\item \emph{Pearson equation:} $\mathcal Z[(z+\varsigma)^3g(z+1)]=\mathcal Z[(z-\varsigma)^3g(z)]$. Put $f=D_{\alpha_0+1}^3g(x-\gamma)$. Then $f(x+1)-f(x)=D_{\alpha_0}^3[(x+1)^3g(x+1-\gamma)-(x-\alpha_0)^3g(x-\gamma)]$, and $f''(0)=0$, so (L0) applies.
+\end{itemize}
+Put $F_j=(z)_j(-z)_j$, $E_k=(\varsigma+z)_k(\varsigma-z)_k$ and $F^1_j=(1+z)_j(1-z)_j$. These are even, of degree $j,k,j$ in $z^2$, and $z^2F^1_j=-F_{j+1}$.
+
+\emph{Beta evaluation.} For $j,k\ge0$,
+\[
+ \mathcal Z[F_jE_k]=\mathcal Z[1]\,\frac{(\varsigma)_{j+k}(\varsigma)_j^2(2\varsigma)_k^2}{(3\varsigma)_{j+k}} .
+\]
+Let $g(z)=(z)_j(1-z)_j(\varsigma+z)_k(\varsigma+1-z)_k$ and $T(z)=(z+\varsigma)^3g(z+1)$. The Pearson equation gives $\mathcal Z[T]=\mathcal Z[(z-\varsigma)^3g]=\mathcal Z[-T(-z)]=-\mathcal Z[T]$ by evenness, so $\mathcal Z[T]=0$.
+Evenness also gives $\mathcal Z[T]=\frac12\mathcal Z[T(z)+T(-z)]$. With $zT(z)=P(z)F_jE_k$, $P=(\varsigma+z)^2(\varsigma+k+z)(z+j)$, we get $(P(z)-P(-z))/z=2[(3\varsigma+j+k)z^2+2\varsigma j(\varsigma+k)+\varsigma^2(\varsigma+j+k)]$, hence
+$\mathcal Z[F_jE_k((3\varsigma+j+k)z^2+2\varsigma j(\varsigma+k)+\varsigma^2(\varsigma+j+k))]=0$. Using $z^2E_k=(\varsigma+k)^2E_k-E_{k+1}$ and $z^2F_j=j^2F_j-F_{j+1}$ gives the two recursions
+\begin{align*}
+ (3\varsigma+j+k)\mathcal Z[F_jE_{k+1}]&=(\varsigma+j+k)(2\varsigma+k)^2\mathcal Z[F_jE_k],\\
+ (3\varsigma+j)\mathcal Z[F_{j+1}]&=(\varsigma+j)^3\mathcal Z[F_j],
+\end{align*}
+which the right side satisfies. Induction on $j$ and then on $k$ gives the formula.
+
+\emph{The mass.} $\mathcal Z[1]=(2\gamma+1)!^3\gamma!^3/(3\gamma+2)!$. Indeed $D_{2\gamma+1}(x)=\Phi_\gamma(x-\gamma)$ with $\Phi_\gamma(z)=z\prod_{i=1}^\gamma(z^2-i^2)$, and (L0) gives
+$\mathcal Z_\gamma[g]=-\mathcal Z_{\gamma-1}[(z^2-\gamma^2)^3g]$. So $\mathcal Z_\gamma[1]=\mathcal Z_{\gamma-1}[u^3]$ with $u=\gamma^2-z^2=E_1$ at parameter $\gamma-1$, where $\varsigma=\gamma$. Write $u^3=E_3-(6\gamma+5)E_2+(2\gamma+1)^2E_1$ and use the Beta evaluation at $j=0$. A short computation gives
+$\mathcal Z_\gamma[1]/\mathcal Z_{\gamma-1}[1]=((2\gamma+1)2\gamma)^3\gamma^3/(3\gamma(3\gamma+1)(3\gamma+2))$, and $\mathcal Z_0[1]=\mathcal V(x^3)=3B_2=\frac12$.
+
+\emph{Splitting.} The matrix $[\mathcal Z[(z+\gamma)^{i+j}]]$ equals $U[\mathcal Z[z^{i+j}]]U^\top$ with $U$ lower unitriangular, so the determinant in the lemma is $(-1)^{\gamma g}\det[\mathcal Z[z^{i+j}]]$. By evenness $\mathcal Z[z^{\rm odd}]=0$, and ordering the indices as (even, odd) makes the matrix block diagonal. The blocks are the Hankel matrices of
+$\mathcal Z_+(P)=\mathcal Z[P(z^2)]$ of size $\lceil g/2\rceil$ and $\mathcal Z_-(P)=\mathcal Z[z^2P(z^2)]$ of size $\lfloor g/2\rfloor$. If $\pi_n$ are monic of degree $n$ with $\mathcal L(\pi_nq)=0$ for $\deg q<n$, then $\det[\mathcal L(w^{i+j})]_{i,j<m}=\prod_{n<m}\mathcal L(\pi_nw^n)$, because $[\mathcal L(\pi_i\pi_j)]=V[\mathcal L(w^{l+k})]V^\top$ with $V$ unitriangular.
+
+\emph{The orthogonal polynomials.} Put
+\[
+ Q_n=\sum_{k\le n}\frac{(-n)_k(n+3\varsigma-1)_k}{k!(\varsigma)_k(2\varsigma)_k^2}E_k,\qquad R_n=\sum_{k\le n}\frac{(-n)_k(n+3\varsigma)_k}{k!(\varsigma+1)_k(2\varsigma)_k^2}E_k .
+\]
+For $j\le n$ the Beta evaluation gives
+\[
+ \mathcal Z[Q_nF_j]=\mathcal Z[1]\frac{(\varsigma)_j^3}{(3\varsigma)_j}\sum_{k}\frac{(-n)_k(n+3\varsigma-1)_k(\varsigma+j)_k}{k!(\varsigma)_k(3\varsigma+j)_k}.
+\]
+This sum is balanced, and Pfaff--Saalschütz \cite[Theorem~2.2.6]{AAR99} with $\alpha=n+3\varsigma-1$, $\beta=\varsigma+j$, $\gamma'=\varsigma$ gives a product containing $(-j)_n$. It is zero for $j<n$. So $Q_n$ is orthogonal for $\mathcal Z_+$ to all polynomials in $z^2$ of degree less than $n$. At $j=n$ the product evaluates, after the normalization by the leading coefficients $(n+3\varsigma-1)_n/((\varsigma)_n(2\varsigma)_n^2)$ and $(-1)^n$, to
+$\mathcal Z_+(\hat Q_nw^n)=h^+_n$. For the odd block, $\mathcal Z_-(R_nF^1_j)=-\mathcal Z[R_nF_{j+1}]$, and the same argument with $\gamma'=\varsigma+1$ and $\beta=\varsigma+j+1$ gives orthogonality for $j<n$ and $\mathcal Z_-(\hat R_nw^n)=-h^-_n$. The factorial arithmetic uses
+$(3\varsigma)_n=(n+3\gamma+2)!/(3\gamma+2)!$ and $(n+3\varsigma-1)_n=(2n+3\gamma+1)!/(n+3\gamma+1)!$. The product of the norms, with the sign $(-1)^{\gamma g}$ from the shift and $(-1)^{\lfloor g/2\rfloor}$ from the odd block, is the formula. The largest factorial arguments are
+$2n+3\gamma+2\le g+3\gamma+1$ in the even block and $2n+3\gamma+3\le g+3\gamma+1$ in the odd block. \qed
+
+\emph{Remark.} Put $W(y)=|\Gamma(\gamma+1+iy)|^6\cosh(\pi y)/\pi$. A Barnes-integral evaluation gives $\mathcal Z[g]=\int_{\R}g(iy)W(y)\,dy$, and $W$ is the Wilson weight with parameters $(0,\gamma+1,\gamma+1,\gamma+1)$. Its odd part $y^2W$ is the Wilson weight with $(1,\gamma+1,\gamma+1,\gamma+1)$. This explains the two families $h^+,h^-$. We do not use it.
+
+\subsubsection{Proof of Theorem~\ref{thm:B83}}
+Lemma~\ref{lem:blockA}, Lemma~\ref{lem:blockC} and the cross entries give $\det\overline N_{\mathrm{int}}\ne0$ for $\ell\notin\{2,13,24359\}$. Lemmas~\ref{lem:G3} and~\ref{lem:W} give
+$\det\overline N_{\mathrm{half}}\ne0$ for $\ell\ne3,5$. So $\det\overline N(0,0)\ne0$, and by \eqref{eq:target} and Lemma~\ref{lem:PD} the valuation of $J_n(a,b,X)$ is $\mathrm{w}_{n,\ell}$ at every
+point of the theorem. \qed
+
 %% =====================================================================
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
 Put $D=33.4401$, $\Lambda=28.68723663$, $\eta=D-\Lambda=4.75286337$, $\rho=42.94856306$ and $\kappa=3$. The modulus is
-$M=126$, and there are three tied families:
+$M=126$, and there are four tied families:
 \begin{itemize}
-\item Lai's primes: $S=\{s:s\equiv1\pmod{18}\}$, $\ell=\frac92n+1$;
-\item the first line: $S=\{s:s\equiv5\pmod7\}$, $\ell=\frac73n+\frac13$;
-\item the second line: $S=\{s:s\equiv3\pmod7\}$, $\ell=\frac73n+\frac23$.
+\item the band: all unit classes, $c=\frac83$, $c'=3$, $R(\ell)=\{n:8n<3\ell,\ \ell+1<3n\}$;
+\item Lai's primes: $S=\{s:s\equiv1\pmod{18}\}$, $c=c'=\frac92$, $\ell=\frac92n+1$;
+\item the first line: $S=\{s:s\equiv5\pmod7\}$, $c=c'=\frac73$, $\ell=\frac73n+\frac13$;
+\item the second line: $S=\{s:s\equiv3\pmod7\}$, $c=c'=\frac73$, $\ell=\frac73n+\frac23$.
 \end{itemize}
-Each set $S$ has $6$ of the $36$ unit classes, Lai's set meets each of the other two in one class, and the two lines
-are disjoint. The finite exceptional set $E$ consists of the primes below $100$ and the primes $73$ and $1039$.
+The band has the required property with $C=2$ for $\ell\ge100$, since the interval $(\frac{\ell+1}3,\frac{3\ell}8)$ has length at least $3$ and contains a point within $2$ of every $y\in[\frac\ell3,\frac{3\ell}8]$. Each of the three other sets $S$ has $6$ of the $36$ unit classes. Lai's set meets each of the two lines in one
+class, and the two lines are disjoint. The finite exceptional set $E$ consists of the primes below $100$ and the primes $73$, $1039$ and $24359$.
 
 \emph{Part (a).} Since $a\zeta(3)+b\pi^4=a\zeta(3)+90b\zeta(4)$, it suffices to prove the bound of part (a) for
 $a\zeta(3)+b\zeta(4)$ with $a,b\in\Z$ and $b\ne0$. Let $\xi=a\zeta(3)+b\zeta(4)$ and $P_n=Q_n$. By \eqref{eq:scaled} and
 Theorem~\ref{thm:content}, $q^{3n}m_nQ_n(p/q)=m_nJ_n(qa,qb,p)\in\Z$, so (a) of Theorem~\ref{thm:criterion} holds with
 $d_n=m_n$. Corollary~\ref{cor:families} gives (b). Take $W(p,q)=q$ and $K=1$. For each family add the prime divisors of
-$b$ to the exceptional set, and let $\mathrm{Bad}(\ell,p,q)$ be $\ell^4\mid q$, with $e=4$. Corollaries~\ref{cor:NV}
-and~\ref{cor:NV7} give (c). Put $u_0=3/\eta$ and $\beta=1637/10000$. Since $\frac73(u_0+\beta)<\frac92u_0$, the windows of
-Lai's family and of the lines do not overlap, and
-\[
- \cM(u_0,u_0+\beta)=4\beta\Bigl(\frac92\cdot\frac16+2\cdot\frac73\cdot\frac16\Bigr)=\frac{18007}{18000}>1 .
-\]
-Theorem~\ref{thm:criterion} applies, and $\rho(3/\eta+\beta)=34.13974\ldots<34.14$.
+$b$ to the exceptional set, and let $\mathrm{Bad}(\ell,p,q)$ be $\ell^4\mid q$, with $e=4$. Corollaries~\ref{cor:B83},
+\ref{cor:NV} and~\ref{cor:NV7} give (c). Put $u_0=3/\eta$ and $\beta=7/800$. The windows $(\frac83u,3w]$, $(\frac92u,\frac92w]$ and
+$(\frac73u,\frac73w]$ with $w=u_0+\beta$ are pairwise disjoint, because $\frac73w<\frac83u_0$ and $3w<\frac92u_0$. So
+\begin{multline*}
+ \cM(u_0,u_0+\beta)=4\Bigl[\Bigl(\frac{u_0}3+3\beta\Bigr)+\frac16\cdot\frac92\beta+2\cdot\frac16\cdot\frac73\beta\Bigr]\\
+ =\frac4\eta+\frac{163}9\beta=1.00007\ldots>1 .
+\end{multline*}
+Theorem~\ref{thm:criterion} applies, and $\rho(3/\eta+\beta)=27.48487\ldots<27.49$.
 
 \emph{Part (b).} Let $\xi=y^*=\zeta(3)/\zeta(4)$ and $P_n=f_n$. As above,
 $q^{3n}m_nf_n(p/q)=m_nJ_n(q,-p,0)\in\Z$, and Corollary~\ref{cor:families} gives (b). Since $1<y^*<2$, every $p/q$
 with $|y^*-p/q|<1$ has $0<p<3q$, and we take $W(p,q)=|p|$ and $K=3$. Let $\mathrm{Bad}(\ell,p,q)$ be $\ell\mid p$, with
-$e=1$. Corollaries~\ref{cor:NV} and~\ref{cor:NV7} give (c). With $\beta=661/1000$ the windows overlap, and
-\[
- \cM(u_0,u_0+\beta)=\beta\Bigl(\frac92\cdot\frac16+2\cdot\frac73\cdot\frac16\Bigr)
- -2\cdot\frac1{36}\Bigl(\frac73(u_0+\beta)-\frac92u_0\Bigr)=1.00015\ldots>1 .
-\]
-Theorem~\ref{thm:criterion} gives $|y^*-p/q|>q^{-55.499}$ for large $q$, since $\rho(3/\eta+\beta)=55.4980\ldots$.
+$e=1$. Corollaries~\ref{cor:B83}, \ref{cor:NV} and~\ref{cor:NV7} give (c). With $\beta=9593/50000$ the windows of the band and of the
+two lines overlap, and the other windows are disjoint from them. The band meets each line in a window of length $\frac73w-\frac83u_0=\frac13(7\beta-u_0)$ and
+density $\frac16$, so
+\begin{multline*}
+ \cM(u_0,u_0+\beta)=\Bigl(\frac{u_0}3+3\beta\Bigr)+\frac16\cdot\frac92\beta+2\cdot\frac16\cdot\frac73\beta-2\cdot\frac16\cdot\frac13(7\beta-u_0)\\
+ =\frac{4u_0}9+\frac{15}4\beta=1.0000076\ldots>1 .
+\end{multline*}
+Theorem~\ref{thm:criterion} gives $|y^*-p/q|>q^{-35.3492}$ for large $q$, since $\rho(3/\eta+\beta)=35.34918\ldots$.
 Finally $\zeta(3)/\pi^4=y^*/90$, because $\zeta(4)=\pi^4/90$, and Lemma~\ref{lem:scale} with $r=1/90$ gives part (b) of
 Theorem~\ref{thm:main}. \qed
 
@@ -1708,9 +2066,11 @@ below the bounds of Section~\ref{sec:local}, and in the range $\sqrt{8n}<p<3n$ i
 few primes where a class constant of the proofs vanishes modulo $p$. This suggests that $\Lambda=28.6872366\ldots$ is
 the true exponential rate of the denominators of $J_n(a,b,X)$ as a polynomial in three variables.
 
-\emph{Nonvanishing.} The tolerance $\ell^4\nmid q$ is best possible for both families: at the tested pairs, the roots of
-$J_n(1,1,X)$ have $v_\ell(X)=-4$. For primes $2n<\ell<8n/3$ off the two lines, the reduction used in
-Theorem~\ref{thm:NV7} is singular, so other sizes would need a new argument. The exponent of part (b) is larger than
+\emph{Nonvanishing.} The tolerance $\ell^4\nmid q$ is best possible for all three families: at the tested pairs, the roots of
+$J_n(1,1,X)$ have $v_\ell(X)=-4$. For primes $5n/2<\ell<8n/3$ the reduced half block is the Hankel matrix of a weight on two
+intervals of residues. We know no closed form for its determinants, which have large prime factors. At $124$ pairs $(n,\ell)$ with $n<90$ the prime $\ell$ does not divide it.
+The mass $\sum_\ell e\log\ell$ of the band is $\frac43n$ per size for the plane and $\frac13n$ for the ratio, below the $1.585n$ that would give the
+exponent $27.11$. The exponent of part (b) is larger than
 that of part (a) because the coefficient $b=-p$ of the ratio family grows with $q$, so that only one power of each tied
 prime is available.
 
@@ -1723,23 +2083,23 @@ $12.51$ of Marcovecchio and Zudilin is better than ours.
 \raggedbottom
 
 Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every theorem,
-proposition and lemma its proof uses. The remarks, Theorem~\ref{thm:C01} and the exact valuations stated after
-Theorems~\ref{thm:NV} and~\ref{thm:NV7} are not part of the formalization. The development is in the directories
+proposition and lemma its proof uses. The remarks, Theorem~\ref{thm:C01}, the exact valuations stated after
+Theorems~\ref{thm:NV} and~\ref{thm:NV7}, the exact valuation in Theorem~\ref{thm:B83} (the formalization proves the nonvanishing it implies) and the remark on Wilson weights after Lemma~\ref{lem:W} are not part of the formalization. The development is in the directories
 \lean{CatalanCore/Lai} and \lean{CatalanCore/Measure} of the repository
 \begin{center}
 \FormalizationLink
 \end{center}
 Theorem~\ref{thm:main} consists of the theorems
 \begin{center}
-{\small\texttt{LaiIrrationalityMeasure.lai\_plane\_measure\_34\_14}}\\
-{\small\texttt{LaiIrrationalityMeasure.lai\_ratio\_measure\_55\_50}}
+{\small\texttt{LaiIrrationalityMeasure.lai\_plane\_measure\_27\_49}}\\
+{\small\texttt{LaiIrrationalityMeasure.lai\_ratio\_measure\_35\_35}}
 \end{center}
 in \lean{SolutionLai.lean}, and Corollary~\ref{cor:mobius} for integers $a$, $b$, $c$, $d$ is
-{\small\texttt{LaiIrrationalityMeasure.lai\_ratio\_mobius\_measure\_55\_50}}. Their statements use only Mathlib. The numbers $\zeta(3)$ and $\zeta(4)$ are written as the
+{\small\texttt{LaiIrrationalityMeasure.lai\_ratio\_mobius\_measure\_35\_35}}. Their statements use only Mathlib. The numbers $\zeta(3)$ and $\zeta(4)$ are written as the
 series $\sum_{k\ge0}(k+1)^{-3}$ and $\sum_{k\ge0}(k+1)^{-4}$, and $\pi$ is Mathlib's \lean{Real.pi}. The first theorem
-states, for integers $a$ and $b\ne0$, that $q^{-34.14}<|a\zeta(3)+b\zeta(4)-p/q|$ for all integers $p$ and all
+states, for integers $a$ and $b\ne0$, that $q^{-27.49}<|a\zeta(3)+b\zeta(4)-p/q|$ for all integers $p$ and all
 sufficiently large $q$. Applied to $(a,90b)$ it gives part (a), since $\pi^4=90\zeta(4)$. This is the only place
-where the formal statement differs in form from Theorem~\ref{thm:main}. The second states $q^{-55.50}<|\zeta(3)/\pi^4-p/q|$ in the same form. The modules contain no
+where the formal statement differs in form from Theorem~\ref{thm:main}. The second states $q^{-35.35}<|\zeta(3)/\pi^4-p/q|$ in the same form. The modules contain no
 \lean{sorry} and no \lean{native_decide}. The command \lean{\#print axioms} reports only \lean{propext},
 \lean{Classical.choice} and \lean{Quot.sound}. The proof is kernel-checked. It has not been run through the
 independent checker \lean{lake comparator} \cite{Comparator}.
@@ -1759,7 +2119,7 @@ the names with a short prefix only. The full namespaces are \lean{CatalanCore.La
 \begin{itemize}
 \item Proposition~\ref{prop:finite} and \eqref{eq:homog}: \lean{laiR_partial_fractions}, \lean{laiL_eval_moment} and
  \lean{isHomogeneous_laiJ}. The identity $\zeta(4)=\pi^4/90$ is \lean{zeta4_eq_pi}.
-\item Theorem~\ref{thm:criterion}: \lean{measure_of_family_tiedNV_index}, with the structure \lean{TiedNV}, the mass
+\item Theorem~\ref{thm:criterion}: \lean{measure_of_family_tiedNV_index}, with the structure \lean{TiedNV}, whose families have a slope interval $[c,c']$, the mass
  condition \lean{NT.UnionWindowOK} and the prime number theorem in progressions \lean{NT.pnt_class} and
  \lean{NT.theta_interval_asymp}. Lemma~\ref{lem:scale}: \lean{plain_measure_smul}. Lemma~\ref{lem:mobius}:
  \lean{plain_measure_all_den} and \lean{plain_measure_mobius}. Corollary~\ref{cor:mobius}: \lean{lai_mobius_of}.
@@ -1773,6 +2133,11 @@ the names with a short prefix only. The full namespaces are \lean{CatalanCore.La
  Lemma~\ref{lem:bands} and Theorem~\ref{thm:content}: \lean{sum_signed_le} and \lean{lai_content}.
 \item Theorem~\ref{thm:NV} and Corollary~\ref{cor:NV}: \lean{lai_nv_core}, \lean{lai_nv_plane} and \lean{lai_nv_ratio}.
  Theorem~\ref{thm:NV7} and Corollary~\ref{cor:NV7}: \lean{nv7_core}, \lean{nv7_plane} and \lean{nv7_ratio}.
+\item Theorem~\ref{thm:B83}: \lean{B83Main.b83_nonvanishing}, with the corollaries \lean{nv_plane_B83} and \lean{nv_ratio_B83} for Corollary~\ref{cor:B83}.
+ Lemma~\ref{lem:U83}: \lean{u83_A} and \lean{u83_C}. Lemmas~\ref{lem:blockA} and~\ref{lem:blockC}: \lean{det_MA} and \lean{det_MC}, with \lean{det_intBlock_band_ne}.
+ Lemma~\ref{lem:entries}: \lean{lb06_point} and the weighted bounds of \lean{B83Weighted}. Lemma~\ref{lem:G3}: \lean{lemma_G3_monomial}, with Wolstenholme's theorem
+ \lean{wolstenholme_one} and \lean{wolstenholme_two}. Lemma~\ref{lem:W}: \lean{wilson_hankel}, \lean{wilson_hankel_padic_unit} and the
+ Pfaff--Saalschütz summation \lean{saalschutz}. The unit of the half block: \lean{half_block_unit}. The assembly of the Gram determinant: \lean{det_gramF_ne_zero}.
 \item Section~\ref{sec:proof}: \lean{lai_roots_of}.
 \end{itemize}
 The certificate data are the coefficients of $H$, the $40$ cells, the trigonometric values at the cell centres, and
