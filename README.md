@@ -65,7 +65,6 @@ or of `π⁴`, whose known measures are smaller: 5.4197 (Leibtag et al.) and 12.
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
 | `a ζ(3) + b π⁴`, nonzero rationals `a, b` | 34.14 | improved measure | 66.3 (Leibtag et al.) |
-| `ζ(3)/π⁴` | 55.50 | first measure | none (irrational by Lai) |
 | `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`, rationals with `ad − bc ≠ 0` | 55.50 | first measure | none (irrational by Lai) |
 
 ### 5. Dilogarithms of rational numbers
@@ -83,18 +82,16 @@ Examples:
 | `Li₂(1/6)` | 11.72 | improved measure | 783.29 (Rhin–Viola) |
 | `Li₂(1/20)` | 9.36 | improved measure | 11.94 (Rhin–Viola) |
 | `Li₂(−1/5)` | 10.37 | improved measure | 62.69 (Rhin–Viola) |
-| `Li₂(−2/11)`, `Li₂(−2/13)`, `Li₂(−2/15)` | 110.29, 65.00, 49.03 | first proofs of irrationality | none |
-| `Li₂(2/13)` | 2408.00 | first measure | none (irrational by Liu; Tan–Zhang) |
 
 The theorem also gives finite measures for every reduced `2/b` with odd `b ≥ 13` and every reduced `−2/b`
 with odd `b ≥ 11`. In the domain `0 < |a/b| ≤ 1/2`, this leaves four positive and three negative
 arguments with reduced absolute numerator 2 outside these ranges.
 
-| Number | μ ≤ | Prior irrationality coverage |
-|---|---:|---|
-| `Li₂(2/13)` | 2,974.00 | Liu |
-| `Li₂(−2/11)`, `Li₂(−2/13)`, `Li₂(−2/15)` | 111.27, 65.33, 49.22 | First proofs to our knowledge |
-| `Li₂(−3/50)`, `Li₂(4/167)`, `Li₂(−4/177)` | 73,784.43, 70,747.01, 13,998.32 | Below Tan–Zhang's uniform thresholds |
+| Number | μ ≤ | New | Other bound |
+|---|---|---|---|
+| `Li₂(−2/11)`, `Li₂(−2/13)`, `Li₂(−2/15)` | 110.29, 65.00, 49.03 | first proofs of irrationality | none |
+| `Li₂(2/13)`, `Li₂(2/15)` | 2408.00, 127.11 | first measures | none (irrational by Liu; Tan–Zhang) |
+| `Li₂(−3/50)`, `Li₂(4/167)`, `Li₂(−4/177)` | 12,476.00, 14,121.72, 7,834.47 | first proofs of irrationality | none (below Tan–Zhang's thresholds 60, 168, 178) |
 
 The paper gives the witness entries for these bounds and the full comparison for `±1/k`, `k ≤ 20`, against
 Hata and Rhin–Viola. The earlier ranges are in [Liu's formalization](https://github.com/siqiliu-tsinghua/Li2Rational)

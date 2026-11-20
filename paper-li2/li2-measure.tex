@@ -61,7 +61,10 @@ explicit upper bound for $\mu(\Li_2(a/b))$ whenever an explicit margin $\eta(a,b
 a closed-form arithmetic rate in $\log b$, $\log|a|$ and $\log|b-a|$ and a piecewise affine decay rate in
 $\log(b/|a|)$. For example $\mu(\Li_2(1/2))\le228.26$, $\mu(\Li_2(1/3))\le21.52$, $\mu(\Li_2(1/4))\le15.16$,
 $\mu(\Li_2(1/5))\le12.90$, $\mu(\Li_2(-1/2))\le13.92$ and $\mu(\Li_2(-1/3))\le11.89$. As far as we know these
-are the first irrationality measures for these numbers. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
+are the first irrationality measures for these numbers. For the numerator $2$ we obtain finite measures for
+$\Li_2(2/b)$ for every odd $b\ge13$ and for $\Li_2(-2/b)$ for every odd $b\ge11$. As far as we know this proves for the
+first time that $\Li_2(-2/11)$, $\Li_2(-2/13)$ and $\Li_2(-2/15)$ are irrational. The same holds for $\Li_2(-3/50)$,
+$\Li_2(4/167)$ and $\Li_2(-4/177)$. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
 from $783.29$ to $11.72$ at $b=6$ and from $11.94$ to $9.36$ at $b=20$. For $\Li_2(-1/b)$
 with $5\le b\le20$ they improve the bounds that follow from Rhin and Viola's linear independence measures. The
 approximations are Tang's normalized Hankel determinants. Liu and Tan and Zhang used them, with an arithmetic rate of
@@ -166,50 +169,82 @@ linear independence measure of $1$, $\Li_1(-1/k)$, $\Li_2(-1/k)$ \cite[Table~1]{
 \cite[Tables~1 and~2, p.~386]{Hata93dilog}. Published values are rounded to two decimals.}\label{tab:values}
 \end{table}
 
-For the numerator $2$ the evaluation of the formula gives a positive margin for every odd $b\ge13$ and, with the
-minus sign, for every odd $b\ge11$, by the argument of Remark~\ref{rem:numerators}. The first values with the minus
-sign are new irrationality results.
+For the numerator $2$ the theorem covers two full ranges of odd denominators.
 
 \begin{corollary}\label{cor:two}
-For odd $b$ with $13\le b\le41$ and $x=\Li_2(2/b)$, and for odd $b$ with $11\le b\le41$ and $x=\Li_2(-2/b)$, the bound
-$\mu(x)\le\mu_0$ holds with the $\mu_0$ of Table~\ref{tab:two}. In particular $\Li_2(-2/11)$, $\Li_2(-2/13)$ and
-$\Li_2(-2/15)$ are irrational.
+$\Li_2(2/b)$ has a finite irrationality measure for every odd $b\ge13$, and $\Li_2(-2/b)$ for every odd $b\ge11$. For
+the numbers $x$ in Tables~\ref{tab:two} and~\ref{tab:larger} the bound $\mu(x)\le\mu_0$ holds with the stated $\mu_0$.
+In particular $\Li_2(-2/11)$, $\Li_2(-2/13)$, $\Li_2(-2/15)$, $\Li_2(-3/50)$, $\Li_2(4/167)$ and $\Li_2(-4/177)$ are
+irrational.
 \end{corollary}
 
 \begin{table}[ht]
 \centering
 \renewcommand{\arraystretch}{1.1}
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}r|rr||r|rr@{}}
+\begin{tabular}{@{}r|rl|rl@{}}
 \toprule
-$b$ & $\Li_2(2/b)$ & $\Li_2(-2/b)$ & $b$ & $\Li_2(2/b)$ & $\Li_2(-2/b)$\\
+ & \multicolumn{2}{c|}{$x=\Li_2(2/b)$} & \multicolumn{2}{c}{$x=\Li_2(-2/b)$}\\
+$b$ & $\mu_0$ & entries & $\mu_0$ & entries\\
 \midrule
-$11$ & -- & $110.29$ & $27$ & $31.29$ & $27.01$\\
-$13$ & $2408.00$ & $65.00$ & $29$ & $29.14$ & $25.87$\\
-$15$ & $127.11$ & $49.03$ & $31$ & $27.40$ & $24.92$\\
-$17$ & $72.41$ & $41.07$ & $33$ & $25.98$ & $24.12$\\
-$19$ & $53.50$ & $36.13$ & $35$ & $24.85$ & $23.42$\\
-$21$ & $44.00$ & $32.75$ & $37$ & $23.89$ & $22.81$\\
-$23$ & $38.02$ & $30.28$ & $39$ & $23.08$ & $22.27$\\
-$25$ & $34.06$ & $28.39$ & $41$ & $22.41$ & $21.80$\\
+$11$ & -- & & $110.29$ & $308$\\
+$13$ & $2408.00$ & $31$ & $65.00$ & $308,328$\\
+$15$ & $127.11$ & $13$ & $49.03$ & $328$\\
+$17$ & $72.41$ & $19$ & $41.07$ & $328,348$\\
+$19$ & $53.50$ & $46$ & $36.13$ & $328,348$\\
+$21$ & $44.00$ & $43,62$ & $32.75$ & $328,348$\\
+$23$ & $38.02$ & $60$ & $30.28$ & $328,348$\\
+$25$ & $34.06$ & $72$ & $28.39$ & $348$\\
+$27$ & $31.29$ & $69,91$ & $27.01$ & $348,369$\\
+$29$ & $29.14$ & $69,89$ & $25.87$ & $348,369$\\
+$31$ & $27.40$ & $68,88$ & $24.92$ & $348,369$\\
+$33$ & $25.98$ & $87$ & $24.12$ & $348,369$\\
+$35$ & $24.85$ & $86,102$ & $23.42$ & $348,369$\\
+$37$ & $23.89$ & $102$ & $22.81$ & $348,369$\\
+$39$ & $23.08$ & $117$ & $22.27$ & $348,369$\\
+$41$ & $22.41$ & $117,136$ & $21.80$ & $369$\\
 \bottomrule
 \end{tabular}
-\caption{Bounds $\mu_0$ from Theorem~\ref{thm:main} for the numerator $2$. No irrationality measure for these numbers
-was published before, as far as we know.}\label{tab:two}
+\caption{Bounds $\mu(x)\le\mu_0$ from Theorem~\ref{thm:main} for the numerator $2$. The columns ``entries'' give the
+zero-based indices of the table entries of the candidate. One index is a transport from that entry with $m=0$. Two
+indices are an interpolation.}\label{tab:two}
 \end{table}
 
-Liu proves that $\Li_2(2/k)$ is irrational for $k\ge13$ and $\Li_2(-2/k)$ for $k\ge16$ \cite{LiuLi2Rational}. Tan
-and Zhang lower these to $q\ge12$ and $q\ge16$ \cite[Table~1]{TanZhang26}. So for $\Li_2(2/b)$ our range starts one odd
-denominator later, and for $\Li_2(-2/b)$ it starts at $b=11$, which adds $b=11$, $13$ and $15$.
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}r|rl|rr@{}}
+\toprule
+$x$ & $\mu_0$ & entries & Tan--Zhang & Liu\\
+\midrule
+$\Li_2(-3/50)$ & $12476.00$ & $349,370$ & $q\ge60$ & $k\ge62$\\
+$\Li_2(4/167)$ & $14121.72$ & $137,147$ & $q\ge168$ & $k\ge183$\\
+$\Li_2(-4/177)$ & $7834.47$ & $137,147$ & $q\ge178$ & $k\ge194$\\
+\bottomrule
+\end{tabular}
+\caption{Bounds from Theorem~\ref{thm:main} for larger numerators. The last two columns give the ranges of
+denominators in which Tan and Zhang \cite[Table~1]{TanZhang26} and Liu \cite{LiuLi2Rational} prove irrationality for the
+same numerator.}\label{tab:larger}
+\end{table}
+
+No irrationality measure for any $\Li_2(\pm2/b)$ was published before, as far as we know. Liu proves that
+$\Li_2(2/k)$ is irrational for $k\ge13$ and $\Li_2(-2/k)$ for $k\ge16$ \cite{LiuLi2Rational}. Tan and Zhang prove it for
+$q\ge12$ and $q\ge16$ \cite[Table~1]{TanZhang26}. Their ranges include every denominator, ours only those coprime to
+the numerator. For $\Li_2(2/b)$ with odd $b$ all three ranges start at $b=13$. For $\Li_2(-2/b)$ ours starts at $b=11$,
+and the first irrationality proofs are those of $\Li_2(-2/11)$, $\Li_2(-2/13)$ and $\Li_2(-2/15)$. The three points of
+Table~\ref{tab:larger} lie below the ranges of both Tan and Zhang and Liu, so their irrationality is also new as far as
+we know. Their margins are below $10^{-2}$, and the measures are large. The theorem gives no measure for $\Li_2(2/b)$
+with $b\in\{5,7,9,11\}$ or for $\Li_2(-2/b)$ with $b\in\{5,7,9\}$.
 
 \begin{remark}[larger numerators]\label{rem:numerators}
-Evaluating the formula for $2\le|a|\le7$ and $b<4000$ confirms the ranges above for $a=\pm2$. For $3\le|a|\le7$ it gives a positive margin for every $b$ coprime to $a$ from
-$b=55,167,424,953,2046$ on for $a=3,\dots,7$, and from $b=50,177,437,971,2069$ on for $a=-3,\dots,-7$. For $b\ge4000$ the transport of Remark~\ref{rem:large}
-has a positive margin at $b=4000$, and its margin increases with $b$. Near these thresholds the margin is of order $10^{-3}$ and the measure is large. Tan and Zhang
-prove irrationality from $q=54,168,418,1038,2233$ and from $q=60,178,434,1058,2256$ \cite[Table~1]{TanZhang26}. So
-the evaluation gives new irrational values for the numerators $-3$, $\pm4$, $\pm6$ and $\pm7$ just below their
-thresholds, and none for $3$ and $\pm5$. This remark rests on a floating-point evaluation of the margin at each $b$ and
-is not part of the formal proof.
+Evaluating the formula for $3\le|a|\le7$ and $b<4000$ gives a positive margin for every $b$ coprime to $a$ from
+$b=55,167,424,953,2046$ on for $a=3,\dots,7$, and from $b=50,177,437,971,2069$ on for $a=-3,\dots,-7$. For $b\ge4000$
+the transport of Remark~\ref{rem:large} has a positive margin at $b=4000$, and its margin increases with $b$. Tan and
+Zhang prove irrationality from $q=54,168,418,1038,2233$ and from $q=60,178,434,1058,2256$ \cite[Table~1]{TanZhang26}.
+So the evaluation gives new irrational values for the numerators $-3$, $\pm4$, $\pm6$ and $\pm7$ just below
+their thresholds, and none for $3$ and $\pm5$. Table~\ref{tab:larger} lists the first of them for $-3$ and $\pm4$. This remark rests on a floating-point evaluation of the margin at each $b$ and is not
+part of the formal proof.
 \end{remark}
 
 \begin{remark}[large denominators]\label{rem:large}
@@ -1093,9 +1128,22 @@ The other entries of Table~\ref{tab:values} are computed in the same way.
 \end{proof}
 
 \begin{proof}[Proof of Corollary~\ref{cor:two}]
-The same evaluation at $\lambda=\pm2/b$. For example, at $\lambda=-\frac2{11}$ the best candidate has $\rho=22.75$ and
-$\eta=0.4125\ldots$, which gives $110.2849\ldots$. At $\lambda=\frac2{13}$ it has $\rho=23.1$ and $\eta=0.0191\ldots$,
-which gives $2407.99\ldots$. A finite measure implies irrationality.
+\emph{The ranges.} For $\lambda=2/b$ with odd $b\ge13$ take the transport with slope $m=1$ of entry $31$, which lies at
+the lattice node $\frac2{13}$. Its margin is $\eta(b)=D_{31}+\log(b/13)+c(2,b)$. At $b=13$ it is $0.0191\ldots>0$, and
+\[
+ \frac{d\eta}{db}=\frac1b+\frac8{3b}-\frac9{4(b-2)}=\frac{17b-88}{12b(b-2)}>0\qquad(b\ge13).
+\]
+For $\lambda=-2/b$ with odd $b\ge11$ take the transport with slope $m=0$ of entry $308$, at the bent node
+$-\frac2{11}$. Its margin is $\eta(b)=D_{308}+c(-2,b)$. At $b=11$ it is $0.4125\ldots>0$, and
+\[
+ \frac{d\eta}{db}=\frac8{3b}-\frac9{4(b+2)}=\frac{5b+64}{12b(b+2)}>0\qquad(b\ge11).
+\]
+So the margin stays positive on both ranges, and Theorem~\ref{thm:main} gives a finite measure.
+
+\emph{The tables.} Each value is Theorem~\ref{thm:main} at the indicated candidate. For example entry $308$ has
+$\rho=\frac{91}4$ and $D=5335835236283847/5000000000000000$, and at $\lambda=-\frac2{11}$ it gives
+$\eta=0.412567\ldots$ and $110.2849\ldots$. At $-\frac3{50}$, $\frac4{167}$ and $-\frac4{177}$ the margins are
+$0.004394\ldots$, $0.004562\ldots$ and $0.008292\ldots$. A finite measure implies irrationality.
 \end{proof}
 
 \begin{remark}[ranges without a measure]
