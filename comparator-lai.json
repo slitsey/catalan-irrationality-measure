@@ -3,8 +3,7 @@
   "solution_module": "SolutionLai",
   "theorem_names": [
     "LaiIrrationalityMeasure.lai_plane_measure_27_49",
-    "LaiIrrationalityMeasure.lai_ratio_measure_35_35",
-    "LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35"
+    "LaiIrrationalityMeasure.lai_ratio_measure_35_35"
   ],
   "definition_names": [],
   "permitted_axioms": [

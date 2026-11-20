@@ -460,14 +460,13 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
 
 The Lean plane theorem writes the number as `a ζ(3) + b ζ(4)`, with `ζ(4) = π⁴/90` and integers `a, b`,
 `b ≠ 0`. Scaling by a nonzero rational does not change μ, so
-it covers every rational point off the axes. An integer Möbius map `x ↦ (ax + b)/(cx + d)` with
-`ad − bc ≠ 0` changes no irrationality exponent, so the bound 35.35 holds for every ratio
-`(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)`. The Lean lemma is `CatalanCore.Measure.plain_measure_mobius`.
+it covers every rational point off the axes. A rational Möbius map changes no irrationality exponent, so the
+bound 35.35 also holds for every ratio `(a ζ(3) + b π⁴)/(c ζ(3) + d π⁴)` with `ad − bc ≠ 0`.
 The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 `CatalanCore/Content/`, `CatalanCore/Decay/`, `CatalanCore/NT/`, `CatalanCore/Measure/TiedNV.lean`,
-`CatalanCore/Measure/Mobius.lean` and `CatalanCore/Tools/Joukowski.lean`. The theorem is
-`CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_27_49`,
-`LaiIrrationalityMeasure.lai_ratio_measure_35_35` and `LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35`.
+`CatalanCore/Tools/Joukowski.lean`. The theorem is
+`CatalanCore.Lai.lai_roots_of`, and the public theorems are `LaiIrrationalityMeasure.lai_plane_measure_27_49` and
+`LaiIrrationalityMeasure.lai_ratio_measure_35_35`.
 
 ## Dilogarithms: μ(Li₂(a/b))
 

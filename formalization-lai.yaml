@@ -114,8 +114,3 @@ alignment:
       module: "ChallengeLai"
       status: proved
       note: "zeta(3)/pi^4, exponent 35.35."
-    - source: "Litsey, Irrationality measures for a zeta(3) + b pi^4 and zeta(3)/pi^4 (2026), Corollary 1.2"
-      lean: "LaiIrrationalityMeasure.lai_ratio_mobius_measure_35_35"
-      module: "ChallengeLai"
-      status: proved
-      note: "(a zeta(3) + b pi^4)/(c zeta(3) + d pi^4) for integers a, b, c, d with ad - bc != 0, exponent 35.35."
