@@ -12,6 +12,7 @@ public import CatalanCore.Li2.Content.Denominator
 public import CatalanCore.Li2.Content.Difference
 public import CatalanCore.Li2.Content.Numerator
 public import CatalanCore.Li2.Content.Rate
+public import CatalanCore.Li2.Content.MediumClosed
 public import CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P050
 public import OAI.NumberTheory.Catalan.Polynomial.RationalProductFormula
 public import CatalanCore.Li2.Port.Unified.Modular.Positive.Packed.P036
@@ -343,7 +344,7 @@ theorem generic_ranges (a b : ℤ) (hb : 0 < b) (hab : IsCoprime a b)
       (-e * (n : ℝ) ^ 2 ≤ ∑ p ∈ (primes 0 4) \ exceptional a b, term (lam a b) n p) ∧
       ((-4 / ((N : ℝ) + 1) - e) * (n : ℝ) ^ 2 ≤
         ∑ p ∈ (primes 4 k) \ exceptional a b, term (lam a b) n p) ∧
-      ((-523 / 840 + (2 / 3) / ((N : ℝ) + 1) ^ 2 - e) * (n : ℝ) ^ 2 ≤
+      ((mediumConst - e) * (n : ℝ) ^ 2 ≤
         ∑ p ∈ primes k n, term (lam a b) n p) ∧
       ((7 / 2 - e) * (n : ℝ) ^ 2 ≤ ∑ p ∈ primes n (4 * n), term (lam a b) n p) ∧
       (∀ p : ℕ, p.Prime → 4 * n < p → padicValRat p (ParameterFamily.dtilde (lam a b) n) ≤ 0) := by
@@ -357,7 +358,7 @@ theorem generic_ranges (a b : ℤ) (hb : 0 < b) (hab : IsCoprime a b)
     linarith
   have htiny := tinyRangeDraft a b hb ha hablt e he
   have hsmall := smallRangeDraft a b hb ha hablt δ e hδ0 hδ1 he
-  have hmedium := parameter_mediumN_eventually (lam a b) N hN e he
+  have hmedium := parameter_mediumN_eventually_closed (lam a b) N hN e he
   have houter := parameter_outer_eventually_conditional (lam a b) e he
   have units (p : ℕ) (hp : p.Prime) (hpE : p ∉ exceptional a b) :
       (Port.Li2.VG p (lam a b) 0 ∧ Port.Li2.VG p (lam a b)⁻¹ 0 ∧
@@ -526,15 +527,14 @@ theorem content_rate (a b : ℤ) (hb : 0 < b) (hab : IsCoprime a b)
   rw [primeRangeEqDraft] at hlog
   change Real.log (ParameterFamily.dtilde (lam a b) n : ℝ) ≤
     -(∑ p ∈ primes 0 (4*n), term (lam a b) n p) at hlog
-  have hcorr : 0 ≤ ((2/3:ℝ) / ((N : ℝ)+1)^2) * (n : ℝ)^2 := by positivity
   have hbudgetMul : (4 / ((N : ℝ)+1)) * (n : ℝ)^2 ≤ (e/2) * (n : ℝ)^2 :=
     mul_le_mul_of_nonneg_right hbudget.le (sq_nonneg _)
   have hsum : (CatalanCore.Li2.cRate a b - e) * (n : ℝ)^2 ≤
       ∑ p ∈ primes 0 (4*n), term (lam a b) n p := by
     rw [hpart]
     have hall := add_le_add (add_le_add (add_le_add (add_le_add hExc htiny) hsmall) hmedium) houter
-    refine (le_add_of_nonneg_right (add_nonneg (sub_nonneg.mpr hbudgetMul) hcorr)).trans ?_
-    convert hall using 1 <;> (unfold CatalanCore.Li2.cRate; ring)
+    refine (le_add_of_nonneg_right (sub_nonneg.mpr hbudgetMul)).trans ?_
+    convert hall using 1 <;> (unfold CatalanCore.Li2.cRate mediumConst; ring)
   calc
     Real.log (ParameterFamily.dtilde (lam a b) n : ℝ) ≤
         -(∑ p ∈ primes 0 (4*n), term (lam a b) n p) := hlog

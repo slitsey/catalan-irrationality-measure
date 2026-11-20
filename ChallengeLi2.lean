@@ -2745,7 +2745,7 @@ end CatalanCore.Li2.Uniform
 namespace CatalanCore.Li2
 
 noncomputable def cRate (a b : ℤ) : ℝ :=
-  7 / 2 - 523 / 840 + (8 / 3) * Real.log (b : ℝ) -
+  28 * Real.log 2 - 9 / 2 * Real.log 3 - 139 / 12 + (8 / 3) * Real.log (b : ℝ) -
     6 * Real.log |(a : ℝ)| - (9 / 4) * Real.log |((b - a : ℤ) : ℝ)|
 
 end CatalanCore.Li2
