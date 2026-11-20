@@ -440,8 +440,9 @@ coefficient grows with `q`, and every estimate must be uniform in the direction 
   `3n < p ≤ 6n`. The law is piecewise affine in `n/p`, and its integral against the primes has a closed form
   in logarithms by Gauss's digamma theorem. This gives `Λ = 28.68723663`.
 - **Nonvanishing in a band.** For every prime `ℓ` with `8n/3 < ℓ < 3n − 1`, outside the finite set
-  `{2, 3, 5, 13, 24359}`, the `ℓ`-adic valuation of `J_n(a, b, X)` is computed exactly, `−21n + 7ℓ − 7`, at every
-  point with `b` a unit and `v_ℓ(X) ≥ −3`. So the prime is good for every size `n` in an interval and for every
+  `{2, 3, 5, 13, 24359}`, `J_n(a, b, X) ≠ 0` at every point with `b` an `ℓ`-adic unit and `v_ℓ(X) ≥ −3`
+  (`B83Main.b83_nonvanishing`). The paper also shows that the valuation is exactly `−21n + 7ℓ − 7`; that refinement
+  is outside the formal proof. So the prime is good for every size `n` in an interval and for every
   direction. The reduced Gram matrix is block triangular. The integral blocks are small matrices of constants,
   with determinants `−2²·13²·24359` and `2¹⁵`. The half-integral block is, modulo `ℓ`, the Hankel matrix of the
   functional `xᵉ ↦ e·B_{e−1}` against the cube of a falling factorial. Faulhaber's formula and four sums of
