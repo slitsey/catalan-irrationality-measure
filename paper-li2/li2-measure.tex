@@ -59,13 +59,13 @@ equilibrium measures, formal verification, Lean}
 Let $\mu$ denote the irrationality exponent. For coprime integers $a$ and $b$ with $0<2|a|\le b$ we prove an
 explicit upper bound for $\mu(\Li_2(a/b))$ whenever an explicit margin $\eta(a,b)$ is positive. The margin is the sum of
 a closed-form arithmetic rate in $\log b$, $\log|a|$ and $\log|b-a|$ and a piecewise affine decay rate in
-$\log(b/|a|)$. For example $\mu(\Li_2(1/2))\le234.57$, $\mu(\Li_2(1/3))\le21.57$, $\mu(\Li_2(1/4))\le15.19$,
-$\mu(\Li_2(1/5))\le12.92$, $\mu(\Li_2(-1/2))\le13.94$ and $\mu(\Li_2(-1/3))\le11.91$. These are, to our knowledge, the first irrationality measures for those six numbers.
-For reduced numerator $2$ we obtain finite measures at $2/b$ for odd $b\ge13$ and at $-2/b$ for odd $b\ge11$.
-The values at $-2/11$, $-2/13$ and $-2/15$ appear to give new irrationality results. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
-from $783.29$ to $11.73$ at $b=6$ and from $11.94$ to $9.36$ at $b=20$. For $\Li_2(-1/b)$
-with $5\le b\le20$ they improve the bounds that follow from Rhin and Viola's linear independence measures. The approximations are Tang's normalized Hankel determinants. Liu and Tan and Zhang
-used them, with the same arithmetic rate, to prove irrationality of $\Li_2(\pm1/k)$ and of $\Li_2(p/q)$ in explicit
+$\log(b/|a|)$. For example $\mu(\Li_2(1/2))\le228.26$, $\mu(\Li_2(1/3))\le21.52$, $\mu(\Li_2(1/4))\le15.16$,
+$\mu(\Li_2(1/5))\le12.90$, $\mu(\Li_2(-1/2))\le13.92$ and $\mu(\Li_2(-1/3))\le11.89$. As far as we know these
+are the first irrationality measures for these numbers. For $6\le b\le20$ the bounds improve those of Rhin and Viola, for instance
+from $783.29$ to $11.72$ at $b=6$ and from $11.94$ to $9.36$ at $b=20$. For $\Li_2(-1/b)$
+with $5\le b\le20$ they improve the bounds that follow from Rhin and Viola's linear independence measures. The
+approximations are Tang's normalized Hankel determinants. Liu and Tan and Zhang used them, with an arithmetic rate of
+the same shape, to prove irrationality of $\Li_2(\pm1/k)$ and of $\Li_2(p/q)$ in explicit
 ranges. A measure needs more. We prove that the determinants do not vanish at rational points for a band of primes
 of positive density, and we prove decay on an exponentially small neighbourhood of $\Li_2(a/b)$ by a dual
 certificate for a logarithmic energy problem with capped lattice charges. Concavity of the dual and a transport in
@@ -93,7 +93,11 @@ Let $a$ and $b$ be coprime integers with $b>0$ and $0<2|a|\le b$. Put
 \]
 and define the \emph{arithmetic rate}
 \begin{equation}\label{eq:crate}
- c(a,b)=\frac72-\frac{523}{840}+\frac83\log b-6\log|a|-\frac94\log|b-a| .
+ c(a,b)=c_0+\frac83\log b-6\log|a|-\frac94\log|b-a|,
+\end{equation}
+where
+\begin{equation}\label{eq:c0}
+ c_0=28\log2-\frac92\log3-\frac{139}{12}=2.8810324\ldots
 \end{equation}
 Let $M=98/39$. In Section~\ref{sec:uniform} we define, from a finite table of certified data, an explicit function
 $\Dlow_s(t,\rho)$ of the sign $s$, of $t\ge\log2$ and of $\rho>0$. It is the largest of finitely many numbers, each
@@ -118,13 +122,12 @@ lemma used in its proof. The formal proof has no unproved steps and uses only th
 Section~\ref{sec:lean} describes it. The remarks are not part of the formal proof. The use of AI in this work is
 disclosed at the end of the paper.
 
-The numbers in the following corollary are evaluations of the formula of Theorem~\ref{thm:main} at one admissible
+The numbers in the following corollaries are evaluations of the formula of Theorem~\ref{thm:main} at one admissible
 $\rho$. They are rounded up in the last digit.
 
 \begin{corollary}\label{cor:table}
-For the numbers $x$ in Tables~\ref{tab:values} and~\ref{tab:larger-numerators}, and for $x=\Li_2(\pm2/39)$,
-the stated bound $\mu(x)\le\mu_0$ holds in the plain form of Theorem~\ref{thm:main}. In particular, $\Li_2(2/b)$
-has a finite irrationality measure for every odd $b\ge13$, and $\Li_2(-2/b)$ for every odd $b\ge11$.
+For the numbers $x$ in Table~\ref{tab:values} the bound $\mu(x)\le\mu_0$ holds with the stated $\mu_0$, in the plain
+form of Theorem~\ref{thm:main}.
 \end{corollary}
 
 \begin{table}[ht]
@@ -136,70 +139,85 @@ has a finite irrationality measure for every odd $b\ge13$, and $\Li_2(-2/b)$ for
  & \multicolumn{3}{c|}{$x=\Li_2(1/k)$} & \multicolumn{3}{c}{$x=\Li_2(-1/k)$}\\
 $k$ & $\mu_0$ & RV & Hata & $\mu_0$ & RV & Hata\\
 \midrule
-$2$ & $234.57$ & -- & -- & $13.94$ & -- & --\\
-$3$ & $21.57$ & -- & -- & $11.91$ & -- & --\\
-$4$ & $15.19$ & -- & -- & $10.99$ & -- & --\\
-$5$ & $12.92$ & -- & -- & $10.38$ & $62.69$ & $228.61$\\
-$6$ & $11.73$ & $783.29$ & -- & $10.02$ & $44.51$ & $55.94$\\
-$7$ & $11.03$ & $69.69$ & $95.06$ & $9.76$ & $33.76$ & $35.84$\\
-$8$ & $10.50$ & $47.43$ & $51.08$ & $9.58$ & $26.06$ & $27.39$\\
-$9$ & $10.15$ & $30.44$ & $33.13$ & $9.43$ & $21.88$ & $22.66$\\
-$10$ & $9.86$ & $24.04$ & $25.24$ & $9.31$ & $19.24$ & $19.75$\\
-$11$ & $9.67$ & $19.80$ & $21.19$ & $9.21$ & $17.42$ & $17.77$\\
-$12$ & $9.54$ & $17.60$ & $18.54$ & $9.12$ & $16.08$ & $16.33$\\
-$13$ & $9.41$ & $16.29$ & $16.65$ & $9.16$ & $15.05$ & $15.24$\\
+$2$ & $228.26$ & -- & -- & $13.92$ & -- & --\\
+$3$ & $21.52$ & -- & -- & $11.89$ & -- & --\\
+$4$ & $15.16$ & -- & -- & $10.98$ & -- & --\\
+$5$ & $12.90$ & -- & -- & $10.37$ & $62.69$ & $228.61$\\
+$6$ & $11.72$ & $783.29$ & -- & $10.01$ & $44.51$ & $55.94$\\
+$7$ & $11.02$ & $69.69$ & $95.06$ & $9.76$ & $33.76$ & $35.84$\\
+$8$ & $10.49$ & $47.43$ & $51.08$ & $9.57$ & $26.06$ & $27.39$\\
+$9$ & $10.14$ & $30.44$ & $33.13$ & $9.42$ & $21.88$ & $22.66$\\
+$10$ & $9.85$ & $24.04$ & $25.24$ & $9.30$ & $19.24$ & $19.75$\\
+$11$ & $9.66$ & $19.80$ & $21.19$ & $9.20$ & $17.42$ & $17.77$\\
+$12$ & $9.54$ & $17.60$ & $18.54$ & $9.11$ & $16.08$ & $16.33$\\
+$13$ & $9.40$ & $16.29$ & $16.65$ & $9.16$ & $15.05$ & $15.24$\\
 $14$ & $9.32$ & $15.13$ & $15.27$ & $9.14$ & $14.23$ & $14.42$\\
 $15$ & $9.32$ & $14.40$ & $14.48$ & $9.16$ & $13.58$ & $13.75$\\
-$16$ & $9.33$ & $13.71$ & $13.81$ & $9.17$ & $13.06$ & $13.20$\\
-$17$ & $9.34$ & $13.18$ & $13.24$ & $9.21$ & $12.61$ & --\\
+$16$ & $9.33$ & $13.71$ & $13.81$ & $9.16$ & $13.06$ & $13.20$\\
+$17$ & $9.34$ & $13.18$ & $13.24$ & $9.20$ & $12.61$ & --\\
 $18$ & $9.32$ & $12.71$ & $12.76$ & $9.23$ & $12.23$ & --\\
-$19$ & $9.34$ & $12.30$ & -- & $9.27$ & $11.90$ & --\\
-$20$ & $9.36$ & $11.94$ & -- & $9.30$ & $11.62$ & --\\
+$19$ & $9.34$ & $12.30$ & -- & $9.26$ & $11.90$ & --\\
+$20$ & $9.36$ & $11.94$ & -- & $9.29$ & $11.62$ & --\\
 \bottomrule
 \end{tabular}
 \caption{Bounds $\mu(x)\le\mu_0$ from Theorem~\ref{thm:main}, with the published bounds. For $\Li_2(1/k)$ the
 column RV is Rhin and Viola \cite[pp.~434--435]{RhinViola05}. For $\Li_2(-1/k)$ it is $\nu+1$, where $\nu$ is their
 linear independence measure of $1$, $\Li_1(-1/k)$, $\Li_2(-1/k)$ \cite[Table~1]{RhinViola19}. The columns Hata are
-\cite[Tables~1 and~2, p.~386]{Hata93dilog}. Published values are rounded to two decimals. Theorem~\ref{thm:main}
-also gives $\mu(\Li_2(2/39))\le23.11$ and $\mu(\Li_2(-2/39))\le22.31$.}\label{tab:values}
+\cite[Tables~1 and~2, p.~386]{Hata93dilog}. Published values are rounded to two decimals.}\label{tab:values}
 \end{table}
+
+For the numerator $2$ the evaluation of the formula gives a positive margin for every odd $b\ge13$ and, with the
+minus sign, for every odd $b\ge11$, by the argument of Remark~\ref{rem:numerators}. The first values with the minus
+sign are new irrationality results.
+
+\begin{corollary}\label{cor:two}
+For odd $b$ with $13\le b\le41$ and $x=\Li_2(2/b)$, and for odd $b$ with $11\le b\le41$ and $x=\Li_2(-2/b)$, the bound
+$\mu(x)\le\mu_0$ holds with the $\mu_0$ of Table~\ref{tab:two}. In particular $\Li_2(-2/11)$, $\Li_2(-2/13)$ and
+$\Li_2(-2/15)$ are irrational.
+\end{corollary}
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{@{}r r l@{}}
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}r|rr||r|rr@{}}
 \toprule
-$\lambda$ & $\mu_0$ for $\Li_2(\lambda)$ & Certified entries used\\
+$b$ & $\Li_2(2/b)$ & $\Li_2(-2/b)$ & $b$ & $\Li_2(2/b)$ & $\Li_2(-2/b)$\\
 \midrule
-$2/13$   & $2\,974.00$  & $31$\\
-$-2/11$  & $111.27$      & $308$\\
-$-2/13$  & $65.33$       & $308,328$\\
-$-2/15$  & $49.22$       & $328$\\
-$-3/50$  & $73\,784.43$ & $349,370$\\
-$4/167$  & $70\,747.01$ & $137,147$\\
-$-4/177$ & $13\,998.32$ & $137,147$\\
+$11$ & -- & $110.29$ & $27$ & $31.29$ & $27.01$\\
+$13$ & $2408.00$ & $65.00$ & $29$ & $29.14$ & $25.87$\\
+$15$ & $127.11$ & $49.03$ & $31$ & $27.40$ & $24.92$\\
+$17$ & $72.41$ & $41.07$ & $33$ & $25.98$ & $24.12$\\
+$19$ & $53.50$ & $36.13$ & $35$ & $24.85$ & $23.42$\\
+$21$ & $44.00$ & $32.75$ & $37$ & $23.89$ & $22.81$\\
+$23$ & $38.02$ & $30.28$ & $39$ & $23.08$ & $22.27$\\
+$25$ & $34.06$ & $28.39$ & $41$ & $22.41$ & $21.80$\\
 \bottomrule
 \end{tabular}
-\caption{Examples with larger reduced numerators. The last column gives zero-based entry indices in the Lean node
-table. A single entry is evaluated at its node. Two entries are interpolated.}\label{tab:larger-numerators}
+\caption{Bounds $\mu_0$ from Theorem~\ref{thm:main} for the numerator $2$. No irrationality measure for these numbers
+was published before, as far as we know.}\label{tab:two}
 \end{table}
 
-\begin{samepage}
-For reduced numerator $2$ and $0<|\lambda|\le1/2$, the ranges in Corollary~\ref{cor:table} leave $2/b$ with
-$b\in\{5,7,9,11\}$ and $-2/b$ with $b\in\{5,7,9\}$ outside the stated coverage. Tan and Zhang
-\cite[Table~1 and \S5]{TanZhang26} give irrationality for $2/b$ from $b=13$ and for $-2/b$ from $b=17$ when
-restricted to odd denominators. Liu's ranges \cite{LiuLi2Rational} give the same odd thresholds for numerator $2$.
-To our knowledge the measures at $-2/11$, $-2/13$ and $-2/15$ give the first irrationality proofs for these values.
-The examples $-3/50$, $4/167$ and $-4/177$ also lie below the corresponding uniform sufficient thresholds in
-\cite[Table~1]{TanZhang26}.
+Liu proves that $\Li_2(2/k)$ is irrational for $k\ge13$ and $\Li_2(-2/k)$ for $k\ge16$ \cite{LiuLi2Rational}. Tan
+and Zhang lower these to $q\ge12$ and $q\ge16$ \cite[Table~1]{TanZhang26}. So for $\Li_2(2/b)$ our range starts one odd
+denominator later, and for $\Li_2(-2/b)$ it starts at $b=11$, which adds $b=11$, $13$ and $15$.
 
-\end{samepage}
+\begin{remark}[larger numerators]\label{rem:numerators}
+Evaluating the formula for $2\le|a|\le7$ and $b<4000$ confirms the ranges above for $a=\pm2$. For $3\le|a|\le7$ it gives a positive margin for every $b$ coprime to $a$ from
+$b=55,167,424,953,2046$ on for $a=3,\dots,7$, and from $b=50,177,437,971,2069$ on for $a=-3,\dots,-7$. For $b\ge4000$ the transport of Remark~\ref{rem:large}
+has a positive margin at $b=4000$, and its margin increases with $b$. Near these thresholds the margin is of order $10^{-3}$ and the measure is large. Tan and Zhang
+prove irrationality from $q=54,168,418,1038,2233$ and from $q=60,178,434,1058,2256$ \cite[Table~1]{TanZhang26}. So
+the evaluation gives new irrational values for the numerators $-3$, $\pm4$, $\pm6$ and $\pm7$ just below their
+thresholds, and none for $3$ and $\pm5$. This remark rests on a floating-point evaluation of the margin at each $b$ and
+is not part of the formal proof.
+\end{remark}
 
 \begin{remark}[large denominators]\label{rem:large}
 For fixed $a$ the margin $\eta$ tends to infinity with $b$. Let $(\rho_k,D_k)$ be an entry of the lattice node
 $\frac1{403}$. For $b\ge403|a|$ the transport with slope $m=1$ from this entry is a candidate with
 $D=D_k+t-\log403$, and $c(a,b)=\frac5{12}\log b+O_a(1)$. So $\eta\ge\frac{17}{12}\log b+O_a(1)$, and
 Theorem~\ref{thm:main} gives a finite measure for every large $b$ coprime to $a$. For $a=\pm1$ a numerical evaluation
-of the margin for $2\le b\le403$ finds it positive, with minimum $0.1326\ldots$ at $b=2$. This remark is not part of
+of the margin for $2\le b\le403$ finds it positive, with minimum $0.1362\ldots$ at $b=2$. This remark is not part of
 the formal proof.
 \end{remark}
 
@@ -238,13 +256,14 @@ $q\ge0.1851\,p^{84/17}$. Tan and Zhang proved that $\Li_2(p/q)$ is irrational wh
 Rhin--Viola integrals \cite{TanZhang26}. With Liu's construction and new comparison measures they lowered the
 thresholds for $p\le7$, for instance to $q\ge418$ for $p=5$. They quote the arithmetic rate of Liu's polynomials as
 $\frac83\log q-\frac94\log(q-\epsilon p)-6\log p+\frac{72}{25}$ for $\Li_2(\epsilon p/q)$ \cite[(2.2)]{TanZhang26}. This
-is the rate \eqref{eq:crate} with a larger constant. These results prove irrationality. Neither states an
-irrationality measure. Theorem~\ref{thm:main} uses the same polynomials and the same denominators, and it gives a
-measure. As far as we know, no irrationality measure for $\Li_2(1/k)$ with $2\le k\le5$, for
-$\Li_2(-1/k)$ with $2\le k\le4$, or for $\Li_2(\pm2/39)$ was published before. Table~\ref{tab:values} compares our bounds with the published ones. At every $k$ where
-a published bound exists, the best published bound is that of Rhin and Viola, and ours is smaller. For $\Li_2(1/k)$
-with $6\le k\le20$ the improvement runs from $783.29$ to $11.73$ at $k=6$ and from $11.94$ to $9.36$ at $k=20$. For
-$\Li_2(-1/k)$ with $5\le k\le20$ it runs from $62.69$ to $10.38$ at $k=5$ and from $11.62$ to $9.30$ at $k=20$.
+is the rate \eqref{eq:crate} with the constant $\frac{72}{25}$ in place of $c_0$, and $c_0>\frac{72}{25}$. These
+results prove irrationality. Neither states an irrationality measure. Theorem~\ref{thm:main} uses the same polynomials
+and the same denominators, and it gives a measure. As far as we know, no irrationality measure for $\Li_2(1/k)$ with
+$2\le k\le5$, for $\Li_2(-1/k)$ with $2\le k\le4$, or for any $\Li_2(\pm2/b)$ was published before.
+Table~\ref{tab:values} compares our bounds with the published ones. At every $k$ where a published bound exists, the
+best published bound is that of Rhin and Viola, and ours is smaller. For $\Li_2(1/k)$ with $6\le k\le20$ the
+improvement runs from $783.29$ to $11.72$ at $k=6$ and from $11.94$ to $9.36$ at $k=20$. For $\Li_2(-1/k)$ with
+$5\le k\le20$ it runs from $62.69$ to $10.37$ at $k=5$ and from $11.62$ to $9.29$ at $k=20$.
 
 \emph{Recent results.} Since September 2026 several new results have appeared in this area, some obtained with AI
 systems. In October 2026 OpenAI proved that Catalan's constant is irrational \cite{OpenAI2026} and that $\mu(\pi)=2$
@@ -319,16 +338,18 @@ We keep Tang's determinants and the known arithmetic rate. The proof rests on th
  forms, and the penalty integrals are computed from the sign pattern of the field, proved on Taylor cells with explicit
  remainders (Section~\ref{ssec:cert}).
 \end{enumerate}
-The denominator bound of Section~\ref{sec:content} is the rate of Liu's construction. We derive it from one valuation
-bound valid at every prime (Theorem~\ref{thm:K}) and Tang's estimates for the other primes. Our constant is
-$\frac72-\frac{523}{840}=\frac{2417}{840}$.
+The denominator bound of Section~\ref{sec:content} has the shape of the rate of Liu's construction. We derive it from
+one valuation bound valid at every prime (Theorem~\ref{thm:K}) and from Tang's local bounds at the other primes. For
+the medium primes we evaluate Tang's profile integral in closed form, and this gives the constant
+$c_0=28\log2-\frac92\log3-\frac{139}{12}$.
 
 \subsection{Organization}
 Section~\ref{sec:construction} recalls Tang's construction. Section~\ref{sec:criterion} proves the measure criterion.
 Section~\ref{sec:content} bounds the denominators, Section~\ref{sec:nv} proves the nonvanishing, Section~\ref{sec:decay}
 proves the decay for one datum, and Section~\ref{sec:uniform} makes it uniform in $t$. Section~\ref{sec:proof} proves
-Theorem~\ref{thm:main} and Corollary~\ref{cor:table}. Section~\ref{sec:lean} describes the formalization. The disclosure of AI
-use follows it.
+Theorem~\ref{thm:main} and Corollary~\ref{cor:table}. Section~\ref{sec:tangproofs} proves Tang's local bounds and the
+closed form of the medium-prime constant. Section~\ref{sec:lean} describes the formalization. The disclosure of AI use
+follows it.
 
 \subsection{Notation}
 We write $v_p$ for the $p$-adic valuation and $\vG$ for the Gauss valuation of a polynomial, the minimum of the
@@ -549,18 +570,20 @@ Let $\varepsilon>0$ and $\delta=1/(N+1)$ with $4/(N+1)<\varepsilon/2$. For large
 dividing $ab(b-a)$:
 \begin{enumerate}[label=(\alph*)]
 \item (small primes) $\sum_{4<p\le\delta n}v_p(\cont\tilde Q_n)\log p\ge(-4\delta-\varepsilon/8)n^2$;
-\item (medium primes) $\sum_{\delta n<p\le n}v_p(\cont\tilde Q_n)\log p\ge(-\frac{523}{840}+\frac23\delta^2-\varepsilon/8)n^2$;
+\item (medium primes) $\sum_{\delta n<p\le n}v_p(\cont\tilde Q_n)\log p\ge(c_{\rm med}-\varepsilon/8)n^2$, with
+ $c_{\rm med}=28\log2-\frac92\log3-\frac{181}{12}$;
 \item (outer primes) $\sum_{n<p\le4n}v_p(\cont\tilde Q_n)\log p\ge(\frac72-\varepsilon/8)n^2$;
 \item (large primes) $v_p(\cont\tilde Q_n)\ge0$ for $p>4n$.
 \end{enumerate}
 \end{proposition}
 
 Part (a) is the local bound summed with Chebyshev's estimate. In part (b) Tang bounds $v_p$ by a profile
-$n\,\phi(p/n)$, where $\phi(x)$ is an explicit function of $\lfloor1/x\rfloor$, $\lfloor2/x\rfloor$ and $\lfloor4/x\rfloor$.
-The weighted prime number theorem turns the sum into $n^2\int_\delta^1\phi$. On each interval where the floors are
-constant the integral is a rational function of the floor values, and the sum of these is bounded below by
-$-523/840$. Part (c) counts the multiples of $p$ among the factors of $S_n^{2n}/F_n$ and the poles. Part (d) holds
-because every factor is then $p$-integral.
+$n\,\varpi(p/n)$, where $\varpi(x)$ is an explicit function of $\lfloor1/x\rfloor$, $\lfloor2/x\rfloor$ and
+$\lfloor4/x\rfloor$. The weighted prime number theorem turns the sum into $n^2\int_\delta^1\varpi$. On each interval
+where $\lfloor1/x\rfloor$ is constant the integral is a rational function of the floor value. Partial fractions and
+harmonic numbers evaluate the sum of these integrals over all intervals as $c_{\rm med}$, and every partial sum is at
+least $c_{\rm med}$. Part (c) counts the multiples of $p$ among the factors of $S_n^{2n}/F_n$ and the poles. Part (d)
+holds because every factor is then $p$-integral. Section~\ref{sec:tangproofs} proves all four parts.
 
 \begin{theorem}[arithmetic rate]\label{thm:content}
 For every $\varepsilon>0$ there is $n_1$ such that $\log\tilde d_n\le-(c(a,b)-\varepsilon)n^2$ for $n\ge n_1$ with
@@ -574,15 +597,14 @@ Theorem~\ref{thm:K}, $A_2(n)\ge\frac83n^2-O(n)$, $S(n)\le\frac94n^2$ and $L_p(n)
 \[
  \sum_{p\in\mathcal S}v_p(\cont\tilde Q_n)\log p\ge\Bigl(\frac83\log b-6\log|a|-\frac94\log|b-a|-\frac\varepsilon8\Bigr)n^2 .
 \]
-The primes $p\le4$ outside $\mathcal S$ cost $O(n\log n)$. Adding Proposition~\ref{prop:tang} and letting $\delta\to0$
-with $\varepsilon$ gives the claim.
+The primes $p\le4$ outside $\mathcal S$ cost $O(n\log n)$. Adding Proposition~\ref{prop:tang}, with $\delta$ so small
+that $4\delta<\varepsilon/8$, gives the claim, since $\frac72+c_{\rm med}=c_0$.
 \end{proof}
 
 \begin{remark}
 The rate of Theorem~\ref{thm:content} is the rate of Liu's construction, quoted by Tan and Zhang
-\cite[(2.2)]{TanZhang26}. The logarithmic terms are the same. Liu's constant is $\frac{72}{25}$, and ours is
-$\frac{2417}{840}=\frac{72}{25}-\frac{11}{4200}$. Our constant comes from Tang's estimate for the medium primes in
-Proposition~\ref{prop:tang}(b).
+\cite[(2.2)]{TanZhang26}. The logarithmic terms are the same. Liu's constant is $\frac{72}{25}=2.88$, and ours is
+$c_0=\frac72+c_{\rm med}=2.8810324\ldots$, larger by $0.0010324\ldots$.
 \end{remark}
 
 %% =====================================================================
@@ -1063,27 +1085,729 @@ measure.
 
 \begin{proof}[Proof of Corollary~\ref{cor:table}]
 Each entry is Theorem~\ref{thm:main} at one candidate. For example, at $\lambda=\frac13$ the lattice node $\frac13$ has
-the entry $\rho=\frac{35}2$, $D=-2.624336\ldots$, and $c(1,3)=4.247432\ldots$. So $\eta=1.623095\ldots$ and
-$\rho\max(2/\eta,39/98)=21.5637\ldots$. At $\lambda=-\frac13$ the bent node $-\frac13$ on $\Gamma_3$ has the entry
-$\rho=18$, $D=0.336425\ldots$, and $c(-1,3)=2.687851\ldots$, which gives $11.9036\ldots$. At $\lambda=\frac12$ the entry
-$\rho=\frac{31}2$, $D=-4.593612\ldots$ and $c(1,2)=4.725773\ldots$ give $\eta=0.132160\ldots$ and $234.5629\ldots$. At
-$\lambda=-\frac2{39}$ the best candidate interpolates between the nodes $-\frac2{25}$ and $-\frac2{41}$ on $\Gamma_{15}$.
+the entry $\rho=\frac{35}2$, $D=-2.624336\ldots$, and $c(1,3)=4.251084\ldots$. So $\eta=1.626747\ldots$ and
+$\rho\max(2/\eta,39/98)=21.5153\ldots$. At $\lambda=-\frac13$ the bent node $-\frac13$ on $\Gamma_3$ has the entry
+$\rho=18$, $D=0.336425\ldots$, and $c(-1,3)=2.691502\ldots$, which gives $11.8893\ldots$. At $\lambda=\frac12$ the entry
+$\rho=\frac{31}2$, $D=-4.593612\ldots$ and $c(1,2)=4.729424\ldots$ give $\eta=0.135812\ldots$ and $228.2564\ldots$.
 The other entries of Table~\ref{tab:values} are computed in the same way.
-
-For Table~\ref{tab:larger-numerators}, let $u_i$ and $u_j$ be the magnitudes of the indicated nodes. For two
-entries take $\theta=\log(|\lambda|/u_j)/\log(u_i/u_j)$ and interpolate both $D$ and $\rho$ with this weight.
-The strict measure bounds follow by rational interval evaluation. Reduce each logarithm's argument to $[1,2]$ by
-powers of two and use $\log x=2\sum_{k=0}^{31}v^{2k+1}/(2k+1)+R$, where $v=(x-1)/(x+1)$ and
-$0\le R\le 2v^{65}/(65(1-v^2))$. For example entry $308$ has $\rho=91/4$ and
-$D=5335835236283847/5000000000000000$ at $-2/11$. It gives $\eta>0.40891625$ and $\rho\max(2/\eta,39/98)<111.27$.
-
-For the positive numerator $2$, transport entry $31$ from $2/13$ with slope $m=1$. The margin starts positive
-at $b=13$, and its derivative in $b$ is $(17b-88)/(12b(b-2))>0$ for $b\ge13$. For numerator $-2$,
-transport entry $308$ from $-2/11$ with slope $m=0$. The derivative of the margin is
-$(5b+64)/(12b(b+2))>0$ for $b\ge11$. Thus the margins stay positive throughout the claimed ranges.
 \end{proof}
 
+\begin{proof}[Proof of Corollary~\ref{cor:two}]
+The same evaluation at $\lambda=\pm2/b$. For example, at $\lambda=-\frac2{11}$ the best candidate has $\rho=22.75$ and
+$\eta=0.4125\ldots$, which gives $110.2849\ldots$. At $\lambda=\frac2{13}$ it has $\rho=23.1$ and $\eta=0.0191\ldots$,
+which gives $2407.99\ldots$. A finite measure implies irrationality.
+\end{proof}
 
+\begin{remark}[ranges without a measure]
+The margin $\eta$ is at most $0$ for every $\rho$ when $|a|\ge2$ and $b$ is small, for instance for $\Li_2(2/11)$ and
+$\Li_2(-2/9)$. Near the first denominators with $\eta>0$ the margin is small and the measure is large. This remark is
+not part of the formal proof.
+\end{remark}
+
+%% =====================================================================
+%% Proofs of Tang's estimates for the denominators.
+%% Section to be merged into main.tex (uses its macros: \vG, \cont, \Li, \Z, \Q, \R, \N).
+%% Labels are prefixed tp: to avoid clashes.
+%% =====================================================================
+\section{Proofs of Tang's estimates}\label{sec:tangproofs}
+
+Tang's bounds for the denominators exist only as Lean code \cite{TangLi2}. In this section we give paper proofs of all
+of them that Section~\ref{sec:content} uses. For the medium primes we also evaluate Tang's profile integral in closed
+form, which gives the constant $c_{\rm med}$ of Proposition~\ref{prop:tang}(b). These are the bound at a prime that divides none of $a$, $b$ and $b-a$,
+the bound at a prime that divides $b$, the bounds at the medium, outer and large primes, and the sums over primes in
+Proposition~\ref{prop:tang}. We also prove Lemma~\ref{lem:V}, which is Tang's lemma with one added parameter. The
+proofs follow the Lean statements and constants. At two places, the medium primes and the primes dividing $b$, our
+argument is shorter than the formal one. The statements are the same, and Remarks~\ref{tp:rem:medium}
+and~\ref{tp:rem:b} describe the differences.
+
+Throughout, $p$ is a prime and $v=v_p$, with $v(0)=+\infty$. For $P=A_0+A_1X\in\Q[X]$ we write
+$\vG(P)=\min(v(A_0),v(A_1))$. The Gauss valuation satisfies $\vG(P+P')\ge\min(\vG P,\vG P')$ and
+$\vG(PP')\ge\vG P+\vG P'$. The rational $\lambda=a/b$ is as in Section~\ref{sec:content}, so $0<|\lambda|<1$. We put
+$r=\lambda/(1-\lambda)$, $L=L_p(n)=\lfloor\log_p(7n-2)\rfloor$ and $q_k=\lfloor kn/p\rfloor$ for $k=1,2,3,4$.
+
+\subsection{The functional}\label{tp:ssec:functional}
+For a polynomial $Q$ put
+\[
+ \mathcal G(Q)=\sum_{x\ge1}\lambda^xQ(x).
+\]
+The series converges absolutely since $|\lambda|<1$, and $\mathcal G(x^k)=\Li_{-k}(\lambda)$. In this notation the
+functional \eqref{eq:functional} is
+\begin{equation}\label{tp:eq:Lambda}
+ \Lambda_X(R)=\mathcal G\bigl((xq)'\bigr)+\sum_{l=1}^{K}R_l\,l\lambda^{-l}(X-\tau_l)
+\end{equation}
+for a rational function $R=F/D_K$ with $F$ a polynomial. Here $q$ is the polynomial part of $R$ and $R_l$ is its residue
+at $x=-l$. Indeed $\Lambda_X(x^k)=(k+1)\Li_{-k}(\lambda)=\mathcal G((x\cdot x^k)')$. The \emph{binomial moments} are
+\[
+ G(k)=\mathcal G\Bigl(\binom xk\Bigr)=\sum_{x\ge1}\lambda^x\binom xk .
+\]
+So $G(0)=r$ and $G(k)=\lambda^k/(1-\lambda)^{k+1}=r^k/(1-\lambda)$ for $k\ge1$.
+
+\begin{lemma}\label{tp:lem:shift}
+For every polynomial $Q$ and every integer $M\ge0$,
+\[
+ \mathcal G(Q)=-\sum_{m=0}^{M-1}\lambda^{-m}Q(-m)+\lambda^{-M}\mathcal G\bigl(Q(x-M)\bigr),
+\]
+and $G(k+1)=r\bigl(G(k)+\binom1{k+1}\bigr)$ for $k\ge0$.
+\end{lemma}
+
+\begin{proof}
+Shifting the summation variable gives
+\[
+ \mathcal G(Q(x-1))=\lambda\sum_{y\ge0}\lambda^yQ(y)=\lambda(Q(0)+\mathcal G(Q)).
+\]
+So $\mathcal G(Q)=\lambda^{-1}\mathcal G(Q(x-1))-Q(0)$, and induction on $M$ gives the first identity. With
+$Q=\binom x{k+1}$ the same shift reads $\mathcal G(\binom{x+1}{k+1})=\lambda^{-1}(G(k+1)-\lambda\binom1{k+1})$.
+Since
+$\binom{x+1}{k+1}=\binom x{k+1}+\binom xk$, this gives
+\[
+ G(k+1)(\lambda^{-1}-1)=G(k)+\binom1{k+1},
+\]
+and $(\lambda^{-1}-1)^{-1}=r$.
+\end{proof}
+
+\subsection{Integer-valued polynomials}
+The next lemma collects three classical facts. We use the convention $\lfloor\log_pd\rfloor=0$ for $d\le1$.
+
+\begin{lemma}\label{tp:lem:intval}
+Let $Q\in\Q[x]$ have degree at most $d$, and let $v(Q(i))\ge\gamma$ for $0\le i\le d$.
+\begin{enumerate}[label=(\alph*)]
+\item $v(Q(m))\ge\gamma$ and $v(\Delta^kQ(m))\ge\gamma$ for every integer $m$ and every $k\ge0$, where $\Delta$ is the
+ forward difference.
+\item For every integer $m$ and every $s\ge0$, the coefficient of $y^s$ in $Q(m+y)$ has valuation at least
+ $\gamma-s\lfloor\log_pd\rfloor$. In particular $v(Q'(m))\ge\gamma-\lfloor\log_pd\rfloor$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Newton's formula gives $Q(x)=\sum_{k\le d}\Delta^kQ(0)\binom xk$ with
+$\Delta^kQ(0)=\sum_{i\le k}(-1)^{k-i}\binom kiQ(i)$. The binomial coefficients $\binom mk$ are integers for every integer
+$m$, and differences of values at integers are integral combinations of such values.
+
+(b) By (a), $Q(m+y)=\sum_{k\le d}\Delta^kQ(m)\binom yk$, so it suffices to show that the coefficient $\beta_{k,s}$ of
+$y^s$ in $\binom yk$ satisfies $v(\beta_{k,s})\ge-s\lfloor\log_pk\rfloor$ for $1\le k\le d$. For $s=0$ this holds since
+$\beta_{k,0}=0$. From $\binom yk=\frac yk\binom{y-1}{k-1}$ and $\binom{y-1}{k-1}=\sum_{i<k}(-1)^{k-1-i}\binom yi$ we get
+$\beta_{k,s}=\frac1k\sum_{i<k}(-1)^{k-1-i}\beta_{i,s-1}$ for $s\ge1$. Here $\beta_{0,s-1}=[s=1]$. Since
+$v(k)\le\lfloor\log_pk\rfloor$, induction on $s$ gives the claim.
+\end{proof}
+
+\subsection{Proof of Lemma~\ref{lem:V}}\label{tp:ssec:V}
+We prove the three parts of Lemma~\ref{lem:V}, with $f\ge0$ and $v(r)\ge-f$. For $f=0$ these are Tang's lemmas.
+
+(a) We have $G(0)=r$. By Lemma~\ref{tp:lem:shift}, $G(k+1)=r(G(k)+\binom1{k+1})$, and $\binom1{k+1}\in\{0,1\}$. If
+$v(G(k))\ge-(k+1)f$, then $v(G(k+1))\ge-f+\min(-(k+1)f,0)=-(k+2)f$.
+
+(b) Let $g$ have degree at most $d$ with $v(g(i))\ge\gamma$ for $0\le i\le d$. The value of $\Lambda$ on $g$ is
+$\mathcal G(h)$ with $h=(xg)'=g+xg'$, a polynomial of degree at most $d$. By Lemma~\ref{tp:lem:intval},
+$v(h(m))\ge\gamma-\lfloor\log_pd\rfloor$ for every integer $m$. Newton's formula and linearity give
+$\mathcal G(h)=\sum_{k\le d}\Delta^kh(0)\,G(k)$, and (a) gives $v(G(k))\ge-(d+1)f$ for $k\le d$. The same argument
+shows, for every polynomial $h$ of degree at most $d$,
+\begin{equation}\label{tp:eq:Gbound}
+ v(\mathcal G(h))\ge\min_{0\le i\le d}v(h(i))-(d+1)f .
+\end{equation}
+
+(c) Let $q$ be the polynomial part of $S_nD_n^3\binom xi\binom xj/D_{4n}$. Lemma~\ref{tp:lem:gram}(b) below shows
+that $q=0$ if $i+j<n$, and otherwise $\deg q\le d=i+j-n$ and $v(q(m))\ge-\lfloor\log_p(3n+i+j)\rfloor\ge-L$ for every
+integer $m$, since $3n+i+j\le7n-2$. Then (b) gives $v(U_{ij})\ge-L-\lfloor\log_pd\rfloor-(d+1)f\ge-2L-f(i+j-n+1)$.
+\qed
+
+\subsection{The entries of the binomial Gram matrix}
+Put $F_{ij}=S_nD_n^3\binom xi\binom xj$ for $0\le i,j<2n$, so that the entries \eqref{eq:entry} are
+$E_{ij}=\Lambda_X(F_{ij}/D_{4n})$.
+
+\begin{lemma}\label{tp:lem:gram}
+Let $0\le i,j<2n$ and $1\le l\le4n$.
+\begin{enumerate}[label=(\alph*)]
+\item The residue of $F_{ij}/D_{4n}$ at $-l$ is an integer. It is $0$ for $l\le n$.
+\item The polynomial part $q_{ij}$ of $F_{ij}/D_{4n}$ is $0$ if $i+j<n$. Otherwise it has degree at most $i+j-n$, and
+ $v(q_{ij}(m))\ge-\lfloor\log_p(3n+i+j)\rfloor$ for every prime $p$ and every integer $m$.
+\item $\tilde Q_n=\det[E_{ij}]_{i,j<2n}$. If $T$ is the coefficient matrix of polynomials $e_0,\dots,e_{2n-1}$ of degree
+ below $2n$, then $\det[\Lambda_X(W_ne_ie_j)]=(\det T)^2Q_n$.
+\item If $4n<p^2$, then $v(S_n^{2n}/F_n)=N_p(n)$ with
+ $N_p(n)=2n(q_4-3q_1)-2\sum_{i<2n}\lfloor i/p\rfloor$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Write $\binom{x+n}n=D_n(x)/n!$. Then $F_{ij}=(4n)!\,P_{ij}$ with $P_{ij}=\binom{x+n}n^3\binom xi\binom xj$, a polynomial
+of degree $3n+i+j$ with integer values at the integers.
+
+(a) The residue is $(4n)!P_{ij}(-l)/\prod_{l'\ne l}(l'-l)$, the product over $1\le l'\le4n$. The product equals
+$(-1)^{l-1}(l-1)!(4n-l)!$, so the residue is $\pm4n\binom{4n-1}{l-1}P_{ij}(-l)$, an integer. For $l\le n$ the factor
+$D_n(-l)$ vanishes.
+
+(b) Expand $P_{ij}=\sum_{k\le3n+i+j}\pi_k\binom{x+4n}k$ with $\pi_k\in\Z$. For $k\ge4n$,
+\[
+ (4n)!\binom{x+4n}k=D_{4n}(x)\binom x{k-4n}\Big/\binom k{4n},
+\]
+and for $k<4n$ the term has degree below $4n$. So
+\[
+ q_{ij}=\sum_{4n\le k\le3n+i+j}\pi_k\binom x{k-4n}\Big/\binom k{4n}.
+\]
+By Kummer's theorem $v(\binom k{4n})\le\lfloor\log_pk\rfloor$, which gives both claims.
+
+(c) The polynomials $\binom xi$ have leading coefficients $1/i!$. So the coefficient matrix of $(\binom xi)_{i<2n}$ is
+triangular with determinant $\prod_{i<2n}1/i!$. The Gram matrix is bilinear in the basis. Hence
+$\det[E_{ij}]=S_n^{2n}\prod_{i<2n}(i!)^{-2}Q_n=\tilde Q_n$, and the second statement holds for the same reason.
+
+(d) For $m<p^2$ we have $v(m!)=\lfloor m/p\rfloor$. Apply this to $(4n)!$, $n!$ and $i!$ with $i<2n$.
+\end{proof}
+
+\subsection{Three determinant lemmas}
+The following lemma is used at every prime.
+
+\begin{lemma}\label{tp:lem:det}
+Let $M$ be an $h\times h$ matrix over $\Q[X]$.
+\begin{enumerate}[label=(\alph*)]
+\item If $\vG(M_{ij})\ge u_i+u'_j$ for all $i,j$, then $\vG(\det M)\ge\sum_iu_i+\sum_ju'_j$.
+\item Let $M=WC$ with $W$ of size $h\times I$ and $C$ of size $I\times h$ for a finite index set $I$. Suppose
+ $\vG(W_{is})\ge\omega_s$ and $\vG(C_{sj})\ge\kappa_s$ for all $i,j$ and $s\in I$. Let $\mathrm{rk}:I\to\Z_{\ge0}$ be
+ injective and $\theta$ a nondecreasing function with $\theta(\mathrm{rk}(s))\le\omega_s+\kappa_s$ for all $s$. Then
+ $\vG(\det M)\ge\sum_{t<h}\theta(t)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Each term of the Leibniz expansion is a product of entries $M_{i\pi(i)}$, with Gauss valuation at least
+$\sum_iu_i+\sum_iu'_{\pi(i)}$.
+
+(b) By the Cauchy--Binet formula $\det M=\sum_S\det W_{\cdot,S}\det C_{S,\cdot}$ over the subsets $S\subset I$ of size
+$h$. By (a) with constant row weights, $\vG(\det W_{\cdot,S})\ge\sum_{s\in S}\omega_s$, and similarly for $C$. So each term
+has Gauss valuation at least $\sum_{s\in S}\theta(\mathrm{rk}(s))$. The ranks of $S$ are $h$ distinct nonnegative
+integers. Since $\theta$ is nondecreasing, their sum is at least $\sum_{t<h}\theta(t)$.
+\end{proof}
+
+The third lemma treats a Hankel matrix plus point masses at nodes that are congruent modulo $p$.
+
+\begin{lemma}\label{tp:lem:rankone}
+Let $H_{ij}=V_{ij}+\sum_{\sigma}\sum_{t<C_\sigma}\gamma_{\sigma,t}\,x_{\sigma,t}^{\,i+j}$ for $0\le i,j<h$, where
+$\sigma$ runs over a finite set. Suppose that $\vG(V_{ij})\ge0$, that the $x_{\sigma,t}$ are distinct integers with
+$x_{\sigma,t}\equiv x_{\sigma,0}\pmod p$, and that $\vG(\gamma_{\sigma,t})\ge w_{\sigma,t}$ with $w_{\sigma,t}$
+nondecreasing in $t$. Then
+\[
+ \vG(\det H)\ge\sum_\sigma\sum_{k<C_\sigma}\min(w_{\sigma,k}+2k,0).
+\]
+\end{lemma}
+
+\begin{proof}
+Fix $\sigma$ and write $x_t=x_{\sigma,t}$. Newton interpolation on the nodes $x_0,x_1,\dots$ gives
+$y^i=\sum_{k\le i}h_{i-k}(x_0,\dots,x_k)\prod_{s<k}(y-x_s)$, where $h_m$ is the complete homogeneous symmetric
+polynomial. At $y=x_t$ the terms with $k>t$ vanish. Put $A_{i,(\sigma,k)}=p^kh_{i-k}(x_0,\dots,x_k)$ and
+$T_{k,t}=p^{-k}\prod_{s<k}(x_t-x_s)$. Then $v(A_{i,(\sigma,k)})\ge k$, the $T_{k,t}$ are $p$-integral, and
+$x_t^i=\sum_{k\le t}A_{i,(\sigma,k)}T_{k,t}$. Hence
+\[
+ \sum_t\gamma_{\sigma,t}x_t^{i+j}=\sum_{k,k'}A_{i,(\sigma,k)}M^\sigma_{kk'}A_{j,(\sigma,k')},\qquad
+ M^\sigma_{kk'}=\sum_{t\ge\max(k,k')}T_{k,t}T_{k',t}\gamma_{\sigma,t}.
+\]
+Since $w$ is nondecreasing, $\vG(M^\sigma_{kk'})\ge w_{\sigma,\max(k,k')}\ge\frac12(w_{\sigma,k}+w_{\sigma,k'})$.
+
+Let $I$ consist of $h$ slots $s$ with $\rho_s=w_s=0$ and the slots $(\sigma,k)$ with $\rho=k$ and $w=w_{\sigma,k}$. Then
+$H=\tilde A\,\mathrm{diag}(V,M)\,\tilde A^{T}$ with $\tilde A=[\,\mathrm{Id}\mid A\,]$, where $M$ is block diagonal with
+blocks $M^\sigma$. The column $s$ of $\tilde A$ has valuation at least $\rho_s$, and the entry $(s,s')$ of the middle
+matrix has Gauss valuation at least $\frac12(w_s+w_{s'})$. By the Cauchy--Binet formula and
+Lemma~\ref{tp:lem:det}(a), every term of $\det H$ has Gauss valuation at least
+$\sum_{s\in S}(\rho_s+\frac12w_s)+\sum_{s\in S'}(\rho_s+\frac12w_s)$ for two sets $S,S'\subset I$. This is at least
+$2\sum_{s\in I}\min(\rho_s+\frac12w_s,0)=\sum_{\sigma,k}\min(w_{\sigma,k}+2k,0)$.
+\end{proof}
+
+\subsection{Primes not dividing $ab(b-a)$, and large primes}
+
+\begin{lemma}\label{tp:lem:units}
+If $p\nmid ab(b-a)$, then $\lambda$, $\lambda^{-1}$, $1-\lambda$ and $r$ are $p$-adic units.
+\end{lemma}
+
+\begin{proof}
+We have $\lambda=a/b$, $1-\lambda=(b-a)/b$ and $r=a/(b-a)$.
+\end{proof}
+
+\begin{proposition}\label{tp:prop:fallback}
+Let $p\nmid ab(b-a)$ and $n\ge1$.
+\begin{enumerate}[label=(\alph*)]
+\item $\vG(E_{ij})\ge-2L$ for all $i,j<2n$, and $\vG(\tilde Q_n)\ge-4nL$.
+\item If $p>4n$, then $\vG(E_{ij})\ge0$ and $\vG(\tilde Q_n)\ge0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) By \eqref{tp:eq:Lambda}, $E_{ij}=U_{ij}+\sum_lc_l\,l\lambda^{-l}(X-\tau_l)$ with $c_l$ the residues of
+Lemma~\ref{tp:lem:gram}(a). Lemma~\ref{lem:V}(c) with $f=0$ gives $v(U_{ij})\ge-2L$. The $c_l$ are integers and
+$\lambda^{-1}$ is a unit. Since $\lambda$ is a unit and $c\le4n\le7n-2$, each term $\lambda^c/c^2$ of $\tau_l$ has
+valuation at least $-2L$, so $\vG(X-\tau_l)\ge-2L$. Lemma~\ref{tp:lem:det}(a) with $u_i=u'_j=-L$ and
+Lemma~\ref{tp:lem:gram}(c) give the bound for $\tilde Q_n$.
+
+(b) Now $(4n)!$, $n!$ and $i!$ for $i<2n$ are units, and so is every integer in $[1,4n]$. So $\binom xi\in\Z_{(p)}[x]$,
+and division by the monic $D_{4n}$ keeps the polynomial part $q_{ij}$ in $\Z_{(p)}[x]$. Then $(xq_{ij})'$ has
+$p$-integral coefficients, so its values at integers are $p$-integral, and $\mathcal G((xq_{ij})')$ is $p$-integral by
+\eqref{tp:eq:Gbound} with $f=0$. The residues are integers and $\tau_l$ is $p$-integral since $l<p$.
+\end{proof}
+
+At a prime $p\nmid ab(b-a)$ with $p>4n$ we therefore have $v_p(\cont\tilde Q_n)\ge0$. This is
+Proposition~\ref{prop:tang}(d).
+
+\subsection{Primes dividing $b$}\label{tp:ssec:b}
+Let $e=v_p(b)\ge1$. Then $v(\lambda^{-1})=e$, $r=a/(b-a)$ is a unit and $v(1/(1-\lambda))=e$. Put
+\[
+ A_2(n)=\sum_{k<2n-1}\Bigl(n+1+\Bigl\lfloor\frac k3\Bigr\rfloor\Bigr).
+\]
+
+\begin{proposition}\label{tp:prop:b}
+If $p\mid b$ and $e=v_p(b)$, then $\vG(\tilde Q_n)\ge e\,A_2(n)-4nL$ for every $n\ge1$.
+\end{proposition}
+
+The proof writes the Gram matrix as a product $WC$ through slots attached to the poles, as Tang does for $p=2$ at
+$\lambda=\frac12$. The weight of a pole slot comes from the factor $\lambda^{-m}$, which is $p$-adically small. The
+factorization rests on a reflection formula for $\Lambda_X$.
+
+\begin{lemma}\label{tp:lem:reflect}
+Let $K\ge1$, $R=F/D_K$ with $F$ a polynomial, $q$ the polynomial part of $R$ and $c_m$ the residue of $R$ at $-m$. For
+$1\le m\le K$ write $R=c_m/y+r_0^{(m)}+r_1^{(m)}y+O(y^2)$ with $y=x+m$. Put $\mathrm{C}_K=\sum_{k=1}^K\lambda^{-k}/k^2$.
+Then
+\[
+ \Lambda_X(R)=-R(0)+\sum_{m=1}^K\lambda^{-m}\bigl(mc_m(X+\mathrm{C}_K)-r_0^{(m)}+mr_1^{(m)}\bigr)+\mathcal T(R),
+\]
+\[
+ \mathcal T(R)=\lambda^{-K-1}\mathcal G\bigl(h(x-K-1)\bigr)-\sum_{l=1}^Kc_l\,l\sum_{k=K-l+1}^{K}\frac{\lambda^{-l-k}}{k^2},
+ \qquad h=(xq)'.
+\]
+\end{lemma}
+
+\begin{proof}
+Lemma~\ref{tp:lem:shift} with $M=K+1$ gives
+$\mathcal G(h)=-\sum_{m=0}^K\lambda^{-m}h(-m)+\lambda^{-K-1}\mathcal G(h(x-K-1))$. Since
+$xq=xR-\sum_lc_l+\sum_l lc_l/(x+l)$, we have $h=(xR)'-\sum_llc_l/(x+l)^2$. Near $x=-m$,
+$xR=(y-m)R=-mc_m/y+\text{const}+(r_0^{(m)}-mr_1^{(m)})y+O(y^2)$, so the double pole of $(xR)'$ at $-m$ is
+$mc_m/y^2$ and its regular value is $r_0^{(m)}-mr_1^{(m)}$. Hence, with $c_0=0$ and
+$r_0^{(0)}=R(0)$, $r_1^{(0)}=0$,
+\[
+ h(-m)=r_0^{(m)}-mr_1^{(m)}-\sum_{l\ne m}\frac{lc_l}{(l-m)^2}\qquad(0\le m\le K).
+\]
+On the other side, $l\lambda^{-l}\tau_l=\sum_{m=0}^{l-1}l\lambda^{-m}/(l-m)^2$. Inserting both into
+\eqref{tp:eq:Lambda}, the double sums combine to
+\[
+ \sum_lc_l\,l\Bigl(\sum_{\substack{0\le m\le K\\ m\ne l}}\frac{\lambda^{-m}}{(l-m)^2}-\sum_{m<l}\frac{\lambda^{-m}}{(l-m)^2}\Bigr)
+ =\sum_lc_l\,l\lambda^{-l}\sum_{k=1}^{K-l}\frac{\lambda^{-k}}{k^2}.
+\]
+Write the inner sum as $\mathrm C_K-\sum_{k=K-l+1}^K\lambda^{-k}/k^2$. Collecting terms gives the formula.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{tp:prop:b}]
+Apply Lemma~\ref{tp:lem:reflect} with $K=4n$ to $R=F_{ij}/D_{4n}$. We have $R(0)=[i=j=0]$, since
+$S_nD_n(0)^3/D_{4n}(0)=1$ and $\binom0i=[i=0]$. For $1\le m\le n$ the function $R$ has a zero of order at least two at
+$-m$, so $c_m=r_0^{(m)}=r_1^{(m)}=0$.
+
+\emph{The node terms.} Let $n<m\le4n$ and $y=x+m$. Put
+$\chi(y)=S_nD_n(x)^3/\prod_{l\ne m}(x+l)=\sum_t\chi_ty^t$, $f_s=[y^s]\binom xi$ and $g_s=[y^s]\binom xj$. Then
+$R=\chi\binom xi\binom xj/y$, so $c_m$, $r_0^{(m)}$ and $r_1^{(m)}$ are the coefficients of $y^0$, $y^1$, $y^2$ in
+$\chi\binom xi\binom xj$. Hence the node term equals $\lambda^{-m}\sum_{s,s'\le2}f_s\mathcal K^{(m)}_{ss'}g_{s'}$ with
+\[
+ \mathcal K^{(m)}_{ss'}=\sum_{t=0}^{2-s-s'}\chi_t\beta_{t+s+s'},\qquad
+ \beta_0=m(X+\mathrm C_{4n}),\ \beta_1=-1,\ \beta_2=m,
+\]
+and $\mathcal K^{(m)}_{ss'}=0$ for $s+s'>2$. We bound the factors.
+\begin{itemize}[leftmargin=*]
+\item $v(f_s)\ge-sL$ and $v(g_s)\ge-sL$, by Lemma~\ref{tp:lem:intval}(b) with $\gamma=0$ and $d<2n$.
+\item $\chi_0$ is the residue of $S_nW_n$ at $-m$, an integer by Lemma~\ref{tp:lem:gram}(a). The quotient
+ $\chi(y)/\chi_0=\prod_{i\le n}(1+\frac y{i-m})^3\prod_{l\ne m}(1+\frac y{l-m})^{-1}$ has as coefficient of $y^t$
+ a polynomial with integer coefficients, homogeneous of degree $t$, in numbers $1/(i-m)$, $1/(l-m)$ of valuation at
+ least $-\lfloor\log_p4n\rfloor\ge-L$. So $v(\chi_t)\ge-tL$.
+\item $v(\lambda^{-k}/k^2)=ek-2v_p(k)\ge k-2v_p(k)\ge0$, since $k\ge p^{v_p(k)}\ge2^{v_p(k)}\ge2v_p(k)$. So
+ $v(\mathrm C_{4n})\ge0$ and $\vG(\beta_t)\ge0$.
+\end{itemize}
+Hence $\vG(\mathcal K^{(m)}_{ss'})\ge-(2-s-s')L$, and
+$\vG\bigl(\lambda^{-m}\sum_{s'}\mathcal K^{(m)}_{ss'}g_{s'}\bigr)\ge em+(s-2)L$.
+
+\emph{The tail.} Let $h=(xq_{ij})'$. By Lemma~\ref{tp:lem:gram}(b) and Lemma~\ref{tp:lem:intval}(b),
+$v(h(m))\ge-2L$ for every integer $m$. Since $r$ is a unit, \eqref{tp:eq:Gbound} with $f=0$ shows that
+$v(\mathcal G(h(x-4n-1)))\ge-2L$. In the second part of $\mathcal T$, $c_l$ is an integer, $l+k\ge4n+1$ and
+$v(k^2)\le2L$. So $v(\mathcal T(R))\ge(4n+1)e-2L$.
+
+\emph{The factorization.} Let $I$ consist of a constant slot $0$, the node slots $(m,s)$ with $n<m\le4n$ and
+$0\le s\le2$, and $2n$ tail slots $j'$. Put
+\begin{gather*}
+ W_{i,0}=[i=0],\qquad C_{0,j}=-[j=0],\\
+ W_{i,(m,s)}=f_s,\qquad C_{(m,s),j}=\lambda^{-m}\sum_{s'}\mathcal K^{(m)}_{ss'}g_{s'},\\
+ W_{i,j'}=\mathcal T(F_{ij'}/D_{4n}),\qquad C_{j',j}=[j'=j].
+\end{gather*}
+Then $[E_{ij}]=WC$ by Lemma~\ref{tp:lem:reflect}. The weights are $\omega_0=\kappa_0=0$,
+$\omega_{(m,s)}=-sL$, $\kappa_{(m,s)}=em+(s-2)L$, $\omega_{j'}=(4n+1)e-2L$ and $\kappa_{j'}=0$. Rank the slots by
+$\mathrm{rk}(0)=0$, $\mathrm{rk}(m,s)=3(m-n-1)+s+1$ and $\mathrm{rk}(j')=9n+1+j'$, and put $\theta(0)=-2L$ and
+$\theta(t)=e\min(n+1+\lfloor(t-1)/3\rfloor,4n+1)-2L$ for $t\ge1$. Then $\theta$ is nondecreasing, and
+$\theta(\mathrm{rk}(s))=\omega_s+\kappa_s$ for every slot except the constant one, where $\theta(0)\le0$. By
+Lemma~\ref{tp:lem:det}(b) and Lemma~\ref{tp:lem:gram}(c),
+\[
+ \vG(\tilde Q_n)\ge\sum_{t<2n}\theta(t)=-4nL+e\sum_{k=0}^{2n-2}\Bigl(n+1+\Bigl\lfloor\frac k3\Bigr\rfloor\Bigr)=eA_2(n)-4nL,
+\]
+since $n+1+\lfloor(2n-2)/3\rfloor\le4n+1$.
+\end{proof}
+
+\begin{remark}\label{tp:rem:b}
+The formal proof uses the finite identity of Lemma~\ref{tp:lem:shift} and the same slots. It writes the node terms
+through the derivatives of $1/\prod_{l\ne m}(x+l)$ and keeps the part of $\mathrm C_K$ beyond $K$ in the tail. The
+Laurent coefficients used here give the same matrices $W$ and $C$ up to the bookkeeping of these terms. The weights and
+the bound are Tang's, with $e$ in place of $1$.
+\end{remark}
+
+\subsection{Medium primes}\label{tp:ssec:medium}
+In this subsection $p\ge5$ is a prime with $p\nmid ab(b-a)$, $p\le n$ and $4n<p^2$. We prove Tang's bound at such
+primes.
+
+\begin{proposition}\label{tp:prop:medium}
+Under these assumptions $\vG(\tilde Q_n)\ge M_p(n)$, where
+\begin{multline*}
+ M_p(n)=n(3q_4-6q_1-4q_2-6)+p\bigl(q_1(2q_1-q_4+2)+q_2(q_2+1)\bigr)\\
+ +\min(n-q_1p,\,4n-q_4p)+q_4-2q_1 .
+\end{multline*}
+\end{proposition}
+
+We use the residue classes of Section~\ref{sec:nv}, now for the prime $p$. For $0\le\sigma<p$ let $a_\sigma$ be the
+number of $i\in[1,n]$ and $c_\sigma$ the number of $l\in[1,4n]$ with $i\equiv\sigma$, $l\equiv\sigma\pmod p$, and put
+$\nu_\sigma=3a_\sigma-c_\sigma-1+[\sigma=0]$. For a polynomial $E\in\Z[x]$ and a class $\sigma$, the \emph{local order}
+$o_\sigma(E)$ is the largest $o\ge0$ with $E(-\sigma+pu)\in p^ou^o\Z_{(p)}[u]$.
+
+\begin{proposition}[local bound for the entries]\label{tp:prop:entry}
+For all $E,E'\in\Z[x]$,
+\[
+ \vG\bigl(\Lambda_X(W_nEE')\bigr)\ge\min_{0\le\sigma<p}\bigl(\nu_\sigma+o_\sigma(E)+o_\sigma(E')\bigr).
+\]
+\end{proposition}
+
+The proof uses the ring $\mathcal O$ of rational functions $g/h$ with $g,h\in\Z_{(p)}[u]$, $h(0)$ a unit and all other
+coefficients of $h$ divisible by $p$. This ring is closed under sums, products and $d/du$. Its elements take
+$p$-integral values at every integer $u$, since $h(u)\equiv h(0)\pmod p$. If $g\in\mathcal O$ and $k\in\Z$, then
+$(g(u)-g(-k))/(u+k)\in\mathcal O$. Indeed, the numerator of $g(u)-g(-k)$ over the denominator $h(u)h(-k)$ lies in
+$\Z_{(p)}[u]$ and vanishes at $-k$, and $h(-k)$ is a unit.
+
+\begin{proof}[Proof of Proposition~\ref{tp:prop:entry}]
+Let $R=W_nEE'$, let $R_l$ be its residue at $-l$, and let $\mu=\min_\sigma(\nu_\sigma+o_\sigma(E)+o_\sigma(E'))$. By
+\eqref{tp:eq:Lambda}, $\Lambda_X(R)=\mathcal G(\Phi')+\sum_lR_l\,l\lambda^{-l}(X-\tau_l)$ with $\Phi=xq$ and $q$ the
+polynomial part of $R$.
+
+\emph{The pole terms.} Let $l$ be in the class $\sigma$. Every factor $i-l$ of $D_n(-l)$ with $i\equiv\sigma$ is
+divisible by $p$, and $v(\prod_{l'\ne l}(l'-l))=c_\sigma-1$ since $0<|l'-l|<p^2$. Writing $-l=-\sigma+pu$ with
+$u\in\Z$ gives $v(E(-l))\ge o_\sigma(E)$. Hence
+\begin{equation}\label{tp:eq:resval}
+ v(R_l)\ge3a_\sigma-c_\sigma+1+o_\sigma(E)+o_\sigma(E').
+\end{equation}
+Moreover $v(l)\ge[\sigma=0]$, $\lambda$ is a unit and $v(\tau_l)\ge-2$. So each pole term has Gauss valuation at least
+$\nu_\sigma+o_\sigma(E)+o_\sigma(E')\ge\mu$.
+
+\emph{Splitting by classes.} Put $x=-\sigma+pu$. The integers $x\ge1$ are exactly the numbers $pu-\sigma$ with
+$0\le\sigma<p$ and $u\ge1$. So $\mathcal G(Q)=\sum_\sigma\lambda^{-\sigma}\mathcal G_p(Q(-\sigma+pu))$ for every
+polynomial $Q$, where $\mathcal G_p$ is $\mathcal G$ with $\lambda^p$ in place of $\lambda$. Since $\lambda$ is
+$p$-integral, $\lambda^p\equiv\lambda\pmod p$, so $1-\lambda^p$ is a unit and $\lambda^p/(1-\lambda^p)$ is $p$-integral. So
+\eqref{tp:eq:Gbound} for $\lambda^p$ with $f=0$ gives $v(\mathcal G_p(g))\ge\min_{0\le i\le\deg g}v(g(i))$ for every polynomial $g$. With
+$\phi_\sigma(u)=\Phi(-\sigma+pu)$ we have $\Phi'(-\sigma+pu)=p^{-1}\phi_\sigma'(u)$. So it suffices to show
+$v(\phi_\sigma'(i))\ge\mu+1$ for all $\sigma$ and all integers $i\ge0$.
+
+\emph{The local form.} Fix $\sigma$. Let $K_\sigma$ be the set of $k\ge0$ with $1\le\sigma+pk\le4n$ and
+$K'_\sigma\subset K_\sigma$ those with $\sigma+pk\le n$. At $x=-\sigma+pu$ the factors $x+l$ with $l=\sigma+pk$ equal
+$p(u+k)$, and the others are $(l-\sigma)+pu$ with $l-\sigma$ a unit. Hence
+\[
+ D_n(x)=p^{a_\sigma}\prod_{k\in K'_\sigma}(u+k)\,N(u),\qquad D_{4n}(x)=p^{c_\sigma}\prod_{k\in K_\sigma}(u+k)\,M(u),
+\]
+with $N,M\in\Z[u]$ of the form required for denominators in $\mathcal O$. Write $E(x)=p^ou^oH(u)$ and
+$E'(x)=p^{o'}u^{o'}H'(u)$ with $o=o_\sigma(E)$, $o'=o_\sigma(E')$ and $H,H'\in\Z_{(p)}[u]$. Then
+\[
+ \Psi(u):=xR(x)=p^{\epsilon}\frac{g(u)}{\prod_{k\in S}(u+k)},\qquad S=K_\sigma\setminus K'_\sigma,
+\]
+with $\epsilon=3a_\sigma-c_\sigma+o+o'+[\sigma=0]$ and
+$g=p^{-[\sigma=0]}(-\sigma+pu)u^{o+o'}\prod_{k\in K'_\sigma}(u+k)^2N^3HH'/M\in\mathcal O$. The elements of $S$ are
+distinct integers in $[0,p-1]$, since $\sigma+pk\le4n<p^2$. So
+$1/\prod_{k\in S}(u+k)=\sum_{k\in S}\eta_k/(u+k)$ with $\eta_k=1/\prod_{k'\in S,k'\ne k}(k'-k)$ a unit. Hence
+\[
+ \Psi=p^{\epsilon}A+p^{\epsilon}\sum_{k\in S}\frac{\eta_kg(-k)}{u+k},\qquad
+ A=\sum_{k\in S}\eta_k\frac{g(u)-g(-k)}{u+k}\in\mathcal O .
+\]
+
+\emph{Cancellation of the poles.} From $\Phi=xR-\sum_lR_l+\sum_llR_l/(x+l)$ we get
+\[
+ \phi_\sigma=\Psi-\sum_lR_l+\sum_{l\equiv\sigma}\frac{lR_l}{p(u+k_l)}+\sum_{l\not\equiv\sigma}\frac{lR_l}{(l-\sigma)+pu},
+\]
+with $l=\sigma+pk_l$. The residues $R_l$ with $l\le n$ vanish, since $D_n(-l)=0$, so the third sum has poles only at
+the points $u=-k$ with $k\in S$. The function $\phi_\sigma$ is a polynomial, and the last sum has no poles at integers. So the
+principal parts at the points $u=-k$, $k\in S$, cancel between $\Psi$ and the third sum. Therefore
+\begin{gather*}
+ \phi_\sigma=p^{\epsilon}A-\sum_lR_l+\sum_{l\not\equiv\sigma}\frac{lR_l}{(l-\sigma)+pu},\\
+ \phi_\sigma'(u)=p^\epsilon A'(u)-\sum_{l\not\equiv\sigma}\frac{p\,lR_l}{((l-\sigma)+pu)^2}.
+\end{gather*}
+At an integer $u$ the first term has valuation at least $\epsilon=\nu_\sigma+o+o'+1\ge\mu+1$, since $A'\in\mathcal O$.
+By \eqref{tp:eq:resval} for the class of $l$, each term of the sum has valuation at least
+$1+v(R_l)\ge\mu+3$.
+\end{proof}
+
+\begin{remark}\label{tp:rem:medium}
+The formal proof reaches the same entry bound through an explicit decomposition of the polynomial and pole parts over
+$\Z_p$, by classes of poles, with jets of the basis at each class. The argument above uses only values at integers and
+the ring $\mathcal O$. The statement and the weights are Tang's.
+\end{remark}
+
+\emph{The basis.} Put $h_\sigma=c_\sigma-2a_\sigma$ for $\sigma\ne0$, $h_0=q_3-q_1$ and $\delta=q_4-q_1-q_3$. Then
+$\delta\in\{0,1\}$. Since $p\le n$ we have $a_\sigma\le q_1+1\le2q_1\le c_\sigma/2$, so $h_\sigma\ge0$. Also
+$\sum_\sigma h_\sigma+\delta=4n-2n=2n$, since $\sum_\sigma c_\sigma=4n$, $\sum_\sigma a_\sigma=n$, $a_0=q_1$ and
+$c_0=q_4$. Put $\Pi=\prod_\sigma(x+\sigma)^{h_\sigma}$ and
+\[
+ e_{\sigma,t}=(x+\sigma)^t\prod_{\sigma'\ne\sigma}(x+\sigma')^{h_{\sigma'}}\quad(0\le t<h_\sigma),
+\]
+together with $e_*=\Pi$ when $\delta=1$. These are $2n$ monic integer polynomials of degree below $2n$.
+
+\begin{lemma}\label{tp:lem:basis}
+The coefficient matrix $T$ of this basis satisfies $v(\det T)=0$. The local orders satisfy
+$o_\sigma(e_{\sigma,t})\ge t$, $o_{\sigma'}(e_{\sigma,t})\ge h_{\sigma'}$ for $\sigma'\ne\sigma$, and
+$o_{\sigma'}(e_*)\ge h_{\sigma'}$.
+\end{lemma}
+
+\begin{proof}
+Suppose an $\F_p$-combination $\sum\xi_{\sigma,t}e_{\sigma,t}+\xi_*e_*$ vanishes modulo $p$. The polynomial $e_*$ is monic
+of degree $2n-1$, and the others have smaller degree, so $\xi_*=0$. Reduce modulo $\Pi$ and use the Chinese remainder
+theorem for the coprime factors $(x+\sigma)^{h_\sigma}$ over $\F_p$. In the component of $\sigma$ only the
+$e_{\sigma,t}$ survive, and they are $(x+\sigma)^t$ times a unit. They are independent, so all $\xi$ vanish. The local
+orders follow from $x+\sigma'=(\sigma'-\sigma)+pu$ at $x=-\sigma+pu$, which equals $pu$ for $\sigma'=\sigma$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{tp:prop:medium}]
+Put $T_\sigma=\nu_\sigma+2h_\sigma$. For $\sigma\ne0$, $T_\sigma=c_\sigma-a_\sigma-1$, and $c_\sigma-a_\sigma$ counts
+the $l\equiv\sigma$ in an interval of length $3n$, so $q_3-1\le T_\sigma\le q_3$. For $\sigma=0$,
+$T_0=3q_1-q_4+2(q_3-q_1)=q_3-\delta$. Give $e_{\sigma,t}$ the weight $w=\nu_\sigma+2t$ and $e_*$ the weight $q_3-1$.
+We claim $w(e)\le\nu_{\sigma'}+2o_{\sigma'}(e)$ for every basis vector $e$ and every class $\sigma'$. For $e_{\sigma,t}$
+and $\sigma'=\sigma$ this follows from $o_\sigma(e_{\sigma,t})\ge t$. In the other cases
+$o_{\sigma'}(e)\ge h_{\sigma'}$, so the right side is at least $T_{\sigma'}\ge q_3-1$. The left side is $q_3-1$ for
+$e_*$, and at most $\nu_\sigma+2(h_\sigma-1)=T_\sigma-2\le q_3-2$ for $e_{\sigma,t}$. By Proposition~\ref{tp:prop:entry} the Gram matrix of the
+basis has entries with $\vG\ge\frac12(w(e)+w(e'))$. Lemma~\ref{tp:lem:det}(a), Lemma~\ref{tp:lem:gram}(c),(d) and
+Lemma~\ref{tp:lem:basis} give $\vG(\tilde Q_n)\ge\sum w+N_p(n)$.
+
+We compute $\sum w$. For $\sigma\ne0$ the class gives
+$\sum_{t<h_\sigma}(\nu_\sigma+2t)=h_\sigma(\nu_\sigma+h_\sigma-1)=(c_\sigma-2a_\sigma)(a_\sigma-2)$. For $\sigma=0$, with
+$q_4=q_1+q_3+\delta$, the class and $e_*$ give $h_0(3q_1-q_4+h_0-1)+\delta(q_3-1)=(q_4-2q_1)(q_1-1)$. So
+\[
+ \sum w=\sum_{\sigma}(c_\sigma-2a_\sigma)(a_\sigma-2)+q_4-2q_1 .
+\]
+Write $n=q_1p+\rho_1$, $2n=q_2p+\rho_2$ and $4n=q_4p+\rho_4$ with $0\le\rho_k<p$. Index the classes by
+$j\in[1,p]$. Then $a=q_1+[j\le\rho_1]$ and $c=q_4+[j\le\rho_4]$, and summing over $j$ gives
+\begin{multline*}
+ \sum_\sigma(c_\sigma-2a_\sigma)(a_\sigma-2)=p(q_4-2q_1)(q_1-2)\\
+ +(q_4-4q_1+2)\rho_1+(q_1-2)\rho_4+\min(\rho_1,\rho_4).
+\end{multline*}
+Also $\sum_{i<2n}\lfloor i/p\rfloor=pq_2(q_2-1)/2+q_2\rho_2$. Inserting $\rho_k=kn-q_kp$ and collecting terms gives
+$\sum w+N_p(n)=M_p(n)$.
+\end{proof}
+
+\subsection{Outer primes}\label{tp:ssec:outer}
+Let $p\ge5$, $p\nmid ab(b-a)$ and $n<p\le4n$. Then $4n<p^2$. Put
+\[
+ \Omega_p(n)=\begin{cases}
+ 3n-p+2,& 3p\le4n,\\
+ 5p-7n+1,& 4n<3p,\ 2p\le3n,\\
+ p-n+1,& 3n<2p,\ p\le2n,\\
+ 3p-7n-1,& 2n<p\le3n,\\
+ 2n-1,& 3n<p\le4n.
+ \end{cases}
+\]
+
+\begin{proposition}\label{tp:prop:outer}
+Under these assumptions $\vG(\tilde Q_n)\ge \Omega_p(n)$.
+\end{proposition}
+
+\begin{proof}
+\emph{The raw bound.} The Hankel entry is $\Lambda_X(W_nx^{i+j})=V_{ij}+\sum_l\gamma_l(-l)^{i+j}$ with
+$\gamma_l=\varrho_l\,l\lambda^{-l}(X-\tau_l)$, where $\varrho_l$ is the residue of $W_n$ at $-l$ and $V_{ij}$ is
+$\Lambda_X$ of the polynomial part of $D_n^3x^{i+j}/D_{4n}$. That polynomial part has integer coefficients, so
+$\vG(V_{ij})\ge0$ as in Proposition~\ref{tp:prop:fallback}(b). For $n<l\le4n$,
+$\varrho_l=\pm(l-1)!^2/((l-n-1)!^3(4n-l)!)$, so
+\[
+ v(\varrho_l)=2\Bigl\lfloor\frac{l-1}p\Bigr\rfloor-3\Bigl\lfloor\frac{l-1-n}p\Bigr\rfloor-\Bigl\lfloor\frac{4n-l}p\Bigr\rfloor,
+\]
+and $\vG(X-\tau_l)\ge-2[p\le l]$. Put $w(l)=v(\varrho_l)+[p\mid l]-2[p\le l]$ for $l>n$ and $w(l)=16n+4$ for $l\le n$,
+where $\gamma_l=0$. In each class order the poles by decreasing $l$. Then $w$ is nondecreasing along each class: if
+$n<l$ and $l+p\le4n$, the three floors change by $+2$, $-3$ and $+1$, so $w(l+p)-w(l)=-2[l<p]\le0$, and $w(l)\le16n+4$
+always. Lemma~\ref{tp:lem:rankone} with the nodes $-l$ gives
+$\vG(Q_n)\ge\sum_\sigma\sum_{k<C_\sigma}\min(w(l_{\sigma,k})+2k,0)$, where $l_{\sigma,k}$ is the $(k+1)$-st largest pole
+of the class and $C_\sigma$ the size of the class.
+
+\emph{The slot weights.} Let $N_\sigma$ be the number of poles $l\le n$ in the class. For $k<C_\sigma-N_\sigma$ and
+$l=l_{\sigma,k}$ the class has $k$ poles above $l$, so $\lfloor(4n-l)/p\rfloor=k$, $\lfloor(l-1)/p\rfloor=C_\sigma-1-k$
+for $\sigma\ne0$, and $\lfloor(l-1-n)/p\rfloor=C_\sigma-1-k-N_\sigma$. This gives
+$w(l)=3N_\sigma-C_\sigma+1+[\sigma=0]-2[p\le l]$ for $\sigma\ne0$, and the same formula holds for $\sigma=0$. The
+slots with $k\ge C_\sigma-N_\sigma$ contribute $0$.
+
+\emph{The classes.} Let $L_4=q_4\in\{1,2,3\}$ and $\rho=4n-L_4p$. Index the classes by $j\in[1,p]$. For $j<p$ we have
+$N=[j\le n]$, since $p>n$, and $C=L_4+[j\le\rho]$. The smallest pole of the class is $j<p$, and all others exceed $p$.
+For $j=p$ we have $N=0$ and $C=L_4$. Summing $\min(w+2k,0)$ over the slots gives, per class,
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+class & $j\le n$ & $C$ & contribution\\
+\midrule
+(i) & yes & $L_4+1$ & $-(L_4-1)$\\
+(ii) & yes & $L_4$ & $-\max(L_4-2,0)$\\
+(iii) & no & $L_4+1$ & $-3L_4$\\
+(iv) & no & $L_4$ & $-3(L_4-1)$\\
+(v) $j=p$ & no & $L_4$ & $-1,-2,-4$ for $L_4=1,2,3$\\
+\bottomrule
+\end{tabular}
+\end{center}
+For instance in type (iii) the weights are $-L_4-2+2k$ for $k<L_4$ and $L_4$ for $k=L_4$, with sum of negative parts
+$-3L_4$. Also $N_p(n)=2nL_4-2\max(2n-p,0)$, since $\lfloor i/p\rfloor\le1$ for $i<2n<2p$.
+
+\emph{The five ranges.} In each range of $\Omega$ we count the classes and add $N_p(n)$.
+\begin{itemize}[leftmargin=*]
+\item $3p\le4n$: $L_4=3$, $\rho=4n-3p<n$. Types (i), (ii), (iv) occur $\rho$, $n-\rho$, $p-1-n$ times. The sum is
+ $-2\rho-(n-\rho)-6(p-1-n)-4=n-3p+2$, and $N_p(n)=2n+2p$.
+\item $4n<3p$, $2p\le3n$: $L_4=2$, $\rho=4n-2p\ge n$. Types (i), (iii), (iv) occur $n$, $\rho-n$, $p-1-\rho$ times. The
+ sum is $-n-6(\rho-n)-3(p-1-\rho)-2=3p-7n+1$, and $N_p(n)=2p$.
+\item $3n<2p\le4n$: $L_4=2$, $\rho<n$. Types (i), (ii), (iv) occur $\rho$, $n-\rho$, $p-1-n$ times. The sum is
+ $-\rho-3(p-1-n)-2=-p-n+1$, and $N_p(n)=2p$.
+\item $2n<p\le3n$: $L_4=1$, $\rho=4n-p\ge n$. Types (i), (iii), (iv) occur $n$, $3n-p$, $2p-4n-1$ times. The sum is
+ $-3(3n-p)-1$, and $N_p(n)=2n$.
+\item $3n<p\le4n$: $L_4=1$, $\rho<n$. The sum is $-1$, and $N_p(n)=2n$.
+\end{itemize}
+In each case the sum plus $N_p(n)$ is $\Omega_p(n)$. Lemma~\ref{tp:lem:gram}(d) finishes the proof.
+\end{proof}
+
+\subsection{The profile}\label{tp:ssec:profile}
+For $0<x\le1$ define
+\begin{multline*}
+ \varpi(x)=3\Bigl\lfloor\frac4x\Bigr\rfloor-6\Bigl\lfloor\frac1x\Bigr\rfloor-4\Bigl\lfloor\frac2x\Bigr\rfloor-6\\
+ +x\Bigl(\Bigl\lfloor\frac1x\Bigr\rfloor\Bigl(2\Bigl\lfloor\frac1x\Bigr\rfloor-\Bigl\lfloor\frac4x\Bigr\rfloor+2\Bigr)
+ +\Bigl\lfloor\frac2x\Bigr\rfloor\Bigl(\Bigl\lfloor\frac2x\Bigr\rfloor+1\Bigr)\Bigr)\\
+ +\min\Bigl(1-x\Bigl\lfloor\frac1x\Bigr\rfloor,\,4-x\Bigl\lfloor\frac4x\Bigr\rfloor\Bigr).
+\end{multline*}
+At $x=p/n$ we have $\lfloor k/x\rfloor=q_k$. Hence
+\begin{equation}\label{tp:eq:Mprofile}
+ M_p(n)=n\varpi(p/n)+q_4-2q_1\ge n\varpi(p/n),
+\end{equation}
+since $q_4\ge4q_1$. The function $\varpi$ is piecewise affine. Let $A\ge1$ be an integer and $A<1/x<A+1$. Put
+$\upsilon=1/x-A$. Then $\lfloor1/x\rfloor=A$, $\lfloor2/x\rfloor=2A+\lfloor2\upsilon\rfloor$,
+$\lfloor4/x\rfloor=4A+\lfloor4\upsilon\rfloor$, $1-xA=x\upsilon$ and $4-x\lfloor4/x\rfloor=x\{4\upsilon\}$.
+Substituting gives the following table.
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}cc@{}}
+\toprule
+$\upsilon$ & $\varpi(x)$\\
+\midrule
+$(0,\frac14)$ & $(2A^2+3A)x-2A-5$\\
+$(\frac14,\frac13)$ & $(2A^2-A-1)x-2A+1$\\
+$(\frac13,\frac12)$ & $(2A^2+2A)x-2A-2$\\
+$(\frac12,\frac23)$ & $(2A^2+2A)x-2A$\\
+$(\frac23,\frac34)$ & $(2A^2+5A+2)x-2A-3$\\
+$(\frac34,1)$ & $(2A^2+A-1)x-2A+3$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The minimum is $x\upsilon$ when $\lfloor4\upsilon\rfloor\le3\upsilon$, that is on the first, third and fifth
+intervals, and $x\{4\upsilon\}$ otherwise.
+
+The integral of the profile over each interval $[1/(A+1),1/A]$ is a rational function of $A$. Its sum over $A$ is the
+medium-prime constant. Partial fractions reduce the sum to harmonic numbers $H_m=\sum_{k\le m}1/k$.
+
+\begin{lemma}\label{tp:lem:cells}
+For every integer $A\ge1$,
+\[
+ \int_{1/(A+1)}^{1/A}\varpi(x)\,dx=\mathcal I(A):=-\frac{384A^4+768A^3+563A^2+179A+21}{\mathcal D(A)}<0,
+\]
+where $\mathcal D(A)=A(A+1)(2A+1)(3A+1)(3A+2)(4A+1)(4A+3)$. For every integer $N\ge1$,
+\[
+ \int_{1/(N+1)}^1\varpi(x)\,dx=\sum_{A=1}^N\mathcal I(A)\ge c_{\rm med}=28\log2-\frac92\log3-\frac{181}{12}.
+\]
+\end{lemma}
+
+\begin{proof}
+The interval $\upsilon\in(\alpha,\beta)$ corresponds to $x\in(1/(A+\beta),1/(A+\alpha))$, and
+$\int_u^v(cx+d)\,dx=c(v^2-u^2)/2+d(v-u)$. The endpoints are $\frac1A$, $\frac4{4A+1}$, $\frac3{3A+1}$,
+$\frac2{2A+1}$, $\frac3{3A+2}$, $\frac4{4A+3}$ and $\frac1{A+1}$. Adding the six integrals over the common denominator
+$\mathcal D(A)$ gives $\mathcal I(A)$. The numerator and $\mathcal D(A)$ are positive for $A\ge1$, so $\mathcal I(A)<0$.
+
+The partial fraction decomposition of $\mathcal I(A)$ is
+\[
+ \mathcal I(A)=-\frac72\Bigl(\frac1A+\frac1{A+1}\Bigr)+\frac{16}{4A+1}+\frac{16}{4A+3}+\frac4{2A+1}-\frac{9/2}{3A+1}-\frac{9/2}{3A+2},
+\]
+as one checks by clearing denominators. For $M\ge1$ put
+\[
+ C(M)=16H_{4M}-4H_{2M}-\frac92H_{3M}-\frac{15}2H_M+\frac7{2M}-\frac{181}{12}.
+\]
+With $H_4=\frac{25}{12}$, $H_3=\frac{11}6$, $H_2=\frac32$ and $H_1=1$ we get $C(1)=0$. We claim
+$C(A+1)-C(A)=\mathcal I(A)$ for $A\ge1$. Indeed $H_{4A+4}-H_{4A}=\sum_{i=1}^4\frac1{4A+i}$, and similarly for
+$3A$, $2A$ and $A$. In the difference, the terms with denominators $4A+2$ and $2A+1$ give
+$\frac{16}{4A+2}-\frac4{2A+1}=\frac4{2A+1}$. The terms with denominators $4A+4$, $2A+2$, $3A+3$ and $A+1$ give
+\[
+ \Bigl(4-2-\frac32-\frac{15}2+\frac72\Bigr)\frac1{A+1}=-\frac7{2(A+1)},
+\]
+and with $-\frac7{2A}$ this is $-\frac72(\frac1A+\frac1{A+1})$. The remaining terms are
+$\frac{16}{4A+1}+\frac{16}{4A+3}-\frac{9/2}{3A+1}-\frac{9/2}{3A+2}$. So the difference is the partial fraction form
+of $\mathcal I(A)$. By induction,
+$\sum_{A=1}^N\mathcal I(A)=C(N+1)$.
+
+As $M\to\infty$, $H_m=\log m+\gamma+o(1)$ with Euler's constant $\gamma$. The coefficients of $H$ in $C(M)$ sum to
+$16-4-\frac92-\frac{15}2=0$, so $\gamma$ and $\log M$ cancel, and
+\[
+ C(M)\to16\log4-4\log2-\frac92\log3-\frac{181}{12}=c_{\rm med}.
+\]
+Since every $\mathcal I(A)$ is negative, the partial sums $C(N+1)$ decrease to $c_{\rm med}$. So each of them is at
+least $c_{\rm med}$.
+\end{proof}
+
+\begin{remark}
+The integrals $\mathcal I(A)$ are Tang's, and he bounds their sum below by $-\frac{523}{840}$. The closed form of the
+sum is our derivation. Numerically $c_{\rm med}=-0.6189675\ldots$, and $\frac72+c_{\rm med}=c_0$.
+\end{remark}
+
+\subsection{Sums over primes}\label{tp:ssec:sums}
+We use the prime number theorem in the form $\vartheta(x)=\sum_{p\le x}\log p=x+o(x)$ \cite{Davenport}. Abel summation
+gives $\sum_{p\le x}p\log p=x\vartheta(x)-\int_2^x\vartheta(t)\,dt=\frac12x^2+o(x^2)$. The prime powers $p^k\le x$ with $k\ge2$ satisfy $\sum\log p=\sum_{k\ge2}\vartheta(x^{1/k})=O(\sqrt x\log^2x)$.
+
+\begin{lemma}\label{tp:lem:pnt}
+Let $0<u<v$ and $\alpha,\beta\in\R$. Then
+$\sum_{un<p\le vn}(\alpha p+\beta n)\log p=\bigl(\frac\alpha2(v^2-u^2)+\beta(v-u)\bigr)n^2+o(n^2)$, and the same holds
+with strict inequalities at either end.
+\end{lemma}
+
+\begin{proof}
+This follows from the two asymptotic formulas. Changing an endpoint adds or removes at most one prime, at a cost of
+$O(n\log n)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:tang}]
+Let $S$ be the set of primes dividing $ab(b-a)$. For large $n$ we have $\delta n>\max S$, $\delta n\ge5$ and
+$n>4(N+1)^2$. Every prime $p>\delta n$ then satisfies $p\notin S$, $p\ge5$ and $p^2>n^2/(N+1)^2>4n$. Recall that
+$v_p(\cont\tilde Q_n)=\vG(\tilde Q_n)$.
+
+(a) By Proposition~\ref{tp:prop:fallback}(a),
+\[
+ \sum_{4<p\le\delta n,\,p\notin S}v_p(\cont\tilde Q_n)\log p\ge-4n\sum_{p\le\delta n}L_p(n)\log p .
+\]
+Since $\lfloor\log_p(7n-2)\rfloor-1\le\#\{k\ge2:p^k\le7n\}$, the last sum is at most
+$\vartheta(\delta n)+\sum_{p^k\le7n,\,k\ge2}\log p=\delta n+o(n)$.
+
+(b) By Proposition~\ref{tp:prop:medium} and \eqref{tp:eq:Mprofile}, the sum is at least
+\[
+ \sum_{\delta n<p\le n}n\varpi(p/n)\log p .
+\]
+The interval $[\delta,1]$ is the union of $6N$ intervals on whose
+interiors $\varpi$ is affine. The function $\varpi$ is bounded on $[\delta,1]$.
+We apply Lemma~\ref{tp:lem:pnt} on each interval. The primes at the endpoints cost $O(n\log n)$. This gives
+\[
+ \sum_{\delta n<p\le n}n\varpi(p/n)\log p=n^2\int_\delta^1\varpi+o(n^2).
+\] Lemma~\ref{tp:lem:cells} with $\delta=1/(N+1)$
+gives (b).
+
+(c) By Proposition~\ref{tp:prop:outer} the sum is at least $\sum_{n<p\le4n}\Omega_p(n)\log p$. On the five ranges
+$\Omega$ is $\alpha p+\beta n$ plus a constant, and the constants contribute $O(n)$. By Lemma~\ref{tp:lem:pnt}
+the sum is $n^2$ times
+\begin{multline*}
+ \int_1^{4/3}(3-x)\,dx+\int_{4/3}^{3/2}(5x-7)\,dx+\int_{3/2}^2(x-1)\,dx+\int_2^3(3x-7)\,dx+\int_3^42\,dx\\
+ =\frac{11}{18}+\frac1{72}+\frac38+\frac12+2=\frac72,
+\end{multline*}
+up to $o(n^2)$.
+
+(d) This is Proposition~\ref{tp:prop:fallback}(b).
+\end{proof}
+
+The proof of Theorem~\ref{thm:content} uses one more step. Let $p>4n$. For $n$ large, $p\notin S$. So
+$v_p(\tilde d_n)=-v_p(\cont\tilde Q_n)\le0$, and
+\[
+ \log\tilde d_n=\sum_pv_p(\tilde d_n)\log p\le-\sum_{p\le4n}v_p(\cont\tilde Q_n)\log p .
+\]
+The primes $p\le4n$ split into $S$, the primes $p\le4$ outside $S$ and the three ranges of
+Proposition~\ref{prop:tang}, as in the proof of Theorem~\ref{thm:content}.
 
 %% =====================================================================
 \section{Formalization}\label{sec:lean}
@@ -1091,18 +1815,20 @@ $(5b+64)/(12b(b+2))>0$ for $b\ge11$. Thus the margins stay positive throughout t
 
 Theorem~\ref{thm:main} is formalized in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}, together with every theorem,
 proposition and lemma its proof uses. The remarks are not part of the formalization. The public statement is the
-theorem \lean{Li2IrrationalityMeasure.li2_measure_general} in the statement file \lean{ChallengeLi2.lean} of the repository
+theorem \lean{Li2IrrationalityMeasure.li2_measure_general} in \lean{SolutionLi2.lean}, against the statement file
+\lean{ChallengeLi2.lean}, of the repository
 \begin{center}
 \FormalizationLink
 \end{center}
 Its statement uses only Mathlib. The number $\Li_2(a/b)$ is written as the series
 $\sum_{k\ge0}(a/b)^{k+1}/(k+1)^2$, the rate $c(a,b)$ is written out, and the table of
 Definition~\ref{def:Dlow} is given as rational literals. The conclusion is $q^{-\mu}<|\Li_2(a/b)-p/q|$ for all
-integers $p$ and all sufficiently large $q$. The solution uses no \lean{sorry} and no \lean{native_decide}, and
+integers $p$ and all sufficiently large $q$. The modules contain no \lean{sorry} and no \lean{native_decide}, and
 \lean{\#print axioms} reports only \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
 
-Tang's construction, his local bounds at the primes prime to $ab(b-a)$ and Proposition~\ref{prop:tang} are ported
-from his formalization \cite{TangLi2} under the Apache License~2.0. The ported files are listed in the repository's
+Tang's construction and his local bounds at the primes prime to $ab(b-a)$ are ported from his formalization
+\cite{TangLi2} under the Apache License~2.0. The closed form of the medium-prime constant in
+Proposition~\ref{prop:tang}(b) is formalized on top of them. The ported files are listed in the repository's
 \texttt{NOTICE}. Tang's own files adapt parts of Firsching's formalization of Fauzan's proof \cite{Firsching26}. The
 prime number theorem is taken from the PNT+ project \cite{PNTPlus}. The finite checks of Theorem~\ref{thm:types} and
 of the certificates of Section~\ref{ssec:cert} are carried out by the Lean kernel in rational arithmetic. Their data

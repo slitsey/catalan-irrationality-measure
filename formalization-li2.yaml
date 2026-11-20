@@ -12,15 +12,15 @@ project:
     value D of a node table at (rho, sign a, log(b/|a|)) with
     eta = D + c(a, b) > 0 gives |Li2(a/b) - p/q| > q^(-mu) for every
     mu > rho max(2/eta, 39/98), every integer p and every sufficiently large
-    integer q. Here c(a, b) = 7/2 - 523/840 + (8/3) log b - 6 log|a|
+    integer q. Here c(a, b) = 28 log 2 - (9/2) log 3 - 139/12 + (8/3) log b - 6 log|a|
     - (9/4) log|b - a| bounds the denominators at every prime. The
     approximations are Tang's Hankel determinants. Decay on a neighbourhood
     comes from dual bounds for a logarithmic energy, certified at 419 table
     entries (151 lattice and 268 bent contours) by interval arithmetic checked
     in the kernel, and uniform in log(b/|a|) by interpolation and transport.
     Nonvanishing on a band of primes, with type constants checked modulo 12,
-    gives the measure. Examples: mu(Li2(1/2)) <= 234.57, mu(Li2(1/3)) <= 21.57,
-    mu(Li2(-1/2)) <= 13.94.
+    gives the measure. Examples: mu(Li2(1/2)) <= 228.26, mu(Li2(1/3)) <= 21.52,
+    mu(Li2(-1/2)) <= 13.92; Li2(-2/11), Li2(-2/13) and Li2(-2/15) are irrational.
   authors:
     - "Sean Litsey"
   license: "Apache-2.0"

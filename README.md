@@ -77,12 +77,14 @@ Examples:
 
 | Number | μ ≤ | New | Other bound |
 |---|---|---|---|
-| `Li₂(1/2)` | 234.57 | first measure | none (irrational by Tang; Zhang) |
-| `Li₂(1/3)`, `Li₂(1/4)`, `Li₂(1/5)` | 21.57, 15.19, 12.92 | first measures | none (irrational by Liu; Prellberg) |
-| `Li₂(−1/2)`, `Li₂(−1/3)`, `Li₂(−1/4)` | 13.94, 11.91, 10.99 | first measures | none (irrational by Liu; Prellberg) |
-| `Li₂(1/6)` | 11.73 | improved measure | 783.29 (Rhin–Viola) |
+| `Li₂(1/2)` | 228.26 | first measure | none (irrational by Tang; Zhang) |
+| `Li₂(1/3)`, `Li₂(1/4)`, `Li₂(1/5)` | 21.52, 15.16, 12.90 | first measures | none (irrational by Liu; Prellberg) |
+| `Li₂(−1/2)`, `Li₂(−1/3)`, `Li₂(−1/4)` | 13.92, 11.89, 10.98 | first measures | none (irrational by Liu; Prellberg) |
+| `Li₂(1/6)` | 11.72 | improved measure | 783.29 (Rhin–Viola) |
 | `Li₂(1/20)` | 9.36 | improved measure | 11.94 (Rhin–Viola) |
-| `Li₂(−1/5)` | 10.38 | improved measure | 62.69 (Rhin–Viola) |
+| `Li₂(−1/5)` | 10.37 | improved measure | 62.69 (Rhin–Viola) |
+| `Li₂(−2/11)`, `Li₂(−2/13)`, `Li₂(−2/15)` | 110.29, 65.00, 49.03 | first proofs of irrationality | none |
+| `Li₂(2/13)` | 2408.00 | first measure | none (irrational by Liu; Tan–Zhang) |
 
 The theorem also gives finite measures for every reduced `2/b` with odd `b ≥ 13` and every reduced `−2/b`
 with odd `b ≥ 11`. In the domain `0 < |a/b| ≤ 1/2`, this leaves four positive and three negative
@@ -461,12 +463,13 @@ The proof is in [`CatalanCore/Lai/`](CatalanCore/Lai/), with general lemmas in
 ## Dilogarithms: μ(Li₂(a/b))
 
 For coprime integers `a, b` with `0 < 2|a| ≤ b`, let `t = log(b/|a|)` and
-`c(a, b) = 7/2 − 523/840 + (8/3) log b − 6 log|a| − (9/4) log|b − a|`. If `D` is a decay value of the
+`c(a, b) = 28 log 2 − (9/2) log 3 − 139/12 + (8/3) log b − 6 log|a| − (9/4) log|b − a|`. If `D` is a decay value of the
 certified node table at `(ρ, sign a, t)` and `η = D + c(a, b) > 0`, then `μ(Li₂(a/b)) ≤ ρ·max(2/η, 39/98)`.
 
 - **Denominators.** A bound for the valuation at every prime of the common denominator of Tang's
-  determinant polynomials gives the rate `c(a, b)`. Liu's construction has the same rate with the constant
-  72/25 in place of 7/2 − 523/840.
+  determinant polynomials gives the rate `c(a, b)`. The medium primes contribute the closed form 28 log 2 − (9/2) log 3 − 181/12,
+  an infinite sum of cell integrals evaluated by partial fractions; Liu's construction reaches the smaller
+  constant 72/25 by a certified table.
 - **Decay on a neighbourhood.** Dual bounds for a logarithmic energy are certified at 419 entries of a node
   table, on 151 lattice and 268 bent contours, by interval arithmetic checked in the kernel. Interpolation and
   transport make them uniform in `t`.
