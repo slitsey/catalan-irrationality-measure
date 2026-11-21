@@ -49,12 +49,27 @@ reduction of the moments in \cite[\S3]{OpenAI2026}. It is obtained from the $p$-
 recursions and does not involve the parameters.
 
 Second, $p^2Z(i,j)$ is $p$-integral. It is congruent to $Z(\lfloor i/p\rfloor,J)$ if $i\equiv j\pmod p$ and
-to $0$ otherwise. To see this, write $i'=\lfloor i/p\rfloor$. Since $i<p^2$, we have $H_i=p^{-1}H_{i'}+S_i$
-and $H^{(2)}_i=p^{-2}H^{(2)}_{i'}+S'_i$ with $S_i,S'_i$ $p$-integral, which gives the case $i=j$. If
-$i\not\equiv j$, then $p^2Z(i,j)=p\cdot pZ(i,j)\equiv0$. If $i\equiv j$ and $i\ne j$, then $i-j=(i'-J)p$. The
-integers $k\in(j,i]$ prime to $p$ form $i'-J$ complete systems of residues modulo $p$, so
-$\sum_k1/k\equiv(i'-J)\sum_{r=1}^{p-1}1/r\equiv0\pmod p$. Hence $H_i-H_j\equiv(H_{i'}-H_J)/p$ and
-$p^2Z(i,j)\equiv Z(i',J)$.
+to $0$ otherwise. To see this, write $i'=\lfloor i/p\rfloor$, and write $H^{(2)}_i=\sum_{k\le i}k^{-2}$, so
+that $Z(i,i)=-H^{(2)}_i$. Since $i<p^2$, the only terms of $H_i$ and $H^{(2)}_i$ that are not $p$-integral
+come from $k=pk'$ with $k'\le i'$. Hence
+\[
+ H_i=p^{-1}H_{i'}+S_i,\qquad H^{(2)}_i=p^{-2}H^{(2)}_{i'}+S'_i,
+\]
+with $S_i$ and $S'_i$ $p$-integral, and the same holds for $j$ with $J$ in place of $i'$. In particular
+$v_p(H_i-H_j)\ge-1$, since $H_{i'}$ and $H_J$ are $p$-integral ($i',J<p$).
+
+If $i=j$, then $p^2Z(i,i)=-H^{(2)}_{i'}-p^2S'_i\equiv Z(i',i')\pmod p$.
+
+If $i\not\equiv j\pmod p$, then $i-j$ is prime to $p$. So $v_p(Z(i,j))=v_p(H_i-H_j)\ge-1$, and
+$p^2Z(i,j)\equiv0\pmod p$.
+
+If $i\equiv j\pmod p$ and $i\ne j$, we may assume $i>j$, since $Z$ is symmetric. Then $i-j=(i'-J)p$
+with $0<i'-J<p$, so $i'-J$ is a unit. The integers $k\in(j,i]$ prime to $p$ form $i'-J$ complete systems
+of nonzero residues modulo $p$. Hence their reciprocals sum to $(i'-J)\sum_{r=1}^{p-1}r^{-1}\equiv0\pmod p$,
+and $H_i-H_j=p^{-1}(H_{i'}-H_J)+pT$ with $T$ $p$-integral. Dividing by $i-j=(i'-J)p$ gives
+\[
+ p^2Z(i,j)=\frac{H_{i'}-H_J}{i'-J}+\frac{p^2T}{i'-J}\equiv Z(i',J)\pmod p .
+\]
 
 Now use \eqref{eq:rational-part}. By the first fact, the part $\sum_iF[i]\,p^2M(i,j)$ with $F=P_c$ is
 $\sum_iF[i]\,W[\varrho(i)]\,M(u(i)-1,J)$. For fixed $u$ the indices with $u(i)=u$ are those for which
